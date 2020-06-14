@@ -14,7 +14,7 @@ function buildScript() {
     'mdlContainer.js',
     'rules.js',
     'toast.js',
-    'info.js',
+    'info.js', 
     'rollback.js',
     'ui.js',
     'whodunnit.js',

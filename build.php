@@ -24,10 +24,10 @@ function buildScript() {
     'pageProtect.js'
     ]; // List of files in order to import 
     foreach($jsFiles as $file) {
-        $result .= file_get_contents($file) . "\n"; // get contents and append
+        $result .= file_get_contents("./src/js/" . $file) . "\n"; // get contents and append
     }
 
-    $files = glob('./*.html', GLOB_BRACE); // for each html file
+    $files = glob('./src/html/*.html', GLOB_BRACE); // for each html file
     foreach($files as $file) {
         $result = str_replace("[[[[include ". end(explode("/", $file)). "]]]]", file_get_contents($file), $result); // replace include statements
     }
@@ -35,7 +35,7 @@ function buildScript() {
 /*
 R E D W A R N
 (c) 2020 Ed. E and contributors - ed6767wiki (at) gmail.com
-Licensed under the Apache License 2.0 - read more at https://github.com/ed6767/redwarn/blob/master/LICENSE
+Licensed under the Apache License 2.0 - read more at https://gitlab.com/redwarn/redwarn-web
 
 +-------------------------------------------+
 |                                           |
@@ -47,7 +47,7 @@ Licensed under the Apache License 2.0 - read more at https://github.com/ed6767/r
 | IS RELEASED AS THIS FILE IS BUILT BY A    |
 | SEPERATE SCRIPT. INSTEAD, ISSUE A PULL    |
 | REQUEST AT                                |
-| https://github.com/ed6767/redwarn         |
+| https://gitlab.com/redwarn/redwarn-web    |
 |                                           |
 +-------------------------------------------+
 

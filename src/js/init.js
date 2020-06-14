@@ -259,7 +259,7 @@ function initRW() {
         });
 
         // User blacklist
-        importScript('User:Ed6767/redwarn/blacklist.js'); // everything is handled within this script
+        mw.loader.load("https://en.wikipedia.org/w/index.php?title=User:Ed6767/redwarn/blacklist.js&action=raw&ctype=text/javascript"); // everything is handled within this script
 
         // We have perms, let's continue.
 

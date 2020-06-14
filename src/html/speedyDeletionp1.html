@@ -29,7 +29,7 @@
         font-size: small;
     ">
     Before nominating a page for speedy deletion, consider whether it could be improved, reduced to a stub, merged or redirected elsewhere,
-        reverted to a better previous revision, or handled in <a href="https://en.wikipedia.org/wiki/Wikipedia:Deletion_policy#Alternatives_to_deletion" target="_blank">some other way</a>. A page
+        reverted to a better previous revision, or handled in <a href="" target="_blank" id="callCWD">some other way</a>. A page
         is eligible for speedy deletion only if all of its revisions are also eligible.<br /><br />
     <b>Are you sure a speedy deletion request is the best option and the data you have entered is correct?</b>
         </span><br />
@@ -44,6 +44,7 @@
 </div>
 
 <script>
+    document.getElementById("callCWD").href=document.location.origin+"/wiki/Wikipedia:Deletion_policy#Alternatives_to_deletion"
     function pushRollback() {
         var data = $('#newMsgForm').serializeArray().reduce(function(obj, item) {
                 obj[item.name] = item.value;

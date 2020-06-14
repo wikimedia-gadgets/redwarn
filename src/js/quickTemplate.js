@@ -330,7 +330,7 @@ rw.info.writeConfig(true, ()=>{ // save config
 
         // Script generated, let's continue
         //Commit to script page
-        $.post("https://en.wikipedia.org/w/api.php", {
+        $.post(WIKICWD+"/w/api.php", {
             "action": "edit",
             "format": "json",
             "token" : mw.user.tokens.get("csrfToken"),
@@ -358,7 +358,7 @@ rw.info.writeConfig(true, ()=>{ // save config
                 rw.info.writeConfig(true, ()=>{ // save config
                     rw.quickTemplate.packStore = []; // clear out packs
                     // Now add to QTPacks page
-                    $.post("https://en.wikipedia.org/w/api.php", {
+                    $.post(WIKICWD+"/w/api.php", {
                         "action": "edit",
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
@@ -378,7 +378,7 @@ rw.info.writeConfig(true, ()=>{ // save config
                             rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your pack has not been published to the QTPack page, maybe add manually.");
                         } else {
                             // Done! Load QTPack page
-                            redirect("https://en.wikipedia.org/wiki/WP:REDWARN/QTPACKS"); 
+                            redirect("https://en.wikipedia.org/wiki/WP:REDWARN/QTPACKS"); // No WIKICWD due to lack of page there
                         }
                     });
                 }); 

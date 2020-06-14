@@ -91,7 +91,7 @@ function goToLatestDiffPage(article) {
             let latestRId = r.query.pages[0].revisions[0].revid;
             let parentRId = r.query.pages[0].revisions[0].parentid;
             // Open page in new tab (has to be done here due to new security systems)
-            bc.postMessage(WIKICWD+"w/index.php?title="+ encodeURIComponent(name) +"&diff="+ latestRId +"&oldid="+ parentRId +"&diffmode=source");
+            bc.postMessage(WIKICWD+"/w/index.php?title="+ encodeURIComponent(name) +"&diff="+ latestRId +"&oldid="+ parentRId +"&diffmode=source");
     });
 }
 

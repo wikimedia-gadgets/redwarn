@@ -392,7 +392,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                 // Got it! Now open preview dialog
                
                 // Add handler for when page loaded
-                let url = rw.wikiBase+"/w/index.php?title="+ mw.config.get("wgRelevantPageName") +"&diff="+ rID +"&oldid="+ mw.util.getParamValue("diff") +"&diffmode=source#rollbackPreview";
+                let url = rw.wikiIndex + "?title="+ mw.config.get("wgRelevantPageName") +"&diff="+ rID +"&oldid="+ mw.util.getParamValue("diff") +"&diffmode=source#rollbackPreview";
                 redirect(url); // goto in current tab
             });
         });
@@ -411,7 +411,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                 rw.info.latestRevisionNotByUser(mw.config.get("wgRelevantPageName"), un, (content, summary, rID) => {
                     // Got it! Now set page content to summary
                     // Push UNDO using CSRF token
-                    $.post(rw.wikiBase+"/w/api.php", {
+                    $.post(rw.wikiAPI + "", {
                         "action": "edit",
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
@@ -447,7 +447,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             
             let rollbackCallback = ()=>{ // using rollback API
                 // PUSH ROLLBACK
-                $.post(rw.wikiBase+"/w/api.php", {
+                $.post(rw.wikiAPI + "", {
                         "action": "rollback",
                         "format": "json",
                         "token" : rw.info.rollbackToken,
@@ -514,15 +514,15 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         // Restore revision by ID
         rw.ui.loadDialog.show("Restoring...");
         // Ask API for latest revision
-        $.getJSON(rw.wikiBase+"/w/api.php?action=query&prop=revisions&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&rvslots=*&rvprop=ids%7Cuser&formatversion=2&format=json", r=>{
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&rvslots=*&rvprop=ids%7Cuser&formatversion=2&format=json", r=>{
             // We got the response
             let crID = r.query.pages[0].revisions[0].revid;
             // Ask API for the restore revision
-            $.getJSON(rw.wikiBase+"/w/api.php?action=query&prop=revisions&rvprop=user&rvstartid="+ revID +"&rvendid="+ revID +"&titles="+ encodeURI(mw.config.get("wgRelevantPageName")) +"&formatversion=2&rvslots=*&format=json", r=>{
+            $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&rvprop=user&rvstartid="+ revID +"&rvendid="+ revID +"&titles="+ encodeURI(mw.config.get("wgRelevantPageName")) +"&formatversion=2&rvslots=*&format=json", r=>{
                 let revUsr = r.query.pages[0].revisions[0].user; // get user
                 let summary = "Restoring revision "+ revID + " by " + revUsr; // gen our summary
                 // Now we've got that, we just need to submit. the undo
-                $.post(rw.wikiBase+"/w/api.php", {
+                $.post(rw.wikiAPI + "", {
                         "action": "edit",
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
@@ -636,7 +636,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             // Fetch latest revision not by user
             rw.info.latestRevisionNotByUser(pageName, un, (content, summary, rID) => {
                 // Assemble URL
-                let url = rw.wikiBase+"/w/index.php?title="+ pageName +"&diff="+ rID +"&oldid="+ revID +"&diffmode=source#rollbackPreview";
+                let url = rw.wikiIndex + "?title="+ pageName +"&diff="+ rID +"&oldid="+ revID +"&diffmode=source#rollbackPreview";
                 redirect(url, true); // open URL in new tab
                 rw.ui.loadDialog.close(); // close load dialog
             });

@@ -53,7 +53,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
 
     "getCurrentPageProtection" : callback=>{ // Callback {edit: level, move:level}
         // Request protection level from mediawiki
-        $.getJSON(rw.wikiBase+"/w/api.php?action=query&format=json&prop=info%7Cflagged&inprop=protection&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")), r=>{
+        $.getJSON(rw.wikiAPI + "?action=query&format=json&prop=info%7Cflagged&inprop=protection&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")), r=>{
             let pageInfo = r.query.pages[Object.keys(r.query.pages)[0]];
 
             let editProtection = "unprotected";
@@ -140,7 +140,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
 '''${requestDuration + " " + requestProtect.name}:''' ${changeCoreReason}. ${changeExtraInfo} `+ rw.sign();
 
                 // New req current page.
-                $.getJSON(rw.wikiBase+"/w/api.php?action=query&prop=revisions&titles="+ encodeURIComponent(rw.pageProtect.rfppPage) +"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+                $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+ encodeURIComponent(rw.pageProtect.rfppPage) +"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
                     // Grab text from latest revision of talk page
                     // Check if exists
                     let revisionWikitext = "";
@@ -190,7 +190,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                     console.log(finalTxt);
 
                     // Push edit using CSRF token
-                    $.post(rw.wikiBase+"/w/api.php", {
+                    $.post(rw.wikiAPI + "", {
                         "action": "edit",
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),

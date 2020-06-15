@@ -6,7 +6,7 @@ rw.whodunnit = {
     "mouseHighlighter" : () => {
         rw.ui.loadDialog.show("Loading...");
         // Get HTML page content (i.e straight from the parser, so not touched)
-        $.getJSON(rw.wikiBase+"/w/api.php?action=parse&page="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&prop=text&format=json&formatversion=2", r=>{
+        $.getJSON(rw.wikiAPI + "?action=parse&page="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&prop=text&format=json&formatversion=2", r=>{
             $("#mw-content-text").html(r.parse.text); // set content    
             rw.ui.loadDialog.close(); // Close load dialog
             
@@ -60,7 +60,7 @@ rw.whodunnit = {
         rw.whodunnit.html = htmlIn.replace(/[^\w\s!?]/g, ""); // Replace most and just leave as a char only string
         
         let name = mw.config.get("wgRelevantPageName"); 
-        $.getJSON(rw.wikiBase+"/w/api.php?action=query&prop=revisions&titles="+ encodeURIComponent(name) +"&rvlimit=500&rvprop=ids%7Cuser%7Ctimestamp&format=json", r=>{
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+ encodeURIComponent(name) +"&rvlimit=500&rvprop=ids%7Cuser%7Ctimestamp&format=json", r=>{
             
             let cronologicalRevs = r.query.pages[Object.keys(r.query.pages)[0]].revisions;
             // Process to put in time order based on timestamps
@@ -83,7 +83,7 @@ rw.whodunnit = {
         // Update loading box
         rw.ui.loadDialog.setText("Investigating rev. "+ revID +"...");
 
-        $.getJSON(rw.wikiBase+"/w/api.php?action=parse&format=json&oldid="+ revID, r=>{ // Get revision content
+        $.getJSON(rw.wikiAPI + "?action=parse&format=json&oldid="+ revID, r=>{ // Get revision content
             if (!r.parse.text["*"].replace(/[^\w\s!?]/g, "").includes(html)) {
                 if (rw.whodunnit.i == 0) {
                     // We can't process this element
@@ -93,7 +93,7 @@ rw.whodunnit = {
                     rw.ui.loadDialog.setText("Loading diff...");
                     let cprID = rw.whodunnit.revs[rw.whodunnit.i-1].revid;
                     let cpprID = rw.whodunnit.revs[rw.whodunnit.i-1].parentid;
-                    redirect(rw.wikiBase+"/w/index.php?diff="+ cprID +"&oldid="+ cpprID +"&diffmode=source"); // go
+                    redirect(rw.wikiIndex + "?diff="+ cprID +"&oldid="+ cpprID +"&diffmode=source"); // go
                     // we done
                 }
             } else {

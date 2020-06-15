@@ -29,8 +29,8 @@
         </div>
 
     <script>
-const WIKICWD = document.location.origin;
-document.getElementById('callCWD').href=WIKICWD+"/wiki/Special:RecentChanges";
+const WIKICWD = `+ rw.wikiBase +`;
+document.getElementById('callCWD').href= WIKICWD +"/wiki/Special:RecentChanges";
 // Create broadcast channel
 var bcID = "RWBC_" + Math.random().toString(36).substring(7);
 const bc = new BroadcastChannel(bcID);

@@ -50,7 +50,11 @@ var rw = {
     "welcome": ()=> {return atob("e3tzdWJzdDpXZWxjb21lfX0=");}, // welcome template
     "welcomeIP": ()=> {return atob("e3tzdWJzdDp3ZWxjb21lLWFub259fQ==");}, // welcome IP template
     "sharedIPadvice" : ()=> {return atob("XG46e3tzdWJzdDpTaGFyZWQgSVAgYWR2aWNlfX0=");}, // if this is a shared...
+
+    // Wiki automated config
     "wikiBase" : mw.config.get("wgServer"), // mediawiki base URL (i.e. //en.wikipedia.org)
+    "wikiIndex" : mw.config.get("wgServer") + mw.config.get("wgScript"), // mediawiki index.php (i.e. //en.wikipedia.org/w/index.php)
+    "wikiAPI" : mw.config.get("wgServer") + mw.config.get("wgScriptPath") + "/api.php", // mediawiki API path  (i.e. //en.wikipedia.org/w/api.php)
 
     "makeID" : length=> {
         // Generates a random string
@@ -66,7 +70,7 @@ var rw = {
     "visuals" : {
         "init" : (callback) => {
             // Welcome message
-            console.log("RedWarn "+ rw.version + " - (c) Ed E and contributors");
+            console.log("RedWarn "+ rw.version + " - (c) 2020 RedWarn Contributors");
             // Load MDL and everything needed, then callback when all loaded
             $('head').append(`
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">

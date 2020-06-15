@@ -460,7 +460,7 @@ rw.ui = {
             //let aivPage = "User:Ed6767/sandbox"; // dev
             let aivPage = "Wikipedia:Administrator_intervention_against_vandalism"; // PRODUCTION! 
 
-            $.getJSON(rw.wikiBase+"/w/api.php?action=query&prop=revisions&titles="+aivPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+            $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+aivPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
                 // Grab text from latest revision of AIV page
                 // Check if exists
                 let revisionWikitext =  latestR.query.pages[0].revisions[0].slots.main.content; // Set wikitext
@@ -474,7 +474,7 @@ rw.ui = {
                 let textToAdd = "*" + (targetIsIP ? "{{IPvandal|" : "{{vandal|") + target + "}} " + reportContent; // DANGER! WIKITEXT (here is fine. be careful w changes.) - if target IP give correct template, else normal
                 let finalTxt = revisionWikitext + "\n\n" + textToAdd; // compile final string
                 // Now we just submit
-                $.post(rw.wikiBase+"/w/api.php", {
+                $.post(rw.wikiAPI + "", {
                     "action": "edit",
                     "format": "json",
                     "token" : mw.user.tokens.get("csrfToken"),

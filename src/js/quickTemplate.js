@@ -330,7 +330,7 @@ rw.info.writeConfig(true, ()=>{ // save config
 
         // Script generated, let's continue
         //Commit to script page
-        $.post(rw.wikiBase+"/w/api.php", {
+        $.post(rw.wikiAPI + "", {
             "action": "edit",
             "format": "json",
             "token" : mw.user.tokens.get("csrfToken"),
@@ -358,7 +358,7 @@ rw.info.writeConfig(true, ()=>{ // save config
                 rw.info.writeConfig(true, ()=>{ // save config
                     rw.quickTemplate.packStore = []; // clear out packs
                     // Now add to QTPacks page
-                    $.post(rw.wikiBase+"/w/api.php", {
+                    $.post(rw.wikiAPI + "", {
                         "action": "edit",
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),

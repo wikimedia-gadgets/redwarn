@@ -1,0 +1,49 @@
+<h2 style="font-weight: 200;font-size:45px;line-height: 48px;">`+selectedPack.name+`</h2>
+<div style="height:400px;overflow:auto;">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 100%;">
+        <input class="mdl-textfield__input" type="text" id="title"> <script>$("#title").val(atob("`+ btoa(selectedTemplate.title) +`"));</script> <!-- Script to set due to quote issues-->
+        <label class="mdl-textfield__label" for="title">Title</label>
+    </div><br />
+    <div class="mdl-textfield mdl-js-textfield" style="width: 100%;">
+        <textarea class="mdl-textfield__input" type="text" rows= "3" id="about">`+ selectedTemplate.about +`</textarea>
+        <label class="mdl-textfield__label" for="about">Description</label>
+    </div>
+
+    <h5>Edit source</h5>
+    <i>Create your template below. For more help, see the <a href="https://en.wikipedia.org/wiki/WP:REDWARN/QTPACKS" target="_blank">help page.</a></i>
+    <div class="mdl-textfield mdl-js-textfield" style="width: 100%;">
+        <textarea class="mdl-textfield__input" type="text" rows="5" id="content" style="font-family: monospace;">`+ selectedTemplate.content +`</textarea>
+        <label class="mdl-textfield__label" for="content">Content</label>
+    </div>
+</div>
+<!-- CLOSE AND CREATE BUTTONS -->
+<span style="float:right;">
+    <button id="exitBtn" class="mdl-button mdl-js-button mdl-js-ripple-effect">
+        EXIT
+    </button>
+    &nbsp;
+    <button id="testBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+        TEST
+    </button>
+    &nbsp;
+    <button id="saveBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+        SAVE CHANGES
+    </button>
+</span>
+
+<script>
+    // Add handlers
+    $("#exitBtn").click(()=>{
+        window.parent.postMessage('qTClose\`'+ btoa($("#title").val()) + "\`" + btoa($("#about").val()) + "\`" + btoa($("#content").val()), '*');
+    });
+
+    $("#testBtn").click(()=>{
+        // Test changes
+        window.parent.postMessage('qTTest\`'+ btoa($("#title").val()) + "\`" + btoa($("#about").val()) + "\`" + btoa($("#content").val()), '*');
+    });
+
+    $("#saveBtn").click(()=>{
+        // Save changes here
+        window.parent.postMessage('qTSave\`'+ btoa($("#title").val()) + "\`" + btoa($("#about").val()) + "\`" + btoa($("#content").val()), '*');
+    });
+</script>

@@ -55,7 +55,6 @@ To all normal users, if you wish to customise RedWarn, submit a request on the t
 */
 // <nowiki>
 '. $result . '
-    const WIKICWD = document.location.origin;
     $( document ).ready( function () {
         // Init when page loaded
       try {

@@ -5,7 +5,7 @@ rw.info = { // API
     "getRollbackToken" : () => {
         // Ran on load to allow for ?action=rollback request
         rw.info.featureRestrictPermissionLevel("rollbacker", ()=>{
-            $.getJSON(WIKICWD+"/w/api.php?action=query&meta=tokens&type=rollback&format=json", r=>{
+            $.getJSON(rw.wikiBase+"/w/api.php?action=query&meta=tokens&type=rollback&format=json", r=>{
                 rw.info.rollbackToken = r.query.tokens.rollbacktoken; // Set from response
             });
         },()=>{});
@@ -34,7 +34,7 @@ rw.info = { // API
 
         // gets user config from their page. 
         let user = rw.info.getUsername();
-        $.getJSON(WIKICWD+"/w/api.php?action=query&prop=revisions&titles=User:"+user+"/redwarnConfig.js&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+        $.getJSON(rw.wikiBase+"/w/api.php?action=query&prop=revisions&titles=User:"+user+"/redwarnConfig.js&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
             // Grab text from latest revision of talk page
             // Check if exists
             let revisionWikitext = "";
@@ -125,7 +125,7 @@ If somebody has asked you to add code to this page, DO NOT do so as it may compr
 !!! Do not edit below this line unless you understand the risks! If rw.config isn't defined, this file will be reset. !!!
 */
 rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config text
-        $.post(WIKICWD+"/w/api.php", {  // LOCALISATION ISSUE!!
+        $.post(rw.wikiBase+"/w/api.php", {  // LOCALISATION ISSUE!!
                 "action": "edit",
                 "format": "json",
                 "token" : mw.user.tokens.get("csrfToken"),
@@ -181,7 +181,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
     },
 
     "parseWikitext" : (wikiTxt, callback) => { // Uses Wikipedia's API to turn Wikitext to string. NEED TO USE POST IF USERPAGE IS LARGE EXT..
-        $.post(WIKICWD+"/w/api.php", {
+        $.post(rw.wikiBase+"/w/api.php", {
             "action": "parse",
             "format": "json",
             "contentmodel" : "wikitext",
@@ -190,14 +190,14 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
             "assert": "user",
             "text": wikiTxt
         }).done(r => {
-            let processedResult = r.parse.text['*'].replace(/\/\//g, "https://").replace(/href=\"\/wiki/g, `href=WIKICWD+"/wiki`); // regex replace w direct urls
+            let processedResult = r.parse.text['*'].replace(/\/\//g, "https://").replace(/href=\"\/wiki/g, `href=rw.wikiBase+"/wiki`); // regex replace w direct urls
             callback(processedResult); // make callback w HTML
         });
     },
 
     "lastWarningLevel" : (user, callback)=> { // callback(wLevel. thisMonthsNotices, userPg) 0 none 1 notice 2 caution 3 warning 4 final warning
         // Get the last warning level of a user this month
-        $.getJSON(WIKICWD+"/w/api.php?action=query&prop=revisions&titles=User_talk:"+user+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+        $.getJSON(rw.wikiBase+"/w/api.php?action=query&prop=revisions&titles=User_talk:"+user+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
             // Grab text from latest revision of talk page
             // Check if exists
             let revisionWikitext = "";
@@ -277,7 +277,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         }
         if (callback == null) rw.ui.loadDialog.show("Saving message..."); // show load if no callback
         // Add text to a page. If underdate true, add it under a date marker
-        $.getJSON(WIKICWD+"/w/api.php?action=query&prop=revisions&titles=User_talk:"+user+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+        $.getJSON(rw.wikiBase+"/w/api.php?action=query&prop=revisions&titles=User_talk:"+user+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
             // Grab text from latest revision of talk page
             // Check if exists
             let revisionWikitext = "";
@@ -351,7 +351,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
             console.log(finalTxt);
 
             // Push edit using CSRF token
-            $.post(WIKICWD+"/w/api.php", {
+            $.post(rw.wikiBase+"/w/api.php", {
                 "action": "edit",
                 "format": "json",
                 "token" : mw.user.tokens.get("csrfToken"),
@@ -372,8 +372,8 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                     if (callback != null) {callback(); return;}; // callback and stop if set, else..
 
                     // Redirect to complete page
-                    let reloadNeeded = window.location.href.includes(WIKICWD+"/wiki/User_talk:"+ user); // if we are already on the talk page we need to refresh as this would just change the hash
-                    redirect(WIKICWD+"/wiki/User_talk:"+ user + "#noticeApplied-" + dt.edit.newrevid + "-" + dt.edit.oldrevid); // go to talk page
+                    let reloadNeeded = window.location.href.includes(rw.wikiBase+"/wiki/User_talk:"+ user); // if we are already on the talk page we need to refresh as this would just change the hash
+                    redirect(rw.wikiBase+"/wiki/User_talk:"+ user + "#noticeApplied-" + dt.edit.newrevid + "-" + dt.edit.oldrevid); // go to talk page
                     if (reloadNeeded) {location.reload();}
                     // We done
                 }
@@ -396,7 +396,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
     // Used for rollback
     "isLatestRevision" : (name, revID, callback, noRedirectCallback) => { // callback(username) only if successful!! in other cases, will REDIRECT to latest revison compare page
         // Check if revsion is the latest revision
-        $.getJSON(WIKICWD+"/w/api.php?action=query&prop=revisions&titles="+ encodeURIComponent(name) +"&rvslots=*&rvprop=ids%7Cuser&formatversion=2&format=json", r=>{
+        $.getJSON(rw.wikiBase+"/w/api.php?action=query&prop=revisions&titles="+ encodeURIComponent(name) +"&rvslots=*&rvprop=ids%7Cuser&formatversion=2&format=json", r=>{
             // We got the response
             let latestRId = r.query.pages[0].revisions[0].revid;
             let parentRId = r.query.pages[0].revisions[0].parentid;
@@ -411,14 +411,14 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 
                 // Load the preview page of the latest one
                 try {if (dialogEngine.dialog.open) {return;}} catch (error) {} // DO NOT REDIRECT IF DIALOG IS OPEN.
-                redirect(WIKICWD+"/w/index.php?title="+ encodeURIComponent(name) +"&diff="+ latestRId +"&oldid="+ parentRId +"&diffmode=source#redirectLatestRevision");
+                redirect(rw.wikiBase+"/w/index.php?title="+ encodeURIComponent(name) +"&diff="+ latestRId +"&oldid="+ parentRId +"&diffmode=source#redirectLatestRevision");
             }
         });
     },
 
     "latestRevisionNotByUser" : (name, username, callback) => { // CALLBACK revision, summaryText, rId
         // Name is page name, username is bad username
-        $.getJSON(WIKICWD+"/w/api.php?action=query&prop=revisions&titles="+ encodeURIComponent(name) +"&rvslots=*&rvprop=ids%7Cuser%7Ccontent&rvexcludeuser="+ username +"&formatversion=2&format=json", r=>{
+        $.getJSON(rw.wikiBase+"/w/api.php?action=query&prop=revisions&titles="+ encodeURIComponent(name) +"&rvslots=*&rvprop=ids%7Cuser%7Ccontent&rvexcludeuser="+ username +"&formatversion=2&format=json", r=>{
             // We got the response
             let _r;
             try {
@@ -426,7 +426,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 if (_r == null) { throw "can't be null"; } // if empty error
             } catch (error) {
                 // Probably no other edits. Redirect to history page and show the notice
-                redirect(WIKICWD+"/w/index.php?title="+ encodeURIComponent(name) +"&action=history#rollbackFailNoRev");
+                redirect(rw.wikiBase+"/w/index.php?title="+ encodeURIComponent(name) +"&action=history#rollbackFailNoRev");
                 return; // exit
             }
 
@@ -494,11 +494,11 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 rw.info.changeWatch.active = true;
 
                 // Get latest rev id
-                $.getJSON(WIKICWD+"/w/api.php?action=query&prop=revisions&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&rvslots=*&rvprop=ids&formatversion=2&format=json", r=>{
+                $.getJSON(rw.wikiBase+"/w/api.php?action=query&prop=revisions&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&rvslots=*&rvprop=ids&formatversion=2&format=json", r=>{
                     // We got the response, set our ID
                     rw.info.changeWatch.lastRevID = r.query.pages[0].revisions[0].revid;
                     rw.info.changeWatch.timecheck = setInterval(()=>{ // Check for new revision every 5 seconds
-                        $.getJSON(WIKICWD+"/w/api.php?action=query&prop=revisions&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&rvslots=*&rvprop=ids&formatversion=2&format=json", r2=>{
+                        $.getJSON(rw.wikiBase+"/w/api.php?action=query&prop=revisions&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&rvslots=*&rvprop=ids&formatversion=2&format=json", r2=>{
                             // Got response, compare
                             if (rw.info.changeWatch.lastRevID != r2.query.pages[0].revisions[0].revid) {
                                 // New Revision! Redirect.
@@ -508,7 +508,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
 
                                 if (windowFocused) {
                                     // Redirect and don't do anything else
-                                    redirect(WIKICWD+"/w/index.php?title="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&diff="+ latestRId +"&oldid="+ parentRId +"&diffmode=source#watchLatestRedirect");
+                                    redirect(rw.wikiBase+"/w/index.php?title="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&diff="+ latestRId +"&oldid="+ parentRId +"&diffmode=source#watchLatestRedirect");
                                 } else {
                                     // Push notification
                                     document.title = "**New Edit!** " + document.title; // Add alert to title
@@ -526,7 +526,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
 
                                         window.onfocus = function(){
                                             // Redirect on focus
-                                            redirect(WIKICWD+"/w/index.php?title="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&diff="+ latestRId +"&oldid="+ parentRId +"&diffmode=source#watchLatestRedirect");
+                                            redirect(rw.wikiBase+"/w/index.php?title="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&diff="+ latestRId +"&oldid="+ parentRId +"&diffmode=source#watchLatestRedirect");
                                         };
                                     }
                                 } 

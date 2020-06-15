@@ -40,7 +40,7 @@ rw.multiAct = { // Multi action screen
                     // Still more to do, so resubmit
                     let latestID = $('#mw-history-compare').find('input[name="diff"]:checked').val(); 
                     let oldestID = $('#mw-history-compare').find('input[name="oldid"]:checked').val(); 
-                    $.getJSON(WIKICWD+"/w/api.php?action=query&prop=revisions&format=json&titles="+
+                    $.getJSON(rw.wikiBase+"/w/api.php?action=query&prop=revisions&format=json&titles="+
                         mw.config.get("wgRelevantPageName")+"&rvprop=ids%7Cuser%7Ccomment&rvstartid="+
                         latestID+"&rvendid="+oldestID + "&rvcontinue="+ r.continue.rvcontinue,
                     resultHandler); // continueee
@@ -59,7 +59,7 @@ rw.multiAct = { // Multi action screen
                 let latestID = $('#mw-history-compare').find('input[name="diff"]:checked').val(); 
                 let oldestID = $('#mw-history-compare').find('input[name="oldid"]:checked').val(); 
                 // Get all revisions 
-                $.getJSON(WIKICWD+"/w/api.php?action=query&prop=revisions&format=json&titles="+
+                $.getJSON(rw.wikiBase+"/w/api.php?action=query&prop=revisions&format=json&titles="+
                     mw.config.get("wgRelevantPageName")+"&rvprop=ids%7Cuser%7Ccomment&rvstartid="+
                     latestID+"&rvendid="+oldestID,
                 resultHandler);

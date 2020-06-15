@@ -270,13 +270,13 @@ rw.ui = {
                     
                     // Do the action for each action now.
                     ({
-                        "usrPg" : un=>redirect("https://en.wikipedia.org/wiki/User:"+ un, true),  // Open user page in new tab
+                        "usrPg" : un=>redirect(WIKICWD+"/wiki/User:"+ un, true),  // Open user page in new tab
 
-                        "tlkPg" : un=>redirect("https://en.wikipedia.org/wiki/User_talk:"+ un, true),  // Open talk page in new tab
+                        "tlkPg" : un=>redirect(WIKICWD+"/wiki/User_talk:"+ un, true),  // Open talk page in new tab
 
-                        "contribs" : un=>redirect("https://en.wikipedia.org/wiki/Special:Contributions/"+ un, true),  // Redirect to contribs page in new tab
+                        "contribs" : un=>redirect(WIKICWD+"/wiki/Special:Contributions/"+ un, true),  // Redirect to contribs page in new tab
 
-                        "accInfo" : un=>redirect("https://en.wikipedia.org/wiki/Special:CentralAuth?target="+ un, true),  // Redirect to Special:CentralAuth page in new tab
+                        "accInfo" : un=>redirect(WIKICWD+"/wiki/Special:CentralAuth?target="+ un, true),  // Redirect to Special:CentralAuth page in new tab
 
                         "sendMsg" : un=>rw.ui.newMsg(un), // show new msg dialog
 
@@ -460,7 +460,7 @@ rw.ui = {
             //let aivPage = "User:Ed6767/sandbox"; // dev
             let aivPage = "Wikipedia:Administrator_intervention_against_vandalism"; // PRODUCTION! 
 
-            $.getJSON("https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles="+aivPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+            $.getJSON(WIKICWD+"/w/api.php?action=query&prop=revisions&titles="+aivPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
                 // Grab text from latest revision of AIV page
                 // Check if exists
                 let revisionWikitext =  latestR.query.pages[0].revisions[0].slots.main.content; // Set wikitext
@@ -474,7 +474,7 @@ rw.ui = {
                 let textToAdd = "*" + (targetIsIP ? "{{IPvandal|" : "{{vandal|") + target + "}} " + reportContent; // DANGER! WIKITEXT (here is fine. be careful w changes.) - if target IP give correct template, else normal
                 let finalTxt = revisionWikitext + "\n\n" + textToAdd; // compile final string
                 // Now we just submit
-                $.post("https://en.wikipedia.org/w/api.php", {
+                $.post(WIKICWD+"/w/api.php", {
                     "action": "edit",
                     "format": "json",
                     "token" : mw.user.tokens.get("csrfToken"),

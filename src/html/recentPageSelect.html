@@ -1,0 +1,25 @@
+<h2 style="font-weight: 200;">Select Recent Page</h2>
+
+<div style="height:365px;overflow:auto;">
+    <!-- Insert list -->
+    ${finalRVList}
+</div>
+
+<span style="float:right;">
+    <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('closeRecentPageDialog', '*');">
+        CANCEL
+    </button>
+    <button id="submitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="selectPage();">
+        SELECT THIS PAGE
+    </button>
+</span>
+
+<script>
+    function selectPage() {
+        // Make sure something is checked and continue
+        if ($("input:checked").val() != null) {
+            window.parent.postMessage('RecentPageDialogSel\`'+ $("input:checked").val(), '*'); // push selected index upstairs
+            window.parent.postMessage('closeRecentPageDialog', '*'); // close, we done
+        }
+    }
+</script>

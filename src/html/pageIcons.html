@@ -1,0 +1,73 @@
+DO NOT REMOVE THIS LINE */
+
+if (mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:")) {
+    pageIconHTML += `
+        <!-- BEGIN USER ONLY ICONS -->
+        `+ (iconsLocation == "sidebar" ? "" : "&nbsp;&nbsp;&nbsp;") + ` <!-- no spacing on sidebar -->
+        <div id="newUsrMsg" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.ui.newMsg();">send</span></div>
+        <div class="mdl-tooltip mdl-tooltip--large" for="newUsrMsg">
+            New Message
+        </div>
+
+        <div id="welcomeUsr" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.quickTemplate.openSelectPack();">library_add</span></div>
+        <div class="mdl-tooltip mdl-tooltip--large" for="welcomeUsr">
+            Quick Template
+        </div>
+
+        <div id="warnUsr" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.ui.beginWarn();">report</span></div>
+        <div class="mdl-tooltip mdl-tooltip--large" for="warnUsr">
+            Send Notice
+        </div>
+
+        <div id="reportUsr" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.ui.openAdminReport();">gavel</span></div>
+        <div class="mdl-tooltip mdl-tooltip--large" for="reportUsr">
+            Report to Admin
+        </div>
+    `;
+} // end this section
+pageIconHTML += `
+    `+ (iconsLocation == "sidebar" ? "" : "&nbsp;&nbsp;&nbsp;") + ` <!-- no spacing on sidebar -->
+    <!-- START PAGE ONLY ICONS -->
+
+    <!-- ONLY ON EDITABLE PAGES -->
+    `+ (mw.config.get("wgIsProbablyEditable") ? `
+    <div id="RwPageLock" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.pageProtect.open();">lock</span></div>
+    <div class="mdl-tooltip mdl-tooltip--large" for="RwPageLock">
+        Manage Page Protection
+    </div>
+
+    <div id="rwSpyIcon" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.info.changeWatch.toggle();">notification_important</span></div>
+    <div class="mdl-tooltip mdl-tooltip--large" for="rwSpyIcon">
+        Alert on Change
+    </div>
+
+    <div id="rwInspectorLaunch" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.visuals.toast.show('This feature is experimental and may not always work.');rw.whodunnit.mouseHighlighter();">find_in_page</span></div>
+    <div class="mdl-tooltip mdl-tooltip--large" for="rwInspectorLaunch">
+        Inspector (alpha)
+    </div>
+    
+    <div id="mrevPg" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.info.isLatestRevision(mw.config.get('wgRelevantPageName'), 0, ()=>{});">watch_later</span></div>
+    <div class="mdl-tooltip mdl-tooltip--large" for="mrevPg">
+        Latest revision
+    </div>
+    ` : `
+    <!-- UNEDITABLE ONLY ICON -->
+    <div id="RwPageLock" class="icon material-icons"><span style="cursor: pointer; color:red;" onclick="rw.pageProtect.open();">lock</span></div>
+    <div class="mdl-tooltip" for="RwPageLock">
+        You cannot edit this page. Click to manage page protection.
+    </div>
+    `) + ` <!-- END EDITABLE PAGES ONLY ICONS -->
+
+    <div id="rwOpenPref" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.ui.openPreferences();">settings</span></div>
+    <div class="mdl-tooltip mdl-tooltip--large" for="rwOpenPref">
+        RedWarn Preferences
+    </div>
+
+    <div id="rwFeedbackIco" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.ui.sendFeedback();">contact_support</span></div>
+    <div class="mdl-tooltip mdl-tooltip--large" for="rwFeedbackIco">
+        RedWarn Feedback and Support
+    </div>
+`;
+
+
+/* DO NOT REMOVE THIS LINE

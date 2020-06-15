@@ -1,0 +1,84 @@
+<!-- Style for title preview -->
+<style>
+    h2 {
+        font-size: 20px;
+        line-height: 0px;
+    }
+    .mw-editsection {
+        display: none;
+    }
+</style>
+<h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Feedback & Support</h2>
+<p>Found a bug in RedWarn, want to send general feedback, or just need help? Use this form. Your feedback is greatly appreciated!</p>
+<form id="newMsgForm">
+<input type="hidden" id="trgtUsrVisualBox" value="Ed6767/redwarn/bugsquasher" readonly>
+<span id="previewContainer" style="display:none;">
+    <!-- EDIT BUTTON -->
+
+    <span id="editBtn" class="material-icons" style="font-size: 16px;padding-bottom: 3px;float: right;padding-right: 5px;cursor: pointer;" onclick="$('#previewContainer').hide();$('#editorContainer').show();">
+        create
+    </span>
+
+    <div id="preview" style="height: 150px; overflow-y: auto; width:100%;"> <!-- do not use max-height as this moves the buttons and makes it hard for muscle memory-->
+        
+    </div> <!-- Used to show preview-->
+</span>
+
+<span id="editorContainer">
+    <span id="previewBtn" class="material-icons" style="font-size: 16px;padding-bottom: 3px;float: right;padding-right: 5px;cursor: pointer;" onclick="$('#previewContainer').show();$('#editorContainer').hide();grabPreview();">
+        visibility
+    </span>
+    <div id="editor">
+        <textarea id="wikiTxt" name="wikiTxt" style="height: 150px; max-height: 150px; overflow-y: auto; width:100%;">
+=== Your Subject ===
+Your message here. `+ rw.sign() +`
+`+(extraInfo != null ? extraInfo : "")+`</textarea>
+    </div> <!-- Used to edit Wikitext -->
+</span>
+</form>
+
+<span style="float:right;">
+    <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('closeDialog', '*');">
+        CANCEL
+    </button>
+    <button id="submitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="sendMessage();">
+        SEND FEEDBACK
+    </button>
+</span>
+
+<script>
+        // Handle incoming data
+    window.onmessage = function(e){
+        if (e.data.action == 'parseWikiTxt') {
+            $("#preview").html(e.data.result); // Set preview to content
+        }
+    };
+
+    function pushToast(text) {window.parent.postMessage('pushToast\\\`' + text);} // Push toast to host
+
+    function grabPreview() {
+        var wikiTxt = document.getElementById("wikiTxt").value;
+        if (!wikiTxt.includes("`+ rw.sign() +`")) {
+            // Not signed, warn
+            pushToast("Don't forget to sign your message!");
+        }
+        window.parent.postMessage('generatePreview\\\`'+ wikiTxt, '*');
+    }
+
+    function sendMessage() {
+        // Send it!
+        var data = $('#newMsgForm').serializeArray().reduce(function(obj, item) {
+                obj[item.name] = item.value;
+                return obj;
+                }, {}); // form data
+
+        var wikiTxt = data.wikiTxt;
+        if (!wikiTxt.includes("`+ rw.sign() +`")) {
+            // Not signed, warn
+            pushToast("Sign your message with '`+ rw.sign() +`'");
+            return; // Do not continue
+        }
+        window.parent.postMessage('applyNotice\\\`' + document.getElementById("trgtUsrVisualBox").value + '\\\`' + wikiTxt + '\\\`' + "new topic"); // Push upstairs and commit
+        window.parent.postMessage("closeDialog"); // We done here. Top will refresh or reshow if error occurs.
+    }
+</script>

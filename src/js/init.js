@@ -298,7 +298,7 @@ function initRW() {
                     rw.rollback.restore(window.location.hash.split("-")[2], "Undo message addition (via toast)");
                 }, 7500);
             } else if (window.location.hash.includes("#redirectLatestRevision")) { // When latest revision loaded
-                rw.visuals.toast.show("Redirected to the lastest revision.", "BACK", ()=>window.history.back(), 4000); // When back clciked go back
+                rw.visuals.toast.show("Redirected to the latest revision.", "BACK", ()=>window.history.back(), 4000); // When back clciked go back
             } else if (window.location.hash.includes("#watchLatestRedirect")) {
                 // Redirected to latest by redirector, play sound
                 let src = 'https://raw.githubusercontent.com/ed6767/redwarn/master/redwarn%20notifs%20new%20edit.mp3';

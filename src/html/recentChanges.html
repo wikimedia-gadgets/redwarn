@@ -4,16 +4,10 @@
 
 <!--
     Need to:
-    fix size of rw patrol icon 
-    fixheader sizing
-    add more buttons
     filter config
-    live updates toggle + fade out hover cursor item on live updates ON
     use list:recentchanges api rather than parsing from the html (lame and not epic gamer)
     ORES function
-
     function for ORES: function fetchORES(revID) {} function for live update: function refreshLive() {} (replace code) function for checking user info ie: edit count: function userInfo(userID) {}
-
     potential other things: animate close out of patrol back into wikipedia- and some stuff
 -->
 
@@ -32,10 +26,22 @@
     <!-- Show a few edits on load -->
     <!-- No header, and the drawer stays open on larger screens (fixed drawer). -->
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
-        <dialog class="mdl-dialog" id="filterSubDialog">
+        <dialog class="mdl-dialog" id="filterSubDialog" style="width: 30vw;">
             <h5 class="mdl-dialog__title">Filter Preferences</h5>
             <div class="mdl-dialog__content">
                 <p>
+                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-1">
+                        <input type="checkbox" id="switch-1" class="mdl-switch__input" checked>
+                        <span class="mdl-switch__label">Filter1</span>
+                      </label>
+                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-2">
+                      <input type="checkbox" id="switch-2" class="mdl-switch__input" checked>
+                      <span class="mdl-switch__label">Filter2</span>
+                    </label>
+                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-3">
+                      <input type="checkbox" id="switch-3" class="mdl-switch__input" checked>
+                      <span class="mdl-switch__label">Filter3</span>
+                    </label>
                     Filters placeholder
                 </p>
                 <div class="mdl-dialog__actions">
@@ -45,32 +51,60 @@
                 </div>
             </div>
         </dialog>
-        <div id="header_custom" style="height: 40px;" style="display: flex; justify-content: flex-start; flex-direction: row; width: 100vw;">
-            <span>`+ rw.logoHTML +` Patrol</span> <!--class="mdl-layout-title" keeping this here because im removing that and might forget if i need to add back-->
-            <button class="mdl-button mdl-button--raised mdl-js-button" id="filterButton" style="margin-right: 10px;">Filter Preferences</button>
-            <button class="mdl-button mdl-button--raised mdl-js-button" id="retWiki" onclick="window.parent.postMessage('closeDialogPT');">Close RW Patrol</button>
-        </div>
-        <div class="mdl-layout__drawer" style="width:100%;-webkit-transform: translateX(0px); transform: translateX(0px); -webkit-transform: translateY(40px); transform: translateY(40px);">
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
+            <div class="mdl-layout__drawer" style="width:100%;-webkit-transform: translateX(0px); transform: translateX(0px);">
+            <span class="mdl-layout-title">`+ rw.logoHTML +` Patrol</span>
+            <div id="cornerbuttons" style="position: fixed; right: 35px; top: 15px; display: flex; justify-content: flex-end; flex-direction: row;">
+                <button class="mdl-button mdl-js-button mdl-button--icon" id="filterButton" style="margin-right: 7px;">
+                <i class="material-icons">settings</i>
+                </button>                
+                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="live" for="liveswitch" style="margin-top: 3px;">
+                    <input type="checkbox" id="liveswitch" class="mdl-switch__input" onclick="switchCheck()"/>
+                    <span class="mdl-switch__label"><small>Toggle live</small></span>
+                </label>
+            </div>
 
             <nav class="mdl-navigation">
                 <a class="mdl-navigation__link" onclick="window.parent.postMessage('closeDialogPT');" href="">Return to
                     Wikipedia / Change filter options</a>
                 <a class="mdl-navigation__link" href="#" id="newAttached" target="_blank">Open New Attached Tab</a>
-                <a class="mdl-navigation__link" href="#" style="background-color: teal;color:white;"
+                <a class="mdl-navigation__link" id="hoverswitch" href="#" style="background-color: teal;color:white; display: initial;"
                     onmouseover="tI = setInterval(refreshLive,  750);"
-                    onmouseout="clearTimeout(tI);" style="display: initial;">Hover your cursor here for live updates</a>
+                    onmouseout="clearTimeout(tI);">Hover your cursor here for live updates</a>
                 <div id="recentChangesContainer">
                 </div>
-
             </nav>
+            </div>
         </div>
+
         <main class="mdl-layout__content">
             <div class="page-content" style="display:none;">
             </div>
         </main>
     </div>
+    <style>
+        #filterswitch {
+            margin-bottom: 15px;
+        }
+    </style>
 
     <script>
+
+        function switchCheck() {
+            console.log("test");
+            let livetoggle= document.getElementById('liveswitch');
+            let hoverswitch = document.getElementById('hoverswitch');
+            console.log(livetoggle);
+            if (livetoggle.checked == true) {
+                tI = setInterval(refreshLive, 750);
+                hoverswitch.style.display = "none";
+            } else {
+                clearTimeout(tI);
+                hoverswitch.style.display = "initial";
+            }
+        }
+
+
         const WIKICWD = "https:" + "`+ rw.wikiBase +`";
         console.log(WIKICWD)
 

@@ -284,7 +284,7 @@ function initRW() {
                     `,
                     "READ SUMMARY", ()=>{
                         dialogEngine.closeDialog();
-                        redirect("https://en.wikipedia.org/wiki/User:Ed6767/redwarn/bugsquasher#"+ rw.version + "_summary", true);
+                        redirect("https://en.wikipedia.org/wiki/Wikipedia:RedWarn/bugsquasher#"+ rw.version + "_summary", true);
                     },
                     "LATER", ()=>{
                         dialogEngine.closeDialog();

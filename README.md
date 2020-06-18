@@ -1,6 +1,7 @@
 # redwarn-web
 [![](https://data.jsdelivr.com/v1/package/npm/redwarn-web/badge)](https://www.jsdelivr.com/package/npm/redwarn-web)
-Wikipedia editing tool.
+
+The recent edits patrol and warning tool (aka RedWarn) is a JavaScript counter-vandalism tool, designed to be a user-friendly way to perform common moderation tasks.
 
 ## For full documentation, bugs, features and more info, see [WP:REDWARN](https://en.wikipedia.org/wiki/WP:REDWARN) on Wikipedia
 

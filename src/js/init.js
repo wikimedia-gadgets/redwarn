@@ -55,7 +55,7 @@ var rw = {
     "wikiBase" : mw.config.get("wgServer"), // mediawiki base URL (i.e. //en.wikipedia.org)
     "wikiIndex" : mw.config.get("wgServer") + mw.config.get("wgScript"), // mediawiki index.php (i.e. //en.wikipedia.org/w/index.php)
     "wikiAPI" : mw.config.get("wgServer") + mw.config.get("wgScriptPath") + "/api.php", // mediawiki API path  (i.e. //en.wikipedia.org/w/api.php)
-
+    "wikiID": mw.config.values.wgWikiID,
     "makeID" : length=> {
         // Generates a random string
         var result           = '';
@@ -193,11 +193,38 @@ var rw = {
              // If preferences set, apply them
             if (rw.config.ptrAddCol) addCol = rw.config.ptrAddCol;
             if (rw.config.ptrRmCol) rmCol = rw.config.ptrRmCol;
-            
-            let url = URL.createObjectURL(new Blob([mdlContainers.generateHtml(`
+            // basically multiact js but with stuff replaced
+            let content = mdlContainers.generateContainer(` 
             [[[[include recentChanges.html]]]]
-            `)], { type: 'text/html' })); // blob url
-            redirect(url, false);
+            `, document.body.offsetWidth, document.body.offsetHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
+
+            // Init if needed
+            if ($("#PTdialogContainer").length < 1) {
+                // Need to init
+                $("body").prepend(`
+                    <div id="PTdialogContainer">
+                    </div>
+                `);
+                // Add close event
+                addMessageHandler("closeDialogPT", ()=>{rw.recentChanges.dialog.close();}); // closing
+            }
+            
+            $("#PTdialogContainer").html(`
+            <dialog class="mdl-dialog" id="rwPATROLdialog">
+                `+ content +`
+            </dialog>
+            `);
+
+
+            rw.recentChanges.dialog = document.querySelector('#rwPATROLdialog'); // set dialog
+
+            $("#rwPATROLdialog").attr("style", "padding:inherit;"); // set no padding
+            // Firefox issue fix
+            if (! rw.recentChanges.dialog.showModal) {
+                dialogPolyfill.registerDialog(rw.recentChanges.dialog);
+            }
+
+            rw.recentChanges.dialog.showModal(); // Show dialog
         },
         "diffLinkAddRedWarn" : () => { // add redwarn to recent changes page
             $('body').unbind('DOMSubtreeModified'); // Prevent infinite loop

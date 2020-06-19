@@ -1,134 +1,293 @@
 <!DOCTYPE HTML>
 <html>
-    <!-- RECENT CHANGES EDITOR. RUNS COMPLETLY SEPERATE AS STANDALONE PAGE. DO NOT USE A CONTAINER. -->
-    <head>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-indigo.min.css" />
-    </head>
-    <body onload="refreshLive();"> <!-- Show a few edits on load -->
+<!-- RECENT CHANGES EDITOR. RUNS COMPLETLY SEPERATE AS STANDALONE PAGE. DO NOT USE A CONTAINER. -->
+
+<!--
+    Need to:
+    filter config
+    use list:recentchanges api rather than parsing from the html (lame and not epic gamer)
+    ORES function
+    function for ORES: function fetchORES(revID) {} function for live update: function refreshLive() {} (replace code) function for checking user info ie: edit count: function userInfo(userID) {}
+    potential other things: animate close out of patrol back into wikipedia- and some stuff
+-->
+
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-indigo.min.css" />
+</head>
+
+<body onload="refreshLive();">
+    <!-- Show a few edits on load -->
     <!-- No header, and the drawer stays open on larger screens (fixed drawer). -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
+        <dialog class="mdl-dialog" id="filterSubDialog" style="width: 30vw;">
+            <h5 class="mdl-dialog__title">Filter Preferences</h5>
+            <div class="mdl-dialog__content">
+                <p>
+                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-1">
+                        <input type="checkbox" id="switch-1" class="mdl-switch__input" checked>
+                        <span class="mdl-switch__label">Filter1</span>
+                      </label>
+                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-2">
+                      <input type="checkbox" id="switch-2" class="mdl-switch__input" checked>
+                      <span class="mdl-switch__label">Filter2</span>
+                    </label>
+                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-3">
+                      <input type="checkbox" id="switch-3" class="mdl-switch__input" checked>
+                      <span class="mdl-switch__label">Filter3</span>
+                    </label>
+                    Filters placeholder
+                </p>
+                <div class="mdl-dialog__actions">
+                    <button type="button" class="mdl-button close">Close</button>
+                    <button type="button" class="mdl-button">Save</button>
+
+                </div>
+            </div>
+        </dialog>
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
             <div class="mdl-layout__drawer" style="width:100%;-webkit-transform: translateX(0px); transform: translateX(0px);">
             <span class="mdl-layout-title">`+ rw.logoHTML +` Patrol</span>
+            <div id="cornerbuttons" style="position: fixed; right: 35px; top: 15px; display: flex; justify-content: flex-end; flex-direction: row;">
+                <button class="mdl-button mdl-js-button mdl-button--icon" id="filterButton" style="margin-right: 7px;">
+                <i class="material-icons">settings</i>
+                </button>                
+                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="live" for="liveswitch" style="margin-top: 3px;">
+                    <input type="checkbox" id="liveswitch" class="mdl-switch__input" onclick="switchCheck()"/>
+                    <span class="mdl-switch__label"><small>Toggle live</small></span>
+                </label>
+            </div>
+
             <nav class="mdl-navigation">
-                <a class="mdl-navigation__link" id="callCWD" href="">Return to Wikipedia / Change filter options</a>
+                <a class="mdl-navigation__link" onclick="window.parent.postMessage('closeDialogPT');" href="">Return to
+                    Wikipedia / Change filter options</a>
                 <a class="mdl-navigation__link" href="#" id="newAttached" target="_blank">Open New Attached Tab</a>
-                <a class="mdl-navigation__link" href="#" style="background-color: teal;color:white;" onmouseover="tI = setInterval(refreshLive,  750);" onmouseout="clearTimeout(tI);">Hover your cursor here for live updates</a>
+                <a class="mdl-navigation__link" id="hoverswitch" href="#" style="background-color: teal;color:white; display: initial;"
+                    onmouseover="tI = setInterval(refreshLive,  750);"
+                    onmouseout="clearTimeout(tI);">Hover your cursor here for live updates</a>
                 <div id="recentChangesContainer">
                 </div>
-                
             </nav>
             </div>
-            <main class="mdl-layout__content">
-            <div class="page-content" style="display:none;">
-            </div>
-            </main>
         </div>
 
+        <main class="mdl-layout__content">
+            <div class="page-content" style="display:none;">
+            </div>
+        </main>
+    </div>
+    <style>
+        #filterswitch {
+            margin-bottom: 15px;
+        }
+    </style>
+
     <script>
-const WIKICWD = "`+ rw.wikiBase +`";
-document.getElementById('callCWD').href= WIKICWD +"/wiki/Special:RecentChanges";
-// Create broadcast channel
-var bcID = "RWBC_" + Math.random().toString(36).substring(7);
-const bc = new BroadcastChannel(bcID);
-$("#newAttached").attr("href", "https://en.wikipedia.org/wiki/User:Ed6767/redwarn/patrol#rwPatrolAttach-"+ bcID); // set link
+        // Defining constants
+        const WIKICWD = "https:" + "`+ rw.wikiBase +`";
+        const WIKIID = "`+ rw.wikiID +`";
+        
+        async function fetchUSR(url) {
+            let response = await fetch(url);
+            return await response.json();
+        }
 
-var tI;
-function convertRange( value, r1, r2 ) { 
-    return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
-}
-// Check for new updates every 750ms
-function refreshLive() {
-    // Don't use JSON API so that the vars are interchangable from Special:RecentChanges
-    parseRecentChanges(arr=>{
-        arr.forEach(edit => {
-            console.log(edit);
-            // Clear excess
-            if ($('a[id^="recentChange"]').length > 250) {
-                // Max 250 (rev8), delete bottom
-                $('a[id^="recentChange"]').last().remove(); // remove the last one
+        async function userInfo(ids) { // ids should be an array of user ids - will return EDIT COUNT (API:Users) and WARNING LEVEL (Unoffical)
+            let idlist = ""; //dec as str
+            let userResult
+            ids.forEach(element => { 
+                idlist += element + "|";
+            });
+            idlist = idlist.substring(0, idlist.length - 1); //remove last char (which will be an excess "|")
+            console.log(idlist);
+            let url = WIKICWD + "/w/api.php?action=query&list=users&ususerids="+ idlist + "&format=json&usprop=editcount"
+            try {
+                let fUsrResponse = await fetch(url);
+                let fUsrJSON = await fUsrResponse.json(); 
+                console.log(fUsrJSON.query.users);  
+            } catch(error) {
+                console.log(error);
             }
-            // Add new
-            if ($("#recentChange-"+ edit.revID).length < 1) { // Only continue if edit not already in page
-                let sizeDiff = edit.changeSize;
-                let opacityLevel = 0;
-                if ((sizeDiff > 1000) || (sizeDiff < -1000)) {
-                    // Max opacity
-                    opacityLevel = 1;
-                } else {
-                    // We can map
-                    if (sizeDiff < 0) {
-                        // Red map
-                        opacityLevel = convertRange(sizeDiff, [0, -1000], [0.1, 0.75]);
-                    } else {
-                        // Green map
-                        opacityLevel = convertRange(sizeDiff, [0, 1000], [0.1, 0.75]);
-                    }
-                    
-                }
-                let style = (sizeDiff < 0) ? "background-color: rgba(`+ rmCol +`,"+ opacityLevel +"); color:black;" : "background-color: rgba(`+ addCol +`,"+ opacityLevel +"); color:black;" // First neg style, next add style
-                $("#recentChangesContainer").prepend('<a class="mdl-navigation__link notif" href="#" style="display:none;'+ style +'" id="recentChange-'+ edit.revID +'"><i id="title-'+ edit.revID +'"></i><br><b>'+ edit.user +'</b> ('+ sizeDiff +')<br /><span id="comment-'+ edit.revID +'"></span><br>'+ edit.tags +'</a>');
-                $('#title-'+ edit.revID).text(edit.title); // XSS security
-                $('#comment-'+ edit.revID).text(edit.comment);
-                $("#recentChange-"+ edit.revID).fadeIn(); // fancy
+            return fUsrJSON.query.users;
 
-                // Append click handler
-                $('#recentChange-'+ edit.revID).on("click", ()=>goToLatestDiffPage(edit.title));
+            // now the warning level part
+            // jk... ill do this later tm
+
+        }
+        let ids= ["12082052","0","7304691","27826629","34993826","7304691","0"];
+        userInfo(ids);
+
+        function refreshLiveTMP() {
+
+        }
+
+
+        function switchCheck() { // Checks on the switch click for toggling live feeds if its in 'checked' state or not and changes page accordingly
+            console.log("test");
+            let livetoggle= document.getElementById('liveswitch');
+            let hoverswitch = document.getElementById('hoverswitch');
+            console.log(livetoggle);
+            if (livetoggle.checked == true) {
+                tI = setInterval(refreshLive, 750);
+                hoverswitch.style.display = "none";
+            } else {
+                clearTimeout(tI);
+                hoverswitch.style.display = "initial";
             }
+        }
+
+        var filterButton = document.getElementById('filterButton');
+        var filterDialog = document.getElementById('filterSubDialog');
+
+        if (!filterDialog.showModal) {
+            dialogPolyfill.registerDialog(filterDialog);
+        }
+        filterButton.addEventListener('click', function () {
+            filterDialog.showModal();
+        })
+        filterDialog.querySelector('.close').addEventListener('click', function () {
+            filterDialog.close();
+        });
+
+
+        document.getElementById('callCWD').href = WIKICWD + "/wiki/Special:RecentChanges";
+        // Create broadcast channel
+        var bcID = "RWBC_" + Math.random().toString(36).substring(7);
+        const bc = new BroadcastChannel(bcID);
+        $("#newAttached").attr("href", "https://en.wikipedia.org/wiki/User:Ed6767/redwarn/patrol#rwPatrolAttach-" + bcID); // set link
+
+        var tI;
+        function convertRange(value, r1, r2) {
+            return (value - r1[0]) * (r2[1] - r2[0]) / (r1[1] - r1[0]) + r2[0];
+        }
+
+        /*
+            PARAMETERS FOR A NEW REFRESHLIVE
+            rctag - potential vandal tags / redwarn only
+            RCPROP:
+            user (for listing)
+            userid (for searching user edits)
+            comment
+            title
+            timestamp
+            ids
+            tags
+            sizes
+            ---
+            RCSHOW:
+            (!)anon
+            (!)autopatrolled
+            (!)bot
+            (!)minor
+            (!)patrolled
+            (!)redirect
+            ---
+            rclimit - will probably be set to a fixed value
+            rctype - user choice
+            rctoponly - will be default setting -toggle
             
-        });
-    });
-}
+        */
 
-function goToLatestDiffPage(article) {
-    $("#welcomeContainer").hide();
-    // Nav to latest diff page
-    $.getJSON(WIKICWD + "/w/api.php?action=query&prop=revisions&titles="+ encodeURIComponent(article) +"&rvslots=*&rvprop=ids%7Cuser&formatversion=2&format=json", r=>{
-            // We got the response
-            let latestRId = r.query.pages[0].revisions[0].revid;
-            let parentRId = r.query.pages[0].revisions[0].parentid;
-            // Open page in new tab (has to be done here due to new security systems)
-            bc.postMessage(WIKICWD+"/w/index.php?title="+ encodeURIComponent(name) +"&diff="+ latestRId +"&oldid="+ parentRId +"&diffmode=source");
-    });
-}
 
-function parseRecentChanges(callback) {
-    // USING HTML API for one reason
-    // 1. works easily with Special:RecentChanges filters
-    $.get(WIKICWD +"/wiki/Special:RecentChanges?`+ filters +`&action=render&enhanced=0", r=>{
-        $("body").append("<div id='toDelete' style='display:none;'></div>"); // create temp div
-        $("#toDelete").html(r);
-        let _ = $("#toDelete").find("ul").find("li");
-        let arr = [];
-        let recentChanges = _.each(i=> {
-            let el = _[i];
-            let revId = $(el).attr("data-mw-revid"); // get revision ID
-            let changeSize = $(el).find(".mw-diff-bytes").text(); // get size (+123)
-            let changeTitle = $(el).find(".mw-changeslist-title").text(); // get title of page
-            let changeUsername = $(el).find(".mw-userlink").text(); // get username of changer
-            let tags =  $(el).find(".mw-tag-markers").text(); // get tags (mobile edit ext)
-            let comment = $(el).find(".comment").text(); // get comment
-            if (!isNaN(parseInt(changeSize))) {
-                // Valid
-                arr[i] = {
-                "revID": revId,
-                "changeSize": parseInt(changeSize),
-                "tags": tags,
-                "user": changeUsername,
-                "title": changeTitle,
-                "comment": comment
-                }; // append data to the array
-            }
-        });
 
-        $("toDelete").remove(); // dispose unneeded
-        callback(arr); // we done
-    });
-}
+
+        // Check for new updates every 750ms
+        function refreshLive() {
+            // Don't use JSON API so that the vars are interchangable from Special:RecentChanges
+            parseRecentChanges(arr => {
+                arr.forEach(edit => {
+                    console.log(edit);
+                    // Clear excess
+                    if ($('a[id^="recentChange"]').length > 250) {
+                        // Max 250 (rev8), delete bottom
+                        $('a[id^="recentChange"]').last().remove(); // remove the last one
+                    }
+                    // Add new
+                    if ($("#recentChange-" + edit.revID).length < 1) { // Only continue if edit not already in page
+                        let sizeDiff = edit.changeSize;
+                        let opacityLevel = 0;
+                        if ((sizeDiff > 1000) || (sizeDiff < -1000)) {
+                            // Max opacity
+                            opacityLevel = 1;
+                        } else {
+                            // We can map
+                            if (sizeDiff < 0) {
+                                // Red map
+                                opacityLevel = convertRange(sizeDiff, [0, -1000], [0.1, 0.75]);
+                            } else {
+                                // Green map
+                                opacityLevel = convertRange(sizeDiff, [0, 1000], [0.1, 0.75]);
+                            }
+
+                        }
+                        let style = (sizeDiff < 0) ? "background-color: rgba(`+ rmCol +`," + opacityLevel + "); color:black;" : "background-color: rgba(`+ addCol +`," + opacityLevel + "); color:black;" // First neg style, next add style
+                        $("#recentChangesContainer").prepend('<a class="mdl-navigation__link notif" href="#" style="display:none;' + style + '" id="recentChange-' + edit.revID + '"><i id="title-' + edit.revID + '"></i><br><b>' + edit.user + '</b> (' + sizeDiff + ')<br /><span id="comment-' + edit.revID + '"></span><br>' + edit.tags + '</a>');
+                        $('#title-' + edit.revID).text(edit.title); // XSS security
+                        $('#comment-' + edit.revID).text(edit.comment);
+                        $("#recentChange-" + edit.revID).fadeIn(); // fancy
+
+                        // Append click handler
+                        $('#recentChange-' + edit.revID).on("click", () => goToLatestDiffPage(edit.title));
+                    }
+
+                });
+            });
+        }
+
+        function goToLatestDiffPage(article) {
+            $("#welcomeContainer").hide();
+            // Nav to latest diff page
+            $.getJSON(WIKICWD + "/w/api.php?action=query&prop=revisions&titles=" + encodeURIComponent(article) + "&rvslots=*&rvprop=ids%7Cuser&formatversion=2&format=json", r => {
+                // We got the response
+                let latestRId = r.query.pages[0].revisions[0].revid;
+                let parentRId = r.query.pages[0].revisions[0].parentid;
+                // Open page in new tab (has to be done here due to new security systems)
+                bc.postMessage(WIKICWD + "/w/index.php?title=" + encodeURIComponent(name) + "&diff=" + latestRId + "&oldid=" + parentRId + "&diffmode=source");
+            });
+        }
+
+        function parseRecentChanges(callback) {
+            // USING HTML API for one reason
+            // 1. works easily with Special:RecentChanges filters
+            $.get(WIKICWD + "/wiki/Special:RecentChanges?`+ filters +`&action=render&enhanced=0", r => {
+                $("body").append("<div id='toDelete' style='display:none;'></div>"); // create temp div
+                $("#toDelete").html(r);
+                let _ = $("#toDelete").find("ul").find("li");
+                let arr = [];
+                let recentChanges = _.each(i => {
+                    let el = _[i];
+                    let revId = $(el).attr("data-mw-revid"); // get revision ID
+                    let changeSize = $(el).find(".mw-diff-bytes").text(); // get size (+123)
+                    let changeTitle = $(el).find(".mw-changeslist-title").text(); // get title of page
+                    let changeUsername = $(el).find(".mw-userlink").text(); // get username of changer
+                    let tags = $(el).find(".mw-tag-markers").text(); // get tags (mobile edit ext)
+                    let comment = $(el).find(".comment").text(); // get comment
+                    if (!isNaN(parseInt(changeSize))) {
+                        // Valid
+                        arr[i] = {
+                            "revID": revId,
+                            "changeSize": parseInt(changeSize),
+                            "tags": tags,
+                            "user": changeUsername,
+                            "title": changeTitle,
+                            "comment": comment
+                        }; // append data to the array
+                    }
+                });
+
+                $("toDelete").remove(); // dispose unneeded
+                callback(arr); // we done
+            });
+        }
 
     </script>
-    </body>
+</body>
+
 </html>

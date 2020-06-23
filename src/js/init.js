@@ -374,9 +374,9 @@ function initRW() {
                 // Recent changes page
                 // Add redwarn btn
                 $(".mw-specialpage-summary").prepend(`
-                <div id="openRWP" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.recentChanges.openPage(window.location.search.substr(1));">how_to_reg</span></div>  Click the icon to launch RedWarn patrol with these filters
+                <div id="openRWP" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.recentChanges.openPage(window.location.search.substr(1));">policy</span></div>         Click the icon to open Redwarn Patrol
                 <div class="mdl-tooltip mdl-tooltip--large" for="openRWP">
-                    Launch RedWarn Patrol with these filters
+                    Launch RedWarn Patrol
                 </div>
                 `); // Register tooltip
                 for (let item of document.getElementsByClassName("mdl-tooltip")) {

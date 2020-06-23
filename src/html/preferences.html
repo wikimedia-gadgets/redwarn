@@ -13,6 +13,18 @@ var onSettingsLoad = {};
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+
+<!--some stuff-->
+<style>
+        .select2-dropdown.increasezindex {
+            z-index:999999999999; /* ITS OVER 9000 LOOOL */
+        }
+        .dropdown-sw {
+            width: 200px;
+        }
+</style>
+
 
 <!-- COLOR PICKER -->
 <!-- One of the following themes -->
@@ -225,7 +237,47 @@ var onSettingsLoad = {};
             </label>
             
             <!-- END APPEARANCE TAB-->
-        </div>
+            <h4>Patrol preferences</h4>
+            <div id="containerthing">
+                <div id="filtertoggles" style="width: 50%; min-height: 250px; float: left;">
+                    <p>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-1">
+                            <input type="checkbox" id="switch-1" class="mdl-switch__input" checked>
+                            <span class="mdl-switch__label">Autopatrolled Edits</span>
+                          </label>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-2">
+                          <input type="checkbox" id="switch-2" class="mdl-switch__input" checked>
+                          <span class="mdl-switch__label">Bot Edits</span>
+                        </label>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-3">
+                          <input type="checkbox" id="switch-3" class="mdl-switch__input" checked>
+                          <span class="mdl-switch__label">Minor Edits</span>
+                        </label>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-4">
+                            <input type="checkbox" id="switch-4" class="mdl-switch__input" checked>
+                            <span class="mdl-switch__label">Patrolled Edits</span>
+                          </label>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-5">
+                          <input type="checkbox" id="switch-5" class="mdl-switch__input" checked>
+                          <span class="mdl-switch__label">Redirect Page Edits</span>
+                        </label>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-6">
+                          <input type="checkbox" id="switch-6" class="mdl-switch__input" checked>
+                          <span class="mdl-switch__label">Anonymous Users</span>
+                        </label>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-7" style="margin-top: 20px !important;">
+                            <input type="checkbox" id="switch-7" class="mdl-switch__input" checked>
+                            <span class="mdl-switch__label">Latest revisions only</span>
+                          </label>
+                    </p>
+                </div>
+                <div id="filterspecifics" style="width: 50%; min-height: 250px; display: inline-block;">
+                    <p>Placeholder text for rest of the filters</p>
+                    <select class="dropdown-rctype dropdown-sw" name="rctype[]" multiple="multiple"></select><br><br>
+                    <select class="dropdown-rctag dropdown-sw" name="rcname[]"></select>
+                </div>
+            </div>
+
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-2">
         <div class="page-content">
@@ -373,9 +425,35 @@ var onSettingsLoad = {};
       <button type="button" class="mdl-button close">Cancel</button>
     </div>
 </dialog>
-
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <script>
     // CORE THINGS
+
+    //select2
+    var rctypes = ["Categorize", "Edit", "External", "Log", "New"];
+    var rctags = ["Possible Vandalism", "Bad External Link/Image(s)", "Replaces >90% of page", "Undo", "Rollback", "New Redirect", "Possible BLP issue or vandalism", "Remove redirect", "Blanking", "Possible autobiography", ]; // Should be a list of commonly used tags or the default tag (from config), which should be put into the place of rctags[0]
+        $(document).ready(function() {
+            $('.dropdown-rctype').select2({
+                placeholder: "rctype",
+                multiple: true,
+                tags: false,
+                data: rctypes,
+                allowClear: true,
+                dropdownCssClass:'increasezindex'
+            });
+            $('.dropdown-rctag').select2({
+                placeholder: "rctag",
+                tags: true,
+                multiple: true,
+                data: rctags,
+                allowClear: true,
+                dropdownCssClass:'increasezindex'
+            });
+            $('.dropdown-rctype').val(rctype_config);
+            $('.dropdown-rctype').trigger(rctag_config);
+        });
+
+
     var config = `+ JSON.stringify(rw.config) +`;
     function saveConfig() {
         var data = $('form').serializeArray().reduce((obj, item) => {

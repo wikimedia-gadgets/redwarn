@@ -1,20 +1,10 @@
 <!DOCTYPE HTML>
 <html>
-<!-- RECENT CHANGES EDITOR. RUNS COMPLETLY SEPERATE AS STANDALONE PAGE. DO NOT USE A CONTAINER. -->
-
-<!--
-    Need to:
-    filter config
-    use list:recentchanges api rather than parsing from the html (lame and not epic gamer)
-    ORES function
-    function for ORES: function fetchORES(revID) {} function for live update: function refreshLive() {} (replace code) function for checking user info ie: edit count: function userInfo(userID) {}
-    potential other things: animate close out of patrol back into wikipedia- and some stuff
--->
-
-
 <head>
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+
     <link
         href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
         rel="stylesheet">
@@ -27,34 +17,59 @@
     <!-- Show a few edits on load -->
     <!-- No header, and the drawer stays open on larger screens (fixed drawer). -->
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
-        <dialog class="mdl-dialog" id="filterSubDialog" style="width: 30vw;">
-            <h5 class="mdl-dialog__title">Filter Preferences</h5>
+
+        <dialog class="mdl-dialog" id="filterSubDialog" style="width: 500px;">
+            <h5 class="mdl-dialog__title" style="padding-bottom: 32px;">Filter Preferences</h5>
             <div class="mdl-dialog__content">
-                <p>
-                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-1">
-                        <input type="checkbox" id="switch-1" class="mdl-switch__input" checked>
-                        <span class="mdl-switch__label">Filter1</span>
-                      </label>
-                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-2">
-                      <input type="checkbox" id="switch-2" class="mdl-switch__input" checked>
-                      <span class="mdl-switch__label">Filter2</span>
-                    </label>
-                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-3">
-                      <input type="checkbox" id="switch-3" class="mdl-switch__input" checked>
-                      <span class="mdl-switch__label">Filter3</span>
-                    </label>
-                    Filters placeholder
-                </p>
+                <div id="filtertoggles" style="width: 50%; min-height: 350px; float: left;">
+                    <p>Filter toggles</p>
+                    <p>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-1">
+                            <input type="checkbox" id="switch-1" class="mdl-switch__input" checked>
+                            <span class="mdl-switch__label">Autopatrolled Edits</span>
+                          </label>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-2">
+                          <input type="checkbox" id="switch-2" class="mdl-switch__input" checked>
+                          <span class="mdl-switch__label">Bot Edits</span>
+                        </label>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-3">
+                          <input type="checkbox" id="switch-3" class="mdl-switch__input" checked>
+                          <span class="mdl-switch__label">Minor Edits</span>
+                        </label>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-4">
+                            <input type="checkbox" id="switch-4" class="mdl-switch__input" checked>
+                            <span class="mdl-switch__label">Patrolled Edits</span>
+                          </label>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-5">
+                          <input type="checkbox" id="switch-5" class="mdl-switch__input" checked>
+                          <span class="mdl-switch__label">Redirect Page Edits</span>
+                        </label>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-6">
+                          <input type="checkbox" id="switch-6" class="mdl-switch__input" checked>
+                          <span class="mdl-switch__label">Anonymous Users</span>
+                        </label>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-7" style="margin-top: 20px !important;">
+                            <input type="checkbox" id="switch-7" class="mdl-switch__input" checked>
+                            <span class="mdl-switch__label">Latest revisions only</span>
+                          </label>
+                    </p>
+                </div>
+                <div id="filterspecifics" style="width: 50%; min-height: 350px; display: inline-block;">
+                    <p>Specific Filters</p>
+                    <select class="dropdown-rctype dropdown-sw" name="rctype[]" multiple="multiple"></select><br><br>
+                    <select class="dropdown-rctag dropdown-sw" name="rcname[]"></select>
+                </div>
+
                 <div class="mdl-dialog__actions">
                     <button type="button" class="mdl-button close">Close</button>
-                    <button type="button" class="mdl-button">Save</button>
+                    <button type="button" class="mdl-button" onclick="saveConfig()">Save</button>
 
                 </div>
             </div>
         </dialog>
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
             <div class="mdl-layout__drawer" style="width:100%;-webkit-transform: translateX(0px); transform: translateX(0px);">
-            <span class="mdl-layout-title">`+ rw.logoHTML +` Patrol</span>
+            <span class="mdl-layout-title" style="font-size: 3.5vh;">`+ rw.logoHTML +` Patrol</span>
             <div id="cornerbuttons" style="position: fixed; right: 35px; top: 15px; display: flex; justify-content: flex-end; flex-direction: row;">
                 <button class="mdl-button mdl-js-button mdl-button--icon" id="filterButton" style="margin-right: 7px;">
                 <i class="material-icons">settings</i>
@@ -65,14 +80,25 @@
                 </label>
             </div>
 
-            <nav class="mdl-navigation">
-                <a class="mdl-navigation__link" onclick="window.parent.postMessage('closeDialogPT');" href="">Return to
-                    Wikipedia / Change filter options</a>
-                <a class="mdl-navigation__link" href="#" id="newAttached" target="_blank">Open New Attached Tab</a>
+            <nav class="mdl-navigation" style="width: 100%;">
+                <div class="btns" style="width: 100%;">
+                    <a class="mdl-navigation__link" style="width: 50%; float: left !important; margin-right: 0; padding-right: 0; margin-left:0; padding-left: 0;" onclick="window.parent.postMessage('closeDialogPT');" href="">
+                        <span style="padding-left: 32px;">Return to wikipedia</span>
+                    </a>
+                    <a class="mdl-navigation__link" style="width: 50%; float: right !important; margin-right: 0; padding-right: 0; margin-left:0; padding-left: 0;" href="#" id="newAttached" target="_blank">
+                        <span style="padding-left: 32px;">Open new attached tab</span>
+                    </a>
+                </div>
                 <a class="mdl-navigation__link" id="hoverswitch" href="#" style="background-color: teal;color:white; display: initial;"
                     onmouseover="tI = setInterval(refreshLive,  750);"
                     onmouseout="clearTimeout(tI);">Hover your cursor here for live updates</a>
                 <div id="recentChangesContainer">
+                    <!--\/ PLACEHOLDER VALUE FOR FORMATTING REMOVE ON REV15 BUILD FINISH \/-->
+                    <div id="43254543544643643632532423523235" class="child__edit" style="height: 150px; background-color: crimson; padding-left: 32px">
+                        <div id="actions" style="padding-bottom: 5px; padding-top: 5px;">ACTIONS</div>
+                        <p>User • (Edits) • Warnings</p><p class="slightly-larger">[Type]: [Page] (+XXXX) (ICN)</p><p>Comment: Lorem Ipsum Domen...</p><small class="btm-right">Tags: X, Y, Z</small>
+                    </div>
+                    <!--/\ PLACEHOLDER VALUE FOR FORMATTING REMOVE ON REV15 BUILD FINISH /\-->
                 </div>
             </nav>
             </div>
@@ -84,50 +110,192 @@
         </main>
     </div>
     <style>
+        .btm-right small {
+            bottom: 15px;
+            right: 20px;
+        }
+        .child__edit {
+            height: 150px;
+            padding-left: 32px
+        }
+        .child__edit p {
+            margin: 0 0 0 0;
+            font-size: medium;
+        }
+        .dropdown-sw {
+            width: 200px;
+        }
+        .mdl-navigation__link {
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 24px;
+            letter-spacing: 0;
+            opacity: .87;
+        }
+
         #filterswitch {
             margin-bottom: 15px;
         }
-    </style>
 
+        .mdl-dialog__content {
+            width: 100%;
+            padding: 0;
+            margin: auto;
+        }
+        .select2-dropdown.increasezindex {
+            z-index:999999999999; /* ITS OVER 9000 LOOOL */
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
     <script>
+
+
+
         // Defining constants
         const WIKICWD = "https:" + "`+ rw.wikiBase +`";
         const WIKIID = "`+ rw.wikiID +`";
+        const WIKIAPI = "` +rw.wikiAPI +`";
         
-        async function fetchUSR(url) {
-            let response = await fetch(url);
-            return await response.json();
-        }
-
-        async function userInfo(ids) { // ids should be an array of user ids - will return EDIT COUNT (API:Users) and WARNING LEVEL (Unoffical)
-            let idlist = ""; //dec as str
-            let userResult
-            ids.forEach(element => { 
-                idlist += element + "|";
+        var rctypes = ["Categorize", "Edit", "External", "Log", "New"];
+        var rctags = ["Possible Vandalism", "Bad External Link/Image(s)", "Replaces >90% of page", "Undo", "Rollback", "New Redirect", "Possible BLP issue or vandalism", "Remove redirect", "Blanking", "Possible autobiography", ]; // Should be a list of commonly used tags or the default tag (from config), which should be put into the place of rctags[0]
+        $(document).ready(function() {
+            $('.dropdown-rctype').select2({
+                placeholder: "rctype",
+                multiple: true,
+                tags: false,
+                data: rctypes,
+                allowClear: true,
+                dropdownCssClass:'increasezindex'
             });
-            idlist = idlist.substring(0, idlist.length - 1); //remove last char (which will be an excess "|")
-            console.log(idlist);
-            let url = WIKICWD + "/w/api.php?action=query&list=users&ususerids="+ idlist + "&format=json&usprop=editcount"
-            try {
-                let fUsrResponse = await fetch(url);
-                let fUsrJSON = await fUsrResponse.json(); 
-                console.log(fUsrJSON.query.users);  
-            } catch(error) {
-                console.log(error);
-            }
-            return fUsrJSON.query.users;
+            $('.dropdown-rctag').select2({
+                placeholder: "rctag",
+                multiple: true,
+                tags: true,
+                data: rctags,
+                allowClear: true,
+                dropdownCssClass:'increasezindex'
+            });
+        });
+        $(document).ready(function() {
+            saveConfig();
+        });
 
-            // now the warning level part
-            // jk... ill do this later tm
+        Array.prototype.remove = function(value) { // fuck you internet explorer u kinda smell
+                    for (var i = this.length; i--; ) {
+                        if (this[i] === value) {
+                            this.splice(i, 1);
+                        }
+                    }
+                }
+
+        function getUserInfo(ids, callback) { // ids should be an array of user ids - will return EDIT COUNT (API:Users) and WARNING LEVEL (Unoffical)
+            let idurl = "";
+            ids.forEach(element => { 
+                idurl += element + "|";
+            });            
+            idurl = idurl.substring(0, idurl.length - 1); //remove last char (which will be an excess "|")
+            let infoOUT = []; // Nested array - output of output[n][0] is userid & output[n][1] is corresponding edit count & output[n][2] is warning level
+            $.getJSON(WIKICWD + "/w/api.php?action=query&list=users&ususerids="+ idurl + "&format=json&usprop=editcount", result => {
+                let user = result.query.users;
+                let unamelist = [];
+                $.each(user, function(key, value) { // need to give uname to lastwarninglevel
+                    unamelist.push(value.name);
+                })
+ 
+                lastWarningLevel(unamelist, res => {
+                    // res[n][0] is uname to match to
+                    $.each(user, function(key, value) {
+                        let userInfo = []
+                        userInfo.push(value.userid);
+                        userInfo.push(value.name);
+                        userInfo.push(value.editcount);
+                        $.each(result, function(key, value) {
+                            if (value[0] == userInfo[1]) {
+                                userInfo.push(value[1]);
+                            } else {
+                                return true; //continue next one
+                            }
+                        })
+                        infoOUT.push({uid: userInfo[0], name: userInfo[1], editcount: userInfo[2], warninglevel: userInfo[3]});
+                    })
+                })
+            });
+            callback(infoOUT); // thats it folks
+        }
+
+
+        function getRndInteger(max) { // its in the name
+              return Math.floor(Math.random() * Math.floor(max));
+        }
+
+        function refreshLiveTMP() { 
+            // if you add to it its preferred you refer to a users id when referring to an edit, as names are not as consistent (anons are given a random value).
+            // insert code for filter fetch here
+            var filterlist = ["filters"];
+            fetchRecentChanges(filterlist, call => { // send filterlist to parserecentchanges to filter out stuff then use callback func. to handle parsing etc...
+                let ids = [];
+                for(let [key, value] of Object.entries(call)) {
+                    ids.push((value.userid).toString());
+                }
+                let stripped = ids;  // Preserve ids variable incase we need to refer back to it and make a new one for manipulating anons
+
+                let container = document.getElementById('recentChangesContainer');
+                let isanon = "not-anon";
+                stripped.forEach(element => { // Anons get a random ID + prefix to make sure ignored
+                    isanon = "not-anon";
+                    if (element=="0") {
+                        num = getRndInteger(999999999);
+                        element = "anon-" + num;
+                        isanon = "anonify"
+                    }
+                    userid = element.toString();
+                    // content format 
+                    //<p>User • (Edits) • Warnings</p><p class="slightly-larger">[Type]: [Page] (+XXXX) (ICN)</p><p>Comment: Lorem Ipsum Domen...</p><small class="btm-right">Tags: X, Y, Z</small>
+                    container.innerHTML += "<div id='" + userid + "' class='child__edit " + isanon + "' style='background-color: green;'></div> "
+                    
+                });
+                getUserInfo(ids, res => {
+                    var output = res;
+                    console.log(res);
+                    console.log(res.length);
+                    $.each(res, function(key, value) {
+                        // for 'readability'
+                        var uid = value.uid;
+                        var uname = value.name;
+                        var warningLevel = value.warninglevel;
+                        var editcount = value.editcount;
+                        var warningLevelIcn = "thumbs_up";
+                        // thumb_up for 0
+                        // info for 1
+                        // annoucement for 2
+                        // report_problem for 3 (red?)
+                        // report for 4 (#a20000?)
+
+                        // horror for setting icn
+                        if (warningLevel == "0") {
+                            warningLevelIcn = "thumbs_up" // no change
+                        } else if (warningLevel == "1") {
+                            warningLevelIcn = "info";
+                        } else if (warningLevel == "2") {
+                            warningLevelIcn = "announcement";
+                        } else if (warningLevel == "3") {
+                            warningLevelIcn = "report_problem";
+                        } else if (warningLevel == "4") {
+                            warningLevelIcn == "report";
+                        } else if (warningLevel == undefined) {
+                            warningLevelIcn == "thumbs_up"; // is anonymous user/no warning level out given
+                        }
+                        console.log(warningLevelIcn);
+                        console.log(editcount);
+                        console.log(uname);
+                        document.getElementById(uid).innerHTML += "<p class='userinfo'>" + uname + " • ("+ editcount +") • <span class='material-icons'>" + warningLevelIcn +"</span></p>";
+                    });
+                });
+            });
 
         }
-        let ids= ["12082052","0","7304691","27826629","34993826","7304691","0"];
-        userInfo(ids);
-
-        function refreshLiveTMP() {
-
-        }
-
+        refreshLiveTMP();
 
         function switchCheck() { // Checks on the switch click for toggling live feeds if its in 'checked' state or not and changes page accordingly
             console.log("test");
@@ -143,6 +311,8 @@
             }
         }
 
+
+        // code for filters preferences
         var filterButton = document.getElementById('filterButton');
         var filterDialog = document.getElementById('filterSubDialog');
 
@@ -155,9 +325,9 @@
         filterDialog.querySelector('.close').addEventListener('click', function () {
             filterDialog.close();
         });
+        // code for filters preferences
 
 
-        document.getElementById('callCWD').href = WIKICWD + "/wiki/Special:RecentChanges";
         // Create broadcast channel
         var bcID = "RWBC_" + Math.random().toString(36).substring(7);
         const bc = new BroadcastChannel(bcID);
@@ -168,78 +338,7 @@
             return (value - r1[0]) * (r2[1] - r2[0]) / (r1[1] - r1[0]) + r2[0];
         }
 
-        /*
-            PARAMETERS FOR A NEW REFRESHLIVE
-            rctag - potential vandal tags / redwarn only
-            RCPROP:
-            user (for listing)
-            userid (for searching user edits)
-            comment
-            title
-            timestamp
-            ids
-            tags
-            sizes
-            ---
-            RCSHOW:
-            (!)anon
-            (!)autopatrolled
-            (!)bot
-            (!)minor
-            (!)patrolled
-            (!)redirect
-            ---
-            rclimit - will probably be set to a fixed value
-            rctype - user choice
-            rctoponly - will be default setting -toggle
-            
-        */
 
-
-
-
-        // Check for new updates every 750ms
-        function refreshLive() {
-            // Don't use JSON API so that the vars are interchangable from Special:RecentChanges
-            parseRecentChanges(arr => {
-                arr.forEach(edit => {
-                    console.log(edit);
-                    // Clear excess
-                    if ($('a[id^="recentChange"]').length > 250) {
-                        // Max 250 (rev8), delete bottom
-                        $('a[id^="recentChange"]').last().remove(); // remove the last one
-                    }
-                    // Add new
-                    if ($("#recentChange-" + edit.revID).length < 1) { // Only continue if edit not already in page
-                        let sizeDiff = edit.changeSize;
-                        let opacityLevel = 0;
-                        if ((sizeDiff > 1000) || (sizeDiff < -1000)) {
-                            // Max opacity
-                            opacityLevel = 1;
-                        } else {
-                            // We can map
-                            if (sizeDiff < 0) {
-                                // Red map
-                                opacityLevel = convertRange(sizeDiff, [0, -1000], [0.1, 0.75]);
-                            } else {
-                                // Green map
-                                opacityLevel = convertRange(sizeDiff, [0, 1000], [0.1, 0.75]);
-                            }
-
-                        }
-                        let style = (sizeDiff < 0) ? "background-color: rgba(`+ rmCol +`," + opacityLevel + "); color:black;" : "background-color: rgba(`+ addCol +`," + opacityLevel + "); color:black;" // First neg style, next add style
-                        $("#recentChangesContainer").prepend('<a class="mdl-navigation__link notif" href="#" style="display:none;' + style + '" id="recentChange-' + edit.revID + '"><i id="title-' + edit.revID + '"></i><br><b>' + edit.user + '</b> (' + sizeDiff + ')<br /><span id="comment-' + edit.revID + '"></span><br>' + edit.tags + '</a>');
-                        $('#title-' + edit.revID).text(edit.title); // XSS security
-                        $('#comment-' + edit.revID).text(edit.comment);
-                        $("#recentChange-" + edit.revID).fadeIn(); // fancy
-
-                        // Append click handler
-                        $('#recentChange-' + edit.revID).on("click", () => goToLatestDiffPage(edit.title));
-                    }
-
-                });
-            });
-        }
 
         function goToLatestDiffPage(article) {
             $("#welcomeContainer").hide();
@@ -253,39 +352,118 @@
             });
         }
 
-        function parseRecentChanges(callback) {
-            // USING HTML API for one reason
-            // 1. works easily with Special:RecentChanges filters
-            $.get(WIKICWD + "/wiki/Special:RecentChanges?`+ filters +`&action=render&enhanced=0", r => {
-                $("body").append("<div id='toDelete' style='display:none;'></div>"); // create temp div
-                $("#toDelete").html(r);
-                let _ = $("#toDelete").find("ul").find("li");
-                let arr = [];
-                let recentChanges = _.each(i => {
-                    let el = _[i];
-                    let revId = $(el).attr("data-mw-revid"); // get revision ID
-                    let changeSize = $(el).find(".mw-diff-bytes").text(); // get size (+123)
-                    let changeTitle = $(el).find(".mw-changeslist-title").text(); // get title of page
-                    let changeUsername = $(el).find(".mw-userlink").text(); // get username of changer
-                    let tags = $(el).find(".mw-tag-markers").text(); // get tags (mobile edit ext)
-                    let comment = $(el).find(".comment").text(); // get comment
-                    if (!isNaN(parseInt(changeSize))) {
-                        // Valid
-                        arr[i] = {
-                            "revID": revId,
-                            "changeSize": parseInt(changeSize),
-                            "tags": tags,
-                            "user": changeUsername,
-                            "title": changeTitle,
-                            "comment": comment
-                        }; // append data to the array
-                    }
+        function fetchRecentChanges(filterlist, callback) { // fetch JSON from action API using querys
+            $.getJSON(WIKICWD + "/w/api.php?action=query&list=recentchanges&rclimit=50&format=json&rcprop=user|userid|title|timestamp|ids", r => { // we need to add stuff for filters in here somewhere later.
+                let feed = r.query.recentchanges;
+                callback(feed); // this is all we needed to do
                 });
-
-                $("toDelete").remove(); // dispose unneeded
-                callback(arr); // we done
-            });
         }
+        
+        function saveConfig() {
+            var rctypefilter = $('.dropdown-rctype').select2('data');
+            var rctagfilter = $('.dropdown-rctag').select2('data');
+            var switch2 = document.getElementById('switch-2').checked;
+        }
+
+
+
+
+        function fetchMeWarningLevel(users, callback) { // death
+            let userurl = "";
+            $.each(users, function(key, value) {
+                if(value == undefined) {
+                    return true;
+                }
+                userurl += "User_talk:" + value + "|";
+            });
+            userurl = userurl.substring(0, userurl.length - 1);
+            // Get the last warning level of a user this month
+            $.getJSON(WIKICWD + "/w/api.php?action=query&prop=revisions&titles="+ userurl +"&rvslots=*&rvprop=content&formatversion=2&format=json", feed => {
+            // ...
+                callback(feed)
+            });
+
+        }
+
+        function lastWarningLevel(users, callback) { // callback() - users param is an array!
+        // users should be ARRAY
+            fetchMeWarningLevel(users, phoneafriend => { // returns feed for us to use, users is parsed within function 
+                //...
+                var warnsOUT = [];
+                $.each(phoneafriend.query.pages, function(key, value) {
+                    //...
+                    let perUserWarns = [];
+                    let username = (value.title).substring(10); // Put username in place so we can figure out what goes where
+                    perUserWarns.push(username); 
+                    if (!value.missing) {
+                        content = value.revisions[0].slots.main.content; // load page content into var if talk page exists
+                    } else {
+                        perUserWarns.push('0') // return 0, missing talk page
+                        warnsOUT.push(perUserWarns); // since it finished we should push to output now
+                        return true; // begin next $.each loop iteration returning true to callback
+                    }
+                    let contentLines = content.split("\\n");
+
+                    // date heading
+                    let currentDateHeading = ((d)=>{return "== " + ['January','February','March','April','May','June','July','August','September','October','November','December'][d.getMonth()] + " " + (1900 + d.getYear()) + " =="})(new Date);
+                    // date heading no space (rev13)
+                    let currentAltDateHeading = ((d)=>{return "==" + ['January','February','March','April','May','June','July','August','September','October','November','December'][d.getMonth()] + " " + (1900 + d.getYear()) + "=="})(new Date);
+                    
+                    let pagesIncludeCurrentDate = contentLines.includes(currentDateHeading);
+                    let pagesIncludeCurrentAltDate = contentLines.includes(currentAltDateHeading);
+
+                    if ((!pagesIncludeCurrentDate) && (!pagesIncludeCurrentAltDate)) {
+                        perUserWarns.push('0'); // no warnings this month
+                        warnsOUT.push(perUserWarns);
+                        return true; // begin next iteration
+                    } else if ((!pagesIncludeCurrentDate) && (pagesIncludeCurrentAltDate)) { currentDateHeading = currentAltDateHeading; }
+                    // Aft determining if page exists or if using alt date, continue onwards
+                    let highestWarningLevel = 0; // Highest is 0 so if d/t with nothing inside report this
+                    let thisMonthsNotices = "" // for dialog
+                    for(let i = contentLines.indexOf(currentDateHeading) + 1; i < contentLines.length; i++) { // For each line
+                        if (contentLines[i].startsWith("==")) {
+                            break; // New section so break loop - Level 0 Warning / N/A
+                        }
+
+                        if (contentLines[i].match(/(File:|Image:)Stop hand nuvola.svg/gi)) { // Set to level 4
+                            highestWarningLevel = 4;
+                            break; // Is highest dont need to check more, break
+                        }
+
+                        if (contentLines[i].match(/(File:|Image:)(Nuvola apps important.svg|Ambox warning pn.svg)/gi)) { // Set to level 4
+                            highestWarningLevel = 3;
+                        }
+
+                        if (contentLines[i].match(/(File:|Image:)Information orange.svg/gi)) { // Set to level 2
+                            if (highestWarningLevel < 3) { // Check isnt higher
+                                highestWarningLevel = 2;
+                            }
+                        }
+
+                        if (contentLines[i].match(/(File:|Image:)Information.svg/gi)) { // Set to level 1
+                            if (highestWarningLevel < 2) { // Check isnt higher
+                                highestWarningLevel = 1;
+                            }
+                        }
+                        // ... if you need anything extra within the inspect loop
+                    }
+                    perUserWarns.push(highestWarningLevel.toString());
+                    warnsOUT.push(perUserWarns);
+
+                    // ... anything outside the inspect loop ie: pushing to warnsOUT
+
+                });
+                //  ... anything outside MAIN loop ie calling back warnsout final
+                callback(warnsOUT);
+                return;
+            })
+        }
+
+        function refreshLive() {
+            console.log("Placeholder.")
+        }
+
+
 
     </script>
 </body>

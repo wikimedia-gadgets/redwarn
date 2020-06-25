@@ -198,10 +198,30 @@ rw.quickTemplate = { // Quick template UI and loader
             rw.info.addWikiTextToUserPage(rw.info.targetUsername(un), wikiTxtToAdd, addUnderDate, "[[WP:REDWARN/QTPACKS|" + selectedPack.name + " - " + selectedTemplate.title + "]]");
         });
 
+        // Now generate text input code - SYNTAX {{RWTEXT|Label|ID}}
+        let finalAdditionalInputs = ``;
+        // NORMAL TEXT INPUT
+        (m=>{
+            if (m != null) { // to stop errors
+                m.forEach(match=>{ // for each match to regex
+                    let v = match.split("|"); // split at pipe for varibles
+                    let label = v[1]; // strip label
+                    let id = v[2].split("}")[0]; // strip ID
+                    // Now add our textbox
+                    finalAdditionalInputs += `
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
+                        <input class="mdl-textfield__input rwCustomTextInput" type="text" id="${btoa(match)}"> <!-- ID is b64 of what needs to be replaced -->
+                        <label class="mdl-textfield__label" for="${btoa(match)}">${label}</label>
+                    </div>
+                    `;
+                });
+            }
+        })(selectedTemplate.content.match(/{{RWTEXT\|[^}}]*\|[^{{]*}}/g)); // regex here for above function
+        
         // Finally, show final submit dialog
         dialogEngine.create(mdlContainers.generateContainer(`
         [[[[include quickTemplateSubmit.html]]]]
-        `, 500, 530)).showModal();
+        `, 500, 550)).showModal();
     },
 
     "newPack" : ()=> {
@@ -310,7 +330,7 @@ rw.quickTemplate = { // Quick template UI and loader
 |  WILL CAUSE SERIOUS ISSUES.        |
 +------------------------------------+
 
-Install script (c) Ed. E (User:Ed6767) - license: https://github.com/ed6767/redwarn
+Install script (c) Ed. E (User:Ed6767) - license: https://gitlab.com/redwarn/redwarn-web
 */
 rw.ui.loadDialog.show("Installing...");
 let packSource = JSON.parse(atob("${btoa(JSON.stringify(selectedPack))}")); // Load source from currentpack
@@ -362,7 +382,7 @@ rw.info.writeConfig(true, ()=>{ // save config
                         "action": "edit",
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
-                        "title" : "User:Ed6767/redwarn/help/Quick_Template",
+                        "title" : "Wikipedia:RedWarn/help/Quick_Template/templates",
                         "summary" : "Publish new pack [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
                         "appendtext": // Add our section wikitxt here
                         `

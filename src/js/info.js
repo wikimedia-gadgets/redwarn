@@ -151,7 +151,8 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         // Restrict feature to users in this group
         mw.user.getGroups(g=>{
             let hasPerm = g.includes(l);
-            hasPerm = g.includes("sysop"); // admins override all feature restrictions
+            if (!hasPerm) hasPerm = g.includes("sysop"); // admins override all feature restrictions if we don't have them
+            
             if ((l == "confirmed") && !hasPerm) {hasPerm = g.includes("autoconfirmed");} // Due to 2 types of confirmed user, confirmed and autoconfirmed, we have to check both
             if (hasPerm) {
                 // Has the permission needed

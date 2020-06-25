@@ -242,7 +242,15 @@ rw.ui = {
 
         // USER TALK ACTIONS - check if not disabled then continue
         if (rw.config.rwDisableRightClickUser != "disable") $(()=>{
+            // REV15 - only trigger on shift+right-click
+            $('a[href*="/wiki/User_talk:"], a[href*="/wiki/User:"], a[href*="/wiki/Special:Contributions/"]').on('contextmenu', e=>{
+                if (!e.shiftKey) return; // if shift key not down, don't show the context menu
+                e.preventDefault();
+                $(e.currentTarget).contextMenu();
+            });
+
             $.contextMenu({
+                trigger: 'none',
                 selector: 'a[href*="/wiki/User_talk:"], a[href*="/wiki/User:"], a[href*="/wiki/Special:Contributions/"]', // Select all appropriate user links
                 callback: (act, info)=>{
                     // CALLBACK
@@ -327,7 +335,7 @@ rw.ui = {
                     "aAsubmenu": {
                         "name": "Quick Actions", 
                         "items": {
-                            "sendMsg": {name: "New Talk Page Message"},
+                            "sendMsg": {name: "New Message"},
                             "newNotice": {name: "New Notice"},
                             "quickWel": {name: "Quick Template"},
                             "adminReport": {name: "Report to Admin"}

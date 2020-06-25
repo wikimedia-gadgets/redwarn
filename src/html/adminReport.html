@@ -57,7 +57,8 @@
 
         let fullReason = "";
         if (data.reason == "Other (please enter in comment)") { // If other is chosen
-            if (data.comment == "" || data.comment.length < 5) {pushToast("Enter your reason."); return;} // If no comment, or comment is not long enough (5+ chars) push toast and EXIT.
+            if (data.comment == "") {pushToast("Enter your reason."); return;}
+            if (data.comment.length < 5) {pushToast("Your reason is not long enough"); return;} // If no comment, or comment is not long enough (5+ chars) push toast and EXIT.
             fullReason = data.comment; // else continue and set the reason to the comment
         } else {
             // Append the reason and comment if there is one

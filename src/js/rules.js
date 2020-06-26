@@ -497,7 +497,7 @@ var rules = [
         ]
     },
     {
-        "name": "User should draft in userspace without the risk of speedy deletion",
+        "name": "User should draft in draftspace or userspace",
         "catagory": "Reminders",
         "template": "uw-draftfirst",
         "warningLevels": [

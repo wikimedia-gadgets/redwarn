@@ -3,7 +3,7 @@ $(".menu").css("z-index", 110); // stop ours from overlaying
 var rwStyle = `
 /* MW INDICATORS to stop tooltip clashes */
 .mw-indicators {
-    z-index: 100;
+    z-index: 1;
 }
 
 /* DIALOG ANIMATION BEGIN */

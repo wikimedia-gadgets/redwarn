@@ -6,13 +6,13 @@ var onSettingsLoad = {};
 </script>
 <!-- END MATERIAL ICONS ARRAY-->
 <!-- SORTABLE JS-->
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.10.2/Sortable.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/jquery-sortablejs@latest/jquery-sortable.js"></script>
+<script src="https://redwarn.toolforge.org/cdn/js/sortable.js"></script>
+<script src="https://redwarn.toolforge.org/cdn/js/jquery-sortable.js"></script>
 
 <!-- CONTEXT MENUS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js"></script>
+<link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/jqueryContextMenu.css">
+<script src="https://redwarn.toolforge.org/cdn/js/jquery-contextmenu.js"></script>
+<script src="https://redwarn.toolforge.org/cdn/js/jquery-ui-position.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
 <!--some stuff-->
@@ -28,10 +28,10 @@ var onSettingsLoad = {};
 
 <!-- COLOR PICKER -->
 <!-- One of the following themes -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"/> <!-- 'classic' theme -->
+<link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/pickr.css"/> <!-- 'classic' theme -->
 
 <!-- Modern or es5 bundle -->
-<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+<script src="https://redwarn.toolforge.org/cdn/js/pickr.js"></script>
 
 <!-- PAGE CONTENT --> 
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -314,6 +314,19 @@ var onSettingsLoad = {};
             </label>
             <br />
 
+            <!-- Latest Revision Actions -->
+            <strong>When loading the latest revision...</strong><br />
+            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwLatestRevisionOptionEnable">
+                <input type="radio" id="rwLatestRevisionOptionEnable" class="mdl-radio__button" name="rwLatestRevisionOption" value="stayintab" checked>
+                <span class="mdl-radio__label">Stay in this tab</span>
+            </label>
+            &nbsp;&nbsp;
+            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwLatestRevisionOption">
+                <input type="radio" id="rwLatestRevisionOption" class="mdl-radio__button" name="rwLatestRevisionOption" value="newtab">
+                <span class="mdl-radio__label">Open in a new tab</span>
+            </label>
+            <br />
+
             <!-- New Notice Template Text or Template Name rwNoticeListByTemplateName -->
             <strong>List notices with...</strong><br />
             <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwNoticeListByTemplateNameDisable">
@@ -393,7 +406,7 @@ var onSettingsLoad = {};
             <h2>`+ rw.logoHTML +` `+ rw.version +`</h2>
             <h5>The user-<span id="hahaFunnyJoke">friendly</span> counter-vandalism tool.</h5>
             <!-- Impliment very original and not outdated haha jokes -->
-            <script>$("#hahaFunnyJoke").on("click", ()=> {Object.assign(document.createElement('a'), { target: '_blank', href: "https://www.youtube.com/watch?v=FTQbiNvZqaY"}).click();});</script>
+            <script>$("#hahaFunnyJoke").on("click", ()=> {if (confirm("You are about to open an external link to YouTube.com - continue?")) Object.assign(document.createElement('a'), { target: '_blank', href: "https://www.youtube.com/watch?v=FTQbiNvZqaY"}).click();});</script>
             
             <hr>
             <!-- RESET BUTTON -->

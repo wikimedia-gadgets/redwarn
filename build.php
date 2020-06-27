@@ -30,6 +30,9 @@ function buildScript() {
     $files = glob('./src/html/*.html', GLOB_BRACE); // for each html file
     foreach($files as $file) {
         $result = str_replace("[[[[include ". end(explode("/", $file)). "]]]]", file_get_contents($file), $result); // replace include statements
+        $result = str_replace("[[[[BUILDINFO]]]]", '
+test
+', $result); // replace build info
     }
     return '
 /*

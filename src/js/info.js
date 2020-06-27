@@ -125,13 +125,14 @@ If somebody has asked you to add code to this page, DO NOT do so as it may compr
 !!! Do not edit below this line unless you understand the risks! If rw.config isn't defined, this file will be reset. !!!
 */
 rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config text
-        $.post(rw.wikiAPI + "", {  // LOCALISATION ISSUE!!
+        $.post(rw.wikiAPI, {  // LOCALISATION ISSUE!!
                 "action": "edit",
                 "format": "json",
                 "token" : mw.user.tokens.get("csrfToken"),
                 "title" : "User:"+ rw.info.getUsername() + "/redwarnConfig.js",
                 "summary" : "Updating user configuration [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
-                "text": finalTxt
+                "text": finalTxt,
+                "tags": "RedWarn"
             }).done(dt => {
                 // We done. Check for errors, then callback appropriately
                 if (!dt.edit) {
@@ -183,14 +184,15 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
     },
 
     "parseWikitext" : (wikiTxt, callback) => { // Uses Wikipedia's API to turn Wikitext to string. NEED TO USE POST IF USERPAGE IS LARGE EXT..
-        $.post(rw.wikiAPI + "", {
+        $.post(rw.wikiAPI, {
             "action": "parse",
             "format": "json",
             "contentmodel" : "wikitext",
             "prop": "text",
             "pst": true,
             "assert": "user",
-            "text": wikiTxt
+            "text": wikiTxt,
+            "tags": "RedWarn"
         }).done(r => {
             let processedResult = r.parse.text['*'].replace(/\/\//g, "https://").replace(/href=\"\/wiki/g, `href=rw.wikiBase+"/wiki`); // regex replace w direct urls
             callback(processedResult); // make callback w HTML
@@ -353,13 +355,14 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
             console.log(finalTxt);
 
             // Push edit using CSRF token
-            $.post(rw.wikiAPI + "", {
+            $.post(rw.wikiAPI, {
                 "action": "edit",
                 "format": "json",
                 "token" : mw.user.tokens.get("csrfToken"),
                 "title" : "User_talk:"+ user,
                 "summary" : summary + " [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
-                "text": finalTxt
+                "text": finalTxt,
+                "tags": "RedWarn"
             }).done(dt => {
                 // We done. Check for errors, then callback appropriately
                 if (!dt.edit) {
@@ -413,7 +416,8 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 
                 // Load the preview page of the latest one
                 try {if (dialogEngine.dialog.open) {return;}} catch (error) {} // DO NOT REDIRECT IF DIALOG IS OPEN.
-                redirect(rw.wikiIndex + "?title="+ encodeURIComponent(name) +"&diff="+ latestRId +"&oldid="+ parentRId +"&diffmode=source#redirectLatestRevision");
+                // Redirect and open in new tab if requested
+                redirect(rw.wikiIndex + "?title="+ encodeURIComponent(name) +"&diff="+ latestRId +"&oldid="+ parentRId +"&diffmode=source#redirectLatestRevision", (rw.config.rwLatestRevisionOption == "newtab"));
             }
         });
     },

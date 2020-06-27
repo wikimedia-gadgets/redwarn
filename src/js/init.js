@@ -43,7 +43,10 @@ if (rw != null) {
     mw.notify("Warning! You have two versions of RedWarn installed at once! Please edit your common.js or skin js files to ensure that you only use one instance to prevent issues.");
 }
 var rw = {
-    "version" : "rev15dev", // don't forget to change each version!
+    "version" : "15dev", // don't forget to change each version!
+    // ADDED BY BUILD SCRIPT
+    "buildInfo" : `[[[[BUILDINFO]]]]`,
+    // Now edited by us again
     "logoHTML" : `<span style="font-family:Roboto;font-weight: 300;text-shadow:2px 2px 4px #0600009e;"><span style="color:red">Red</span>Warn</span>`, // HTML of the logo
     "logoShortHTML" : `<span style="font-family:Roboto;font-weight: 300;text-shadow:2px 2px 4px #0600009e;"><span style="color:red">R</span>W</span>`, // Short HTML of the logo
     "sign": ()=>{return atob("fn5+fg==")}, // we have to do this because mediawiki will swap this out with devs sig.
@@ -73,14 +76,14 @@ var rw = {
             console.log("RedWarn "+ rw.version + " - (c) 2020 RedWarn Contributors");
             // Load MDL and everything needed, then callback when all loaded
             $('head').append(`
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js"></script>
-                <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.2/dialog-polyfill.min.js"></script> <!-- firefox being dumb -->
-                <script src="https://code.getmdl.io/1.3.0/material.min.js" id="MDLSCRIPT"></script>
+                <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/jqueryContextMenu.css">
+                <script src="https://redwarn.toolforge.org/cdn/js/jquery-contextmenu.js"></script>
+                <script src="https://redwarn.toolforge.org/cdn/js/jquery-ui-position.js"></script>
+                <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/materialicons.css">
+                <script src="https://redwarn.toolforge.org/cdn/js/dialogPolyfill.js"></script> <!-- firefox being dumb -->
+                <script src="https://redwarn.toolforge.org/cdn/js/mdl.js" id="MDLSCRIPT"></script>
                 <!-- Roboto Font -->
-                <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+                <link href="https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese" rel="stylesheet">
 
                 <!-- MDL AND CONTEXT MENU STYLES -->
                 <style>
@@ -116,7 +119,7 @@ var rw = {
                 pageIconHTML += "</div>"; // close contianer
                 if (iconsLocation == "default") {
                     try {
-                        document.getElementsByClassName("mw-indicators mw-body-content")[0].innerHTML += pageIconHTML; // Append our icons to the page icons
+                        $(".mw-indicators").append(pageIconHTML); // Append our icons to the page icons
                     } catch (error) {
                         // Incompatible theme, use sidebar instead
                         iconsLocation = "sidebar";
@@ -311,7 +314,7 @@ function initRW() {
                     `,
                     "READ SUMMARY", ()=>{
                         dialogEngine.closeDialog();
-                        redirect("https://en.wikipedia.org/wiki/Wikipedia:RedWarn/bugsquasher#"+ rw.version + "_summary", true);
+                        redirect("https://en.wikipedia.org/wiki/Wikipedia:RedWarn/bugsquasher#RedWarn_"+ rw.version + "_summary", true);
                     },
                     "LATER", ()=>{
                         dialogEngine.closeDialog();
@@ -333,7 +336,7 @@ function initRW() {
                 rw.visuals.toast.show("Redirected to the latest revision.", "BACK", ()=>window.history.back(), 4000); // When back clciked go back
             } else if (window.location.hash.includes("#watchLatestRedirect")) {
                 // Redirected to latest by redirector, play sound
-                let src = 'https://raw.githubusercontent.com/ed6767/redwarn/master/redwarn%20notifs%20new%20edit.mp3';
+                let src = 'https://redwarn.toolforge.org/cdn/audio/newEdit.mp3';
                 let audio = new Audio(src);
                 audio.play();
                 // enable watcher

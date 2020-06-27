@@ -33,7 +33,7 @@ rw.ui = {
         // Assemble rule listbox
         let finalListBox = "<span>";
         let currentHeading = "";
-        rules.forEach((rule, i) => {
+        rw.rules.forEach((rule, i) => {
             // Check if category is different to current heading first
             if (rule.catagory != currentHeading) {
                 // Now generate a new heading and section for search to hide
@@ -482,13 +482,14 @@ rw.ui = {
                 let textToAdd = "*" + (targetIsIP ? "{{IPvandal|" : "{{vandal|") + target + "}} " + reportContent; // DANGER! WIKITEXT (here is fine. be careful w changes.) - if target IP give correct template, else normal
                 let finalTxt = revisionWikitext + "\n\n" + textToAdd; // compile final string
                 // Now we just submit
-                $.post(rw.wikiAPI + "", {
+                $.post(rw.wikiAPI, {
                     "action": "edit",
                     "format": "json",
                     "token" : mw.user.tokens.get("csrfToken"),
                     "title" : aivPage,
                     "summary" : `Reporting [[Special:Contributions/${target}|${target}]] [[WP:REDWARN|(RedWarn ${rw.version})]]`, // summary sign here
-                    "text": finalTxt
+                    "text": finalTxt,
+                    "tags" : "RedWarn"
                 }).done(dt => {
                     // We done. Check for errors, then callback appropriately
                     if (!dt.edit) {

@@ -393,7 +393,7 @@
         } 
     }
 
-    var rules = `+ JSON.stringify(rules) +`; // get rules from host
+    var rules = `+ JSON.stringify(rw.rules) +`; // get rules from host
     var refreshLevels = i=> {
        if (rules[i].warningLevels.includes(0)) {
            // Single notice

@@ -190,13 +190,14 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                     console.log(finalTxt);
 
                     // Push edit using CSRF token
-                    $.post(rw.wikiAPI + "", {
+                    $.post(rw.wikiAPI, {
                         "action": "edit",
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
                         "title" : rw.pageProtect.rfppPage,
                         "summary" : `Requesting protection change for [[${mw.config.get("wgRelevantPageName").replace(/_/g, ' ')}]] [[WP:REDWARN|(RedWarn ${rw.version})]]`, // summary sign here
-                        "text": finalTxt
+                        "text": finalTxt,
+                        "tags": "RedWarn"
                     }).done(dt => {
                         // We done. Check for errors, then callback appropriately
                         if (!dt.edit) {

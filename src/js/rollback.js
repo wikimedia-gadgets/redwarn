@@ -411,14 +411,15 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                 rw.info.latestRevisionNotByUser(mw.config.get("wgRelevantPageName"), un, (content, summary, rID) => {
                     // Got it! Now set page content to summary
                     // Push UNDO using CSRF token
-                    $.post(rw.wikiAPI + "", {
+                    $.post(rw.wikiAPI, {
                         "action": "edit",
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
                         "title" : mw.config.get("wgRelevantPageName"),
                         "summary" : summary + ": " + reason + " [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
                         "undo": crID, // current
-                        "undoafter": rID // restore version
+                        "undoafter": rID, // restore version
+                        "tags" : "RedWarn"
                     }).done(dt => {
                         // We done. Check for errors, then callback appropriately
                         if (!dt.edit) {
@@ -447,13 +448,14 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             
             let rollbackCallback = ()=>{ // using rollback API
                 // PUSH ROLLBACK
-                $.post(rw.wikiAPI + "", {
+                $.post(rw.wikiAPI, {
                         "action": "rollback",
                         "format": "json",
                         "token" : rw.info.rollbackToken,
                         "title" : mw.config.get("wgRelevantPageName"),
                         "summary" : "Rollback edit(s) by [[Special:Contributions/"+ un +"|"+ un +"]] ([[User_talk:"+ un +"|talk]]): " + reason + " [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
-                        "user": un // rollback user
+                        "user": un, // rollback user
+                        "tags" : "RedWarn"
                     }).done(dt => {
                         // THESE CALLBACKS ARE NO INTERCHANGABLE!
                         // We done. Check for errors, then callback appropriately
@@ -522,14 +524,15 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                 let revUsr = r.query.pages[0].revisions[0].user; // get user
                 let summary = "Restoring revision "+ revID + " by " + revUsr; // gen our summary
                 // Now we've got that, we just need to submit. the undo
-                $.post(rw.wikiAPI + "", {
+                $.post(rw.wikiAPI, {
                         "action": "edit",
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
                         "title" : mw.config.get("wgRelevantPageName"),
                         "summary" : summary + (reason != null ? ": " + reason : "") + " [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
                         "undo": crID, // current
-                        "undoafter": revID // restore version
+                        "undoafter": revID, // restore version
+                        "tags" : "RedWarn"
                     }).done(dt => {
                         // Request done. Check for errors, then go to the latest revision
                         if (!dt.edit) {

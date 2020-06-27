@@ -1,5 +1,5 @@
-// Data processed from Twinkle Source at https://github.com/azatoth/twinkle
-var rules = [
+// Data originally processed from Twinkle Source at https://github.com/azatoth/twinkle
+rw.rules = [
     {
         "name": "Vandalism",
         "catagory": "Common warnings",

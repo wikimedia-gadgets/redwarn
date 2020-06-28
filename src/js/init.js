@@ -277,12 +277,13 @@ function initRW() {
         // Quick check we have perms to use (in confirmed/autoconfirmed group)
         rw.info.featureRestrictPermissionLevel("confirmed", false, ()=>{
             // We don't have permission
-            
+            //display a toast to notify user
+            rw.visuals.toast.show("You must be Autoconfirmed or Confirmed to use RedWarn.  Please refer the user guide for more information.");
             // Add red lock to the top right to show that RedWarn cannot be used
             document.getElementsByClassName("mw-indicators mw-body-content")[0].innerHTML = `
             <div id="Lock" class="icon material-icons"><span style="cursor: help; color:red;" onclick="">lock</span></div>
             <div class="mdl-tooltip" for="Lock">
-                You don't have permission to use RedWarn yet. Please refer to the user guide for more information.
+                You must be Autoconfirmed or Confirmed to use RedWarn.  Please refer the user guide for more information.
             </div>
             `;
             // Now register that
@@ -317,8 +318,9 @@ function initRW() {
                         redirect("https://en.wikipedia.org/wiki/Wikipedia:RedWarn/bugsquasher#RedWarn_"+ rw.version + "_summary", true);
                     },
                     "LATER", ()=>{
-                        dialogEngine.closeDialog();
-                        rw.visuals.toast.show("You can read more later at RedWarn's page (WP:REDWARN)");
+                        dialogEngine.closeDialog();//this thing turns it off
+                        rw.visuals.toast.show("You can read more later at RedWarn's page (WP:REDWARN)");//display a toast
+                        
                     },168);
                 });
             }

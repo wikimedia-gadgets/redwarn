@@ -293,7 +293,12 @@ var onSettingsLoad = {};
             <strong>User right-click menu</strong><br />
             <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwDisableRightClickUserEnable">
                 <input type="radio" id="rwDisableRightClickUserEnable" class="mdl-radio__button" name="rwDisableRightClickUser" value="enable" checked>
-                <span class="mdl-radio__label">Enable</span>
+                <span class="mdl-radio__label">Enable on Shift+Right-click</span>
+            </label>
+            &nbsp;&nbsp;
+            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwDisableRightClickUserOpt2">
+                <input type="radio" id="rwDisableRightClickUserOpt2" class="mdl-radio__button" name="rwDisableRightClickUser" value="Opt2">
+                <span class="mdl-radio__label">Enable on right-click</span>
             </label>
             &nbsp;&nbsp;
             <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwDisableRightClickUser">
@@ -403,11 +408,12 @@ var onSettingsLoad = {};
         <section class="mdl-layout__tab-panel" id="scroll-tab-6">
         <div class="page-content">
             <!-- ABOUT TAB -->
-            <h2>`+ rw.logoHTML +` `+ rw.version +`</h2>
+            <h2>${rw.logoHTML} ${rw.version}</h2>
             <h5>The user-<span id="hahaFunnyJoke">friendly</span> counter-vandalism tool.</h5>
             <!-- Impliment very original and not outdated haha jokes -->
             <script>$("#hahaFunnyJoke").on("click", ()=> {if (confirm("You are about to open an external link to YouTube.com - continue?")) Object.assign(document.createElement('a'), { target: '_blank', href: "https://www.youtube.com/watch?v=FTQbiNvZqaY"}).click();});</script>
-            
+            <h6>Build info</h6>
+            <pre>${rw.buildInfo}</pre>
             <hr>
             <!-- RESET BUTTON -->
             <span class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" id="resetRW">

@@ -108,7 +108,7 @@ rw.ui = {
         addMessageHandler("pushToast`*", m=>rw.visuals.toast.show(m.split('`')[1],false,false, 5000));
 
         // Add admin report handler
-        addMessageHandler("adminR", ()=>rw.ui.openAdminReport(un));
+        addMessageHandler("adminR", ()=>rw.ui.adminReportSelector(un));
 
         // Add recent page handelr
         addMessageHandler("openRecentPageSelector", ()=>rw.ui.recentlyVisitedSelector.showDialog(p=>{
@@ -242,15 +242,19 @@ rw.ui = {
 
         // USER TALK ACTIONS - check if not disabled then continue
         if (rw.config.rwDisableRightClickUser != "disable") $(()=>{
-            // REV15 - only trigger on shift+right-click
-            $('a[href*="/wiki/User_talk:"], a[href*="/wiki/User:"], a[href*="/wiki/Special:Contributions/"]').on('contextmenu', e=>{
-                if (!e.shiftKey) return; // if shift key not down, don't show the context menu
-                e.preventDefault();
-                $(e.currentTarget).contextMenu();
-            });
-
+            // REV15 - only trigger on shift+right-click unless if set in settings - If config is set to "Opt2", to open on right-click set in preferences, set below in trigger
+            if (rw.config.rwDisableRightClickUser != "Opt2") {
+                $('a[href*="/wiki/User_talk:"], a[href*="/wiki/User:"], a[href*="/wiki/Special:Contributions/"]').on('contextmenu', e=>{
+                
+                    // if shift key not down, don't show the context menu. 
+                    if (!e.shiftKey) return; 
+                    e.preventDefault();
+                    $(e.currentTarget).contextMenu();
+                });
+            }
+            
             $.contextMenu({
-                trigger: 'none',
+                trigger: (rw.config.rwDisableRightClickUser == "Opt2" ? undefined : 'none'), // if set in options, activate as usual
                 selector: 'a[href*="/wiki/User_talk:"], a[href*="/wiki/User:"], a[href*="/wiki/Special:Contributions/"]', // Select all appropriate user links
                 callback: (act, info)=>{
                     // CALLBACK
@@ -292,7 +296,7 @@ rw.ui = {
 
                         "newNotice" : un=>rw.ui.beginWarn(false, un), // show new warning dialog
 
-                        "adminReport" : un=>rw.ui.openAdminReport(un),
+                        "adminReport" : un=>rw.ui.adminReportSelector(un),
 
                         "usrPronouns": un=>{ // Show a tost with this users prefered pronouns
                             rw.info.getUserPronouns(un, p=>{
@@ -680,5 +684,13 @@ rw.ui = {
                 rw.ui.recentlyVisitedSelector.dialog.close();
             });
         }
+    },
+
+    "adminReportSelector" : un=> { // DON'T FORGET TO USE un ATTR!
+        // Open the admin report selector dialog
+        rw.ui.recentlyVisitedSelector.init(mdlContainers.generateContainer(`
+            [[[[include adminReportSelector.html]]]]
+        `, 600, 500)); // 420 hahahaha
+        rw.ui.recentlyVisitedSelector.dialog.showModal();
     }
 }

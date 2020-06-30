@@ -1,4 +1,4 @@
-// (c) Ed.E 2020
+// (c) Ed.E and contributors 2020
 
 // Window focus checking n things
 var windowFocused = true;

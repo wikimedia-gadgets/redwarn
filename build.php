@@ -30,10 +30,15 @@ function buildScript() {
     $files = glob('./src/html/*.html', GLOB_BRACE); // for each html file
     foreach($files as $file) {
         $result = str_replace("[[[[include ". end(explode("/", $file)). "]]]]", file_get_contents($file), $result); // replace include statements
+      
+        // Generate and add build info
         $result = str_replace("[[[[BUILDINFO]]]]", '
-test
-', $result); // replace build info
+Build Time: '. date('d/m/Y H:i:s', time()) .' UTC
+Excecuted script: '. str_replace("\\", "/", __FILE__) .'
+User: '. get_current_user() . '@'. gethostname() .' on '. php_uname('s') .'
+', $result);
     }
+
     return '
 /*
 R E D W A R N

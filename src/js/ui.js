@@ -493,7 +493,7 @@ rw.ui = {
                     "title" : aivPage,
                     "summary" : `Reporting [[Special:Contributions/${target}|${target}]] [[WP:REDWARN|(RedWarn ${rw.version})]]`, // summary sign here
                     "text": finalTxt,
-                    "tags" : "RedWarn"
+                    "tags" : (rw.wikiBase.includes("en.wikipedia.org") ? "RedWarn" : null) // Only add tags if on english wikipedia
                 }).done(dt => {
                     // We done. Check for errors, then callback appropriately
                     if (!dt.edit) {

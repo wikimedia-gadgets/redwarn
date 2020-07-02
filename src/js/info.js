@@ -132,7 +132,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 "title" : "User:"+ rw.info.getUsername() + "/redwarnConfig.js",
                 "summary" : "Updating user configuration [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
                 "text": finalTxt,
-                "tags": "RedWarn"
+                "tags" : (rw.wikiBase.includes("en.wikipedia.org") ? "RedWarn" : null) // Only add tags if on english wikipedia
             }).done(dt => {
                 // We done. Check for errors, then callback appropriately
                 if (!dt.edit) {
@@ -192,7 +192,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
             "pst": true,
             "assert": "user",
             "text": wikiTxt,
-            "tags": "RedWarn"
+            "tags" : (rw.wikiBase.includes("en.wikipedia.org") ? "RedWarn" : null) // Only add tags if on english wikipedia
         }).done(r => {
             let processedResult = r.parse.text['*'].replace(/\/\//g, "https://").replace(/href=\"\/wiki/g, `href=rw.wikiBase+"/wiki`); // regex replace w direct urls
             callback(processedResult); // make callback w HTML
@@ -362,7 +362,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 "title" : "User_talk:"+ user,
                 "summary" : summary + " [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
                 "text": finalTxt,
-                "tags": "RedWarn"
+                "tags" : (rw.wikiBase.includes("en.wikipedia.org") ? "RedWarn" : null) // Only add tags if on english wikipedia
             }).done(dt => {
                 // We done. Check for errors, then callback appropriately
                 if (!dt.edit) {
@@ -440,7 +440,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
 
             console.log("_r");
             let latestContent = _r.slots.main.content;
-            let summary = "Rollback edit(s) by [[Special:Contributions/"+ username +"|"+ username +"]] ([[User_talk:"+ username +"|talk]]) to rev. "+ _r.revid +" by " +_r.user;
+            let summary = "Reverting edit(s) by [[Special:Contributions/"+ username +"|"+ username +"]] ([[User_talk:"+ username +"|talk]]) to rev. "+ _r.revid +" by " +_r.user;
             callback(latestContent, summary, _r.revid);
         });
     },

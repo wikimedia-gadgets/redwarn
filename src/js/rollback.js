@@ -419,7 +419,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                         "summary" : summary + ": " + reason + " [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
                         "undo": crID, // current
                         "undoafter": rID, // restore version
-                        "tags" : "RedWarn"
+                        "tags" : (rw.wikiBase.includes("en.wikipedia.org") ? "RedWarn" : null) // Only add tags if on english wikipedia
                     }).done(dt => {
                         // We done. Check for errors, then callback appropriately
                         if (!dt.edit) {
@@ -455,7 +455,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                         "title" : mw.config.get("wgRelevantPageName"),
                         "summary" : "Rollback edit(s) by [[Special:Contributions/"+ un +"|"+ un +"]] ([[User_talk:"+ un +"|talk]]): " + reason + " [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
                         "user": un, // rollback user
-                        "tags" : "RedWarn"
+                        "tags" : (rw.wikiBase.includes("en.wikipedia.org") ? "RedWarn" : null) // Only add tags if on english wikipedia
                     }).done(dt => {
                         // THESE CALLBACKS ARE NO INTERCHANGABLE!
                         // We done. Check for errors, then callback appropriately
@@ -532,7 +532,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                         "summary" : summary + (reason != null ? ": " + reason : "") + " [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
                         "undo": crID, // current
                         "undoafter": revID, // restore version
-                        "tags" : "RedWarn"
+                        "tags" : (rw.wikiBase.includes("en.wikipedia.org") ? "RedWarn" : null) // Only add tags if on english wikipedia
                     }).done(dt => {
                         // Request done. Check for errors, then go to the latest revision
                         if (!dt.edit) {

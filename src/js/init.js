@@ -98,7 +98,8 @@ var rw = {
                 </style>
             `); // Append required libaries to page
 
-
+            // Show redwarn only spans
+            $(".RedWarnOnlyVisuals").show();
             
             // wait for load
             waitForMDLLoad(callback);

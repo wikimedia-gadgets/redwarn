@@ -295,9 +295,6 @@ function initRW() {
             // That's it
         });
 
-        // User blacklist (for English Wikipedia only)
-        if (rw.wikiBase.includes("en.wikipedia.org")) importScript('User:Ed6767/redwarn/blacklist.js'); // everything is handled within this script
-
         // We have perms, let's continue.
 
         // Load config and check if updated

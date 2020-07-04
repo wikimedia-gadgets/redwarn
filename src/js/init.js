@@ -189,11 +189,13 @@ var rw = {
             let sidebarSize = 500;
             let addCol = "0,255,0"; // rbg
             let rmCol = "255,0,0"; // rgb
+            let mwBody = document.getElementsByTagName("BODY")[0];
             /*if (rw.config.ptrSidebar) sidebarSize = rw.config.ptrSidebar; DEP. REV12*/
              // If preferences set, apply them
             if (rw.config.ptrAddCol) addCol = rw.config.ptrAddCol;
             if (rw.config.ptrRmCol) rmCol = rw.config.ptrRmCol;
             // basically multiact js but with stuff replaced
+            mwBody.style.overflowY = "hidden";
             let content = mdlContainers.generateContainer(` 
             [[[[include recentChanges.html]]]]
             `, document.body.offsetWidth, document.body.offsetHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
@@ -206,7 +208,10 @@ var rw = {
                     </div>
                 `);
                 // Add close event
-                addMessageHandler("closeDialogPT", ()=>{rw.recentChanges.dialog.close();}); // closing
+                addMessageHandler("closeDialogPT", ()=>{
+                    rw.recentChanges.dialog.close();
+                    mwBody.style.overflowY = "auto";
+                }); // closing
             }
             
             $("#PTdialogContainer").html(`
@@ -223,7 +228,6 @@ var rw = {
             if (! rw.recentChanges.dialog.showModal) {
                 dialogPolyfill.registerDialog(rw.recentChanges.dialog);
             }
-
             rw.recentChanges.dialog.showModal(); // Show dialog
         },
         "diffLinkAddRedWarn" : () => { // add redwarn to recent changes page

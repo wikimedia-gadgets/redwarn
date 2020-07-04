@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-indigo.min.css" />
 </head>
 
-<body onload="refreshLive();">
+<body onload="refreshLive(call => {});">
     <!-- Show a few edits on load -->
     <!-- No header, and the drawer stays open on larger screens (fixed drawer). -->
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
@@ -69,7 +69,15 @@
         </dialog>
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
             <div class="mdl-layout__drawer" style="width:100%;-webkit-transform: translateX(0px); transform: translateX(0px);">
-            <span class="mdl-layout-title" style="font-size: 3.5vh;">`+ rw.logoHTML +` Patrol</span>
+            <span class="mdl-layout-title" style="font-size: 2em;">`+ rw.logoHTML +` Patrol</span>
+            <div id="nav-btns" style="position: fixed; left: 300px; top: 15px;">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="margin-right: 10px;" onclick="window.parent.postMessage('closeDialogPT');" href="">
+                    Return to Wikipedia
+                </button>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" href="#" id="newAttached" target="_blank">
+                    Open new attached tab
+                </button>
+            </div>
             <div id="cornerbuttons" style="position: fixed; right: 35px; top: 15px; display: flex; justify-content: flex-end; flex-direction: row;">
                 <button class="mdl-button mdl-js-button mdl-button--icon" id="filterButton" style="margin-right: 7px;">
                 <i class="material-icons">settings</i>
@@ -81,43 +89,11 @@
             </div>
 
             <nav class="mdl-navigation" style="width: 100%;">
-                <div class="btns" style="width: 100%;">
-                    <a class="mdl-navigation__link" style="width: 50%; float: left !important; margin-right: 0; padding-right: 0; margin-left:0; padding-left: 0;" onclick="window.parent.postMessage('closeDialogPT');" href="">
-                        <span style="padding-left: 32px;">Return to wikipedia</span>
-                    </a>
-                    <a class="mdl-navigation__link" style="width: 50%; float: right !important; margin-right: 0; padding-right: 0; margin-left:0; padding-left: 0;" href="#" id="newAttached" target="_blank">
-                        <span style="padding-left: 32px;">Open new attached tab</span>
-                    </a>
-                </div>
                 <a class="mdl-navigation__link" id="hoverswitch" href="#" style="background-color: teal;color:white; display: initial;"
-                    onmouseover="tI = setInterval(refreshLive,  750);"
-                    onmouseout="clearTimeout(tI);">Hover your cursor here for live updates</a>
+                onmouseover="tI = setInterval(refreshLive, 1750);"
+                onmouseout="clearTimeout(tI);">Hover your cursor here for live updates</a>
                 <div id="recentChangesContainer">
-                    <!--\/ PLACEHOLDER VALUE FOR FORMATTING REMOVE ON REV15 BUILD FINISH \/-->
-                    <div id="43254543544643643632532423523235" class="child__edit" style="height: 150px; background-color: crimson; padding-left: 32px">
-                        <div id="actions" style="padding-bottom: 5px; padding-top: 5px;">
-                            <a class="mdl-button mdl-js-button mdl-button--icon">
-                                <i class="material-icons">
-                                    open_in_browser
-                                </i>
-                            </a>
-                            <a class="mdl-button mdl-js-button mdl-button--icon">
-                                <i class="material-icons">
-                                    compare
-                                </i>
-                            </a>
-                            <a class="mdl-button mdl-js-button mdl-button--icon">
-                                <i class="material-icons">
-                                    send
-                                </i>
-                            </a>
-                        </div>
-                        <p class="userinfo">User • (Edits) • Warnings</p>
-                        <p class="slightly-larger">[Type]: [Page] (+XXXX) (ICN)</p>
-                        <p>Comment: Lorem Ipsum Domen...</p>
-                        <small class="btm-right">Tags: X, Y, Z</small>
-                    </div>
-                    <!--/\ PLACEHOLDER VALUE FOR FORMATTING REMOVE ON REV15 BUILD FINISH /\-->
+                    <!-- All edits are placed in this container by the javascript-->
                 </div>
             </nav>
             </div>
@@ -248,13 +224,15 @@
               return Math.floor(Math.random() * Math.floor(max));
         }
 
-        function refreshLiveTMP() {
+        function refreshLive() { // we're gonna use the callback to only do refresh cooldown after everything is loaded
+
             // if you add to it its preferred you refer to a users id when referring to an edit, as names are not as consistent (anons are given a random value).
             // insert code for filter fetch here
             var filterlist = ["filters"];
             let enableWarn = true; // temp
             fetchRecentChanges(filterlist, call => { // send filterlist to parserecentchanges to filter out stuff then use callback func. to handle parsing etc...
                 let container = document.getElementById('recentChangesContainer');
+                container.innerHTML = ""
                 let ids = []; 
                 let allRevs = []; // didnt realise till towards the end that using userid as your identifying id is a bad idea.
                 let allIDS = []; // Maintain relationship between our anon- and the username (which will be the IP adress of the person)
@@ -367,7 +345,6 @@
             });
         }
 
-        refreshLiveTMP();
 
         function capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
@@ -376,7 +353,7 @@
             let livetoggle= document.getElementById('liveswitch');
             let hoverswitch = document.getElementById('hoverswitch');
             if (livetoggle.checked == true) {
-                tI = setInterval(refreshLive, 750);
+                tI = setInterval(refreshLive, 1750);
                 hoverswitch.style.display = "none";
             } else {
                 clearTimeout(tI);
@@ -536,9 +513,6 @@
         //    alert(res.length)
         //})
 
-        function refreshLive() {
-            console.log("Placeholder.")
-        }
 
 
 

@@ -95,8 +95,27 @@
                 <div id="recentChangesContainer">
                     <!--\/ PLACEHOLDER VALUE FOR FORMATTING REMOVE ON REV15 BUILD FINISH \/-->
                     <div id="43254543544643643632532423523235" class="child__edit" style="height: 150px; background-color: crimson; padding-left: 32px">
-                        <div id="actions" style="padding-bottom: 5px; padding-top: 5px;">ACTIONS</div>
-                        <p>User • (Edits) • Warnings</p><p class="slightly-larger">[Type]: [Page] (+XXXX) (ICN)</p><p>Comment: Lorem Ipsum Domen...</p><small class="btm-right">Tags: X, Y, Z</small>
+                        <div id="actions" style="padding-bottom: 5px; padding-top: 5px;">
+                            <a class="mdl-button mdl-js-button mdl-button--icon">
+                                <i class="material-icons">
+                                    open_in_browser
+                                </i>
+                            </a>
+                            <a class="mdl-button mdl-js-button mdl-button--icon">
+                                <i class="material-icons">
+                                    compare
+                                </i>
+                            </a>
+                            <a class="mdl-button mdl-js-button mdl-button--icon">
+                                <i class="material-icons">
+                                    send
+                                </i>
+                            </a>
+                        </div>
+                        <p class="userinfo">User • (Edits) • Warnings</p>
+                        <p class="slightly-larger">[Type]: [Page] (+XXXX) (ICN)</p>
+                        <p>Comment: Lorem Ipsum Domen...</p>
+                        <small class="btm-right">Tags: X, Y, Z</small>
                     </div>
                     <!--/\ PLACEHOLDER VALUE FOR FORMATTING REMOVE ON REV15 BUILD FINISH /\-->
                 </div>
@@ -110,13 +129,20 @@
         </main>
     </div>
     <style>
+        .userinfo {
+            padding-top: 5px;
+            display: inline-flex;
+            vertical-align: middle !important;
+        }
         .btm-right small {
             bottom: 15px;
             right: 20px;
         }
         .child__edit {
-            height: 150px;
-            padding-left: 32px
+            height: 160px;
+            max-height: 200px;
+            padding-left: 32px;
+            border-top: 1px solid grey;
         }
         .child__edit p {
             margin: 0 0 0 0;
@@ -189,39 +215,32 @@
                     }
                 }
 
-        function getUserInfo(ids, callback) { // ids should be an array of user ids - will return EDIT COUNT (API:Users) and WARNING LEVEL (Unoffical)
+        function fetchEditCount(ids, callback) {
             let idurl = "";
             ids.forEach(element => { 
                 idurl += element + "|";
             });            
             idurl = idurl.substring(0, idurl.length - 1); //remove last char (which will be an excess "|")
-            let infoOUT = []; // Nested array - output of output[n][0] is userid & output[n][1] is corresponding edit count & output[n][2] is warning level
-            $.getJSON(WIKICWD + "/w/api.php?action=query&list=users&ususerids="+ idurl + "&format=json&usprop=editcount", result => {
+            $.getJSON(WIKICWD + "/w/api.php?action=query&list=users&ususerids="+ idurl + "&format=json&usprop=editcount", feed => {
+                callback(feed)
+            });
+        }
+
+        function getUserInfo(ids, callback) { // ids should be an array of user ids - will return EDIT COUNT (API:Users) and WARNING LEVEL (Unoffical)
+            fetchEditCount(ids, result => {
+                let infoOUT = []; // Nested array - output of output[n][0] is userid & output[n][1] is corresponding edit count & output[n][2] is warning level
                 let user = result.query.users;
                 let unamelist = [];
-                $.each(user, function(key, value) { // need to give uname to lastwarninglevel
+                user.forEach(value => { // to make stuff for lastwarninglevel
                     unamelist.push(value.name);
-                })
- 
-                lastWarningLevel(unamelist, res => {
-                    // res[n][0] is uname to match to
-                    $.each(user, function(key, value) {
-                        let userInfo = []
-                        userInfo.push(value.userid);
-                        userInfo.push(value.name);
-                        userInfo.push(value.editcount);
-                        $.each(result, function(key, value) {
-                            if (value[0] == userInfo[1]) {
-                                userInfo.push(value[1]);
-                            } else {
-                                return true; //continue next one
-                            }
-                        })
-                        infoOUT.push({uid: userInfo[0], name: userInfo[1], editcount: userInfo[2], warninglevel: userInfo[3]});
-                    })
-                })
+                });
+                user.forEach(user => {
+                    let userInfo = [];
+                    userInfo = [user.userid, user.name, user.editcount];
+                    infoOUT.push({uid: userInfo[0], name: userInfo[1], editcount: userInfo[2]}); // push everything out to callback array
+                });
+                callback(infoOUT); // it is done.
             });
-            callback(infoOUT); // thats it folks
         }
 
 
@@ -229,79 +248,133 @@
               return Math.floor(Math.random() * Math.floor(max));
         }
 
-        function refreshLiveTMP() { 
+        function refreshLiveTMP() {
             // if you add to it its preferred you refer to a users id when referring to an edit, as names are not as consistent (anons are given a random value).
             // insert code for filter fetch here
             var filterlist = ["filters"];
+            let enableWarn = true; // temp
             fetchRecentChanges(filterlist, call => { // send filterlist to parserecentchanges to filter out stuff then use callback func. to handle parsing etc...
-                let ids = [];
-                for(let [key, value] of Object.entries(call)) {
-                    ids.push((value.userid).toString());
-                }
-                let stripped = ids;  // Preserve ids variable incase we need to refer back to it and make a new one for manipulating anons
-
                 let container = document.getElementById('recentChangesContainer');
-                let isanon = "not-anon";
-                stripped.forEach(element => { // Anons get a random ID + prefix to make sure ignored
-                    isanon = "not-anon";
-                    if (element=="0") {
-                        num = getRndInteger(999999999);
-                        element = "anon-" + num;
-                        isanon = "anonify"
+                let ids = []; 
+                let allRevs = []; // didnt realise till towards the end that using userid as your identifying id is a bad idea.
+                let allIDS = []; // Maintain relationship between our anon- and the username (which will be the IP adress of the person)
+                let allUSERS_only = []; // for lastwarninglvl
+                let allANON = [];
+                
+                let unanonLIST = []; // for calling stuff that needs NONANONYMOUS USERS
+                for(let [key, value] of Object.entries(call)) {
+                    unanonLIST.push(value.userid);
+                }
+                for(let [key, value] of Object.entries(call)) { // Get the values to link the things up to eachother
+                    if(value.userid == 0 ) {
+                        value.userid = "anon-" + getRndInteger(999999999);
+                        allANON.push([value.userid, value.user]);
+                    } else {
+                        allUSERS_only.push(value.user);
                     }
-                    userid = element.toString();
-                    // content format 
-                    //<p>User • (Edits) • Warnings</p><p class="slightly-larger">[Type]: [Page] (+XXXX) (ICN)</p><p>Comment: Lorem Ipsum Domen...</p><small class="btm-right">Tags: X, Y, Z</small>
-                    container.innerHTML += "<div id='" + userid + "' class='child__edit " + isanon + "' style='background-color: green;'></div> "
-                    
-                });
-                getUserInfo(ids, res => {
-                    var output = res;
-                    console.log(res);
-                    console.log(res.length);
-                    $.each(res, function(key, value) {
-                        // for 'readability'
-                        var uid = value.uid;
-                        var uname = value.name;
-                        var warningLevel = value.warninglevel;
-                        var editcount = value.editcount;
-                        var warningLevelIcn = "thumbs_up";
-                        // thumb_up for 0
-                        // info for 1
-                        // annoucement for 2
-                        // report_problem for 3 (red?)
-                        // report for 4 (#a20000?)
+                    let ptLogRevTMP = {revid: value.revid, old_revid: value.old_revid, uid: value.userid, uname: value.user, title: value.title, comment: value.parsedcomment, tags: value.tags, type: value.type, size_old: value.oldlen, size_new: value.newlen};
+                    let linkIDUN = [value.userid, value.user]; // Solve issues with username - anon-[no] relationship, anons have id of 0 so we need to make sure usernames are linked back to anons
+                    ids.push((value.userid).toString());
+                    allIDS.push(linkIDUN);
+                    allRevs.push(ptLogRevTMP);
+                }
 
-                        // horror for setting icn
-                        if (warningLevel == "0") {
-                            warningLevelIcn = "thumbs_up" // no change
-                        } else if (warningLevel == "1") {
-                            warningLevelIcn = "info";
-                        } else if (warningLevel == "2") {
-                            warningLevelIcn = "announcement";
-                        } else if (warningLevel == "3") {
-                            warningLevelIcn = "report_problem";
-                        } else if (warningLevel == "4") {
-                            warningLevelIcn == "report";
-                        } else if (warningLevel == undefined) {
-                            warningLevelIcn == "thumbs_up"; // is anonymous user/no warning level out given
+                
+                allRevs.forEach(arr => { // arr[0] is rev name arr[2] is userid of the editor, makes divs for stuff
+                    let iter = arr.uname;
+                    let userid = arr.uid;
+                    let revid = arr.revid
+                    allIDS.forEach(uID => { // link stuff (anons)
+                        if (iter == uID[1]) {
+                            userid = uID[0];
                         }
-                        console.log(warningLevelIcn);
-                        console.log(editcount);
-                        console.log(uname);
-                        document.getElementById(uid).innerHTML += "<p class='userinfo'>" + uname + " • ("+ editcount +") • <span class='material-icons'>" + warningLevelIcn +"</span></p>";
+                    });
+                    container.innerHTML += "<div class='child__edit " + userid + " " + arr.uname + " " + revid + "' style='background-color: green;'><div id='actions' style='padding-bottom: 5px; padding-top: 5px;'><a class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>open_in_browser</i></a><a class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>compare</i></a><a class='mdl-button mdl-js-button mdl-button--icon'><i class='material-icons'>send</i></a></div></div>"
+                });
+
+                let infoOUT = []; // Nested array - output of output[n][0] is userid & output[n][1] is corresponding edit count & output[n][2] is warning level
+                getUserInfo(unanonLIST, userinfo => { // usernames parameter is used for consistency of anon
+                    // IDENTIFIABLE ISSUE: WE DO NOT HAVE A RESULT FROM THE THING
+                    let unamelist =[];
+                    userinfo.forEach(res => {
+                        let uname = res.name;
+                        let editcount = res.editcount;
+                        let warningLvl = res.warninglevel;
+                        if(res.name == uname) {
+                            let warningLevelIcn;
+                            // horror for setting icn
+                            $("." + res.uid).append("<p class='userinfo'>" + uname + " • (" + editcount + ") • <span class='warningLevel warn-" + res.uid +"'> <span class='material-icons'>autorenew</span></span></p>")
+                        };
+                    });
+                    allANON.forEach(arr => {
+                        $("." + arr[0]).append("<p class='userinfo'>" + arr[1] + " • (N/A) • <span class='warningLevel warn-" + arr[0] +"'> <span class='material-icons'>close</span></span></p>")
+                    });
+                    allRevs.forEach(arr => {
+                        if(arr.comment == "") {
+                            arr.comment = "(No comment provided.)"
+                        }
+                        let trafficIcn;
+                        let size = arr.size_new - arr.size_old;
+                        let sizeStr = "";
+                        if(size < 0) {
+                            sizeStr = size.toString();
+                        } else {
+                            sizeStr = "+" + size.toString();
+                        }
+                        $("." + arr.revid).append("<p class='slightly-larger'>[" + capitalizeFirstLetter(arr.type) +"]: " + arr.title + "   ("+ sizeStr +") <span class='trafficlight-'" + arr.revid + ")</p><p>Comment: " + arr.comment + "</p><small class='btm-right'>Tags: <span class='tags-"+ arr.revid + "'></span></small>");
+                        var tags = arr.tags;
+                        let tagsToAppend = "";
+                        tags.forEach(tag => {
+                            console.log(tag)
+                            tagsToAppend += tag + ", ";
+                        })
+                        if(tagsToAppend.length == 0) {
+                            tagsToAppend = "None."
+                        } else {
+                            tagsToAppend.slice(0, -2);
+                        }
+                        $(".tags-" + arr.revid).append(tagsToAppend);
+                    });
+                    lastWarningLevel(allUSERS_only, warnArr => {
+                        // ...
+                        warnArr.forEach(value => {
+                            let warningLevelIcn;
+                            let name = value[0]
+                            if (value[1] == "0") {
+                                warningLevelIcn = "thumb_up" // no change
+                            } else if (value[1] == "1") {
+                                warningLevelIcn = "info";
+                            } else if (value[1] == "2") {
+                                warningLevelIcn = "announcement";
+                            } else if (value[1] == "3") {
+                                warningLevelIcn = "report_problem";
+                            } else if (value[1] == "4") {
+                                warningLevelIcn == "report";
+                            } else if (value[1] == undefined) {
+                                warningLevelIcn == "thumb_up"; // is anonymous user/no warning level out given
+                            }
+                            let uid; 
+                            allIDS.forEach(userARR => {
+                                if(userARR[1] == name) {
+                                    uid = userARR[0];
+                                }
+                            $(".warn-" + uid).html("<span class='material-icons' style='padding-left: 5px;'>"+ warningLevelIcn +"</span>");
+                            });
+                        })
                     });
                 });
-            });
 
+            });
         }
+
         refreshLiveTMP();
 
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
         function switchCheck() { // Checks on the switch click for toggling live feeds if its in 'checked' state or not and changes page accordingly
-            console.log("test");
             let livetoggle= document.getElementById('liveswitch');
             let hoverswitch = document.getElementById('hoverswitch');
-            console.log(livetoggle);
             if (livetoggle.checked == true) {
                 tI = setInterval(refreshLive, 750);
                 hoverswitch.style.display = "none";
@@ -353,7 +426,7 @@
         }
 
         function fetchRecentChanges(filterlist, callback) { // fetch JSON from action API using querys
-            $.getJSON(WIKICWD + "/w/api.php?action=query&list=recentchanges&rclimit=50&format=json&rcprop=user|userid|title|timestamp|ids", r => { // we need to add stuff for filters in here somewhere later.
+            $.getJSON(WIKICWD + "/w/api.php?action=query&list=recentchanges&rclimit=50&format=json&rcprop=user|userid|title|timestamp|ids|tags|parsedcomment|sizes&rctype=edit|external|new", r => { // we need to add stuff for filters in here somewhere later.
                 let feed = r.query.recentchanges;
                 callback(feed); // this is all we needed to do
                 });
@@ -370,7 +443,7 @@
 
         function fetchMeWarningLevel(users, callback) { // death
             let userurl = "";
-            $.each(users, function(key, value) {
+            users.forEach(value => {
                 if(value == undefined) {
                     return true;
                 }
@@ -388,9 +461,8 @@
         function lastWarningLevel(users, callback) { // callback() - users param is an array!
         // users should be ARRAY
             fetchMeWarningLevel(users, phoneafriend => { // returns feed for us to use, users is parsed within function 
-                //...
                 var warnsOUT = [];
-                $.each(phoneafriend.query.pages, function(key, value) {
+                phoneafriend.query.pages.forEach(value => {
                     //...
                     let perUserWarns = [];
                     let username = (value.title).substring(10); // Put username in place so we can figure out what goes where
@@ -454,10 +526,15 @@
 
                 });
                 //  ... anything outside MAIN loop ie calling back warnsout final
+                console.log(warnsOUT);
                 callback(warnsOUT);
                 return;
             })
         }
+        //lastWarningLevel(["Ed6767", "Prompt0259"], res => {
+        //    console.log(res)ge
+        //    alert(res.length)
+        //})
 
         function refreshLive() {
             console.log("Placeholder.")

@@ -158,6 +158,7 @@
         const WIKICWD = "https:" + "`+ rw.wikiBase +`";
         const WIKIID = "`+ rw.wikiID +`";
         const WIKIAPI = "` +rw.wikiAPI +`";
+        const CORSENABLED = false; // CHANGE THIS WHENEVER CORS IMPLEMENTATION IS DONE. WILL BE BASED OFF VALUE OF rw.wikiID
         
         var rctypes = ["Categorize", "Edit", "External", "Log", "New"];
         var rctags = ["Possible Vandalism", "Bad External Link/Image(s)", "Replaces >90% of page", "Undo", "Rollback", "New Redirect", "Possible BLP issue or vandalism", "Remove redirect", "Blanking", "Possible autobiography", ]; // Should be a list of commonly used tags or the default tag (from config), which should be put into the place of rctags[0]
@@ -299,7 +300,41 @@
                         } else {
                             sizeStr = "+" + size.toString();
                         }
-                        $("." + arr.revid).append("<p class='slightly-larger'>[" + capitalizeFirstLetter(arr.type) +"]: " + arr.title + "   ("+ sizeStr +") <span class='trafficlight-'" + arr.revid + ")</p><p>Comment: " + arr.comment + "</p><small class='btm-right'>Tags: <span class='tags-"+ arr.revid + "'></span></small>");
+                        $("." + arr.revid).append("<p class='slightly-larger'>[" + capitalizeFirstLetter(arr.type) +"]: " + arr.title + "   ("+ sizeStr +") <span class='trafficlight-" + arr.revid + "'')</p><p>Comment: " + arr.comment + "</p><small class='btm-right'>Tags: <span class='tags-"+ arr.revid + "'></span></small>");
+                        // insert code for color scaling
+                        if(CORSENABLED) {
+                            console.log("true")
+                            // do stuff for cors here
+                            // implementation soon tm
+                        } else if(!CORSENABLED) {
+                            console.log("false")
+                            // do stuff for NO cors here
+                            let sizeDiff = size;
+                            let opacityLevel = 0;
+                            if ((sizeDiff > 1000) || (sizeDiff < -1000)) {
+                                // Max opacity
+                                opacityLevel = 1;
+                            } else {
+                                // We can map
+                                if (sizeDiff < 0) {
+                                    // Red map
+                                    opacityLevel = convertRange(sizeDiff, [0, -1000], [0.1, 0.75]);
+                                } else {
+                                    // Green map
+                                    opacityLevel = convertRange(sizeDiff, [0, 1000], [0.1, 0.75]);
+                                }
+
+                            }
+                            let back = (sizeDiff < 0) ? "rgba(` + rmCol + `," + opacityLevel + ")" : "rgba(` + addCol + `,"+ opacityLevel +")";
+                            let style = {
+                                "background-color": back,
+                                "color": "black"
+                            }
+                            console.log(style)
+                            $("." + arr.revid).css(style) 
+                        }
+
+                        
                         var tags = arr.tags;
                         let tagsToAppend = "";
                         tags.forEach(tag => {
@@ -508,10 +543,7 @@
                 return;
             })
         }
-        //lastWarningLevel(["Ed6767", "Prompt0259"], res => {
-        //    console.log(res)ge
-        //    alert(res.length)
-        //})
+
 
 
 

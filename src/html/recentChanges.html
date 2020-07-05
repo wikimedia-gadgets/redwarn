@@ -1,5 +1,14 @@
 <!DOCTYPE HTML>
 <html>
+
+<!--
+    recentChanges.html ->
+                        Redwarn Patrol feature. Do actions on edits based off the Recent Changes feed from REST.
+                        Future:
+                            Diff/Comparison Page
+                            Clean up code maybe?
+-->
+
 <head>
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -13,7 +22,7 @@
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-indigo.min.css" />
 </head>
 
-<body onload="refreshLive(call => {});">
+<body onload="refreshLive();">
     <!-- Show a few edits on load -->
     <!-- No header, and the drawer stays open on larger screens (fixed drawer). -->
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
@@ -149,17 +158,40 @@
             z-index:999999999999; /* ITS OVER 9000 LOOOL */
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script> <!--For preferences-->
     <script>
-
+        /*---------------------------------------------
+        |        Recent Changes (Redwarn Patrol)      |                                            
+        |        -------------------------------      |                                            
+        |        Below javascript handles the         |                                        
+        |        filtering and retrieval of           |                                    
+        |        the recent changes REST API          |                                        
+        |        query for Redwarn Patrol.            |                                    
+        |        -------------------------------      |                                            
+        |                                             |    
+        ---------------------------------------------*/
 
 
         // Defining constants
         const WIKICWD = "https:" + "`+ rw.wikiBase +`";
         const WIKIID = "`+ rw.wikiID +`";
         const WIKIAPI = "` +rw.wikiAPI +`";
-        const CORSENABLED = false; // CHANGE THIS WHENEVER CORS IMPLEMENTATION IS DONE. WILL BE BASED OFF VALUE OF rw.wikiID
+        const CORSENABLED = false; // We will force this to be disabled until CORS implementation is completed.
+
+
         
+        // Initialization. \/ //
+        // Create broadcast channel
+        var bcID = "RWBC_" + Math.random().toString(36).substring(7);
+        const bc = new BroadcastChannel(bcID);
+        $("#newAttached").attr("href", "https://en.wikipedia.org/wiki/User:Ed6767/redwarn/patrol#rwPatrolAttach-" + bcID); // set link
+
+        var tI;
+        function convertRange(value, r1, r2) {
+            return (value - r1[0]) * (r2[1] - r2[0]) / (r1[1] - r1[0]) + r2[0];
+        }
+
+        // Select2 Initialization
         var rctypes = ["Categorize", "Edit", "External", "Log", "New"];
         var rctags = ["Possible Vandalism", "Bad External Link/Image(s)", "Replaces >90% of page", "Undo", "Rollback", "New Redirect", "Possible BLP issue or vandalism", "Remove redirect", "Blanking", "Possible autobiography", ]; // Should be a list of commonly used tags or the default tag (from config), which should be put into the place of rctags[0]
         $(document).ready(function() {
@@ -183,49 +215,27 @@
         $(document).ready(function() {
             saveConfig();
         });
+        // code for filters preferences
+        var filterButton = document.getElementById('filterButton');
+        var filterDialog = document.getElementById('filterSubDialog');
 
-        Array.prototype.remove = function(value) { // fuck you internet explorer u kinda smell
-                    for (var i = this.length; i--; ) {
-                        if (this[i] === value) {
-                            this.splice(i, 1);
-                        }
-                    }
-                }
-
-        function fetchEditCount(ids, callback) {
-            let idurl = "";
-            ids.forEach(element => { 
-                idurl += element + "|";
-            });            
-            idurl = idurl.substring(0, idurl.length - 1); //remove last char (which will be an excess "|")
-            $.getJSON(WIKICWD + "/w/api.php?action=query&list=users&ususerids="+ idurl + "&format=json&usprop=editcount", feed => {
-                callback(feed)
-            });
+        if (!filterDialog.showModal) {
+            dialogPolyfill.registerDialog(filterDialog);
         }
+        filterButton.addEventListener('click', function () {
+            filterDialog.showModal();
+        })
+        filterDialog.querySelector('.close').addEventListener('click', function () {
+            filterDialog.close();
+        });
+        // code for filters preferences
 
-        function getUserInfo(ids, callback) { // ids should be an array of user ids - will return EDIT COUNT (API:Users) and WARNING LEVEL (Unoffical)
-            fetchEditCount(ids, result => {
-                let infoOUT = []; // Nested array - output of output[n][0] is userid & output[n][1] is corresponding edit count & output[n][2] is warning level
-                let user = result.query.users;
-                let unamelist = [];
-                user.forEach(value => { // to make stuff for lastwarninglevel
-                    unamelist.push(value.name);
-                });
-                user.forEach(user => {
-                    let userInfo = [];
-                    userInfo = [user.userid, user.name, user.editcount];
-                    infoOUT.push({uid: userInfo[0], name: userInfo[1], editcount: userInfo[2]}); // push everything out to callback array
-                });
-                callback(infoOUT); // it is done.
-            });
-        }
+        // Initialization. /\ //
 
 
-        function getRndInteger(max) { // its in the name
-              return Math.floor(Math.random() * Math.floor(max));
-        }
 
-        function refreshLive() { // we're gonna use the callback to only do refresh cooldown after everything is loaded
+        // Main funcs. \/ //
+        function refreshLive() { // MAIN FUNCTION. Will call all functions needed for getting and parsing recent changes.
 
             // if you add to it its preferred you refer to a users id when referring to an edit, as names are not as consistent (anons are given a random value).
             // insert code for filter fetch here
@@ -246,7 +256,7 @@
                 }
                 for(let [key, value] of Object.entries(call)) { // Get the values to link the things up to eachother
                     if(value.userid == 0 ) {
-                        value.userid = "anon-" + getRndInteger(999999999);
+                        value.userid = "anon-" + Math.floor(Math.random() * Math.floor(999999999));;
                         allANON.push([value.userid, value.user]);
                     } else {
                         allUSERS_only.push(value.user);
@@ -380,96 +390,6 @@
             });
         }
 
-
-        function capitalizeFirstLetter(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
-        }
-        function switchCheck() { // Checks on the switch click for toggling live feeds if its in 'checked' state or not and changes page accordingly
-            let livetoggle= document.getElementById('liveswitch');
-            let hoverswitch = document.getElementById('hoverswitch');
-            if (livetoggle.checked == true) {
-                tI = setInterval(refreshLive, 1750);
-                hoverswitch.style.display = "none";
-            } else {
-                clearTimeout(tI);
-                hoverswitch.style.display = "initial";
-            }
-        }
-
-
-        // code for filters preferences
-        var filterButton = document.getElementById('filterButton');
-        var filterDialog = document.getElementById('filterSubDialog');
-
-        if (!filterDialog.showModal) {
-            dialogPolyfill.registerDialog(filterDialog);
-        }
-        filterButton.addEventListener('click', function () {
-            filterDialog.showModal();
-        })
-        filterDialog.querySelector('.close').addEventListener('click', function () {
-            filterDialog.close();
-        });
-        // code for filters preferences
-
-
-        // Create broadcast channel
-        var bcID = "RWBC_" + Math.random().toString(36).substring(7);
-        const bc = new BroadcastChannel(bcID);
-        $("#newAttached").attr("href", "https://en.wikipedia.org/wiki/User:Ed6767/redwarn/patrol#rwPatrolAttach-" + bcID); // set link
-
-        var tI;
-        function convertRange(value, r1, r2) {
-            return (value - r1[0]) * (r2[1] - r2[0]) / (r1[1] - r1[0]) + r2[0];
-        }
-
-
-
-        function goToLatestDiffPage(article) {
-            $("#welcomeContainer").hide();
-            // Nav to latest diff page
-            $.getJSON(WIKICWD + "/w/api.php?action=query&prop=revisions&titles=" + encodeURIComponent(article) + "&rvslots=*&rvprop=ids%7Cuser&formatversion=2&format=json", r => {
-                // We got the response
-                let latestRId = r.query.pages[0].revisions[0].revid;
-                let parentRId = r.query.pages[0].revisions[0].parentid;
-                // Open page in new tab (has to be done here due to new security systems)
-                bc.postMessage(WIKICWD + "/w/index.php?title=" + encodeURIComponent(name) + "&diff=" + latestRId + "&oldid=" + parentRId + "&diffmode=source");
-            });
-        }
-
-        function fetchRecentChanges(filterlist, callback) { // fetch JSON from action API using querys
-            $.getJSON(WIKICWD + "/w/api.php?action=query&list=recentchanges&rclimit=50&format=json&rcprop=user|userid|title|timestamp|ids|tags|parsedcomment|sizes&rctype=edit|external|new", r => { // we need to add stuff for filters in here somewhere later.
-                let feed = r.query.recentchanges;
-                callback(feed); // this is all we needed to do
-                });
-        }
-        
-        function saveConfig() {
-            var rctypefilter = $('.dropdown-rctype').select2('data');
-            var rctagfilter = $('.dropdown-rctag').select2('data');
-            var switch2 = document.getElementById('switch-2').checked;
-        }
-
-
-
-
-        function fetchMeWarningLevel(users, callback) { // death
-            let userurl = "";
-            users.forEach(value => {
-                if(value == undefined) {
-                    return true;
-                }
-                userurl += "User_talk:" + value + "|";
-            });
-            userurl = userurl.substring(0, userurl.length - 1);
-            // Get the last warning level of a user this month
-            $.getJSON(WIKICWD + "/w/api.php?action=query&prop=revisions&titles="+ userurl +"&rvslots=*&rvprop=content&formatversion=2&format=json", feed => {
-            // ...
-                callback(feed)
-            });
-
-        }
-
         function lastWarningLevel(users, callback) { // callback() - users param is an array!
         // users should be ARRAY
             fetchMeWarningLevel(users, phoneafriend => { // returns feed for us to use, users is parsed within function 
@@ -538,11 +458,158 @@
 
                 });
                 //  ... anything outside MAIN loop ie calling back warnsout final
-                console.log(warnsOUT);
                 callback(warnsOUT);
                 return;
             })
         }
+        // Main funcs. /\ //
+
+
+
+        // ASYNC / CALLBACK FIX FUNCTIONS. \/ //
+
+        function fetchMeWarningLevel(users, callback) { // async fix.
+            let userurl = "";
+            users.forEach(value => {
+                if(value == undefined) {
+                    return true;
+                }
+                userurl += "User_talk:" + value + "|";
+            });
+            userurl = userurl.substring(0, userurl.length - 1);
+            // Get the last warning level of a user this month
+            $.getJSON(WIKICWD + "/w/api.php?action=query&prop=revisions&titles="+ userurl +"&rvslots=*&rvprop=content&formatversion=2&format=json", feed => {
+            // ...
+                callback(feed)
+            });
+
+        }
+
+        function fetchRecentChanges(filterlist, callback) { // fetch JSON from action API using querys
+            $.getJSON(WIKICWD + "/w/api.php?action=query&list=recentchanges&rclimit=50&format=json&rcprop=user|userid|title|timestamp|ids|tags|parsedcomment|sizes&rctype=edit|external|new", r => { // we need to add stuff for filters in here somewhere later.
+                let feed = r.query.recentchanges;
+                callback(feed); // this is all we needed to do
+                });
+        }
+
+        function fetchEditCount(ids, callback) {// Fix for async: the main thread will be held up until this is done.
+
+            // Note: we can probably lessen loading times for base stuff if we did this stuff in async rather than 
+            // holding up the main thread but for now its whatever, warning levels take the longest and don't hold us from
+            // inteferacing with anything actually important.
+            let idurl = "";
+            ids.forEach(element => { 
+                idurl += element + "|";
+            });            
+            idurl = idurl.substring(0, idurl.length - 1); //remove last char (which will be an excess "|")
+            $.getJSON(WIKICWD + "/w/api.php?action=query&list=users&ususerids="+ idurl + "&format=json&usprop=editcount", feed => {
+                callback(feed)
+            });
+        }
+
+        function getUserInfo(ids, callback) { // Wrapper for the interpretation of ids and fetching of the edit count for users. This is jank but I actually cba
+            // ids should be an array of user ids - will return EDIT COUNT (API:Users) and WARNING LEVEL (Unoffical)
+            fetchEditCount(ids, result => {
+                let infoOUT = []; // Nested array - output of output[n][0] is userid & output[n][1] is corresponding edit count & output[n][2] is warning level
+                let user = result.query.users;
+                let unamelist = [];
+                user.forEach(value => { // to make stuff for lastwarninglevel
+                    unamelist.push(value.name);
+                });
+                user.forEach(user => {
+                    let userInfo = [];
+                    userInfo = [user.userid, user.name, user.editcount];
+                    infoOUT.push({uid: userInfo[0], name: userInfo[1], editcount: userInfo[2]}); // push everything out to callback array
+                });
+                callback(infoOUT); // it is done.
+            });
+        }
+
+        function fetchEditCount(ids, callback) {// Fix for async: the main thread will be held up until this is done.
+        
+        // Note: we can probably lessen loading times for base stuff if we did this stuff in async rather than 
+        // holding up the main thread but for now its whatever, warning levels take the longest and don't hold us from
+        // inteferacing with anything actually important.
+        let idurl = "";
+        ids.forEach(element => { 
+            idurl += element + "|";
+        });            
+        idurl = idurl.substring(0, idurl.length - 1); //remove last char (which will be an excess "|")
+        $.getJSON(WIKICWD + "/w/api.php?action=query&list=users&ususerids="+ idurl + "&format=json&usprop=editcount", feed => {
+            callback(feed)
+        });
+        }
+
+        function getUserInfo(ids, callback) { // Wrapper for the interpretation of ids and fetching of the edit count for users. This is jank but I actually cba
+        // ids should be an array of user ids - will return EDIT COUNT (API:Users) and WARNING LEVEL (Unoffical)
+        fetchEditCount(ids, result => {
+            let infoOUT = []; // Nested array - output of output[n][0] is userid & output[n][1] is corresponding edit count & output[n][2] is warning level
+            let user = result.query.users;
+            let unamelist = [];
+            user.forEach(value => { // to make stuff for lastwarninglevel
+                unamelist.push(value.name);
+            });
+            user.forEach(user => {
+                let userInfo = [];
+                userInfo = [user.userid, user.name, user.editcount];
+                infoOUT.push({uid: userInfo[0], name: userInfo[1], editcount: userInfo[2]}); // push everything out to callback array
+            });
+            callback(infoOUT); // it is done.
+        });
+        }
+        // ASYNC / CALLBACK FIX FUNCTIONS. /\ //
+
+
+
+        // Miscelleneous functions. \/ //
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        function switchCheck() { // Checks on the switch click for toggling live feeds if its in 'checked' state or not and changes page accordingly
+            let livetoggle= document.getElementById('liveswitch');
+            let hoverswitch = document.getElementById('hoverswitch');
+            if (livetoggle.checked == true) {
+                tI = setInterval(refreshLive, 1750);
+                hoverswitch.style.display = "none";
+            } else {
+                clearTimeout(tI);
+                hoverswitch.style.display = "initial";
+            }
+        }
+
+        function goToLatestDiffPage(article) {
+            $("#welcomeContainer").hide();
+            // Nav to latest diff page
+            $.getJSON(WIKICWD + "/w/api.php?action=query&prop=revisions&titles=" + encodeURIComponent(article) + "&rvslots=*&rvprop=ids%7Cuser&formatversion=2&format=json", r => {
+                // We got the response
+                let latestRId = r.query.pages[0].revisions[0].revid;
+                let parentRId = r.query.pages[0].revisions[0].parentid;
+                // Open page in new tab (has to be done here due to new security systems)
+                bc.postMessage(WIKICWD + "/w/index.php?title=" + encodeURIComponent(name) + "&diff=" + latestRId + "&oldid=" + parentRId + "&diffmode=source");
+            });
+        }
+
+        function saveConfig() { // gets info
+            var rctypefilter = $('.dropdown-rctype').select2('data');
+            var rctagfilter = $('.dropdown-rctag').select2('data');
+            var switch2 = document.getElementById('switch-2').checked;
+        }
+        // Miscelleneous functions. /\ //
+
+
+
+        // Custom methods:
+
+            // Method for removing stuff from arrays
+        Array.prototype.remove = function(value) { // fuck you internet explorer u kinda smell
+                    for (var i = this.length; i--; ) {
+                        if (this[i] === value) {
+                            this.splice(i, 1);
+                        }
+                    }
+                }
 
 
 

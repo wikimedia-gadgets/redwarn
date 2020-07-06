@@ -247,6 +247,10 @@ var rw = {
 
         "bindRecentChanges" : () => { // on list change add redwarn
             $('body').on('DOMSubtreeModified', 'ul.special', ()=>rw.recentChanges.diffLinkAddRedWarn());
+        },
+        "filterSave": (configIn) => {
+            // Do stuff with configIn
+
         }
     }
 };
@@ -290,6 +294,8 @@ function initRW() {
             for (let item of document.getElementsByClassName("mdl-tooltip")) {
                 rw.visuals.register(item); 
             }
+            // A bit more of a clear error for someone who may not be paying immediate attention. Maybe we can use wikitext to send new user guide?
+            mw.notify("You do not have permission to use Redwarn yet. Please refer to the user guide for more information (Error: User is NOT confirmed/autoconfirmed)", {title: "Error loading Redwarn", autoHide: "false", tag: "redwarn"});
             rw = {}; // WIPE OUT ENTIRE CLASS. We're not doing anything here.
             // That's it
         });

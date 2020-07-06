@@ -59,7 +59,7 @@
                     <p>Specific Filters</p>
                     <form action="#">
                         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                          <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sample4" value="1234">
+                          <input class="mdl-textfield__input maxeditcount" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sample4" value="1234">
                           <label class="mdl-textfield__label" for="sample4">Max. edit count</label>
                           <span class="mdl-textfield__error">Please input a number.</span>
                         </div>
@@ -226,7 +226,7 @@
                 placeholder: "User Groups",
                 multiple: false,
                 tags: false, 
-                dataL rcgroups,
+                data: rcgroups,
                 allowClear: true,
                 dropdownCssClass:'increazezindex'
             })
@@ -291,9 +291,12 @@
             rctagData.forEach(function (item, key) {
                 parsedrctag.push(item.text);
             });
+            let maxeditcount = $("#maxeditcount").attr("value")
+            console.log(maxeditcount)
             var specifics = {
                 "rctype": parsedrctype,
-                "rctag": parsedrctag
+                "rctag": parsedrctag,
+                "maxedit": maxeditcount
             }
             var toggles = {
                 "bots": document.getElementById('bots').checked,

@@ -205,7 +205,7 @@
         // Select2 Initialization
         var rctypes = ["Edit", "External", "New"];
         var rctags = ["Possible Vandalism", "Bad External Link/Image(s)", "Replaces >90% of page", "Undo", "Rollback", "New Redirect", "Possible BLP issue or vandalism", "Remove redirect", "Blanking", "Possible autobiography", ]; // Should be a list of commonly used tags or the default tag (from config), which should be put into the place of rctags[0]
-        var rcgroups = ["", "Unconfirmed", "Confirmed", "Extended Confirmed", "Sysop"];
+        var rcgroups = ["*", "Unconfirmed", "Confirmed", "extendedconfirmed", "Sysop"];
         $(document).ready(function() {
             $('.dropdown-rctype').select2({
                 placeholder: "Edit Type",
@@ -413,10 +413,10 @@
                         let uname = res.name;
                         let editcount = res.editcount;
                         let warningLvl = res.warninglevel;
-                        if(res.groups === null) {
-                            console.log("empty");
-                        } else if (res.groups.indexOf((FILTERS.specifics.group).toString().toLowerCase()) > -1) {
+                        if (!res.groups.includes((FILTERS.specifics.group[0]).toString().toLowerCase())) {
                             $("." + res.uid).css("display", "none");
+                        } else {
+                            console.log("no")
                         }
                         if(res.name == uname) {
                             let warningLevelIcn;

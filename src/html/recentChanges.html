@@ -205,7 +205,7 @@
         // Select2 Initialization
         var rctypes = ["Edit", "External", "New"];
         var rctags = ["Possible Vandalism", "Bad External Link/Image(s)", "Replaces >90% of page", "Undo", "Rollback", "New Redirect", "Possible BLP issue or vandalism", "Remove redirect", "Blanking", "Possible autobiography", ]; // Should be a list of commonly used tags or the default tag (from config), which should be put into the place of rctags[0]
-        var rcgroups = ["", "Unconfirmed", "autoconfirmed/confirmed", "extendedconfirmed", "Sysop"];
+        var rcgroups = ["", "Unconfirmed", "autoconfirmed", "extendedconfirmed", "Sysop"];
         $(document).ready(function() {
             $('.dropdown-rctype').select2({
                 placeholder: "Edit Type",
@@ -309,14 +309,9 @@
                 parsedrctag.push(item.text);
             });
             console.log(parsedugroupData.text);
-            if(parsedugroupData[0].text == "autoconfirmed/confirmed") {
-                console.log("a")
-                parsedugroup = ["autoconfirmed", "confirmed"];
-            } else {
-                parsedugroup.push(parsedugroupData[0].text);
-            }
+            parsedugroup.push(parsedugroupData[0].text);
+            
             let maxeditcount = $(".maxeditcount").prop("value");
-            console.log(maxeditcount);
             var specifics = {
                 "rctype": parsedrctype,
                 "rctag": parsedrctag,
@@ -359,14 +354,12 @@
                 rctypeurl += arr.toLowerCase() + "|";
             })
             rctypeurl = rctypeurl.substring(0, rctypeurl.length - 1);
-            console.log(rctypeurl)
             let rctagurl = ""
             if(FILTERS.specifics.rctag[0] == undefined) {
                 rctagurl = ""
             } else {
                 rctagurl = "&rctag=" + FILTERS.specifics.rctag[0];
             }
-            console.log(rctagurl)
             // this going to horrify you
             let toggles = FILTERS.toggles
             let togglelist = "&rcshow=" + (toggles.anonymous ? "" : "!anon|") + (toggles.bots ? "" : "!bot|") + (toggles.minor ? "" : "!minor|") + (toggles.redirects ? "" : "!redirect|")
@@ -436,14 +429,12 @@
                         let editcount = res.editcount;
                         let warningLvl = res.warninglevel;
                         if(FILTERS.specifics.group[0] != "0") {
-                            FILTERS.specifics.group.forEach(group => {
-                                console.log(group)
-                                if (!res.groups.includes((group).toString().toLowerCase())) {
-                                    $("." + res.uid).css("display", "none");
-                                } else {
-                                    console.log("no")
-                                }
-                            })
+                            if (!res.groups.includes((FILTERS.specifics.group[0]).toString().toLowerCase())) {
+                                console.log("hide!")
+                                $("." + res.uid).css("display", "none");
+                            } else {
+                                console.log("no")
+                            }
 
                         }
                         if(res.name == uname) {
@@ -638,6 +629,9 @@
                 user.forEach(user => {
                     let grouplist = [];
                     for(const group in user.groups) {
+                        if(user.groups[group] == "confirmed") {
+                            user.groups[group] = "autoconfirmed";
+                        }
                         grouplist.push(user.groups[group].toString());
                     }
                     let userInfo = [];

@@ -12,14 +12,14 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://redwarn.toolforge.org/cdn/js/jQuery.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://redwarn.toolforge.org/cdn/css/select2.css" rel="stylesheet" />
 
     <link
         href="https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese"
         rel="stylesheet">
     <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/materialicons.css">
 
-    <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/material.blue-indigo.min.css" />
+    <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/material.${rw.config.colTheme}.min.css" />
 </head>
 
 <body onload="refreshLive();">
@@ -163,7 +163,7 @@
             z-index:999999999999; /* ITS OVER 9000 LOOOL */
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script> <!--For preferences-->
+    <script src="https://redwarn.toolforge.org/cdn/js/select2.js"></script> <!--For preferences-->
     <script>
         /*---------------------------------------------
         |        Recent Changes (Redwarn Patrol)      |                                            
@@ -213,7 +213,8 @@
                 tags: false,
                 data: rctypes,
                 allowClear: true,
-                dropdownCssClass:'increasezindex'
+                dropdownCssClass:'increasezindex',
+                dropdownParent: $('#filterSubDialog')
             });
             $('.dropdown-rctag').select2({
                 placeholder: "Tag...",
@@ -221,7 +222,8 @@
                 tags: true,
                 data: rctags,
                 allowClear: true,
-                dropdownCssClass:'increasezindex'
+                dropdownCssClass:'increasezindex',
+                dropdownParent: $('#filterSubDialog')
             });
             $('.dropdown-groups').select2({
                 placeholder: "Filter by User Group",
@@ -229,7 +231,8 @@
                 tags: true, 
                 data: rcgroups,
                 allowClear: true,
-                dropdownCssClass:'increasezindex'
+                dropdownCssClass:'increasezindex',
+                dropdownParent: $('#filterSubDialog')
             })
 
             if(FILTERS == undefined) { // Make filters for us - will likely be used first launch only

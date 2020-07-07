@@ -178,7 +178,7 @@ rw.ui = {
                 </div>
                 `,
 
-                // Final/Only Warning (dark red) TODO: Click opens admin report pannel.
+                // Final/Only Warning (dark red)
                 `
                 <span class="material-icons" id="PastWarning" style="cursor:pointer;position: relative;top: 5px;padding-left: 10px;color:#a20000;" onclick="window.parent.postMessage('adminR');">report</span>
                 <div class="mdl-tooltip mdl-tooltip--large" for="PastWarning">
@@ -453,7 +453,7 @@ rw.ui = {
         // Open preferences page with no padding, full screen
         dialogEngine.create(mdlContainers.generateContainer(`
         [[[[include preferences.html]]]]
-        `, document.body.offsetWidth, document.body.offsetHeight), true).showModal(); // TRUE HERE MEANS NO PADDING.
+        `, document.body.offsetWidth, document.body.offsetHeight, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
     },
 
     "openAdminReport" : (un)=> { // Open admin report dialog

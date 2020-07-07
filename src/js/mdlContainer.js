@@ -38,7 +38,15 @@ var mdlContainers = {
         return content; // return
     },
 
-    "generateContainer" : function(innerContent, width, height) {
+    "generateContainer" : function(innerContent, width, height, fill) { // fill sizes mdl containers in dialogEngine to ALWAYS be screen size
+        if (fill) {
+            // If fill mode on, fit to window
+            $(window).resize(()=>{
+                $(dialogEngine.dialog.getElementsByTagName("iframe")[0]).attr("height",  document.body.offsetHeight);
+                $(dialogEngine.dialog.getElementsByTagName("iframe")[0]).attr("width",  document.body.offsetWidth);
+            });
+        }
+
         let url = URL.createObjectURL(new Blob([mdlContainers.generateHtml(innerContent)], { type: 'text/html' })); // blob url
         return `<iframe width="`+width+`" height="`+height+`" src="`+ url + `" frameborder="0" scrolling="no" style="max-height: 100%;"></iframe>`;
     }

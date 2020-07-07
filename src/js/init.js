@@ -220,11 +220,9 @@ var rw = {
             
             $("#PTdialogContainer").html(`
             <dialog class="mdl-dialog" id="rwPATROLdialog">
-                `+ content +`
+                ${content}
             </dialog>
             `);
-
-
             rw.recentChanges.dialog = document.querySelector('#rwPATROLdialog'); // set dialog
 
             $("#rwPATROLdialog").attr("style", "padding:inherit;"); // set no padding
@@ -232,29 +230,14 @@ var rw = {
             if (! rw.recentChanges.dialog.showModal) {
                 dialogPolyfill.registerDialog(rw.recentChanges.dialog);
             }
-            rw.recentChanges.dialog.showModal(); // Show dialog
-        },
-        "diffLinkAddRedWarn" : () => { // add redwarn to recent changes page
-            $('body').unbind('DOMSubtreeModified'); // Prevent infinite loop
-            $.each($(".mw-changeslist-diff"), (i,el)=>{
-                if ($(el).parent().html().includes("#redwarn")) {
-                    // Link already there.
-                } else {
-                    $(el).parent().prepend(`<a href='#redwarn' onclick='rw.ui.revisionBrowser("`+ el.href +`");'>Redwarn</a>  | `);
-                }
+
+            // Resize on window change
+            $(window).resize(()=>{
+                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("height",  document.body.offsetHeight);
+                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("width",  document.body.offsetWidth);
             });
-            window.addEventListener("focus", e=>{ 
-                rw.recentChanges.bindRecentChanges(); // fix chrome unfocus bug 
-            }, false);
-            rw.recentChanges.bindRecentChanges();
-        },
 
-        "bindRecentChanges" : () => { // on list change add redwarn
-            $('body').on('DOMSubtreeModified', 'ul.special', ()=>rw.recentChanges.diffLinkAddRedWarn());
-        },
-        "filterSave": (configIn) => {
-            // Do stuff with configIn
-
+            rw.recentChanges.dialog.showModal(); // Show dialog
         }
     }
 };
@@ -286,8 +269,6 @@ function initRW() {
         // Quick check we have perms to use (in confirmed/autoconfirmed group)
         rw.info.featureRestrictPermissionLevel("confirmed", false, ()=>{
             // We don't have permission
-            //display a toast to notify user
-            rw.visuals.toast.show("You must be Autoconfirmed or Confirmed to use RedWarn.  Please refer the user guide for more information.");
             // Add red lock to the top right to show that RedWarn cannot be used
             document.getElementsByClassName("mw-indicators mw-body-content")[0].innerHTML = `
             <div id="Lock" class="icon material-icons"><span style="cursor: help; color:red;" onclick="">lock</span></div>
@@ -385,11 +366,20 @@ function initRW() {
                 rw.rollback.loadIcons(); // load rollback icons
             } else if (mw.config.get("wgRelevantPageName").includes("Special:RecentChanges")) {
                 // Recent changes page
-                // Add redwarn btn
+                // Add redwarn open btn
                 $(".mw-specialpage-summary").prepend(`
-                <div id="openRWP" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.recentChanges.openPage(window.location.search.substr(1));">policy</span></div>         Click the icon to open Redwarn Patrol
+                <div id="openRWP" style="
+                    font-size: 32px;
+                    float: right;
+                    background: white;
+                ">
+                    <span style="cursor: pointer;" onclick="rw.recentChanges.openPage(window.location.search.substr(1));">
+                        ${rw.logoHTML} patrol
+                    </span>
+                </div>
+
                 <div class="mdl-tooltip mdl-tooltip--large" for="openRWP">
-                    Launch RedWarn Patrol
+                    Click to launch RedWarn Patrol
                 </div>
                 `); // Register tooltip
                 for (let item of document.getElementsByClassName("mdl-tooltip")) {

@@ -30,43 +30,44 @@
         <dialog class="mdl-dialog" id="filterSubDialog" style="width: 500px;">
             <h5 class="mdl-dialog__title" style="padding-bottom: 32px;">Filter Preferences</h5>
             <div class="mdl-dialog__content">
-                <div id="filtertoggles" style="width: 50%; min-height: 350px; float: left;">
-                    <p>Filter toggles</p>
+                <div id="filtertoggles" style="width: 47.5%; min-height: 300px; float: left; padding-left: 2.5%; padding-right: 0.5%;">
+                    <p>Toggleable Properties</p>
                     <p>
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="bots">
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="bots" style="margin-top: 10px !important;">
                           <input type="checkbox" id="bots" class="mdl-switch__input" checked>
-                          <span class="mdl-switch__label">Bot Edits</span>
+                          <span class="mdl-switch__label">Show bot edits</span>
                         </label>
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="minor">
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="minor" style="margin-top: 10px !important;">
                           <input type="checkbox" id="minor" class="mdl-switch__input" checked>
-                          <span class="mdl-switch__label">Minor Edits</span>
+                          <span class="mdl-switch__label">Show minor edits</span>
                         </label>
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="redirects">
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="redirects" style="margin-top: 10px !important;">
                           <input type="checkbox" id="redirects" class="mdl-switch__input" checked>
-                          <span class="mdl-switch__label">Redirect Page Edits</span>
+                          <span class="mdl-switch__label">Allow redirect page edits</span>
                         </label>
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="anonymous">
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="anonymous" style="margin-top: 10px !important;">
                           <input type="checkbox" id="anonymous" class="mdl-switch__input" checked>
-                          <span class="mdl-switch__label">Anonymous Users</span>
+                          <span class="mdl-switch__label">Show anonymous users</span>
                         </label>
                         <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="latest" style="margin-top: 10px !important;">
                             <input type="checkbox" id="latest" class="mdl-switch__input" checked>
-                            <span class="mdl-switch__label">Latest revisions only</span>
+                            <span class="mdl-switch__label">Show only latest revisions</span>
                           </label>
                     </p>
                 </div>
-                <div id="filterspecifics" style="width: 50%; min-height: 350px; display: inline-block;">
+                <div id="filterspecifics" style="width: 49.5%; min-height: 300px; display: inline-block;">
                     <p>Specific Filters</p>
-                    <form action="#">
-                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                          <input class="mdl-textfield__input maxeditcount" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sample4" value="1234">
-                          <label class="mdl-textfield__label" for="sample4">Max. edit count</label>
-                          <span class="mdl-textfield__error">Please input a number.</span>
-                        </div>
-                    </form>
-                    <select id="groups" class="dropdown-groups dropdown-sw" name="groups[]"></select><br><br>
-                    <select id="rctype" class="dropdown-rctype dropdown-sw" name="rctype[]" multiple="multiple"></select><br><br>
-                    <select id="rctag" class="dropdown-rctag dropdown-sw" name="rctag[]"></select>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input class="mdl-textfield__input maxeditcount" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sample4" value="1234">
+                      <label class="mdl-textfield__label" for="sample4">Max. edit count (0 for no max)</label>
+                      <span class="mdl-textfield__error">Please input a number.</span>
+                    </div>
+                    <span class="specificboxes">
+                        <select id="groups" class="dropdown-groups dropdown-sw" name="groups[]"></select><br><br> <!-- bad practice but im lazy-->
+                        <select id="rctype" class="dropdown-rctype dropdown-sw" name="rctype[]" multiple="multiple"></select><br><br>
+                        <select id="rctag" class="dropdown-rctag dropdown-sw" name="rctag[]"></select>               
+                    </span>
+
                 </div>
 
                 <div class="mdl-dialog__actions">
@@ -204,10 +205,10 @@
         // Select2 Initialization
         var rctypes = ["Edit", "External", "New"];
         var rctags = ["Possible Vandalism", "Bad External Link/Image(s)", "Replaces >90% of page", "Undo", "Rollback", "New Redirect", "Possible BLP issue or vandalism", "Remove redirect", "Blanking", "Possible autobiography", ]; // Should be a list of commonly used tags or the default tag (from config), which should be put into the place of rctags[0]
-        var rcgroups = ["Unconfirmed", "Confirmed", "Extended Confirmed", "Admins"];
+        var rcgroups = ["", "Unconfirmed", "Confirmed", "Extended Confirmed", "Sysop"];
         $(document).ready(function() {
             $('.dropdown-rctype').select2({
-                placeholder: "rctype",
+                placeholder: "Edit Type",
                 multiple: true,
                 tags: false,
                 data: rctypes,
@@ -215,7 +216,7 @@
                 dropdownCssClass:'increasezindex'
             });
             $('.dropdown-rctag').select2({
-                placeholder: "rctag",
+                placeholder: "Tag...",
                 multiple: false,
                 tags: true,
                 data: rctags,
@@ -223,17 +224,18 @@
                 dropdownCssClass:'increasezindex'
             });
             $('.dropdown-groups').select2({
-                placeholder: "User Groups",
+                placeholder: "Filter by User Group",
                 multiple: false,
-                tags: false, 
+                tags: true, 
                 data: rcgroups,
                 allowClear: true,
-                dropdownCssClass:'increazezindex'
+                dropdownCssClass:'increasezindex'
             })
 
             if(FILTERS == undefined) { // Make filters for us - will likely be used first launch only
                 // set filters to default
-                FILTERS = { 
+                // maxedit should be 0 for no user
+                FILTERS = {
                     "toggles": {
                         "bots": true,
                         "minor": true,
@@ -243,9 +245,12 @@
                     }, 
                     "specifics": {
                         "rctype": ["Edit", "External", "New"],
-                        "rctag": []
+                        "rctag": [],
+                        "maxedit": 0,
+                        "group": []
                     }
                 }
+
                 PARENTRW.config.filters = FILTERS;
                 PARENTRW.info.writeConfig(true, ret => {
                     ret = undefined; // i dont care whats called back as long as this works
@@ -283,6 +288,8 @@
             filterDialog.close();
             var rctypeData = $("#rctype").select2('data');
             var rctagData = $("#rctag").select2('data');
+            var parsedugroupData = $("#groups").select2('data');
+            var parsedugroup = [];
             var parsedrctype = [];
             var parsedrctag = [];
             rctypeData.forEach(function (item, key) {
@@ -291,12 +298,16 @@
             rctagData.forEach(function (item, key) {
                 parsedrctag.push(item.text);
             });
-            let maxeditcount = $("#maxeditcount").attr("value")
-            console.log(maxeditcount)
+            parsedugroupData.forEach(function(item, key) {
+                parsedugroup.push(item.text);
+            })
+            let maxeditcount = $(".maxeditcount").attr("value");
+            console.log(maxeditcount);
             var specifics = {
                 "rctype": parsedrctype,
                 "rctag": parsedrctag,
-                "maxedit": maxeditcount
+                "maxedit": maxeditcount,
+                "group": parsedugroup
             }
             var toggles = {
                 "bots": document.getElementById('bots').checked,
@@ -309,6 +320,7 @@
                 "toggles": toggles,
                 "specifics": specifics
             }
+            firstlaunch = true;
             PARENTRW.config.filters = FILTERS;
             PARENTRW.info.writeConfig(true, ret => {
                 ret = undefined; // lol idc
@@ -396,20 +408,41 @@
                 getUserInfo(unanonLIST, userinfo => { // usernames parameter is used for consistency of anon
                     // IDENTIFIABLE ISSUE: WE DO NOT HAVE A RESULT FROM THE THING
                     let unamelist =[];
+                    console.log(userinfo)
                     userinfo.forEach(res => {
                         let uname = res.name;
                         let editcount = res.editcount;
                         let warningLvl = res.warninglevel;
+                        if(res.groups === null) {
+                            console.log("empty");
+                        } else if (res.groups.indexOf((FILTERS.specifics.group).toString().toLowerCase()) > -1) {
+                            $("." + res.uid).css("display", "none");
+                        }
                         if(res.name == uname) {
                             let warningLevelIcn;
                             // horror for setting icn
-                            $("." + res.uid).append("<p class='userinfo'>" + uname + " • (" + editcount + ") • <span class='warningLevel warn-" + res.uid +"'> <span class='material-icons'>autorenew</span></span>")
+                            $("." + res.uid).append("<p class='userinfo'>" + uname + " • (<span class='editcount-" + res.uid + "'>" + editcount + "</span>) • <span class='warningLevel warn-" + res.uid +"'> <span class='material-icons'>autorenew</span></span>")
                         };
                     });
                     allANON.forEach(arr => {
                         $("." + arr[0]).append("<p class='userinfo'>" + arr[1] + " • (N/A) • <span class='warningLevel warn-" + arr[0] +"'> <span class='material-icons'>close</span></span>")
                     });
                     allRevs.forEach(arr => {
+
+                        if(parseInt(FILTERS.specifics.maxedit, 10) < parseInt($(".editcount-" + arr.uid).html(), 10) && parseInt(FILTERS.specifics.maxedit) != 0) { // js type lackluster strictness will be a saving grac
+                            $("." + arr.revid).css("display", "none");
+
+                        }
+                        let tmp_revID = arr.revid
+                        let filtrgrp = FILTERS.specifics.group;
+                        //for(const users of userinfo){
+                        //       for (const groups of users.groups) {
+                        //            if(groups === filtrgrp) {
+                        //                $("." + tmp_revID).css("display", "none");
+                        //            }
+                        //       }
+                        //}
+                            
                         if(arr.comment == "") {
                             arr.comment = "(No comment provided.)"
                         }
@@ -425,7 +458,7 @@
                         if((arr.uid).toString().includes("anon-")) {
                             disableStr = "disabled";
                         }
-                        $("." + arr.revid).append("      <a class='mdl-button mdl-js-button mdl-button--icon' onclick='goToLatestDiffPage(" + arr.revid + ", " + arr.old_revid + ")' style='margin-top: 6px; margin-left: 10px;'><i class='material-icons'>open_in_browser</i></a><a class='mdl-button mdl-js-button mdl-button--icon' style='margin-top: 6px;' disabled><i class='material-icons'>compare</i></a><a class='mdl-button mdl-js-button mdl-button--icon' style='margin-top: 6px;' "+ disableStr +"><i class='material-icons'>send</i></a></p>");
+                        $("." + arr.revid).append("      <a class='mdl-button mdl-js-button mdl-button--icon' onclick='goToLatestDiffPage(" + arr.revid + ", " + arr.old_revid + ")' style='margin-top: 6px; margin-left: 10px;'><i class='material-icons'>open_in_browser</i></a><!-- Rev17+ Feature only<a class='mdl-button mdl-js-button mdl-button--icon' style='margin-top: 6px;' disabled><i class='material-icons'>compare</i></a>--><a class='mdl-button mdl-js-button mdl-button--icon' style='margin-top: 6px;' "+ disableStr +"><i class='material-icons'>send</i></a></p>");
                         $("." + arr.revid).append("<p class='slightly-larger'>[" + capitalizeFirstLetter(arr.type) +"]: " + arr.title + "   ("+ sizeStr +") <span class='trafficlight-" + arr.revid + "'')</p><p>Comment: " + arr.comment + "</p><small class='btm-right'>Tags: <span class='tags-"+ arr.revid + "'></span></small>");
                         // insert code for color scaling
                         if(CORSENABLED) {
@@ -585,8 +618,12 @@
                     unamelist.push(value.name);
                 });
                 user.forEach(user => {
+                    let grouplist = [];
+                    for(const group in user.groups) {
+                        grouplist.push(user.groups[group].toString());
+                    }
                     let userInfo = [];
-                    userInfo = [user.userid, user.name, user.editcount, user.groups];
+                    userInfo = [user.userid, user.name, user.editcount, grouplist];
                     infoOUT.push({uid: userInfo[0], name: userInfo[1], editcount: userInfo[2], groups: userInfo[3]}); // push everything out to callback array
                 });
                 callback(infoOUT); // it is done.
@@ -617,7 +654,6 @@
         }
 
         function fetchRecentChanges(filterlist, callback) { // fetch JSON from action API using querys
-            console.log(WIKICWD + "/w/api.php?action=query&list=recentchanges&rclimit=50&format=json&rcprop=user|userid|title|timestamp|ids|tags|parsedcomment|sizes" + filterlist.rctype + filterlist.rctag + filterlist.rcshow + filterlist.rctop)
             $.getJSON(WIKICWD + "/w/api.php?action=query&list=recentchanges&rclimit=50&format=json&rcprop=user|userid|title|timestamp|ids|tags|parsedcomment|sizes" + filterlist.rctype + filterlist.rctag + filterlist.rcshow + filterlist.rctop, r => { // we need to add stuff for filters in here somewhere later.
                 let feed = r.query.recentchanges;
                 callback(feed); // this is all we needed to do
@@ -634,6 +670,7 @@
                 idurl += element + "|";
             });            
             idurl = idurl.substring(0, idurl.length - 1); //remove last char (which will be an excess "|")
+            console.log(WIKICWD + "/w/api.php?action=query&list=users&ususerids="+ idurl + "&format=json&usprop=editcount|groups");
             $.getJSON(WIKICWD + "/w/api.php?action=query&list=users&ususerids="+ idurl + "&format=json&usprop=editcount|groups", feed => {
                 callback(feed)
             });
@@ -676,18 +713,6 @@
         }
         // Miscelleneous functions. /\ //
 
-
-
-        // Custom methods:
-
-            // Method for removing stuff from arrays
-        Array.prototype.remove = function(value) { // fuck you internet explorer u kinda smell
-                    for (var i = this.length; i--; ) {
-                        if (this[i] === value) {
-                            this.splice(i, 1);
-                        }
-                    }
-                }
 
 
 

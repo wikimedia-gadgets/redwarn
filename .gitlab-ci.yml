@@ -1,0 +1,13 @@
+# This file is a template, and might need editing before it works on your project.
+# Full project: https://gitlab.com/pages/plain-html
+image: php:latest
+
+pages:
+  stage: deploy
+  script:
+    - php build.php > public/redwarn.js
+  artifacts:
+    paths:
+      - public
+  only:
+    - dev

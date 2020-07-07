@@ -58,7 +58,7 @@
                 <div id="filterspecifics" style="width: 49.5%; min-height: 300px; display: inline-block;">
                     <p>Specific Filters</p>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                      <input class="mdl-textfield__input maxeditcount" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sample4" value="1234">
+                      <input class="mdl-textfield__input maxeditcount" id="maxeditcount" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sample4">
                       <label class="mdl-textfield__label" for="sample4">Max. edit count (0 for no max)</label>
                       <span class="mdl-textfield__error">Please input a number.</span>
                     </div>
@@ -205,7 +205,7 @@
         // Select2 Initialization
         var rctypes = ["Edit", "External", "New"];
         var rctags = ["Possible Vandalism", "Bad External Link/Image(s)", "Replaces >90% of page", "Undo", "Rollback", "New Redirect", "Possible BLP issue or vandalism", "Remove redirect", "Blanking", "Possible autobiography", ]; // Should be a list of commonly used tags or the default tag (from config), which should be put into the place of rctags[0]
-        var rcgroups = ["*", "Unconfirmed", "Confirmed", "extendedconfirmed", "Sysop"];
+        var rcgroups = ["", "Unconfirmed", "autoconfirmed/confirmed", "extendedconfirmed", "Sysop"];
         $(document).ready(function() {
             $('.dropdown-rctype').select2({
                 placeholder: "Edit Type",
@@ -257,15 +257,21 @@
                 });
                 $('#rctype').val(FILTERS.specifics.rctype);
                 $('#rctag').val(FILTERS.specifics.rctag);
+                $('#groups').val(FILTERS.specifics.group[0]);
+                $('#groups').trigger('change');
                 $('#rctype').trigger('change');
                 $('#rctag').trigger('change');
+                document.getElementById("maxeditcount").value = FILTERS.specifics.maxedit;
                 
             } else { // normal scenario - set up select 2 then checkboxes in preferences so we can refer to them
                 $('#rctype').val(FILTERS.specifics.rctype);
                 $('#rctag').val(FILTERS.specifics.rctag);
-
+                $('#groups').val(FILTERS.specifics.group[0]);
+                $('#groups').trigger('change');
                 $('#rctype').trigger('change');
                 $('#rctag').trigger('change');
+                document.getElementById("maxeditcount").value = FILTERS.specifics.maxedit;
+                console.log(document.getElementById("maxeditcount").value)
             }
         });
 
@@ -289,6 +295,10 @@
             var rctypeData = $("#rctype").select2('data');
             var rctagData = $("#rctag").select2('data');
             var parsedugroupData = $("#groups").select2('data');
+            if(parsedugroupData.text == undefined) {
+                parsedugroupData.text = "0";
+            }
+            console.log(parsedugroupData);
             var parsedugroup = [];
             var parsedrctype = [];
             var parsedrctag = [];
@@ -298,10 +308,9 @@
             rctagData.forEach(function (item, key) {
                 parsedrctag.push(item.text);
             });
-            parsedugroupData.forEach(function(item, key) {
-                parsedugroup.push(item.text);
-            })
-            let maxeditcount = $(".maxeditcount").attr("value");
+            console.log(parsedugroupData.text)
+            parsedugroup.push(parsedugroupData.text)
+            let maxeditcount = $(".maxeditcount").prop("value");
             console.log(maxeditcount);
             var specifics = {
                 "rctype": parsedrctype,
@@ -378,7 +387,15 @@
                     unanonLIST.push(value.userid);
                 }
                 for(let [key, value] of Object.entries(call)) { // Get the values to link the things up to eachother
+                    if(FILTERS.specifics.group[0] == "Unconfirmed") { // Anonymous only filter
+                        if(value.userid != 0) {
+                            continue;
+                        }
+                    }
                     if(value.userid == 0 ) {
+                        if(FILTERS.specifics.group[0] != "0" && FILTERS.specifics.group[0] != "Unconfirmed") { // If group isnt in default/all state
+                            continue;
+                        }
                         value.userid = "anon-" + Math.floor(Math.random() * Math.floor(999999999));;
                         allANON.push([value.userid, value.user]);
                     } else {
@@ -413,10 +430,12 @@
                         let uname = res.name;
                         let editcount = res.editcount;
                         let warningLvl = res.warninglevel;
-                        if (!res.groups.includes((FILTERS.specifics.group[0]).toString().toLowerCase())) {
-                            $("." + res.uid).css("display", "none");
-                        } else {
-                            console.log("no")
+                        if(FILTERS.specifics.group[0] != "0") {
+                            if (!res.groups.includes((FILTERS.specifics.group[0]).toString().toLowerCase())) {
+                                $("." + res.uid).css("display", "none");
+                            } else {
+                                console.log("no")
+                            }
                         }
                         if(res.name == uname) {
                             let warningLevelIcn;

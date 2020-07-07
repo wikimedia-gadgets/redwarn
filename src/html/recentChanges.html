@@ -247,7 +247,7 @@
                         "rctype": ["Edit", "External", "New"],
                         "rctag": [],
                         "maxedit": 0,
-                        "group": []
+                        "group": ["0"]
                     }
                 }
 
@@ -308,8 +308,13 @@
             rctagData.forEach(function (item, key) {
                 parsedrctag.push(item.text);
             });
-            console.log(parsedugroupData.text)
-            parsedugroup.push(parsedugroupData.text)
+            console.log(parsedugroupData.text);
+            if(parsedugroupData[0].text == "autoconfirmed/confirmed") {
+                console.log("a")
+                parsedugroup = ["autoconfirmed", "confirmed"];
+            } else {
+                parsedugroup.push(parsedugroupData[0].text);
+            }
             let maxeditcount = $(".maxeditcount").prop("value");
             console.log(maxeditcount);
             var specifics = {
@@ -431,11 +436,15 @@
                         let editcount = res.editcount;
                         let warningLvl = res.warninglevel;
                         if(FILTERS.specifics.group[0] != "0") {
-                            if (!res.groups.includes((FILTERS.specifics.group[0]).toString().toLowerCase())) {
-                                $("." + res.uid).css("display", "none");
-                            } else {
-                                console.log("no")
-                            }
+                            FILTERS.specifics.group.forEach(group => {
+                                console.log(group)
+                                if (!res.groups.includes((group).toString().toLowerCase())) {
+                                    $("." + res.uid).css("display", "none");
+                                } else {
+                                    console.log("no")
+                                }
+                            })
+
                         }
                         if(res.name == uname) {
                             let warningLevelIcn;
@@ -448,19 +457,9 @@
                     });
                     allRevs.forEach(arr => {
 
-                        if(parseInt(FILTERS.specifics.maxedit, 10) < parseInt($(".editcount-" + arr.uid).html(), 10) && parseInt(FILTERS.specifics.maxedit) != 0) { // js type lackluster strictness will be a saving grac
+                        if(parseInt(FILTERS.specifics.maxedit, 10) < parseInt($(".editcount-" + arr.uid).html(), 10) && parseInt(FILTERS.specifics.maxedit) != 0) { // filter out edits if value isnt 0 and is >max
                             $("." + arr.revid).css("display", "none");
-
                         }
-                        let tmp_revID = arr.revid
-                        let filtrgrp = FILTERS.specifics.group;
-                        //for(const users of userinfo){
-                        //       for (const groups of users.groups) {
-                        //            if(groups === filtrgrp) {
-                        //                $("." + tmp_revID).css("display", "none");
-                        //            }
-                        //       }
-                        //}
                             
                         if(arr.comment == "") {
                             arr.comment = "(No comment provided.)"

@@ -271,7 +271,6 @@
                 $('#rctype').trigger('change');
                 $('#rctag').trigger('change');
                 document.getElementById("maxeditcount").value = FILTERS.specifics.maxedit;
-                console.log(document.getElementById("maxeditcount").value)
             }
         });
 
@@ -298,7 +297,6 @@
             if(parsedugroupData.text == undefined) {
                 parsedugroupData.text = "0";
             }
-            console.log(parsedugroupData);
             var parsedugroup = [];
             var parsedrctype = [];
             var parsedrctag = [];
@@ -308,7 +306,6 @@
             rctagData.forEach(function (item, key) {
                 parsedrctag.push(item.text);
             });
-            console.log(parsedugroupData.text);
             parsedugroup.push(parsedugroupData[0].text);
             
             let maxeditcount = $(".maxeditcount").prop("value");
@@ -349,7 +346,6 @@
 
             // filters 
             let rctypeurl= "&rctype="
-            console.log(FILTERS)
             FILTERS.specifics.rctype.forEach(arr => {
                 rctypeurl += arr.toLowerCase() + "|";
             })
@@ -423,17 +419,14 @@
                 getUserInfo(unanonLIST, userinfo => { // usernames parameter is used for consistency of anon
                     // IDENTIFIABLE ISSUE: WE DO NOT HAVE A RESULT FROM THE THING
                     let unamelist =[];
-                    console.log(userinfo)
                     userinfo.forEach(res => {
                         let uname = res.name;
                         let editcount = res.editcount;
                         let warningLvl = res.warninglevel;
                         if(FILTERS.specifics.group[0] != "0") {
                             if (!res.groups.includes((FILTERS.specifics.group[0]).toString().toLowerCase())) {
-                                console.log("hide!")
                                 $("." + res.uid).css("display", "none");
                             } else {
-                                console.log("no")
                             }
 
                         }
@@ -467,8 +460,9 @@
                         if((arr.uid).toString().includes("anon-")) {
                             disableStr = "disabled";
                         }
-                        $("." + arr.revid).append("      <a class='mdl-button mdl-js-button mdl-button--icon' onclick='goToLatestDiffPage(" + arr.revid + ", " + arr.old_revid + ")' style='margin-top: 6px; margin-left: 10px;'><i class='material-icons'>open_in_browser</i></a><!-- Rev17+ Feature only<a class='mdl-button mdl-js-button mdl-button--icon' style='margin-top: 6px;' disabled><i class='material-icons'>compare</i></a>--><a class='mdl-button mdl-js-button mdl-button--icon' style='margin-top: 6px;' "+ disableStr +"><i class='material-icons'>send</i></a></p>");
+                        $("." + arr.revid).append("      <a class='mdl-button mdl-js-button mdl-button--icon' onclick='goToLatestDiffPage(" + arr.revid + ", " + arr.old_revid + ")' style='margin-top: 6px; margin-left: 10px;'><i class='material-icons'>open_in_browser</i></a><!-- Rev17+ Feature only<a class='mdl-button mdl-js-button mdl-button--icon' style='margin-top: 6px;' disabled><i class='material-icons'>compare</i></a>--><a class='mdl-button mdl-js-button mdl-button--icon message-" + arr.uid + "' style='margin-top: 6px;' "+ disableStr +"><i class='material-icons'>send</i></a></p>");
                         $("." + arr.revid).append("<p class='slightly-larger'>[" + capitalizeFirstLetter(arr.type) +"]: " + arr.title + "   ("+ sizeStr +") <span class='trafficlight-" + arr.revid + "'')</p><p>Comment: " + arr.comment + "</p><small class='btm-right'>Tags: <span class='tags-"+ arr.revid + "'></span></small>");
+                        $(".message-" + arr.uid).click(function(){ PARENTRW.ui.newMsg(arr.uname) });
                         // insert code for color scaling
                         if(CORSENABLED) {
                             // do stuff for cors here
@@ -682,7 +676,6 @@
                 idurl += element + "|";
             });            
             idurl = idurl.substring(0, idurl.length - 1); //remove last char (which will be an excess "|")
-            console.log(WIKICWD + "/w/api.php?action=query&list=users&ususerids="+ idurl + "&format=json&usprop=editcount|groups");
             $.getJSON(WIKICWD + "/w/api.php?action=query&list=users&ususerids="+ idurl + "&format=json&usprop=editcount|groups", feed => {
                 callback(feed)
             });

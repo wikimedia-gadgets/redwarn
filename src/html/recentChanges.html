@@ -1,5 +1,14 @@
 <!DOCTYPE HTML>
 <html>
+
+<!--
+    recentChanges.html ->
+                        Redwarn Patrol feature. Do actions on edits based off the Recent Changes feed from REST.
+                        Future:
+                            Diff/Comparison Page
+                            Clean up code maybe?
+-->
+
 <head>
     <meta charset="UTF-8">
     <script src="https://redwarn.toolforge.org/cdn/js/jQuery.js"></script>
@@ -21,55 +30,64 @@
         <dialog class="mdl-dialog" id="filterSubDialog" style="width: 500px;">
             <h5 class="mdl-dialog__title" style="padding-bottom: 32px;">Filter Preferences</h5>
             <div class="mdl-dialog__content">
-                <div id="filtertoggles" style="width: 50%; min-height: 350px; float: left;">
-                    <p>Filter toggles</p>
+                <div id="filtertoggles" style="width: 47.5%; min-height: 300px; float: left; padding-left: 2.5%; padding-right: 0.5%;">
+                    <p>Toggleable Properties</p>
                     <p>
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-1">
-                            <input type="checkbox" id="switch-1" class="mdl-switch__input" checked>
-                            <span class="mdl-switch__label">Autopatrolled Edits</span>
-                          </label>
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-2">
-                          <input type="checkbox" id="switch-2" class="mdl-switch__input" checked>
-                          <span class="mdl-switch__label">Bot Edits</span>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="bots" style="margin-top: 10px !important;">
+                          <input type="checkbox" id="bots" class="mdl-switch__input" checked>
+                          <span class="mdl-switch__label">Show bot edits</span>
                         </label>
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-3">
-                          <input type="checkbox" id="switch-3" class="mdl-switch__input" checked>
-                          <span class="mdl-switch__label">Minor Edits</span>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="minor" style="margin-top: 10px !important;">
+                          <input type="checkbox" id="minor" class="mdl-switch__input" checked>
+                          <span class="mdl-switch__label">Show minor edits</span>
                         </label>
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-4">
-                            <input type="checkbox" id="switch-4" class="mdl-switch__input" checked>
-                            <span class="mdl-switch__label">Patrolled Edits</span>
-                          </label>
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-5">
-                          <input type="checkbox" id="switch-5" class="mdl-switch__input" checked>
-                          <span class="mdl-switch__label">Redirect Page Edits</span>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="redirects" style="margin-top: 10px !important;">
+                          <input type="checkbox" id="redirects" class="mdl-switch__input" checked>
+                          <span class="mdl-switch__label">Allow redirect page edits</span>
                         </label>
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-6">
-                          <input type="checkbox" id="switch-6" class="mdl-switch__input" checked>
-                          <span class="mdl-switch__label">Anonymous Users</span>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="anonymous" style="margin-top: 10px !important;">
+                          <input type="checkbox" id="anonymous" class="mdl-switch__input" checked>
+                          <span class="mdl-switch__label">Show anonymous users</span>
                         </label>
-                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="switch-7" style="margin-top: 20px !important;">
-                            <input type="checkbox" id="switch-7" class="mdl-switch__input" checked>
-                            <span class="mdl-switch__label">Latest revisions only</span>
+                        <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="filterswitch" for="latest" style="margin-top: 10px !important;">
+                            <input type="checkbox" id="latest" class="mdl-switch__input" checked>
+                            <span class="mdl-switch__label">Show only latest revisions</span>
                           </label>
                     </p>
                 </div>
-                <div id="filterspecifics" style="width: 50%; min-height: 350px; display: inline-block;">
+                <div id="filterspecifics" style="width: 49.5%; min-height: 300px; display: inline-block;">
                     <p>Specific Filters</p>
-                    <select class="dropdown-rctype dropdown-sw" name="rctype[]" multiple="multiple"></select><br><br>
-                    <select class="dropdown-rctag dropdown-sw" name="rcname[]"></select>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                      <input class="mdl-textfield__input maxeditcount" id="maxeditcount" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sample4">
+                      <label class="mdl-textfield__label" for="sample4">Max. edit count (0 for no max)</label>
+                      <span class="mdl-textfield__error">Please input a number.</span>
+                    </div>
+                    <span class="specificboxes">
+                        <select id="groups" class="dropdown-groups dropdown-sw" name="groups[]"></select><br><br> <!-- bad practice but im lazy-->
+                        <select id="rctype" class="dropdown-rctype dropdown-sw" name="rctype[]" multiple="multiple"></select><br><br>
+                        <select id="rctag" class="dropdown-rctag dropdown-sw" name="rctag[]"></select>               
+                    </span>
+
                 </div>
 
                 <div class="mdl-dialog__actions">
                     <button type="button" class="mdl-button close">Close</button>
-                    <button type="button" class="mdl-button" onclick="saveConfig()">Save</button>
+                    <button type="button" class="mdl-button save">Save</button>
 
                 </div>
             </div>
         </dialog>
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
             <div class="mdl-layout__drawer" style="width:100%;-webkit-transform: translateX(0px); transform: translateX(0px);">
-            <span class="mdl-layout-title" style="font-size: 3.5vh;">`+ rw.logoHTML +` Patrol</span>
+            <span class="mdl-layout-title" style="font-size: 2em;">`+ rw.logoHTML +` Patrol</span>
+            <div id="nav-btns" style="position: fixed; left: 300px; top: 15px;">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="margin-right: 10px;" onclick="window.parent.postMessage('closeDialogPT');" href="">
+                    Return to Wikipedia
+                </button>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" href="#" id="newAttached" target="_blank" onclick="">
+                    Open new attached tab
+                </button>
+            </div>
             <div id="cornerbuttons" style="position: fixed; right: 35px; top: 15px; display: flex; justify-content: flex-end; flex-direction: row;">
                 <button class="mdl-button mdl-js-button mdl-button--icon" id="filterButton" style="margin-right: 7px;">
                 <i class="material-icons">settings</i>
@@ -81,24 +99,11 @@
             </div>
 
             <nav class="mdl-navigation" style="width: 100%;">
-                <div class="btns" style="width: 100%;">
-                    <a class="mdl-navigation__link" style="width: 50%; float: left !important; margin-right: 0; padding-right: 0; margin-left:0; padding-left: 0;" onclick="window.parent.postMessage('closeDialogPT');" href="">
-                        <span style="padding-left: 32px;">Return to wikipedia</span>
-                    </a>
-                    <a class="mdl-navigation__link" style="width: 50%; float: right !important; margin-right: 0; padding-right: 0; margin-left:0; padding-left: 0;" href="#" id="newAttached" target="_blank">
-                        <span style="padding-left: 32px;">Open new attached tab</span>
-                    </a>
-                </div>
                 <a class="mdl-navigation__link" id="hoverswitch" href="#" style="background-color: teal;color:white; display: initial;"
-                    onmouseover="tI = setInterval(refreshLive,  750);"
-                    onmouseout="clearTimeout(tI);">Hover your cursor here for live updates</a>
+                onmouseover="tI = setInterval(refreshLive, 1750);"
+                onmouseout="clearTimeout(tI);">Hover your cursor here for live updates</a>
                 <div id="recentChangesContainer">
-                    <!--\/ PLACEHOLDER VALUE FOR FORMATTING REMOVE ON REV15 BUILD FINISH \/-->
-                    <div id="43254543544643643632532423523235" class="child__edit" style="height: 150px; background-color: crimson; padding-left: 32px">
-                        <div id="actions" style="padding-bottom: 5px; padding-top: 5px;">ACTIONS</div>
-                        <p>User • (Edits) • Warnings</p><p class="slightly-larger">[Type]: [Page] (+XXXX) (ICN)</p><p>Comment: Lorem Ipsum Domen...</p><small class="btm-right">Tags: X, Y, Z</small>
-                    </div>
-                    <!--/\ PLACEHOLDER VALUE FOR FORMATTING REMOVE ON REV15 BUILD FINISH /\-->
+                    <!-- All edits are placed in this container by the javascript-->
                 </div>
             </nav>
             </div>
@@ -110,17 +115,28 @@
         </main>
     </div>
     <style>
+        .userinfo {
+            padding-top: 5px;
+            display: inline-flex;
+            vertical-align: middle !important;
+        }
         .btm-right small {
             bottom: 15px;
             right: 20px;
         }
         .child__edit {
-            height: 150px;
-            padding-left: 32px
+            min-height: 100px;
+            max-height: 350px !important;
+            padding-left: 32px;
+            border-top: 1px solid grey;
         }
         .child__edit p {
             margin: 0 0 0 0;
-            font-size: medium;
+            font-size: 1em;
+            line-height: 20px;
+        }
+        .child__edit .userinfo {
+            font-size: 1.2em;
         }
         .dropdown-sw {
             width: 200px;
@@ -147,21 +163,52 @@
             z-index:999999999999; /* ITS OVER 9000 LOOOL */
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script> <!--For preferences-->
     <script>
-
+        /*---------------------------------------------
+        |        Recent Changes (Redwarn Patrol)      |                                            
+        |        -------------------------------      |                                            
+        |        Below javascript handles the         |                                        
+        |        filtering and retrieval of           |                                    
+        |        the recent changes REST API          |                                        
+        |        query for Redwarn Patrol.            |                                    
+        |        -------------------------------      |                                            
+        |                                             |    
+        ---------------------------------------------*/
 
 
         // Defining constants
+        const PARENTRW = window.parent.rw;
         const WIKICWD = "https:" + "`+ rw.wikiBase +`";
         const WIKIID = "`+ rw.wikiID +`";
         const WIKIAPI = "` +rw.wikiAPI +`";
-        
-        var rctypes = ["Categorize", "Edit", "External", "Log", "New"];
+        const CORSENABLED = false; // We will force this to be disabled until CORS implementation is completed.
+        // This is like this so we can shadow it later on. It will be used to set filters in preferences which will 
+        // have its values grabbed rather than directly from here.
+        var FILTERS = PARENTRW.config.filters;
+
+
+        // Initialization. \/ //
+
+        // Creates a broadcast channel for opening revision pages
+        var bcID = "RWBC_" + Math.random().toString(36).substring(7);
+        const bc = new BroadcastChannel(bcID);
+        $("#newAttached").on("click",function(){
+         window.open('https://en.wikipedia.org/wiki/User:Ed6767/redwarn/patrol#rwPatrolAttach-' + bcID,'_blank');
+        });
+
+        var tI;
+        function convertRange(value, r1, r2) {
+            return (value - r1[0]) * (r2[1] - r2[0]) / (r1[1] - r1[0]) + r2[0];
+        }
+
+        // Select2 Initialization
+        var rctypes = ["Edit", "External", "New"];
         var rctags = ["Possible Vandalism", "Bad External Link/Image(s)", "Replaces >90% of page", "Undo", "Rollback", "New Redirect", "Possible BLP issue or vandalism", "Remove redirect", "Blanking", "Possible autobiography", ]; // Should be a list of commonly used tags or the default tag (from config), which should be put into the place of rctags[0]
+        var rcgroups = ["", "Unconfirmed", "autoconfirmed", "extendedconfirmed", "Sysop"];
         $(document).ready(function() {
             $('.dropdown-rctype').select2({
-                placeholder: "rctype",
+                placeholder: "Edit Type",
                 multiple: true,
                 tags: false,
                 data: rctypes,
@@ -169,228 +216,333 @@
                 dropdownCssClass:'increasezindex'
             });
             $('.dropdown-rctag').select2({
-                placeholder: "rctag",
-                multiple: true,
+                placeholder: "Tag...",
+                multiple: false,
                 tags: true,
                 data: rctags,
                 allowClear: true,
                 dropdownCssClass:'increasezindex'
             });
-        });
-        $(document).ready(function() {
-            saveConfig();
-        });
+            $('.dropdown-groups').select2({
+                placeholder: "Filter by User Group",
+                multiple: false,
+                tags: true, 
+                data: rcgroups,
+                allowClear: true,
+                dropdownCssClass:'increasezindex'
+            })
 
-        Array.prototype.remove = function(value) { // fuck you internet explorer u kinda smell
-                    for (var i = this.length; i--; ) {
-                        if (this[i] === value) {
-                            this.splice(i, 1);
-                        }
+            if(FILTERS == undefined) { // Make filters for us - will likely be used first launch only
+                // set filters to default
+                // maxedit should be 0 for no user
+                FILTERS = {
+                    "toggles": {
+                        "bots": true,
+                        "minor": true,
+                        "redirects": true,
+                        "anonymous": true,
+                        "rctop": true
+                    }, 
+                    "specifics": {
+                        "rctype": ["Edit", "External", "New"],
+                        "rctag": [],
+                        "maxedit": 0,
+                        "group": ["0"]
                     }
                 }
 
-        function getUserInfo(ids, callback) { // ids should be an array of user ids - will return EDIT COUNT (API:Users) and WARNING LEVEL (Unoffical)
-            let idurl = "";
-            ids.forEach(element => { 
-                idurl += element + "|";
-            });            
-            idurl = idurl.substring(0, idurl.length - 1); //remove last char (which will be an excess "|")
-            let infoOUT = []; // Nested array - output of output[n][0] is userid & output[n][1] is corresponding edit count & output[n][2] is warning level
-            $.getJSON(WIKICWD + "/w/api.php?action=query&list=users&ususerids="+ idurl + "&format=json&usprop=editcount", result => {
-                let user = result.query.users;
-                let unamelist = [];
-                $.each(user, function(key, value) { // need to give uname to lastwarninglevel
-                    unamelist.push(value.name);
-                })
- 
-                lastWarningLevel(unamelist, res => {
-                    // res[n][0] is uname to match to
-                    $.each(user, function(key, value) {
-                        let userInfo = []
-                        userInfo.push(value.userid);
-                        userInfo.push(value.name);
-                        userInfo.push(value.editcount);
-                        $.each(result, function(key, value) {
-                            if (value[0] == userInfo[1]) {
-                                userInfo.push(value[1]);
-                            } else {
-                                return true; //continue next one
-                            }
-                        })
-                        infoOUT.push({uid: userInfo[0], name: userInfo[1], editcount: userInfo[2], warninglevel: userInfo[3]});
-                    })
-                })
-            });
-            callback(infoOUT); // thats it folks
-        }
-
-
-        function getRndInteger(max) { // its in the name
-              return Math.floor(Math.random() * Math.floor(max));
-        }
-
-        function refreshLiveTMP() { 
-            // if you add to it its preferred you refer to a users id when referring to an edit, as names are not as consistent (anons are given a random value).
-            // insert code for filter fetch here
-            var filterlist = ["filters"];
-            fetchRecentChanges(filterlist, call => { // send filterlist to parserecentchanges to filter out stuff then use callback func. to handle parsing etc...
-                let ids = [];
-                for(let [key, value] of Object.entries(call)) {
-                    ids.push((value.userid).toString());
-                }
-                let stripped = ids;  // Preserve ids variable incase we need to refer back to it and make a new one for manipulating anons
-
-                let container = document.getElementById('recentChangesContainer');
-                let isanon = "not-anon";
-                stripped.forEach(element => { // Anons get a random ID + prefix to make sure ignored
-                    isanon = "not-anon";
-                    if (element=="0") {
-                        num = getRndInteger(999999999);
-                        element = "anon-" + num;
-                        isanon = "anonify"
-                    }
-                    userid = element.toString();
-                    // content format 
-                    //<p>User • (Edits) • Warnings</p><p class="slightly-larger">[Type]: [Page] (+XXXX) (ICN)</p><p>Comment: Lorem Ipsum Domen...</p><small class="btm-right">Tags: X, Y, Z</small>
-                    container.innerHTML += "<div id='" + userid + "' class='child__edit " + isanon + "' style='background-color: green;'></div> "
-                    
+                PARENTRW.config.filters = FILTERS;
+                PARENTRW.info.writeConfig(true, ret => {
+                    ret = undefined; // i dont care whats called back as long as this works
                 });
-                getUserInfo(ids, res => {
-                    var output = res;
-                    console.log(res);
-                    console.log(res.length);
-                    $.each(res, function(key, value) {
-                        // for 'readability'
-                        var uid = value.uid;
-                        var uname = value.name;
-                        var warningLevel = value.warninglevel;
-                        var editcount = value.editcount;
-                        var warningLevelIcn = "thumbs_up";
-                        // thumb_up for 0
-                        // info for 1
-                        // annoucement for 2
-                        // report_problem for 3 (red?)
-                        // report for 4 (#a20000?)
-
-                        // horror for setting icn
-                        if (warningLevel == "0") {
-                            warningLevelIcn = "thumbs_up" // no change
-                        } else if (warningLevel == "1") {
-                            warningLevelIcn = "info";
-                        } else if (warningLevel == "2") {
-                            warningLevelIcn = "announcement";
-                        } else if (warningLevel == "3") {
-                            warningLevelIcn = "report_problem";
-                        } else if (warningLevel == "4") {
-                            warningLevelIcn == "report";
-                        } else if (warningLevel == undefined) {
-                            warningLevelIcn == "thumbs_up"; // is anonymous user/no warning level out given
-                        }
-                        console.log(warningLevelIcn);
-                        console.log(editcount);
-                        console.log(uname);
-                        document.getElementById(uid).innerHTML += "<p class='userinfo'>" + uname + " • ("+ editcount +") • <span class='material-icons'>" + warningLevelIcn +"</span></p>";
-                    });
-                });
-            });
-
-        }
-        refreshLiveTMP();
-
-        function switchCheck() { // Checks on the switch click for toggling live feeds if its in 'checked' state or not and changes page accordingly
-            console.log("test");
-            let livetoggle= document.getElementById('liveswitch');
-            let hoverswitch = document.getElementById('hoverswitch');
-            console.log(livetoggle);
-            if (livetoggle.checked == true) {
-                tI = setInterval(refreshLive, 750);
-                hoverswitch.style.display = "none";
-            } else {
-                clearTimeout(tI);
-                hoverswitch.style.display = "initial";
+                $('#rctype').val(FILTERS.specifics.rctype);
+                $('#rctag').val(FILTERS.specifics.rctag);
+                $('#groups').val(FILTERS.specifics.group[0]);
+                $('#groups').trigger('change');
+                $('#rctype').trigger('change');
+                $('#rctag').trigger('change');
+                document.getElementById("maxeditcount").value = FILTERS.specifics.maxedit;
+                
+            } else { // normal scenario - set up select 2 then checkboxes in preferences so we can refer to them
+                $('#rctype').val(FILTERS.specifics.rctype);
+                $('#rctag').val(FILTERS.specifics.rctag);
+                $('#groups').val(FILTERS.specifics.group[0]);
+                $('#groups').trigger('change');
+                $('#rctype').trigger('change');
+                $('#rctag').trigger('change');
+                document.getElementById("maxeditcount").value = FILTERS.specifics.maxedit;
             }
-        }
+        });
 
 
-        // code for filters preferences
+        // Setting up / Controlling filter preferences 
         var filterButton = document.getElementById('filterButton');
         var filterDialog = document.getElementById('filterSubDialog');
 
-        if (!filterDialog.showModal) {
+        if (!filterDialog.showModal) { // register as dialog if not registered 
             dialogPolyfill.registerDialog(filterDialog);
         }
-        filterButton.addEventListener('click', function () {
+        filterButton.addEventListener('click', function () { // await click
             filterDialog.showModal();
         })
-        filterDialog.querySelector('.close').addEventListener('click', function () {
+        filterDialog.querySelector('.close').addEventListener('click', function () { // close btn
             filterDialog.close();
         });
+        filterDialog.querySelector('.save').addEventListener('click', function() { // Save button
+            // Save config stuff
+            filterDialog.close();
+            var rctypeData = $("#rctype").select2('data');
+            var rctagData = $("#rctag").select2('data');
+            var parsedugroupData = $("#groups").select2('data');
+            if(parsedugroupData.text == undefined) {
+                parsedugroupData.text = "0";
+            }
+            var parsedugroup = [];
+            var parsedrctype = [];
+            var parsedrctag = [];
+            rctypeData.forEach(function (item, key) {
+                parsedrctype.push(item.text);
+            });
+            rctagData.forEach(function (item, key) {
+                parsedrctag.push(item.text);
+            });
+            parsedugroup.push(parsedugroupData[0].text);
+            
+            let maxeditcount = $(".maxeditcount").prop("value");
+            var specifics = {
+                "rctype": parsedrctype,
+                "rctag": parsedrctag,
+                "maxedit": maxeditcount,
+                "group": parsedugroup
+            }
+            var toggles = {
+                "bots": document.getElementById('bots').checked,
+                "minor": document.getElementById('minor').checked,
+                "redirects": document.getElementById('redirects').checked,
+                "anonymous": document.getElementById('anonymous').checked,
+                "rctop": document.getElementById('latest').checked
+            }
+            FILTERS = {
+                "toggles": toggles,
+                "specifics": specifics
+            }
+            firstlaunch = true;
+            PARENTRW.config.filters = FILTERS;
+            PARENTRW.info.writeConfig(true, ret => {
+                ret = undefined; // lol idc
+            })
+
+        })
+
         // code for filters preferences
 
-
-        // Create broadcast channel
-        var bcID = "RWBC_" + Math.random().toString(36).substring(7);
-        const bc = new BroadcastChannel(bcID);
-        $("#newAttached").attr("href", "https://en.wikipedia.org/wiki/User:Ed6767/redwarn/patrol#rwPatrolAttach-" + bcID); // set link
-
-        var tI;
-        function convertRange(value, r1, r2) {
-            return (value - r1[0]) * (r2[1] - r2[0]) / (r1[1] - r1[0]) + r2[0];
-        }
+        // Initialization. /\ //
 
 
 
-        function goToLatestDiffPage(article) {
-            $("#welcomeContainer").hide();
-            // Nav to latest diff page
-            $.getJSON(WIKICWD + "/w/api.php?action=query&prop=revisions&titles=" + encodeURIComponent(article) + "&rvslots=*&rvprop=ids%7Cuser&formatversion=2&format=json", r => {
-                // We got the response
-                let latestRId = r.query.pages[0].revisions[0].revid;
-                let parentRId = r.query.pages[0].revisions[0].parentid;
-                // Open page in new tab (has to be done here due to new security systems)
-                bc.postMessage(WIKICWD + "/w/index.php?title=" + encodeURIComponent(name) + "&diff=" + latestRId + "&oldid=" + parentRId + "&diffmode=source");
-            });
-        }
+        // Main funcs. \/ //
+        function refreshLive() { // MAIN FUNCTION. Will call all functions needed for getting and parsing recent changes.
+            // INIT REF.
 
-        function fetchRecentChanges(filterlist, callback) { // fetch JSON from action API using querys
-            $.getJSON(WIKICWD + "/w/api.php?action=query&list=recentchanges&rclimit=50&format=json&rcprop=user|userid|title|timestamp|ids", r => { // we need to add stuff for filters in here somewhere later.
-                let feed = r.query.recentchanges;
-                callback(feed); // this is all we needed to do
-                });
-        }
-        
-        function saveConfig() {
-            var rctypefilter = $('.dropdown-rctype').select2('data');
-            var rctagfilter = $('.dropdown-rctag').select2('data');
-            var switch2 = document.getElementById('switch-2').checked;
-        }
-
-
-
-
-        function fetchMeWarningLevel(users, callback) { // death
-            let userurl = "";
-            $.each(users, function(key, value) {
-                if(value == undefined) {
-                    return true;
+            // filters 
+            let rctypeurl= "&rctype="
+            FILTERS.specifics.rctype.forEach(arr => {
+                rctypeurl += arr.toLowerCase() + "|";
+            })
+            rctypeurl = rctypeurl.substring(0, rctypeurl.length - 1);
+            let rctagurl = ""
+            if(FILTERS.specifics.rctag[0] == undefined) {
+                rctagurl = ""
+            } else {
+                rctagurl = "&rctag=" + FILTERS.specifics.rctag[0];
+            }
+            // this going to horrify you
+            let toggles = FILTERS.toggles
+            let togglelist = "&rcshow=" + (toggles.anonymous ? "" : "!anon|") + (toggles.bots ? "" : "!bot|") + (toggles.minor ? "" : "!minor|") + (toggles.redirects ? "" : "!redirect|")
+            if(togglelist == "&rcshow=") {
+                togglelist = "";
+            }
+            let rctopurl = (toggles.rctop ? "&rctoponly=true" : "&rctoponly=false");
+            let filterlist = {"rctype": rctypeurl, "rctag": rctagurl, "rcshow": togglelist, "rctop": rctopurl};
+            // filters
+            // if you add to it its preferred you refer to a users id when referring to an edit, as names are not as consistent (anons are given a random value).
+            // insert code for filter fetch here
+            fetchRecentChanges(filterlist, call => { // send filterlist to parserecentchanges to filter out stuff then use callback func. to handle parsing etc...
+                let container = document.getElementById('recentChangesContainer');
+                container.innerHTML = ""
+                let ids = []; 
+                let allRevs = []; // didnt realise till towards the end that using userid as your identifying id is a bad idea.
+                let allIDS = []; // Maintain relationship between our anon- and the username (which will be the IP adress of the person)
+                let allUSERS_only = []; // for lastwarninglvl
+                let allANON = [];
+                
+                let unanonLIST = []; // for calling stuff that needs NONANONYMOUS USERS
+                for(let [key, value] of Object.entries(call)) {
+                    unanonLIST.push(value.userid);
                 }
-                userurl += "User_talk:" + value + "|";
-            });
-            userurl = userurl.substring(0, userurl.length - 1);
-            // Get the last warning level of a user this month
-            $.getJSON(WIKICWD + "/w/api.php?action=query&prop=revisions&titles="+ userurl +"&rvslots=*&rvprop=content&formatversion=2&format=json", feed => {
-            // ...
-                callback(feed)
-            });
+                for(let [key, value] of Object.entries(call)) { // Get the values to link the things up to eachother
+                    if(FILTERS.specifics.group[0] == "Unconfirmed") { // Anonymous only filter
+                        if(value.userid != 0) {
+                            continue;
+                        }
+                    }
+                    if(value.userid == 0 ) {
+                        if(FILTERS.specifics.group[0] != "0" && FILTERS.specifics.group[0] != "Unconfirmed") { // If group isnt in default/all state
+                            continue;
+                        }
+                        value.userid = "anon-" + Math.floor(Math.random() * Math.floor(999999999));;
+                        allANON.push([value.userid, value.user]);
+                    } else {
+                        allUSERS_only.push(value.user);
+                    }
+                    let ptLogRevTMP = {revid: value.revid, old_revid: value.old_revid, uid: value.userid, uname: value.user, title: value.title, comment: value.parsedcomment, tags: value.tags, type: value.type, size_old: value.oldlen, size_new: value.newlen};
+                    let linkIDUN = [value.userid, value.user]; // Solve issues with username - anon-[no] relationship, anons have id of 0 so we need to make sure usernames are linked back to anons
+                    ids.push((value.userid).toString());
+                    allIDS.push(linkIDUN);
+                    allRevs.push(ptLogRevTMP);
+                }
 
+                
+                allRevs.forEach(arr => { // arr[0] is rev name arr[2] is userid of the editor, makes divs for stuff
+                    let iter = arr.uname;
+                    let userid = arr.uid;
+                    let revid = arr.revid;
+                    let anonify = false;
+                    allIDS.forEach(uID => { // link stuff (anons)
+                        if (iter == uID[1]) {
+                            userid = uID[0];
+                        }
+                    });
+                    container.innerHTML += "<div class='child__edit " + userid + " " + revid + "' style='background-color: green;'></div>";
+                })
+                let infoOUT = []; // Nested array - output of output[n][0] is userid & output[n][1] is corresponding edit count & output[n][2] is warning level
+                getUserInfo(unanonLIST, userinfo => { // usernames parameter is used for consistency of anon
+                    // IDENTIFIABLE ISSUE: WE DO NOT HAVE A RESULT FROM THE THING
+                    let unamelist =[];
+                    userinfo.forEach(res => {
+                        let uname = res.name;
+                        let editcount = res.editcount;
+                        let warningLvl = res.warninglevel;
+                        if(FILTERS.specifics.group[0] != "0") {
+                            if (!res.groups.includes((FILTERS.specifics.group[0]).toString().toLowerCase())) {
+                                $("." + res.uid).css("display", "none");
+                            } else {
+                            }
+
+                        }
+                        if(res.name == uname) {
+                            let warningLevelIcn;
+                            // horror for setting icn
+                            $("." + res.uid).append("<p class='userinfo'>" + uname + " • (<span class='editcount-" + res.uid + "'>" + editcount + "</span>) • <span class='warningLevel warn-" + res.uid +"'> <span class='material-icons'>autorenew</span></span>")
+                        };
+                    });
+                    allANON.forEach(arr => {
+                        $("." + arr[0]).append("<p class='userinfo'>" + arr[1] + " • (N/A) • <span class='warningLevel warn-" + arr[0] +"'> <span class='material-icons'>close</span></span>")
+                    });
+                    allRevs.forEach(arr => {
+
+                        if(parseInt(FILTERS.specifics.maxedit, 10) < parseInt($(".editcount-" + arr.uid).html(), 10) && parseInt(FILTERS.specifics.maxedit) != 0) { // filter out edits if value isnt 0 and is >max
+                            $("." + arr.revid).css("display", "none");
+                        }
+                            
+                        if(arr.comment == "") {
+                            arr.comment = "(No comment provided.)"
+                        }
+                        let trafficIcn;
+                        let size = arr.size_new - arr.size_old;
+                        let sizeStr = "";
+                        if(size < 0) {
+                            sizeStr = size.toString();
+                        } else {
+                            sizeStr = "+" + size.toString();
+                        }
+                        let disableStr = "";
+                        if((arr.uid).toString().includes("anon-")) {
+                            disableStr = "disabled";
+                        }
+                        $("." + arr.revid).append("      <a class='mdl-button mdl-js-button mdl-button--icon' onclick='goToLatestDiffPage(" + arr.revid + ", " + arr.old_revid + ")' style='margin-top: 6px; margin-left: 10px;'><i class='material-icons'>open_in_browser</i></a><!-- Rev16+ Feature only<a class='mdl-button mdl-js-button mdl-button--icon' style='margin-top: 6px;' disabled><i class='material-icons'>compare</i></a>--><a class='mdl-button mdl-js-button mdl-button--icon message-" + arr.uid + "' style='margin-top: 6px;' "+ disableStr +"><i class='material-icons'>send</i></a></p>");
+                        $("." + arr.revid).append("<p class='slightly-larger'>[" + capitalizeFirstLetter(arr.type) +"]: " + arr.title + "   ("+ sizeStr +") <span class='trafficlight-" + arr.revid + "'')</p><p>Comment: " + arr.comment + "</p><small class='btm-right'>Tags: <span class='tags-"+ arr.revid + "'></span></small>");
+                        $(".message-" + arr.uid).click(function(){ PARENTRW.ui.newMsg(arr.uname) });
+                        // insert code for color scaling
+                        if(CORSENABLED) {
+                            // do stuff for cors here
+                            // implementation soon tm
+                        } else if(!CORSENABLED) {
+                            // do stuff for NO cors here
+                            let sizeDiff = size;
+                            let opacityLevel = 0;
+                            if ((sizeDiff > 1000) || (sizeDiff < -1000)) {
+                                // Max opacity
+                                opacityLevel = 1;
+                            } else {
+                                // We can map
+                                if (sizeDiff < 0) {
+                                    // Red map
+                                    opacityLevel = convertRange(sizeDiff, [0, -1000], [0.1, 0.75]);
+                                } else {
+                                    // Green map
+                                    opacityLevel = convertRange(sizeDiff, [0, 1000], [0.1, 0.75]);
+                                }
+
+                            }
+                            let back = (sizeDiff < 0) ? "rgba(` + rmCol + `," + opacityLevel + ")" : "rgba(` + addCol + `,"+ opacityLevel +")";
+                            let style = {
+                                "background-color": back,
+                                "color": "black"
+                            }
+                            $("." + arr.revid).css(style) 
+                        }
+
+                        
+                        var tags = arr.tags;
+                        let tagsToAppend = "";
+                        tags.forEach(tag => {
+                            tagsToAppend += tag + ", ";
+                        })
+                        if(tagsToAppend.length == 0) {
+                            tagsToAppend = "None."
+                        } else {
+                            tagsToAppend.slice(0, -2);
+                        }
+                        $(".tags-" + arr.revid).append(tagsToAppend);
+                    });
+                    lastWarningLevel(allUSERS_only, warnArr => {
+                        // ...
+                        warnArr.forEach(value => {
+                            let warningLevelIcn;
+                            let name = value[0]
+                            if (value[1] == "0") {
+                                warningLevelIcn = "thumb_up" // no change
+                            } else if (value[1] === "1") {
+                                warningLevelIcn = "info";
+                            } else if (value[1] === "2") {
+                                warningLevelIcn = "announcement";
+                            } else if (value[1] === "3") {
+                                warningLevelIcn = "report_problem";
+                            } else if (value[1] === "4") {
+                                warningLevelIcn = "report";
+                            } else if (value[1] === undefined) {
+                                warningLevelIcn == "thumb_up"; // is anonymous user/no warning level out given
+                            }
+                            let uid; 
+                            allIDS.forEach(userARR => {
+                                if(userARR[1] == name) {
+                                    uid = userARR[0];
+                                }
+                            $(".warn-" + uid).html("<span class='material-icons' style='padding-left: 5px;'>"+ warningLevelIcn +"</span>");
+                            });
+                        })
+                    });
+                });
+
+            });
         }
 
         function lastWarningLevel(users, callback) { // callback() - users param is an array!
         // users should be ARRAY
             fetchMeWarningLevel(users, phoneafriend => { // returns feed for us to use, users is parsed within function 
-                //...
                 var warnsOUT = [];
-                $.each(phoneafriend.query.pages, function(key, value) {
+                phoneafriend.query.pages.forEach(value => {
                     //...
                     let perUserWarns = [];
                     let username = (value.title).substring(10); // Put username in place so we can figure out what goes where
@@ -458,10 +610,115 @@
                 return;
             })
         }
-
-        function refreshLive() {
-            console.log("Placeholder.")
+        
+        function getUserInfo(ids, callback) { // Wrapper for the interpretation of ids and fetching of the edit count for users. This is jank but I actually cba
+            // ids should be an array of user ids - will return EDIT COUNT (API:Users) and WARNING LEVEL (Unoffical)
+            fetchEditCount(ids, result => {
+                let infoOUT = []; // Nested array - output of output[n][0] is userid & output[n][1] is corresponding edit count & output[n][2] is warning level
+                let user = result.query.users;
+                let unamelist = [];
+                user.forEach(value => { // to make stuff for lastwarninglevel
+                    unamelist.push(value.name);
+                });
+                user.forEach(user => {
+                    let grouplist = [];
+                    for(const group in user.groups) {
+                        if(user.groups[group] == "confirmed") {
+                            user.groups[group] = "autoconfirmed";
+                        }
+                        grouplist.push(user.groups[group].toString());
+                    }
+                    let userInfo = [];
+                    userInfo = [user.userid, user.name, user.editcount, grouplist];
+                    infoOUT.push({uid: userInfo[0], name: userInfo[1], editcount: userInfo[2], groups: userInfo[3]}); // push everything out to callback array
+                });
+                callback(infoOUT); // it is done.
+            });
         }
+        
+        // Main funcs. /\ //
+
+
+
+        // ASYNC / CALLBACK FIX FUNCTIONS. \/ //
+
+        function fetchMeWarningLevel(users, callback) { // async fix.
+            let userurl = "";
+            users.forEach(value => {
+                if(value == undefined) {
+                    return true;
+                }
+                userurl += "User_talk:" + value + "|";
+            });
+            userurl = userurl.substring(0, userurl.length - 1);
+            // Get the last warning level of a user this month
+            $.getJSON(WIKICWD + "/w/api.php?action=query&prop=revisions&titles="+ userurl +"&rvslots=*&rvprop=content&formatversion=2&format=json", feed => {
+            // ...
+                callback(feed)
+            });
+
+        }
+
+        function fetchRecentChanges(filterlist, callback) { // fetch JSON from action API using querys
+            $.getJSON(WIKICWD + "/w/api.php?action=query&list=recentchanges&rclimit=50&format=json&rcprop=user|userid|title|timestamp|ids|tags|parsedcomment|sizes" + filterlist.rctype + filterlist.rctag + filterlist.rcshow + filterlist.rctop, r => { // we need to add stuff for filters in here somewhere later.
+                let feed = r.query.recentchanges;
+                callback(feed); // this is all we needed to do
+                });
+        }
+
+        function fetchEditCount(ids, callback) {// Fix for async: the main thread will be held up until this is done.
+
+            // Note: we can probably lessen loading times for base stuff if we did this stuff in async rather than 
+            // holding up the main thread but for now its whatever, warning levels take the longest and don't hold us from
+            // inteferacing with anything actually important.
+            let idurl = "";
+            ids.forEach(element => { 
+                idurl += element + "|";
+            });            
+            idurl = idurl.substring(0, idurl.length - 1); //remove last char (which will be an excess "|")
+            $.getJSON(WIKICWD + "/w/api.php?action=query&list=users&ususerids="+ idurl + "&format=json&usprop=editcount|groups", feed => {
+                callback(feed)
+            });
+        }
+
+
+        // ASYNC / CALLBACK FIX FUNCTIONS. /\ //
+
+
+
+        // Miscelleneous functions. \/ //
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        function switchCheck() { // Checks on the switch click for toggling live feeds if its in 'checked' state or not and changes page accordingly
+            let livetoggle= document.getElementById('liveswitch');
+            let hoverswitch = document.getElementById('hoverswitch');
+            if (livetoggle.checked == true) {
+                tI = setInterval(refreshLive, 1750);
+                hoverswitch.style.display = "none";
+            } else {
+                clearTimeout(tI);
+                hoverswitch.style.display = "initial";
+            }
+        }
+
+        function goToLatestDiffPage(revid, old_revid) {
+            $("#welcomeContainer").hide();
+            // Nav to latest diff page
+             // Open page in new tab (has to be done here due to new security systems)
+            bc.postMessage(WIKICWD + "/w/index.php?title=" + encodeURIComponent(name) + "&diff=" + revid + "&oldid=" + old_revid + "&diffmode=source");
+        }
+
+        function saveConfig() { // gets info
+            var rctypefilter = $('.dropdown-rctype').select2('data');
+            var rctagfilter = $('.dropdown-rctag').select2('data');
+            var switch2 = document.getElementById('switch-2').checked;
+        }
+        // Miscelleneous functions. /\ //
+
+
 
 
 

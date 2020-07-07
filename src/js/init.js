@@ -193,11 +193,13 @@ var rw = {
             let sidebarSize = 500;
             let addCol = "0,255,0"; // rbg
             let rmCol = "255,0,0"; // rgb
+            let mwBody = document.getElementsByTagName("BODY")[0];
             /*if (rw.config.ptrSidebar) sidebarSize = rw.config.ptrSidebar; DEP. REV12*/
              // If preferences set, apply them
             if (rw.config.ptrAddCol) addCol = rw.config.ptrAddCol;
             if (rw.config.ptrRmCol) rmCol = rw.config.ptrRmCol;
             // basically multiact js but with stuff replaced
+            mwBody.style.overflowY = "hidden";
             let content = mdlContainers.generateContainer(` 
             [[[[include recentChanges.html]]]]
             `, document.body.offsetWidth, document.body.offsetHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
@@ -210,7 +212,10 @@ var rw = {
                     </div>
                 `);
                 // Add close event
-                addMessageHandler("closeDialogPT", ()=>{rw.recentChanges.dialog.close();}); // closing
+                addMessageHandler("closeDialogPT", ()=>{
+                    rw.recentChanges.dialog.close();
+                    mwBody.style.overflowY = "auto";
+                }); // closing
             }
             
             $("#PTdialogContainer").html(`
@@ -227,7 +232,6 @@ var rw = {
             if (! rw.recentChanges.dialog.showModal) {
                 dialogPolyfill.registerDialog(rw.recentChanges.dialog);
             }
-
             rw.recentChanges.dialog.showModal(); // Show dialog
         },
         "diffLinkAddRedWarn" : () => { // add redwarn to recent changes page
@@ -247,6 +251,10 @@ var rw = {
 
         "bindRecentChanges" : () => { // on list change add redwarn
             $('body').on('DOMSubtreeModified', 'ul.special', ()=>rw.recentChanges.diffLinkAddRedWarn());
+        },
+        "filterSave": (configIn) => {
+            // Do stuff with configIn
+
         }
     }
 };
@@ -291,6 +299,8 @@ function initRW() {
             for (let item of document.getElementsByClassName("mdl-tooltip")) {
                 rw.visuals.register(item); 
             }
+            // A bit more of a clear error for someone who may not be paying immediate attention. Maybe we can use wikitext to send new user guide?
+            mw.notify("You do not have permission to use Redwarn yet. Please refer to the user guide for more information (Error: User is NOT confirmed/autoconfirmed)", {title: "Error loading Redwarn", autoHide: "false", tag: "redwarn"});
             rw = {}; // WIPE OUT ENTIRE CLASS. We're not doing anything here.
             // That's it
         });

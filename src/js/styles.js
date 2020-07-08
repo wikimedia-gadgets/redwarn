@@ -1,43 +1,154 @@
-// THE MAIN PAGE DOES NOT INCLUDE MATERIAL DESIGN LITE CSS. Include all the things here if needed.
+// 
 $(".menu").css("z-index", 110); // stop ours from overlaying
+
+var rwDialogAnimations = { // Custom CSS for each animation style
+    // DEFAULT
+    "default" : `
+    /* DEFAULT DIALOG ANIMATION BEGIN */
+
+    dialog[open] {
+        -webkit-animation: show 0.25s ease normal;
+    }
+    @-webkit-keyframes show{
+        from {
+            opacity: 0;
+            transform: scale(0.5) translateY(-10%);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0%);
+        }
+    }
+    
+    dialog.closeAnimate {
+        -webkit-animation: close 0.25s ease normal;
+    }
+    
+    @-webkit-keyframes close{
+        from {
+            opacity: 1;
+            transform: scale(1) translateY(0%);
+        }
+        to {
+            opacity: 0;
+            transform: scale(0.5) translateY(-10%);
+        }
+    }
+    
+    /* DIALOG ANIMATION END */`,
+
+    // NONE (marked as "instant")
+    "none" : `
+    /* DEFAULT DIALOG ANIMATION BEGIN */
+
+    dialog[open] {
+        -webkit-animation: show 0.01s ease normal;
+    }
+    @-webkit-keyframes show{
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    dialog.closeAnimate {
+        -webkit-animation: close 0.01s ease normal;
+    }
+    
+    @-webkit-keyframes close{
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+    
+    /* DIALOG ANIMATION END */
+    `,
+
+    // Spinny
+    "spinny" : `
+    /* DEFAULT DIALOG ANIMATION BEGIN */
+
+    dialog[open] {
+        -webkit-animation: show 0.25s ease normal;
+    }
+    @-webkit-keyframes show{
+        from {
+            opacity: 0;
+            transform: scale(0.5) translateY(-10%) rotate(30deg);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0%) rotate(0deg);
+        }
+    }
+    
+    dialog.closeAnimate {
+        -webkit-animation: close 0.25s ease normal;
+    }
+    
+    @-webkit-keyframes close{
+        from {
+            opacity: 1;
+            transform: scale(1) translateY(0%) rotate(0deg);
+        }
+        to {
+            opacity: 0;
+            transform: scale(0.5) translateY(-10%) rotate(-30deg);
+        }
+    }
+    
+    /* DIALOG ANIMATION END */`,
+
+    // Mega
+    "mega" : `
+    /* DEFAULT DIALOG ANIMATION BEGIN */
+
+    dialog[open] {
+        -webkit-animation: show 0.25s ease normal;
+    }
+    @-webkit-keyframes show{
+        from {
+            opacity: 0;
+            transform: scale(3);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    dialog.closeAnimate {
+        -webkit-animation: close 0.25s ease normal;
+    }
+    
+    @-webkit-keyframes close{
+        from {
+            opacity: 1;
+            transform: scale(1);
+        }
+        to {
+            opacity: 0;
+            transform: scale(3);
+        }
+    }
+    
+    /* DIALOG ANIMATION END */`
+};
+
+
+// MAIN CSS - THE MAIN PAGE DOES NOT INCLUDE MATERIAL DESIGN LITE CSS. Include all the things here if needed.
 var rwStyle = `
 /* MW INDICATORS to stop tooltip clashes */
 .mw-indicators {
     z-index: 1;
 }
 
-/* DIALOG ANIMATION BEGIN */
 
-dialog[open] {
-    -webkit-animation: show 0.25s ease normal;
-}
-@-webkit-keyframes show{
-    from {
-        opacity: 0;
-        transform: scale(0.5) translateY(-10%);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0%);
-    }
-}
-
-dialog.closeAnimate {
-    -webkit-animation: close 0.25s ease normal;
-}
-
-@-webkit-keyframes close{
-    from {
-        opacity: 1;
-        transform: scale(1) translateY(0%);
-    }
-    to {
-        opacity: 0;
-        transform: scale(0.5) translateY(-10%);
-    }
-}
-
-/* DIALOG ANIMATION END */
 
 .mdl-tooltip {
     -webkit-transform: scale(0);

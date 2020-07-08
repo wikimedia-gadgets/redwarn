@@ -59,10 +59,10 @@ var onSettingsLoad = {};
     </div>
     <!-- Tabs -->
     <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-      <a href="#scroll-tab-1" class="mdl-layout__tab is-active">Appearance</a>
+        <a href="#scroll-tab-3" class="mdl-layout__tab is-active">Dashboard</a>
+      <a href="#scroll-tab-1" class="mdl-layout__tab">Appearance</a>
       <a href="#scroll-tab-2" class="mdl-layout__tab">Behavior</a>
       <!--
-      <a href="#scroll-tab-3" class="mdl-layout__tab">Tab 3</a>
       <a href="#scroll-tab-4" class="mdl-layout__tab">Tab 4</a>
       <a href="#scroll-tab-5" class="mdl-layout__tab">Tab 5</a>-->
       <a href="#scroll-tab-6" class="mdl-layout__tab">ABOUT</a>
@@ -70,7 +70,7 @@ var onSettingsLoad = {};
   </header>
   <main class="mdl-layout__content" style="padding-left: 5%;">
     <form id="config">
-        <section class="mdl-layout__tab-panel is-active" id="scroll-tab-1">
+        <section class="mdl-layout__tab-panel" id="scroll-tab-1">
         <div class="page-content">
             <!-- APPEARANCE TAB -->
             <h4>Appearance</h4>
@@ -396,8 +396,56 @@ var onSettingsLoad = {};
             <!-- END BEHAVIOR SETTINGS -->
         </div>
         </section>
-        <section class="mdl-layout__tab-panel" id="scroll-tab-3">
-        <div class="page-content"><!-- Your content goes here --></div>
+        <section class="mdl-layout__tab-panel is-active" id="scroll-tab-3"> <!-- DASHBOARD -->
+        <div class="page-content" style="padding-top:10px;">
+            <div style="width:25%;float:right;">
+                <!-- Square card -->
+                <style>
+                    .demo-card-square.mdl-card {
+                    width: 320px;
+                    height: 320px;
+                    }
+                    .demo-card-square > .mdl-card__title {
+                    color: #fff;
+                    background:
+                        url('../assets/demos/dog.png') bottom right 15% no-repeat #46B6AC;
+                    }
+                    </style>
+    
+                <div class="demo-card-square mdl-card mdl-shadow--2dp">
+                <div class="mdl-card__title mdl-card--expand">
+                    <h2 class="mdl-card__title-text">Update</h2>
+                </div>
+                <div class="mdl-card__supporting-text">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Aenan convallis.
+                </div>
+                <div class="mdl-card__actions mdl-card--border">
+                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                    View Updates
+                    </a>
+                </div>
+                </div>
+            </div>
+            <div style="width:70%;float: left;"> <!-- Left side newsboard -->
+                <div class="mdl-card mdl-shadow--2dp" style="width:100%">
+                    <div class="mdl-card__title" style="color: #fff;
+                    height: 176px;
+                    background: url('https://upload.wikimedia.org/wikipedia/commons/d/d3/Golden_Gate_Bridge_at_sunset_1.jpg') center / cover;">
+                        <h2 class="mdl-card__title-text">Test</h2>
+                    </div>
+                    <div class="mdl-card__supporting-text">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Mauris sagittis pellentesque lacus eleifend lacinia...
+                    </div>
+                    <div class="mdl-card__actions mdl-card--border">
+                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
+                        Get Started
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-4">
         <div class="page-content"><!-- Your content goes here --></div>
@@ -431,7 +479,6 @@ var onSettingsLoad = {};
         </div>
         </section>
     </form>
-    <i>To apply your changes, click the save icon in the top right corner.</i>
   </main>
 </div>
 

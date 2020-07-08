@@ -137,7 +137,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                 // Assemble text to add per page template
                 let text = `=== [[:${mw.config.get("wgRelevantPageName").replace(/_/g, ' ')}]] ===
 * {{pagelinks|${mw.config.get("wgRelevantPageName").replace(/_/g, ' ')}}}
-'''${requestDuration + " " + requestProtect.name}:''' ${(changeCoreReason == "Other rationale" ? "" : changeCoreReason)}. ${changeExtraInfo} `+ rw.sign();
+'''${(requestProtect.name == "no protection" ? "Unprotection" : requestDuration + " " + requestProtect.name)}:''' ${(changeCoreReason == "Other rationale" ? "" : changeCoreReason + `. `)}${changeExtraInfo} `+ rw.sign();
 
                 // New req current page.
                 $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+ encodeURIComponent(rw.pageProtect.rfppPage) +"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{

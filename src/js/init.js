@@ -43,7 +43,14 @@ if (rw != null) {
     mw.notify("Warning! You have two versions of RedWarn installed at once! Please edit your common.js or skin js files to ensure that you only use one instance to prevent issues.");
 }
 var rw = {
+    // UPDATE THIS DATA FOR EVERY VERSION!
     "version" : "15dev", // don't forget to change each version!
+    "versionSummary": `
+<!-- RedWarn 15 -->
+RedWarn 15 brings a striking new featureset to RedWarn,
+including connectivity to the Huggle anti-vandalism network, user interface improvements,
+a new redesigned RedWarn patrol, UAA reports, the new RedWarn dashboard and many more.
+    `,
     // ADDED BY BUILD SCRIPT
     "buildInfo" : `[[[[BUILDINFO]]]]`,
     // Now edited by us again
@@ -305,9 +312,9 @@ function initRW() {
                     // Show an update dialog
                     rw.ui.confirmDialog(`
                     <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Welcome to ${rw.logoHTML} ${rw.version}!</h2>
-                    <b>RedWarn has just got a new update!</b> Would you like to read more about what's new?
+                    ${rw.versionSummary}
                     `,
-                    "READ SUMMARY", ()=>{
+                    "READ MORE", ()=>{
                         dialogEngine.closeDialog();
                         redirect("https://en.wikipedia.org/wiki/Wikipedia:RedWarn/bugsquasher#RedWarn_"+ rw.version + "_summary", true);
                     },

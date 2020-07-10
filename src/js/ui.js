@@ -449,6 +449,11 @@ rw.ui = {
             "CANCEL", ()=>dialogEngine.closeDialog(), 98);
         });
 
+        // Add new QTPack handler
+        addMessageHandler("newQTP", ()=>rw.quickTemplate.newPack());
+
+        // Lock scrolling
+        dialogEngine.freezeScrolling();
 
         // Open preferences page with no padding, full screen
         dialogEngine.create(mdlContainers.generateContainer(`

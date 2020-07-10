@@ -35,5 +35,16 @@ var dialogEngine = {
             // Animation finished
             dialogEngine.dialog.close();
         });
+
+        // Make sure to reenable scrolling
+        dialogEngine.enableScrolling();
+    },
+
+    "freezeScrolling" : ()=>{// stop the page from scrolling
+        $("body").css("overflow", "hidden");
+    }, 
+
+    "enableScrolling" : ()=>{
+        $("body").css("overflow", "");
     }
 }

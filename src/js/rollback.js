@@ -245,6 +245,14 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
     ],
 
     "loadIcons" : () => { // Adds icons to a diff page - see rw.rollback.icons to set defaults here.
+        // Check if page is editable, if not, don't show
+        if (!mw.config.get("wgIsProbablyEditable")) {
+           // Can't edit, so exit
+           return; 
+        }
+
+        // else, continue :)
+
         let isLatest = $("#mw-diff-ntitle1").text().includes("Latest revision"); // is this the latest revision diff page?
         let isLeftLatest = $("#mw-diff-otitle1").text().includes("Latest revision"); // is the left side the latest revision? (rev13 bug fix)
 

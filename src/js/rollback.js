@@ -408,7 +408,14 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             // Set handlers for each method
             let pseudoRollbackCallback = ()=>{ // pseudoRollback 
                 // Fetch latest revision not by user
-                rw.info.latestRevisionNotByUser(mw.config.get("wgRelevantPageName"), un, (content, summary, rID) => {
+                rw.info.latestRevisionNotByUser(mw.config.get("wgRelevantPageName"), un, (content, summary, rID, pID) => {
+                    // Verify that pID is NOT the thing rev we want to rollback, else it's been overwritten
+                	if (pID == rw.rollback.getRollbackrevID()) {
+                		// looks like that there is a newer revision! redirect to it.
+                		rw.info.isLatestRevision(mw.config.get("wgRelevantPageName"), 0, ()=>{});
+                		return; // stop here.
+                    }
+                    
                     // Got it! Now set page content to summary
                     // Push UNDO using CSRF token
                     $.post(rw.wikiAPI, {

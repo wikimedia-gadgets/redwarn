@@ -435,13 +435,10 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 redirect(rw.wikiIndex + "?title="+ encodeURIComponent(name) +"&action=history#rollbackFailNoRev");
                 return; // exit
             }
-
-
-
-            console.log("_r");
+            
             let latestContent = _r.slots.main.content;
             let summary = "Reverting edit(s) by [[Special:Contributions/"+ username +"|"+ username +"]] ([[User_talk:"+ username +"|talk]]) to rev. "+ _r.revid +" by " +_r.user;
-            callback(latestContent, summary, _r.revid);
+            callback(latestContent, summary, _r.revid, _r.parentid);
         });
     },
 

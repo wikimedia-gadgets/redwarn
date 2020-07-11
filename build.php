@@ -21,7 +21,8 @@ function buildScript() {
     'pendingChanges.js',
     'multiAct.js',
     'quickTemplate.js',
-    'pageProtect.js'
+    'pageProtect.js',
+    'han.js'
     ]; // List of files in order to import 
     foreach($jsFiles as $file) {
         $result .= file_get_contents("./src/js/" . $file) . "\n"; // get contents and append

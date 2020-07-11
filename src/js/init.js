@@ -325,6 +325,15 @@ function initRW() {
                     },168);
                 });
             }
+
+            // Connect to HAN if enabled
+            if (rw.config.rwHAN != "disable") {
+                rw.han.connect();
+            } else {
+                // Hide HAN icon
+                $("#rwHANicon").hide();
+            }
+
             // TODO: probably fix this mess into a URL
             // HERE REALLY REALLY NEEDS CLEANUP
                 // Check if a message is in URL (i.e edit complete ext)

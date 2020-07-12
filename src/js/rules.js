@@ -735,7 +735,7 @@ rw.rules = [
         "warningLevels": [
             6
         ],
-        "note" : "Username notices should not be added for blatent violations. In these cases, click the gavel to report the username to the admins."
+        "note" : "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
     },
     {
         "name": "Canvassing",
@@ -880,7 +880,7 @@ rw.rules = [
         "warningLevels": [
             6
         ],
-        "note" : "Username notices should not be added for blatent violations. In these cases, click the gavel to report the username to the admins."
+        "note" : "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
     },
     {
         "name": "Username is against policy, and conflict of interest",
@@ -889,7 +889,7 @@ rw.rules = [
         "warningLevels": [
             6
         ],
-        "note" : "Username notices should not be added for blatent violations. In these cases, click the gavel to report the username to the admins."
+        "note" : "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
     },
     {
         "name": "Userpage or subpage is against policy",
@@ -898,6 +898,6 @@ rw.rules = [
         "warningLevels": [
             6
         ],
-        "note" : "Username notices should not be added for blatent violations. In these cases, click the gavel to report the username to the admins."
+        "note" : "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
     }
 ];

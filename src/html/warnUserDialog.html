@@ -528,7 +528,8 @@
                 $("#errorString").text("Please sign your notice.");
                 return; // Do not continue
             }
-            window.parent.postMessage('applyNotice\\\`' + document.getElementById("trgtUsrVisualBox").value + '\\\`' + wikiTxt + '\\\`' + "New Notice: "+ rules[data.template].name); // Push upstairs and commit
+            // Format: applyNotice,target,wikitxt,warnlevel|rulename
+            window.parent.postMessage(('applyNotice\\\`' + document.getElementById("trgtUsrVisualBox").value + '\\\`' + wikiTxt + '\\\`' + rules[data.template].name + '\\\`' + r)); // Push upstairs and commit
             window.parent.postMessage("closeDialog"); // We done here. Top will refresh or reshow if error occurs.
         });
     }

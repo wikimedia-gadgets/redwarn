@@ -666,12 +666,9 @@ var onSettingsLoad = {};
 
     // Colour theme preview
     function updateColourTheme() {
-        // Fade out
-        $("body").fadeOut(500, ()=>{
-            // Add stylesheet for this version
-            $('head').append('<link rel="stylesheet" type="text/css" href="https://redwarn.toolforge.org/cdn/css/material.' + $("input[name=colTheme]:checked").val() + '.min.css">');
-        });
-        // Fade in after 250 ms
-        setTimeout(()=>$("body").fadeIn(), 250);
+        // Show loading dialog
+        window.parent.postMessage('newThemeDialog');
+        // Add stylesheet for this version
+        setTimeout(()=>$('head').append('<link rel="stylesheet" type="text/css" onload="window.parent.postMessage(\\\'loadDialogClose\\\');" href="https://redwarn.toolforge.org/cdn/css/material.' + $("input[name=colTheme]:checked").val() + '.min.css">'), 500);
     }
 </script>

@@ -126,8 +126,33 @@ rw.ui = {
             let _eD = eD.split("`"); // params
             let user = _eD[1];
             let wikiTxt = _eD[2];
-            let summary = _eD[3];
+            let rule = _eD[3];
+            let template = _eD[4].split("|")[0];
+            let warningLevel = "N/A";
+
             if ((customCallback == null) || (customCallback == false)) { // if not set
+                // Map warning level
+                (['1', '2', '3', '4', '4im']).forEach(e=>{
+                    if (template.includes(e)) warningLevel = e; // if includes this level, add
+                });
+
+                console.log({user, wikiTxt, rule, template, warningLevel}); // debug
+
+                // Let HAN know if possible (first letter only for cross compatibility)
+                if (warningLevel != "N/A") rw.han.reportWarn(user, warningLevel.charAt(0));
+
+                // MAKE EDIT - summary with warning info
+                let summary = `${
+                    ({  
+                        "N/A" : "Notice:",
+                        "1" : "Note:",
+                        "2" : "Caution:",
+                        "3" : "Warning:",
+                        "4" : "Final Warning:",
+                        "4im": "ONLY Warning:"
+                    })[warningLevel]
+                } ${rule}`;
+
                 // MAKE EDIT
                 rw.info.addWikiTextToUserPage(user, wikiTxt, true, summary);
             } else {
@@ -451,6 +476,10 @@ rw.ui = {
 
         // Add new QTPack handler
         addMessageHandler("newQTP", ()=>rw.quickTemplate.newPack());
+
+        // Add load new theme handler
+        addMessageHandler("newThemeDialog", ()=>rw.ui.loadDialog.show("Changing theme..."));
+        addMessageHandler("loadDialogClose", ()=>rw.ui.loadDialog.close());
 
         // Lock scrolling
         dialogEngine.freezeScrolling();

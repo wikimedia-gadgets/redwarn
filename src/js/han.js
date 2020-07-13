@@ -1,24 +1,62 @@
 // Handles connection to Huggle Anti-vandalism network
 rw.han = {
     "connected": false,
+    "authRequired": false,
     "reconnectTries": 0,
     "messageLog" : [],
     "onlineUsers" : [],
+    "tokenLocalStorageID" : `RedWarnToolsHANgatewayToken-${rw.info.getUsername()}`, // the value where our connection token is stored in localStorage
+
+    "oauthLogin" : ()=>{ // all the things needed to show login is required
+        rw.han.authRequired = true;
+        // Alert user to log in
+        $("#rwHANicon").css("color", "blue");
+        $("#rwHANstatus").html("Click to log in to the Huggle anti-vandalism network.");
+        rw.visuals.toast.show("Verify your account identity to access the Huggle anti-vandalism network.", "CONTINUE", ()=>{if (rw.han.authRequired) redirect("https://hangateway.toolforge.org/login", true);}, 15000);
+    },
+
     "connect" : (callback)=>{ // connect
         console.log("Connecting to HAN...");
         if (!rw.wikiBase.includes("en.wikipedia.org")) return; // no HAN on this wiki - enwiki only atm
-        rw.han.socket = new WebSocket('wss://hangateway.toolforge.org'); // wss://hangateway.toolforge.org - dev ws://localhost:7676
+        rw.han.socket = new WebSocket(`wss://hangateway.toolforge.org/gateway?user=${rw.info.getUsername()}`); // wss://hangateway.toolforge.org/gateway - dev ws://localhost:7676
 
         // Connection opened
         rw.han.socket.addEventListener('open', function (event) {
-            rw.han.socket.send(`connect|${rw.info.getUsername()}|RedWarn ${rw.version}`); // send connect command - Username|RedWarn version
+            console.log("Socket connected");
+
+            // Verify that we have a token stored
+            let hanToken = localStorage.getItem(rw.han.tokenLocalStorageID);
+            if (hanToken == null) {
+                // None stored, auth needed
+                rw.han.oauthLogin();
+            } else {
+                // Let's connect with that token
+                rw.han.socket.send(`connect|${hanToken}|RedWarn ${rw.version}`); // send connect command - Username|RedWarn version
+            }
         });
 
         // Listen for messages
         rw.han.socket.addEventListener('message', function (event) {
-            if (!rw.han.connected && event.data == "CONNECTED") {
+            // If auth needed and oauth signal sent
+            if (rw.han.authRequired && (event.data.split("|")[0] == "TOKEN")) {
+                // Save in storage
+                localStorage.setItem(rw.han.tokenLocalStorageID, event.data.split("|")[1]);
+                // Send connect command
+                rw.han.socket.send(`connect|${event.data.split("|")[1]}|RedWarn ${rw.version}`);
+            } else if (!rw.han.connected && event.data == "BADREQ") {
+                // Likely bad token
+                rw.han.oauthLogin();
+            } else if (!rw.han.connected && event.data == "CONNECTED") { // on connected signal
+                if (rw.han.authRequired) {
+                    // Show notice that it's connected
+                    rw.ui.confirmDialog(`
+                    Welcome back. Your account identity has been confirmed and you can now access the Huggle anti-vandalism network in this browser.
+                    To see what other users are doing, and to discuss counter-vandalism efforts, click the chat icon in RedWarn's menu.
+                    `, "OKAY", ()=>dialogEngine.closeDialog() , "", ()=>{}, 47);
+                }
+                rw.han.authRequired = false;
                 console.log("Connected to HAN.");
-                $("#rwHANicon").css("color", "green"); // set to connected colour
+                $("#rwHANicon").css("color", ""); // set to no color so that it doesn't stand out too much
                 rw.han.connected = true;
                 rw.han.reconnectTries = 0;
                 if (callback != null) callback();
@@ -98,7 +136,7 @@ rw.han = {
         rw.han.socket.onclose = ()=>{
             // Connection closed
             console.log("Connection closed");
-
+            rw.han.authRequired = false;
             // Remove online users handler
             if (rw.han.connectedTimer != null) clearInterval(rw.han.connectedTimer);
 
@@ -137,7 +175,10 @@ rw.han = {
 
     "ui" : ()=>{
         // HAN icon clicked
-        if (!rw.han.connected) {
+        if (rw.han.authRequired) {
+            // Open oauth page
+            redirect("https://hangateway.toolforge.org/login", true);
+        } else if (!rw.han.connected) {
             // Failed / lost connection - reconnect
             rw.visuals.toast.show("Reconnecting to HAN...");
             rw.han.connect(); // reconnect

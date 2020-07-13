@@ -105,6 +105,9 @@ a new redesigned RedWarn patrol, UAA reports, the new RedWarn dashboard and many
                 </style>
             `); // Append required libaries to page
 
+            // OOui
+            mw.loader.load( 'oojs-ui-windows' );
+
             // Show redwarn only spans
             $(".RedWarnOnlyVisuals").show();
             

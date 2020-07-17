@@ -47,9 +47,8 @@ var rw = {
     "version" : "15dev", // don't forget to change each version!
     "versionSummary": `
 <!-- RedWarn 15 -->
-RedWarn 15 brings a striking new featureset to RedWarn,
-including connectivity to the Huggle anti-vandalism network, user interface improvements,
-a new redesigned RedWarn patrol, UAA reports, the new RedWarn dashboard and many more.
+RedWarn 15 unifies the anti-vandalism experience, including connectivity to the Huggle anti-vandalism network,
+user interface improvements, UAA reports, bug fixes and more.
     `,
     // ADDED BY BUILD SCRIPT
     "buildInfo" : `[[[[BUILDINFO]]]]`,
@@ -246,6 +245,9 @@ a new redesigned RedWarn patrol, UAA reports, the new RedWarn dashboard and many
                 $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("height",  document.body.offsetHeight);
                 $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("width",  document.body.offsetWidth);
             });
+
+            // Add message handler for dialog close
+            addMessageHandler("rwRCPcloseDialog", ()=>rw.recentChanges.dialog.close());
 
             rw.recentChanges.dialog.showModal(); // Show dialog
         }

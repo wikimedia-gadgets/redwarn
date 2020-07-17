@@ -1,6 +1,6 @@
 <?php
 // RedWarn's very basic build tool
-// (c) Ed E
+// (c) RedWarn contributors - https://gitlab.com/redwarn/redwarn-web
 //
 // USAGE: Run this in the terminal, or grab it as a web request.
 //
@@ -116,7 +116,7 @@ function processIncludedFiles($fileContents) {
 			$filePath = $htmlRoot . DIRECTORY_SEPARATOR . $matches[1];
 
 			return file_exists($filePath) ?
-				file_get_contents($filePath) : "[[[[FAILED INCLUDE (" . $matches[1]. ")]]]]";
+				file_get_contents($filePath) : "!!!! RedWarn Build Error: failed to include " . $matches[1]. " - if this is a release version of RedWarn, please report this error at WT:REDWARN !!!!";
 		},
         $fileContents
 	);

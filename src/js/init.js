@@ -44,7 +44,7 @@ if (rw != null) {
 }
 var rw = {
     // UPDATE THIS DATA FOR EVERY VERSION!
-    "version" : "15dev", // don't forget to change each version!
+    "version" : "15", // don't forget to change each version!
     "versionSummary": `
 <!-- RedWarn 15 -->
 RedWarn 15 unifies the anti-vandalism experience, including connectivity to the Huggle anti-vandalism network,

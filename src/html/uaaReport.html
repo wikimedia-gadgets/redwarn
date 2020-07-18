@@ -66,7 +66,7 @@
         }
         fullReason += " ${rw.sign()}"; // Add sig to the end (w space)
         // Push this upstairs
-        window.parent.postMessage('UAAreport\\\`'+ fullReason + '\\\`' + data.target, '*'); // Report with full reason
+        window.parent.postMessage('UAA\\\`'+ fullReason + '\\\`' + data.target, '*'); // Report with full reason
         window.parent.postMessage('closeDialog', '*'); // Close. We will be reopened on error.
     }
 </script>

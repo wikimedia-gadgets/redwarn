@@ -27,7 +27,7 @@ rw.han = {
 
     "connect" : (callback)=>{ // connect
         console.log("Connecting to HAN...");
-        if (!rw.wikiBase.includes("en.wikipedia.org")) return; // no HAN on this wiki - enwiki only atm
+        if (!(rw.wikiID == "enwiki")) return; // no HAN on this wiki - enwiki only atm
         rw.han.socket = new WebSocket(`wss://hangateway.toolforge.org/gateway?user=${rw.info.getUsername()}`); // wss://hangateway.toolforge.org/gateway - dev ws://localhost:7676
 
         // Connection opened

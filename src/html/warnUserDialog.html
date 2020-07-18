@@ -369,7 +369,7 @@
         if (fromCustomTxt) {
             // Edited using Wikitext editor
             var wikiTxt = document.getElementById("wikiTxt").value;
-            if (!wikiTxt.includes("`+ rw.sign() +`")) {
+            if (!wikiTxt.includes("${rw.sign()}")) {
                 // Not signed, warn
                 pushToast("Don't forget to sign your notice!");
             }
@@ -382,7 +382,7 @@
             }
             // Get preview as usual
             getTemplateName(name=>{
-            var wikiTxt = "{{subst:"+ name +"}} " + "`+ rw.sign() +`";
+            var wikiTxt = "{{subst:"+ name +"}} " + "${rw.sign()}";
             // Check if this user is an IP, if so, add the advice template to the end
             if (`+ (rw.info.isUserAnon(rw.info.targetUsername(un)) ? "true" : "false") +` == true) {
                 wikiTxt += "`+ rw.sharedIPadvice() +`";
@@ -523,7 +523,7 @@
                 }, {}); // form data
 
             var wikiTxt = document.getElementById("wikiTxt").value;
-            if (!wikiTxt.includes("`+ rw.sign() +`")) {
+            if (!wikiTxt.includes("${rw.sign()}")) {
                 // Not signed, warn
                 $("#errorString").text("Please sign your notice.");
                 return; // Do not continue

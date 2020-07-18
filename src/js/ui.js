@@ -527,7 +527,7 @@ rw.ui = {
                     "title" : aivPage,
                     "summary" : `Reporting [[Special:Contributions/${target}|${target}]] [[WP:REDWARN|(RedWarn ${rw.version})]]`, // summary sign here
                     "text": finalTxt,
-                    "tags" : (rw.wikiBase.includes("en.wikipedia.org") ? "RedWarn" : null) // Only add tags if on english wikipedia
+                    "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
                 }).done(dt => {
                     // We done. Check for errors, then callback appropriately
                     if (!dt.edit) {
@@ -721,10 +721,85 @@ rw.ui = {
     },
 
     "adminReportSelector" : un=> { // DON'T FORGET TO USE un ATTR!
+        un = rw.info.targetUsername(un); // get target
+        // Handle events
+        addMessageHandler("openAIV", ()=>rw.ui.openAdminReport(un)); // AIV report
+        addMessageHandler("openUAA", ()=>rw.ui.beginUAAReport(un)); // UAA report
+
         // Open the admin report selector dialog
-        rw.ui.recentlyVisitedSelector.init(mdlContainers.generateContainer(`
+        dialogEngine.create(mdlContainers.generateContainer(`
             [[[[include adminReportSelector.html]]]]
-        `, 600, 500)); // 420 hahahaha
-        rw.ui.recentlyVisitedSelector.dialog.showModal();
+        `, 600, 500)).showModal();
+    },
+
+    "beginUAAReport" : un=> { // Report to UAA
+
+        // Check if IP - if so, exit
+        if (rw.info.isUserAnon(un)) {
+            rw.ui.confirmDialog("As IPs don't have usernames, you can't report them to UAA.", "OKAY", ()=>dialogEngine.closeDialog() , "", ()=>{}, 0);
+            return; // stop
+        }
+
+        // Add toast handler
+        addMessageHandler("pushToast`*", m=>rw.visuals.toast.show(m.split('`')[1],false,false,2500));
+
+        // On report
+        addMessageHandler("UAAreport`*", m=>{
+            let reportContent = m.split('`')[1]; // report content
+            let target = m.split('`')[2]; // target username
+            console.log("reporting "+ target + ": "+ reportContent);
+            rw.visuals.toast.show("Reporting "+ target +"...", false, false, 2000); // show toast
+            // Submit the report. MUST REPLACE WITH REAL AIV WHEN DONE AND WITH SANDBOX IN DEV!    
+            let uaaPage = "Wikipedia:Usernames_for_administrator_attention"; // PRODUCTION: Wikipedia:Usernames_for_administrator_attention
+
+            $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+uaaPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+                // Grab text from latest revision of AIV page
+                // Check if exists
+                let revisionWikitext =  latestR.query.pages[0].revisions[0].slots.main.content; // Set wikitext
+                if (revisionWikitext.toLowerCase().includes(target.toLowerCase())) {// If report is already there
+                    rw.visuals.toast.show("This user has already been reported.", false, false, 5000); // show already reported toast
+                    return; // Exit
+                }
+
+                // Let's continue
+                // We don't need to do anything special. Just shove our report at the bottom of the page, although, may be advisiable to change this if ARV format changes
+                let textToAdd = "*" + "{{user-uaa|1=" + target + "}} &ndash; " + reportContent; // DANGER! WIKITEXT (here is fine. be careful w changes.) - if target IP give correct template, else normal
+                let finalTxt = revisionWikitext + "\n\n" + textToAdd; // compile final string
+                // Now we just submit
+                $.post(rw.wikiAPI, {
+                    "action": "edit",
+                    "format": "json",
+                    "token" : mw.user.tokens.get("csrfToken"),
+                    "title" : uaaPage,
+                    "summary" : `Reporting [[Special:Contributions/${target}|${target}]] [[WP:REDWARN|(RedWarn ${rw.version})]]`, // summary sign here
+                    "text": finalTxt,
+                    "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
+                }).done(dt => {
+                    // We done. Check for errors, then callback appropriately
+                    if (!dt.edit) {
+                        // Error occured or other issue
+                        console.error(dt);
+                        dialogEngine.dialog.showModal(); // reshow dialog
+                        rw.visuals.toast.show("Sorry, there was an error, likely an edit conflict. Try reporting again."); // That's it
+                    } else {
+                        // Success! No need to do anything else.
+                        rw.visuals.toast.show("User reported.", false, false, 5000); // we done
+                    }
+                });
+            });
+        }); // END ON REPORT EVENT
+
+        // Check matching user
+        if (rw.info.targetUsername(un) == rw.info.getUsername()) {
+            // Usernames are the same, give toast.
+            rw.visuals.toast.show("You can not report yourself, nor can you test this feature except in a genuine case.", false, false, 7500);
+            return; // DO NOT continue.
+        }
+
+
+        // See uaaReport.html for code
+        dialogEngine.create(mdlContainers.generateContainer(`
+        [[[[include uaaReport.html]]]]
+        `, 500, 410)).showModal();
     }
 }

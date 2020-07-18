@@ -31,7 +31,7 @@
     <div id="editor">
         <textarea id="wikiTxt" name="wikiTxt" style="height: 150px; max-height: 150px; overflow-y: auto; width:100%;">
 === Your Subject ===
-Your message here. `+ rw.sign() +`
+Your message here. ${rw.sign()}
 `+(extraInfo != null ? extraInfo : "")+`</textarea>
     </div> <!-- Used to edit Wikitext -->
 </span>
@@ -58,7 +58,7 @@ Your message here. `+ rw.sign() +`
 
     function grabPreview() {
         var wikiTxt = document.getElementById("wikiTxt").value;
-        if (!wikiTxt.includes("`+ rw.sign() +`")) {
+        if (!wikiTxt.includes("${rw.sign()}")) {
             // Not signed, warn
             pushToast("Don't forget to sign your message!");
         }
@@ -73,9 +73,9 @@ Your message here. `+ rw.sign() +`
                 }, {}); // form data
 
         var wikiTxt = data.wikiTxt;
-        if (!wikiTxt.includes("`+ rw.sign() +`")) {
+        if (!wikiTxt.includes("${rw.sign()}")) {
             // Not signed, warn
-            pushToast("Sign your message with '`+ rw.sign() +`'");
+            pushToast("Sign your message with '${rw.sign()}'");
             return; // Do not continue
         }
         window.parent.postMessage('applyNotice\\\`' + document.getElementById("trgtUsrVisualBox").value + '\\\`' + wikiTxt + '\\\`' + "new topic"); // Push upstairs and commit

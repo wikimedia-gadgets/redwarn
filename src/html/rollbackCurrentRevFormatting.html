@@ -1,0 +1,51 @@
+<!-- Rollback buttons and icons / other formatting - see src/js/rollback.js -->
+<span id="rwCurrentRevRollbackBtns"><!-- main buttons -->
+    ${currentRevIcons}
+</span>
+<span id="rwRollbackInProgress" style="display:none;">
+    <div id="rwRollbackInProgressBar" class="mdl-progress mdl-js-progress" style="
+    width:300px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;"></div>
+    <div style="height:5px"></div><!-- spacer -->
+    <span style="font-family: Roboto;font-size: 16px;">Reverting...</span><br/>
+    <div style="height:5px"></div><!-- spacer -->
+</span>
+
+<!-- Rollback complete icons -->
+<span id="rwRollbackDoneIcons" style="display:none;">
+    <!-- Done indicator -->
+    <div style="height:5px"></div><!-- spacer -->
+    <span style="font-family: Roboto;font-size: 16px;display: inline-flex;vertical-align: middle;">
+        <span class="material-icons" style="color:green;cursor:default;">check_circle</span>&nbsp;&nbsp;
+        Rollback complete
+    </span><br/>
+    <div style="height:5px"></div><!-- spacer -->
+    <!-- CONTROL ICONS - todo add onclick events -->
+    <div id="RWRBDONEmrevPg" class="icon material-icons"><span style="cursor: pointer;">watch_later</span></div>
+    <div class="mdl-tooltip mdl-tooltip--large" for="RWRBDONEmrevPg">
+        Go to latest revision
+    </div>
+    &nbsp;&nbsp;
+    <div id="RWRBDONEnewUsrMsg" class="icon material-icons"><span style="cursor: pointer;">send</span></div>
+    <div class="mdl-tooltip mdl-tooltip--large" for="RWRBDONEnewUsrMsg">
+        New Message
+    </div>
+    &nbsp;&nbsp;
+    <div id="RWRBDONEwelcomeUsr" class="icon material-icons"><span style="cursor: pointer;">library_add</span></div>
+    <div class="mdl-tooltip mdl-tooltip--large" for="RWRBDONEwelcomeUsr">
+        Quick Template
+    </div>
+    &nbsp;&nbsp;
+    <div id="RWRBDONEwarnUsr" class="icon material-icons"><span style="cursor: pointer;">report</span></div>
+    <div class="mdl-tooltip mdl-tooltip--large" for="RWRBDONEwarnUsr">
+        Send Notice
+    </div>
+    &nbsp;&nbsp;
+    <div id="RWRBDONEreportUsr" class="icon material-icons"><span style="cursor: pointer;">gavel</span></div>
+    <div class="mdl-tooltip mdl-tooltip--large" for="RWRBDONEreportUsr">
+        Report to Admin
+    </div>
+
+</span>

@@ -1,5 +1,5 @@
-// Data processed from Twinkle Source at https://github.com/azatoth/twinkle
-var rules = [
+// Data originally processed from Twinkle Source at https://github.com/azatoth/twinkle
+rw.rules = [
     {
         "name": "Vandalism",
         "catagory": "Common warnings",
@@ -497,7 +497,7 @@ var rules = [
         ]
     },
     {
-        "name": "User should draft in userspace without the risk of speedy deletion",
+        "name": "User should draft in draftspace or userspace",
         "catagory": "Reminders",
         "template": "uw-draftfirst",
         "warningLevels": [
@@ -735,7 +735,7 @@ var rules = [
         "warningLevels": [
             6
         ],
-        "note" : "Username notices should not be added for blatent violations. In these cases, click the gavel to report the username to the admins."
+        "note" : "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
     },
     {
         "name": "Canvassing",
@@ -880,7 +880,7 @@ var rules = [
         "warningLevels": [
             6
         ],
-        "note" : "Username notices should not be added for blatent violations. In these cases, click the gavel to report the username to the admins."
+        "note" : "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
     },
     {
         "name": "Username is against policy, and conflict of interest",
@@ -889,7 +889,7 @@ var rules = [
         "warningLevels": [
             6
         ],
-        "note" : "Username notices should not be added for blatent violations. In these cases, click the gavel to report the username to the admins."
+        "note" : "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
     },
     {
         "name": "Userpage or subpage is against policy",
@@ -898,6 +898,6 @@ var rules = [
         "warningLevels": [
             6
         ],
-        "note" : "Username notices should not be added for blatent violations. In these cases, click the gavel to report the username to the admins."
+        "note" : "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
     }
 ];

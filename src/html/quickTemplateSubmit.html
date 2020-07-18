@@ -20,7 +20,8 @@
         </div>
     </div>
     <!-- Custom inputs here -->
-    
+    ${finalAdditionalInputs}
+
     <!-- Finally, preview -->
     <span id="previewContainer">
         <!-- EDIT BUTTON -->
@@ -78,5 +79,29 @@
 
     // Once loaded call load preview
     grabPreview();
+    
+    // Generate preview on change
+    var previewTO;
+    function refreshPreview() {
+        clearTimeout(previewTO); // cancel TO
+        let originalText = atob("`+ btoa(selectedTemplate.content) +`");
+        // Now replace for each input
+        
+        $(".rwCustomTextInput").each((i, el)=>{
+            console.log(originalText);
+            console.log(atob($(el).attr("id")));
+            originalText = originalText.replace(atob($(el).attr("id")), $(el).val()); // replace case with inputted text
+        });
+
+        // Now set the text input
+        $("#wikiTxt").val(originalText);
+
+        
+        grabPreview(); // now load preview
+
+    }
+
+    // Add event handler for inputboxes
+    $(".rwCustomTextInput").change(()=>refreshPreview());
     
 </script>

@@ -53,7 +53,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
 
     "getCurrentPageProtection" : callback=>{ // Callback {edit: level, move:level}
         // Request protection level from mediawiki
-        $.getJSON("https://en.wikipedia.org/w/api.php?action=query&format=json&prop=info%7Cflagged&inprop=protection&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")), r=>{
+        $.getJSON(rw.wikiAPI + "?action=query&format=json&prop=info%7Cflagged&inprop=protection&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")), r=>{
             let pageInfo = r.query.pages[Object.keys(r.query.pages)[0]];
 
             let editProtection = "unprotected";
@@ -137,10 +137,10 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                 // Assemble text to add per page template
                 let text = `=== [[:${mw.config.get("wgRelevantPageName").replace(/_/g, ' ')}]] ===
 * {{pagelinks|${mw.config.get("wgRelevantPageName").replace(/_/g, ' ')}}}
-'''${requestDuration + " " + requestProtect.name}:''' ${changeCoreReason}. ${changeExtraInfo} `+ rw.sign();
+'''${(requestProtect.name == "no protection" ? "Unprotection" : requestDuration + " " + requestProtect.name)}:''' ${(changeCoreReason == "Other rationale" ? "" : changeCoreReason + `. `)}${changeExtraInfo} `+ rw.sign();
 
                 // New req current page.
-                $.getJSON("https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles="+ encodeURIComponent(rw.pageProtect.rfppPage) +"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+                $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+ encodeURIComponent(rw.pageProtect.rfppPage) +"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
                     // Grab text from latest revision of talk page
                     // Check if exists
                     let revisionWikitext = "";
@@ -190,13 +190,14 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                     console.log(finalTxt);
 
                     // Push edit using CSRF token
-                    $.post("https://en.wikipedia.org/w/api.php", {
+                    $.post(rw.wikiAPI, {
                         "action": "edit",
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
                         "title" : rw.pageProtect.rfppPage,
                         "summary" : `Requesting protection change for [[${mw.config.get("wgRelevantPageName").replace(/_/g, ' ')}]] [[WP:REDWARN|(RedWarn ${rw.version})]]`, // summary sign here
-                        "text": finalTxt
+                        "text": finalTxt,
+                        "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
                     }).done(dt => {
                         // We done. Check for errors, then callback appropriately
                         if (!dt.edit) {

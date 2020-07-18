@@ -6,11 +6,11 @@ NOTICE: All cross-domain addresses in containers MUST BE ABSOLUTE (i.e https:// 
 var mdlContainers = {
     "generateHtml" : innerContent => {
         let content = `
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.2/dialog-polyfill.min.js"></script> <!-- firefox being dumb -->
+        <script src="https://redwarn.toolforge.org/cdn/js/jQuery.js"></script>
+        <link href="https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese" rel="stylesheet">
+        <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/materialicons.css">
+        <script defer src="https://redwarn.toolforge.org/cdn/js/mdl.js"></script>
+        <script src="https://redwarn.toolforge.org/cdn/js/dialogPolyfill.js"></script> <!-- firefox being dumb -->
         `;
         
         // Themes
@@ -22,7 +22,7 @@ var mdlContainers = {
         }
         
         content += `
-        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.`+ theme +`.min.css" />
+        <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/material.${theme}.min.css" />
         <!-- Material dropdown - MIT License, Copyright (c) 2016 CreativeIT https://github.com/CreativeIT/getmdl-select/blob/master/LICENSE.txt -->
         <style>
         .getmdl-select{outline:none}.getmdl-select .mdl-textfield__input{cursor:pointer}.getmdl-select .selected{background-color:#ddd}.getmdl-select .mdl-icon-toggle__label{float:right;margin-top:-30px;color:rgba(0,0,0,0.4);transform:rotate(0);transition:transform 0.3s}.getmdl-select.is-focused .mdl-icon-toggle__label{color:#3f51b5;transform:rotate(180deg)}.getmdl-select .mdl-menu__container{width:100% !important;margin-top:2px}.getmdl-select .mdl-menu__container .mdl-menu{width:100%}.getmdl-select .mdl-menu__container .mdl-menu .mdl-menu__item{font-size:16px}.getmdl-select__fix-height .mdl-menu__container .mdl-menu{overflow-y:auto;max-height:288px !important}.getmdl-select__fix-height .mdl-menu.mdl-menu--top-left{bottom:auto;top:0}
@@ -38,8 +38,16 @@ var mdlContainers = {
         return content; // return
     },
 
-    "generateContainer" : function(innerContent, width, height) {
+    "generateContainer" : function(innerContent, width, height, fill) { // fill sizes mdl containers in dialogEngine to ALWAYS be screen size
+        if (fill) {
+            // If fill mode on, fit to window
+            $(window).resize(()=>{
+                $(dialogEngine.dialog.getElementsByTagName("iframe")[0]).attr("height",  document.body.offsetHeight);
+                $(dialogEngine.dialog.getElementsByTagName("iframe")[0]).attr("width",  document.body.offsetWidth);
+            });
+        }
+
         let url = URL.createObjectURL(new Blob([mdlContainers.generateHtml(innerContent)], { type: 'text/html' })); // blob url
-        return `<iframe width="`+width+`" height="`+height+`" src="`+ url + `" frameborder="0" scrolling="no"></iframe>`;
+        return `<iframe width="`+width+`" height="`+height+`" src="`+ url + `" frameborder="0" scrolling="no" style="max-height: 100%;"></iframe>`;
     }
 }

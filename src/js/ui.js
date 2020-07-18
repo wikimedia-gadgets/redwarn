@@ -33,7 +33,7 @@ rw.ui = {
         // Assemble rule listbox
         let finalListBox = "<span>";
         let currentHeading = "";
-        rules.forEach((rule, i) => {
+        rw.rules.forEach((rule, i) => {
             // Check if category is different to current heading first
             if (rule.catagory != currentHeading) {
                 // Now generate a new heading and section for search to hide
@@ -108,7 +108,7 @@ rw.ui = {
         addMessageHandler("pushToast`*", m=>rw.visuals.toast.show(m.split('`')[1],false,false, 5000));
 
         // Add admin report handler
-        addMessageHandler("adminR", ()=>rw.ui.openAdminReport(un));
+        addMessageHandler("adminR", ()=>rw.ui.adminReportSelector(un));
 
         // Add recent page handelr
         addMessageHandler("openRecentPageSelector", ()=>rw.ui.recentlyVisitedSelector.showDialog(p=>{
@@ -126,8 +126,33 @@ rw.ui = {
             let _eD = eD.split("`"); // params
             let user = _eD[1];
             let wikiTxt = _eD[2];
-            let summary = _eD[3];
+            let rule = _eD[3];
+            let template = _eD[4].split("|")[0];
+            let warningLevel = "N/A";
+
             if ((customCallback == null) || (customCallback == false)) { // if not set
+                // Map warning level
+                (['1', '2', '3', '4', '4im']).forEach(e=>{
+                    if (template.includes(e)) warningLevel = e; // if includes this level, add
+                });
+
+                console.log({user, wikiTxt, rule, template, warningLevel}); // debug
+
+                // Let HAN know if possible (first letter only for cross compatibility)
+                if (warningLevel != "N/A") rw.han.reportWarn(user, warningLevel.charAt(0));
+
+                // MAKE EDIT - summary with warning info
+                let summary = `${
+                    ({  
+                        "N/A" : "Notice:",
+                        "1" : "Note:",
+                        "2" : "Caution:",
+                        "3" : "Warning:",
+                        "4" : "Final Warning:",
+                        "4im": "ONLY Warning:"
+                    })[warningLevel]
+                } ${rule}`;
+
                 // MAKE EDIT
                 rw.info.addWikiTextToUserPage(user, wikiTxt, true, summary);
             } else {
@@ -178,7 +203,7 @@ rw.ui = {
                 </div>
                 `,
 
-                // Final/Only Warning (dark red) TODO: Click opens admin report pannel.
+                // Final/Only Warning (dark red)
                 `
                 <span class="material-icons" id="PastWarning" style="cursor:pointer;position: relative;top: 5px;padding-left: 10px;color:#a20000;" onclick="window.parent.postMessage('adminR');">report</span>
                 <div class="mdl-tooltip mdl-tooltip--large" for="PastWarning">
@@ -242,7 +267,19 @@ rw.ui = {
 
         // USER TALK ACTIONS - check if not disabled then continue
         if (rw.config.rwDisableRightClickUser != "disable") $(()=>{
+            // REV15 - only trigger on shift+right-click unless if set in settings - If config is set to "Opt2", to open on right-click set in preferences, set below in trigger
+            if (rw.config.rwDisableRightClickUser != "Opt2") {
+                $('a[href*="/wiki/User_talk:"], a[href*="/wiki/User:"], a[href*="/wiki/Special:Contributions/"]').on('contextmenu', e=>{
+                
+                    // if shift key not down, don't show the context menu. 
+                    if (!e.shiftKey) return; 
+                    e.preventDefault();
+                    $(e.currentTarget).contextMenu();
+                });
+            }
+            
             $.contextMenu({
+                trigger: (rw.config.rwDisableRightClickUser == "Opt2" ? undefined : 'none'), // if set in options, activate as usual
                 selector: 'a[href*="/wiki/User_talk:"], a[href*="/wiki/User:"], a[href*="/wiki/Special:Contributions/"]', // Select all appropriate user links
                 callback: (act, info)=>{
                     // CALLBACK
@@ -270,13 +307,13 @@ rw.ui = {
                     
                     // Do the action for each action now.
                     ({
-                        "usrPg" : un=>redirect("https://en.wikipedia.org/wiki/User:"+ un, true),  // Open user page in new tab
+                        "usrPg" : un=>redirect(rw.wikiBase+"/wiki/User:"+ un, true),  // Open user page in new tab
 
-                        "tlkPg" : un=>redirect("https://en.wikipedia.org/wiki/User_talk:"+ un, true),  // Open talk page in new tab
+                        "tlkPg" : un=>redirect(rw.wikiBase+"/wiki/User_talk:"+ un, true),  // Open talk page in new tab
 
-                        "contribs" : un=>redirect("https://en.wikipedia.org/wiki/Special:Contributions/"+ un, true),  // Redirect to contribs page in new tab
+                        "contribs" : un=>redirect(rw.wikiBase+"/wiki/Special:Contributions/"+ un, true),  // Redirect to contribs page in new tab
 
-                        "accInfo" : un=>redirect("https://en.wikipedia.org/wiki/Special:CentralAuth?target="+ un, true),  // Redirect to Special:CentralAuth page in new tab
+                        "accInfo" : un=>redirect(rw.wikiBase+"/wiki/Special:CentralAuth?target="+ un, true),  // Redirect to Special:CentralAuth page in new tab
 
                         "sendMsg" : un=>rw.ui.newMsg(un), // show new msg dialog
 
@@ -284,7 +321,7 @@ rw.ui = {
 
                         "newNotice" : un=>rw.ui.beginWarn(false, un), // show new warning dialog
 
-                        "adminReport" : un=>rw.ui.openAdminReport(un),
+                        "adminReport" : un=>rw.ui.adminReportSelector(un),
 
                         "usrPronouns": un=>{ // Show a tost with this users prefered pronouns
                             rw.info.getUserPronouns(un, p=>{
@@ -327,7 +364,7 @@ rw.ui = {
                     "aAsubmenu": {
                         "name": "Quick Actions", 
                         "items": {
-                            "sendMsg": {name: "New Talk Page Message"},
+                            "sendMsg": {name: "New Message"},
                             "newNotice": {name: "New Notice"},
                             "quickWel": {name: "Quick Template"},
                             "adminReport": {name: "Report to Admin"}
@@ -437,11 +474,20 @@ rw.ui = {
             "CANCEL", ()=>dialogEngine.closeDialog(), 98);
         });
 
+        // Add new QTPack handler
+        addMessageHandler("newQTP", ()=>rw.quickTemplate.newPack());
+
+        // Add load new theme handler
+        addMessageHandler("newThemeDialog", ()=>rw.ui.loadDialog.show("Changing theme..."));
+        addMessageHandler("loadDialogClose", ()=>rw.ui.loadDialog.close());
+
+        // Lock scrolling
+        dialogEngine.freezeScrolling();
 
         // Open preferences page with no padding, full screen
         dialogEngine.create(mdlContainers.generateContainer(`
         [[[[include preferences.html]]]]
-        `, document.body.offsetWidth, document.body.offsetHeight), true).showModal(); // TRUE HERE MEANS NO PADDING.
+        `, document.body.offsetWidth, document.body.offsetHeight, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
     },
 
     "openAdminReport" : (un)=> { // Open admin report dialog
@@ -460,7 +506,7 @@ rw.ui = {
             //let aivPage = "User:Ed6767/sandbox"; // dev
             let aivPage = "Wikipedia:Administrator_intervention_against_vandalism"; // PRODUCTION! 
 
-            $.getJSON("https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles="+aivPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+            $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+aivPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
                 // Grab text from latest revision of AIV page
                 // Check if exists
                 let revisionWikitext =  latestR.query.pages[0].revisions[0].slots.main.content; // Set wikitext
@@ -474,13 +520,14 @@ rw.ui = {
                 let textToAdd = "*" + (targetIsIP ? "{{IPvandal|" : "{{vandal|") + target + "}} " + reportContent; // DANGER! WIKITEXT (here is fine. be careful w changes.) - if target IP give correct template, else normal
                 let finalTxt = revisionWikitext + "\n\n" + textToAdd; // compile final string
                 // Now we just submit
-                $.post("https://en.wikipedia.org/w/api.php", {
+                $.post(rw.wikiAPI, {
                     "action": "edit",
                     "format": "json",
                     "token" : mw.user.tokens.get("csrfToken"),
                     "title" : aivPage,
                     "summary" : `Reporting [[Special:Contributions/${target}|${target}]] [[WP:REDWARN|(RedWarn ${rw.version})]]`, // summary sign here
-                    "text": finalTxt
+                    "text": finalTxt,
+                    "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
                 }).done(dt => {
                     // We done. Check for errors, then callback appropriately
                     if (!dt.edit) {
@@ -671,5 +718,88 @@ rw.ui = {
                 rw.ui.recentlyVisitedSelector.dialog.close();
             });
         }
+    },
+
+    "adminReportSelector" : un=> { // DON'T FORGET TO USE un ATTR!
+        un = rw.info.targetUsername(un); // get target
+        // Handle events
+        addMessageHandler("openAIV", ()=>rw.ui.openAdminReport(un)); // AIV report
+        addMessageHandler("openUAA", ()=>rw.ui.beginUAAReport(un)); // UAA report
+
+        // Open the admin report selector dialog
+        dialogEngine.create(mdlContainers.generateContainer(`
+            [[[[include adminReportSelector.html]]]]
+        `, 600, 500)).showModal();
+    },
+
+    "beginUAAReport" : un=> { // Report to UAA
+
+        // Check if IP - if so, exit
+        if (rw.info.isUserAnon(un)) {
+            rw.ui.confirmDialog("As IPs don't have usernames, you can't report them to UAA.", "OKAY", ()=>dialogEngine.closeDialog() , "", ()=>{}, 0);
+            return; // stop
+        }
+
+        // Add toast handler
+        addMessageHandler("pushToast`*", m=>rw.visuals.toast.show(m.split('`')[1],false,false,2500));
+
+        // On report
+        addMessageHandler("UAAreport`*", m=>{
+            let reportContent = m.split('`')[1]; // report content
+            let target = m.split('`')[2]; // target username
+            console.log("reporting "+ target + ": "+ reportContent);
+            rw.visuals.toast.show("Reporting "+ target +"...", false, false, 2000); // show toast
+            // Submit the report. MUST REPLACE WITH REAL AIV WHEN DONE AND WITH SANDBOX IN DEV!    
+            let uaaPage = "Wikipedia:Usernames_for_administrator_attention"; // PRODUCTION: Wikipedia:Usernames_for_administrator_attention
+
+            $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+uaaPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+                // Grab text from latest revision of AIV page
+                // Check if exists
+                let revisionWikitext =  latestR.query.pages[0].revisions[0].slots.main.content; // Set wikitext
+                if (revisionWikitext.toLowerCase().includes(target.toLowerCase())) {// If report is already there
+                    rw.visuals.toast.show("This user has already been reported.", false, false, 5000); // show already reported toast
+                    return; // Exit
+                }
+
+                // Let's continue
+                // We don't need to do anything special. Just shove our report at the bottom of the page, although, may be advisiable to change this if ARV format changes
+                let textToAdd = "*" + "{{user-uaa|1=" + target + "}} &ndash; " + reportContent; // DANGER! WIKITEXT (here is fine. be careful w changes.) - if target IP give correct template, else normal
+                let finalTxt = revisionWikitext + "\n\n" + textToAdd; // compile final string
+                // Now we just submit
+                $.post(rw.wikiAPI, {
+                    "action": "edit",
+                    "format": "json",
+                    "token" : mw.user.tokens.get("csrfToken"),
+                    "title" : uaaPage,
+                    "summary" : `Reporting [[Special:Contributions/${target}|${target}]] [[WP:REDWARN|(RedWarn ${rw.version})]]`, // summary sign here
+                    "text": finalTxt,
+                    "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
+                }).done(dt => {
+                    // We done. Check for errors, then callback appropriately
+                    if (!dt.edit) {
+                        // Error occured or other issue
+                        console.error(dt);
+                        dialogEngine.dialog.showModal(); // reshow dialog
+                        rw.visuals.toast.show("Sorry, there was an error, likely an edit conflict. Try reporting again."); // That's it
+                    } else {
+                        // Success! No need to do anything else.
+                        rw.visuals.toast.show("User reported.", false, false, 5000); // we done
+                    }
+                });
+            });
+        }); // END ON REPORT EVENT
+
+        // Check matching user
+        if (rw.info.targetUsername(un) == rw.info.getUsername()) {
+            // Usernames are the same, give toast.
+            rw.visuals.toast.show("You can not report yourself, nor can you test this feature except in a genuine case.", false, false, 7500);
+            return; // DO NOT continue.
+        }
+
+
+        // See uaaReport.html for code
+        dialogEngine.create(mdlContainers.generateContainer(`
+        [[[[include uaaReport.html]]]]
+        `, 500, 410)).showModal();
     }
 }

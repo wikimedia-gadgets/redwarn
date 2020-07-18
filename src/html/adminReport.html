@@ -1,5 +1,5 @@
 <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Report to AIV</h2>
-<span>Please note: This form currently supports <b>vandalism reports</b> only. For now, use Twinkle to report sockpuppetry, username violations and edit warring that isn't related to vandalism.</span>
+<span>Please note: This form currently supports <b>vandalism reports</b> only. For now, use Twinkle to report sockpuppetry and edit warring that isn't related to vandalism.</span>
 <form id="reportForm">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
         <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="`+ rw.info.targetUsername(un).replace(/_/g, ' ') +`" name="target" readonly>
@@ -57,13 +57,14 @@
 
         let fullReason = "";
         if (data.reason == "Other (please enter in comment)") { // If other is chosen
-            if (data.comment == "" || data.comment.length < 5) {pushToast("Enter your reason."); return;} // If no comment, or comment is not long enough (5+ chars) push toast and EXIT.
+            if (data.comment == "") {pushToast("Enter your reason."); return;}
+            if (data.comment.length < 5) {pushToast("Your reason is not long enough"); return;} // If no comment, or comment is not long enough (5+ chars) push toast and EXIT.
             fullReason = data.comment; // else continue and set the reason to the comment
         } else {
             // Append the reason and comment if there is one
             fullReason = data.reason + (data.comment == "" ? "" : " - "+ data.comment); // If data comment empty don't add anything otherwise make it Reason - Comment
         }
-        fullReason += " `+ rw.sign() +`"; // Add sig to the end (w space)
+        fullReason += " ${rw.sign()}"; // Add sig to the end (w space)
         // Push this upstairs
         window.parent.postMessage('report\\\`'+ fullReason + '\\\`' + data.target, '*'); // Report with full reason
         window.parent.postMessage('closeDialog', '*'); // Close. We will be reopened on error.

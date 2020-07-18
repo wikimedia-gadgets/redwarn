@@ -369,7 +369,7 @@
         if (fromCustomTxt) {
             // Edited using Wikitext editor
             var wikiTxt = document.getElementById("wikiTxt").value;
-            if (!wikiTxt.includes("`+ rw.sign() +`")) {
+            if (!wikiTxt.includes("${rw.sign()}")) {
                 // Not signed, warn
                 pushToast("Don't forget to sign your notice!");
             }
@@ -382,7 +382,7 @@
             }
             // Get preview as usual
             getTemplateName(name=>{
-            var wikiTxt = "{{subst:"+ name +"}} " + "`+ rw.sign() +`";
+            var wikiTxt = "{{subst:"+ name +"}} " + "${rw.sign()}";
             // Check if this user is an IP, if so, add the advice template to the end
             if (`+ (rw.info.isUserAnon(rw.info.targetUsername(un)) ? "true" : "false") +` == true) {
                 wikiTxt += "`+ rw.sharedIPadvice() +`";
@@ -393,7 +393,7 @@
         } 
     }
 
-    var rules = `+ JSON.stringify(rules) +`; // get rules from host
+    var rules = `+ JSON.stringify(rw.rules) +`; // get rules from host
     var refreshLevels = i=> {
        if (rules[i].warningLevels.includes(0)) {
            // Single notice
@@ -523,12 +523,13 @@
                 }, {}); // form data
 
             var wikiTxt = document.getElementById("wikiTxt").value;
-            if (!wikiTxt.includes("`+ rw.sign() +`")) {
+            if (!wikiTxt.includes("${rw.sign()}")) {
                 // Not signed, warn
                 $("#errorString").text("Please sign your notice.");
                 return; // Do not continue
             }
-            window.parent.postMessage('applyNotice\\\`' + document.getElementById("trgtUsrVisualBox").value + '\\\`' + wikiTxt + '\\\`' + "New Notice: "+ rules[data.template].name); // Push upstairs and commit
+            // Format: applyNotice,target,wikitxt,warnlevel|rulename
+            window.parent.postMessage(('applyNotice\\\`' + document.getElementById("trgtUsrVisualBox").value + '\\\`' + wikiTxt + '\\\`' + rules[data.template].name + '\\\`' + r)); // Push upstairs and commit
             window.parent.postMessage("closeDialog"); // We done here. Top will refresh or reshow if error occurs.
         });
     }

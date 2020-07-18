@@ -19,7 +19,7 @@ if (mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRe
             Send Notice
         </div>
 
-        <div id="reportUsr" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.ui.openAdminReport();">gavel</span></div>
+        <div id="reportUsr" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.ui.adminReportSelector();">gavel</span></div>
         <div class="mdl-tooltip mdl-tooltip--large" for="reportUsr">
             Report to Admin
         </div>
@@ -52,21 +52,22 @@ pageIconHTML += `
     </div>
     ` : `
     <!-- UNEDITABLE ONLY ICON -->
-    <div id="RwPageLock" class="icon material-icons"><span style="cursor: pointer; color:red;" onclick="rw.pageProtect.open();">lock</span></div>
+    <div id="RwPageLock" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.pageProtect.open();">lock</span></div>
     <div class="mdl-tooltip" for="RwPageLock">
         You cannot edit this page. Click to manage page protection.
     </div>
     `) + ` <!-- END EDITABLE PAGES ONLY ICONS -->
+
+    <div id="rwHANicon" class="icon material-icons" style="color:orange;"><span style="cursor: pointer;" onclick="rw.han.ui();">chat_bubble</span></div>
+    <div class="mdl-tooltip mdl-tooltip--large" id="rwHANstatus" for="rwHANicon">
+        Connecting to HAN...
+    </div>
 
     <div id="rwOpenPref" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.ui.openPreferences();">settings</span></div>
     <div class="mdl-tooltip mdl-tooltip--large" for="rwOpenPref">
         RedWarn Preferences
     </div>
 
-    <div id="rwFeedbackIco" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.ui.sendFeedback();">contact_support</span></div>
-    <div class="mdl-tooltip mdl-tooltip--large" for="rwFeedbackIco">
-        RedWarn Feedback and Support
-    </div>
 `;
 
 

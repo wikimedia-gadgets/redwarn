@@ -1,4 +1,4 @@
-// (c) Ed.E 2020
+// (c) Ed.E and contributors 2020
 
 // Window focus checking n things
 var windowFocused = true;
@@ -43,14 +43,28 @@ if (rw != null) {
     mw.notify("Warning! You have two versions of RedWarn installed at once! Please edit your common.js or skin js files to ensure that you only use one instance to prevent issues.");
 }
 var rw = {
-    "version" : "rev14", // don't forget to change each version!
+    // UPDATE THIS DATA FOR EVERY VERSION!
+    "version" : "15", // don't forget to change each version!
+    "versionSummary": `
+<!-- RedWarn 15 -->
+RedWarn 15 unifies the anti-vandalism experience, including connectivity to the Huggle anti-vandalism network,
+user interface improvements, UAA reports, bug fixes and more.
+    `,
+    // ADDED BY BUILD SCRIPT
+    "buildInfo" : `[[[[BUILDINFO]]]]`,
+    // Now edited by us again
     "logoHTML" : `<span style="font-family:Roboto;font-weight: 300;text-shadow:2px 2px 4px #0600009e;"><span style="color:red">Red</span>Warn</span>`, // HTML of the logo
     "logoShortHTML" : `<span style="font-family:Roboto;font-weight: 300;text-shadow:2px 2px 4px #0600009e;"><span style="color:red">R</span>W</span>`, // Short HTML of the logo
     "sign": ()=>{return atob("fn5+fg==")}, // we have to do this because mediawiki will swap this out with devs sig.
     "welcome": ()=> {return atob("e3tzdWJzdDpXZWxjb21lfX0=");}, // welcome template
     "welcomeIP": ()=> {return atob("e3tzdWJzdDp3ZWxjb21lLWFub259fQ==");}, // welcome IP template
     "sharedIPadvice" : ()=> {return atob("XG46e3tzdWJzdDpTaGFyZWQgSVAgYWR2aWNlfX0=");}, // if this is a shared...
-    
+
+    // Wiki automated config
+    "wikiBase" : mw.config.get("wgServer"), // mediawiki base URL (i.e. //en.wikipedia.org)
+    "wikiIndex" : mw.config.get("wgServer") + mw.config.get("wgScript"), // mediawiki index.php (i.e. //en.wikipedia.org/w/index.php)
+    "wikiAPI" : mw.config.get("wgServer") + mw.config.get("wgScriptPath") + "/api.php", // mediawiki API path  (i.e. //en.wikipedia.org/w/api.php)
+    "wikiID": mw.config.values.wgWikiID,
     "makeID" : length=> {
         // Generates a random string
         var result           = '';
@@ -65,17 +79,17 @@ var rw = {
     "visuals" : {
         "init" : (callback) => {
             // Welcome message
-            console.log("RedWarn "+ rw.version + " - (c) Ed E and contributors");
+            console.log("RedWarn "+ rw.version + " - (c) 2020 RedWarn Contributors");
             // Load MDL and everything needed, then callback when all loaded
             $('head').append(`
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js"></script>
-                <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-                <script src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.2/dialog-polyfill.min.js"></script> <!-- firefox being dumb -->
-                <script src="https://code.getmdl.io/1.3.0/material.min.js" id="MDLSCRIPT"></script>
+                <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/jqueryContextMenu.css">
+                <script src="https://redwarn.toolforge.org/cdn/js/jquery-contextmenu.js"></script>
+                <script src="https://redwarn.toolforge.org/cdn/js/jquery-ui-position.js"></script>
+                <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/materialicons.css">
+                <script src="https://redwarn.toolforge.org/cdn/js/dialogPolyfill.js"></script> <!-- firefox being dumb -->
+                <script src="https://redwarn.toolforge.org/cdn/js/mdl.js" id="MDLSCRIPT"></script>
                 <!-- Roboto Font -->
-                <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+                <link href="https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese" rel="stylesheet">
 
                 <!-- MDL AND CONTEXT MENU STYLES -->
                 <style>
@@ -90,7 +104,11 @@ var rw = {
                 </style>
             `); // Append required libaries to page
 
+            // OOui
+            mw.loader.load( 'oojs-ui-windows' );
 
+            // Show redwarn only spans
+            $(".RedWarnOnlyVisuals").show();
             
             // wait for load
             waitForMDLLoad(callback);
@@ -111,7 +129,7 @@ var rw = {
                 pageIconHTML += "</div>"; // close contianer
                 if (iconsLocation == "default") {
                     try {
-                        document.getElementsByClassName("mw-indicators mw-body-content")[0].innerHTML += pageIconHTML; // Append our icons to the page icons
+                        $(".mw-indicators").append(pageIconHTML); // Append our icons to the page icons
                     } catch (error) {
                         // Incompatible theme, use sidebar instead
                         iconsLocation = "sidebar";
@@ -184,33 +202,54 @@ var rw = {
             let sidebarSize = 500;
             let addCol = "0,255,0"; // rbg
             let rmCol = "255,0,0"; // rgb
+            let mwBody = document.getElementsByTagName("BODY")[0];
             /*if (rw.config.ptrSidebar) sidebarSize = rw.config.ptrSidebar; DEP. REV12*/
              // If preferences set, apply them
             if (rw.config.ptrAddCol) addCol = rw.config.ptrAddCol;
             if (rw.config.ptrRmCol) rmCol = rw.config.ptrRmCol;
-            
-            let url = URL.createObjectURL(new Blob([mdlContainers.generateHtml(`
+            // basically multiact js but with stuff replaced
+            mwBody.style.overflowY = "hidden";
+            let content = mdlContainers.generateContainer(` 
             [[[[include recentChanges.html]]]]
-            `)], { type: 'text/html' })); // blob url
-            redirect(url, false);
-        },
-        "diffLinkAddRedWarn" : () => { // add redwarn to recent changes page
-            $('body').unbind('DOMSubtreeModified'); // Prevent infinite loop
-            $.each($(".mw-changeslist-diff"), (i,el)=>{
-                if ($(el).parent().html().includes("#redwarn")) {
-                    // Link already there.
-                } else {
-                    $(el).parent().prepend(`<a href='#redwarn' onclick='rw.ui.revisionBrowser("`+ el.href +`");'>Redwarn</a>  | `);
-                }
-            });
-            window.addEventListener("focus", e=>{ 
-                rw.recentChanges.bindRecentChanges(); // fix chrome unfocus bug 
-            }, false);
-            rw.recentChanges.bindRecentChanges();
-        },
+            `, document.body.offsetWidth, document.body.offsetHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
 
-        "bindRecentChanges" : () => { // on list change add redwarn
-            $('body').on('DOMSubtreeModified', 'ul.special', ()=>rw.recentChanges.diffLinkAddRedWarn());
+            // Init if needed
+            if ($("#PTdialogContainer").length < 1) {
+                // Need to init
+                $("body").prepend(`
+                    <div id="PTdialogContainer">
+                    </div>
+                `);
+                // Add close event
+                addMessageHandler("closeDialogPT", ()=>{
+                    rw.recentChanges.dialog.close();
+                    mwBody.style.overflowY = "auto";
+                }); // closing
+            }
+            
+            $("#PTdialogContainer").html(`
+            <dialog class="mdl-dialog" id="rwPATROLdialog">
+                ${content}
+            </dialog>
+            `);
+            rw.recentChanges.dialog = document.querySelector('#rwPATROLdialog'); // set dialog
+
+            $("#rwPATROLdialog").attr("style", "padding:inherit;"); // set no padding
+            // Firefox issue fix
+            if (! rw.recentChanges.dialog.showModal) {
+                dialogPolyfill.registerDialog(rw.recentChanges.dialog);
+            }
+
+            // Resize on window change
+            $(window).resize(()=>{
+                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("height",  document.body.offsetHeight);
+                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("width",  document.body.offsetWidth);
+            });
+
+            // Add message handler for dialog close
+            addMessageHandler("rwRCPcloseDialog", ()=>rw.recentChanges.dialog.close());
+
+            rw.recentChanges.dialog.showModal(); // Show dialog
         }
     }
 };
@@ -242,24 +281,22 @@ function initRW() {
         // Quick check we have perms to use (in confirmed/autoconfirmed group)
         rw.info.featureRestrictPermissionLevel("confirmed", false, ()=>{
             // We don't have permission
-            
             // Add red lock to the top right to show that RedWarn cannot be used
             document.getElementsByClassName("mw-indicators mw-body-content")[0].innerHTML = `
             <div id="Lock" class="icon material-icons"><span style="cursor: help; color:red;" onclick="">lock</span></div>
             <div class="mdl-tooltip" for="Lock">
-                You don't have permission to use RedWarn yet. Please refer to the user guide for more information.
+                You must be Autoconfirmed or Confirmed to use RedWarn.  Please refer the user guide for more information.
             </div>
             `;
             // Now register that
             for (let item of document.getElementsByClassName("mdl-tooltip")) {
                 rw.visuals.register(item); 
             }
+            // A bit more of a clear error for someone who may not be paying immediate attention. Maybe we can use wikitext to send new user guide?
+            mw.notify("You do not have permission to use Redwarn yet. Please refer to the user guide for more information (Error: User is NOT confirmed/autoconfirmed)", {title: "Error loading Redwarn", autoHide: "false", tag: "redwarn"});
             rw = {}; // WIPE OUT ENTIRE CLASS. We're not doing anything here.
             // That's it
         });
-
-        // User blacklist
-        importScript('User:Ed6767/redwarn/blacklist.js'); // everything is handled within this script
 
         // We have perms, let's continue.
 
@@ -268,25 +305,40 @@ function initRW() {
             rw.info.getRollbackToken(); // get rollback token
             rw.visuals.pageIcons(); // page icons once config loaded
             rw.ui.registerContextMenu(); // register context menus once config loaded
+
+            // Add dialog animations from config
+            $('head').append(`<style>${rwDialogAnimations[(rw.config.dialogAnimation == null ? "default" : rw.config.dialogAnimation)]}</style>`);
+
+            // Check if updated
             if (rw.config.lastVersion != rw.version) {
                 // We've had an update
                 rw.config.lastVersion = rw.version; // update entry 
                 rw.info.writeConfig(true, ()=> { // update the config file
                     // Show an update dialog
                     rw.ui.confirmDialog(`
-                    <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Welcome to `+rw.logoHTML+` `+ rw.version +`!</h2>
-                    <b>RedWarn has just got a new update!</b> Would you like to read more about what's new?
+                    <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Welcome to ${rw.logoHTML} ${rw.version}!</h2>
+                    ${rw.versionSummary}
                     `,
-                    "READ SUMMARY", ()=>{
+                    "READ MORE", ()=>{
                         dialogEngine.closeDialog();
-                        redirect("https://en.wikipedia.org/wiki/User:Ed6767/redwarn/bugsquasher#"+ rw.version + "_summary", true);
+                        redirect("https://en.wikipedia.org/wiki/Wikipedia:RedWarn/bugsquasher#RedWarn_"+ rw.version + "_summary", true);
                     },
                     "LATER", ()=>{
-                        dialogEngine.closeDialog();
-                        rw.visuals.toast.show("You can read more later at RedWarn's page (WP:REDWARN)");
+                        dialogEngine.closeDialog();//this thing turns it off
+                        rw.visuals.toast.show("You can read more later at RedWarn's page (WP:REDWARN)");//display a toast
+                        
                     },168);
                 });
             }
+
+            // Connect to HAN if enabled
+            if (rw.config.rwHAN != "disable") {
+                rw.han.connect();
+            } else {
+                // Hide HAN icon
+                $("#rwHANicon").hide();
+            }
+
             // TODO: probably fix this mess into a URL
             // HERE REALLY REALLY NEEDS CLEANUP
                 // Check if a message is in URL (i.e edit complete ext)
@@ -298,10 +350,10 @@ function initRW() {
                     rw.rollback.restore(window.location.hash.split("-")[2], "Undo message addition (via toast)");
                 }, 7500);
             } else if (window.location.hash.includes("#redirectLatestRevision")) { // When latest revision loaded
-                rw.visuals.toast.show("Redirected to the lastest revision.", "BACK", ()=>window.history.back(), 4000); // When back clciked go back
+                rw.visuals.toast.show("Redirected to the latest revision.", "BACK", ()=>window.history.back(), 4000); // When back clciked go back
             } else if (window.location.hash.includes("#watchLatestRedirect")) {
                 // Redirected to latest by redirector, play sound
-                let src = 'https://raw.githubusercontent.com/ed6767/redwarn/master/redwarn%20notifs%20new%20edit.mp3';
+                let src = 'https://redwarn.toolforge.org/cdn/audio/newEdit.mp3';
                 let audio = new Audio(src);
                 audio.play();
                 // enable watcher
@@ -340,11 +392,20 @@ function initRW() {
                 rw.rollback.loadIcons(); // load rollback icons
             } else if (mw.config.get("wgRelevantPageName").includes("Special:RecentChanges")) {
                 // Recent changes page
-                // Add redwarn btn
+                // Add redwarn open btn
                 $(".mw-specialpage-summary").prepend(`
-                <div id="openRWP" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.recentChanges.openPage(window.location.search.substr(1));">how_to_reg</span></div>  Click the icon to launch RedWarn patrol with these filters
+                <div id="openRWP" style="
+                    font-size: 32px;
+                    float: right;
+                    background: white;
+                ">
+                    <span style="cursor: pointer;" onclick="rw.recentChanges.openPage(window.location.search.substr(1));">
+                        ${rw.logoHTML} patrol
+                    </span>
+                </div>
+
                 <div class="mdl-tooltip mdl-tooltip--large" for="openRWP">
-                    Launch RedWarn Patrol with these filters
+                    Click to launch RedWarn Patrol
                 </div>
                 `); // Register tooltip
                 for (let item of document.getElementsByClassName("mdl-tooltip")) {

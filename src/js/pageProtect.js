@@ -195,7 +195,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
                         "title" : rw.pageProtect.rfppPage,
-                        "summary" : `Requesting protection change for [[${mw.config.get("wgRelevantPageName").replace(/_/g, ' ')}]] [[w:en:Wikipedia:RedWarn|(RedWarn ${rw.version})]]`, // summary sign here
+                        "summary" : `Requesting protection change for [[${mw.config.get("wgRelevantPageName").replace(/_/g, ' ')}]] [[WP:REDWARN|(RedWarn ${rw.version})]]`, // summary sign here
                         "text": finalTxt,
                         "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
                     }).done(dt => {

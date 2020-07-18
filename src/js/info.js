@@ -130,7 +130,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 "format": "json",
                 "token" : mw.user.tokens.get("csrfToken"),
                 "title" : "User:"+ rw.info.getUsername() + "/redwarnConfig.js",
-                "summary" : "Updating user configuration [[w:en:Wikipedia:RedWarn|(RedWarn "+ rw.version +")]]", // summary sign here
+                "summary" : "Updating user configuration [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
                 "text": finalTxt,
                 "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
             }).done(dt => {
@@ -360,7 +360,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 "format": "json",
                 "token" : mw.user.tokens.get("csrfToken"),
                 "title" : "User_talk:"+ user,
-                "summary" : summary + " [[w:en:Wikipedia:RedWarn|(RedWarn "+ rw.version +")]]", // summary sign here
+                "summary" : summary + " [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
                 "text": finalTxt,
                 "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
             }).done(dt => {

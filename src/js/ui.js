@@ -504,7 +504,7 @@ rw.ui = {
             rw.visuals.toast.show("Reporting "+ target +"...", false, false, 2000); // show toast
             // Submit the report. MUST REPLACE WITH REAL AIV WHEN DONE AND WITH SANDBOX IN DEV!    
             //let aivPage = "User:Ed6767/sandbox"; // dev
-            let aivPage = "Wikipedia:Administrator intervention against vandalism"; // PRODUCTION! 
+            let aivPage = "Wikipedia:Administrator_intervention_against_vandalism"; // PRODUCTION! 
 
             $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+aivPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
                 // Grab text from latest revision of AIV page
@@ -525,7 +525,7 @@ rw.ui = {
                     "format": "json",
                     "token" : mw.user.tokens.get("csrfToken"),
                     "title" : aivPage,
-                    "summary" : `Reporting [[Special:Contributions/${target}|${target}]] [[w:en:Wikipedia:RedWarn|(RedWarn ${rw.version})]]`, // summary sign here
+                    "summary" : `Reporting [[Special:Contributions/${target}|${target}]] [[WP:REDWARN|(RedWarn ${rw.version})]]`, // summary sign here
                     "text": finalTxt,
                     "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
                 }).done(dt => {
@@ -744,7 +744,7 @@ rw.ui = {
         addMessageHandler("pushToast`*", m=>rw.visuals.toast.show(m.split('`')[1],false,false,2500));
 
         // On report
-        addMessageHandler("UAA`*", m=>{
+        addMessageHandler("UAAreport`*", m=>{
             let reportContent = m.split('`')[1]; // report content
             let target = m.split('`')[2]; // target username
             console.log("reporting "+ target + ": "+ reportContent);
@@ -771,7 +771,7 @@ rw.ui = {
                     "format": "json",
                     "token" : mw.user.tokens.get("csrfToken"),
                     "title" : uaaPage,
-                    "summary" : `Reporting [[Special:Contributions/${target}|${target}]] via UAA interface - [[w:en:Wikipedia:RedWarn|(RedWarn ${rw.version})]]`, // summary sign here
+                    "summary" : `Reporting [[Special:Contributions/${target}|${target}]] [[WP:REDWARN|(RedWarn ${rw.version})]]`, // summary sign here
                     "text": finalTxt,
                     "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
                 }).done(dt => {

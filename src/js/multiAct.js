@@ -199,7 +199,7 @@ rw.multiAct = { // Multi action screen
                         let editHandler = i=>{
                             let action = actionsToTake[i];
                             // Time to make the actual contrib
-                            rw.info.addWikiTextToUserPage(action.user, action.wikiTxt, action.underDate, "Complete [[WP:REDWARN/MAT|MAT]] action", false, false, ()=>{
+                            rw.info.addWikiTextToUserPage(action.user, action.wikiTxt, action.underDate, "Complete [[w:en:Wikipedia:RedWarn/MAT|MAT]] action", false, false, ()=>{
                                 // Check we can continue
                                 if (i == actionsToTake.length - 1) {
                                     // We done

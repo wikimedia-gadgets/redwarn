@@ -431,7 +431,6 @@
                         let warningLvl = res.warninglevel;
                         if(FILTERS.specifics.group[0] != "") {
                             if (!res.groups.includes((FILTERS.specifics.group[0]).toString().toLowerCase())) {
-                                console.log("you just got FILTERTED")
                                 $("." + res.uid).css("display", "none");
                             } else {
                             }
@@ -517,7 +516,7 @@
                         // ...
                         warnArr.forEach(value => {
                             let warningLevelIcn;
-                            let name = value[0]
+                            let name = value[0];
                             if (value[1] == "0") {
                                 warningLevelIcn = "thumb_up" // no change
                             } else if (value[1] === "1") {
@@ -536,7 +535,8 @@
                                 if(userARR[1] == name) {
                                     uid = userARR[0];
                                 }
-                            $(".warn-" + uid).html("<span class='material-icons' style='padding-left: 5px;'>"+ warningLevelIcn +"</span>");
+                            let helpmeGod = Math.random().toString(36).substring(7); // GOD IS DEAD.
+                            $(".warn-" + uid).html("<span class='material-icons' id='"+helpmeGod+"' style='padding-left: 5px;'>"+ warningLevelIcn +"</span><div class='mdl-tooltip' for='"+helpmeGod+"'>Follow</div>");
                             });
                         })
                     });
@@ -705,7 +705,7 @@
             let livetoggle= document.getElementById('liveswitch');
             let hoverswitch = document.getElementById('hoverswitch');
             if (livetoggle.checked == true) {
-                tI = setInterval(refreshLive, 1750);
+                tI = setInterval(refreshLive, 3750);
                 hoverswitch.style.display = "none";
             } else {
                 clearTimeout(tI);

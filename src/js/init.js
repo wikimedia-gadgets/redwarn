@@ -44,7 +44,7 @@ if (rw != null) {
 }
 var rw = {
     // UPDATE THIS DATA FOR EVERY VERSION!
-    "version" : "15dev", // don't forget to change each version!
+    "version" : "16-dev", // don't forget to change each version!
     "versionSummary": `
 <!-- RedWarn 15 -->
 RedWarn 15 brings a striking new featureset to RedWarn,

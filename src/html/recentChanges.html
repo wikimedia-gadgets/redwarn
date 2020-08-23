@@ -345,7 +345,6 @@
         function configuration() {
             let userConfig = window.parent.rw.patrol;
             if(!userConfig) {
-                alert("test");
                 console.log("No Patrol Configuration Set! Creating one...");
                 var specifics = {
                     "rctype": parsedrctype,
@@ -375,8 +374,8 @@
         var revisionFeed = {};
         var userInfo = {};
         function main() { // Main func.
-            var config = configuration();
-            console.log(config);
+            //var config = configuration();
+            //console.log(config);
             console.log("Redwarn Patrol")
             // 1) Call getFeed(), parse it into revisionFeed variable as a pretty json
             // 2) getFeed will chain to filter code to remove REVISIONS that dont specify to filter specific stuff
@@ -387,14 +386,19 @@
         }
         
         async function getFeed() { // It ONLY gets the feed and then pretty prints it into something more usable
-
+            // fetch() from wikipedia API, with all info
+            // remove specifics then send user ids and all associated revids to getUserInfo for further parsing and filtering
         }
 
-        async function getUserInfo(userList) { // Generates the userInfo structure and removes non existent users (in the feed of things), handles anonymous users
+        async function getUserInfo(idList) { // Generates the userInfo structure and removes non existent users (in the feed of things), handles anonymous users
             // 1) Fetch stuff from the API (edit count, groups, etc etc etc)
             // Parse it
         }
 
+        async function getWarningLevel(userIDlist) {
+            // fetch() from wikipedia api with the generated url to download talk pages, use func callback to do stuff to it 
+            // when done, find the level and append it to the uid/add it to the userInfo json object
+        }
 
 
 

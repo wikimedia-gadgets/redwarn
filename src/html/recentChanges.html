@@ -22,7 +22,7 @@
     <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/material.${rw.config.colTheme}.min.css" />
 </head>
 
-<body onload="refreshLive();">
+<body onload="main();">
     <!-- Show a few edits on load -->
     <!-- No header, and the drawer stays open on larger screens (fixed drawer). -->
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
@@ -342,9 +342,72 @@
 
         // Initialization. /\ //
 
-
+        function configuration() {
+            let userConfig = window.parent.rw.patrol;
+            if(!userConfig) {
+                alert("test");
+                console.log("No Patrol Configuration Set! Creating one...");
+                var specifics = {
+                    "rctype": parsedrctype,
+                    "rctag": parsedrctag,
+                    "maxedit": maxeditcount,
+                    "group": parsedugroup
+                }
+                var toggles = {
+                    "bots": document.getElementById('bots').checked,
+                    "minor": document.getElementById('minor').checked,
+                    "redirects": document.getElementById('redirects').checked,
+                    "anonymous": document.getElementById('anonymous').checked,
+                    "rctop": document.getElementById('latest').checked
+                }
+                userConfig = {
+                    "toggles": toggles,
+                    "specifics": specifics
+                }
+                window.parent.rw.patrol = userConfig;
+                PARENTRW.info.writeConfig(true, ret => {ret = undefined;})
+            }
+            return userConfig;
+        }
+        
 
         // Main funcs. \/ //
+        var revisionFeed = {};
+        var userInfo = {};
+        function main() { // Main func.
+            var config = configuration();
+            console.log(config);
+            console.log("Redwarn Patrol")
+            // 1) Call getFeed(), parse it into revisionFeed variable as a pretty json
+            // 2) getFeed will chain to filter code to remove REVISIONS that dont specify to filter specific stuff
+            // 3) Chain get feed to getUserInfo, which will remove users not in the revisionFeed and filter out user specific stuff, if a user gets removed by filter all revisions get removed of it too
+            // 4) When both are done format the page, then call warning level so we can insert that into the page and userInfo
+            // 5) Repeat ~3000ms later (or sooner for hover), should be configurable
+
+        }
+        
+        async function getFeed() { // It ONLY gets the feed and then pretty prints it into something more usable
+
+        }
+
+        async function getUserInfo(userList) { // Generates the userInfo structure and removes non existent users (in the feed of things), handles anonymous users
+            // 1) Fetch stuff from the API (edit count, groups, etc etc etc)
+            // Parse it
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         function refreshLive() { // MAIN FUNCTION. Will call all functions needed for getting and parsing recent changes.
             // INIT REF.
 

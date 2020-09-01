@@ -211,7 +211,7 @@ user interface improvements, UAA reports, bug fixes and more.
             mwBody.style.overflowY = "hidden";
             let content = mdlContainers.generateContainer(` 
             [[[[include recentChanges.html]]]]
-            `, document.body.offsetWidth, document.body.offsetHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
+            `, window.innerWidth, window.innerHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
 
             // Init if needed
             if ($("#PTdialogContainer").length < 1) {
@@ -242,8 +242,8 @@ user interface improvements, UAA reports, bug fixes and more.
 
             // Resize on window change
             $(window).resize(()=>{
-                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("height",  document.body.offsetHeight);
-                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("width",  document.body.offsetWidth);
+                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("height",  window.innerHeight);
+                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("width",  window.innerWidth);
             });
 
             // Add message handler for dialog close

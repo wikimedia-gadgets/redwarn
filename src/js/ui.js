@@ -14,7 +14,7 @@ rw.ui = {
             Close
         </div>
          <iframesrc="`+ url +`" frameborder="0" style="height:95%;"></iframe>
-        `, document.body.offsetWidth-70, document.body.offsetHeight-50)).showModal();
+        `, window.innerWidth-70, window.innerHeight-50)).showModal();
     },
 
     "beginWarn" : (ignoreWarnings, un, pg, customCallback, callback, hideUserInfo, autoSelectReasonIndex)=> { // if customCallback = false, callback(templatestr) (rev12) autoSelectReasonIndex(rev13) for quick rollbacks for vandalism ext..
@@ -487,7 +487,7 @@ rw.ui = {
         // Open preferences page with no padding, full screen
         dialogEngine.create(mdlContainers.generateContainer(`
         [[[[include preferences.html]]]]
-        `, document.body.offsetWidth, document.body.offsetHeight, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
+        `, window.innerWidth, window.innerHeight, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
     },
 
     "openAdminReport" : (un)=> { // Open admin report dialog

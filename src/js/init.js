@@ -3,11 +3,11 @@
 // Window focus checking n things
 var windowFocused = true;
 
-window.onblur = function(){  
-    windowFocused = false;  
-}  
-window.onfocus = function(){  
-    windowFocused = true;  
+window.onblur = function(){
+    windowFocused = false;
+}
+window.onfocus = function(){
+    windowFocused = true;
 }
 
 // Array extention
@@ -109,7 +109,7 @@ user interface improvements, UAA reports, bug fixes and more.
 
             // Show redwarn only spans
             $(".RedWarnOnlyVisuals").show();
-            
+
             // wait for load
             waitForMDLLoad(callback);
         },
@@ -181,17 +181,17 @@ user interface improvements, UAA reports, bug fixes and more.
                 mw.notify("RedWarn isn't compatible with this theme.");
                 return; // Exit
             }
-            
+
 
             // Now register all tooltips
-            for (let item of document.getElementsByClassName("mdl-tooltip")) rw.visuals.register(item); 
+            for (let item of document.getElementsByClassName("mdl-tooltip")) rw.visuals.register(item);
 
             // Now Register menu mdl-menu
-            for (let item of document.getElementsByClassName("mdl-menu")) rw.visuals.register(item); 
-            
+            for (let item of document.getElementsByClassName("mdl-menu")) rw.visuals.register(item);
+
             // Now fade in container
             $("#rwPGIconContainer").fadeIn();
-            
+
             // That's done :)
         }
     },
@@ -226,7 +226,7 @@ user interface improvements, UAA reports, bug fixes and more.
                     mwBody.style.overflowY = "auto";
                 }); // closing
             }
-            
+
             $("#PTdialogContainer").html(`
             <dialog class="mdl-dialog" id="rwPATROLdialog">
                 ${content}
@@ -273,7 +273,14 @@ window.onmessage = e=>{
 };
 
 // init everthing
-function initRW() {
+async function initRW() {
+    // Load in CDN-related files
+    rw.cdn = rwCDNManager;
+    const cdnInit = await rwCDNManager.init();
+    if (!cdnInit) {
+        mw.notify("RedWarn couldn't access the browser's storage (IndexedDB). This is required for caching dialogs and other UI components. If you are using a old browser, please upgrade to a better browser.");
+    }
+
     rw.visuals.init(()=>{
         rw.visuals.toast.init();
         dialogEngine.init();
@@ -290,7 +297,7 @@ function initRW() {
             `;
             // Now register that
             for (let item of document.getElementsByClassName("mdl-tooltip")) {
-                rw.visuals.register(item); 
+                rw.visuals.register(item);
             }
             // A bit more of a clear error for someone who may not be paying immediate attention. Maybe we can use wikitext to send new user guide?
             mw.notify("You do not have permission to use Redwarn yet. Please refer to the user guide for more information (Error: User is NOT confirmed/autoconfirmed)", {title: "Error loading Redwarn", autoHide: "false", tag: "redwarn"});
@@ -312,7 +319,7 @@ function initRW() {
             // Check if updated
             if (rw.config.lastVersion != rw.version) {
                 // We've had an update
-                rw.config.lastVersion = rw.version; // update entry 
+                rw.config.lastVersion = rw.version; // update entry
                 rw.info.writeConfig(true, ()=> { // update the config file
                     // Show an update dialog
                     rw.ui.confirmDialog(`
@@ -326,7 +333,7 @@ function initRW() {
                     "LATER", ()=>{
                         dialogEngine.closeDialog();//this thing turns it off
                         rw.visuals.toast.show("You can read more later at RedWarn's page (WP:REDWARN)");//display a toast
-                        
+
                     },168);
                 });
             }
@@ -386,7 +393,7 @@ function initRW() {
             } else if (window.location.hash.includes("#rollbackFailNoRev")) {
                 rw.visuals.toast.show("Could not rollback as there were no recent revisions by other users. Use the history page to try and manually revert.", false, false, 15000);
             }
-            
+
             if ($("table.diff").length > 0) { // DETECT DIFF HERE - if diff table is present
                 // Diff page
                 rw.rollback.loadIcons(); // load rollback icons
@@ -409,9 +416,9 @@ function initRW() {
                 </div>
                 `); // Register tooltip
                 for (let item of document.getElementsByClassName("mdl-tooltip")) {
-                    rw.visuals.register(item); 
+                    rw.visuals.register(item);
                 }
-            
+
             } else if (mw.config.get("wgRelevantPageName").includes("Special:Contributions")) { // Special contribs page
                 rw.rollback.contribsPageIcons(); // rollback icons on current
             } else if (window.location.hash.includes("#rwPatrolAttach-RWBC_")) { // Connect to recent changes window
@@ -420,7 +427,7 @@ function initRW() {
                 bc.onmessage = msg=>{// On message open here
                     rw.ui.loadDialog.show("Loading...");
                     redirect(msg.data);
-                } 
+                }
                 // Set session storage (see below) Hopefully will only effect this window
                 sessionStorage.rwBCID = bcID;
             }
@@ -430,7 +437,7 @@ function initRW() {
                 bc.onmessage = msg=>{// On message open here
                     rw.ui.loadDialog.show("Loading...");
                     redirect(msg.data);
-                } 
+                }
             }
 
             // Log page in recently visited (rev13)
@@ -467,6 +474,6 @@ function initRW() {
 
             // MultiAct history
             rw.multiAct.initHistoryPage();
-        }); 
+        });
     });
 }

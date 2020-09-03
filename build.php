@@ -14,6 +14,7 @@
 $jsRoot = __DIR__ . DIRECTORY_SEPARATOR . "src" . DIRECTORY_SEPARATOR . "js";
 $jsFiles = [
     'styles.js',
+    'cdn.js',
     'init.js',
     'dialog.js',
     'mdlContainer.js',
@@ -167,10 +168,10 @@ function buildScript() {?>
 */
 // <nowiki>
 <?php getJSSources(); ?>
-$( document ).ready( function () {
+$(document).ready(async function() {
 	// Initialize RedWarn once the page is loaded.
 	try {
-		initRW();
+		await initRW();
 	} catch (err) {
 		mw.notify("Sorry, an error occured while loading RedWarn.");
 		console.error(err);

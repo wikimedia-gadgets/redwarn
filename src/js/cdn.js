@@ -7,9 +7,36 @@
 // Privacy, my rear end. - CA
 
 var rwCDNManager = {
-    homepage: "https://redwarn-lite.wmcloud.org",
+    homepage: "https://redwarn.chlod.local",
     stores: {
         html: "html_cache"
+    },
+    html: {
+        // Place all required HTML files here.
+        "adminReport": null,
+        "adminReportSelector": null,
+        "confirmDialog": null,
+        "hanUI": null,
+        "loadingSpinner": null,
+        "multipleAction": null,
+        "newMsg": null,
+        "pageIcons": null,
+        "pendingReviewReason": null,
+        "preferences": null,
+        "quickTemplateEditTemplate": null,
+        "quickTemplateNewPack": null,
+        "quickTemplateSelectPack": null,
+        "quickTemplateSelectTemplate": null,
+        "quickTemplateSubmit": null,
+        "recentChanges": null,
+        "recentPageSelect": null,
+        "requestPageProtect": null,
+        "rollbackCurrentRevFormatting": null,
+        "rollbackReason": null,
+        "sendFeedback": null,
+        "speedyDeletionp1": null,
+        "uaaReport": null,
+        "warnUserDialog": null
     }
 };
 
@@ -71,17 +98,41 @@ rwCDNManager.init = async (recurse = 0) => {
          **/
         get: (storeName, key) => {
             if (storeName == null || key == null) {
-                console.log("Bad arguments when adding to IDB.");
+                console.log("Bad arguments when getting from IDB.");
                 return (async () => false)();
             }
 
             return new Promise((resolve, reject) => {
-                const transaction = db.transaction([storeName], "readwrite");
+                const transaction = db.transaction([storeName], "readonly");
                 transaction.onerror = reject;
                 const store = transaction.objectStore(storeName);
 
                 /** @param event {{target: IDBRequest }} **/
                 store.get(key).onsuccess = (event) => {
+                    console.dir(event.target);
+                    resolve(event.target.result);
+                };
+            });
+        },
+        /**
+         * Gets all items on the given store.
+         *
+         * @param storeName {string} The name of the store. Get this from `rwCDNManager.stores`.
+         * @returns {Promise<any>} All items in the store.
+         **/
+        getAll: (storeName) => {
+            if (storeName == null) {
+                console.log("Bad arguments when getting all from IDB.");
+                return (async () => false)();
+            }
+
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], "readonly");
+                transaction.onerror = reject;
+                const store = transaction.objectStore(storeName);
+
+                /** @param event {{target: IDBRequest }} **/
+                store.getAll().onsuccess = (event) => {
                     console.dir(event.target);
                     resolve(event.target.result);
                 };
@@ -163,6 +214,11 @@ rwCDNManager.init = async (recurse = 0) => {
         }
     }
 
+    if (!await rwCDNManager.getAllHTML())
+        return false;
+
+    // more things here in the future.
+
     return true;
 }
 
@@ -217,28 +273,42 @@ rwCDNManager.fetchHTML = async (htmlName, arguments = {}, options = {}) => {
 }
 
 /**
+ * Called at initialization. This grabs all HTML files in the HTML store and loads it
+ * into the `rwCDNManger.html` object. If a file is unavailable, it will grab the file
+ * from the RedWarn CDN.
+ *
+ * @returns {Promise<boolean>} Whether all HTML files were account for or not.
+ */
+rwCDNManager.getAllHTML = async() => {
+    try {
+        const idbCache = await rwCDNManager.database.getAll(rwCDNManager.stores.html);
+
+        const idbHTMLFiles = {};
+        for (const cachedHTML of idbCache) {
+            idbHTMLFiles[cachedHTML.filename] = cachedHTML.content;
+        }
+
+        const htmlFiles = Object.keys(rwCDNManager.html);
+        for (const filename of htmlFiles) {
+            if (idbHTMLFiles[filename] === undefined) {
+                rwCDNManager.html[filename] = await rwCDNManager.fetchHTML(filename);
+            } else {
+                rwCDNManager.html[filename] = idbHTMLFiles[filename];
+            }
+        }
+        return Object.values(rwCDNManager.html).reduce((p, n) => p && n != null, true);
+    } catch (e) {
+        mw.notify("Failed to get required HTML files from the RedWarn CDN.");
+        return false;
+    }
+}
+
+/**
  * Gets a page from the cache. If the HTML is uncached, this will return undefined.
  *
  * @param htmlName {string} The name of the HTML file to get from the backend.
  * @param arguments {Record<string, any>} The arguments to be used to fill up parts of the HTML file.
  */
-rwCDNManager.getHTML = async (htmlName, arguments) => {
-    let htmlPull = null;
-    do {
-        try {
-            htmlPull = (await rwCDNManager.database.get(
-                rwCDNManager.stores.html,
-                htmlName
-            ));
-
-            if (htmlPull === undefined)
-                return rwCDNManager.fetchHTML(htmlName, arguments);
-            else htmlPull = htmlPull.content;
-        } catch (e) {
-            // TODO Create a fallback dialog here eventually.
-            return "<h2 color=\"red\">An error occurred while trying to get the HTML for the page.</h2>"
-        }
-    } while (htmlPull === null);
-
-    return rwCDNManager.parseHTML(htmlPull, arguments);
+rwCDNManager.getHTML = (htmlName, arguments) => {
+    return rwCDNManager.parseHTML(rwCDNManager.html[htmlName], arguments);
 }

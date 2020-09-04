@@ -1,7 +1,7 @@
 <!-- REVIEW REASON DIALOG -->
 <script>var closed = false;</script>
-<h2 style="font-weight: 200;font-size:45px;line-height: 48px;">`+ reviewAction +`</h2>
-<p>`+ reviewCaption +`</p><br/>
+<h2 style="font-weight: 200;font-size:45px;line-height: 48px;"><!-- rw-arg:reviewAction --></h2>
+<p><!-- rw-arg:reviewCaption --></p><br/>
 <form id="newMsgForm" onsubmit="pushReview();" action="#">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
         <input class="mdl-textfield__input" type="text" name="reviewReason" id="reviewReason" value="">
@@ -23,9 +23,9 @@
                 obj[item.name] = item.value;
                 return obj;
                 }, {}); // form data
-        
+
         let reason = data.reviewReason;
-        
+
         // Submit it
         window.parent.postMessage('reason\\\`' + reason); // Push upstairs
         window.parent.postMessage("closeDialog"); // We done here.
@@ -39,7 +39,7 @@
     var autoAcceptTimerTick;
     var autoAcceptTimerCount = 0;
     var autoAcceptStop = false; // used to not show another and cause ux issues if stopped
-    if (` + autoAccept + `) {
+    if (/* rw-arg:autoAccept */) {
         $("#submitBtn").text("AUTO SUBMIT ("+ (5 - autoAcceptTimerCount) +")");
         autoAcceptTimerTick = setInterval(()=> {
             autoAcceptTimerCount += 1; // up by one

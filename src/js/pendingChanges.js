@@ -2,8 +2,8 @@ rw.PendingChangesReview = {
     "reviewPage" : ()=> {
         // Check config if disabled
         if (rw.config.rwDisablePendingChanges == "disable") return; // if disabled, exit
-        
-        // Pending changes buttons and warning (ONLY on review pages) 
+
+        // Pending changes buttons and warning (ONLY on review pages)
         if (($("#mw-fr-reviewform").length > 0) && !($("#mw-fr-reviewformlegend").text().includes("Re-review"))) {
             rw.info.featureRestrictPermissionLevel("reviewer", ()=>{ // Restrict to pending changes reviewers
                 // Add to accept header
@@ -83,10 +83,10 @@ rw.PendingChangesReview = {
                                         // Error
                                         rw.visuals.toast.show("Sorry, an error occured and your review has not been submitted.", false, false, 5000);
                                     }
-                                    
+
                                 });
                             });
-                            
+
                             // SHOW DIALOG
                             let reviewAction = "Accept "+ count +" Revision"+ ((count > 1) ? "s" : ""); // i.e accept 1 revision / accept 2 revisions
                             let reviewCaption = `
@@ -94,9 +94,13 @@ rw.PendingChangesReview = {
                             <br/><br/>
                             Enter an optional comment, then confirm your review by clicking 'Submit Review' or by pressing ENTER.`;
                             let autoAccept = rw.config.rwDisableReviewAutoAccept != "disable" ? "true" : "false";
-                            dialogEngine.create(mdlContainers.generateContainer(`
-                            [[[[include pendingReviewReason.html]]]]
-                            `, 500, 350)).showModal();
+                            dialogEngine.create(mdlContainers.generateContainer(
+                            rw.cdn.getHTML("pendingReviewReason", {
+                                reviewAction: reviewAction,
+                                reviewCaption: reviewCaption,
+                                autoAccept: autoAccept
+                            })
+                            , 500, 350)).showModal();
                         });
                     });
                 };
@@ -109,7 +113,7 @@ rw.PendingChangesReview = {
                     // When DENY button clicked.
                     rw.PendingChangesReview.confirmLatestRev(()=>{
                         rw.PendingChangesReview.getPendingChangesUsers((usr, count, users, userCount)=>{
-                            
+
                             addMessageHandler("reason`*", reasonIn=> { // ON REASON RECIEVED
                                 // Generate revert string
                                 let revertString = "Reverting "+ count +" pending edit"+ ((count > 1) ? "s" : "") + " by ";
@@ -163,7 +167,7 @@ rw.PendingChangesReview = {
                                         let el = parser.parseFromString(r, 'text/html');
                                         let resultStr = el.getElementById("mw-content-text").getElementsByTagName("p")[0].innerHTML;
                                         if (resultStr.includes("Cannot reject these changes because someone already accepted some (or all) of the edits")) {
-                                            // Show the issue 
+                                            // Show the issue
                                             rw.PendingChangesReview.confirmLatestRev(()=>successHandler(), true); // true here note a different wording
                                         } else if (r.toLowerCase().includes("internal error")) {
                                             rw.visuals.toast.show("Sorry, an error occured and your review has not been submitted");
@@ -184,9 +188,13 @@ rw.PendingChangesReview = {
                             Confirm your review by clicking 'Submit Review' or by pressing ENTER.
                             `;
                             let autoAccept = rw.config.rwEnableReviewAutoRevert == "enable" ? "true" : "false";
-                            dialogEngine.create(mdlContainers.generateContainer(`
-                            [[[[include pendingReviewReason.html]]]]
-                            `, 500, 350)).showModal();
+                            dialogEngine.create(mdlContainers.generateContainer(
+                                rw.cdn.getHTML("pendingReviewReason", {
+                                    reviewAction: reviewAction,
+                                    reviewCaption: reviewCaption,
+                                    autoAccept: autoAccept
+                                })
+                            , 500, 350)).showModal();
                         });
                     });
                 };
@@ -214,7 +222,7 @@ rw.PendingChangesReview = {
             $(".fr-rating-controls").hide();
             // Handlers
             $("#rReviewUnAccept").click(()=>{
-                addMessageHandler("reason`*", reasonIn=> { // ON REASON RECIEVED 
+                addMessageHandler("reason`*", reasonIn=> { // ON REASON RECIEVED
                     // Dumbest one of all, just send, reload and hope for the best
                     let comment = reasonIn.split("`")[1];
                     rw.ui.loadDialog.show("Unaccepting...");
@@ -248,9 +256,13 @@ rw.PendingChangesReview = {
                 Confirm your review by clicking 'Submit Review' or by pressing ENTER.
                 `;
                 let autoAccept = rw.config.rwEnableReviewAutoRevert == "enable" ? "true" : "false";
-                dialogEngine.create(mdlContainers.generateContainer(`
-                [[[[include pendingReviewReason.html]]]]
-                `, 500, 350)).showModal();
+                dialogEngine.create(mdlContainers.generateContainer(
+                    rw.cdn.getHTML("pendingReviewReason", {
+                        reviewAction: reviewAction,
+                        reviewCaption: reviewCaption,
+                        autoAccept: autoAccept
+                    })
+                , 500, 350)).showModal();
 
             });
         }
@@ -305,8 +317,8 @@ rw.PendingChangesReview = {
                 let user = rev.user;
                 // Summary - revID: summary (click revid to open diff in new tab)
                 let summary = "<a target='_blank' href='https://en.wikipedia.org/w/index.php?title="+ encodeURIComponent(mw.config.get("wgRelevantPageName"))
-                                +"&diff="+ rev.revid +"&oldid="+ rev.parentid +"&diffmode=source'>"+ rev.revid +"</a>: " + rev.comment; 
-            
+                                +"&diff="+ rev.revid +"&oldid="+ rev.parentid +"&diffmode=source'>"+ rev.revid +"</a>: " + rev.comment;
+
                 // If user not in userObj, add
                 if (!(user in userObj)) {
                     userObj[user] = {

@@ -6,7 +6,7 @@
 
 <div style="height:455px;overflow:auto;" id="chatList">
     <!-- Insert list -->
-    ${allMessages}
+    <!-- rw-arg:messages -->
 </div>
 
 <span style="width:100%;">
@@ -24,7 +24,7 @@
         element.scrollTop = element.scrollHeight;
     }
     updateScroll();
-    
+
     // On new message add to page
     window.onmessage = e=>{$("#chatList").append(e.data);updateScroll();};
 

@@ -83,14 +83,14 @@ rw.han = {
                 try {
                     let message = JSON.parse(event.data);
                     //console.log(message);
-                    if (message.type == "message") { 
+                    if (message.type == "message") {
                         // Save message in log with timestamp
                         message.timestamp = Date.now();
                         rw.han.chatLog.push(message);
                         rw.han.saveChatLog();
 
                         // Process
-                        
+
                         // Normal message
                         // Check if ping
                         if (message.content.toLowerCase().includes(rw.info.getUsername().toLowerCase())) {
@@ -108,7 +108,7 @@ rw.han = {
                             rw.han.parseMessage(message)
                             , '*');
 
-                        
+
                     } else if (message.type == "online") {
                         // User listing array - save
                         let newOnlineUsers = Object.keys(message.info);
@@ -146,7 +146,7 @@ rw.han = {
                     console.error(error);
                 }
             }
-            
+
         });
 
         rw.han.socket.onclose = ()=>{
@@ -210,10 +210,14 @@ rw.han = {
             addMessageHandler("sendHANMsg`*", m=>{
                 rw.han.socket.send(m.split("`")[1]); // send message
             });
-            
-            dialogEngine.create(mdlContainers.generateContainer(`
-            [[[[include hanUI.html]]]]
-            `, 500, 600)).showModal();
+
+            dialogEngine.create(mdlContainers.generateContainer(
+                rw.cdn.getHTML("hanUI", {
+                    messages: allMessages
+                }),
+                500,
+                600
+            )).showModal();
         }
     },
 

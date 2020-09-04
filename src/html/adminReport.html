@@ -2,7 +2,7 @@
 <span>Please note: This form currently supports <b>vandalism reports</b> only. For now, use Twinkle to report sockpuppetry and edit warring that isn't related to vandalism.</span>
 <form id="reportForm">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
-        <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="`+ rw.info.targetUsername(un).replace(/_/g, ' ') +`" name="target" readonly>
+        <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="<!-- rw-arg:targetUsername -->" name="target" readonly>
         <label class="mdl-textfield__label" for="trgtUsrVisualBox">Target</label>
         <div class="mdl-tooltip" for="trgtUsrVisualBox">
             To target a different user, please visit their userpage.
@@ -52,7 +52,7 @@
                 obj[item.name] = item.value;
                 return obj;
                 }, {}); // form data
-        
+
         if (data.reason == "") {pushToast("Select a reason."); return;} // If no reason selected, push toast and EXIT.
 
         let fullReason = "";
@@ -64,9 +64,9 @@
             // Append the reason and comment if there is one
             fullReason = data.reason + (data.comment == "" ? "" : " - "+ data.comment); // If data comment empty don't add anything otherwise make it Reason - Comment
         }
-        fullReason += " ${rw.sign()}"; // Add sig to the end (w space)
+        fullReason += "<!-- rw-arg:signature -->"; // Add sig to the end (w space)
         // Push this upstairs
-        window.parent.postMessage('report\\\`'+ fullReason + '\\\`' + data.target, '*'); // Report with full reason
+        window.parent.postMessage('report\\`'+ fullReason + '\\`' + data.target, '*'); // Report with full reason
         window.parent.postMessage('closeDialog', '*'); // Close. We will be reopened on error.
     }
 </script>

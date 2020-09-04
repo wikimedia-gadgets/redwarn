@@ -19,8 +19,8 @@ rw.multiAct = { // Multi action screen
                     // Summary - revID: summary (click revid to open diff in new tab)
                     let summary = "<a target='_blank' href='https://en.wikipedia.org/w/index.php?title="+ encodeURIComponent(mw.config.get("wgRelevantPageName"))
                                     +"&diff="+ rev.revid +"&oldid="+ rev.parentid +"&diffmode=source'>"+ rev.revid +"</a>: " +
-                                    ((rev.comment != null && rev.comment.length > 0) ? rev.comment : "<i>No summary provided</i>"); 
-                
+                                    ((rev.comment != null && rev.comment.length > 0) ? rev.comment : "<i>No summary provided</i>");
+
                     // If user not in userObj, add
                     if (!(user in userObj)) {
                         userObj[user] = {
@@ -38,8 +38,8 @@ rw.multiAct = { // Multi action screen
                 // Check if continue
                 if (r.continue != null) {
                     // Still more to do, so resubmit
-                    let latestID = $('#mw-history-compare').find('input[name="diff"]:checked').val(); 
-                    let oldestID = $('#mw-history-compare').find('input[name="oldid"]:checked').val(); 
+                    let latestID = $('#mw-history-compare').find('input[name="diff"]:checked').val();
+                    let oldestID = $('#mw-history-compare').find('input[name="oldid"]:checked').val();
                     $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&format=json&titles="+
                         mw.config.get("wgRelevantPageName")+"&rvprop=ids%7Cuser%7Ccomment&rvstartid="+
                         latestID+"&rvendid="+oldestID + "&rvcontinue="+ r.continue.rvcontinue,
@@ -56,9 +56,9 @@ rw.multiAct = { // Multi action screen
                 e.preventDefault(); // stop the default redirect
                 rw.ui.loadDialog.show("Please wait..."); // Show loading dialog
                 // Load all revisions between oldid and diff - remember we are checking between this range
-                let latestID = $('#mw-history-compare').find('input[name="diff"]:checked').val(); 
-                let oldestID = $('#mw-history-compare').find('input[name="oldid"]:checked').val(); 
-                // Get all revisions 
+                let latestID = $('#mw-history-compare').find('input[name="diff"]:checked').val();
+                let oldestID = $('#mw-history-compare').find('input[name="oldid"]:checked').val();
+                // Get all revisions
                 $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&format=json&titles="+
                     mw.config.get("wgRelevantPageName")+"&rvprop=ids%7Cuser%7Ccomment&rvstartid="+
                     latestID+"&rvendid="+oldestID,
@@ -218,7 +218,7 @@ rw.multiAct = { // Multi action screen
                                 }
                             });
                         };
-                        
+
                         editHandler(0); // start it all
                     });
                 }
@@ -226,9 +226,15 @@ rw.multiAct = { // Multi action screen
 
             // Open screen - do not use dialogEngine as other dialogs use this - allow for overlay
             // Generate container
-            let content = mdlContainers.generateContainer(`
-            [[[[include multipleAction.html]]]]
-            `, document.body.offsetWidth, document.body.offsetHeight);
+            let content = mdlContainers.generateContainer(
+                rw.cdn.getHTML("mutipleAction", {
+                    rwLogo: rw.logoHTML,
+                    list: listHTML,
+                    sharedIPAdvice: rw.sharedIPadvice()
+                }),
+                document.body.offsetWidth,
+                document.body.offsetHeight
+            );
             // Dialog gubbins
             // Init if needed
             if ($("#MAdialogContainer").length < 1) {
@@ -240,7 +246,7 @@ rw.multiAct = { // Multi action screen
                 // Add close event
                 addMessageHandler("closeDialogMA", ()=>{rw.multiAct.dialog.close();}); // closing
             }
-            
+
             $("#MAdialogContainer").html(`
             <dialog class="mdl-dialog" id="rwMAdialog">
                 `+ content +`
@@ -304,7 +310,7 @@ rw.multiAct = { // Multi action screen
                             </span>
                         </div>
                         `,
-        
+
                         // NOTICE
                         `
                         <span class="material-icons" id="PastWarning-`+un+`" style="cursor:pointer;position: relative;top: 5px;padding-left: 10px;color:blue;">info</span>
@@ -333,7 +339,7 @@ rw.multiAct = { // Multi action screen
                             </span>
                         </div>
                         `,
-        
+
                         // Final/Only Warning (dark red)
                         `
                         <span class="material-icons" id="PastWarning-`+un+`" style="cursor:pointer;position: relative;top: 5px;padding-left: 10px;color:#a20000;" >report</span>
@@ -360,13 +366,13 @@ rw.multiAct = { // Multi action screen
                         editCounterHandler(i + 1);
                     });
                     return;
-                } 
+                }
                 rw.info.getUserEditCount(usernames[i], cI=>{
                     // Push to iframe
                     // Set c to blank space if edit count undefined or edit count with number sorted if is
                     let c = cI == null ? "-" : cI.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // regex adds commas to number to make more readable
                     rw.multiAct.dialog.getElementsByTagName("iframe")[0].contentWindow.postMessage("editCount-"+ usernames[i] + "`" + c, '*');
-                    
+
                     // Make sure there wasn't an issue, if so redo, and if redo fails just continue
                     if ((cI == null) && !isRetry) {
                         editCounterHandler(i, true); // do it again with retry flag

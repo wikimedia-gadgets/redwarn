@@ -21,7 +21,7 @@
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
       <!-- Title -->
-      <span class="mdl-layout-title" style="width: calc(100% - 60px);">` + rw.logoHTML + ` Multiple Action Tool</span>
+      <span class="mdl-layout-title" style="width: calc(100% - 60px);"><!-- rw-arg:logo --> Multiple Action Tool</span>
         <!-- HELP -->
         <div id="helpMe" class="icon material-icons" style="float:right;">
           <span style="cursor: pointer; padding-right:15px;" onclick='Object.assign(document.createElement("a"), { target: "_blank", href: "https://en.wikipedia.org/wiki/User:Ed6767/redwarn/help/Multiple_Action_Tool"}).click();'>
@@ -118,7 +118,7 @@
         </tr>
       </thead>
       <tbody>
-        `+ listHTML +`
+		  <!-- rw-arg:list -->
       </tbody>
     </table>
 
@@ -142,7 +142,7 @@
         'use strict';
         if (buttonTxt) {
             // Show with action and button
-            toast.MaterialSnackbar.showSnackbar({message: text, actionHandler: btnClick, actionText: buttonTxt, timeout: tOut}); 
+            toast.MaterialSnackbar.showSnackbar({message: text, actionHandler: btnClick, actionText: buttonTxt, timeout: tOut});
         } else {
             // Show just message
             toast.MaterialSnackbar.showSnackbar({message: text, timeout: tOut});
@@ -151,13 +151,13 @@
 
     // Register all tolltips
     for (let item of document.getElementsByClassName("mdl-tooltip")) {
-      componentHandler.upgradeElement(item); 
+      componentHandler.upgradeElement(item);
     }
   };
 
   // Progress bar
   var setProgress = (val, max)=>{if (val == max) {$("#mainLoadCard").hide(); $("#mainFilterControlCard").show();}}; // placeholder function, main defined once progress bar registered
-  
+
   document.querySelector('#p1').addEventListener('mdl-componentupgraded', ()=>{
     setProgress = (val, max) => {
       // Calc percent done and set
@@ -178,10 +178,10 @@
   function checkUpdate() {
     // Update checked boxes
     let checkedBoxes = $("tbody > tr > td:visible > label > input:checked");
-    $(".mdl-layout-title").html('`+ rw.logoHTML +` Multiple Action Tool'+
+    $(".mdl-layout-title").html('<!-- rw-arg:logo --> Multiple Action Tool'+
     (checkedBoxes.length > 0 ?
       " (" + checkedBoxes.length + " user" + (checkedBoxes.length > 1 ? "s": "") + " selected)"
-      : "")); 
+      : ""));
   }
 
   // Toggle check boxes toggleCheck(type or max top, is type?)
@@ -200,7 +200,7 @@
   }
 
   function removeSelected() {
-    // Hide all selected elements 
+    // Hide all selected elements
     $("tbody > tr").each((i, el)=>{
       if ($(el).find("td:visible > label > input:checkbox:checked").length > 0) {
         // remove element as checked
@@ -217,7 +217,7 @@
       pushToast("Please select a user.");
     }
     return bc;
-  } 
+  }
 
   // SET TEXT UNDER DATE HANDLER
   addMessageHandler("applyToChecked\`*", cI=>{ // apply to checked b64 txt, underDate (Yes/No), source (i.e New Notice)
@@ -252,7 +252,7 @@
       pushToast("Please set an action for the selected users.");
       return; //exit
     } // else continue
-    
+
     // Show confirm dialog
     window.parent.postMessage('RWMATcommitSelectedConfirm\`'+ $("tbody > tr > td:visible > label > input:checked").length); // push request for confirm to top
 
@@ -269,7 +269,7 @@
           let finalWikiTxt = userAct.toAdd;
           if (userAct.underDate && userIsIp) {
             // Add shared IP advice for under date
-            finalWikiTxt += "`+rw.sharedIPadvice()+`";
+            finalWikiTxt += "<!-- rw-arg:sharedIPAdvice -->";
           }
 
           // Finally, push upstairs to be done.

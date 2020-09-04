@@ -125,7 +125,18 @@ user interface improvements, UAA reports, bug fixes and more.
                 let pageIconHTML = "<div id='rwPGIconContainer' style='display:none;display: inline-block;'>"; // obj it is appended to
                 // Possible icons locations: default (page icons area) or sidebar
                 let iconsLocation = rw.config.pgIconsLocation ? rw.config.pgIconsLocation : "default"; // If set in config, use config
-                /* [[[[include pageIcons.html]]]] */
+                if (/^User(_talk)?:/g.test(mw.config.get("wgRelevantPageName"))) {
+                    pageIconHTML += rw.cdn.getHTML("userpageIcons", {
+                        spacing: (iconsLocation == "sidebar" ? "" : "&nbsp;&nbsp;&nbsp;")
+                    });
+                }
+                const editable = mw.config.get("wgIsProbablyEditable");
+                pageIconHTML += rw.cdn.getHTML("userpageIcons", {
+                    spacing: (iconsLocation == "sidebar" ? "" : "&nbsp;&nbsp;&nbsp;"),
+                    editableIconsStyle: editable ? "" : "display: none",
+                    uneditableIconsStyle: editable ? "display: none" : "",
+                });
+                /* rw.cdn.getHTML("pageIcons", {uneditableIconsStyle}) */
                 pageIconHTML += "</div>"; // close contianer
                 if (iconsLocation == "default") {
                     try {

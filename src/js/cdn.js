@@ -236,7 +236,7 @@ rwCDNManager.parseHTML = (html, arguments) => {
     let newHTML = html;
     for (var [i, v] of Object.entries(arguments)) {
         newHTML = newHTML.replace(
-            new RegExp(`<!-- rw-arg:${i} -->`, "g"),
+            new RegExp(`(<!--|/\\*) rw-arg:${i} (-->|\\*/)`, "g"),
             v
         );
     }
@@ -309,6 +309,6 @@ rwCDNManager.getAllHTML = async() => {
  * @param htmlName {string} The name of the HTML file to get from the backend.
  * @param arguments {Record<string, any>} The arguments to be used to fill up parts of the HTML file.
  */
-rwCDNManager.getHTML = (htmlName, arguments) => {
+rwCDNManager.getHTML = (htmlName, arguments = {}) => {
     return rwCDNManager.parseHTML(rwCDNManager.html[htmlName], arguments);
 }

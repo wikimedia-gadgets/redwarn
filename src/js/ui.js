@@ -19,7 +19,7 @@ rw.ui = {
 
     "beginWarn" : (ignoreWarnings, un, pg, customCallback, callback, hideUserInfo, autoSelectReasonIndex)=> { // if customCallback = false, callback(templatestr) (rev12) autoSelectReasonIndex(rev13) for quick rollbacks for vandalism ext..
         // Give user a warning (show dialog)
-        
+
         let autoLevelSelectEnable = (!hideUserInfo) && (rw.config.rwautoLevelSelectDisable != "disable"); // If autolevelselect enabled (always disabled on hideUserInfo options)
 
         if ((rw.info.targetUsername(un) == rw.info.getUsername()) && !ignoreWarnings) {
@@ -90,7 +90,7 @@ rw.ui = {
                     $("#rwTemplateSelect${i}").html(\`${rule.template} <!-- ${rule.name} (comment for search) -->\`); // set to default
                 });
                 </script>
-                `; 
+                `;
             }
         });
         finalListBox += `</span>`; // close final catagory
@@ -216,12 +216,12 @@ rw.ui = {
             ][w];
 
             // CREATE DIALOG
-            // MDL FULLY SUPPORTED HERE (container). 
+            // MDL FULLY SUPPORTED HERE (container).
             dialogEngine.create(mdlContainers.generateContainer(`
             [[[[include warnUserDialog.html]]]]
             `, 500, 630)).showModal(); // 500x630 dialog, see warnUserDialog.html for code
         });
-            
+
     }, // end beginWarn
 
     "newMsg" : (un, noRedirect, buttonTxt, callback)=>{
@@ -256,10 +256,16 @@ rw.ui = {
         });
 
         // CREATE DIALOG
-        // MDL FULLY SUPPORTED HERE (container). 
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include newMsg.html]]]]
-        `, 500, 390)).showModal(); // 500x390 dialog, see newMsg.html for code
+        // MDL FULLY SUPPORTED HERE (container).
+        dialogEngine.create(mdlContainers.generateContainer(
+            rw.cdn.getHTML("newMsg", {
+                target: rw.info.targetUsername(un),
+                signature: rw.sign(),
+                buttonText: (buttonTxt == null ? "Send message" : buttonTxt)
+            }),
+            500,
+            390
+        )).showModal(); // 500x390 dialog, see newMsg.html for code
     },
 
     "registerContextMenu" : () => { // Register context menus for right-click actions
@@ -270,14 +276,14 @@ rw.ui = {
             // REV15 - only trigger on shift+right-click unless if set in settings - If config is set to "Opt2", to open on right-click set in preferences, set below in trigger
             if (rw.config.rwDisableRightClickUser != "Opt2") {
                 $('a[href*="/wiki/User_talk:"], a[href*="/wiki/User:"], a[href*="/wiki/Special:Contributions/"]').on('contextmenu', e=>{
-                
-                    // if shift key not down, don't show the context menu. 
-                    if (!e.shiftKey) return; 
+
+                    // if shift key not down, don't show the context menu.
+                    if (!e.shiftKey) return;
                     e.preventDefault();
                     $(e.currentTarget).contextMenu();
                 });
             }
-            
+
             $.contextMenu({
                 trigger: (rw.config.rwDisableRightClickUser == "Opt2" ? undefined : 'none'), // if set in options, activate as usual
                 selector: 'a[href*="/wiki/User_talk:"], a[href*="/wiki/User:"], a[href*="/wiki/Special:Contributions/"]', // Select all appropriate user links
@@ -304,7 +310,7 @@ rw.ui = {
                         // Contribs link, go split at last slash
                         targetUsername = (a=>{return a[a.length - 1]})(hrefOfSelection.split("/"));
                     }
-                    
+
                     // Do the action for each action now.
                     ({
                         "usrPg" : un=>redirect(rw.wikiBase+"/wiki/User:"+ un, true),  // Open user page in new tab
@@ -331,7 +337,7 @@ rw.ui = {
 
                         "usrEditCount": un=>{ // Show a tost with this users prefered pronouns
                             rw.info.getUserEditCount(un, count=>{
-                                if (count == null) count = "an unknown number of"; // stop undefined message 
+                                if (count == null) count = "an unknown number of"; // stop undefined message
                                 rw.visuals.toast.show(un + " has made "+ count + " edits.", false, false, 3000);
                             });
                         },
@@ -356,13 +362,13 @@ rw.ui = {
                         "allLog": un=>redirect("https://en.wikipedia.org/wiki/Special:Log/"+ un, true)  // Redirect to filter log page in new tab
 
                     })[act](targetUsername.trim());
-                    
+
                 },
                 items: { // TODO: add extra options like logs ext. ext.
                     "usrPg": {name: "User Page"},
                     "tlkPg": {name: "Talk Page"},
                     "aAsubmenu": {
-                        "name": "Quick Actions", 
+                        "name": "Quick Actions",
                         "items": {
                             "sendMsg": {name: "New Message"},
                             "newNotice": {name: "New Notice"},
@@ -371,7 +377,7 @@ rw.ui = {
                         }
                     },
                     "aIsubmenu": {
-                        "name": "Account info", 
+                        "name": "Account info",
                         "items": {
                             "contribs": {name: "Contributions"},
                             "accInfo": {name: "Central Auth"},
@@ -382,7 +388,7 @@ rw.ui = {
                             "blockLog" : {name: "Block Log"},
                             "allLog" : {name: "All Logs"}
                         }
-                    }  
+                    }
                 }
             });
         }); // END USER ACTIONS CONTEXT MENU
@@ -416,7 +422,7 @@ rw.ui = {
             console.log(`Deleting under: `+ reasonTitle +`
             `+ reason.input + additionalInfo + ` (redwarn)
             `);
-        }); 
+        });
 
         let finalStr = ``;
         for (const key in speedyDeleteReasons) {
@@ -430,7 +436,7 @@ rw.ui = {
             });
         }
         // CREATE DIALOG
-        // MDL FULLY SUPPORTED HERE (container). 
+        // MDL FULLY SUPPORTED HERE (container).
         dialogEngine.create(mdlContainers.generateContainer(`
         [[[[include speedyDeletionp1.html]]]]
         `, 500, 450)).showModal(); // 500x300 dialog, see speedyDeletionp1.html for code
@@ -453,7 +459,7 @@ rw.ui = {
 
             // Push change
             rw.info.writeConfig();
-        }); 
+        });
 
         addMessageHandler("resetConfig", rs=>{
             // Reset config recieved, set config back to default
@@ -484,10 +490,63 @@ rw.ui = {
         // Lock scrolling
         dialogEngine.freezeScrolling();
 
+        const rollbackIcons = (() => {
+            // Now we generate for each icon (config should've loaded and put these in order by now)
+            let returnStr = "";
+            rw.rollback.icons.forEach((icon,i) => {
+                let elID = "rollbackIcon-"+ (icon.originalIndex == null ? i : icon.originalIndex); // get index from original if already set, else use i (basically only use i on a fresh config)
+                // Top row, so only add currently enabled icons
+                if (icon.enabled) returnStr += `
+                    <li id="${elID}" class="icon material-icons">
+                        <span style="cursor: pointer;
+                                    font-size:28px;
+                                    padding-right:5px;
+                                    color:${icon.color};">
+                            ${icon.icon}
+                        </span>
+                    </li>
+                    <div class="mdl-tooltip mdl-tooltip--large" for="${elID}">
+                        ${icon.name}
+                    </div>
+                    `;
+            });
+
+            return returnStr;
+        })();
+
+        const disabledRollbackIcons = (() => {
+            // Now we generate for each icon (config should've loaded and put these in order by now)
+            let returnStr = "";
+            rw.rollback.icons.forEach((icon,i)=>{
+                let elID = "rollbackIcon-"+ (icon.originalIndex == null ? i : icon.originalIndex); // get index from original if already set, else use i
+                // bottom row, so only add disabled icons
+                if (!icon.enabled) returnStr += `
+                    <li id="${elID}" class="icon material-icons">
+                        <span style="cursor: pointer;
+                                    font-size:28px;
+                                    padding-right:5px;
+                                    color:${icon.color};">
+                            ${icon.icon}
+                        </span>
+                    </li>
+                    <div class="mdl-tooltip mdl-tooltip--large" for="${elID}">
+                        ${icon.name}
+                    </div>
+                    `;
+            });
+
+            return returnStr;
+        })();
+
         // Open preferences page with no padding, full screen
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include preferences.html]]]]
-        `, window.innerWidth, window.innerHeight, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
+        dialogEngine.create(mdlContainers.generateContainer(
+            rw.cdn.getHTML("preferences", {
+                logo: rw.logoHTML,
+                rollbackIcons: rollbackIcons,
+                disabledRollbackIcons: disabledRollbackIcons,
+                config: JSON.stringify(rw.config)
+            })
+        , window.innerWidth, window.innerHeight, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
     },
 
     "openAdminReport" : (un)=> { // Open admin report dialog
@@ -502,9 +561,9 @@ rw.ui = {
             console.log("reporting "+ target + ": "+ reportContent);
             console.log("is ip? "+ (targetIsIP ? "yes" : "no"));
             rw.visuals.toast.show("Reporting "+ target +"...", false, false, 2000); // show toast
-            // Submit the report. MUST REPLACE WITH REAL AIV WHEN DONE AND WITH SANDBOX IN DEV!    
+            // Submit the report. MUST REPLACE WITH REAL AIV WHEN DONE AND WITH SANDBOX IN DEV!
             //let aivPage = "User:Ed6767/sandbox"; // dev
-            let aivPage = "Wikipedia:Administrator_intervention_against_vandalism"; // PRODUCTION! 
+            let aivPage = "Wikipedia:Administrator_intervention_against_vandalism"; // PRODUCTION!
 
             $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+aivPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
                 // Grab text from latest revision of AIV page
@@ -552,14 +611,19 @@ rw.ui = {
 
 
         // See adminReport.html for code
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include adminReport.html]]]]
-        `, 500, 410)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(
+            rw.cdn.getHTML("adminReport", {
+                targetUsername: rw.info.targetUsername(un).replace(/_/g, ' '),
+                signature: rw.sign()
+            }),
+            500,
+            410
+        )).showModal();
     },
 
     "loadDialog" : {
         // Loading dialog
-        "hasInit" : false, 
+        "hasInit" : false,
         "init" : text=> {
             if (!rw.ui.loadDialog.hasInit) { // Only continue if we haven't already appended our container div
                 $("body").append(`
@@ -569,7 +633,10 @@ rw.ui = {
             }
             $("#rwUILoad").html(`
             <dialog class="mdl-dialog" id="rwUILoadDialog">
-                ` + mdlContainers.generateContainer(`[[[[include loadingSpinner.html]]]]`, 300, 30) +`
+                ` + mdlContainers.generateContainer(
+                    rw.cdn.getHTML("loadingSpinner", {text: text}),
+                300,
+                30) +`
             </dialog>
             `); // Create dialog with content from loadingSpinner.html
 
@@ -600,16 +667,23 @@ rw.ui = {
                 // Animation finished
                 rw.ui.loadDialog.dialog.close();
             });
-        } 
+        }
     },
 
     "confirmDialog": (content, pBtnTxt, pBtnClick, sBtnTxt, sBtnClick, extraHeight, noExtraLines) => { // noExtraLines removes the <br/> tags
         // Confirm dialog (yes, no, ext...)
         addMessageHandler("sBtn", sBtnClick);
         addMessageHandler("pBtn", pBtnClick);
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include confirmDialog.html]]]]
-        `, 500, 80 + extraHeight)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(
+            rw.cdn.getHTML("confirmDialog", {
+                secondButton: sBtnTxt.length > 0 ? `<button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('sBtn', '*');">${sBtnTxt}</button>` : "",
+                content: content,
+                extraLines: (noExtraLines === true ? "" : "<br /><br />"),
+                pBtnText: pBtnTxt
+            }),
+            500,
+            80 + extraHeight
+        )).showModal();
     },
 
     "sendFeedback" : extraInfo=> {
@@ -640,7 +714,7 @@ rw.ui = {
         });
 
         // CREATE DIALOG
-        // MDL FULLY SUPPORTED HERE (container). 
+        // MDL FULLY SUPPORTED HERE (container).
         dialogEngine.create(mdlContainers.generateContainer(`
         [[[[include sendFeedback.html]]]]
         `, 500, 390)).showModal(); // 500x390 dialog, see sendFeedback.html for code
@@ -692,7 +766,7 @@ rw.ui = {
                 <hr />
                 `;
             });
-            
+
             // Add close handler
             addMessageHandler("closeRecentPageDialog", ()=>rw.ui.recentlyVisitedSelector.close());
 
@@ -701,7 +775,7 @@ rw.ui = {
                 let selectedI = m.split("`")[1];
                 callback(recentlyVisited[selectedI]); // send callback
             });
-            
+
             // Now show dialog
             rw.ui.recentlyVisitedSelector.init(mdlContainers.generateContainer(`
             [[[[include recentPageSelect.html]]]]
@@ -727,9 +801,11 @@ rw.ui = {
         addMessageHandler("openUAA", ()=>rw.ui.beginUAAReport(un)); // UAA report
 
         // Open the admin report selector dialog
-        dialogEngine.create(mdlContainers.generateContainer(`
-            [[[[include adminReportSelector.html]]]]
-        `, 600, 500)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(
+            rw.cdn.getHTML("adminReportSelector"),
+            600,
+            500
+        )).showModal();
     },
 
     "beginUAAReport" : un=> { // Report to UAA
@@ -749,7 +825,7 @@ rw.ui = {
             let target = m.split('`')[2]; // target username
             console.log("reporting "+ target + ": "+ reportContent);
             rw.visuals.toast.show("Reporting "+ target +"...", false, false, 2000); // show toast
-            // Submit the report. MUST REPLACE WITH REAL AIV WHEN DONE AND WITH SANDBOX IN DEV!    
+            // Submit the report. MUST REPLACE WITH REAL AIV WHEN DONE AND WITH SANDBOX IN DEV!
             let uaaPage = "Wikipedia:Usernames_for_administrator_attention"; // PRODUCTION: Wikipedia:Usernames_for_administrator_attention
 
             $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+uaaPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{

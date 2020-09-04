@@ -191,10 +191,10 @@ rwCDNManager.parseHTML = (html, arguments) => {
  * Gets a page from the CDN and stores it in cache.
  *
  * @param htmlName {string} The name of the HTML file to get from the backend.
- * @param arguments {undefined|any[]} The arguments to be used to fill up parts of the HTML file.
- * @param options {undefined|any} The options to be used in making the request.
+ * @param arguments {Record<string, any>} The arguments to be used to fill up parts of the HTML file.
+ * @param options {any} The options to be used in making the request.
  */
-rwCDNManager.fetchHTML = async (htmlName, arguments, options) => {
+rwCDNManager.fetchHTML = async (htmlName, arguments = {}, options = {}) => {
     let htmlPull;
     do {
         try {
@@ -220,7 +220,7 @@ rwCDNManager.fetchHTML = async (htmlName, arguments, options) => {
  * Gets a page from the cache. If the HTML is uncached, this will return undefined.
  *
  * @param htmlName {string} The name of the HTML file to get from the backend.
- * @param arguments {undefined|any[]} The arguments to be used to fill up parts of the HTML file.
+ * @param arguments {Record<string, any>} The arguments to be used to fill up parts of the HTML file.
  */
 rwCDNManager.getHTML = async (htmlName, arguments) => {
     let htmlPull = null;
@@ -229,7 +229,11 @@ rwCDNManager.getHTML = async (htmlName, arguments) => {
             htmlPull = (await rwCDNManager.database.get(
                 rwCDNManager.stores.html,
                 htmlName
-            )).content;
+            ));
+
+            if (htmlPull === undefined)
+                return rwCDNManager.fetchHTML(htmlName, arguments);
+            else htmlPull = htmlPull.content;
         } catch (e) {
             // TODO Create a fallback dialog here eventually.
             return "<h2 color=\"red\">An error occurred while trying to get the HTML for the page.</h2>"

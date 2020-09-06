@@ -212,7 +212,7 @@ rw.han = {
             });
 
             dialogEngine.create(mdlContainers.generateContainer(
-                rw.cdn.getHTML("hanUI", {
+                rw.static.getHTML("hanUI", {
                     messages: allMessages
                 }),
                 500,

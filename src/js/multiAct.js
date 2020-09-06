@@ -227,7 +227,7 @@ rw.multiAct = { // Multi action screen
             // Open screen - do not use dialogEngine as other dialogs use this - allow for overlay
             // Generate container
             let content = mdlContainers.generateContainer(
-                rw.cdn.getHTML("mutipleAction", {
+                rw.static.getHTML("mutipleAction", {
                     rwLogo: rw.logoHTML,
                     list: listHTML,
                     sharedIPAdvice: rw.sharedIPadvice()

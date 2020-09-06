@@ -126,17 +126,16 @@ user interface improvements, UAA reports, bug fixes and more.
                 // Possible icons locations: default (page icons area) or sidebar
                 let iconsLocation = rw.config.pgIconsLocation ? rw.config.pgIconsLocation : "default"; // If set in config, use config
                 if (/^User(_talk)?:/g.test(mw.config.get("wgRelevantPageName"))) {
-                    pageIconHTML += rw.cdn.getHTML("userpageIcons", {
+                    pageIconHTML += rw.static.getHTML("userpageIcons", {
                         spacing: (iconsLocation == "sidebar" ? "" : "&nbsp;&nbsp;&nbsp;")
                     });
                 }
                 const editable = mw.config.get("wgIsProbablyEditable");
-                pageIconHTML += rw.cdn.getHTML("userpageIcons", {
+                pageIconHTML += rw.static.getHTML("pageIcons", {
                     spacing: (iconsLocation == "sidebar" ? "" : "&nbsp;&nbsp;&nbsp;"),
                     editableIconsStyle: editable ? "" : "display: none",
                     uneditableIconsStyle: editable ? "display: none" : "",
                 });
-                /* rw.cdn.getHTML("pageIcons", {uneditableIconsStyle}) */
                 pageIconHTML += "</div>"; // close contianer
                 if (iconsLocation == "default") {
                     try {
@@ -286,8 +285,8 @@ window.onmessage = e=>{
 // init everthing
 async function initRW() {
     // Load in CDN-related files
-    rw.cdn = rwCDNManager;
-    const cdnInit = await rwCDNManager.init();
+    rw.static = rwStaticHTMLManager;
+    const cdnInit = await rwStaticHTMLManager.init();
     if (!cdnInit) {
         mw.notify("RedWarn couldn't access the browser's storage (IndexedDB). This is required for caching dialogs and other UI components. If you are using a old browser, please upgrade to a better browser.");
     }

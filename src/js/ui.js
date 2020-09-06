@@ -258,7 +258,7 @@ rw.ui = {
         // CREATE DIALOG
         // MDL FULLY SUPPORTED HERE (container).
         dialogEngine.create(mdlContainers.generateContainer(
-            rw.cdn.getHTML("newMsg", {
+            rw.static.getHTML("newMsg", {
                 target: rw.info.targetUsername(un),
                 signature: rw.sign(),
                 buttonText: (buttonTxt == null ? "Send message" : buttonTxt)
@@ -540,7 +540,7 @@ rw.ui = {
 
         // Open preferences page with no padding, full screen
         dialogEngine.create(mdlContainers.generateContainer(
-            rw.cdn.getHTML("preferences", {
+            rw.static.getHTML("preferences", {
                 logo: rw.logoHTML,
                 rollbackIcons: rollbackIcons,
                 disabledRollbackIcons: disabledRollbackIcons,
@@ -612,7 +612,7 @@ rw.ui = {
 
         // See adminReport.html for code
         dialogEngine.create(mdlContainers.generateContainer(
-            rw.cdn.getHTML("adminReport", {
+            rw.static.getHTML("adminReport", {
                 targetUsername: rw.info.targetUsername(un).replace(/_/g, ' '),
                 signature: rw.sign()
             }),
@@ -634,7 +634,7 @@ rw.ui = {
             $("#rwUILoad").html(`
             <dialog class="mdl-dialog" id="rwUILoadDialog">
                 ` + mdlContainers.generateContainer(
-                    rw.cdn.getHTML("loadingSpinner", {text: text}),
+                    rw.static.getHTML("loadingSpinner", {text: text}),
                 300,
                 30) +`
             </dialog>
@@ -675,7 +675,7 @@ rw.ui = {
         addMessageHandler("sBtn", sBtnClick);
         addMessageHandler("pBtn", pBtnClick);
         dialogEngine.create(mdlContainers.generateContainer(
-            rw.cdn.getHTML("confirmDialog", {
+            rw.static.getHTML("confirmDialog", {
                 secondButton: sBtnTxt.length > 0 ? `<button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('sBtn', '*');">${sBtnTxt}</button>` : "",
                 content: content,
                 extraLines: (noExtraLines === true ? "" : "<br /><br />"),
@@ -802,7 +802,7 @@ rw.ui = {
 
         // Open the admin report selector dialog
         dialogEngine.create(mdlContainers.generateContainer(
-            rw.cdn.getHTML("adminReportSelector"),
+            rw.static.getHTML("adminReportSelector"),
             600,
             500
         )).showModal();

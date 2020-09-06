@@ -95,7 +95,7 @@ rw.PendingChangesReview = {
                             Enter an optional comment, then confirm your review by clicking 'Submit Review' or by pressing ENTER.`;
                             let autoAccept = rw.config.rwDisableReviewAutoAccept != "disable" ? "true" : "false";
                             dialogEngine.create(mdlContainers.generateContainer(
-                            rw.cdn.getHTML("pendingReviewReason", {
+                            rw.static.getHTML("pendingReviewReason", {
                                 reviewAction: reviewAction,
                                 reviewCaption: reviewCaption,
                                 autoAccept: autoAccept
@@ -189,7 +189,7 @@ rw.PendingChangesReview = {
                             `;
                             let autoAccept = rw.config.rwEnableReviewAutoRevert == "enable" ? "true" : "false";
                             dialogEngine.create(mdlContainers.generateContainer(
-                                rw.cdn.getHTML("pendingReviewReason", {
+                                rw.static.getHTML("pendingReviewReason", {
                                     reviewAction: reviewAction,
                                     reviewCaption: reviewCaption,
                                     autoAccept: autoAccept
@@ -257,7 +257,7 @@ rw.PendingChangesReview = {
                 `;
                 let autoAccept = rw.config.rwEnableReviewAutoRevert == "enable" ? "true" : "false";
                 dialogEngine.create(mdlContainers.generateContainer(
-                    rw.cdn.getHTML("pendingReviewReason", {
+                    rw.static.getHTML("pendingReviewReason", {
                         reviewAction: reviewAction,
                         reviewCaption: reviewCaption,
                         autoAccept: autoAccept

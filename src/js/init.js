@@ -44,11 +44,12 @@ if (rw != null) {
 }
 var rw = {
     // UPDATE THIS DATA FOR EVERY VERSION!
-    "version" : "15", // don't forget to change each version!
+    "version" : "15dev", // don't forget to change each version!
     "versionSummary": `
 <!-- RedWarn 15 -->
-RedWarn 15 unifies the anti-vandalism experience, including connectivity to the Huggle anti-vandalism network,
-user interface improvements, UAA reports, bug fixes and more.
+RedWarn 15 brings a striking new featureset to RedWarn,
+including connectivity to the Huggle anti-vandalism network, user interface improvements,
+a new redesigned RedWarn patrol, UAA reports, the new RedWarn dashboard and many more.
     `,
     // ADDED BY BUILD SCRIPT
     "buildInfo" : `[[[[BUILDINFO]]]]`,
@@ -414,9 +415,9 @@ async function initRW() {
                     </div>
                     <br>
                     `);
-    
+
                     $('.mw-revslider-container').attr("style", "border: 3px solid red;");
-    
+
                 },
 
                 "#rollbackFailNoRev" : ()=>rw.visuals.toast.show("Could not rollback as there were no recent revisions by other users. Use the history page to try and manually revert.", false, false, 15000)
@@ -430,7 +431,7 @@ async function initRW() {
                     break; // exit loop
                 }
             }
-        
+
             if ($("table.diff").length > 0) { // DETECT DIFF HERE - if diff table is present
                 // Diff page
                 rw.rollback.loadIcons(); // load rollback icons

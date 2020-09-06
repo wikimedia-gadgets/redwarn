@@ -484,6 +484,7 @@ var onSettingsLoad = {};
 
 
     var config = `/* rw-arg:config */`;
+    console.log(config);
     function saveConfig() {
         var data = $('form').serializeArray().reduce((obj, item) => {
                 obj[item.name] = item.value;
@@ -528,7 +529,8 @@ var onSettingsLoad = {};
     }
 
     function loadFromConfig() {
-        $.each(config, (key, value) => {
+        for (const key in config) {
+            const value = config[key];
             var ctrl = $('[name='+key+']');
             // Check for onsettings load
             if (onSettingsLoad[key]) onSettingsLoad[key](value); // Call handler if it exists
@@ -543,7 +545,7 @@ var onSettingsLoad = {};
                     default:
                         ctrl.val(value);
                 }
-        });
+        }
     }
 
     loadFromConfig();

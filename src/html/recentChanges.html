@@ -19,7 +19,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/materialicons.css">
 
-    <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/material.${rw.config.colTheme}.min.css" />
+    <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/material./* rw-arg:colTheme */.min.css" />
 </head>
 
 <body onload="main();">
@@ -65,7 +65,7 @@
                     <span class="specificboxes">
                         <select id="groups" class="dropdown-groups dropdown-sw" name="groups[]"></select><br><br> <!-- bad practice but im lazy-->
                         <select id="rctype" class="dropdown-rctype dropdown-sw" name="rctype[]" multiple="multiple"></select><br><br>
-                        <select id="rctag" class="dropdown-rctag dropdown-sw" name="rctag[]"></select>               
+                        <select id="rctag" class="dropdown-rctag dropdown-sw" name="rctag[]"></select>
                     </span>
 
                 </div>
@@ -79,7 +79,7 @@
         </dialog>
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
             <div class="mdl-layout__drawer" style="width:100%;-webkit-transform: translateX(0px); transform: translateX(0px);">
-            <span class="mdl-layout-title" style="font-size: 2em;">`+ rw.logoHTML +` Patrol</span>
+            <span class="mdl-layout-title" style="font-size: 2em;"><!-- rw-arg:logo --> Patrol</span>
             <div id="nav-btns" style="position: fixed; left: 300px; top: 15px;">
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" style="margin-right: 10px;" onclick="window.parent.postMessage('closeDialogPT');" href="">
                     Return to Wikipedia
@@ -91,7 +91,7 @@
             <div id="cornerbuttons" style="position: fixed; right: 35px; top: 15px; display: flex; justify-content: flex-end; flex-direction: row;">
                 <button class="mdl-button mdl-js-button mdl-button--icon" id="filterButton" style="margin-right: 7px;">
                 <i class="material-icons">settings</i>
-                </button>                
+                </button>
                 <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" id="live" for="liveswitch" style="margin-top: 3px;">
                     <input type="checkbox" id="liveswitch" class="mdl-switch__input" onclick="switchCheck()"/>
                     <span class="mdl-switch__label"><small>Toggle live</small></span>
@@ -166,24 +166,24 @@
     <script src="https://redwarn.toolforge.org/cdn/js/select2.js"></script> <!--For preferences-->
     <script>
         /*---------------------------------------------
-        |        Recent Changes (Redwarn Patrol)      |                                            
-        |        -------------------------------      |                                            
-        |        Below javascript handles the         |                                        
-        |        filtering and retrieval of           |                                    
-        |        the recent changes REST API          |                                        
-        |        query for Redwarn Patrol.            |                                    
-        |        -------------------------------      |                                            
-        |                                             |    
+        |        Recent Changes (Redwarn Patrol)      |
+        |        -------------------------------      |
+        |        Below javascript handles the         |
+        |        filtering and retrieval of           |
+        |        the recent changes REST API          |
+        |        query for Redwarn Patrol.            |
+        |        -------------------------------      |
+        |                                             |
         ---------------------------------------------*/
 
 
         // Defining constants
         const PARENTRW = window.parent.rw;
-        const WIKICWD = "https:" + "`+ rw.wikiBase +`";
-        const WIKIID = "`+ rw.wikiID +`";
-        const WIKIAPI = "` +rw.wikiAPI +`";
+        const WIKICWD = "https:" + "/* rw-arg:wikiBase */";
+        const WIKIID = "/* rw-arg:wikiID */";
+        const WIKIAPI = "/* rw-arg:wikiAPI */";
         const CORSENABLED = false; // We will force this to be disabled until CORS implementation is completed.
-        // This is like this so we can shadow it later on. It will be used to set filters in preferences which will 
+        // This is like this so we can shadow it later on. It will be used to set filters in preferences which will
         // have its values grabbed rather than directly from here.
         var FILTERS = PARENTRW.config.filters;
 
@@ -228,7 +228,7 @@
             $('.dropdown-groups').select2({
                 placeholder: "Filter by User Group",
                 multiple: false,
-                tags: true, 
+                tags: true,
                 data: rcgroups,
                 allowClear: true,
                 dropdownCssClass:'increasezindex',
@@ -245,7 +245,7 @@
                         "redirects": true,
                         "anonymous": true,
                         "rctop": true
-                    }, 
+                    },
                     "specifics": {
                         "rctype": ["Edit", "External", "New"],
                         "rctag": [],
@@ -265,7 +265,7 @@
                 $('#rctype').trigger('change');
                 $('#rctag').trigger('change');
                 document.getElementById("maxeditcount").value = FILTERS.specifics.maxedit;
-                
+
             } else { // normal scenario - set up select 2 then checkboxes in preferences so we can refer to them
                 $('#rctype').val(FILTERS.specifics.rctype);
                 $('#rctag').val(FILTERS.specifics.rctag);
@@ -278,11 +278,11 @@
         });
 
 
-        // Setting up / Controlling filter preferences 
+        // Setting up / Controlling filter preferences
         var filterButton = document.getElementById('filterButton');
         var filterDialog = document.getElementById('filterSubDialog');
 
-        if (!filterDialog.showModal) { // register as dialog if not registered 
+        if (!filterDialog.showModal) { // register as dialog if not registered
             dialogPolyfill.registerDialog(filterDialog);
         }
         filterButton.addEventListener('click', function () { // await click
@@ -311,7 +311,7 @@
                 parsedrctag.push(item.text);
             });
             parsedugroup.push(parsedugroupData[0].text);
-            
+
             let maxeditcount = $(".maxeditcount").prop("value");
             var specifics = {
                 "rctype": parsedrctype,
@@ -368,7 +368,7 @@
             }
             return userConfig;
         }
-        
+
 
         // Main funcs. \/ //
         var revisionFeed = {};
@@ -384,7 +384,7 @@
             // 5) Repeat ~3000ms later (or sooner for hover), should be configurable
 
         }
-        
+
         async function getFeed() { // It ONLY gets the feed and then pretty prints it into something more usable
             // fetch() from wikipedia API, with all info
             // remove specifics then send user ids and all associated revids to getUserInfo for further parsing and filtering
@@ -396,7 +396,7 @@
         }
 
         async function getWarningLevel(userIDlist) {
-            // fetch() from wikipedia api with the generated url to download talk pages, use func callback to do stuff to it 
+            // fetch() from wikipedia api with the generated url to download talk pages, use func callback to do stuff to it
             // when done, find the level and append it to the uid/add it to the userInfo json object
         }
 
@@ -415,7 +415,7 @@
         function refreshLive() { // MAIN FUNCTION. Will call all functions needed for getting and parsing recent changes.
             // INIT REF.
 
-            // filters 
+            // filters
             let rctypeurl= "&rctype="
             console.log(FILTERS)
             FILTERS.specifics.rctype.forEach(arr => {
@@ -443,12 +443,12 @@
             fetchRecentChanges(filterlist, call => { // send filterlist to parserecentchanges to filter out stuff then use callback func. to handle parsing etc...
                 let container = document.getElementById('recentChangesContainer');
                 container.innerHTML = ""
-                let ids = []; 
+                let ids = [];
                 let allRevs = []; // didnt realise till towards the end that using userid as your identifying id is a bad idea.
                 let allIDS = []; // Maintain relationship between our anon- and the username (which will be the IP adress of the person)
                 let allUSERS_only = []; // for lastwarninglvl
                 let allANON = [];
-                
+
                 let unanonLIST = []; // for calling stuff that needs NONANONYMOUS USERS
                 for(let [key, value] of Object.entries(call)) {
                     unanonLIST.push(value.userid);
@@ -475,7 +475,7 @@
                     allRevs.push(ptLogRevTMP);
                 }
 
-                
+
                 allRevs.forEach(arr => { // arr[0] is rev name arr[2] is userid of the editor, makes divs for stuff
                     let iter = arr.uname;
                     let userid = arr.uid;
@@ -517,7 +517,7 @@
                         if(parseInt(FILTERS.specifics.maxedit, 10) < parseInt($(".editcount-" + arr.uid).html(), 10) && parseInt(FILTERS.specifics.maxedit) != 0) { // filter out edits if value isnt 0 and is >max
                             $("." + arr.revid).css("display", "none");
                         }
-                            
+
                         if(arr.comment == "") {
                             arr.comment = "(No comment provided.)"
                         }
@@ -558,15 +558,15 @@
                                 }
 
                             }
-                            let back = (sizeDiff < 0) ? "rgba(` + rmCol + `," + opacityLevel + ")" : "rgba(` + addCol + `,"+ opacityLevel +")";
+                            let back = (sizeDiff < 0) ? "rgba(/* rw-arg:rmCol */," + opacityLevel + ")" : "rgba(/* rw-arg:addCol */,"+ opacityLevel +")";
                             let style = {
                                 "background-color": back,
                                 "color": "black"
                             }
-                            $("." + arr.revid).css(style) 
+                            $("." + arr.revid).css(style)
                         }
 
-                        
+
                         var tags = arr.tags;
                         let tagsToAppend = "";
                         tags.forEach(tag => {
@@ -597,7 +597,7 @@
                             } else if (value[1] === undefined) {
                                 warningLevelIcn == "thumb_up"; // is anonymous user/no warning level out given
                             }
-                            let uid; 
+                            let uid;
                             allIDS.forEach(userARR => {
                                 if(userARR[1] == name) {
                                     uid = userARR[0];
@@ -614,13 +614,13 @@
 
         function lastWarningLevel(users, callback) { // callback() - users param is an array!
         // users should be ARRAY
-            fetchMeWarningLevel(users, phoneafriend => { // returns feed for us to use, users is parsed within function 
+            fetchMeWarningLevel(users, phoneafriend => { // returns feed for us to use, users is parsed within function
                 var warnsOUT = [];
                 phoneafriend.query.pages.forEach(value => {
                     //...
                     let perUserWarns = [];
                     let username = (value.title).substring(10); // Put username in place so we can figure out what goes where
-                    perUserWarns.push(username); 
+                    perUserWarns.push(username);
                     if (!value.missing) {
                         content = value.revisions[0].slots.main.content; // load page content into var if talk page exists
                     } else {
@@ -634,7 +634,7 @@
                     let currentDateHeading = ((d)=>{return "== " + ['January','February','March','April','May','June','July','August','September','October','November','December'][d.getMonth()] + " " + (1900 + d.getYear()) + " =="})(new Date);
                     // date heading no space (rev13)
                     let currentAltDateHeading = ((d)=>{return "==" + ['January','February','March','April','May','June','July','August','September','October','November','December'][d.getMonth()] + " " + (1900 + d.getYear()) + "=="})(new Date);
-                    
+
                     let pagesIncludeCurrentDate = contentLines.includes(currentDateHeading);
                     let pagesIncludeCurrentAltDate = contentLines.includes(currentAltDateHeading);
 
@@ -684,7 +684,7 @@
                 return;
             })
         }
-        
+
         function getUserInfo(ids, callback) { // Wrapper for the interpretation of ids and fetching of the edit count for users. This is jank but I actually cba
             // ids should be an array of user ids - will return EDIT COUNT (API:Users) and WARNING LEVEL (Unoffical)
             fetchEditCount(ids, result => {
@@ -709,7 +709,7 @@
                 callback(infoOUT); // it is done.
             });
         }
-        
+
         // Main funcs. /\ //
 
 
@@ -744,13 +744,13 @@
 
         function fetchEditCount(ids, callback) {// Fix for async: the main thread will be held up until this is done.
 
-            // Note: we can probably lessen loading times for base stuff if we did this stuff in async rather than 
+            // Note: we can probably lessen loading times for base stuff if we did this stuff in async rather than
             // holding up the main thread but for now its whatever, warning levels take the longest and don't hold us from
             // inteferacing with anything actually important.
             let idurl = "";
-            ids.forEach(element => { 
+            ids.forEach(element => {
                 idurl += element + "|";
-            });            
+            });
             idurl = idurl.substring(0, idurl.length - 1); //remove last char (which will be an excess "|")
             $.getJSON(WIKICWD + "/w/api.php?action=query&list=users&ususerids="+ idurl + "&format=json&usprop=editcount|groups", feed => {
                 callback(feed)

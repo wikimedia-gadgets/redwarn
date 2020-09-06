@@ -224,8 +224,13 @@ a new redesigned RedWarn patrol, UAA reports, the new RedWarn dashboard and many
             let content = mdlContainers.generateContainer(
                 rw.static.getHTML("recentChanges", {
                     logo: rw.logoHTML,
-                    rmcol: rmCol,
-                    filters: filters
+                    colTheme: rw.config.colTheme,
+                    rmCol: rmCol,
+                    addCol: addCol,
+                    filters: filters,
+                    wikiBase: rw.wikiBase,
+                    wikiID: rw.wikiID,
+                    wikiAPI: rw.wikiAPI
                 })
             , window.innerWidth, window.innerHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
 

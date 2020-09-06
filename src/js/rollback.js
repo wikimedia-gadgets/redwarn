@@ -450,7 +450,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
                         "title" : mw.config.get("wgRelevantPageName"),
-                        "summary" : summary + ": " + reason + " [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
+                        "summary" : summary + ": " + reason + " [[WP:RW|(RWv"+ rw.version +")]]", // summary sign here
                         "undo": crID, // current
                         "undoafter": rID, // restore version
                         "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
@@ -495,7 +495,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                         "format": "json",
                         "token" : rw.info.rollbackToken,
                         "title" : mw.config.get("wgRelevantPageName"),
-                        "summary" : "Rollback edit(s) by [[Special:Contributions/"+ un +"|"+ un +"]] ([[User_talk:"+ un +"|talk]]): " + reason + " [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
+                        "summary" : "Rollback edit(s) by [[Special:Contributions/"+ un +"|"+ un +"]] ([[User_talk:"+ un +"|talk]]): " + reason + " [[WP:RW|(RWv"+ rw.version +")]]", // summary sign here
                         "user": un, // rollback user
                         "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
                     }).done(dt => {
@@ -575,7 +575,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
                         "title" : mw.config.get("wgRelevantPageName"),
-                        "summary" : summary + (reason != null ? ": " + reason : "") + " [[WP:REDWARN|(RedWarn "+ rw.version +")]]", // summary sign here
+                        "summary" : summary + (reason != null ? ": " + reason : "") + " [[WP:RW|(RWv"+ rw.version +")]]", // summary sign here
                         "undo": crID, // current
                         "undoafter": revID, // restore version
                         "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia

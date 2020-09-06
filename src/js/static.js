@@ -27,6 +27,7 @@ var rwStaticHTMLManager = {
         "quickTemplateNewPack": null,
         "quickTemplateSelectPack": null,
         "quickTemplateSelectTemplate": null,
+        "quickTemplateSelectTemplateEdit": null,
         "quickTemplateSubmit": null,
         "recentChanges": null,
         "recentPageSelect": null,

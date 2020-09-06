@@ -219,9 +219,13 @@ user interface improvements, UAA reports, bug fixes and more.
             if (rw.config.ptrRmCol) rmCol = rw.config.ptrRmCol;
             // basically multiact js but with stuff replaced
             mwBody.style.overflowY = "hidden";
-            let content = mdlContainers.generateContainer(` 
-            [[[[include recentChanges.html]]]]
-            `, window.innerWidth, window.innerHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
+            let content = mdlContainers.generateContainer(
+                rw.static.getHTML("recentChanges", {
+                    logo: rw.logoHTML,
+                    rmcol: rmCol,
+                    filters: filters
+                })
+            , window.innerWidth, window.innerHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
 
             // Init if needed
             if ($("#PTdialogContainer").length < 1) {
@@ -286,9 +290,17 @@ window.onmessage = e=>{
 async function initRW() {
     // Load in CDN-related files
     rw.static = rwStaticHTMLManager;
-    const cdnInit = await rwStaticHTMLManager.init();
+
+    let cdnInit;
+    try {
+        cdnInit = await rwStaticHTMLManager.init();
+    } catch (e) {
+        console.error(e);
+    }
+
     if (!cdnInit) {
         mw.notify("RedWarn couldn't access the browser's storage (IndexedDB). This is required for caching dialogs and other UI components. If you are using a old browser, please upgrade to a better browser.");
+        return; // Failed to load. Back out immediately.
     }
 
     rw.visuals.init(()=>{

@@ -5,21 +5,21 @@
         <script src="https://redwarn.toolforge.org/cdn/js/jQuery.js"></script>
         <link href="https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese" rel="stylesheet">
         <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/materialicons.css">
-        
+
         <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/material.blue-indigo.min.css" />
     </head>
     <body onload="refreshLive();"> <!-- Show a few edits on load -->
     <!-- No header, and the drawer stays open on larger screens (fixed drawer). -->
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer">
             <div class="mdl-layout__drawer" style="width:100%;-webkit-transform: translateX(0px); transform: translateX(0px);">
-            <span class="mdl-layout-title">${rw.logoHTML} Patrol</span>
+            <span class="mdl-layout-title"><!-- rw-arg:logo --> Patrol</span>
             <nav class="mdl-navigation">
                 <a class="mdl-navigation__link" href="#" onclick="window.parent.postMessage('rwRCPcloseDialog')">Return to Wikipedia / Change filter options</a>
                 <a class="mdl-navigation__link" href="#" id="newAttached" target="_blank">Open New Attached Tab</a>
                 <a class="mdl-navigation__link" href="#" style="background-color: teal;color:white;" onmouseover="tI = setInterval(refreshLive,  750);" onmouseout="clearTimeout(tI);">Hover your cursor here for live updates</a>
                 <div id="recentChangesContainer">
                 </div>
-                
+
             </nav>
             </div>
             <main class="mdl-layout__content">
@@ -35,7 +35,7 @@ const bc = new BroadcastChannel(bcID);
 $("#newAttached").attr("href", "https://en.wikipedia.org/wiki/User:Ed6767/redwarn/patrol#rwPatrolAttach-"+ bcID); // set link
 
 var tI;
-function convertRange( value, r1, r2 ) { 
+function convertRange( value, r1, r2 ) {
     return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
 }
 // Check for new updates every 750ms
@@ -65,9 +65,9 @@ function refreshLive() {
                         // Green map
                         opacityLevel = convertRange(sizeDiff, [0, 1000], [0.1, 0.75]);
                     }
-                    
+
                 }
-                let style = (sizeDiff < 0) ? "background-color: rgba(`+ rmCol +`,"+ opacityLevel +"); color:black;" : "background-color: rgba(`+ addCol +`,"+ opacityLevel +"); color:black;" // First neg style, next add style
+                let style = (sizeDiff < 0) ? "background-color: rgba(/* rw-arg:rmcol */,"+ opacityLevel +"); color:black;" : "background-color: rgba(`+ addCol +`,"+ opacityLevel +"); color:black;" // First neg style, next add style
                 $("#recentChangesContainer").prepend('<a class="mdl-navigation__link notif" href="#" style="display:none;'+ style +'" id="recentChange-'+ edit.revID +'"><i id="title-'+ edit.revID +'"></i><br><b>'+ edit.user +'</b> ('+ sizeDiff +')<br /><span id="comment-'+ edit.revID +'"></span><br>'+ edit.tags +'</a>');
                 $('#title-'+ edit.revID).text(edit.title); // XSS security
                 $('#comment-'+ edit.revID).text(edit.comment);
@@ -76,7 +76,7 @@ function refreshLive() {
                 // Append click handler
                 $('#recentChange-'+ edit.revID).on("click", ()=>goToLatestDiffPage(edit.title));
             }
-            
+
         });
     });
 }
@@ -96,7 +96,7 @@ function goToLatestDiffPage(article) {
 function parseRecentChanges(callback) {
     // USING HTML API for one reason
     // 1. works easily with Special:RecentChanges filters
-    $.get("https://en.wikipedia.org/wiki/Special:RecentChanges?`+ filters +`&action=render&enhanced=0", r=>{
+    $.get("https://en.wikipedia.org/wiki/Special:RecentChanges?/* rw-arg:filters */&action=render&enhanced=0", r=>{
         $("body").append("<div id='toDelete' style='display:none;'></div>"); // create temp div
         $("#toDelete").html(r);
         let _ = $("#toDelete").find("ul").find("li");

@@ -8,39 +8,39 @@
         display: none;
     }
 </style>
-<h2 style="font-weight: 200;font-size:45px;line-height: 48px;">`+selectedPack.name+`</h2>
-<h5>`+selectedTemplate.title+`</h5>
-<i>`+ selectedTemplate.about +`</i>
+<h2 style="font-weight: 200;font-size:45px;line-height: 48px;"><!-- rw-arg:packName --></h2>
+<h5><!-- rw-arg:packTitle --></h5>
+<i><!-- rw-arg:packAbout --></i>
 <div style="height: 340px;overflow:auto;">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
-        <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="`+ rw.info.targetUsername(un) +`" readonly>
+        <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="/* rw-arg:targetUsername */" readonly>
         <label class="mdl-textfield__label" for="trgtUsrVisualBox">Target</label>
         <div class="mdl-tooltip" for="trgtUsrVisualBox">
             To target a different user, please visit their userpage.
         </div>
     </div>
     <!-- Custom inputs here -->
-    ${finalAdditionalInputs}
+    <!-- rw-arg:finalAdditionalInputs -->
 
     <!-- Finally, preview -->
     <span id="previewContainer">
         <!-- EDIT BUTTON -->
-    
+
         <span id="editBtn" class="material-icons" style="font-size: 16px;padding-bottom: 3px;float: right;padding-right: 5px;cursor: pointer;" onclick="$('#previewContainer').hide();$('#editorContainer').show();">
             create
         </span>
-    
+
         <div id="preview" style="height: 220px; overflow-y: auto; width:100%;"> <!-- do not use max-height as this moves the buttons and makes it hard for muscle memory-->
-            
+
         </div> <!-- Used to show preview-->
     </span>
-    
+
     <span id="editorContainer" style="display:none;">
         <span id="previewBtn" class="material-icons" style="font-size: 16px;padding-bottom: 3px;float: right;padding-right: 5px;cursor: pointer;" onclick="$('#previewContainer').show();$('#editorContainer').hide();grabPreview();">
             visibility
         </span>
         <div id="editor">
-            <textarea id="wikiTxt" name="wikiTxt" style="height: 220px; max-height: 220px; overflow-y: auto; width:100%;">`+ contentStr +`</textarea>
+            <textarea id="wikiTxt" name="wikiTxt" style="height: 220px; max-height: 220px; overflow-y: auto; width:100%;"><!-- rw-arg:contentStr --></textarea>
         </div> <!-- Used to edit Wikitext -->
     </span>
     </form>
@@ -79,14 +79,14 @@
 
     // Once loaded call load preview
     grabPreview();
-    
+
     // Generate preview on change
     var previewTO;
     function refreshPreview() {
         clearTimeout(previewTO); // cancel TO
-        let originalText = atob("`+ btoa(selectedTemplate.content) +`");
+        let originalText = atob("/* rw-arg:originalText */");
         // Now replace for each input
-        
+
         $(".rwCustomTextInput").each((i, el)=>{
             console.log(originalText);
             console.log(atob($(el).attr("id")));
@@ -96,12 +96,12 @@
         // Now set the text input
         $("#wikiTxt").val(originalText);
 
-        
+
         grabPreview(); // now load preview
 
     }
 
     // Add event handler for inputboxes
     $(".rwCustomTextInput").change(()=>refreshPreview());
-    
+
 </script>

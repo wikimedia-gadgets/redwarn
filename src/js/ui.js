@@ -217,9 +217,30 @@ rw.ui = {
 
             // CREATE DIALOG
             // MDL FULLY SUPPORTED HERE (container).
-            dialogEngine.create(mdlContainers.generateContainer(`
-            [[[[include warnUserDialog.html]]]]
-            `, 500, 630)).showModal(); // 500x630 dialog, see warnUserDialog.html for code
+            dialogEngine.create(mdlContainers.generateContainer(
+                rw.static.getHTML("warnUserDialog", {
+                    target: rw.info.targetUsername(un),
+                    hideUserInfo: hideUserInfo ? "" : "</span>",
+                    hideUserInfoInverse: hideUserInfo ? "</span>" : "",
+                    lastWarning: lastWarning,
+                    noticeListByTemplateName: (rw.config.rwNoticeListByTemplateName != "enable") ? `Reason` : `Template`,
+                    finalListBox: finalListBox,
+                    level1Checked: (!autoLevelSelectEnable || (w == 0) ? `checked` : ``),
+                    level2Checked: (!autoLevelSelectEnable || (w == 1) ? `checked` : ``),
+                    level3Checked: (!autoLevelSelectEnable || (w == 2) ? `checked` : ``),
+                    level4Checked: (!autoLevelSelectEnable || (w == 3) ? `checked` : ``),
+                    relatedPage: rw.info.getRelatedPage(pg).replace(/_/g, ' '),
+                    callback: (customCallback ? customCallback : `SEND NOTICE`),
+                    usrPgMonth:usrPgMonth ,
+                    usrPg: userPg,
+                    signature: rw.sign(),
+                    userIsIp: (rw.info.isUserAnon(rw.info.targetUsername(un)) ? "true" : "false"),
+                    sharedIpAdvice: rw.sharedIPadvice(),
+                    rules: JSON.stringify(rules),
+                    autoSelect: (autoLevelSelectEnable) && (autoSelectReasonIndex != null),
+                    autoSelectReasonIndex: autoSelectReasonIndex
+                })
+            , 500, 630)).showModal(); // 500x630 dialog, see warnUserDialog.html for code
         });
 
     }, // end beginWarn
@@ -437,9 +458,12 @@ rw.ui = {
         }
         // CREATE DIALOG
         // MDL FULLY SUPPORTED HERE (container).
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include speedyDeletionp1.html]]]]
-        `, 500, 450)).showModal(); // 500x300 dialog, see speedyDeletionp1.html for code
+        dialogEngine.create(mdlContainers.generateContainer(
+            rw.static.getHTML("speedyDeletionp1", {
+                finalStr: finalStr,
+                speedyDeleteReasons: speedyDeleteReasons
+            })
+        , 500, 450)).showModal(); // 500x300 dialog, see speedyDeletionp1.html for code
     },
 
     "openPreferences" : () => { // Open Preferences page
@@ -544,7 +568,10 @@ rw.ui = {
                 logo: rw.logoHTML,
                 rollbackIcons: rollbackIcons,
                 disabledRollbackIcons: disabledRollbackIcons,
-                config: JSON.stringify(rw.config)
+                config: JSON.stringify(rw.config),
+                version: rw.version,
+                versionSummary: rw.versionSummary,
+                buildInfo: rw.buildInfo
             })
         , window.innerWidth, window.innerHeight, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
     },
@@ -715,9 +742,12 @@ rw.ui = {
 
         // CREATE DIALOG
         // MDL FULLY SUPPORTED HERE (container).
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include sendFeedback.html]]]]
-        `, 500, 390)).showModal(); // 500x390 dialog, see sendFeedback.html for code
+        dialogEngine.create(mdlContainers.generateContainer(
+            rw.static.getHTML("sendFeedback", {
+                prefill: `=== Your Subject ===\nYour message here. ${rw.sign()}${extraInfo == null ? "" : extraInfo}`,
+                signature: rw.sign()
+            })
+        , 500, 390)).showModal(); // 500x390 dialog, see sendFeedback.html for code
     },
 
     "recentlyVisitedSelector" : { // Used to select recently visited page from a dropdown dialog
@@ -777,9 +807,11 @@ rw.ui = {
             });
 
             // Now show dialog
-            rw.ui.recentlyVisitedSelector.init(mdlContainers.generateContainer(`
-            [[[[include recentPageSelect.html]]]]
-            `, 420, 500)); // 420 hahahaha
+            rw.ui.recentlyVisitedSelector.init(mdlContainers.generateContainer(
+                rw.static.getHTML("recentPageSelect", {
+                    finalRVList: finalRVList
+                })
+            , 420, 500)); // 420 hahahaha
             rw.ui.recentlyVisitedSelector.dialog.showModal();
         },
 
@@ -874,8 +906,11 @@ rw.ui = {
 
 
         // See uaaReport.html for code
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include uaaReport.html]]]]
-        `, 500, 410)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(
+            rw.static.getHTML("uaaReport", {
+                target: rw.info.targetUsername(un).replace(/_/g, " "),
+                signature: rw.sign()
+            })
+        , 500, 410)).showModal();
     }
 }

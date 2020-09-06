@@ -187,6 +187,7 @@ user interface improvements, UAA reports, bug fixes and more.
                     `);
                 }
             } catch (error) {
+                console.error(error);
                 // Likely invalid theme, not all themes can use default
                 mw.notify("RedWarn isn't compatible with this theme.");
                 return; // Exit

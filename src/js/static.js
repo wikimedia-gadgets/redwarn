@@ -37,6 +37,7 @@ var rwStaticHTMLManager = {
         "sendFeedback": null,
         "speedyDeletionp1": null,
         "uaaReport": null,
+        "userpageIcons": null,
         "warnUserDialog": null
     }
 };
@@ -111,7 +112,6 @@ rwStaticHTMLManager.init = async (recurse = 0) => {
 
                 /** @param event {{target: IDBRequest }} **/
                 store.get(key).onsuccess = (event) => {
-                    console.dir(event.target);
                     resolve(event.target.result);
                 };
             });
@@ -135,7 +135,6 @@ rwStaticHTMLManager.init = async (recurse = 0) => {
 
                 /** @param event {{target: IDBRequest }} **/
                 store.getAll().onsuccess = (event) => {
-                    console.dir(event.target);
                     resolve(event.target.result);
                 };
             });
@@ -238,7 +237,7 @@ rwStaticHTMLManager.parseHTML = (html, arguments) => {
     let newHTML = html;
     for (var [i, v] of Object.entries(arguments)) {
         newHTML = newHTML.replace(
-            new RegExp(`(<!--|/\\*) rw-arg:${i} (-->|\\*/)`, "g"),
+            new RegExp(`(<!--|/\\*{1,2}) rw-arg:${i} (-->|\\*{1,2}/)`, "g"),
             v
         );
     }
@@ -333,5 +332,6 @@ rwStaticHTMLManager.getAllHTML = async() => {
  * @param arguments {Record<string, any>} The arguments to be used to fill up parts of the HTML file.
  */
 rwStaticHTMLManager.getHTML = (htmlName, arguments = {}) => {
+    console.log("grabbing " + htmlName);
     return rwStaticHTMLManager.parseHTML(rwStaticHTMLManager.html[htmlName], arguments);
 }

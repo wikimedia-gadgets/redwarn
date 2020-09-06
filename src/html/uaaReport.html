@@ -44,7 +44,7 @@
 </span>
 
 <script>
-    function pushToast(text) {window.parent.postMessage('pushToast\\\`' + text);} // Push toast to host
+    function pushToast(text) {window.parent.postMessage('pushToast`' + text);} // Push toast to host
 
     function sendReport() {
         // Submit report
@@ -66,7 +66,7 @@
         }
         fullReason += " /* rw-arg:signature */"; // Add sig to the end (w space)
         // Push this upstairs
-        window.parent.postMessage('UAA\\\`'+ fullReason + '\\\`' + data.target, '*'); // Report with full reason
+        window.parent.postMessage('UAA`'+ fullReason + '`' + data.target, '*'); // Report with full reason
         window.parent.postMessage('closeDialog', '*'); // Close. We will be reopened on error.
     }
 </script>

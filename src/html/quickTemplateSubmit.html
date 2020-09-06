@@ -63,17 +63,17 @@
         }
     };
 
-    function pushToast(text) {window.parent.postMessage('pushToast\\\`' + text);} // Push toast to host
+    function pushToast(text) {window.parent.postMessage('pushToast`' + text);} // Push toast to host
 
     function grabPreview() {
         let wikiTxt = document.getElementById("wikiTxt").value;
-        window.parent.postMessage('generatePreview\\\`'+ wikiTxt, '*');
+        window.parent.postMessage('generatePreview`'+ wikiTxt, '*');
     }
 
     // Used to handle submit
     function handleSubmit() {
         let wikiTxt = document.getElementById("wikiTxt").value;
-        window.parent.postMessage('qtDone\\\`' + btoa(wikiTxt)); // Push upstairs and commit
+        window.parent.postMessage('qtDone`' + btoa(wikiTxt)); // Push upstairs and commit
         window.parent.postMessage("closeDialog"); // We done here. Top will refresh or reshow if error occurs.
     }
 

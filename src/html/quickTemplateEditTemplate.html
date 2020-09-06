@@ -34,16 +34,16 @@
 <script>
     // Add handlers
     $("#exitBtn").click(()=>{
-        window.parent.postMessage('qTClose\`'+ btoa($("#title").val()) + "\`" + btoa($("#about").val()) + "\`" + btoa($("#content").val()), '*');
+        window.parent.postMessage('qTClose`'+ btoa($("#title").val()) + "`" + btoa($("#about").val()) + "`" + btoa($("#content").val()), '*');
     });
 
     $("#testBtn").click(()=>{
         // Test changes
-        window.parent.postMessage('qTTest\`'+ btoa($("#title").val()) + "\`" + btoa($("#about").val()) + "\`" + btoa($("#content").val()), '*');
+        window.parent.postMessage('qTTest`'+ btoa($("#title").val()) + "`" + btoa($("#about").val()) + "`" + btoa($("#content").val()), '*');
     });
 
     $("#saveBtn").click(()=>{
         // Save changes here
-        window.parent.postMessage('qTSave\`'+ btoa($("#title").val()) + "\`" + btoa($("#about").val()) + "\`" + btoa($("#content").val()), '*');
+        window.parent.postMessage('qTSave`'+ btoa($("#title").val()) + "`" + btoa($("#about").val()) + "`" + btoa($("#content").val()), '*');
     });
 </script>

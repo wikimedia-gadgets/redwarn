@@ -14,7 +14,7 @@
 </span>
 
 <script>
-    function pushToast(text) {window.parent.postMessage('pushToast\\\`' + text);} // Push toast to host
+    function pushToast(text) {window.parent.postMessage('pushToast`' + text);} // Push toast to host
 
     function createPack() {
         // Submit pack
@@ -25,7 +25,7 @@
             return; // stop
         }
         // Now we can send to top
-        window.parent.postMessage('qTcreateNew\`'+ packName, '*');
+        window.parent.postMessage('qTcreateNew`'+ packName, '*');
         window.parent.postMessage('closeDialog', '*'); // close, we're done
     }
 </script>

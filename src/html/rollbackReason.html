@@ -26,7 +26,7 @@
 
         let reason = data.rollbackReason;
         // Submit it
-        window.parent.postMessage('reason\\\`' + reason); // Push upstairs
+        window.parent.postMessage('reason`' + reason); // Push upstairs
         window.parent.postMessage("closeDialog"); // We done here.
         return false; // prevent redirect
     }

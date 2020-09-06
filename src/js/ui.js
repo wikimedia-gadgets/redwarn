@@ -236,7 +236,7 @@ rw.ui = {
                     signature: rw.sign(),
                     userIsIp: (rw.info.isUserAnon(rw.info.targetUsername(un)) ? "true" : "false"),
                     sharedIpAdvice: rw.sharedIPadvice(),
-                    rules: JSON.stringify(rules),
+                    rules: JSON.stringify(rw.rules),
                     autoSelect: (autoLevelSelectEnable) && (autoSelectReasonIndex != null),
                     autoSelectReasonIndex: autoSelectReasonIndex
                 })
@@ -453,7 +453,7 @@ rw.ui = {
                     // Too long to fit
                     style="font-size:10px;";
                 }
-                finalStr += `<li class="mdl-menu__item" data-val='speedyDeleteReasons["`+ key + `"][`+ i +`]' onmousedown="refreshLevels('speedyDeleteReasons[\\\'`+ key + `\\\'][`+ i +`]');" style="`+ style +`">`+ key + e.title +`</li>`;;
+                finalStr += `<li class="mdl-menu__item" data-val='speedyDeleteReasons["`+ key + `"][`+ i +`]' onmousedown="refreshLevels('speedyDeleteReasons[\\\'`+ key + `\\\'][`+ i +`]');" style="`+ style +`">`+ key + e.title +`</li>`;
             });
         }
         // CREATE DIALOG

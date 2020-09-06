@@ -65,7 +65,7 @@
     <span id="warningRadioButtons">
     <!-- LEVEL 1 -->
     <label id="l1Lbl" class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="level1" style="padding-right: 10;">
-        <input type="radio" id="level1" class="mdl-radio__button" name="warnLevel" value="1" <!-- rw-arg: level1Checked -->> <!-- Check if no notices recieved or if autolevel select is off -->
+        <input type="radio" id="level1" class="mdl-radio__button" name="warnLevel" value="1" <!-- rw-arg:level1Checked -->> <!-- Check if no notices recieved or if autolevel select is off -->
         <span class="mdl-radio__label">
         <span class="material-icons">info</span>
         </span>
@@ -79,7 +79,7 @@
 
     <!-- Level 2 -->
     <label id="l2Lbl" class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="level2" style="padding-right: 10;">
-        <input type="radio" id="level2" class="mdl-radio__button" name="warnLevel" value="2" <!-- rw-arg: level2Checked -->><!-- Check if level one -->
+        <input type="radio" id="level2" class="mdl-radio__button" name="warnLevel" value="2" <!-- rw-arg:level2Checked -->><!-- Check if level one -->
         <span class="mdl-radio__label">
             <span class="material-icons">announcement</span>
         </span>
@@ -93,7 +93,7 @@
 
     <!-- Level 3 -->
     <label id="l3Lbl" class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="level3" style="padding-right: 10;">
-        <input type="radio" id="level3" class="mdl-radio__button" name="warnLevel" value="3" <!-- rw-arg: level3Checked -->>
+        <input type="radio" id="level3" class="mdl-radio__button" name="warnLevel" value="3" <!-- rw-arg:level3Checked -->>
         <span class="mdl-radio__label"><span class="material-icons">report_problem</span></span>
     </label>
     <div class="mdl-tooltip mdl-tooltip--large" for="l3Lbl">
@@ -106,7 +106,7 @@
 
     <!-- Level 4 -->
     <label id="l4Lbl" class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="level4" style="padding-right: 10;">
-        <input type="radio" id="level4" class="mdl-radio__button" name="warnLevel" value="4" <!-- rw-arg: level4Checked -->>
+        <input type="radio" id="level4" class="mdl-radio__button" name="warnLevel" value="4" <!-- rw-arg:level4Checked -->>
         <span class="mdl-radio__label"><span class="material-icons">report</span></span>
     </label>
     <div class="mdl-tooltip mdl-tooltip--large" for="l4Lbl">
@@ -290,7 +290,7 @@
         // Generate preview if needed (i.e. loading pre still there)
         if ($("#uMloadingPre").length > 0) {
             let wikiTxt = $("#uMloadingPre").text();
-            window.parent.postMessage('generatePreview\\\`'+ wikiTxt, '*');
+            window.parent.postMessage('generatePreview`'+ wikiTxt, '*');
         }
     }
 
@@ -301,7 +301,7 @@
         // Generate preview if needed (i.e. loading pre still there)
         if ($("#uloadingPre").length > 0) {
             let wikiTxt = $("#uloadingPre").text();
-            window.parent.postMessage('generatePreview\\\`'+ wikiTxt, '*');
+            window.parent.postMessage('generatePreview`'+ wikiTxt, '*');
         }
     }
 
@@ -373,7 +373,7 @@
                 // Not signed, warn
                 pushToast("Don't forget to sign your notice!");
             }
-            window.parent.postMessage('generatePreview\\\`'+ wikiTxt, '*');
+            window.parent.postMessage('generatePreview`'+ wikiTxt, '*');
         } else {
             if ($('#editorContainer:visible').length > 0) {
                 // Editor is open, we don't want to overwrite by accident.
@@ -388,12 +388,12 @@
                 wikiTxt += "/* rw-arg:sharedIpAdvice */";
             }
             document.getElementById("wikiTxt").value = wikiTxt; // set edit box
-            window.parent.postMessage('generatePreview\\\`'+ wikiTxt, '*');
+            window.parent.postMessage('generatePreview`'+ wikiTxt, '*');
             });
         }
     }
 
-    var rules = `/* rw-arg:rules */`; // get rules from host
+    var rules = JSON.parse(`/* rw-arg:rules */`); // get rules from host
     var refreshLevels = i=> {
        if (rules[i].warningLevels.includes(0)) {
            // Single notice
@@ -473,7 +473,7 @@
         }
     }
 
-    function pushToast(text) {window.parent.postMessage('pushToast\\\`' + text);} // Push toast to host
+    function pushToast(text) {window.parent.postMessage('pushToast`' + text);} // Push toast to host
 
     var getTemplateName = callback=> { // CALLBACK IS ONLY CALLED IF SUCCESSFUL
         let currentTemplate = "";
@@ -529,7 +529,7 @@
                 return; // Do not continue
             }
             // Format: applyNotice,target,wikitxt,warnlevel|rulename
-            window.parent.postMessage(('applyNotice\\\`' + document.getElementById("trgtUsrVisualBox").value + '\\\`' + wikiTxt + '\\\`' + rules[data.template].name + '\\\`' + r)); // Push upstairs and commit
+            window.parent.postMessage('applyNotice`' + document.getElementById("trgtUsrVisualBox").value + '`' + wikiTxt + '`' + rules[data.template].name + '`' + r); // Push upstairs and commit
             window.parent.postMessage("closeDialog"); // We done here. Top will refresh or reshow if error occurs.
         });
     }
@@ -566,7 +566,7 @@
         setTimeout(()=>{
             $("#reasonsBox > input:visible").click();
             setTimeout(()=>{
-                $("li.mdl-menu__item[data-val='/* rw-arg: autoSelectReasonIndex */']").click();
+                $("li.mdl-menu__item[data-val='/* rw-arg:autoSelectReasonIndex */']").click();
             },250);
         }, 250);
 </script>

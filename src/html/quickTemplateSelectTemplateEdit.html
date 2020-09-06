@@ -49,10 +49,10 @@
             if ($( "input:checked" ).val() == "NEW") {
                 // Create new (qTNew Title Description)
                 if ($( "#createNewTitle" ).val().length > 2) { // if long enough
-                    window.parent.postMessage('qTNew\`'+ $( "#createNewTitle" ).val() + '\`' + $( "#createNewAbout" ).val(), '*');
+                    window.parent.postMessage('qTNew`'+ $( "#createNewTitle" ).val() + '`' + $( "#createNewAbout" ).val(), '*');
                 }
             } else { // Else continue as normal (qTEdit in edit mode, qTNext normal)
-                window.parent.postMessage('qT/* rw-arg:wtf */\`'+ $( "input:checked" ).val(), '*');
+                window.parent.postMessage('qT/* rw-arg:wtf */`'+ $( "input:checked" ).val(), '*');
             }
         }
     }

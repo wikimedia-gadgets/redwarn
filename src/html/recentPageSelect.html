@@ -18,7 +18,7 @@
     function selectPage() {
         // Make sure something is checked and continue
         if ($("input:checked").val() != null) {
-            window.parent.postMessage('RecentPageDialogSel\`'+ $("input:checked").val(), '*'); // push selected index upstairs
+            window.parent.postMessage('RecentPageDialogSel`'+ $("input:checked").val(), '*'); // push selected index upstairs
             window.parent.postMessage('closeRecentPageDialog', '*'); // close, we done
         }
     }

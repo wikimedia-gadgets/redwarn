@@ -524,7 +524,7 @@ var onSettingsLoad = {};
         data.rwRollbackIcons = iconModifyArray;
         console.log(data);
         // Done! Submit
-        window.parent.postMessage("config\\\`"+ btoa(JSON.stringify(data))); // send to the big boss
+        window.parent.postMessage("config`"+ btoa(JSON.stringify(data))); // send to the big boss
     }
 
     function loadFromConfig() {

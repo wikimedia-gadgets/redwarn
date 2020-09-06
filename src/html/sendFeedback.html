@@ -51,7 +51,7 @@
         }
     };
 
-    function pushToast(text) {window.parent.postMessage('pushToast\\\`' + text);} // Push toast to host
+    function pushToast(text) {window.parent.postMessage('pushToast`' + text);} // Push toast to host
 
     function grabPreview() {
         var wikiTxt = document.getElementById("wikiTxt").value;
@@ -59,7 +59,7 @@
             // Not signed, warn
             pushToast("Don't forget to sign your message!");
         }
-        window.parent.postMessage('generatePreview\\\`'+ wikiTxt, '*');
+        window.parent.postMessage('generatePreview`'+ wikiTxt, '*');
     }
 
     function sendMessage() {
@@ -75,7 +75,7 @@
             pushToast("Sign your message with '/* rw-arg:signature */'");
             return; // Do not continue
         }
-        window.parent.postMessage('applyNotice\\\`' + document.getElementById("trgtUsrVisualBox").value + '\\\`' + wikiTxt + '\\\`' + "new topic"); // Push upstairs and commit
+        window.parent.postMessage('applyNotice`' + document.getElementById("trgtUsrVisualBox").value + '`' + wikiTxt + '`' + "new topic"); // Push upstairs and commit
         window.parent.postMessage("closeDialog"); // We done here. Top will refresh or reshow if error occurs.
     }
 </script>

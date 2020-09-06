@@ -220,10 +220,10 @@
   }
 
   // SET TEXT UNDER DATE HANDLER
-  addMessageHandler("applyToChecked\`*", cI=>{ // apply to checked b64 txt, underDate (Yes/No), source (i.e New Notice)
-    let textToAdd = atob(cI.split("\`")[1]);
-    let underDate = cI.split("\`")[2];
-    let source = cI.split("\`")[3];
+  addMessageHandler("applyToChecked`*", cI=>{ // apply to checked b64 txt, underDate (Yes/No), source (i.e New Notice)
+    let textToAdd = atob(cI.split("`")[1]);
+    let underDate = cI.split("`")[2];
+    let source = cI.split("`")[3];
     $("tbody > tr").each((i, el)=>{ // for each row
       if ($(el).find("td:visible > label > input:checkbox:checked").length > 0) { // if checked
         $($(el).find("td:visible")[5]).text(source); // 6th collumn (on click open preview)
@@ -254,7 +254,7 @@
     } // else continue
 
     // Show confirm dialog
-    window.parent.postMessage('RWMATcommitSelectedConfirm\`'+ $("tbody > tr > td:visible > label > input:checked").length); // push request for confirm to top
+    window.parent.postMessage('RWMATcommitSelectedConfirm`'+ $("tbody > tr > td:visible > label > input:checked").length); // push request for confirm to top
 
     // When confirmed
     addMessageHandler("confirmSelected", ()=>{
@@ -273,7 +273,7 @@
           }
 
           // Finally, push upstairs to be done.
-          window.parent.postMessage('RWMATToAdd\`'+ btoa(finalWikiTxt) + '\`'+ userAct.underDate + '\`'+ username);
+          window.parent.postMessage('RWMATToAdd`'+ btoa(finalWikiTxt) + '`'+ userAct.underDate + '`'+ username);
           // Done - Now remove original
           $(el).find("td:visible > label > input:checkbox").click(); // click to uncheck
           $(el).fadeOut(); // hide

@@ -73,7 +73,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
             callback({"edit": editProtection, "move": moveProtection}); // done, send callback
         });
     },
-    
+
     "open" : ()=>{ // Open page protection dialog for this page
         // Get current page protection level
         rw.pageProtect.getCurrentPageProtection(protection=>{
@@ -125,7 +125,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                 } else {
                     requestType = "downgrade";
                 }
-                
+
                 // Let's submit - show load dialog
                 rw.ui.loadDialog.show("Submitting request...");
 
@@ -133,7 +133,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
 
                 // generate heading to add under for upgrade or downgrade
                 let headingToInsertUnder = "== "+ (requestType == "upgrade" ? "Current requests for increase in protection level" : "Current requests for reduction in protection level") +" ==";
-                
+
                 // Assemble text to add per page template
                 let text = `=== [[:${mw.config.get("wgRelevantPageName").replace(/_/g, ' ')}]] ===
 * {{pagelinks|${mw.config.get("wgRelevantPageName").replace(/_/g, ' ')}}}
@@ -165,7 +165,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                     // Locate where the current section is and add ours
                     let locationOfLastLine = wikiTxtLines.indexOf(headingToInsertUnder) + 1; // in case of date heading w nothing under it
                     for (let i = wikiTxtLines.indexOf(headingToInsertUnder) + 1; i < wikiTxtLines.length; i++) {
-                        if (wikiTxtLines[i].startsWith("== ")) { 
+                        if (wikiTxtLines[i].startsWith("== ")) {
                             // New section
                             locationOfLastLine = i - 1; // the line above is therefore the last
                             console.log("exiting loop: " +wikiTxtLines[locationOfLastLine]);
@@ -176,7 +176,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                             break; // exit loop
                         }
                     }
-                    
+
                     if (locationOfLastLine == wikiTxtLines.length - 1) {
                         // To prevent to end notices squishing against eachother
                         // Same as without, but we just include the date string at bottom of page
@@ -197,7 +197,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                         "title" : rw.pageProtect.rfppPage,
                         "summary" : `Requesting protection change for [[${mw.config.get("wgRelevantPageName").replace(/_/g, ' ')}]] [[WP:REDWARN|(RedWarn ${rw.version})]]`, // summary sign here
                         "text": finalTxt,
-                        "tags" : (rw.wikiBase.includes("en.wikipedia.org") ? "RedWarn" : null) // Only add tags if on english wikipedia
+                        "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
                     }).done(dt => {
                         // We done. Check for errors, then callback appropriately
                         if (!dt.edit) {
@@ -208,20 +208,23 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                             // Reshow dialog
                             dialogEngine.dialog.showModal();
                         } else {
-                            // Success! 
+                            // Success!
                             rw.ui.loadDialog.close();
                             rw.visuals.toast.show("RFPP requested.");
                         }
                     });
-                    
-                    
+
+
                 });
             });
 
             // Open dialog
-            dialogEngine.create(mdlContainers.generateContainer(`
-            [[[[include requestPageProtect.html]]]]
-            `, 600, 630)).showModal();
+            dialogEngine.create(mdlContainers.generateContainer(
+                rw.static.getHTML("requestPageProtect", {
+                    title: protectionInfo.title,
+                    finLevelListStr: finLevelListStr
+                })
+            , 600, 630)).showModal();
         });
     }
 };

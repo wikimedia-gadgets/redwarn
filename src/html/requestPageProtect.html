@@ -4,7 +4,7 @@
 font-size: 32px;
 font-weight: 200;
 font-family: Roboto;
-">${protectionInfo.title}</span>
+"><!-- rw-arg:title --></span>
 <h4>Request a level</h4>
 <div style="display: flex; height:400px;">
     <!-- WRAPPER-->
@@ -12,7 +12,7 @@ font-family: Roboto;
     <!-- LEFT SIDE SELECT LEVEL -->
     <div style="flex: 0 0 45%;padding-right: 10px;">
         <span id="radioContainer">
-            ${finLevelListStr} <!-- Add fin level string for radiobuttons-->
+            <!-- rw-arg:finLevelListStr --> <!-- Add fin level string for radiobuttons-->
         </span>
     </div>
 
@@ -93,7 +93,7 @@ font-family: Roboto;
         }
     };
 
-    function pushToast(text) {window.parent.postMessage('pushToast\\\`' + text);} // Push toast to host
+    function pushToast(text) {window.parent.postMessage('pushToast`' + text);} // Push toast to host
 
     function submitRequest() {
         // Send our request back to the top, after making sure everything is ok
@@ -106,7 +106,7 @@ font-family: Roboto;
             if (!changeCoreReason) {pushToast("Please select a reason");return;} // if no core reason, toast and EXIT.
 
             // let's continue and push upstairs
-            window.parent.postMessage('submitRFPP\`' + requestLevel + '\`' + changeCoreReason + '\`' + changeExtraInfo + '\`' + requestDuration);
+            window.parent.postMessage('submitRFPP`' + requestLevel + '`' + changeCoreReason + '`' + changeExtraInfo + '`' + requestDuration);
 
             // We done here - let's close
             window.parent.postMessage('closeDialog', '*');

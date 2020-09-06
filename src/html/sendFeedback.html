@@ -20,7 +20,7 @@
     </span>
 
     <div id="preview" style="height: 150px; overflow-y: auto; width:100%;"> <!-- do not use max-height as this moves the buttons and makes it hard for muscle memory-->
-        
+
     </div> <!-- Used to show preview-->
 </span>
 
@@ -29,10 +29,7 @@
         visibility
     </span>
     <div id="editor">
-        <textarea id="wikiTxt" name="wikiTxt" style="height: 150px; max-height: 150px; overflow-y: auto; width:100%;">
-=== Your Subject ===
-Your message here. `+ rw.sign() +`
-`+(extraInfo != null ? extraInfo : "")+`</textarea>
+        <textarea id="wikiTxt" name="wikiTxt" style="height: 150px; max-height: 150px; overflow-y: auto; width:100%;"><!-- rw-arg:prefill --></textarea>
     </div> <!-- Used to edit Wikitext -->
 </span>
 </form>
@@ -54,15 +51,15 @@ Your message here. `+ rw.sign() +`
         }
     };
 
-    function pushToast(text) {window.parent.postMessage('pushToast\\\`' + text);} // Push toast to host
+    function pushToast(text) {window.parent.postMessage('pushToast`' + text);} // Push toast to host
 
     function grabPreview() {
         var wikiTxt = document.getElementById("wikiTxt").value;
-        if (!wikiTxt.includes("`+ rw.sign() +`")) {
+        if (!wikiTxt.includes("/* rw-arg:signature */")) {
             // Not signed, warn
             pushToast("Don't forget to sign your message!");
         }
-        window.parent.postMessage('generatePreview\\\`'+ wikiTxt, '*');
+        window.parent.postMessage('generatePreview`'+ wikiTxt, '*');
     }
 
     function sendMessage() {
@@ -73,12 +70,12 @@ Your message here. `+ rw.sign() +`
                 }, {}); // form data
 
         var wikiTxt = data.wikiTxt;
-        if (!wikiTxt.includes("`+ rw.sign() +`")) {
+        if (!wikiTxt.includes("/* rw-arg:signature */")) {
             // Not signed, warn
-            pushToast("Sign your message with '`+ rw.sign() +`'");
+            pushToast("Sign your message with '/* rw-arg:signature */'");
             return; // Do not continue
         }
-        window.parent.postMessage('applyNotice\\\`' + document.getElementById("trgtUsrVisualBox").value + '\\\`' + wikiTxt + '\\\`' + "new topic"); // Push upstairs and commit
+        window.parent.postMessage('applyNotice`' + document.getElementById("trgtUsrVisualBox").value + '`' + wikiTxt + '`' + "new topic"); // Push upstairs and commit
         window.parent.postMessage("closeDialog"); // We done here. Top will refresh or reshow if error occurs.
     }
 </script>

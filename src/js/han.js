@@ -5,6 +5,7 @@ rw.han = {
     "reconnectTries": 0,
     "messageLog" : [],
     "onlineUsers" : [],
+    "chatLog": [],
     "tokenLocalStorageID" : `RedWarnToolsHANgatewayToken-${rw.info.getUsername()}`, // the value where our connection token is stored in localStorage
 
     "oauthLogin" : ()=>{ // all the things needed to show login is required
@@ -15,9 +16,18 @@ rw.han = {
         rw.visuals.toast.show("Verify your account identity to access the Huggle anti-vandalism network.", "CONTINUE", ()=>{if (rw.han.authRequired) redirect("https://hangateway.toolforge.org/login", true);}, 15000);
     },
 
+    "saveChatLog" : ()=>{ // save chat log to local storage
+        localStorage.setItem("rwHANchatLog", JSON.stringify(rw.han.chatLog));
+    },
+
+    "readChatLog" : ()=>{  // Read and set chat log crom local storage
+        rw.han.chatLog = JSON.parse(localStorage.getItem("rwHANchatLog"));
+        if (rw.han.chatLog == null) rw.han.chatLog = [];
+    },
+
     "connect" : (callback)=>{ // connect
         console.log("Connecting to HAN...");
-        if (!rw.wikiBase.includes("en.wikipedia.org")) return; // no HAN on this wiki - enwiki only atm
+        if (!(rw.wikiID == "enwiki")) return; // no HAN on this wiki - enwiki only atm
         rw.han.socket = new WebSocket(`wss://hangateway.toolforge.org/gateway?user=${rw.info.getUsername()}`); // wss://hangateway.toolforge.org/gateway - dev ws://localhost:7676
 
         // Connection opened
@@ -47,12 +57,14 @@ rw.han = {
                 // Likely bad token
                 rw.han.oauthLogin();
             } else if (!rw.han.connected && event.data == "CONNECTED") { // on connected signal
+                // Set chat log from memory
+                rw.han.readChatLog();
                 if (rw.han.authRequired) {
                     // Show notice that it's connected
                     rw.ui.confirmDialog(`
                     Welcome back. Your account identity has been confirmed and you can now access the Huggle anti-vandalism network in this browser.
                     To see what other users are doing, and to discuss counter-vandalism efforts, click the chat icon in RedWarn's menu.
-                    `, "OKAY", ()=>dialogEngine.closeDialog() , "", ()=>{}, 47);
+                    `, "OKAY", ()=>dialogEngine.closeDialog() , "", ()=>{}, 57);
                 }
                 rw.han.authRequired = false;
                 console.log("Connected to HAN.");
@@ -71,28 +83,32 @@ rw.han = {
                 try {
                     let message = JSON.parse(event.data);
                     //console.log(message);
-                    if (message.type == "message") { 
-                        if (message.content.includes("\u0001\u0001")) { // u00001 - event start, so event message
-                            let data = message.content.replace("\u0001\u0001", "").split(" ");
-                            //console.log(data);
-                            if (data[0] == "WARN") { // Warn given
-                                console.log(decodeURIComponent(data[2]) + " given level " + data[1] + " warning by "+ message.from)
-                            } else if (data[0] == "ROLLBACK") { // Rollback event
-                                console.log(message.from + " reverted "+ data[1])
-                            }
-                        } else {
-                            // Normal message
-                            // Check if ping
-                            if (message.content.toLowerCase().includes("@"+ rw.info.getUsername().toLowerCase())) {
-                                // Is a ping
-                                console.log("ping!");
-                                // Play sound
-                                let src = 'https://redwarn.toolforge.org/cdn/audio/newPing.mp3';
-                                let audio = new Audio(src);
-                                audio.play();
-                            }
+                    if (message.type == "message") {
+                        // Save message in log with timestamp
+                        message.timestamp = Date.now();
+                        rw.han.chatLog.push(message);
+                        rw.han.saveChatLog();
+
+                        // Process
+
+                        // Normal message
+                        // Check if ping
+                        if (message.content.toLowerCase().includes(rw.info.getUsername().toLowerCase())) {
+                            // Is a ping
+                            console.log("ping!");
+                            // Play sound
+                            let src = 'https://redwarn.toolforge.org/cdn/audio/newPing.mp3';
+                            let audio = new Audio(src);
+                            audio.play();
+                            mw.notify("You have a new mention on HAN.");
                         }
-                        
+
+                        // Pass to UI
+                        dialogEngine.dialog.getElementsByTagName("iframe")[0].contentWindow.postMessage(
+                            rw.han.parseMessage(message)
+                            , '*');
+
+
                     } else if (message.type == "online") {
                         // User listing array - save
                         let newOnlineUsers = Object.keys(message.info);
@@ -130,7 +146,7 @@ rw.han = {
                     console.error(error);
                 }
             }
-            
+
         });
 
         rw.han.socket.onclose = ()=>{
@@ -184,6 +200,55 @@ rw.han = {
             rw.han.connect(); // reconnect
         } else {
             // Connected - show UI - todo
+            // Generate list
+            let allMessages = "";
+            rw.han.chatLog.forEach(message => {
+                // Process
+                allMessages += rw.han.parseMessage(message);
+            });
+
+            addMessageHandler("sendHANMsg`*", m=>{
+                rw.han.socket.send(m.split("`")[1]); // send message
+            });
+
+            dialogEngine.create(mdlContainers.generateContainer(
+                rw.static.getHTML("hanUI", {
+                    messages: allMessages
+                }),
+                500,
+                600
+            )).showModal();
+        }
+    },
+
+    "parseMessage" : message=>{
+        // Converts message to HTML
+        if (message.content.includes("\u0001\u0001")) { // u00001 - event start, so event message
+            let data = message.content.replace("\u0001\u0001", "").split(" ");
+            //console.log(data);
+            if (data[0] == "WARN") { // Warn given
+                return `
+                <a href="https://en.wikipedia.org/wiki/User:${message.from}" target="_blank"><b>${message.from}</b></a>
+                Gave a level ${data[1]} warning to <a href="https://en.wikipedia.org/wiki/User_talk:${decodeURIComponent(data[2])}" target="_blank">${decodeURIComponent(data[2])}</a>
+                <br/><span style="font-size:x-small;font-style:italic;">${new Date(message.timestamp).toUTCString()}</span>
+                <hr/>
+                `;
+            } else if (data[0] == "ROLLBACK") { // Rollback event
+                return `
+                <a href="https://en.wikipedia.org/wiki/User:${message.from}" target="_blank"><b>${message.from}</b></a>
+                Reverted <a href="https://en.wikipedia.org/w/index.php?diff=${data[1]}" target="_blank">${data[1]}</a>
+                <br/><span style="font-size:x-small;font-style:italic;">${new Date(message.timestamp).toUTCString()}</span>
+                <hr/>
+                `;
+            }
+        } else {
+            // Normal message
+            return `
+            <a href="https://en.wikipedia.org/wiki/User:${message.from}" target="_blank"><b>${message.from}</b></a>
+            ${message.content}
+            <br/><span style="font-size:x-small;font-style:italic;">${new Date(message.timestamp).toUTCString()}</span>
+            <hr/>
+            `;
         }
     }
 };

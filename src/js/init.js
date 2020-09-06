@@ -3,11 +3,11 @@
 // Window focus checking n things
 var windowFocused = true;
 
-window.onblur = function(){  
-    windowFocused = false;  
-}  
-window.onfocus = function(){  
-    windowFocused = true;  
+window.onblur = function(){
+    windowFocused = false;
+}
+window.onfocus = function(){
+    windowFocused = true;
 }
 
 // Array extention
@@ -44,7 +44,7 @@ if (rw != null) {
 }
 var rw = {
     // UPDATE THIS DATA FOR EVERY VERSION!
-    "version" : "16-dev", // don't forget to change each version!
+    "version" : "15dev", // don't forget to change each version!
     "versionSummary": `
 <!-- RedWarn 15 -->
 RedWarn 15 brings a striking new featureset to RedWarn,
@@ -110,7 +110,7 @@ a new redesigned RedWarn patrol, UAA reports, the new RedWarn dashboard and many
 
             // Show redwarn only spans
             $(".RedWarnOnlyVisuals").show();
-            
+
             // wait for load
             waitForMDLLoad(callback);
         },
@@ -126,7 +126,17 @@ a new redesigned RedWarn patrol, UAA reports, the new RedWarn dashboard and many
                 let pageIconHTML = "<div id='rwPGIconContainer' style='display:none;display: inline-block;'>"; // obj it is appended to
                 // Possible icons locations: default (page icons area) or sidebar
                 let iconsLocation = rw.config.pgIconsLocation ? rw.config.pgIconsLocation : "default"; // If set in config, use config
-                /* [[[[include pageIcons.html]]]] */
+                if (/^User(_talk)?:/g.test(mw.config.get("wgRelevantPageName"))) {
+                    pageIconHTML += rw.static.getHTML("userpageIcons", {
+                        spacing: (iconsLocation == "sidebar" ? "" : "&nbsp;&nbsp;&nbsp;")
+                    });
+                }
+                const editable = mw.config.get("wgIsProbablyEditable");
+                pageIconHTML += rw.static.getHTML("pageIcons", {
+                    spacing: (iconsLocation == "sidebar" ? "" : "&nbsp;&nbsp;&nbsp;"),
+                    editableIconsStyle: editable ? "" : "display: none",
+                    uneditableIconsStyle: editable ? "display: none" : "",
+                });
                 pageIconHTML += "</div>"; // close contianer
                 if (iconsLocation == "default") {
                     try {
@@ -178,21 +188,22 @@ a new redesigned RedWarn patrol, UAA reports, the new RedWarn dashboard and many
                     `);
                 }
             } catch (error) {
+                console.error(error);
                 // Likely invalid theme, not all themes can use default
                 mw.notify("RedWarn isn't compatible with this theme.");
                 return; // Exit
             }
-            
+
 
             // Now register all tooltips
-            for (let item of document.getElementsByClassName("mdl-tooltip")) rw.visuals.register(item); 
+            for (let item of document.getElementsByClassName("mdl-tooltip")) rw.visuals.register(item);
 
             // Now Register menu mdl-menu
-            for (let item of document.getElementsByClassName("mdl-menu")) rw.visuals.register(item); 
-            
+            for (let item of document.getElementsByClassName("mdl-menu")) rw.visuals.register(item);
+
             // Now fade in container
             $("#rwPGIconContainer").fadeIn();
-            
+
             // That's done :)
         }
     },
@@ -210,9 +221,18 @@ a new redesigned RedWarn patrol, UAA reports, the new RedWarn dashboard and many
             if (rw.config.ptrRmCol) rmCol = rw.config.ptrRmCol;
             // basically multiact js but with stuff replaced
             mwBody.style.overflowY = "hidden";
-            let content = mdlContainers.generateContainer(` 
-            [[[[include recentChanges.html]]]]
-            `, document.body.offsetWidth, document.body.offsetHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
+            let content = mdlContainers.generateContainer(
+                rw.static.getHTML("recentChanges", {
+                    logo: rw.logoHTML,
+                    colTheme: rw.config.colTheme,
+                    rmCol: rmCol,
+                    addCol: addCol,
+                    filters: filters,
+                    wikiBase: rw.wikiBase,
+                    wikiID: rw.wikiID,
+                    wikiAPI: rw.wikiAPI
+                })
+            , window.innerWidth, window.innerHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
 
             // Init if needed
             if ($("#PTdialogContainer").length < 1) {
@@ -227,7 +247,7 @@ a new redesigned RedWarn patrol, UAA reports, the new RedWarn dashboard and many
                     mwBody.style.overflowY = "auto";
                 }); // closing
             }
-            
+
             $("#PTdialogContainer").html(`
             <dialog class="mdl-dialog" id="rwPATROLdialog">
                 ${content}
@@ -243,9 +263,12 @@ a new redesigned RedWarn patrol, UAA reports, the new RedWarn dashboard and many
 
             // Resize on window change
             $(window).resize(()=>{
-                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("height",  document.body.offsetHeight);
-                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("width",  document.body.offsetWidth);
+                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("height",  window.innerHeight);
+                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("width",  window.innerWidth);
             });
+
+            // Add message handler for dialog close
+            addMessageHandler("rwRCPcloseDialog", ()=>rw.recentChanges.dialog.close());
 
             rw.recentChanges.dialog.showModal(); // Show dialog
         }
@@ -271,7 +294,22 @@ window.onmessage = e=>{
 };
 
 // init everthing
-function initRW() {
+async function initRW() {
+    // Load in CDN-related files
+    rw.static = rwStaticHTMLManager;
+
+    let cdnInit;
+    try {
+        cdnInit = await rwStaticHTMLManager.init();
+    } catch (e) {
+        console.error(e);
+    }
+
+    if (!cdnInit) {
+        mw.notify("RedWarn couldn't access the browser's storage (IndexedDB). This is required for caching dialogs and other UI components. If you are using a old browser, please upgrade to a better browser.");
+        return; // Failed to load. Back out immediately.
+    }
+
     rw.visuals.init(()=>{
         rw.visuals.toast.init();
         dialogEngine.init();
@@ -288,7 +326,7 @@ function initRW() {
             `;
             // Now register that
             for (let item of document.getElementsByClassName("mdl-tooltip")) {
-                rw.visuals.register(item); 
+                rw.visuals.register(item);
             }
             // A bit more of a clear error for someone who may not be paying immediate attention. Maybe we can use wikitext to send new user guide?
             mw.notify("You do not have permission to use Redwarn yet. Please refer to the user guide for more information (Error: User is NOT confirmed/autoconfirmed)", {title: "Error loading Redwarn", autoHide: "false", tag: "redwarn"});
@@ -310,7 +348,7 @@ function initRW() {
             // Check if updated
             if (rw.config.lastVersion != rw.version) {
                 // We've had an update
-                rw.config.lastVersion = rw.version; // update entry 
+                rw.config.lastVersion = rw.version; // update entry
                 rw.info.writeConfig(true, ()=> { // update the config file
                     // Show an update dialog
                     rw.ui.confirmDialog(`
@@ -324,7 +362,7 @@ function initRW() {
                     "LATER", ()=>{
                         dialogEngine.closeDialog();//this thing turns it off
                         rw.visuals.toast.show("You can read more later at RedWarn's page (WP:REDWARN)");//display a toast
-                        
+
                     },168);
                 });
             }
@@ -337,54 +375,68 @@ function initRW() {
                 $("#rwHANicon").hide();
             }
 
-            // TODO: probably fix this mess into a URL
-            // HERE REALLY REALLY NEEDS CLEANUP
-                // Check if a message is in URL (i.e edit complete ext)
-            if(window.location.hash.includes("#noticeApplied-")) {
-                // Show toast w undo edit capabilities
-                // #noticeApplied-currentEdit-pastEdit
-                rw.visuals.toast.show("Message saved", "UNDO", ()=>{
-                    // Just restore the version via rollback restore (this does a normal undo request)
-                    rw.rollback.restore(window.location.hash.split("-")[2], "Undo message addition (via toast)");
-                }, 7500);
-            } else if (window.location.hash.includes("#redirectLatestRevision")) { // When latest revision loaded
-                rw.visuals.toast.show("Redirected to the latest revision.", "BACK", ()=>window.history.back(), 4000); // When back clciked go back
-            } else if (window.location.hash.includes("#watchLatestRedirect")) {
-                // Redirected to latest by redirector, play sound
-                let src = 'https://redwarn.toolforge.org/cdn/audio/newEdit.mp3';
-                let audio = new Audio(src);
-                audio.play();
-                // enable watcher
-                rw.info.changeWatch.toggle();
-            } else if (window.location.hash.includes("#investigateFail")) {
-                rw.visuals.toast.show("Investigation Failed. This text has not been modified in the past 500 revisions or originated when the page was created.", false, false, 10000);
-            } else if (window.location.hash.includes("#investigateIncomp")) {
-                rw.visuals.toast.show("The selection could not be investigated.", false, false, 10000);
-            } else if (window.location.hash.includes("#configChange")) {
-                rw.visuals.toast.show("Preferences saved.");
-            } else if (window.location.hash.includes("#rwPendingAccept")) {
-                rw.visuals.toast.show("Changes accepted.");
-            } else if (window.location.hash.includes("#rwReviewUnaccept")) {
-                rw.visuals.toast.show("Changes unaccepted.");
-            } else if (window.location.hash.includes("#compLatest")) {
-                // Go to the latest revison
-                rw.info.isLatestRevision(mw.config.get("wgRelevantPageName"), 0, ()=>{}); // auto filters and redirects for us - 0 is an ID that will never be
-            } else if (window.location.hash.includes("#rollbackPreview")) {
-                // Rollback preview page
-                $('.mw-revslider-container').html(`
-                <div style="padding-left:10px;">
-                    <h2>This is a rollback preview</h2>
-                    To rollback, use the buttons on the left side below. Using the restore revision button <b>will not</b> warn the user and won't redirect you to the latest revision.
-                </div>
-                <br>
-                `);
+            // Manage hash in url
+            // If hash includes key, thsi will be called
+            let hashCallbacks = {
+                "#noticeApplied-" : ()=>{
+                    // Show toast w undo edit capabilities
+                    // #noticeApplied-currentEdit-pastEdit
+                    rw.visuals.toast.show("Message saved", "UNDO", ()=>{
+                        // Just restore the version via rollback restore (this does a normal undo request)
+                        rw.rollback.restore(window.location.hash.split("-")[2], "Undo message addition (via toast)");
+                    }, 7500);
+                },
 
-                $('.mw-revslider-container').attr("style", "border: 3px solid red;");
+                // When latest revision loaded
+                "#redirectLatestRevision" : ()=>rw.visuals.toast.show("Redirected to the latest revision.", "BACK", ()=>window.history.back(), 4000), // When back clciked go back
 
-            } else if (window.location.hash.includes("#rollbackFailNoRev")) {
-                rw.visuals.toast.show("Could not rollback as there were no recent revisions by other users. Use the history page to try and manually revert.", false, false, 15000);
+                "#watchLatestRedirect" : ()=>{
+                    // Redirected to latest by redirector, play sound
+                    let src = 'https://redwarn.toolforge.org/cdn/audio/newEdit.mp3';
+                    let audio = new Audio(src);
+                    audio.play();
+                    // enable watcher
+                    rw.info.changeWatch.toggle();
+                },
+
+                "#investigateFail" : ()=>rw.visuals.toast.show("Investigation Failed. This text has not been modified in the past 500 revisions or originated when the page was created.", false, false, 10000),
+
+                "#investigateIncomp" : ()=>rw.visuals.toast.show("The selection could not be investigated.", false, false, 10000),
+
+                "#configChange" : ()=>rw.visuals.toast.show("Preferences saved."),
+
+                "#rwPendingAccept": ()=>rw.visuals.toast.show("Changes accepted."),
+
+                "#rwReviewUnaccept": ()=>rw.visuals.toast.show("Changes unaccepted."),
+
+                "#compLatest" : ()=>rw.info.isLatestRevision(mw.config.get("wgRelevantPageName"), 0, ()=>{}), // go to the latest revision
+
+                "#rollbackPreview" : ()=> {
+                    // Rollback preview page
+                    $('.mw-revslider-container').html(`
+                    <div style="padding-left:10px;">
+                        <h2>This is a rollback preview</h2>
+                        To rollback, use the buttons on the left side below. Using the restore revision button <b>will not</b> warn the user and won't redirect you to the latest revision.
+                    </div>
+                    <br>
+                    `);
+
+                    $('.mw-revslider-container').attr("style", "border: 3px solid red;");
+
+                },
+
+                "#rollbackFailNoRev" : ()=>rw.visuals.toast.show("Could not rollback as there were no recent revisions by other users. Use the history page to try and manually revert.", false, false, 15000)
+            };
+
+            // Check hashes and do callback
+
+            for (const hash in hashCallbacks) { // for each hash
+                if (hashCallbacks.hasOwnProperty(hash) && window.location.hash.includes(hash)) { // if in URL
+                    hashCallbacks[hash](); // callback
+                    break; // exit loop
+                }
             }
-            
+
             if ($("table.diff").length > 0) { // DETECT DIFF HERE - if diff table is present
                 // Diff page
                 rw.rollback.loadIcons(); // load rollback icons
@@ -407,9 +459,9 @@ function initRW() {
                 </div>
                 `); // Register tooltip
                 for (let item of document.getElementsByClassName("mdl-tooltip")) {
-                    rw.visuals.register(item); 
+                    rw.visuals.register(item);
                 }
-            
+
             } else if (mw.config.get("wgRelevantPageName").includes("Special:Contributions")) { // Special contribs page
                 rw.rollback.contribsPageIcons(); // rollback icons on current
             } else if (window.location.hash.includes("#rwPatrolAttach-RWBC_")) { // Connect to recent changes window
@@ -418,7 +470,7 @@ function initRW() {
                 bc.onmessage = msg=>{// On message open here
                     rw.ui.loadDialog.show("Loading...");
                     redirect(msg.data);
-                } 
+                }
                 // Set session storage (see below) Hopefully will only effect this window
                 sessionStorage.rwBCID = bcID;
             }
@@ -428,7 +480,7 @@ function initRW() {
                 bc.onmessage = msg=>{// On message open here
                     rw.ui.loadDialog.show("Loading...");
                     redirect(msg.data);
-                } 
+                }
             }
 
             // Log page in recently visited (rev13)
@@ -465,6 +517,6 @@ function initRW() {
 
             // MultiAct history
             rw.multiAct.initHistoryPage();
-        }); 
+        });
     });
 }

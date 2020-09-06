@@ -42,8 +42,8 @@ var mdlContainers = {
         if (fill) {
             // If fill mode on, fit to window
             $(window).resize(()=>{
-                $(dialogEngine.dialog.getElementsByTagName("iframe")[0]).attr("height",  document.body.offsetHeight);
-                $(dialogEngine.dialog.getElementsByTagName("iframe")[0]).attr("width",  document.body.offsetWidth);
+                $(dialogEngine.dialog.getElementsByTagName("iframe")[0]).attr("height",  window.innerHeight);
+                $(dialogEngine.dialog.getElementsByTagName("iframe")[0]).attr("width",  window.innerWidth);
             });
         }
 

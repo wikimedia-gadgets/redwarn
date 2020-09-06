@@ -267,7 +267,7 @@ rwStaticHTMLManager.fetchHTML = async (htmlName, arguments = {}, options = {}) =
         } catch (e) {
             console.error(e);
             // TODO Create a fallback dialog here eventually.
-            return "<h2 color=\"red\">An error occurred while trying to get the HTML for the page.</h2>"
+            return "<h2 color=\"red\">An error occurred while trying to get the HTML for the page.</h2>";
         }
     } while (htmlPull == null);
 

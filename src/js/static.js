@@ -7,7 +7,7 @@
 // Privacy, my rear end. - CA
 
 var rwStaticHTMLManager = {
-    homepage: "https://redwarn.chlod.local",
+    homepage: "https://redwarn-lite.wmcloud.org",
     stores: {
         html: "html_cache"
     },

@@ -58,7 +58,7 @@ rw.PendingChangesReview = {
                                         "imageParams": "",
                                         "fileVersion": "",
                                         "validatedParams": $('input[name ="validatedParams"]').attr("value"),
-                                        "wpReason" : comment + " ([[w:en:Wikipedia:RedWarn|RedWarn "+ rw.version + "]])",
+                                        "wpReason" : comment + " ([[w:en:Wikipedia:RW|RWv"+ rw.version + "]])",
                                         "wpSubmit": "Accept revision"
                                 }}).done((r, sT, x)=>{ // TODO: ADD AUTOWARNING, DETECT CHANGE AND OTHER
                                     rw.ui.loadDialog.close();
@@ -148,7 +148,7 @@ rw.PendingChangesReview = {
                                     "imageParams": "",
                                     "fileVersion": "",
                                     "validatedParams": $('input[name ="validatedParams"]').attr("value"),
-                                    "wpReason" : revertString+ (comment.length > 0 ? ": "+ comment : "") + " ([[w:en:Wikipedia:RedWarn|RedWarn "+ rw.version + "]])",
+                                    "wpReason" : revertString+ (comment.length > 0 ? ": "+ comment : "") + " ([[w:en:Wikipedia:RW|RWv"+ rw.version + "]])",
                                     "wpSubmit": "Revert these changes"
                                 }}).done((r,sT,x)=>{
                                     // Cannot reject these changes because someone already accepted some (or all) of the edits.
@@ -240,7 +240,7 @@ rw.PendingChangesReview = {
                         "imageParams": "",
                         "fileVersion": "",
                         "validatedParams": $('input[name ="validatedParams"]').attr("value"),
-                        "wpReason" : "Unapproving"+ (comment.length > 0 ? ": "+ comment : "") + " ([[w:en:Wikipedia:RedWarn|RedWarn "+ rw.version + "]])",
+                        "wpReason" : "Unapproving"+ (comment.length > 0 ? ": "+ comment : "") + " ([[w:en:Wikipedia:RW|RWv"+ rw.version + "]])",
                         "wpSubmit": "Unaccept revision"
                     }).done(r=>{
                         window.location.hash = "#rwReviewUnaccept";

@@ -42,14 +42,40 @@ $magicWords = [
 
 // ==== Part 2. Function definitions ====
 
+// Warnings
+$warnings = array();
+
+function getWarnings() {
+    global $warnings;
+    
+    if (count($warnings) != 0) {
+?>
+/*
+
+ [ W A R N I N G ]
+ 
+ Some issues were encountered while building `redwarn.js`. Please take
+ note of these as it may negatively impact your usage.
+ 
+<?php foreach ($warnings as $v) echo " - " . $v . PHP_EOL; ?>
+ 
+*/
+<?php
+    }
+}
+
 /**
  * Output the credits for RedWarn.
  **/
 function getCredits() {
 ?>
-R E D W A R N
-(c) 2020 Ed. E and contributors - ed6767wiki (at) gmail.com
+
+RedWarn - Recent Edits Patrol and Warning Tool
+The user-friendly Wikipedia counter-vandalism tool.
+
+(c) 2020 The RedWarn Development Team and contributors - ed6767wiki (at) gmail.com or [[WT:RW]]
 Licensed under the Apache License 2.0 - read more at https://gitlab.com/redwarn/redwarn-web/
+
 <?php
 }
 
@@ -68,7 +94,7 @@ function getNotice() {
 | IS RELEASED AS THIS FILE IS BUILT BY A    |
 | SEPERATE SCRIPT. INSTEAD, ISSUE A PULL    |
 | REQUEST AT                                |
-| https://github.com/ed6767/redwarn         |
+| https://gitlab.com/redwarn/redwarn-web    |
 |                                           |
 +-------------------------------------------+
 
@@ -112,12 +138,17 @@ function processIncludedFiles($fileContents) {
     return preg_replace_callback(
 		"#\[\[\[\[include (.+?)]]]]#",
 		function ($matches) {
-			global $htmlRoot;
+			global $htmlRoot, $warnings;
 
 			$filePath = $htmlRoot . DIRECTORY_SEPARATOR . $matches[1];
-
-			return file_exists($filePath) ?
-				file_get_contents($filePath) : "!!!! RedWarn Build Error: failed to include " . $matches[1]. " - if this is a release version of RedWarn, please report this error at WT:REDWARN !!!!";
+            
+            array_push($warnings, "Deprecated HTML inclusion call used: \"" . $matches[0] . "\".");
+            
+            if (!file_exists($filePath)) {
+                array_push($warnings, "Failed to include " . $matches[1] . ". File does not exist.");
+                return "";
+            } else
+                return file_get_contents($filePath);
 		},
         $fileContents
 	);
@@ -154,20 +185,24 @@ function getJSSources() {
         $js .= readJSSourceFile($file) . PHP_EOL;
     }
 
-    echo processJS($js);
+    return processJS($js);
 }
+
+$sources = getJSSources();
 
 /**
  * Outputs everything.
  */
-function buildScript() {?>
+function buildScript() {
+    global $sources; ?>
+<?php getWarnings(); ?>
 /*
 <?php getCredits(); ?>
 
 <?php getNotice(); ?>
 */
 // <nowiki>
-<?php getJSSources(); ?>
+<?php echo $sources; ?>
 $(document).ready(async function() {
 	// Initialize RedWarn once the page is loaded.
 	try {

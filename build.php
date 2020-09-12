@@ -66,7 +66,7 @@ function getNotice() {
 | IS RELEASED AS THIS FILE IS BUILT BY A    |
 | SEPERATE SCRIPT. INSTEAD, ISSUE A PULL    |
 | REQUEST AT                                |
-| https://github.com/ed6767/redwarn         |
+| https://gitlab.com/redwarn/redwarn-web/   |
 |                                           |
 +-------------------------------------------+
 

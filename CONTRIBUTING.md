@@ -47,6 +47,7 @@ You can contribute on any operating system. Your help is greatly appreciated.
 3. Make sure your [common.js](https://en.wikipedia.org/wiki/Special:MyPage/common.js) has the production Redwarn disabled (either by removed or commented out) and append `mw.loader.load('http://localhost:9696/build.php')` to your [common.js](https://en.wikipedia.org/wiki/Special:MyPage/common.js).
 4. In the directory of redwarn-git run `php -S localhost:9696` to start the dev server.
 5. Happy contributing! Every time you save a file, simply refresh your page and the changes you made will be immediately visible.
+6. If you want to build a finished script, run `php build.php > ./release/redwarn-web.js`.
 
 <b>IMPORTANT</b>: if you do not use the dev server and instead decide to edit directly, RW will not work direct from source. Elements will be missing, especially in the UI. This is a common mistake made when editing RedWarn.
 

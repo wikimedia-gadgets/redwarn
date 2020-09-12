@@ -199,7 +199,7 @@ RedWarn 15 unifies the anti-vandalism experience, including user interface impro
         "openPage" : (filters)=> {
             // Open recent changes url
             let sidebarSize = 500;
-            let addCol = "0,255,0"; // rbg
+            let addCol = "0,255,0"; // rgb
             let rmCol = "255,0,0"; // rgb
             let mwBody = document.getElementsByTagName("BODY")[0];
             /*if (rw.config.ptrSidebar) sidebarSize = rw.config.ptrSidebar; DEP. REV12*/

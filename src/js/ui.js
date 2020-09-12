@@ -138,9 +138,6 @@ rw.ui = {
 
                 console.log({user, wikiTxt, rule, template, warningLevel}); // debug
 
-                // Let HAN know if possible (first letter only for cross compatibility)
-                if (warningLevel != "N/A") rw.han.reportWarn(user, warningLevel.charAt(0));
-
                 // MAKE EDIT - summary with warning info
                 let summary = `${
                     ({  
@@ -744,7 +741,7 @@ rw.ui = {
         addMessageHandler("pushToast`*", m=>rw.visuals.toast.show(m.split('`')[1],false,false,2500));
 
         // On report
-        addMessageHandler("UAAreport`*", m=>{
+        addMessageHandler("UAA`*", m=>{
             let reportContent = m.split('`')[1]; // report content
             let target = m.split('`')[2]; // target username
             console.log("reporting "+ target + ": "+ reportContent);

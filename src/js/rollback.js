@@ -471,9 +471,6 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
 
                             // Wait a bit (100ms) to stop loadDialog glitch
                             setTimeout(()=>{
-                                // Report to HAN
-                                rw.han.reportRollback(rw.rollback.getRollbackrevID());
-
                                 // If callback set, call it and exit, else continue
                                 if (callback != null) {callback(); return;}
 
@@ -513,9 +510,6 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
 
                             // Wait a bit (100ms) to stop loadDialog glitch
                             setTimeout(()=>{
-                                // Report to HAN
-                                rw.han.reportRollback(rw.rollback.getRollbackrevID());
-                                
                                 // If callback set, call it and exit, else continue
                                 if (callback != null) {callback(); return;}
 

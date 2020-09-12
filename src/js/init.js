@@ -47,8 +47,7 @@ var rw = {
     "version" : "15", // don't forget to change each version!
     "versionSummary": `
 <!-- RedWarn 15 -->
-RedWarn 15 unifies the anti-vandalism experience, including connectivity to the Huggle anti-vandalism network,
-user interface improvements, UAA reports, bug fixes and more.
+RedWarn 15 unifies the anti-vandalism experience, including user interface improvements, UAA reports, bug fixes and more.
     `,
     // ADDED BY BUILD SCRIPT
     "buildInfo" : `[[[[BUILDINFO]]]]`,
@@ -329,14 +328,6 @@ function initRW() {
                         
                     },168);
                 });
-            }
-
-            // Connect to HAN if enabled
-            if (rw.config.rwHAN != "disable") {
-                rw.han.connect();
-            } else {
-                // Hide HAN icon
-                $("#rwHANicon").hide();
             }
 
             // TODO: probably fix this mess into a URL

@@ -246,7 +246,7 @@ RedWarn 15 unifies the anti-vandalism experience, including user interface impro
             });
 
             // Add message handler for dialog close
-            addMessageHandler("rwRCPcloseDialog", ()=>rw.recentChanges.dialog.close());
+            addMessageHandler("rwRCPcloseDialog", ()=>{rw.recentChanges.dialog.close(); dialogEngine.enableScrolling();});
 
             rw.recentChanges.dialog.showModal(); // Show dialog
         }

@@ -80,8 +80,7 @@ Your message here. ${rw.sign()}
         var wikiTxt = data.wikiTxt;
         if (!wikiTxt.includes("${rw.sign()}")) {
             // Not signed, warn
-            pushToast("Sign your message with '${rw.sign()}'");
-            return; // Do not continue
+            pushToast("WARNING: You haven't signed your message with '${rw.sign()}'");
         }
         window.parent.postMessage('applyNotice\\\`' + document.getElementById("trgtUsrVisualBox").value + '\\\`' + wikiTxt + '\\\`' + "New message"); // Push upstairs and commit
         window.parent.postMessage("closeDialog"); // We done here. Top will refresh or reshow if error occurs.

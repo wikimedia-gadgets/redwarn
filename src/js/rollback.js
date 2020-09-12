@@ -768,6 +768,9 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
     },
 
     "progressBar" : (progress, buffer) => {
+        // Only if set and existing (bug)
+        if ($("#rwRollbackInProgressBar").length < 1) return;
+        
         // Update the progress bar
         $("#rwRollbackInProgressBar")[0].MaterialProgress.setProgress(progress);
         $("#rwRollbackInProgressBar")[0].MaterialProgress.setBuffer(buffer);

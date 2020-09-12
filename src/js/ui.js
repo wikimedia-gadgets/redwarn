@@ -525,7 +525,7 @@ rw.ui = {
                     "format": "json",
                     "token" : mw.user.tokens.get("csrfToken"),
                     "title" : aivPage,
-                    "summary" : `Reporting [[Special:Contributions/${target}|${target}]] [[WP:REDWARN|(RedWarn ${rw.version})]]`, // summary sign here
+                    "summary" : `Reporting [[Special:Contributions/${target}|${target}]] [[w:en:WP:RW|(RW ${rw.version})]]`, // summary sign here
                     "text": finalTxt,
                     "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
                 }).done(dt => {
@@ -771,7 +771,7 @@ rw.ui = {
                     "format": "json",
                     "token" : mw.user.tokens.get("csrfToken"),
                     "title" : uaaPage,
-                    "summary" : `Reporting [[Special:Contributions/${target}|${target}]] [[WP:REDWARN|(RedWarn ${rw.version})]]`, // summary sign here
+                    "summary" : `Reporting [[Special:Contributions/${target}|${target}]] [[w:en:WP:RW|(RW ${rw.version})]]`, // summary sign here
                     "text": finalTxt,
                     "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
                 }).done(dt => {

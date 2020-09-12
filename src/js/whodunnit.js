@@ -35,6 +35,9 @@ rw.whodunnit = {
                     el.style.background = "";
                     $(el).attr("RWWhoDunnitselected", ""); // rm selected
                     $(el).unbind("click"); // unbind onclick
+                    $(el).click(function(e) {
+                        e.preventDefault();
+                    }); // stop links from opening and buttons from submitting, etc.
                 });
                 let arr = document.elementsFromPoint(x, y);
                 // Only continue if more than five elements (works for normal page)

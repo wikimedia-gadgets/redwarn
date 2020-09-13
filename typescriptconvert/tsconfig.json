@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "module": "CommonJS",
+        "target": "es6",
+        "outDir": "./build",
+        "rootDir": "../"
+    },
+    "include": [
+        "./scripts/*"
+    ],
+    "exclude": [
+        "./node_modules"
+    ]
+}

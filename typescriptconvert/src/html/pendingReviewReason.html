@@ -1,0 +1,62 @@
+<!-- REVIEW REASON DIALOG -->
+<script>var closed = false;</script>
+<h2 style="font-weight: 200;font-size:45px;line-height: 48px;"><!-- rw-arg:reviewAction --></h2>
+<p><!-- rw-arg:reviewCaption --></p><br/>
+<form id="newMsgForm" onsubmit="pushReview();" action="#">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
+        <input class="mdl-textfield__input" type="text" name="reviewReason" id="reviewReason" value="">
+        <label class="mdl-textfield__label" for="reviewReason">Comment</label>
+    </div>
+</form>
+<span style="float:right;">
+    <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="closed=true;clearInterval(autoAcceptTimerCount);window.parent.postMessage('closeDialog', '*');">
+        CANCEL
+    </button>
+    <button id="submitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="pushReview();">
+        SUBMIT REVIEW
+    </button>
+</span>
+
+<script>
+    function pushReview() {
+        var data = $('#newMsgForm').serializeArray().reduce(function(obj, item) {
+                obj[item.name] = item.value;
+                return obj;
+                }, {}); // form data
+
+        let reason = data.reviewReason;
+
+        // Submit it
+        window.parent.postMessage('reason`' + reason); // Push upstairs
+        window.parent.postMessage("closeDialog"); // We done here.
+        return false; // prevent redirect
+
+    }
+
+    document.getElementById("reviewReason").focus(); // focus on text box for quick rollback
+
+    // Auto accept in 5 seconds
+    var autoAcceptTimerTick;
+    var autoAcceptTimerCount = 0;
+    var autoAcceptStop = false; // used to not show another and cause ux issues if stopped
+    if (/* rw-arg:autoAccept */) {
+        $("#submitBtn").text("AUTO SUBMIT ("+ (5 - autoAcceptTimerCount) +")");
+        autoAcceptTimerTick = setInterval(()=> {
+            autoAcceptTimerCount += 1; // up by one
+            if (!autoAcceptStop) $("#submitBtn").text("AUTO SUBMIT ("+ (5 - autoAcceptTimerCount) +")");
+            if ((autoAcceptTimerCount == 5) && (!closed)) {
+                // Time's up, clear timer and submit
+                clearInterval(autoAcceptTimerCount);
+                autoAcceptStop = true;
+                pushReview(); // send it
+            }
+        }, 1000); // Every second
+
+        // Cancel on key press or click
+        (_=>{$(document).keydown(_);$(document).click(_);})(()=>{
+            clearInterval(autoAcceptTimerCount);
+            $("#submitBtn").text("SUBMIT REVIEW");
+            autoAcceptStop = true;
+        });
+    }
+</script>

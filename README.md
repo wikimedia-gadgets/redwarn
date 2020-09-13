@@ -20,3 +20,6 @@ You can help! If you find any bugs or would like new features, you can fix these
     3) Click [here](https://en.wikipedia.org/wiki/Special:MyPage/common.js) to go to your common.js file and create it if you have not already, making sure you do not have any other version of redwarn installed and removing it if so, add this line to your common.js: <code>mw.loader.load( 'http://localhost:9696/build.php' );</code><br>
     4) Refresh your wikipedia page by holding shift while refreshing (to force clear your page cache) and your version of redwarn should now be on the development branch!
 </details>
+
+## new instructions
+run webpack

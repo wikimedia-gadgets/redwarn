@@ -195,12 +195,12 @@ var onSettingsLoad = {};
                         <i>Click and drag icons to reorder them, or drag an icon to or from the tray to add or remove them. Items in the tray are accessable via the "More Options" button. Right-click an icon to change its colour or icon.</i>
                         <!-- Icon List -->
                         <ul id="rwRollbackIconsSort" style="text-align: center;width:100%;min-height: 35px;">
-                        	<!-- rw-arg:disabledRollbackIcons -->
+                        	<!-- rw-arg:rollbackIcons -->
                         </ul>
 
                         <!-- Disabled Icon list -->
                         <ul id="rwRollbackIconsSortDisabled" style="text-align: center;width:100%;min-height: 35px;background: #e8e4e4;">
-							<!-- rw-arg:rollbackIcons -->
+							<!-- rw-arg:disabledRollbackIcons -->
                         </ul>
                         <!-- END ROLLBACK ICON SETTINGS -->
 
@@ -414,18 +414,6 @@ var onSettingsLoad = {};
                         </label>
 
                         <br /><br />
-                        <!-- Huggle Antivandalism Network -->
-                        <span style="font-size: 18px;padding-bottom: 20px;cursor:help;" >Huggle Antivandalism Network</span><br/><div style="height:5px"></div> <!-- SPACER -->
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwHANEnable">
-                            <input type="radio" id="rwHANEnable" class="mdl-radio__button" name="rwHAN" value="enable" checked>
-                            <span class="mdl-radio__label">Enable</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwHAN">
-                            <input type="radio" id="rwHAN" class="mdl-radio__button" name="rwHAN" value="disable">
-                            <span class="mdl-radio__label">Disable</span>
-                        </label>
-                        <br /><br />
                         <!-- END BEHAVIOUR SETTINGS -->
                     </div>
                     <div class="mdl-card__actions mdl-card--border">
@@ -484,6 +472,7 @@ var onSettingsLoad = {};
 
 
     var config = `/* rw-arg:config */`;
+    console.log(config);
     function saveConfig() {
         var data = $('form').serializeArray().reduce((obj, item) => {
                 obj[item.name] = item.value;
@@ -528,7 +517,8 @@ var onSettingsLoad = {};
     }
 
     function loadFromConfig() {
-        $.each(config, (key, value) => {
+        for (const key in config) {
+            const value = config[key];
             var ctrl = $('[name='+key+']');
             // Check for onsettings load
             if (onSettingsLoad[key]) onSettingsLoad[key](value); // Call handler if it exists
@@ -543,7 +533,7 @@ var onSettingsLoad = {};
                     default:
                         ctrl.val(value);
                 }
-        });
+        }
     }
 
     loadFromConfig();

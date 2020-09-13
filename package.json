@@ -1,0 +1,39 @@
+{
+    "name": "redwarn-web",
+    "version": "16.0.0",
+    "description": "Wikipedia anti-vandalism tool.",
+    "main": "src/RedWarnLite.ts",
+    "dependencies": {
+        "@types/jquery": "^3.5.1",
+        "css-loader": "^4.3.0",
+        "jquery": "^3.5.1",
+        "material-design-lite": "^1.3.0",
+        "style-loader": "^1.2.1",
+        "ts-loader": "^8.0.3",
+        "tsx-dom": "^0.9.0",
+        "typescript": "^4.0.2",
+        "webpack": "^4.44.1",
+        "webpack-cli": "^3.3.12"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "webpack",
+        "profile": "webpack --profile"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@gitlab.com/redwarn/redwarn-web.git"
+    },
+    "keywords": [
+        "wikipedia",
+        "mediawiki",
+        "vandalism"
+    ],
+    "author": "RedWarn Development Team",
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://gitlab.com/redwarn/redwarn-web/issues"
+    },
+    "homepage": "https://gitlab.com/redwarn/redwarn-web#readme"
+}

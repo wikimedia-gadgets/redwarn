@@ -1,3 +1,6 @@
 public/
 .gitlab-ci.yml
 *.old
+
+node_modules/
+build/

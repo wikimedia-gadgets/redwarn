@@ -1,0 +1,12 @@
+<!-- Loading dialog -->
+<div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div> <!-- Loading spinner (matches theme too!) -->
+<span style="padding-left: 20px;
+position: absolute;
+padding-top: 7px;
+font-size: 16px;
+font-family: Roboto;"><!-- rw-arg:text --></span> <!-- Text -->
+<script>
+    window.onmessage = e=>{ // On any message we just set the text, not much logic here
+        $("span").text(e.data);
+    };
+</script>

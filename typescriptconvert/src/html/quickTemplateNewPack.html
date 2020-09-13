@@ -1,0 +1,31 @@
+<h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Create Template Pack</h2>
+<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
+    <input class="mdl-textfield__input" type="text" id="templatePackName" maxlength="15">
+    <label class="mdl-textfield__label" for="templatePackName">Template Pack Name</label>
+</div>
+<!-- CLOSE AND CREATE BUTTONS -->
+<span style="float:right;">
+    <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('closeDialog', '*');">
+        CANCEL
+    </button>
+    <button id="submitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="createPack();">
+        CREATE
+    </button>
+</span>
+
+<script>
+    function pushToast(text) {window.parent.postMessage('pushToast`' + text);} // Push toast to host
+
+    function createPack() {
+        // Submit pack
+        let packName = $("#templatePackName").val();
+        // Check length is between 4-15 chars
+        if (packName.length > 15 || packName.length < 4) {
+            pushToast("Please ensure your template name is between four and fifteen characters long.");
+            return; // stop
+        }
+        // Now we can send to top
+        window.parent.postMessage('qTcreateNew`'+ packName, '*');
+        window.parent.postMessage('closeDialog', '*'); // close, we're done
+    }
+</script>

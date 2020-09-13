@@ -450,7 +450,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
                         "title" : mw.config.get("wgRelevantPageName"),
-                        "summary" : summary + ": " + reason + " [[WP:RW|(RWv"+ rw.version +")]]", // summary sign here
+                        "summary" : summary + ": " + reason + " [[w:en:WP:RW|(RW "+ rw.version +")]]", // summary sign here
                         "undo": crID, // current
                         "undoafter": rID, // restore version
                         "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
@@ -473,9 +473,6 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
 
                             // Wait a bit (100ms) to stop loadDialog glitch
                             setTimeout(()=>{
-                                // Report to HAN
-                                rw.han.reportRollback(rw.rollback.getRollbackrevID());
-
                                 // If callback set, call it and exit, else continue
                                 if (callback != null) {callback(); return;}
 
@@ -495,7 +492,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                         "format": "json",
                         "token" : rw.info.rollbackToken,
                         "title" : mw.config.get("wgRelevantPageName"),
-                        "summary" : "Rollback edit(s) by [[Special:Contributions/"+ un +"|"+ un +"]] ([[User_talk:"+ un +"|talk]]): " + reason + " [[WP:RW|(RWv"+ rw.version +")]]", // summary sign here
+                        "summary" : "Rollback edit(s) by [[Special:Contributions/"+ un +"|"+ un +"]] ([[User_talk:"+ un +"|talk]]): " + reason + " [[w:en:WP:RW|(RW "+ rw.version +")]]", // summary sign here
                         "user": un, // rollback user
                         "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
                     }).done(dt => {
@@ -515,9 +512,6 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
 
                             // Wait a bit (100ms) to stop loadDialog glitch
                             setTimeout(()=>{
-                                // Report to HAN
-                                rw.han.reportRollback(rw.rollback.getRollbackrevID());
-
                                 // If callback set, call it and exit, else continue
                                 if (callback != null) {callback(); return;}
 
@@ -575,7 +569,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
                         "title" : mw.config.get("wgRelevantPageName"),
-                        "summary" : summary + (reason != null ? ": " + reason : "") + " [[WP:RW|(RWv"+ rw.version +")]]", // summary sign here
+                        "summary" : summary + (reason != null ? ": " + reason : "") + " [[w:en:WP:RW|(RW "+ rw.version +")]]", // summary sign here
                         "undo": crID, // current
                         "undoafter": revID, // restore version
                         "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
@@ -782,6 +776,9 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
     },
 
     "progressBar" : (progress, buffer) => {
+        // Only if set and existing (bug)
+        if ($("#rwRollbackInProgressBar").length < 1) return;
+
         // Update the progress bar
         $("#rwRollbackInProgressBar")[0].MaterialProgress.setProgress(progress);
         $("#rwRollbackInProgressBar")[0].MaterialProgress.setBuffer(buffer);

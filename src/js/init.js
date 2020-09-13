@@ -47,9 +47,7 @@ var rw = {
     "version" : "16dev", // don't forget to change each version!
     "versionSummary": `
 <!-- RedWarn 15 -->
-RedWarn 15 brings a striking new featureset to RedWarn,
-including connectivity to the Huggle anti-vandalism network, user interface improvements,
-a new redesigned RedWarn patrol, UAA reports, the new RedWarn dashboard and many more.
+RedWarn 15 unifies the anti-vandalism experience, including user interface improvements, UAA reports, bug fixes and more.
     `,
     // ADDED BY BUILD SCRIPT
     "buildInfo" : `[[[[BUILDINFO]]]]`,
@@ -212,7 +210,7 @@ a new redesigned RedWarn patrol, UAA reports, the new RedWarn dashboard and many
         "openPage" : (filters)=> {
             // Open recent changes url
             let sidebarSize = 500;
-            let addCol = "0,255,0"; // rbg
+            let addCol = "0,255,0"; // rgb
             let rmCol = "255,0,0"; // rgb
             let mwBody = document.getElementsByTagName("BODY")[0];
             /*if (rw.config.ptrSidebar) sidebarSize = rw.config.ptrSidebar; DEP. REV12*/
@@ -268,7 +266,7 @@ a new redesigned RedWarn patrol, UAA reports, the new RedWarn dashboard and many
             });
 
             // Add message handler for dialog close
-            addMessageHandler("rwRCPcloseDialog", ()=>rw.recentChanges.dialog.close());
+            addMessageHandler("rwRCPcloseDialog", ()=>{rw.recentChanges.dialog.close(); dialogEngine.enableScrolling();});
 
             rw.recentChanges.dialog.showModal(); // Show dialog
         }
@@ -367,66 +365,51 @@ async function initRW() {
                 });
             }
 
-            // Connect to HAN if enabled
-            if (rw.config.rwHAN != "disable") {
-                rw.han.connect();
-            } else {
-                // Hide HAN icon
-                $("#rwHANicon").hide();
+            // TODO: probably fix this mess into a URL
+            // HERE REALLY REALLY NEEDS CLEANUP
+                // Check if a message is in URL (i.e edit complete ext)
+            if(window.location.hash.includes("#noticeApplied-")) {
+                // Show toast w undo edit capabilities
+                // #noticeApplied-currentEdit-pastEdit
+                rw.visuals.toast.show("Message saved", "UNDO", ()=>{
+                    // Just restore the version via rollback restore (this does a normal undo request)
+                    rw.rollback.restore(window.location.hash.split("-")[2], "Undo message addition (via toast)");
+                }, 7500);
+            } else if (window.location.hash.includes("#redirectLatestRevision")) { // When latest revision loaded
+                rw.visuals.toast.show("Redirected to the latest revision.", "BACK", ()=>window.history.back(), 4000); // When back clciked go back
+            } else if (window.location.hash.includes("#watchLatestRedirect")) {
+                // Redirected to latest by redirector, play sound
+                let src = 'https://redwarn.toolforge.org/cdn/audio/newEdit.mp3';
+                let audio = new Audio(src);
+                audio.play();
+                // enable watcher
+                rw.info.changeWatch.toggle();
+            } else if (window.location.hash.includes("#investigateFail")) {
+                rw.visuals.toast.show("Investigation Failed. This text has not been modified in the past 500 revisions or originated when the page was created.", false, false, 10000);
+            } else if (window.location.hash.includes("#investigateIncomp")) {
+                rw.visuals.toast.show("The selection could not be investigated.", false, false, 10000);
+            } else if (window.location.hash.includes("#configChange")) {
+                rw.visuals.toast.show("Preferences saved.");
+            } else if (window.location.hash.includes("#rwPendingAccept")) {
+                rw.visuals.toast.show("Changes accepted.");
+            } else if (window.location.hash.includes("#rwReviewUnaccept")) {
+                rw.visuals.toast.show("Changes unaccepted.");
+            } else if (window.location.hash.includes("#compLatest")) {
+                // Go to the latest revison
+                rw.info.isLatestRevision(mw.config.get("wgRelevantPageName"), 0, ()=>{}); // auto filters and redirects for us - 0 is an ID that will never be
+            } else if (window.location.hash.includes("#rollbackPreview")) {
+                // Rollback preview page
+                $('.mw-revslider-container').html(`
+                <div style="padding-left:10px;">
+                    <h2>This is a rollback preview</h2>
+                    To rollback, use the buttons on the left side below. Using the restore revision button <b>will not</b> warn the user and won't redirect you to the latest revision.
+                </div>
+                <br>
+                `);
+
+                $('.mw-revslider-container').attr("style", "border: 3px solid red;");
+
             }
-
-            // Manage hash in url
-            // If hash includes key, thsi will be called
-            let hashCallbacks = {
-                "#noticeApplied-" : ()=>{
-                    // Show toast w undo edit capabilities
-                    // #noticeApplied-currentEdit-pastEdit
-                    rw.visuals.toast.show("Message saved", "UNDO", ()=>{
-                        // Just restore the version via rollback restore (this does a normal undo request)
-                        rw.rollback.restore(window.location.hash.split("-")[2], "Undo message addition (via toast)");
-                    }, 7500);
-                },
-
-                // When latest revision loaded
-                "#redirectLatestRevision" : ()=>rw.visuals.toast.show("Redirected to the latest revision.", "BACK", ()=>window.history.back(), 4000), // When back clciked go back
-
-                "#watchLatestRedirect" : ()=>{
-                    // Redirected to latest by redirector, play sound
-                    let src = 'https://redwarn.toolforge.org/cdn/audio/newEdit.mp3';
-                    let audio = new Audio(src);
-                    audio.play();
-                    // enable watcher
-                    rw.info.changeWatch.toggle();
-                },
-
-                "#investigateFail" : ()=>rw.visuals.toast.show("Investigation Failed. This text has not been modified in the past 500 revisions or originated when the page was created.", false, false, 10000),
-
-                "#investigateIncomp" : ()=>rw.visuals.toast.show("The selection could not be investigated.", false, false, 10000),
-
-                "#configChange" : ()=>rw.visuals.toast.show("Preferences saved."),
-
-                "#rwPendingAccept": ()=>rw.visuals.toast.show("Changes accepted."),
-
-                "#rwReviewUnaccept": ()=>rw.visuals.toast.show("Changes unaccepted."),
-
-                "#compLatest" : ()=>rw.info.isLatestRevision(mw.config.get("wgRelevantPageName"), 0, ()=>{}), // go to the latest revision
-
-                "#rollbackPreview" : ()=> {
-                    // Rollback preview page
-                    $('.mw-revslider-container').html(`
-                    <div style="padding-left:10px;">
-                        <h2>This is a rollback preview</h2>
-                        To rollback, use the buttons on the left side below. Using the restore revision button <b>will not</b> warn the user and won't redirect you to the latest revision.
-                    </div>
-                    <br>
-                    `);
-
-                    $('.mw-revslider-container').attr("style", "border: 3px solid red;");
-
-                },
-
-                "#rollbackFailNoRev" : ()=>rw.visuals.toast.show("Could not rollback as there were no recent revisions by other users. Use the history page to try and manually revert.", false, false, 15000)
-            };
 
             // Check hashes and do callback
 

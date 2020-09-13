@@ -22,7 +22,7 @@ rw.info = { // API
     },
 
     "getConfig": (callback, resetToDefault) => { // IF RESETTODEFAULT IS TRUE IT WILL DO IT
-        
+
         let defaultConfig = { // Default config on reset or anything like that
             "lastVersion" : rw.version
         };
@@ -32,7 +32,7 @@ rw.info = { // API
         if (rw.config) {callback();} // if config loaded, no need to reload
 
 
-        // gets user config from their page. 
+        // gets user config from their page.
         let user = rw.info.getUsername();
         $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User:"+user+"/redwarnConfig.js&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
             // Grab text from latest revision of talk page
@@ -90,7 +90,7 @@ rw.info = { // API
                 rw.config = defaultConfig;
                 console.error(err);
                 // Reset config file to defaults
-                rw.info.writeConfig(true, ()=>rw.ui.confirmDialog(`Sorry, but an issue has caused your RedWarn preferences to be reset to default. Would you like to report a bug?`, 
+                rw.info.writeConfig(true, ()=>rw.ui.confirmDialog(`Sorry, but an issue has caused your RedWarn preferences to be reset to default. Would you like to report a bug?`,
                 "Open Feedback and Support", ()=>{
                     rw.ui.sendFeedback(`<!-- DO NOT EDIT BELOW THIS LINE! THANK YOU -->
                     rwConfig load - Error info: <code><nowiki>
@@ -98,12 +98,12 @@ rw.info = { // API
                     [[User:`+user+`/redwarnConfig.js|Open user rwConfig.js]]
                     `);
                 },
-                
+
                 "DISMISS", ()=>{
                     dialogEngine.closeDialog();
-                }, 20));   
+                }, 20));
             }
-            
+
 
             callback(); // we done
         });
@@ -130,7 +130,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 "format": "json",
                 "token" : mw.user.tokens.get("csrfToken"),
                 "title" : "User:"+ rw.info.getUsername() + "/redwarnConfig.js",
-                "summary" : "Updating user configuration [[WP:RW|(RWv"+ rw.version +")]]", // summary sign here
+                "summary" : "Updating user configuration [[w:en:WP:RW|(RW "+ rw.version +")]]", // summary sign here
                 "text": finalTxt,
                 "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
             }).done(dt => {
@@ -153,7 +153,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         mw.user.getGroups(g=>{
             let hasPerm = g.includes(l);
             if (!hasPerm) hasPerm = g.includes("sysop"); // admins override all feature restrictions if we don't have them
-            
+
             if ((l == "confirmed") && !hasPerm) {hasPerm = g.includes("autoconfirmed");} // Due to 2 types of confirmed user, confirmed and autoconfirmed, we have to check both
             if (hasPerm) {
                 // Has the permission needed
@@ -180,7 +180,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         } catch (er) {
             // If none
             return "error";
-        }  
+        }
     },
 
     "parseWikitext" : (wikiTxt, callback) => { // Uses Wikipedia's API to turn Wikitext to string. NEED TO USE POST IF USERPAGE IS LARGE EXT..
@@ -216,10 +216,10 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
             // let's continue
             // Returns date in == Month Year == format and matches
             let currentDateHeading = ((d)=>{return "== " + ['January','February','March','April','May','June','July','August','September','October','November','December'][d.getMonth()] + " " + (1900 + d.getYear()) + " =="})(new Date);
-            
+
             // rev13, add alt without space
             let currentAltDateHeading = ((d)=>{return "==" + ['January','February','March','April','May','June','July','August','September','October','November','December'][d.getMonth()] + " " + (1900 + d.getYear()) + "=="})(new Date);
-            
+
             let pageIncludesCurrentDate = wikiTxtLines.includes(currentDateHeading);
             let pageIncludesCurrentAltDate = wikiTxtLines.includes(currentAltDateHeading);
 
@@ -229,7 +229,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 return;
             } else if ((!pageIncludesCurrentDate) && (pageIncludesCurrentAltDate)) currentDateHeading = currentAltDateHeading; // If ==Date== is there but == Date == isn't, use ==Date== instead.
 
-            let highestWarningLevel = 0; // Set highest to nothing so if there is a date title w nothing in then that will be reported 
+            let highestWarningLevel = 0; // Set highest to nothing so if there is a date title w nothing in then that will be reported
             let thisMonthsNotices = ""; // for dialog
             // For each line
             for (let i = wikiTxtLines.indexOf(currentDateHeading) + 1; i < wikiTxtLines.length; i++) {
@@ -252,7 +252,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                     highestWarningLevel = 3; // No need for if check as highest level exits
                 }
 
-                if (wikiTxtLines[i].match(/(File:|Image:)Information orange.svg/gi)) { // Level 2 warning 
+                if (wikiTxtLines[i].match(/(File:|Image:)Information orange.svg/gi)) { // Level 2 warning
                     if (highestWarningLevel < 3) {
                         // We can set
                         highestWarningLevel = 2;
@@ -312,8 +312,8 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
             if ((!pageIncludesCurrentDate) && (pageIncludesCurrentAltDate)) { // If ==Date== is there but == Date == isn't, use ==Date== instead.
                 currentDateHeading = currentAltDateHeading;
                 pageIncludesCurrentDate = true;
-            } 
-            
+            }
+
             // Let's continue :)
             if (underDate) {
                 if (pageIncludesCurrentDate) {
@@ -322,7 +322,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                     // Locate where the current date section ends so we can append ours to the bottom
                     let locationOfLastLine = wikiTxtLines.indexOf(currentDateHeading) + 1; // in case of date heading w nothing under it
                     for (let i = wikiTxtLines.indexOf(currentDateHeading) + 1; i < wikiTxtLines.length; i++) {
-                        if (wikiTxtLines[i].startsWith("==")) { 
+                        if (wikiTxtLines[i].startsWith("==")) {
                             // New section
                             locationOfLastLine = i - 1; // the line above is therefore the last
                             console.log("exiting loop: " +wikiTxtLines[locationOfLastLine]);
@@ -360,7 +360,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 "format": "json",
                 "token" : mw.user.tokens.get("csrfToken"),
                 "title" : "User_talk:"+ user,
-                "summary" : summary + " [[WP:RW|(RWv"+ rw.version +")]]", // summary sign here
+                "summary" : summary + " [[w:en:WP:RW|(RW "+ rw.version +")]]", // summary sign here
                 "text": finalTxt,
                 "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
             }).done(dt => {
@@ -373,7 +373,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                     // Reshow dialog
                     dialogEngine.dialog.showModal();
                 } else {
-                    // Success! 
+                    // Success!
                     if (callback != null) {callback(); return;}; // callback and stop if set, else..
 
                     // Redirect to complete page
@@ -383,7 +383,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                     // We done
                 }
             });
-        }); 
+        });
     }, // end addTextToUserPage
 
     "quickWelcome" : un=>{
@@ -413,7 +413,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 // Nope :(
                 // Check for a noredirect callback, if so, call and return
                 if (noRedirectCallback != null) {noRedirectCallback(); return;}
-                
+
                 // Load the preview page of the latest one
                 try {if (dialogEngine.dialog.open) {return;}} catch (error) {} // DO NOT REDIRECT IF DIALOG IS OPEN.
                 // Redirect and open in new tab if requested
@@ -435,7 +435,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 redirect(rw.wikiIndex + "?title="+ encodeURIComponent(name) +"&action=history#rollbackFailNoRev");
                 return; // exit
             }
-            
+
             let latestContent = _r.slots.main.content;
             let summary = "Reverting edit(s) by [[Special:Contributions/"+ username +"|"+ username +"]] ([[User_talk:"+ username +"|talk]]) to rev. "+ _r.revid +" by " +_r.user;
             callback(latestContent, summary, _r.revid, _r.parentid);
@@ -532,7 +532,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                                             redirect(rw.wikiIndex + "?title="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&diff="+ latestRId +"&oldid="+ parentRId +"&diffmode=source#watchLatestRedirect");
                                         };
                                     }
-                                } 
+                                }
                             }
                         });
                     }, 5000);
@@ -545,5 +545,5 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
             }
         }
     }
-    
+
 };

@@ -27,8 +27,7 @@ $jsFiles = [
     'pendingChanges.js',
     'multiAct.js',
     'quickTemplate.js',
-    'pageProtect.js',
-    'han.js'
+    'pageProtect.js'
 ];
 
 $htmlRoot = __DIR__ . DIRECTORY_SEPARATOR . "src" . DIRECTORY_SEPARATOR . "html";
@@ -47,18 +46,18 @@ $warnings = array();
 
 function getWarnings() {
     global $warnings;
-    
+
     if (count($warnings) != 0) {
 ?>
 /*
 
  [ W A R N I N G ]
- 
+
  Some issues were encountered while building `redwarn.js`. Please take
  note of these as it may negatively impact your usage.
- 
+
 <?php foreach ($warnings as $v) echo " - " . $v . PHP_EOL; ?>
- 
+
 */
 <?php
     }
@@ -94,7 +93,8 @@ function getNotice() {
 | IS RELEASED AS THIS FILE IS BUILT BY A    |
 | SEPERATE SCRIPT. INSTEAD, ISSUE A PULL    |
 | REQUEST AT                                |
-| https://gitlab.com/redwarn/redwarn-web    |
+|                                           |
+| https://gitlab.com/redwarn/redwarn-web/   |
 |                                           |
 +-------------------------------------------+
 
@@ -141,9 +141,9 @@ function processIncludedFiles($fileContents) {
 			global $htmlRoot, $warnings;
 
 			$filePath = $htmlRoot . DIRECTORY_SEPARATOR . $matches[1];
-            
+
             array_push($warnings, "Deprecated HTML inclusion call used: \"" . $matches[0] . "\".");
-            
+
             if (!file_exists($filePath)) {
                 array_push($warnings, "Failed to include " . $matches[1] . ". File does not exist.");
                 return "";

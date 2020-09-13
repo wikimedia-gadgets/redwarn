@@ -54,7 +54,7 @@ rw.rules = [
         ]
     },
     {
-        "name": "Adding unreferenced defamatory information about living persons",
+        "name": "Adding unreferenced information about living persons",
         "catagory": "Article Conduct Warnings",
         "template": "uw-biog",
         "warningLevels": [

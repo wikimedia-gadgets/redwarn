@@ -3,6 +3,7 @@ const path = require("path");
 
 module.exports = {
     mode: process.env.NODE_ENV === "production" ? "production" : "development",
+    devtool: 'source-map',
     entry: ["./src/RedWarnLite.ts"],
     output: {
         path: path.resolve(__dirname, "build"),
@@ -10,6 +11,11 @@ module.exports = {
     },
     resolve: {
         extensions: [".ts", ".tsx", ".js"]
+    },
+    devServer: {
+        compress: true,
+        port: 45991,
+        hot: true
     },
     module: {
         rules: [

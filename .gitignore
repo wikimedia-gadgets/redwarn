@@ -1,6 +1,17 @@
-public/
-.gitlab-ci.yml
+# Old .gitignore
+public
 *.old
 
+# System files
+desktop.ini
+Thumbs.db
+.DS_Store
+
+# Dependencies
 node_modules/
+
+# Build results
 build/
+
+# Temporarily exclude while remaking
+.gitlab-ci.yml

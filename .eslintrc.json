@@ -6,12 +6,8 @@
         "node": false,
         "browser": true
     },
-    "plugins": [
-        "react-hooks"
-    ],
     "extends": [
-        "plugin:@typescript-eslint/recommended",
-        "plugin:react/recommended"
+        "plugin:@typescript-eslint/recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -24,9 +20,6 @@
         }
     },
     "rules": {
-        "react/jsx-uses-react": 1,
-        "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
-        "react-hooks/exhaustive-deps": "warn", // Checks effect dependencies
         "@typescript-eslint/no-explicit-any": "off",
         "indent": [
             "error",
@@ -49,8 +42,11 @@
             "error",
             "always"
         ],
-        "no-unused-vars": [
-            "warn"
+        "@typescript-eslint/no-unused-vars": [
+            "warn",
+            {
+                "varsIgnorePattern": "TSX"
+            }
         ],
         "camelcase": [
             "warn"
@@ -60,6 +56,10 @@
             {
                 "destructuring": "all"
             }
-        ]
+        ],
+        // Space rules to utterly piss on everyone
+        "space-before-blocks": "warn",
+        "key-spacing": "warn",
+        "keyword-spacing": "warn"
     }
 }

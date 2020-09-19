@@ -1,0 +1,72 @@
+<h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Report to AIV</h2>
+<span>Please note: This form currently supports <b>vandalism reports</b> only. For now, use Twinkle to report sockpuppetry and edit warring that isn't related to vandalism.</span>
+<form id="reportForm">
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
+        <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="<!-- rw-arg:targetUsername -->" name="target" readonly>
+        <label class="mdl-textfield__label" for="trgtUsrVisualBox">Target</label>
+        <div class="mdl-tooltip" for="trgtUsrVisualBox">
+            To target a different user, please visit their userpage.
+        </div>
+    </div>
+
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select" style="width: 100%;">
+        <input type="text" value="" class="mdl-textfield__input" id="reasonInput" name="reason" readonly> <!-- USE REASON TO GET THE DATA, NOT REASON INPUT.-->
+        <input type="hidden" value="" name="reasonInput"> <!-- THIS WILL ALWAYS BE BLANK.-->
+        <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
+        <label for="reasonInput" class="mdl-textfield__label">Reason</label>
+        <ul for="reasonInput" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" style="height: 100px; overflow:auto;">
+            <li class="mdl-menu__item" data-val="">Vandalism after final warning</li>
+            <li class="mdl-menu__item" data-val="">Vandalism within 1 day of being unblocked</li>
+            <li class="mdl-menu__item" data-val="">Evidently a vandalism-only account</li>
+            <li class="mdl-menu__item" data-val="">Account is a promotion-only account</li>
+            <li class="mdl-menu__item" data-val="">Account is evidently a spambot or a compromised account</li>
+            <li class="mdl-menu__item" data-val="">Other (please enter in comment)</li> <!-- Must detect and RM this -->
+        </ul>
+    </div>
+
+    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
+        <input class="mdl-textfield__input" type="text" id="commentBox" name="comment">
+        <label class="mdl-textfield__label" for="commentBox">Comment</label>
+        <div class="mdl-tooltip" for="commentBox">
+            Enter additional info you'd like to attach to this report.
+        </div>
+    </div>
+
+</form>
+
+<span style="float:right;">
+    <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('closeDialog', '*');">
+        CANCEL
+    </button>
+    <button id="submitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="sendReport();">
+        REPORT
+    </button>
+</span>
+
+<script>
+    function pushToast(text) {window.parent.postMessage('pushToast`' + text);} // Push toast to host
+
+    function sendReport() {
+        // Submit report
+        var data = $('#reportForm').serializeArray().reduce(function(obj, item) {
+                obj[item.name] = item.value;
+                return obj;
+                }, {}); // form data
+
+        if (data.reason == "") {pushToast("Select a reason."); return;} // If no reason selected, push toast and EXIT.
+
+        let fullReason = "";
+        if (data.reason == "Other (please enter in comment)") { // If other is chosen
+            if (data.comment == "") {pushToast("Enter your reason."); return;}
+            if (data.comment.length < 5) {pushToast("Your reason is not long enough"); return;} // If no comment, or comment is not long enough (5+ chars) push toast and EXIT.
+            fullReason = data.comment; // else continue and set the reason to the comment
+        } else {
+            // Append the reason and comment if there is one
+            fullReason = data.reason + (data.comment == "" ? "" : " - "+ data.comment); // If data comment empty don't add anything otherwise make it Reason - Comment
+        }
+        fullReason += "<!-- rw-arg:signature -->"; // Add sig to the end (w space)
+        // Push this upstairs
+        window.parent.postMessage('report\`'+ fullReason + '\`' + data.target, '*'); // Report with full reason
+        window.parent.postMessage('closeDialog', '*'); // Close. We will be reopened on error.
+    }
+</script>

@@ -1,24 +1,33 @@
+/**
+ *
+ * RedWarn - Recent Edits Patrol and Warning Tool
+ * The user-friendly Wikipedia counter-vandalism tool.
+
+ * (c) 2020 The RedWarn Development Team and contributors - ed6767wiki (at) gmail.com or [[WT:RW]]
+ * Licensed under the Apache License 2.0 - read more at https://gitlab.com/redwarn/redwarn-web/
+ *
+ **/
+
 /* Libraries */
 
 // MDL
 import "../node_modules/material-design-lite/material.min.js";
+// Add options to change the CSS later.
 import "../node_modules/material-design-lite/material.min.css";
 
-// Fonts
-import GlobalHead from "./examples/GlobalHead";
-document.head.append(...GlobalHead());
-
 /* IMPORT EVERYTHING HERE! */
+import Dependencies from "./ui/Dependencies";
+import MaterialDialogTest from "./tests/MaterialDialogTest";
 
-import {initialize} from "./examples/TestTS";
+(async () => {
 
-// Suggestion: put the initialization things in a clean function, split the giant
-// blocks inside said function into their own functions, and then import that
-// here, and then run it as a normal statement.
+    /* Resolve dependencies */
+    await Dependencies.resolve();
 
-// Examples files have been added for clarity.
+    // Initialize components here.
+    // As much as possible, each component should be its own class to make everything
+    // organized.
 
-initialize();
+    await MaterialDialogTest.execute();
 
-
-
+})();

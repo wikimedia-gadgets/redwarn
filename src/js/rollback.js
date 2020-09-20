@@ -304,9 +304,11 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
 
         // RESTORE THIS VERSION ICONS. DO NOT FORGET TO CHANGE BOTH FOR LEFT AND RIGHT
 
+        let twinkleLoadedBeforeUs = $('div[id^="tw-revert"]').length;
+
         // On left side
         // DO NOT FORGET TO CHANGE BOTH!!
-        $('.diff-otitle').prepend(isLeftLatest ? currentRevIcons : `
+        let left = isLeftLatest ? currentRevIcons : `
         <div id="rOld1" class="icon material-icons"><span style="cursor: pointer; font-size:28px; padding-right:5px; color:purple;"
             onclick="rw.rollback.promptRestoreReason($('#mw-diff-otitle1 > strong > a').attr('href').split('&')[1].split('=')[1]);"> <!-- the revID on left -->
                 history
@@ -315,11 +317,15 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         <div class="mdl-tooltip mdl-tooltip--large" for="rOld1">
             Restore this version
         </div>
-        `
-        ); 
+        `;
+        if (twinkleLoadedBeforeUs) {
+            $('.diff-otitle > div[id^="tw-revert"]').after(left);
+        } else {
+            $('.diff-otitle').prepend(left); 
+        }
 
         // On the right side
-        $('.diff-ntitle').prepend(isLatest ? currentRevIcons : `
+        let right = isLatest ? currentRevIcons : `
         <div id="rOld2" class="icon material-icons"><span style="cursor: pointer; font-size:28px; padding-right:5px; color:purple;"
             onclick="rw.rollback.promptRestoreReason($('#mw-diff-ntitle1 > strong > a').attr('href').split('&')[1].split('=')[1]);"> <!-- the revID on right -->
                 history
@@ -328,7 +334,12 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         <div class="mdl-tooltip mdl-tooltip--large" for="rOld2">
             Restore this version
         </div>
-        `); // if the latest rev, show the accurate revs, else, don't 
+        `; // if the latest rev, show the accurate revs, else, don't 
+        if (twinkleLoadedBeforeUs) {
+            $('.diff-ntitle > div[id^="tw-revert"]').after(right);
+        } else {
+            $('.diff-ntitle').prepend(right); 
+        }
         
         setTimeout(()=>{
             // Register all tooltips after 50ms (just some processing time)
@@ -435,10 +446,10 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                 rw.info.latestRevisionNotByUser(mw.config.get("wgRelevantPageName"), un, (content, summary, rID, pID) => {
                     rw.rollback.progressBar(70, 70);
                     // Verify that pID is NOT the thing rev we want to rollback, else it's been overwritten
-                	if (pID == rw.rollback.getRollbackrevID()) {
-                		// looks like that there is a newer revision! redirect to it.
-                		rw.info.isLatestRevision(mw.config.get("wgRelevantPageName"), 0, ()=>{});
-                		return; // stop here.
+                    if (pID == rw.rollback.getRollbackrevID()) {
+                        // looks like that there is a newer revision! redirect to it.
+                        rw.info.isLatestRevision(mw.config.get("wgRelevantPageName"), 0, ()=>{});
+                        return; // stop here.
                     }
                     
                     // Got it! Now set page content to summary

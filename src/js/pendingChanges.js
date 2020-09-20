@@ -1,4 +1,14 @@
+/**
+ * RedWarn's pending changes review feature
+ * @class rw.PendingChangesReview
+ */
 rw.PendingChangesReview = {
+    /**
+     * If on a review page, and user in "reviewer" group, this initalies review controls
+     *
+     * @method reviewPage
+     * @extends rw.PendingChangesReview
+     */
     "reviewPage" : ()=> {
         // Check config if disabled
         if (rw.config.rwDisablePendingChanges == "disable") return; // if disabled, exit
@@ -255,6 +265,15 @@ rw.PendingChangesReview = {
             });
         }
     }, // end init
+
+    /**
+     * Confirm that we are still confirming this revision - if not, the user will be prompted whether they still wish to initate the callback.
+     *
+     * @param {function} callback
+     * @param {boolean} isFailedRevert Whether or not this function was initiated via a failed revert for a different dialog wording.
+     * @method confirmLatestRev
+     * @extends rw.PendingChangesReview
+     */
     "confirmLatestRev" : (callback, isFailedRevert)=> { // Verify that this confirm is the latest revision
         $.getJSON("https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&rvslots=*&rvprop=ids%7Cuser%7Ccomment&formatversion=2&format=json", r=>{
             // We got the response
@@ -289,6 +308,13 @@ rw.PendingChangesReview = {
         });
     },
 
+    /**
+     * Calls back with the past 10 users who have had pending edits
+     *
+     * @param {function} callback callback(lastAcceptedUser, countofEdits, rwMultiActuserObject, userCount)
+     * @method getPendingChangesUsers
+     * @extends rw.PendingChangesReview
+     */
     "getPendingChangesUsers" : callback=> { // CALLBACK(last accepted usr, count, obj, userCount)
         // Get all revisions between last accepted and this one
         $.getJSON("https://en.wikipedia.org/w/api.php?action=query&prop=revisions&format=json&titles="+

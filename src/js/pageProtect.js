@@ -1,7 +1,23 @@
+/**
+ * RedWarn's RFPP feature
+ * @class rw.pageProtect
+ */
 rw.pageProtect = { // Used for [[WP:RFPP]]
+    /**
+     * The RFPP page that RedWarn will edit
+     * @property rfppPage
+     * @type {string}
+     * @extends rw.pageProtect
+     */
     "rfppPage" : "Wikipedia:Requests_for_page_protection", // !!! FOR PRODUCTION USE Wikipedia:Requests_for_page_protection ELSE USE User:Ed6767/sandbox/rwTests/rpp !!!
     // THIS MODULE IS NOW LIVE!!!
 
+    /**
+     * An object containing the protection levels for this Wiki
+     * @property editProtectionLevels
+     * @type {object}
+     * @extends rw.pageProtect
+     */
     // Define protection levels
     "editProtectionLevels" : { //edit protection - SET IN ORDER AS DISTINGUISHES BETWEEN UPGRADE AND DOWNGRADE
         "unprotected" : { // unprotected
@@ -51,6 +67,13 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
 
 // for move protection add smallprint: move protection limit: x
 
+    /**
+     * Calls back with the current protection level of the current page
+     *
+     * @param {function} callback callback(object {edit: level, move:level})
+     * @method getCurrentPageProtection
+     * @extends rw.pageProtect
+     */
     "getCurrentPageProtection" : callback=>{ // Callback {edit: level, move:level}
         // Request protection level from mediawiki
         $.getJSON(rw.wikiAPI + "?action=query&format=json&prop=info%7Cflagged&inprop=protection&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")), r=>{
@@ -74,6 +97,12 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
         });
     },
     
+    /**
+     * Opens the page protection dialog for this page
+     *
+     * @method open
+     * @extends rw.pageProtect
+     */
     "open" : ()=>{ // Open page protection dialog for this page
         // Get current page protection level
         rw.pageProtect.getCurrentPageProtection(protection=>{

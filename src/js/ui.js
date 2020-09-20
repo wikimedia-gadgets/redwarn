@@ -1,7 +1,10 @@
+/**
+ * Most of RedWarn's UI elements and functions that require user input are here.
+ * @class rw.ui
+ */
 // Most UI elements
 // See also dialog.js (dialogEngine) and mdlContainer.js (mdlContainer)
 rw.ui = {
-
     "revisionBrowser" : url=> {
         // Show new container for revision reviewing
         dialogEngine.create(mdlContainers.generateContainer(`
@@ -221,6 +224,16 @@ rw.ui = {
             
     }, // end beginWarn
 
+    /**
+     * Open the "new talk page message" dialog for the specified username
+     *
+     * @param {string} un Target username
+     * @param {boolean} noRedirect If true, a callback will be used rather than submitting the notice.
+     * @param {string} buttonTxt Text to use instead of default "Send Message" for submit button
+     * @param {function} callback Callback to use if noRedirect is true
+     * @method newMessage
+     * @extends rw.ui
+     */
     "newMsg" : (un, noRedirect, buttonTxt, callback)=>{
         // New message dialog
         // Setup preview handling
@@ -259,6 +272,13 @@ rw.ui = {
         `, 500, 390)).showModal(); // 500x390 dialog, see newMsg.html for code
     },
 
+
+    /**
+     * Registers the right-click context menu feature for user links.
+     *
+     * @method registerContextMenu
+     * @extends rw.ui
+     */
     "registerContextMenu" : () => { // Register context menus for right-click actions
         // More docs at https://swisnl.github.io/jQuery-contextMenu/demo/trigger-custom.html
 
@@ -389,7 +409,14 @@ rw.ui = {
 
     }, // end context menus
 
-
+    
+    /**
+     * Requests the speedy deletion of a page. Not currently used and will not currently work without adding speedyDeleteReasons.js into build.php
+     *
+     * @param {string} pg Page name
+     * @method requestSpeedyDelete
+     * @extends rw.ui
+     */
     "requestSpeedyDelete" : (pg)=>{
         // Open Speedy Deletion dialog for first selection, i.e I'm requesting the speedy deletion of..
         // Programming this is proving to be very boring.
@@ -433,6 +460,12 @@ rw.ui = {
         `, 500, 450)).showModal(); // 500x300 dialog, see speedyDeletionp1.html for code
     },
 
+    /**
+     * Opens RedWarn preferences
+     *
+     * @method openPreferences
+     * @extends rw.ui
+     */
     "openPreferences" : () => { // Open Preferences page
         // Add toast handler
         addMessageHandler("pushToast`*", m=>rw.visuals.toast.show(m.split('`')[1],false,false,15000));
@@ -487,6 +520,13 @@ rw.ui = {
         `, window.innerWidth, window.innerHeight, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
     },
 
+    /**
+     * Opens the AIV report dialog
+     *
+     * @param {string} un Username to report
+     * @method openAdminReport
+     * @extends rw.ui
+     */
     "openAdminReport" : (un)=> { // Open admin report dialog
         // Add toast handler
         addMessageHandler("pushToast`*", m=>rw.visuals.toast.show(m.split('`')[1],false,false,2500));
@@ -554,52 +594,19 @@ rw.ui = {
         `, 500, 410)).showModal();
     },
 
-    "loadDialog" : {
-        // Loading dialog
-        "hasInit" : false, 
-        "init" : text=> {
-            if (!rw.ui.loadDialog.hasInit) { // Only continue if we haven't already appended our container div
-                $("body").append(`
-                <div id="rwUILoad">
-                </div>
-                `);
-            }
-            $("#rwUILoad").html(`
-            <dialog class="mdl-dialog" id="rwUILoadDialog">
-                ` + mdlContainers.generateContainer(`[[[[include loadingSpinner.html]]]]`, 300, 30) +`
-            </dialog>
-            `); // Create dialog with content from loadingSpinner.html
-
-            rw.ui.loadDialog.dialog = document.querySelector('#rwUILoadDialog'); // set dialog var
-
-            // Firefox issue fix
-            if (! rw.ui.loadDialog.dialog.showModal) {
-                dialogPolyfill.registerDialog(rw.ui.loadDialog.dialog);
-            }
-
-            rw.ui.loadDialog.hasInit = true;
-        },
-
-        "show" : text=> { // Init and create a new loading dialog
-            rw.ui.loadDialog.init(text); // init
-            rw.ui.loadDialog.setText(text); // set our text
-            // Show dialog
-            rw.ui.loadDialog.dialog.showModal();
-            // We done
-        },
-
-        "setText" : text=> $("#rwUILoadDialog > iframe")[0].contentWindow.postMessage(text, '*'), // Set text of loading by just sending the message to the container
-
-        "close": ()=>{ // Close the dialog and animate
-            $("#rwUILoadDialog")
-            .addClass("closeAnimate")
-            .on("webkitAnimationEnd", ()=>{
-                // Animation finished
-                rw.ui.loadDialog.dialog.close();
-            });
-        } 
-    },
-
+    /**
+     * Opens a confirmation dialog with one or two buttons
+     *
+     * @param {string} content Dialog content
+     * @param {string} pBtnTxt Primary button text
+     * @param {function} pBtnClick Callback when primary button clicked
+     * @param {string} sBtnTxt Secondary button text (Will not show if empty)
+     * @param {function} sBtnClick Secondary button callback
+     * @param {number} extraHeight Extra height to add to the dialog in pixels
+     * @param {boolean} noExtraLines Removes line breaks from the dialog
+     * @method confirmDialog
+     * @extends rw.ui
+     */
     "confirmDialog": (content, pBtnTxt, pBtnClick, sBtnTxt, sBtnClick, extraHeight, noExtraLines) => { // noExtraLines removes the <br/> tags
         // Confirm dialog (yes, no, ext...)
         addMessageHandler("sBtn", sBtnClick);
@@ -609,6 +616,13 @@ rw.ui = {
         `, 500, 80 + extraHeight)).showModal();
     },
 
+    /**
+     * Shows the feedback dialog to leave bug reports and feedback
+     *
+     * @param {string} extraInfo
+     * @method sendFeedback
+     * @extends rw.ui
+     */
     "sendFeedback" : extraInfo=> {
         // Open feedback dialog, basically same as newmsg
         // Setup preview handling
@@ -643,80 +657,13 @@ rw.ui = {
         `, 500, 390)).showModal(); // 500x390 dialog, see sendFeedback.html for code
     },
 
-    "recentlyVisitedSelector" : { // Used to select recently visited page from a dropdown dialog
-        "dialog" : null,
-        "init" : content=>{
-            if ($("#rwRecentVistedSelectContainer").length < 1) {
-                // container hasn't already been init
-                $("body").append(`
-                <div id="rwRecentVistedSelectContainer">
-                </div>
-                `);
-            }
-            // let's continue
-            $("#rwRecentVistedSelectContainer").html(`
-            <dialog class="mdl-dialog" id="rwUILoadDialog">
-                ` + content +`
-            </dialog>
-            `); // Create dialog with content from loadingSpinner.html
-
-            rw.ui.recentlyVisitedSelector.dialog = document.querySelector('#rwUILoadDialog'); // set dialog var
-
-            // Firefox issue fix
-            if (! rw.ui.recentlyVisitedSelector.dialog.showModal) {
-                dialogPolyfill.registerDialog(rw.ui.recentlyVisitedSelector.dialog);
-            }
-        },
-
-        "showDialog" : callback=>{ // Show dialog and callback(selected article)
-            // Assemble revent visits listbox
-            let recentlyVisited = JSON.parse(window.localStorage.rwRecentlyVisited);
-
-             // Check if empty, if so, show dialog and exit
-             if ((recentlyVisited == null) || (recentlyVisited.length < 1)) {
-                rw.ui.confirmDialog("There are no recent pages to show.", "OKAY", ()=>dialogEngine.closeDialog(), "", ()=>{}, 0);
-                return; //exit, don't callback as not complete
-            }
-
-            // Let's continue
-            let finalRVList = "";
-            recentlyVisited.forEach((page, i) => {
-                finalRVList += `
-                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="spI${i}">
-                    <input type="radio" id="spI${i}" class="mdl-radio__button" name="selectedPageIndex" value="${i}">
-                    <span class="mdl-radio__label">${page.replace(/_/g, ' ')}</span>
-                </label>
-                <hr />
-                `;
-            });
-            
-            // Add close handler
-            addMessageHandler("closeRecentPageDialog", ()=>rw.ui.recentlyVisitedSelector.close());
-
-            // Add continue handler
-            addMessageHandler("RecentPageDialogSel`*", m=>{
-                let selectedI = m.split("`")[1];
-                callback(recentlyVisited[selectedI]); // send callback
-            });
-            
-            // Now show dialog
-            rw.ui.recentlyVisitedSelector.init(mdlContainers.generateContainer(`
-            [[[[include recentPageSelect.html]]]]
-            `, 420, 500)); // 420 hahahaha
-            rw.ui.recentlyVisitedSelector.dialog.showModal();
-        },
-
-        "close" : () => {
-            // Close dialog
-            $(rw.ui.recentlyVisitedSelector.dialog)
-            .addClass("closeAnimate")
-            .on("webkitAnimationEnd", ()=>{
-                // Animation finished
-                rw.ui.recentlyVisitedSelector.dialog.close();
-            });
-        }
-    },
-
+    /**
+     * Opens the administrator report venue selector for the specified username
+     *
+     * @param {string} un Username to report
+     * @method adminReportSelector
+     * @extends rw.ui
+     */
     "adminReportSelector" : un=> { // DON'T FORGET TO USE un ATTR!
         un = rw.info.targetUsername(un); // get target
         // Handle events
@@ -729,6 +676,13 @@ rw.ui = {
         `, 600, 500)).showModal();
     },
 
+    /**
+     * Opens the UAA report dialog for a specified user
+     *
+     * @param {string} un Username to report
+     * @method beginUAAReport
+     * @extends rw.ui
+     */
     "beginUAAReport" : un=> { // Report to UAA
 
         // Check if IP - if so, exit
@@ -798,5 +752,170 @@ rw.ui = {
         dialogEngine.create(mdlContainers.generateContainer(`
         [[[[include uaaReport.html]]]]
         `, 500, 410)).showModal();
+    },
+
+    // CLASSES from here 
+
+    /**
+     * A static loading dialog while processes occur. Seperate from dialogEngine.
+     * @class rw.ui.loadDialog
+     */
+    "loadDialog" : {
+        // Loading dialog
+        "hasInit" : false, 
+        "init" : text=> {
+            if (!rw.ui.loadDialog.hasInit) { // Only continue if we haven't already appended our container div
+                $("body").append(`
+                <div id="rwUILoad">
+                </div>
+                `);
+            }
+            $("#rwUILoad").html(`
+            <dialog class="mdl-dialog" id="rwUILoadDialog">
+                ` + mdlContainers.generateContainer(`[[[[include loadingSpinner.html]]]]`, 300, 30) +`
+            </dialog>
+            `); // Create dialog with content from loadingSpinner.html
+
+            rw.ui.loadDialog.dialog = document.querySelector('#rwUILoadDialog'); // set dialog var
+
+            // Firefox issue fix
+            if (! rw.ui.loadDialog.dialog.showModal) {
+                dialogPolyfill.registerDialog(rw.ui.loadDialog.dialog);
+            }
+
+            rw.ui.loadDialog.hasInit = true;
+        },
+
+
+        /**
+         * Opens a loading dialog with the given text
+         *
+         * @param {string} text
+         * @method show
+         * @extends rw.ui.loadDialog
+         */
+        "show" : text=> { // Init and create a new loading dialog
+            rw.ui.loadDialog.init(text); // init
+            rw.ui.loadDialog.setText(text); // set our text
+            // Show dialog
+            rw.ui.loadDialog.dialog.showModal();
+            // We done
+        },
+
+        /**
+         * Changes the text of the current loading dialog
+         *
+         * @param {string} text
+         * @method setText
+         * @extends rw.ui.loadDialog
+         */
+        "setText" : text=> $("#rwUILoadDialog > iframe")[0].contentWindow.postMessage(text, '*'), // Set text of loading by just sending the message to the container
+
+        /**
+         * Closes the current loading dialog
+         *
+         * @method close
+         * @extends rw.ui.loadDialog
+         */
+        "close": ()=>{ // Close the dialog and animate
+            $("#rwUILoadDialog")
+            .addClass("closeAnimate")
+            .on("webkitAnimationEnd", ()=>{
+                // Animation finished
+                rw.ui.loadDialog.dialog.close();
+            });
+        } 
+    },
+
+    /**
+     * A dialog used to select a page from a users 20 recently visited pages
+     * 
+     * @class rw.ui.recentlyVisitedSelector
+     */
+    "recentlyVisitedSelector" : { // Used to select recently visited page from a dropdown dialog
+        "dialog" : null,
+        "init" : content=>{
+            if ($("#rwRecentVistedSelectContainer").length < 1) {
+                // container hasn't already been init
+                $("body").append(`
+                <div id="rwRecentVistedSelectContainer">
+                </div>
+                `);
+            }
+            // let's continue
+            $("#rwRecentVistedSelectContainer").html(`
+            <dialog class="mdl-dialog" id="rwUIRVisDialog">
+                ` + content +`
+            </dialog>
+            `);
+
+            rw.ui.recentlyVisitedSelector.dialog = document.querySelector('#rwUIRVisDialog'); // set dialog var
+
+            // Firefox issue fix
+            if (! rw.ui.recentlyVisitedSelector.dialog.showModal) {
+                dialogPolyfill.registerDialog(rw.ui.recentlyVisitedSelector.dialog);
+            }
+        },
+
+        /**
+         * Shows the selection dialog and calls back when user has made their selection
+         *
+         * @param {function} callback callback(selectedPageTitle)
+         * @method showDialog
+         * @extends rw.ui.recentlyVisitedSelector
+         */
+        "showDialog" : callback=>{ // Show dialog and callback(selected article)
+            // Assemble revent visits listbox
+            let recentlyVisited = JSON.parse(window.localStorage.rwRecentlyVisited);
+
+             // Check if empty, if so, show dialog and exit
+             if ((recentlyVisited == null) || (recentlyVisited.length < 1)) {
+                rw.ui.confirmDialog("There are no recent pages to show.", "OKAY", ()=>dialogEngine.closeDialog(), "", ()=>{}, 0);
+                return; //exit, don't callback as not complete
+            }
+
+            // Let's continue
+            let finalRVList = "";
+            recentlyVisited.forEach((page, i) => {
+                finalRVList += `
+                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="spI${i}">
+                    <input type="radio" id="spI${i}" class="mdl-radio__button" name="selectedPageIndex" value="${i}">
+                    <span class="mdl-radio__label">${page.replace(/_/g, ' ')}</span>
+                </label>
+                <hr />
+                `;
+            });
+            
+            // Add close handler
+            addMessageHandler("closeRecentPageDialog", ()=>rw.ui.recentlyVisitedSelector.close());
+
+            // Add continue handler
+            addMessageHandler("RecentPageDialogSel`*", m=>{
+                let selectedI = m.split("`")[1];
+                callback(recentlyVisited[selectedI]); // send callback
+            });
+            
+            // Now show dialog
+            rw.ui.recentlyVisitedSelector.init(mdlContainers.generateContainer(`
+            [[[[include recentPageSelect.html]]]]
+            `, 420, 500)); // 420 hahahaha
+            rw.ui.recentlyVisitedSelector.dialog.showModal();
+        },
+
+        /**
+         * Closes the currently open dialog
+         *
+         * @method close
+         * @extends rw.ui.recentlyVisitedSelector
+         */
+        "close" : () => {
+            // Close dialog
+            $(rw.ui.recentlyVisitedSelector.dialog)
+            .addClass("closeAnimate")
+            .on("webkitAnimationEnd", ()=>{
+                // Animation finished
+                rw.ui.recentlyVisitedSelector.dialog.close();
+            });
+        }
     }
 }

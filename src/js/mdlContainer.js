@@ -1,10 +1,19 @@
-/*
-(c) Ed E 2020
-
-NOTICE: All cross-domain addresses in containers MUST BE ABSOLUTE (i.e https:// rather than //)
+/**
+* mdlContainers generates both HTML and blob containing all the libaries needed within RedWarn's dialog user interface
+*
+* @class mdlContainers
 */
+// NOTICE: All cross-domain addresses in containers MUST BE ABSOLUTE (i.e https:// rather than //)
 var mdlContainers = {
+    /**
+     * Appends the required themed script, link and style tags to the body HTML provided.
+     * @method generateHtml
+     * @param {string} innerContent HTML body
+     * @return {string} HTML content
+     * @extends mdlContainers
+     */
     "generateHtml" : innerContent => {
+
         let content = `
         <script src="https://redwarn.toolforge.org/cdn/js/jQuery.js"></script>
         <link href="https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese" rel="stylesheet">
@@ -38,6 +47,16 @@ var mdlContainers = {
         return content; // return
     },
 
+    /**
+     * Generates an iFrame with the specified HTML content, width and height.
+     * @method generateContainer
+     * @param {string} innerContent HTML content
+     * @param {number} width width of iFrame
+     * @param {number} height height of iFrame
+     * @param {boolean} fill if set true will expand the iframe to the parent offset height and width when resized, essentially filling the page.
+     * @returns {string} iFrame HTML
+     * @extends mdlContainers
+     */
     "generateContainer" : function(innerContent, width, height, fill) { // fill sizes mdl containers in dialogEngine to ALWAYS be screen size
         if (fill) {
             // If fill mode on, fit to window

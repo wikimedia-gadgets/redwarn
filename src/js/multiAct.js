@@ -1,7 +1,16 @@
+/**
+ * RedWarn's multiple action tool
+ * @class rw.multiAct
+ */
 rw.multiAct = { // Multi action screen
+    /**
+     * Initalise the multiple action tool buttons on a revision history page
+     * @method initHistoryPage
+     * @extends rw.multiAct
+     */
     "initHistoryPage" : ()=> {
         // If on history page, add button to mass warn between edits
-        if(window.location.href.includes("w/index.php?title=") && window.location.href.includes("&action=history")) {
+        if(window.location.href.includes("/index.php?title=") && window.location.href.includes("&action=history")) {
             // On history page, add button
             $(".mw-history-compareselectedversions").append(`
             <button class="mw-ui-button rwMAThist">Use the Multiple Action Tool between selected revisions</button>
@@ -67,6 +76,13 @@ rw.multiAct = { // Multi action screen
         }
     },
 
+    /**
+     * Open the multiple action tool using the specified user object
+     *
+     * @param {object} userObj Object in format of {username1: {edits: [(array of revIDs)]}, username2: ..., username3: ...}
+     * @method open
+     * @extends rw.multiAct
+     */
     "open" : userObj=>{ // userobj format or just {}
         // To prevent a new user from mass spamming loads of users, extendedconfirmed only
         rw.info.featureRestrictPermissionLevel("extendedconfirmed", ()=>{

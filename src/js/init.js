@@ -1,69 +1,137 @@
 // (c) Ed.E and contributors 2020
 
-// Window focus checking n things
-var windowFocused = true;
-
-window.onblur = function(){  
-    windowFocused = false;  
-}  
-window.onfocus = function(){  
-    windowFocused = true;  
-}
-
-// Array extention
-var arrayMove = (arr, old_index, new_index) => {
-    if (new_index >= arr.length) {
-        var k = new_index - arr.length + 1;
-        while (k--) {
-            arr.push(undefined);
-        }
-    }
-    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
-    return arr;
-}
-
-function waitForMDLLoad(cb) { // Used to wait for MDL load
-    if(typeof componentHandler !== "undefined"){
-        cb(); // callback
-    } else {
-        setTimeout(()=>waitForMDLLoad(cb), 250);
-    }
-}
-
-function redirect(url, inNewTab) {
-    if (inNewTab) {
-        Object.assign(document.createElement('a'), { target: '_blank', href: url}).click(); // Open in new tab
-    } else {
-        window.location.href = url; // open here
-    }
-}
 if (rw != null) {
     // Double init, rm the old version and hope for the best
     rw = {};
     mw.notify("Warning! You have two versions of RedWarn installed at once! Please edit your common.js or skin js files to ensure that you only use one instance to prevent issues.");
 }
+
+/**
+* rw is the main class for RedWarn and holds the vast majority of its core code, properties and functions. See other classes for further documentation.
+*
+* @class rw
+*/
 var rw = {
     // UPDATE THIS DATA FOR EVERY VERSION!
+
+    /**
+     * Defines the version of this build of RedWarn. This is shown in, and is also checked to see if an update has occured.
+     * For devlopment versions, you MUST append "dev" to this value to distingish that it is a devlopment build.
+     *
+     * @property version
+     * @type {string}
+     * @extends rw
+     */
     "version" : "15", // don't forget to change each version!
+
+    /**
+     * Defines a brief summary of this version of RedWarn. This is shown in both update notices, and a card in preferences.
+     * To prevent UI issues, it must be kept brief.
+     *
+     * @property versionSummary
+     * @type {string}
+     * @extends rw
+     */
     "versionSummary": `
 <!-- RedWarn 15 -->
 RedWarn 15 unifies the anti-vandalism experience, including user interface improvements, UAA reports, bug fixes and more.
     `,
+
+    /**
+     * This varible is defined by the magic word "[[[[BUILDINFO]]]]", which the build script will replace with information
+     * regarding the time, file location and computer info such as username, computer name and OS of this build.
+     * Shown in preferences only.
+     * @property buildInfo
+     * @type {string}
+     * @extends rw
+     */
     // ADDED BY BUILD SCRIPT
     "buildInfo" : `[[[[BUILDINFO]]]]`,
+
     // Now edited by us again
+    /**
+     * Defines the logo used in parts of RedWarn's UI. Please note that removing or changing this without adding attribution elsewhere may be a violation of RedWarn's license.
+     * @property logoHTML
+     * @type {string}
+     * @extends rw
+     * @default '<span style="font-family:Roboto;font-weight: 300;text-shadow:2px 2px 4px #0600009e;"><span style="color:red">Red</span>Warn</span>'
+     */
     "logoHTML" : `<span style="font-family:Roboto;font-weight: 300;text-shadow:2px 2px 4px #0600009e;"><span style="color:red">Red</span>Warn</span>`, // HTML of the logo
+
+    /**
+     * Defines a short version of the logo used in parts of RedWarn's UI. Please note that removing or changing this without adding attribution elsewhere may be a violation of RedWarn's license.
+     * @property logoShortHTML
+     * @type {string}
+     * @extends rw
+     * @default '<span style="font-family:Roboto;font-weight: 300;text-shadow:2px 2px 4px #0600009e;"><span style="color:red">R</span>W</span>'
+     */
     "logoShortHTML" : `<span style="font-family:Roboto;font-weight: 300;text-shadow:2px 2px 4px #0600009e;"><span style="color:red">R</span>W</span>`, // Short HTML of the logo
+
+
+    /**
+     * Returns a MediaWiki signiature
+     * @method sign
+     * @returns {string} MediaWiki sign (~~~~)
+     * @extends rw
+     */
+
     "sign": ()=>{return atob("fn5+fg==")}, // we have to do this because mediawiki will swap this out with devs sig.
+
+    // Not really used, but keep for now just in case
     "welcome": ()=> {return atob("e3tzdWJzdDpXZWxjb21lfX0=");}, // welcome template
     "welcomeIP": ()=> {return atob("e3tzdWJzdDp3ZWxjb21lLWFub259fQ==");}, // welcome IP template
+
+    /**
+     * Returns a shared IP advice template - please note that is is likely to be depreciated in the near future
+     * @returns {string} shared IP advice template
+     * @method sharedIPadvice
+     * @extends rw
+     */
     "sharedIPadvice" : ()=> {return atob("XG46e3tzdWJzdDpTaGFyZWQgSVAgYWR2aWNlfX0=");}, // if this is a shared...
 
     // Wiki automated config
+
+    /**
+     * The base URL of the MediaWiki instance (wgServer), e.g. //en.wikipedia.org
+     * @property wikiBase
+     * @type {string}
+     * @extends rw
+     */
     "wikiBase" : mw.config.get("wgServer"), // mediawiki base URL (i.e. //en.wikipedia.org)
+
+    /**
+     * The URL of the index.php script of this MediaWiki instance (e.g. //en.wikipedia.org/w/index.php)
+     * @property wikiIndex
+     * @type {string}
+     * @extends rw
+     */
     "wikiIndex" : mw.config.get("wgServer") + mw.config.get("wgScript"), // mediawiki index.php (i.e. //en.wikipedia.org/w/index.php)
+
+    /**
+     * The URL of the api.php script of this MediaWiki instance (e.g. //en.wikipedia.org/w/api.php)
+     * @property wikiAPI
+     * @type {string}
+     * @extends rw
+     */
     "wikiAPI" : mw.config.get("wgServer") + mw.config.get("wgScriptPath") + "/api.php", // mediawiki API path  (i.e. //en.wikipedia.org/w/api.php)
-    "wikiID": mw.config.values.wgWikiID,
+
+    /**
+     * The ID of this MediaWiki instance (e.g. enwiki) - this may not always be defined!
+     * @property wikiAPI
+     * @type {string}
+     * @extends rw
+     */
+    "wikiID": mw.config.get("wgWikiID"),
+
+
+    /**
+     * Generates a random alphanumerical string of the specified length
+     *
+     * @param {number} length
+     * @returns {string}
+     * @method makeID
+     * @extends rw
+     */
     "makeID" : length=> {
         // Generates a random string
         var result           = '';
@@ -75,7 +143,18 @@ RedWarn 15 unifies the anti-vandalism experience, including user interface impro
         return result;
     },
 
+    /**
+     * rw.visuals contains shortcuts to initalising and controlling visual elements, including adding libaries
+     * @class rw.visuals
+     */
     "visuals" : {
+        /**
+         * Adds RedWarn's styles, libaries and other elements to the current page and waits for them to load, then excecutes the callback function
+         *
+         * @param {function} callback 
+         * @method init
+         * @extends rw.visuals
+         */
         "init" : (callback) => {
             // Welcome message
             console.log("RedWarn "+ rw.version + " - (c) 2020 RedWarn Contributors");
@@ -113,11 +192,24 @@ RedWarn 15 unifies the anti-vandalism experience, including user interface impro
             waitForMDLLoad(callback);
         },
 
+        /**
+         * Registers a DOM element with Material Design Lite. Equivalent to componentHandler.upgradeElement(c)
+         *
+         * @param {object} c MDL DOM element to register
+         * @method register
+         * @extends rw.visuals
+         */
         "register" : c=> {
             // Register a componant with MDL
             componentHandler.upgradeElement(c);
         },
 
+        /**
+         * Adds RedWarns control icons to the top icon or sidebar space depending on skin and preferences. 
+         *
+         * @method pageIcons
+         * @extends rw.visuals
+         */
         "pageIcons" : ()=> {
             // Thanks to User:Awesome Aasim for the suggestion and some sample code.
             try {
@@ -195,7 +287,18 @@ RedWarn 15 unifies the anti-vandalism experience, including user interface impro
         }
     },
 
+    /**
+     * RedWarn's recent changes interface
+     * @class rw.recentChanges
+     */
     "recentChanges" : {
+        /**
+         * Opens RedWarn's patrol interface
+         *
+         * @param {string} filters MediaWiki API filters, i.e. userExpLevel=unregistered%3Bnewcomer&hidebots=1&hidecategorization=1
+         * @method openPage
+         * @extends rw.recentChanges
+         */
         "openPage" : (filters)=> {
             // Open recent changes url
             let sidebarSize = 500;
@@ -253,8 +356,99 @@ RedWarn 15 unifies the anti-vandalism experience, including user interface impro
     }
 };
 
+
+/**
+ * RedWarn extensions in the global window space
+ * @class window
+ */
+/**
+ * Is set depending on whether or not this window/tab is in focus.
+ *
+ * @property windowFocused
+ * @type {boolean}
+ * @default true
+ * @extends window
+ */
+// Window focus checking n things
+var windowFocused = true;
+
+window.onblur = function(){  
+    windowFocused = false;  
+}  
+window.onfocus = function(){  
+    windowFocused = true;  
+}
+
+// Array extention
+/**
+ * Moves element at index old_index to new_index
+ * @method arrayMove
+ * @param {array} arr
+ * @param {number} old_index
+ * @param {number} new_index
+ * @returns {array}
+ * @extends window
+ */
+var arrayMove = (arr, old_index, new_index) => {
+    if (new_index >= arr.length) {
+        var k = new_index - arr.length + 1;
+        while (k--) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr;
+}
+
+/**
+ * Waits for Material Design Lite to load, then excecutes callback.
+ *
+ * @method waitForMDLLoad
+ * @param {function} cb Callback function
+ * @extends window
+ */
+function waitForMDLLoad(cb) { // Used to wait for MDL load
+    if(typeof componentHandler !== "undefined"){
+        cb(); // callback
+    } else {
+        setTimeout(()=>waitForMDLLoad(cb), 250);
+    }
+}
+
+/**
+ * Redirect the user to the specified URL
+ *
+ * @method redirect
+ * @param {string} url URL to redirect to
+ * @param {boolean} inNewTab if set to true, will open the URL in a new tab
+ * @extends window
+ */
+function redirect(url, inNewTab) {
+    if (inNewTab) {
+        Object.assign(document.createElement('a'), { target: '_blank', href: url}).click(); // Open in new tab
+    } else {
+        window.location.href = url; // open here
+    }
+}
+
+/**
+ * Object containing messageHandlers and their callbacks. See also addMessageHandler()
+ *
+ * @property messageHandlers
+ * @type {object}
+ * @default '{"testHandler": () => {alert("Working!");}};'
+ * @extends window
+ */
 var messageHandlers = {"testHandler": () => {alert("Working!");}};
 
+/**
+ * Adds a message handler - used between iFrames and the main window.
+ *
+ * @param {string} msg The message that will trigger the callback. If ending with *, this will check if the message contains the prefixed value instead of a direct match.
+ * @param {function} callback Callback for when this message is recieved
+ * @method addMessageHandler
+ * @extends window
+ */
 function addMessageHandler(msg, callback) { // calling more than once will just overwrite
     Object.assign(messageHandlers, ((a,b)=>{let _ = {}; _[a]=b; return _;})(msg, callback)); // function ab returns a good formatted obj
 }
@@ -272,6 +466,12 @@ window.onmessage = e=>{
 };
 
 // init everthing
+/**
+ * Initalises and loads everything in RedWarn, including main feature level restrictions, visual initalisation and window.location.hash handling.
+ *
+ * @method initRW
+ * @extends window
+ */
 function initRW() {
     rw.visuals.init(()=>{
         rw.visuals.toast.init();

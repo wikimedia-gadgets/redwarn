@@ -1,7 +1,23 @@
+/**
+ * rw.info performes misc. actions, inlcuding adding text to user pages, loading user config and more.
+ * @class rw.info
+ */
 // API calls ext.
 rw.info = { // API
+    /**
+     * If a user is in the "rollbacker" user group, this will be automatically set via window.initRW() to the users rollback token.
+     * @property rollbackToken
+     * @type {string}
+     * @extends rw.info
+     */
     // Rollback token
     "rollbackToken" : "",
+
+    /**
+     * Sets rw.info.rollbackToken with the users rollback token if they have they are in the "rollbacker" user group.
+     * @method getRollbackToken
+     * @extends rw.info
+     */
     "getRollbackToken" : () => {
         // Ran on load to allow for ?action=rollback request
         rw.info.featureRestrictPermissionLevel("rollbacker", ()=>{
@@ -10,17 +26,51 @@ rw.info = { // API
             });
         },()=>{});
     },
+
+    /**
+     * Gets the target username of an action, or username argument if defined.
+     *
+     * @param {string} un Optional: Username. If set, will just return this parameter.
+     * @returns {string} Target Username
+     * @method targetUsername
+     * @extends rw.info
+     */
     "targetUsername": un=>{
         if (un) {return un;} // return username if defined
-        return mw.config.values.wgRelevantUserName},
-    "getUsername":  ()=>{return mw.config.values.wgUserName},
+        return mw.config.get("wgRelevantUserName");},
 
+    /**
+     * Gets the logged in user's username
+     *
+     * @returns {string} Logged in username
+     * @method getUsername
+     * @extends rw.info
+     */
+    "getUsername":  ()=>{return mw.config.get("wgUserName");},
+
+
+    /**
+     * Detects if the given username is an IP address
+     *
+     * @param {string} un Username
+     * @returns {boolean}
+     * @method isUserAnon
+     * @extends rw.info
+     */
     "isUserAnon" : un=> {
         // Detect if user is an IP address
         let regEx = un.match(/([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4}|(\d{1,3}\.){3}\d{1,3}/g); // this regex matches all ipv4 and ipv6 addresses. thanks: http://regexlib.com/UserPatterns.aspx?authorId=3e359e7e-cff5-4149-ba94-7baeae099d9c
         return (regEx != null); // If matches is not null then yes
     },
 
+    /**
+     * Sets rw.config to the current user config. If rw.config is already set, it will immediately callback.
+     *
+     * @param {function} callback
+     * @param {boolean} resetToDefault If set to true, the user config will be reset to default. Callback will not be called in these cases.
+     * @method getConfig
+     * @extends rw.info
+     */
     "getConfig": (callback, resetToDefault) => { // IF RESETTODEFAULT IS TRUE IT WILL DO IT
         
         let defaultConfig = { // Default config on reset or anything like that
@@ -109,6 +159,14 @@ rw.info = { // API
         });
     },
 
+    /**
+     * Writes to a users redwarnConfig.js file with the current configuration set in rw.config
+     *
+     * @param {boolean} noRedirect If false, the page will reload on completion and also show a loading dialog.
+     * @param {function} callback Callback function if noRedirect is set to true.
+     * @method writeConfig
+     * @extends rw.info
+     */
     "writeConfig": (noRedirect, callback)=> { // CALLBACK ONLY IF NOREDIRECT IS TRUE.
         let rwConfigTemplate = rw.config.templatePacks; // for restore
         // Handle templates (saved as b64 string)
@@ -148,6 +206,15 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
             });
     },
 
+    /**
+     * Restrict this feature to a user group. This will be overridden if the user is in the "sysop" group.
+     *
+     * @param {string} l User group
+     * @param {function} callback Callback that will be called if user is in the defined user group.
+     * @param {function} callbackIfNot Callback that will be called if user is not in the defined user group.
+     * @method featureRestrictPermissionLevel
+     * @extends rw.info
+     */
     "featureRestrictPermissionLevel": (l, callback, callbackIfNot)=> {
         // Restrict feature to users in this group
         mw.user.getGroups(g=>{
@@ -172,7 +239,15 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         });
     },
 
-    "getRelatedPage" : (pg)=> { // TODO - APPEND &VANARTICLE LIKE TWINKLE FOR THIS!
+    /**
+     * Gets the related page for this action.
+     *
+     * @param {string} pg If set, this function will return this parameter
+     * @returns {string} Related page
+     * @method getRelatedPage
+     * @extends rw.info
+     */
+    "getRelatedPage" : (pg)=> {
         if (pg) {return pg;} // return page if defined
         try {
             let x = mw.util.getParamValue('vanarticle');
@@ -183,6 +258,14 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         }  
     },
 
+    /**
+     * Uses MediaWiki's parser API to convert given WikiText to HTML
+     *
+     * @param {string} wikiTxt 
+     * @param {function} callback callback(parsedHTML)
+     * @method parseWikitext
+     * @extends rw.info
+     */
     "parseWikitext" : (wikiTxt, callback) => { // Uses Wikipedia's API to turn Wikitext to string. NEED TO USE POST IF USERPAGE IS LARGE EXT..
         $.post(rw.wikiAPI, {
             "action": "parse",
@@ -191,14 +274,21 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
             "prop": "text",
             "pst": true,
             "assert": "user",
-            "text": wikiTxt,
-            "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
+            "text": wikiTxt
         }).done(r => {
-            let processedResult = r.parse.text['*'].replace(/\/\//g, "https://").replace(/href=\"\/wiki/g, `href=rw.wikiBase+"/wiki`); // regex replace w direct urls
+            let processedResult = r.parse.text['*'].replace(/\/\//g, "https://").replace(/href=\"\/wiki/g, `href="${rw.wikiBase}/wiki`); // regex replace w direct urls
             callback(processedResult); // make callback w HTML
         });
     },
 
+    /**
+     * Detects and calls back with the highest warning level this user has recieved this month.
+     *
+     * @param {string} user
+     * @param {function} callback callback(int warningLevel [0 none 1 notice 2 caution 3 warning 4 final warning], string thisMonthsNotices (wikitext), string userPg (wikitext))
+     * @method lastWarningLevel
+     * @extends rw.info
+     */
     "lastWarningLevel" : (user, callback)=> { // callback(wLevel. thisMonthsNotices, userPg) 0 none 1 notice 2 caution 3 warning 4 final warning
         // Get the last warning level of a user this month
         $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:"+user+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
@@ -272,6 +362,19 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         });
     },// End lastWarningLevel
 
+    /**
+     * Adds given WikiText to a users talk page.
+     *
+     * @param {string} user Username of the account to add text to
+     * @param {string} text Wikitext to append
+     * @param {boolean} underDate If set true, the edit will be appended under this months date header, e.g. July 2020
+     * @param {string} summary The summary for this edit, excluding any RedWarn branding (this function automatically appends this)
+     * @param {string} blacklist If a userpage contains this text, the edit will not be made and the text in blackListToast will be shown in a toast message. Set to null to disable.
+     * @param {string} blacklistToast Toast message to show if blacklist is matched.
+     * @param {function} callback If no callback set, a saving message dialog will be shown and a redirect will occur on completion.
+     * @method addWikiTextToUserPage
+     * @extends rw.info
+     */
     "addWikiTextToUserPage" : (user, text, underDate, summary, blacklist, blacklistToast, callback) => {
         if ((user == null) || (user.toLowerCase() == "undefined")) {
             // Stop it from being sent to User:undefined
@@ -386,6 +489,16 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         }); 
     }, // end addTextToUserPage
 
+    
+    /**
+     * Quick welcomes the given user. Depreceated in rev12.
+     *
+     * @param {string} un Username to append the welcome template to
+     * @method quickWelcome
+     * @extends rw.info
+     * @deprecated Use rw.quickTemplate instead.
+     * 
+     */
     "quickWelcome" : un=>{
         // Quickly welcome the current user
         // Check if registered or unregistered user
@@ -399,6 +512,16 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
     },
 
     // Used for rollback
+    /**
+     * Check if the given revID is the latest revision of the given page name and will callback with the username of whoever made that edit
+     *
+     * @param {string} name Title of the page to check
+     * @param {string} revID Revision ID to check
+     * @param {function} callback callback(username) Will only be called if this is the latest revision, else will redirect to the latest revision diff page.
+     * @param {function} noRedirectCallback If set, this will be called instead of a redirect if it isn't the latest revision
+     * @method isLatestRevision
+     * @extends rw.info
+     */
     "isLatestRevision" : (name, revID, callback, noRedirectCallback) => { // callback(username) only if successful!! in other cases, will REDIRECT to latest revison compare page
         // Check if revsion is the latest revision
         $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+ encodeURIComponent(name) +"&rvslots=*&rvprop=ids%7Cuser&formatversion=2&format=json", r=>{
@@ -422,6 +545,15 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         });
     },
 
+    /**
+     * Gets the latest revision not made by the specified user on the specified page. Will prepare a summary string for rollback-like reverts.
+     *
+     * @param {string} name Title of the page to check
+     * @param {string} username Username to exclude
+     * @param {function} callback callback(revisionWikiText, preparedRevertSummary, revisionID, parentRevisionID)
+     * @method latestRevisionNotByUser
+     * @extends rw.info
+     */
     "latestRevisionNotByUser" : (name, username, callback) => { // CALLBACK revision, summaryText, rId
         // Name is page name, username is bad username
         $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+ encodeURIComponent(name) +"&rvslots=*&rvprop=ids%7Cuser%7Ccontent&rvexcludeuser="+ username +"&formatversion=2&format=json", r=>{
@@ -442,20 +574,14 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         });
     },
 
-    "stripWikiTxt" : wikiTxt=> {
-        // VERY BASIC Convert WikiText to string
-        try {
-            wikiTxt = wikiTxt.replace(/<!--[^>]*-->/g, ""); // Strip html comments
-            wikiTxt.match(/\[\[(?:[^\]\]]*)\]\]/g).forEach(t=>{ // match [[*]]
-                txtToKeep = (a=>{return a[a.length - 1];})(t.split("|")).replace("]]", ""); // Last | iin the string then rm the end
-                wikiTxt = wikiTxt.replace(t, txtToKeep); // now replace
-            });
-            wikiTxt = wikiTxt.replace(/'''/g, ""); // rm bold
-            wikiTxt = wikiTxt.replace(/''/g, ""); // rm italic
-        } catch (err) {} // Probably no wikitxt there
-         return wikiTxt;
-    },
-
+    /**
+     * Calls back with the pronouns for the users given gender
+     *
+     * @param {string} user Username to check
+     * @param {function} callback callback(pronouns) - either he/him, she/her, they/them.
+     * @method getUserPronouns
+     * @extends rw.info
+     */
     "getUserPronouns" : (user, callback)=> {
         // Trying mediawiki api here rather than a jquery get
         new mw.Api().get({
@@ -469,6 +595,12 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         });
     },
 
+    /**
+     * Calls back with the edit count of the given user
+     *
+     * @param {string} user Username to check
+     * @param {function} callback callback(editCount)
+     */
     "getUserEditCount" : (user, callback)=> {
         // Trying mediawiki api here rather than a jquery get
         new mw.Api().get({
@@ -481,11 +613,39 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         });
     },
 
-    "changeWatch" : {
-        // Watches for changes on a page, always latest version and notifies
+    // CLASSES
+
+    /**
+     * RedWarn's "notify on change" feature, which watches for changes on a page, then notifies the user.
+     * @class rw.info.changeWatch
+     */
+    "changeWatch" : {// Watches for changes on a page, always latest version and notifies
+        /**
+         * Defines whether or not the feature is activated.
+         *
+         * @property active
+         * @type {boolean}
+         * @extends rw.info.changeWatch
+         */
         "active" : false,
+
         "timecheck" : "",
+    
+        /**
+         * Defines the latest revsion ID of this page if feature is enabled
+         *
+         * @property latestRevID
+         * @type {string}
+         * @extends rw.info.changeWatch
+         */
         "lastRevID": "",
+
+
+        /**
+         * Toggles this feature on/off
+         * @method toggle
+         * @extends rw.info.changeWatch
+         */
         "toggle" : ()=> {
             if (!rw.info.changeWatch.active) {
                 // We're not active, make UI changes
@@ -544,6 +704,5 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 rw.info.changeWatch.active = false;
             }
         }
-    }
-    
+    }  
 };

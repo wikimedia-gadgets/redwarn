@@ -1,25 +1,22 @@
 # redwarn-web (Development Branch)
-Wikipedia editing tool.
+RedWarn's userscript - made with TypeScript, Webpack, and TSX-DOM.
 
-## For full documentation, bugs, features and more info, see [WP:REDWARN](https://en.wikipedia.org/wiki/WP:REDWARN) on Wikipedia
+The [**R**ecent **Ed**its Patrol and **Warn**ing Tool](https://en.wikipedia.org/wiki/WP:RedWarn) (abbreviated as RedWarn) is a [Wikipedia](https://en.wikipedia.org/wiki/) [patrol](https://en.wikipedia.org/wiki/WP:RCP) and [counter-vandalism](https://en.wikipedia.org/wiki/WP:VD) tool, designed to be a user-friendly way to perform common moderation tasks.
 
 You can help! If you find any bugs or would like new features, you can fix these or add them yourself. More technical documentation is coming in the user guide soon to help ease this process.
 
-#### Set up local development server for working on Redwarn
+## Contributors
+RedWarn is primarily maintained and developed by the RedWarn contributors.
 
-<details>
-    <summary>System Requirements</summary>
-    1) PHP installed (Preferably latest)<br>
-    2) Internet connection (for wikipedia)<br>
-    3) Git (preferably)<br>
-</details>
-<details>
-    <summary>Set up development server</summary>
-    1) Clone your code to your directory of choice with <code>git clone -b dev https://gitlab.com/redwarn/redwarn-web.git</code>. Alternatively, if you <i>really</i> don't want to install git, navigate to the 'dev' branch in gitlab and download it via zip (or preferred compressed file type) and extract it.<br>
-    2) Have a terminal opened into redwarn-web from the directory you just cloned it in and run the command <code>php -S localhost:9696</code><br>
-    3) Click [here](https://en.wikipedia.org/wiki/Special:MyPage/common.js) to go to your common.js file and create it if you have not already, making sure you do not have any other version of redwarn installed and removing it if so, add this line to your common.js: <code>mw.loader.load( 'http://localhost:9696/build.php' );</code><br>
-    4) Refresh your wikipedia page by holding shift while refreshing (to force clear your page cache) and your version of redwarn should now be on the development branch!
-</details>
+* **[@ed_E](https://gitlab.com/ed_e)** ([\[\[User:Ed6767\]\]](https://en.wikipedia.org/wiki/User:Ed6767)) - lead developer, designer, and chief maintainer
+* **[@pr0mpted](https://gitlab.com/pr0mpted)** - ([\[\[User:Prompt0259\]\]](https://en.wikipedia.org/wiki/User:Prompt0259)) - additional development and design
+* **[@ChlodAlejandro](https://gitlab.com/ChlodAlejandro)** - ([\[\[User:Chlod\]\]](https://en.wikipedia.org/wiki/User:Chlod)) - additional development and design
+* **[@leijurv](https://gitlab.com/leijurv)** - ([\[\[User:Leijurv\]\]](https://en.wikipedia.org/wiki/User:Leijurv)) - additional development and design
+* **[and everyone else on the RedWarn team](https://gitlab.com/groups/redwarn/-/group_members)**
+* **[with some additional development.](https://en.wikipedia.org/wiki/WP:RW#Credits)**
 
-## new instructions
-run webpack
+## Development
+If you wish to contribute in the development of RedWarn, follow the instructions on the [CONTRIBUTING.md](https://gitlab.com/redwarn/redwarn-web/-/blob/master/CONTRIBUTING.md) file.
+
+## License
+Copyright © 2020 - The RedWarn Contributors. Released under the Apache License 2.0.

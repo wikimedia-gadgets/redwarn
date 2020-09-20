@@ -4,22 +4,27 @@ import {Dependency} from "../ui/Dependencies";
 
 export interface RedWarnStorage {
 
-    random: Chance.Chance;
-    dialogTracker: Record<string, MaterialDialog>;
+    // Initializations
     dependencies: Dependency[];
+
+    // Worker objects
+    random: Chance.Chance;
+
+    // Caches
+    dialogTracker: Record<string, MaterialDialog>;
 
 }
 
 declare global {
     // noinspection JSUnusedGlobalSymbols
     interface Window {
-        RedWarn : RedWarnStorage;
+        RedWarnStore : RedWarnStorage;
     }
 }
 
 // Set the constants here.
 // WARNING: SET ONLY THE CONSTANTS HERE.
-window.RedWarn = {
+window.RedWarnStore = {
     dialogTracker: {},
     random: new Chance(),
     dependencies: [
@@ -47,4 +52,4 @@ window.RedWarn = {
     ]
 };
 
-export default window.RedWarn;
+export default window.RedWarnStore;

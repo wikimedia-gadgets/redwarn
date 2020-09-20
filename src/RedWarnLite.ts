@@ -1,9 +1,9 @@
 /**
  *
- * RedWarn - Recent Edits Patrol and Warning Tool
+ * RedWarnStore - Recent Edits Patrol and Warning Tool
  * The user-friendly Wikipedia counter-vandalism tool.
 
- * (c) 2020 The RedWarn Development Team and contributors - ed6767wiki (at) gmail.com or [[WT:RW]]
+ * (c) 2020 The RedWarnStore Development Team and contributors - ed6767wiki (at) gmail.com or [[WT:RW]]
  * Licensed under the Apache License 2.0 - read more at https://gitlab.com/redwarn/redwarn-web/
  *
  **/
@@ -18,11 +18,27 @@ import "../node_modules/material-design-lite/material.min.css";
 /* IMPORT EVERYTHING HERE! */
 import Dependencies from "./ui/Dependencies";
 import MaterialDialogTest from "./tests/MaterialDialogTest";
+import RedWarnHooks from "./event/RedWarnHooks";
 
 (async () => {
 
-    /* Resolve dependencies */
-    await Dependencies.resolve();
+    /**
+     * Extensions can push their own dependencies here.
+     */
+    RedWarnHooks.executeHooks("preinit");
+
+    /**
+     * Initialize everything
+     */
+    await Promise.all([
+        async () => { RedWarnHooks.executeHooks("init"); },
+        async () => { await Dependencies.resolve(); }
+    ]);
+
+    /**
+     * Send notice that RedWarn is done loading.
+     */
+    RedWarnHooks.executeHooks("postinit");
 
     // Initialize components here.
     // As much as possible, each component should be its own class to make everything

@@ -1,9 +1,9 @@
 /**
  *
- * RedWarnStore - Recent Edits Patrol and Warning Tool
+ * RedWarn - Recent Edits Patrol and Warning Tool
  * The user-friendly Wikipedia counter-vandalism tool.
 
- * (c) 2020 The RedWarnStore Development Team and contributors - ed6767wiki (at) gmail.com or [[WT:RW]]
+ * (c) 2020 The RedWarn Development Team and contributors - ed6767wiki (at) gmail.com or [[WT:RW]]
  * Licensed under the Apache License 2.0 - read more at https://gitlab.com/redwarn/redwarn-web/
  *
  **/
@@ -25,20 +25,20 @@ import RedWarnHooks from "./event/RedWarnHooks";
     /**
      * Extensions can push their own dependencies here.
      */
-    RedWarnHooks.executeHooks("preinit");
+    await RedWarnHooks.executeHooks("preinit");
 
     /**
      * Initialize everything
      */
     await Promise.all([
-        async () => { RedWarnHooks.executeHooks("init"); },
+        async () => { await RedWarnHooks.executeHooks("init"); },
         async () => { await Dependencies.resolve(); }
     ]);
 
     /**
      * Send notice that RedWarn is done loading.
      */
-    RedWarnHooks.executeHooks("postinit");
+    await RedWarnHooks.executeHooks("postinit");
 
     // Initialize components here.
     // As much as possible, each component should be its own class to make everything

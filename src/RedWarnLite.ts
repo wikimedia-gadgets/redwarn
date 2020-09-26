@@ -31,8 +31,8 @@ import RedWarnHooks from "./event/RedWarnHooks";
      * Initialize everything
      */
     await Promise.all([
-        async () => { await RedWarnHooks.executeHooks("init"); },
-        async () => { await Dependencies.resolve(); }
+        RedWarnHooks.executeHooks("init"),
+        Dependencies.resolve()
     ]);
 
     /**

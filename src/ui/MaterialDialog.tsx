@@ -58,6 +58,8 @@ export interface MaterialDialogProperties {
      */
     width?: string;
 
+    id?: string;
+
 }
 
 /**
@@ -74,7 +76,7 @@ export default class MaterialDialog {
      * @returns The result - the value returned by the selected button in {@link MaterialDialogProperties.actions}.
      */
     static async show(dialog : MaterialDialog) : Promise<any> {
-        RedWarnStore.dialogTracker[dialog.id] = dialog;
+        RedWarnStore.dialogTracker.set(dialog.id, dialog);
 
         document.body.appendChild(dialog.render());
 
@@ -90,8 +92,10 @@ export default class MaterialDialog {
         dialog.element.showModal();
 
         return new Promise((resolve) => {
-            dialog.element.addEventListener("close", (event) => {
-                resolve(RedWarnStore.dialogTracker[(event.target as Element).id].result);
+            dialog.element.addEventListener("close", () => {
+                const res = RedWarnStore.dialogTracker.get(dialog.id).result;
+                RedWarnStore.dialogTracker.delete(dialog.id);
+                resolve(res);
             });
         });
     }
@@ -116,7 +120,7 @@ export default class MaterialDialog {
     get result() : any { return this._result; }
 
     constructor(props : MaterialDialogProperties) {
-        this.id = `dialog__${RedWarnStore.random.string({length: 16, symbols: false, alpha: true})}`;
+        this.id = `dialog__${props.id || RedWarnStore.random.string({length: 16, symbols: false, alpha: true})}`;
         this.props = props;
     }
 

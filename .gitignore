@@ -15,3 +15,6 @@ build/
 
 # Temporarily exclude while remaking
 .gitlab-ci.yml
+
+# sportz local types
+src/local.d.ts

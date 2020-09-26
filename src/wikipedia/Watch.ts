@@ -1,6 +1,6 @@
 import WikipediaAPI from "./API";
 import RedWarnStore from "../data/RedWarnStore";
-import redirect from "../util/redirect";
+import redirect from "../util/Redirect";
 
 export default class Watch {
     static active = false;

@@ -1,5 +1,5 @@
 import RedWarnHooks from "../event/RedWarnHooks";
-import redirect from "../util/redirect";
+import redirect from "../util/Redirect";
 import Revision from "./Revision";
 import { GenderPronoun, Gender, GenderDict } from "./Gender";
 import { LastWarningLevel } from "./WarningLevels";

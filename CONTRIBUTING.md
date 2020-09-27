@@ -30,9 +30,9 @@ When pushing submissions to this repo we require that you make a seperate fork f
 - When making UI changes, please only use [Material Design Lite](https://getmdl.io) components. 
 - Please test your changes and explain in detail the intended function of the changes you have made.
 
-## Setting up RedWarnStore
+## Setting up RedWarn
 
-RedWarnStore is built through [Webpack](https://webpack.js.org), a module bundler that allows us to easily build frontend code. Aside from that, RedWarnStore uses [tsx-dom](https://github.com/Lusito/tsx-dom) in order to build the interface. Contrary to React, tsx-dom generates usable HTMLElements directly from JSX. This keeps our total file size low and build times even lower. Aside from that, we can modify the DOM with JSX like we would normally do if we were using `document.createElement`.
+RedWarn is built through [Webpack](https://webpack.js.org), a module bundler that allows us to easily build frontend code. Aside from that, RedWarn uses [tsx-dom](https://github.com/Lusito/tsx-dom) in order to build the interface. Contrary to React, tsx-dom generates usable HTMLElements directly from JSX. This keeps our total file size low and build times even lower. Aside from that, we can modify the DOM with JSX like we would normally do if we were using `document.createElement`.
 
 ### For development
 1. Install the required dependencies with `npm`.
@@ -43,11 +43,11 @@ RedWarnStore is built through [Webpack](https://webpack.js.org), a module bundle
    ```shell script
    npm run start
    ```
-3. A web server will then be available at port `45991` (contrary to [RedWarnStore React](https://gitlab.com/redwarn/redwarn)'s `45990`.) You can access the built script on `/redwarn.js` of this path.
+3. A web server will then be available at port `45991` (contrary to [RedWarn React](https://gitlab.com/redwarn/redwarn)'s `45990`.) You can access the built script on `/redwarn.js` of this path.
    ```
    http://localhost:45991/redwarn.js
    ```
-   All changes will automatically be compiled by `webpack-dev-server`. If you want to use this copy of RedWarnStore on Wikipedia (*please do note that live testing on Wikipedia is discouraged and that you should use a testing wiki or similar instead*), you can import it in your [`common.js`](https://en.wikipedia.org/wiki/Special:MyPage/common.js) using the following line.
+   All changes will automatically be compiled by `webpack-dev-server`. If you want to use this copy of RedWarn on Wikipedia (*please do note that live testing on Wikipedia is discouraged and that you should use a testing wiki or similar instead*), you can import it in your [`common.js`](https://en.wikipedia.org/wiki/Special:MyPage/common.js) using the following line.
    ```js
    mw.loader.load("http://localhost:45991/redwarn.js");
    ```
@@ -61,4 +61,4 @@ RedWarnStore is built through [Webpack](https://webpack.js.org), a module bundle
    ```shell script
    npm run build
    ```
-3. The built copy of RedWarnStore will be in `/build`. You can then put this on Wikipedia as a userscript like how we distribute RedWarnStore, or put it on a locally-hosted web server and import it from there.
+3. The built copy of RedWarn will be in `/build`. You can then put this on Wikipedia as a userscript like how we distribute RedWarn, or put it on a locally-hosted web server and import it from there.

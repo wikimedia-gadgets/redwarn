@@ -2,7 +2,16 @@ import WikipediaAPI from "./API";
 import RedWarnStore from "../data/RedWarnStore";
 import redirect from "../util/redirect";
 
+/**
+ * Responsible for watching page changes.
+ *
+ * This class is available in every loaded page of Wikipedia, therefore it can
+ * simply be used as a static class.
+ *
+ * @deprecated Not yet usable as the watching interface is not yet developed.
+ */
 export default class Watch {
+
     static active = false;
     static timecheck: number;
     static lastRevID: number;

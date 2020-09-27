@@ -1,10 +1,24 @@
 import {RedWarnHook, RedWarnHookEventTypes} from "./RedWarnHookEvent";
 
+declare global {
+    // noinspection JSUnusedGlobalSymbols
+    interface Window {
+        RedWarnHooks : { [K in RedWarnHookEventTypes]? : RedWarnHook[] };
+    }
+}
+
+/**
+ * RedWarn Hooks
+ *
+ * In order to introduce integrations to RedWarn from the userscripts of other
+ * Wikipedia users, RedWarn allows the registration of functions - these so-called
+ * "hooks", which are called at specific events in RedWarn's execution.
+ */
 export default class RedWarnHooks {
 
-    static hooks: {
-        [K in RedWarnHookEventTypes]? : RedWarnHook[]
-    } = {};
+    static get hooks() : typeof window.RedWarnHooks {
+        return window.RedWarnHooks ?? (window.RedWarnHooks  = {});
+    }
 
     static assertHookType(hookType : RedWarnHookEventTypes) : void {
         if (RedWarnHooks.hooks[hookType] === undefined)

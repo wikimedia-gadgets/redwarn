@@ -1,4 +1,4 @@
-export default function redirect(url: string, inNewTab = false): void {
+export default function(url: string, inNewTab = false): void {
     if (inNewTab) {
         Object.assign(document.createElement("a"), {
             target: "_blank",

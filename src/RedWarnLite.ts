@@ -19,6 +19,7 @@ import "../node_modules/material-design-lite/material.min.css";
 import Dependencies from "./ui/Dependencies";
 import MaterialDialogTest from "./tests/MaterialDialogTest";
 import RedWarnHooks from "./event/RedWarnHooks";
+import WikipediaAPI from "./wikipedia/API";
 
 (async () => {
 
@@ -32,7 +33,8 @@ import RedWarnHooks from "./event/RedWarnHooks";
      */
     await Promise.all([
         RedWarnHooks.executeHooks("init"),
-        Dependencies.resolve()
+        Dependencies.resolve(),
+        WikipediaAPI.init()
     ]);
 
     /**

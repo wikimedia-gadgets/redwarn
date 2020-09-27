@@ -25,6 +25,9 @@ export interface RedWarnStorage {
     windowFocused: boolean;
 }
 
+// We're exposing the RedWarn storage for the ones who want to tinker with
+// RedWarn's global storage variables. In reality, we don't have to do this,
+// but it's more of a courtesy to users who want to experiment a bit more.
 declare global {
     // noinspection JSUnusedGlobalSymbols
     interface Window {
@@ -65,12 +68,16 @@ window.RedWarnStore = {
     ],
     APIStore: EmptyAPIStore,
 
-    // Wiki automated config
-    wikiBase: mw.config.get("wgServer"), // mediawiki base URL (i.e. //en.wikipedia.org)
-    wikiIndex: mw.config.get("wgServer") + mw.config.get("wgScript"), // mediawiki index.php (i.e. //en.wikipedia.org/w/index.php)
-    wikiAPI:
-        mw.config.get("wgServer") + mw.config.get("wgScriptPath") + "/api.php", // mediawiki API path  (i.e. //en.wikipedia.org/w/api.php)
-    wikiID: mw.config.values.wgWikiID,
+    // Configuration based on MediaWiki data.
+
+    /** MediaWiki base URL (i.e. `//en.wikipedia.org`) */
+    wikiBase: mw.config.get("wgServer"),
+    /** MediaWiki `index.php` (i.e. `//en.wikipedia.org/w/index.php`) */
+    wikiIndex: mw.config.get("wgServer") + mw.config.get("wgScript"),
+    /** MediaWiki API path  (i.e. `//en.wikipedia.org/w/api.php`) */
+    wikiAPI: `${mw.config.get("wgServer") + mw.config.get("wgScriptPath")}/api.php`,
+    /** MediaWiki Wiki ID  (i.e. `enwiki`) */
+    wikiID: mw.config.get("wgWikiID"),
 
     windowFocused: false,
 };

@@ -1,3 +1,0 @@
-[submodule "wiki"]
-	path = wiki
-	url = git@gitlab.com:redwarn/redwarn-web.wiki.git

@@ -172,8 +172,7 @@ export default class MaterialDialogTest {
             })
         );
 
-        document.write("Test complete.");
-
+        alert("Test complete.");
     }
 
 }

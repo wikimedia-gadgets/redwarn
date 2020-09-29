@@ -26,10 +26,12 @@ export default class RedWarnHooks {
     }
 
     static addHook<T extends RedWarnHookEventTypes>(hookType : T, hook : RedWarnHook) : void {
+        this.assertHookType(hookType);
         (RedWarnHooks.hooks[hookType] as RedWarnHook[]).push(hook);
     }
 
     static removeHook<T extends RedWarnHookEventTypes>(hookType : T, hook : RedWarnHook) : void {
+        this.assertHookType(hookType);
         (RedWarnHooks.hooks[hookType] as RedWarnHook[]).filter(h => h !== hook);
     }
 
@@ -37,6 +39,7 @@ export default class RedWarnHooks {
         hookType : T,
         payload : Record<string, any> = {}
     ) : Promise<void> {
+        this.assertHookType(hookType);
         for (const hook of (RedWarnHooks.hooks[hookType] as RedWarnHook[])) {
             const result = hook(payload);
             if (result instanceof Promise) await result;

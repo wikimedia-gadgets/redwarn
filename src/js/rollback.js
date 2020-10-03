@@ -792,7 +792,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         $("#RWRBDONEmrevPg").click(()=>rw.info.isLatestRevision(mw.config.get('wgRelevantPageName'), 0, ()=>{})); // go to latest revision
         $("#RWRBDONEnewUsrMsg").click(()=>rw.ui.newMsg(un)); // send message
         $("#RWRBDONEwelcomeUsr").click(()=>rw.quickTemplate.openSelectPack(un)); // quick template
-        $("#RWRBDONEwarnUsr").click(()=>rw.ui.beginWarn(false, un, mw.config.get("wgRelevantPageName"), null, null, null, (warnIndex != null ? warnIndex : null))); // new notice
+        $("#RWRBDONEwarnUsr").click(()=>rw.ui.beginWarn(false, un, mw.config.get("wgRelevantPageName"), null, null, null, (warnIndex != null ? warnIndex : null))); // Warn User
         $("#RWRBDONEreportUsr").click(()=>rw.ui.adminReportSelector(un)); // report to admin
 
         // Now perform default (if set)

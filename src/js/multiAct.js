@@ -161,9 +161,9 @@ rw.multiAct = { // Multi action screen
                             // Now push to iframe
                             rw.multiAct.dialog.getElementsByTagName("iframe")[0].contentWindow.postMessage(
                                 "applyToChecked`" + btoa(r) +
-                                "`Yes`New Notice"
+                                "`Yes`Warn User"
                                 , '*');
-                        }, true); // Show new notice dialog, true at end hides user info
+                        }, true); // Show Warn User dialog, true at end hides user info
                     });
 
                     // Event Handler for new msg

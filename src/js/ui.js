@@ -382,7 +382,7 @@ rw.ui = {
                         "name": "Quick Actions", 
                         "items": {
                             "sendMsg": {name: "New Message"},
-                            "newNotice": {name: "New Notice"},
+                            "newNotice": {name: "Warn User"},
                             "quickWel": {name: "Quick Template"},
                             "adminReport": {name: "Report to Admin"}
                         }

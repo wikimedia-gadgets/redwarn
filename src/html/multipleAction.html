@@ -81,7 +81,7 @@
         </h5>
         <h5>Set Text from: &nbsp; &nbsp;
           <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" onclick="if (boxChecked()) window.parent.postMessage('RWMATnewNotice');">
-            New Notice
+            Warn User
           </button>
           &nbsp;
           <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" onclick="if (boxChecked()) window.parent.postMessage('RWMATnewMsg');">
@@ -220,7 +220,7 @@
   } 
 
   // SET TEXT UNDER DATE HANDLER
-  addMessageHandler("applyToChecked\`*", cI=>{ // apply to checked b64 txt, underDate (Yes/No), source (i.e New Notice)
+  addMessageHandler("applyToChecked\`*", cI=>{ // apply to checked b64 txt, underDate (Yes/No), source (i.e Warn User)
     let textToAdd = atob(cI.split("\`")[1]);
     let underDate = cI.split("\`")[2];
     let source = cI.split("\`")[3];

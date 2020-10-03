@@ -22,7 +22,7 @@ var rw = {
      * @type {string}
      * @extends rw
      */
-    "version" : "15", // don't forget to change each version!
+    "version" : "16dev", // don't forget to change each version!
 
     /**
      * Defines a brief summary of this version of RedWarn. This is shown in both update notices, and a card in preferences.
@@ -33,8 +33,8 @@ var rw = {
      * @extends rw
      */
     "versionSummary": `
-<!-- RedWarn 15 -->
-RedWarn 15 unifies the anti-vandalism experience, including user interface improvements, UAA reports, bug fixes and more.
+<!-- RedWarn 16 -->
+RedWarn 16 brings new tagging features, automatic WHOIS and average OTRS reports for users and much more...
     `,
 
     /**

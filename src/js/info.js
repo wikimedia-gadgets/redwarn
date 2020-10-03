@@ -704,5 +704,5 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 rw.info.changeWatch.active = false;
             }
         }
-    }  
+    }
 };

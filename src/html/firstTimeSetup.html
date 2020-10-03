@@ -1,0 +1,20 @@
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+      <div class="mdl-layout__header-row">
+        <!-- Title -->
+        <span class="mdl-layout-title" style="width: calc(100% - 60px);">Welcome to ${rw.logoHTML} ${rw.version}!</span>
+  
+          <div id="close" class="icon material-icons" style="float:right;">
+          <span style="cursor: pointer; padding-right:15px;" onclick="window.parent.postMessage('closeDialog');">
+              clear
+          </span>
+          </div>
+          <div class="mdl-tooltip" for="close">
+              Close for now
+          </div>
+      </div>
+    </header>
+    <main class="mdl-layout__content" style="padding-left: 5%;">
+
+    </main>
+</div>

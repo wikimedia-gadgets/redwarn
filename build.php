@@ -26,7 +26,8 @@ $jsFiles = [
     'pendingChanges.js',
     'multiAct.js',
     'quickTemplate.js',
-    'pageProtect.js'
+	'pageProtect.js',
+	'firstTimeSetup.js'
 ];
 
 $htmlRoot = __DIR__ . DIRECTORY_SEPARATOR . "src" . DIRECTORY_SEPARATOR . "html";

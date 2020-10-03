@@ -23,13 +23,15 @@ var dialogEngine = {
      * 
      * @param {string} content HTML content, usually mdlContainer iFrame
      * @param {boolean} noPad optional: whether or not the dialog should have paddding, false for padding, true to remove it. Set to true for full-screen dialogs.
+     *                                  This will also remove rounded corners and other dialog controls.
      * @returns {object} DOM dialog element (you can also access this via dialogEngine.dialog)
      */
     "create" : (content, noPad)=>{ 
        
+        // Create element with rounded corners if requested
         $("#dialogEngineContainer").html(`
-        <dialog class="mdl-dialog" id="dialogEngineDialog">
-            `+ content +`
+        <dialog class="mdl-dialog" id="dialogEngineDialog" ${(noPad ? "" : `style="border-radius: 7px;"`)}>
+            ${content}
         </dialog>
         `);
 

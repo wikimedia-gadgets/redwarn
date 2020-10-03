@@ -1,3 +1,9 @@
+<!-- First time setup PAGE -->
+<!-- SORTABLE JS-->
+<script src="https://redwarn.toolforge.org/cdn/js/sortable.js"></script>
+<script src="https://redwarn.toolforge.org/cdn/js/jquery-sortable.js"></script>
+
+
 <script>
     // Colour theme preview
     function updateColourTheme() {
@@ -26,14 +32,13 @@
     </header>
     <main class="mdl-layout__content" style="padding-left: 5%;padding-right: 5%;">
         <br/><br/>
-        <div class="mdl-card mdl-shadow--2dp" style="width:100%"> <!-- ABOUT CARD -->
+        <div class="mdl-card mdl-shadow--2dp" style="width:100%" id="prefCard"> <!-- ABOUT CARD -->
             <div class="mdl-card__title" style="color: #fff;
             height: 176px;
             background: url('https://upload.wikimedia.org/wikipedia/commons/b/b6/Reflected_sunset.jpg') center / cover;">
                 <h2 class="mdl-card__title-text">Welcome to&nbsp;${rw.logoHTML}&nbsp;${rw.version}!</h2>
             </div>
-            <div class="mdl-card__supporting-text"> <!-- ABOUT CONTENT -->
-                <!-- ABOUT TAB -->
+            <div class="mdl-card__supporting-text"> <!--  CONTENT -->
                 <h5>Congratulations! You've successfully installed RedWarn, the user-<span id="hahaFunnyJoke">friendly</span> counter-vandalism tool.</h5>
                 <!-- Impliment very original and not outdated haha jokes -->
                 <script>$("#hahaFunnyJoke").on("click", ()=> {if (confirm("You are about to open an external link to YouTube.com - continue?")) Object.assign(document.createElement('a'), { target: '_blank', href: "https://www.youtube.com/watch?v=aqsL0QQaSP4"}).click();});</script>
@@ -147,14 +152,183 @@
                         <input type="radio" id="rwRollbackDoneOptionNothing" class="mdl-radio__button" name="rwRollbackDoneOption" value="none">
                         <span class="mdl-radio__label">Ask me every time</span>
                     </label>
-                    <br/>
+                    <br/><br/>
+
+                    <!-- Rollback Icons -->
+                    <h5>Set up your rollback buttons</h5>
+                    <p>
+                        RedWarn offers many quick rollback options that you can use. You can change the order and move them by clicking and dragging.
+                        To see what an icon means, hover over it with your cursor. Icons in the gray area will be hidden under the "More options" menu.
+                        You can also change their colour and icon later on in RedWarn preferences. <!-- To cut down on extra libs and junk here that we don't really need -->
+                    </p>
+
+                    <!-- Main control bit -->
+                    <!-- Icon List -->
+                    <ul id="rwRollbackIconsSort" style="text-align: center;width:100%;min-height: 35px;">
+                        ${(()=>{ // (tags for IDE formatting only) <script> 
+                            // Now we generate for each icon (config should've loaded and put these in order by now)
+                            let returnStr = "";
+                            rw.rollback.icons.forEach((icon,i)=>{
+                                let elID = "rollbackIcon-"+ (icon.originalIndex == null ? i : icon.originalIndex); // get index from original if already set, else use i (basically only use i on a fresh config)
+                                // Top row, so only add currently enabled icons
+                                if (icon.enabled) returnStr += `
+                                <li id="${elID}" class="icon material-icons">
+                                    <span style="cursor: pointer;
+                                                font-size:28px;
+                                                padding-right:5px;
+                                                color:${icon.color};">
+                                        ${icon.icon}
+                                    </span>
+                                </li>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="${elID}">
+                                    ${icon.name} 
+                                </div>
+                                `;
+                            });
+                            
+                            return returnStr; // </script> (tags for IDE formatting only)
+                        })()}
+                    </ul>
+
+                    <!-- Disabled Icon list -->
+                    <ul id="rwRollbackIconsSortDisabled" style="text-align: center;width:100%;min-height: 35px;background: #e8e4e4;">
+                        ${(()=>{ // (tags for IDE formatting only) <script> 
+                            // Now we generate for each icon (config should've loaded and put these in order by now)
+                            let returnStr = "";
+                            rw.rollback.icons.forEach((icon,i)=>{
+                                let elID = "rollbackIcon-"+ (icon.originalIndex == null ? i : icon.originalIndex); // get index from original if already set, else use i
+                                // bottom row, so only add disabled icons
+                                if (!icon.enabled) returnStr += `
+                                <li id="${elID}" class="icon material-icons">
+                                    <span style="cursor: pointer;
+                                                font-size:28px;
+                                                padding-right:5px;
+                                                color:${icon.color};">
+                                        ${icon.icon}
+                                    </span>
+                                </li>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="${elID}">
+                                    ${icon.name} 
+                                </div>
+                                `;
+                            });
+                            
+                            return returnStr; // </script> (tags for IDE formatting only)
+                        })()} 
+                    </ul>
+                    <!-- End rollback icon things -->
+
+                    <h5>Enable rollback reverting</h5>
+                    <p>
+                        If you have rollback permissions, RedWarn can use MediaWiki's rollback feature instead for faster reversions, alike to Huggle and other tools.
+                        Enabling this will only make a speed difference, otherwise there will be no change.
+                        This preference will only be honored if you have the "rollback" user right.
+                    </p>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRBOpt-rollbackLike">
+                        <input type="radio" id="rwRBOpt-rollbackLike" class="mdl-radio__button" name="rollbackMethod" value="rollbackLike" checked>
+                        <span class="mdl-radio__label">Don't use rollback</span>
+                    </label>
+                    &nbsp;&nbsp;
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRBOpt-rollback">
+                        <input type="radio" id="rwRBOpt-rollback" class="mdl-radio__button" name="rollbackMethod" value="rollback">
+                        <span class="mdl-radio__label">Use rollback (recommended for eligible editors)</span>
+                    </label>
+                    <br />
                 </form>
+                <hr/>
+                <h5>Thank you for trying RedWarn!</h5>
+                <p>
+                    A short introductory video will follow. If you have any issues, feature suggestions, or just need help in future, please let us know on RedWarn's talk page
+                    or our Discord server (the invite for which is in RedWarn preferences).
+                </p>
             </div>
             <div class="mdl-card__actions mdl-card--border">
-                <a class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('resetConfig');">
-                    Save preferences and continue to introductory video
+                <a class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="startVideo();">
+                    Apply settings and continue
                 </a>
             </div>
         </div>
+
+        <div class="mdl-card mdl-shadow--2dp" style="width:100%;display: none;text-align: center;" id="video"> <!-- ABOUT CARD -->
+            <video controls style="height: 25%;width: 50%;margin: 0 auto;">
+                <source src="https://redwarn.toolforge.org/cdn/video/devDemoVideo.mp4" type="video/mp4" />
+            </video>
+            <br/>
+            <div class="mdl-card__actions mdl-card--border">
+                <a class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('reload');">
+                    GET STARTED AND RETURN TO WIKIPEDIA
+                </a>
+            </div>
+        </div>
+
+        <br/><br/>
     </main>
 </div>
+
+
+<!-- Scripts -->
+<script>
+    // Sortable for rollback icons
+    $('#rwRollbackIconsSort').sortable({
+        group: 'shared', // set both lists to same group
+        animation: 150
+    });
+    $('#rwRollbackIconsSortDisabled').sortable({
+        group: 'shared', // set both lists to same group
+        animation: 150
+    });
+
+    function startVideo() {
+        // save preferences here. NOTE! If this is ran after prefs set elsewhere THEY WILL BE RESET!
+        var data = $('form').serializeArray().reduce((obj, item) => {
+                obj[item.name] = item.value;
+                return obj;
+                }, {}); // form data
+        // Now we process the icons
+        let iconModifyArray = []; // array for our changes
+
+        // For each enabled icon
+        $("#rwRollbackIconsSort > li").each((i, el)=>{ 
+            let iconIndex = parseInt($(el).attr("id").split("-")[1]);
+            iconModifyArray.push({
+                "index" : iconIndex, // original icon index 
+                "shift" : i, // where to move to
+                "modify" : { // obj of params to change
+                    "enabled": true, // set as enabled
+                    "color" : $(el).find("span").css("color"), // get color
+                    "icon" : $(el).find("span").text().trim() // get icon from inner span text
+                }
+            });
+        });
+
+        // For each disabled icon
+        $("#rwRollbackIconsSortDisabled > li").each((i, el)=>{ 
+            let iconIndex = parseInt($(el).attr("id").split("-")[1]);
+            iconModifyArray.push({
+                "index" : iconIndex, // original icon index 
+                "shift" : $("#rwRollbackIconsSort > li").length + i, // where to move to (for disbaled + the number of total enabled)
+                "modify" : { // obj of params to change
+                    "enabled": false, // set as disabled
+                    "color" : $(el).find("span").css("color"), // get color
+                    "icon" : $(el).find("span").text().trim() // get icon from inner span text
+                }
+            });
+        });
+
+        // Now add to config
+        data.rwRollbackIcons = iconModifyArray;
+        console.log(data);
+
+        // Mark that this process is complete
+        data.firstTimeSetupComplete = "yes";
+
+        // Done! Submit
+        window.parent.postMessage("config\\\`"+ btoa(JSON.stringify(data))); // send to the big boss
+
+
+        // Now, play video
+        $("#prefCard").fadeOut(1000, ()=>{
+            $("#video").fadeIn(1000, ()=>$("#video").find("video")[0].play());
+        });
+    }
+</script>

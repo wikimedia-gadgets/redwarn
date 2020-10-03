@@ -21,7 +21,8 @@ rw.firstTimeSetup = {
             }
 
             // Push change
-            rw.info.writeConfig();
+            rw.ui.loadDialog.show("Saving...");
+            rw.info.writeConfig(true, ()=>{rw.ui.loadDialog.close();});
         }); 
 
         addMessageHandler("resetConfig", rs=>{
@@ -32,6 +33,9 @@ rw.firstTimeSetup = {
         // Add load new theme handler
         addMessageHandler("newThemeDialog", ()=>rw.ui.loadDialog.show("Changing theme..."));
         addMessageHandler("loadDialogClose", ()=>rw.ui.loadDialog.close());
+
+        // Add reload handler
+        addMessageHandler("reload", ()=>window.location.reload());
 
         // Lock scrolling
         dialogEngine.freezeScrolling();

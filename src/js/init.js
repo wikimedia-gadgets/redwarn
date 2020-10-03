@@ -34,7 +34,7 @@ var rw = {
      */
     "versionSummary": `
 <!-- RedWarn 16 -->
-RedWarn 16 brings new tagging features, automatic WHOIS and average OTRS reports for users and much more...
+RedWarn 16 is finally here, bringing UX improvements, bug fixes, and new features!
     `,
 
     /**
@@ -512,6 +512,8 @@ function initRW() {
             if (rw.config.lastVersion != rw.version) {
                 // We've had an update
                 rw.config.lastVersion = rw.version; // update entry 
+                // RW 16 only - rm first setup
+                rw.config.firstTimeSetupComplete = "notNeeded";
                 rw.info.writeConfig(true, ()=> { // update the config file
                     // Show an update dialog
                     rw.ui.confirmDialog(`
@@ -526,7 +528,7 @@ function initRW() {
                         dialogEngine.closeDialog();//this thing turns it off
                         rw.visuals.toast.show("You can read more later at RedWarn's page (WP:REDWARN)");//display a toast
                         
-                    },168);
+                    },225);
                 });
             } else if (rw.config.firstTimeSetupComplete == null) { // Check if first time setup has been completed
                 rw.firstTimeSetup.launch();

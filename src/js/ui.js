@@ -754,6 +754,19 @@ rw.ui = {
         `, 500, 410)).showModal();
     },
 
+    /**
+     * Opens extended options that can be opened from any page (preferences, oversight and TAS reporting)
+     * @method openExtendedOptionsDialog
+     * @extends rw.ui
+     */
+    "openExtendedOptionsDialog" : ()=>{
+        // Event handlers
+
+        dialogEngine.create(mdlContainers.generateContainer(`
+        [[[[include extendedOptions.html]]]]
+        `, 500, 410)).showModal();
+    },
+
     // CLASSES from here 
 
     /**

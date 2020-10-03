@@ -41,11 +41,6 @@ pageIconHTML += `
     <div class="mdl-tooltip mdl-tooltip--large" for="rwSpyIcon">
         Alert on Change
     </div>
-
-    <div id="rwInspectorLaunch" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.visuals.toast.show('This feature is experimental and may not always work.');rw.whodunnit.mouseHighlighter();">find_in_page</span></div>
-    <div class="mdl-tooltip mdl-tooltip--large" for="rwInspectorLaunch">
-        Inspector (alpha)
-    </div>
     
     <div id="mrevPg" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.info.isLatestRevision(mw.config.get('wgRelevantPageName'), 0, ()=>{});">watch_later</span></div>
     <div class="mdl-tooltip mdl-tooltip--large" for="mrevPg">
@@ -53,17 +48,17 @@ pageIconHTML += `
     </div>
     ` : `
     <!-- UNEDITABLE ONLY ICON -->
-    <div id="RwPageLock" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.pageProtect.open();">lock</span></div>
-    <div class="mdl-tooltip" for="RwPageLock">
+    <div id="rwPageLock" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.pageProtect.open();">lock</span></div>
+    <div class="mdl-tooltip" for="rwPageLock">
         You cannot edit this page. Click to manage page protection.
     </div>
     `) + ` <!-- END EDITABLE PAGES ONLY ICONS -->
     `;
 }
 pageIconHTML += `
-    <div id="rwOpenPref" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.ui.openPreferences();">settings</span></div>
+    <div id="rwOpenPref" class="icon material-icons"><span style="cursor: pointer;" onclick="rw.ui.openExtendedOptionsDialog();">more_vert</span></div>
     <div class="mdl-tooltip mdl-tooltip--large" for="rwOpenPref">
-        RedWarn Preferences
+        More Options
     </div>
 
 `;

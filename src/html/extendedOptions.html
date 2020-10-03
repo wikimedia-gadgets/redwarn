@@ -1,0 +1,46 @@
+<!-- Used for OS and TAS reports, along with accessing RedWarn preferences. Maybe in future handle like rollback options too? -->
+
+<!-- Close button -->
+<button class="mdl-button mdl-js-button mdl-button--icon" style="float:right;" onclick="window.parent.postMessage('closeDialog');">
+    <i class="material-icons">close</i>
+</button>
+
+<!-- Title -->
+<h2 style="font-weight: 200;font-size:45px;line-height: 48px;">More Options</h2>
+<hr style="margin:0"/>
+
+<!-- Report to AIV button -->
+<div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+    <span class="material-icons" style="padding-right:20px">flag</span>REPORT ${rw.info.targetUsername()} TO AIV
+</div>
+<hr style="margin:0"/>
+
+<!-- UAA -->
+<div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+    <span class="material-icons" style="padding-right:20px">person_remove</span>REPORT ${rw.info.targetUsername()} TO UAA
+</div>
+<hr style="margin:0"/>
+
+<!-- Oversight report -->
+<div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+    <span class="material-icons" style="padding-right:20px">visibility_off</span>REPORT USER OR EDIT TO OVERSIGHT
+</div>
+<hr style="margin:0"/>
+
+<!-- TAS report -->
+<div class="mdl-button mdl-js-button" style="width:100%; text-align: left; color:red;">
+    <span class="material-icons" style="padding-right:20px">phone_in_talk</span>REPORT USER OR EDIT TO WIKIMEDIA TRUST AND SAFETY
+</div>
+<hr style="margin:0"/>
+
+<!-- Preferences -->
+<div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+    <span class="material-icons" style="padding-right:20px">settings</span>REDWARN PREFERENCES
+</div>
+<hr style="margin:0"/>
+
+<!-- Send feedback -->
+<div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+    <span class="material-icons" style="padding-right:20px">question_answer</span>GO TO THE REDWARN TALK PAGE
+</div>
+<hr style="margin:0"/>

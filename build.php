@@ -22,7 +22,6 @@ $jsFiles = [
     'info.js',
     'rollback.js',
     'ui.js',
-    'whodunnit.js',
     'pendingChanges.js',
     'multiAct.js',
     'quickTemplate.js',

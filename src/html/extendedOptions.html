@@ -9,6 +9,8 @@
 <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">More Options</h2>
 <hr style="margin:0"/>
 
+<!-- BELOW IS ON REVISON AND USER PAGES ONLY - ADD TO CONTEXT MENU DIRECT REPORTING! -->
+${(isUserPage || isOnRevPage ? `
 <!-- Report to AIV button -->
 <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
     <span class="material-icons" style="padding-right:20px">flag</span>REPORT ${rw.info.targetUsername()} TO AIV
@@ -23,15 +25,16 @@
 
 <!-- Oversight report -->
 <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
-    <span class="material-icons" style="padding-right:20px">visibility_off</span>REPORT USER OR EDIT TO OVERSIGHT
+    <span class="material-icons" style="padding-right:20px">visibility_off</span>REPORT ${(isUserPage ? "USER" : "") + (isUserPage && isOnRevPage ? " AND/OR " : "") + (isOnRevPage ? "EDIT" : "")} TO OVERSIGHT
 </div>
 <hr style="margin:0"/>
 
 <!-- TAS report -->
 <div class="mdl-button mdl-js-button" style="width:100%; text-align: left; color:red;">
-    <span class="material-icons" style="padding-right:20px">phone_in_talk</span>REPORT USER OR EDIT TO WIKIMEDIA TRUST AND SAFETY
+    <span class="material-icons" style="padding-right:20px">phone_in_talk</span>REPORT ${(isUserPage ? "USER" : "") + (isUserPage && isOnRevPage ? " AND/OR " : "") + (isOnRevPage ? "EDIT" : "")} TO WIKIMEDIA TRUST AND SAFETY
 </div>
 <hr style="margin:0"/>
+` : ``)}
 
 <!-- Preferences -->
 <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">

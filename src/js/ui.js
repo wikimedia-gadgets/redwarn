@@ -762,9 +762,12 @@ rw.ui = {
     "openExtendedOptionsDialog" : ()=>{
         // Event handlers
 
+        const isUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");
+        const isOnRevPage = window.location.href.includes("diff=") || window.location.href.includes("oldid="); // for reporting revisions
+
         dialogEngine.create(mdlContainers.generateContainer(`
         [[[[include extendedOptions.html]]]]
-        `, 500, 410)).showModal();
+        `, 500, 410)).showModal(); // also shrink more when not on user page or revision page
     },
 
     // CLASSES from here 

@@ -771,7 +771,7 @@ rw.ui = {
                 `);
             }
             $("#rwUILoad").html(`
-            <dialog class="mdl-dialog" id="rwUILoadDialog">
+            <dialog class="mdl-dialog" id="rwUILoadDialog" style="border-radius: 7px;">
                 ` + mdlContainers.generateContainer(`[[[[include loadingSpinner.html]]]]`, 300, 30) +`
             </dialog>
             `); // Create dialog with content from loadingSpinner.html

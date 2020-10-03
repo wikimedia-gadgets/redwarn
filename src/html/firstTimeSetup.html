@@ -121,11 +121,38 @@
                     <p>
                         When you finish reverting an edit, RedWarn can do a number of things depending on your workflow. Which do you prefer?
                     </p>
+                    
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRollbackDoneOptionNewNotice">
+                        <input type="radio" id="rwRollbackDoneOptionNewNotice" class="mdl-radio__button" name="rwRollbackDoneOption" value="RWRBDONEwarnUsr" checked>
+                        <span class="mdl-radio__label">Warn the user (recommended)</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRollbackDoneOptionSendMsg">
+                        <input type="radio" id="rwRollbackDoneOptionSendMsg" class="mdl-radio__button" name="rwRollbackDoneOption" value="RWRBDONEnewUsrMsg">
+                        <span class="mdl-radio__label">Send the user a talk page message</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRollbackDoneOptionQuickTemplate">
+                        <input type="radio" id="rwRollbackDoneOptionQuickTemplate" class="mdl-radio__button" name="rwRollbackDoneOption" value="RWRBDONEwelcomeUsr">
+                        <span class="mdl-radio__label">Open the Quick Template dialog</span>
+                    </label>
+                    
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRollbackDoneOptionLatestRev">
+                        <input type="radio" id="rwRollbackDoneOptionLatestRev" class="mdl-radio__button" name="rwRollbackDoneOption" value="RWRBDONEmrevPg">
+                        <span class="mdl-radio__label">Redirect to the latest revision</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRollbackDoneOptionNothing">
+                        <input type="radio" id="rwRollbackDoneOptionNothing" class="mdl-radio__button" name="rwRollbackDoneOption" value="none">
+                        <span class="mdl-radio__label">Ask me every time</span>
+                    </label>
+                    <br/>
                 </form>
             </div>
             <div class="mdl-card__actions mdl-card--border">
                 <a class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('resetConfig');">
-                    Let's go!
+                    Save preferences and continue to introductory video
                 </a>
             </div>
         </div>

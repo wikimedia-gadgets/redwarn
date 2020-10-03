@@ -1,8 +1,18 @@
+<script>
+    // Colour theme preview
+    function updateColourTheme() {
+        // Show loading dialog
+        window.parent.postMessage('newThemeDialog');
+        // Add stylesheet for this version
+        setTimeout(()=>$('head').append('<link rel="stylesheet" type="text/css" onload="window.parent.postMessage(\\\'loadDialogClose\\\');" href="https://redwarn.toolforge.org/cdn/css/material.' + $("input[name=colTheme]:checked").val() + '.min.css">'), 500);
+    }
+</script>
+
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <header class="mdl-layout__header">
       <div class="mdl-layout__header-row">
         <!-- Title -->
-        <span class="mdl-layout-title" style="width: calc(100% - 60px);">Welcome to ${rw.logoHTML} ${rw.version}!</span>
+        <span class="mdl-layout-title" style="width: calc(100% - 60px);">First Time Setup</span>
   
           <div id="close" class="icon material-icons" style="float:right;">
           <span style="cursor: pointer; padding-right:15px;" onclick="window.parent.postMessage('closeDialog');">
@@ -14,7 +24,110 @@
           </div>
       </div>
     </header>
-    <main class="mdl-layout__content" style="padding-left: 5%;">
+    <main class="mdl-layout__content" style="padding-left: 5%;padding-right: 5%;">
+        <br/><br/>
+        <div class="mdl-card mdl-shadow--2dp" style="width:100%"> <!-- ABOUT CARD -->
+            <div class="mdl-card__title" style="color: #fff;
+            height: 176px;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/b/b6/Reflected_sunset.jpg') center / cover;">
+                <h2 class="mdl-card__title-text">Welcome to&nbsp;${rw.logoHTML}&nbsp;${rw.version}!</h2>
+            </div>
+            <div class="mdl-card__supporting-text"> <!-- ABOUT CONTENT -->
+                <!-- ABOUT TAB -->
+                <h5>Congratulations! You've successfully installed RedWarn, the user-<span id="hahaFunnyJoke">friendly</span> counter-vandalism tool.</h5>
+                <!-- Impliment very original and not outdated haha jokes -->
+                <script>$("#hahaFunnyJoke").on("click", ()=> {if (confirm("You are about to open an external link to YouTube.com - continue?")) Object.assign(document.createElement('a'), { target: '_blank', href: "https://www.youtube.com/watch?v=aqsL0QQaSP4"}).click();});</script>
 
+                <p>
+                    We hope you'll enjoy using it. RedWarn will now guide you through setting up a few prefences in order to make your RedWarn experience optimimal for you. 
+                </p>
+                <form id="config">
+                    <h5>Set a colour theme</h5>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/RedWarnUIColourSchemes.png" style="width: 475px;float: left;padding-right: 50px;" />
+                    <p>This will affect elements within RedWarn's interface only, such as buttons and links.</p>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
+                        <input type="radio" id="option-1" class="mdl-radio__button" name="colTheme" value="blue-indigo" checked  onchange="updateColourTheme();">
+                        <span class="mdl-radio__label">WikiBlue (default)</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
+                        <input type="radio" id="option-2" class="mdl-radio__button" name="colTheme" value="amber-yellow" onchange="updateColourTheme();">
+                        <span class="mdl-radio__label">Sunshine</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-3">
+                        <input type="radio" id="option-3" class="mdl-radio__button" name="colTheme" value="purple-deep_purple" onchange="updateColourTheme();">
+                        <span class="mdl-radio__label">Purple Power</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-4">
+                        <input type="radio" id="option-4" class="mdl-radio__button" name="colTheme" value="blue_grey-red" onchange="updateColourTheme();">
+                        <span class="mdl-radio__label">RedWarn Minimal</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-5">
+                        <input type="radio" id="option-5" class="mdl-radio__button" name="colTheme" value="brown-light_green" onchange="updateColourTheme();">
+                        <span class="mdl-radio__label">Forrest</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-6">
+                        <input type="radio" id="option-6" class="mdl-radio__button" name="colTheme" value="orange-deep_orange" onchange="updateColourTheme();">
+                        <span class="mdl-radio__label">Orange Juice</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-7">
+                        <input type="radio" id="option-7" class="mdl-radio__button" name="colTheme" value="pink-red" onchange="updateColourTheme();">
+                        <span class="mdl-radio__label">Candy Floss</span>
+                    </label>
+                    <br><br>
+
+                    <!-- Warning format -->
+                    <h5>How do your prefer to select your warning templates?</h5>
+                    <p>RedWarn can either display warning templates as their descriptor (i.e. "Vandalism"), or the template name (i.e. "uw-vandalism").
+                        If you select template name, RedWarn will show it's descriptor when you hover over it in the dropdown. Which do you prefer?</p>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwNoticeListByTemplateNameDisable">
+                        <input type="radio" id="rwNoticeListByTemplateNameDisable" class="mdl-radio__button" name="rwNoticeListByTemplateName" value="disable" checked>
+                        <span class="mdl-radio__label">Template descriptions (i.e. Vandalism)</span>
+                    </label>
+                    &nbsp;&nbsp;
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwNoticeListByTemplateName">
+                        <input type="radio" id="rwNoticeListByTemplateName" class="mdl-radio__button" name="rwNoticeListByTemplateName" value="enable">
+                        <span class="mdl-radio__label">Template name (i.e. uw-vandalism)</span>
+                    </label>
+
+                    <h5>Automation</h5>
+                    <p>
+                        RedWarn can use an algorithm to automatically select what it thinks is the best warning level for an editor.
+                        This may be influenced by ORES scores, and the last warning level that other editors have given the target editor.
+                        This option also enables automatic warning template selection when using quick rollback. <strong>Always check before you warn!</strong>
+                    </p>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwautoLevelSelectDisableEnable">
+                        <input type="radio" id="rwautoLevelSelectDisableEnable" class="mdl-radio__button" name="rwautoLevelSelectDisable" value="enable" checked>
+                        <span class="mdl-radio__label">Enable automation</span>
+                    </label>
+                    &nbsp;&nbsp;
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwautoLevelSelectDisable">
+                        <input type="radio" id="rwautoLevelSelectDisable" class="mdl-radio__button" name="rwautoLevelSelectDisable" value="disable">
+                        <span class="mdl-radio__label">Disable automation, I want to select everything manually</span>
+                    </label>
+                    <br/><br/>
+                    <span style="font-size:small;">
+                        Please note: To prevent abuse and spam, automation is disabled for autoconfirmed users.
+                        Your selected preference will only be honored if you have the "extended-confirmed" user right.
+                        You should automatically gain this when you reach 500 edits on an account that is at least 30 days old.
+                    </span>
+                    <br/><br/>
+                    <h5>What do you want to happen when you finish reverting an edit?</h5>
+                    <p>
+                        When you finish reverting an edit, RedWarn can do a number of things depending on your workflow. Which do you prefer?
+                    </p>
+                </form>
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+                <a class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('resetConfig');">
+                    Let's go!
+                </a>
+            </div>
+        </div>
     </main>
 </div>

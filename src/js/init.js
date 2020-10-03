@@ -528,6 +528,8 @@ function initRW() {
                         
                     },168);
                 });
+            } else if (rw.config.firstTimeSetupComplete == null) { // Check if first time setup has been completed
+                rw.firstTimeSetup.launch();
             }
 
             // TODO: probably fix this mess into a URL

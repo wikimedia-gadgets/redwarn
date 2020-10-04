@@ -20,6 +20,54 @@ var mdlContainers = {
         <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/materialicons.css">
         <script defer src="https://redwarn.toolforge.org/cdn/js/mdl.js"></script>
         <script src="https://redwarn.toolforge.org/cdn/js/dialogPolyfill.js"></script> <!-- firefox being dumb -->
+
+        <!-- expander element CSS -->
+        <style>
+        /* For the rotating expanders - also requires JS to trigger animation */
+        expander {
+            float: right;
+            margin-top: 5px;
+            margin-right: 25px;
+            transform-origin: center center;
+        }
+
+        expander.expanding {
+            animation: rotationIn 0.3s  ease-in-out;
+        }
+
+        expander.expanded {
+            transform: rotate(180deg);
+        }
+
+        expander.shrinking {
+            animation: rotationOut 0.3s  ease-in-out;
+        }
+
+        @keyframes rotationIn {
+            from {
+                    transform: rotate(0deg);            
+            }
+            to {
+                    transform: rotate(180deg);
+            }
+        }
+
+        @keyframes rotationOut {
+            from {
+                    transform: rotate(180deg);            
+            }
+            to {
+                    transform: rotate(0deg);
+            }
+        }
+
+        /* Collapsed divs */
+        div.collapsed {
+            transition: all 0.3s ease-in-out;
+            height: 0px;
+            overflow: hidden;
+        }
+        </style>
         `;
         
         // Themes
@@ -41,12 +89,47 @@ var mdlContainers = {
         </script>
         <!-- End material dropdown -->
         <body>
-        `+innerContent+`
+        ${innerContent}
         </body>
+
+        <script>
+        // Expander element things
+        // ANIMATIONS ONLY for expanding elements
+        $("expander").each((i, el)=>{
+            // For each spinny expander, add a click handler for their parent
+            $(el).parent(".mdl-button").click(()=>{
+                // Check if not expanded already
+                if (!$(el).hasClass("expanded")) {
+                    // Expand
+                    $(el).addClass("expanding");
+
+                    // Expand attached div
+                    let col = $(\`#\${$(el).attr("expander-content-id")}\`)[0]; // get div element
+                    $(col).css("height", $(col).attr("targetHeight")); // expand
+                } else {
+                    // Shrink
+                    $(el).removeClass("expanded").addClass("shrinking");
+
+                    // Collapse attached div
+                    let col = $(\`#\${$(el).attr("expander-content-id")}\`)[0]; // get div element
+                    $(col).css("height", "0px"); // shrink
+                }
+            });
+
+            // When animation finishes
+            $(el).on("webkitAnimationEnd", ()=>{
+                if ($(el).hasClass("expanding")) {
+                    // Time to apply the expanded class to ensure it stays
+                    $(el).removeClass("expanding").addClass("expanded");
+                } else {
+                    $(el).removeClass("shrinking"); // just remove shrinking
+                }
+            });
+        });
+        </script>
         `;
         return content; // return
     },
-
     /**
      * Generates an iFrame with the specified HTML content, width and height.
      * @method generateContainer

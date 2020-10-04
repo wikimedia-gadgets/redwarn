@@ -1,5 +1,7 @@
 <!-- Used for OS and TAS reports, along with accessing RedWarn preferences. Maybe in future handle like rollback options too? -->
 
+<!-- DIALOG CONTENT -->
+
 <!-- Close button -->
 <button class="mdl-button mdl-js-button mdl-button--icon" style="float:right;" onclick="window.parent.postMessage('closeDialog');">
     <i class="material-icons">close</i>
@@ -14,7 +16,15 @@ ${(isUserPage || isOnRevPage ? `
 <!-- Report to AIV button -->
 <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
     <span class="material-icons" style="padding-right:20px">flag</span>REPORT ${rw.info.targetUsername()} TO AIV
+    <!-- Drop down spinny icon -->
+    <expander class="material-icons" expander-content-id="rwAIVreport">expand_more</expander>
 </div>
+
+<!-- collapsed AIV report UI - targetHeight = height you need -->
+<div class="collapsed" id="rwAIVreport" targetHeight="320px" style="padding-left:25px;padding-right: 30px;">
+    ${adminReportContent} <!-- Import from HTML to keep extendedOption.html readable - see adminReport.html -->
+</div>
+<!-- end AIV -->
 <hr style="margin:0"/>
 
 <!-- UAA -->

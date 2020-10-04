@@ -25,12 +25,6 @@ rw.ui = {
         
         let autoLevelSelectEnable = (!hideUserInfo) && (rw.config.rwautoLevelSelectDisable != "disable"); // If autolevelselect enabled (always disabled on hideUserInfo options)
 
-        if ((rw.info.targetUsername(un) == rw.info.getUsername()) && !ignoreWarnings) {
-            // Usernames are the same, show dialog
-            rw.ui.confirmDialog("Whoops! You cannot warn yourself here. If you'd like to test, use a sandbox.", "OKAY", ()=>dialogEngine.closeDialog(), "", ()=>{}, 0);
-            return; // DO NOT continue.
-        }
-
         // Let's continue
 
         // Assemble rule listbox
@@ -756,10 +750,21 @@ rw.ui = {
 
     /**
      * Opens extended options that can be opened from any page (preferences, oversight and TAS reporting)
+     * @param {string} un Username for reports. Can also be revision ID (todo)
      * @method openExtendedOptionsDialog
      * @extends rw.ui
      */
-    "openExtendedOptionsDialog" : ()=>{
+    "openExtendedOptionsDialog" : (un)=>{
+
+        // HTML for tabs
+
+        // USER THINGS ONLY - try and catch as will error out on non-user pages
+        let adminReportContent = `[[[[include genericError.html]]]]`; // placeholder
+        try {
+            adminReportContent = `[[[[include adminReport.html]]]]`;
+        } catch (e) {}
+        
+
         // Event handlers
 
         const isUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");

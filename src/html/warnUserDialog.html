@@ -23,15 +23,15 @@
     <!-- FORM -->
     <form id="newNoticeForm">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:75%;"> <!-- 75% for account standing -->
-        <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="`+ rw.info.targetUsername(un) +`" readonly>
+        <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="${rw.info.targetUsername(un)}" readonly>
         <label class="mdl-textfield__label" for="trgtUsrVisualBox">Target</label>
         <div class="mdl-tooltip" for="trgtUsrVisualBox">
             To target a different user, please visit their userpage, or right-click a link to their userpage.
         </div>
     </div>
-    <span style="display:none;">`+ (hideUserInfo ? "" : "</span>") + `<!-- hide if hide requested-->
+    <span style="display:none;">${(hideUserInfo ? "" : "</span>")}<!-- hide if hide requested-->
     <!-- Last warning note -->
-    `+ lastWarning +`
+    ${lastWarning}
 
     <!-- Preview userpage notices this month btn -->
     <span class="material-icons" id="prevUsrPgMonth" style="cursor:pointer;position: relative;top: 5px;padding-left: 10px;" onclick="showThisMonthsUsrMsgs();">assignment_late</span>
@@ -495,6 +495,16 @@
         } else {
             // Radio button
             currentLevel = data.warnLevel; // Set to selected radiobutton value
+        }
+
+        // Check if we're warning ourselves (rw16)
+        if (document.getElementById("trgtUsrVisualBox").value == "${rw.info.getUsername()}") {
+            // We are warning ourselves, so stop it
+            $("#errorString").html("You cannot warn yourself. <br/> <a href='#' id='testSandbox'>Test this feature with a sandbox</a>");
+
+            // Add onclick for sandbox link - change target and refresh with submitedit
+            $("#testSandbox").click(()=>{$("#trgtUsrVisualBox").val("Sandbox for user warnings");submitEdit();});
+            return; // Do not continue
         }
 
         // TEMPLATE

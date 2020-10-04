@@ -136,7 +136,7 @@ export default class MaterialDialogTest {
                 content: [
                     <p>Would you like to play a song?</p>
                 ],
-                // Watch out! Using `MaterialDialogActionType.Close` will close the dialog
+                // Watch out! Using `RWUIDialogActionType.Close` will close the dialog
                 // before executing the action, and this may cause the result to be `undefined`.
                 actions: [{
                     type: MaterialDialogActionType.Finish,

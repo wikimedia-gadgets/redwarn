@@ -5,25 +5,27 @@ export type RedWarnHookEvent =
 
 interface RedWarnHookEventBase {
     type: string;
-    payload: Record<string, any>;
+    payload?: Record<string, any>;
 }
 
-interface RedWarnPreInitializationEvent extends RedWarnHookEventBase {
+export interface RedWarnPreInitializationEvent extends RedWarnHookEventBase {
     type: "preinit",
-    payload: { test: string }
+    payload: undefined
 }
 
-interface RedWarnInitializationEvent extends RedWarnHookEventBase {
+export interface RedWarnInitializationEvent extends RedWarnHookEventBase {
     type: "init",
-    payload: { testB: number }
+    payload: undefined
 }
 
-interface RedWarnPostInitializationEvent extends RedWarnHookEventBase {
+export interface RedWarnPostInitializationEvent extends RedWarnHookEventBase {
     type: "postinit",
     payload: undefined
 }
 
 export type RedWarnHookEventTypes = RedWarnHookEvent["type"];
 export type RedWarnHook = (payload : Record<string, any>) => Promise<void> | void;
+export type RedWarnHookTyped<T extends RedWarnHookEvent> =
+    (payload : (RedWarnHook & { payload : T["payload"]})["payload"]) => Promise<void> | void;
 
 

@@ -1,66 +1,12 @@
-import { ComponentChild, h as TSX } from "tsx-dom";
-import RedWarnStore from "../data/RedWarnStore";
+import {ComponentChild, h as TSX} from "tsx-dom";
 import dialogPolyfill from "dialog-polyfill";
 
 import "../styles/mdl-dialog.css";
+import {RWUIDialog, RWUIDialogActionType, RWUIDialogProperties} from "../../../ui/RWUIDialog";
+import {getMaterialStorage} from "../Material";
+import RedWarnStore from "../../../data/RedWarnStore";
 
-export enum MaterialDialogActionType {
-    /**
-     * The task is finished and the dialog will close after button press.
-     */
-    Finish,
-    /**
-     * The dialog will close after button press, then the optional task will be executed.
-     */
-    Close,
-    /**
-     * A task will execute synchronously and will not close the dialog.
-     */
-    Execute
-}
-
-interface MaterialDialogFinishAction {
-    type: MaterialDialogActionType.Finish;
-    text?: string;
-}
-interface MaterialDialogCloseAction {
-    type: MaterialDialogActionType.Close;
-    text?: string;
-}
-interface MaterialDialogExecuteAction {
-    type: MaterialDialogActionType.Execute;
-    text: string;
-}
-
-/**
- * A MaterialDialogAction is an action that may be executed with a button inside of a MaterialDialog.
- */
-export type MaterialDialogAction =
-    (MaterialDialogFinishAction | MaterialDialogCloseAction | MaterialDialogExecuteAction) & {
-    action?: (this: MaterialDialog, event : MouseEvent) => void,
-    style?: "flat" /* default */ | "raised" | "colored" | "accent" | "flatcolored" | "flataccent"
-};
-
-export interface MaterialDialogProperties {
-
-    /**
-     * The content of the MaterialDialog.
-     */
-    content?: ComponentChild[];
-    /**
-     * The actions of the MaterialDialog. These go at the bottom of the dialog.
-     */
-    actions?: MaterialDialogAction[];
-    /**
-     * The width of the dialog in whatever CSS unit specified.
-     *
-     * @default 30vw
-     */
-    width?: string;
-
-    id?: string;
-
-}
+const StyleStorage = getMaterialStorage();
 
 /**
  * The MaterialDialog is a handling class used to show dialogs on the screen. This will
@@ -68,19 +14,19 @@ export interface MaterialDialogProperties {
  *
  * To show a dialog on the DOM, use {@link MaterialDialog.show}.
  */
-export default class MaterialDialog {
+export default class MaterialDialog extends RWUIDialog {
 
     /**
      * Show a dialog on screen. You can await this if you want to block until the dialog closes.
      * @param dialog The {@link MaterialDialog} to show.
-     * @returns The result - the value returned by the selected button in {@link MaterialDialogProperties.actions}.
+     * @returns The result - the value returned by the selected button in {@link RWUIDialogProperties.actions}.
      */
     static async show(dialog : MaterialDialog) : Promise<any> {
-        RedWarnStore.dialogTracker.set(dialog.id, dialog);
+        StyleStorage.dialogTracker.set(dialog.id, dialog);
 
         document.body.appendChild(dialog.render());
 
-        // Polyfill
+        // Polyfill (required for all skins).
         if (dialogPolyfill != null && !(dialog.element as HTMLDialogElement).showModal) {
             dialogPolyfill.registerDialog(dialog.element);
         }
@@ -93,8 +39,8 @@ export default class MaterialDialog {
 
         return new Promise((resolve) => {
             dialog.element.addEventListener("close", () => {
-                const res = RedWarnStore.dialogTracker.get(dialog.id).result;
-                RedWarnStore.dialogTracker.delete(dialog.id);
+                const res = StyleStorage.dialogTracker.get(dialog.id).result;
+                StyleStorage.dialogTracker.delete(dialog.id);
                 resolve(res);
             });
         });
@@ -107,19 +53,14 @@ export default class MaterialDialog {
     /**
      * The properties of this MaterialDialog.
      */
-    props : MaterialDialogProperties;
+    props : RWUIDialogProperties;
     /**
      * The HTMLDialogElement which contains the actual dialog.
      */
     element? : HTMLDialogElement;
 
-    private _result : any;
-    /**
-     * The result of this dialog. This is the result of the action call.
-     */
-    get result() : any { return this._result; }
-
-    constructor(props : MaterialDialogProperties) {
+    constructor(props : RWUIDialogProperties) {
+        super(props);
         this.id = `dialog__${props.id || RedWarnStore.random.string({length: 16, symbols: false, alpha: true})}`;
         this.props = props;
     }
@@ -132,32 +73,23 @@ export default class MaterialDialog {
         const buttons = [];
         for (const action of this.props.actions) {
             const buttonClasses = ["mdl-button", "mdl-js-button", "mdl-js-ripple-effect"];
-            switch (action.style) {
-                case "colored":
+            switch (action.type) {
+                case RWUIDialogActionType.Close:
+                    break;
+                case RWUIDialogActionType.Execute:
+                case RWUIDialogActionType.Finish:
                     buttonClasses.push("mdl-button--raised");
                     buttonClasses.push("mdl-button--colored");
                     break;
-                case "accent":
-                    buttonClasses.push("mdl-button--raised");
-                    buttonClasses.push("mdl-button--accent");
-                    break;
-                case "flatcolored":
-                    buttonClasses.push("mdl-button--colored");
-                    break;
-                case "flataccent":
-                    buttonClasses.push("mdl-button--accent");
-                    break;
-                case "raised":
-                    buttonClasses.push("mdl-button--raised");
             }
             let text;
             if (action.text)
                 text = action.text;
             else
                 switch (action.type) {
-                    case MaterialDialogActionType.Close:
+                    case RWUIDialogActionType.Close:
                         text = action.text ?? "Close"; break;
-                    case MaterialDialogActionType.Finish:
+                    case RWUIDialogActionType.Finish:
                         text = action.text ?? "Finish"; break;
                 }
 
@@ -167,7 +99,7 @@ export default class MaterialDialog {
 
             switch (action.type) {
                 // Do the action before closing.
-                case MaterialDialogActionType.Finish:
+                case RWUIDialogActionType.Finish:
                     buttonElement.addEventListener("click", (event) => {
                         if (action.action)
                             this._result = action.action.call(this, event);
@@ -176,7 +108,7 @@ export default class MaterialDialog {
                     });
                     break;
                 // Close and then do the action.
-                case MaterialDialogActionType.Close:
+                case RWUIDialogActionType.Close:
                     buttonElement.addEventListener("click", (event) => {
                         this.element.close();
                         setTimeout(() => { this.element.remove(); }, 1000);
@@ -185,7 +117,7 @@ export default class MaterialDialog {
                     });
                     break;
                 // Do the action without closing.
-                case MaterialDialogActionType.Execute:
+                case RWUIDialogActionType.Execute:
                     buttonElement.addEventListener("click", (event) => {
                         if (action.action)
                             this._result = action.action.call(this, event);

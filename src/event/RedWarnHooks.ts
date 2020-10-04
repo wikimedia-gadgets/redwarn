@@ -17,7 +17,7 @@ declare global {
 export default class RedWarnHooks {
 
     static get hooks() : typeof window.RedWarnHooks {
-        return window.RedWarnHooks ?? (window.RedWarnHooks  = {});
+        return window.RedWarnHooks ?? (window.RedWarnHooks = {});
     }
 
     static assertHookType(hookType : RedWarnHookEventTypes) : void {

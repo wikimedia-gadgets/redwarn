@@ -3,34 +3,38 @@ import {
     RedWarnHook,
     RedWarnHookEventTypes
 } from "../event/RedWarnHookEvent";
-import {RWUIElements} from "../ui/RWUIElement";
+import RWUIElement, {RWUIElements} from "../ui/RWUIElement";
+
+type URLString = string;
 
 interface Style {
 
     name : string;
-    version? : string;
+    version : string;
 
     // Mapped by language.
     meta? : {
         [key : string]: {
             displayName? : string;
             description? : string;
-            author? : string | string[];
+            author? : string | string[]; // Must be wiki usernames
 
-            homepage? : string; // URL
+            homepage? : URLString; // URL
 
-            repository? : string;  // URL
-            issues? : string;  // URL
+            repository? : URLString;  // URL
+            issues? : URLString;  // URL
 
-            banner? : string; // URL of Image
+            banner? : URLString; // URL of Image
         }
     };
 
     dependencies? : Dependency[];
     storage? : Record<string, any>;
 
-    // Replace with actual UI elements later
-    classMap : typeof RWUIElements;
+    classMap : {
+        [ T in keyof typeof RWUIElements ]:
+            typeof RWUIElements[T]
+    };
 
     hooks?: { [key in RedWarnHookEventTypes]? : RedWarnHook[] };
 

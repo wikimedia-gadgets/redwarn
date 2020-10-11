@@ -1,10 +1,12 @@
 import {ComponentChild, h as TSX} from "tsx-dom";
-import dialogPolyfill from "dialog-polyfill";
 
-import "../styles/mdl-dialog.css";
+// import "../styles/mdl-dialog.css";
 import {RWUIDialog, RWUIDialogActionType, RWUIDialogProperties} from "../../../ui/RWUIDialog";
 import {getMaterialStorage} from "../Material";
 import RedWarnStore from "../../../data/RedWarnStore";
+
+import { MDCRipple } from "@material/ripple";
+import { MDCDialog } from "@material/dialog";
 
 const StyleStorage = getMaterialStorage();
 
@@ -16,35 +18,8 @@ const StyleStorage = getMaterialStorage();
  */
 export default class MaterialDialog extends RWUIDialog {
 
-    /**
-     * Show a dialog on screen. You can await this if you want to block until the dialog closes.
-     * @param dialog The {@link MaterialDialog} to show.
-     * @returns The result - the value returned by the selected button in {@link RWUIDialogProperties.actions}.
-     */
-    static async show(dialog : MaterialDialog) : Promise<any> {
-        StyleStorage.dialogTracker.set(dialog.id, dialog);
-
-        document.body.appendChild(dialog.render());
-
-        // Polyfill (required for all skins).
-        if (dialogPolyfill != null && !(dialog.element as HTMLDialogElement).showModal) {
-            dialogPolyfill.registerDialog(dialog.element);
-        }
-
-        // Upgrade the newly-inserted MDL element.
-        componentHandler.upgradeDom();
-
-        // Show!
-        dialog.element.showModal();
-
-        return new Promise((resolve) => {
-            dialog.element.addEventListener("close", () => {
-                const res = StyleStorage.dialogTracker.get(dialog.id).result;
-                StyleStorage.dialogTracker.delete(dialog.id);
-                resolve(res);
-            });
-        });
-    }
+    get elementName() : typeof RWUIDialog.elementName { return RWUIDialog.elementName; }
+    get prototype() : typeof MaterialDialog { return MaterialDialog; }
 
     /**
      * A unique identifier for this dialog, to allow multiple active dialogs.
@@ -66,35 +41,52 @@ export default class MaterialDialog extends RWUIDialog {
     }
 
     /**
+     * Show a dialog on screen. You can await this if you want to block until the dialog closes.
+     * @returns The result - the value returned by the selected button in {@link RWUIDialogProperties.actions}.
+     */
+    async show() : Promise<any> {
+        StyleStorage.dialogTracker.set(this.id, this);
+
+        document.body.appendChild(this.render());
+
+        // Upgrade the newly-inserted MDC element.
+        new MDCRipple(this.element.querySelector("button"));
+        const dialog = new MDCDialog(this.element);
+        dialog.open();
+
+        return new Promise((resolve) => {
+            this.element.addEventListener("close", () => {
+                const res = StyleStorage.dialogTracker.get(this.id).result;
+                StyleStorage.dialogTracker.delete(this.id);
+                resolve(res);
+            });
+        });
+    }
+
+    /**
      * Renders the MaterialDialog's actions (as buttons).
      * @return A collection of {@link HTMLButtonElement}s, all of which are MDL buttons.
      */
     private renderActions() : ComponentChild[] {
         const buttons = [];
         for (const action of this.props.actions) {
-            const buttonClasses = ["mdl-button", "mdl-js-button", "mdl-js-ripple-effect"];
+            const buttonClasses = [];
             switch (action.type) {
+                case RWUIDialogActionType.Finish:
+                    buttonClasses.push("mdc-button--raised");
+                    break;
                 case RWUIDialogActionType.Close:
+                    buttonClasses.push("mdc-button");
                     break;
                 case RWUIDialogActionType.Execute:
-                case RWUIDialogActionType.Finish:
-                    buttonClasses.push("mdl-button--raised");
-                    buttonClasses.push("mdl-button--colored");
+                    buttonClasses.push("mdc-button");
+                    buttonClasses.push("mdc-button-outlined");
                     break;
             }
-            let text;
-            if (action.text)
-                text = action.text;
-            else
-                switch (action.type) {
-                    case RWUIDialogActionType.Close:
-                        text = action.text ?? "Close"; break;
-                    case RWUIDialogActionType.Finish:
-                        text = action.text ?? "Finish"; break;
-                }
 
             const buttonElement = <button class={buttonClasses.join(" ")}>
-                {text}
+                <div class="mdc-button__ripple"/>
+                <span class="mdc-button__label">{action.text}</span>
             </button>;
 
             switch (action.type) {
@@ -140,18 +132,26 @@ export default class MaterialDialog extends RWUIDialog {
     render() : Element {
         this.element = <dialog
             id={this.id}
-            class="mdl-dialog"
+            class="mdc-dialog"
             style={`width: ${this.props.width ?? "30vw"};`}>
-            {
-                this.props.content && <div class="mdl-dialog__content">
-                    {...this.props.content}
-                </div>
-            }
-            {
-                this.props.actions && <div class="mdl-dialog__actions">
-                    {this.renderActions()}
-                </div>
-            }
+            <div class="mdc-dialog__container">
+                {
+                    this.props.title && <h2 class="mdc-dialog__title">
+                        {this.props.title}
+                    </h2>
+                }
+                {
+                    this.props.content && <div class="mdc-dialog__content">
+                        {...this.props.content}
+                    </div>
+                }
+                {
+                    this.props.actions && <div class="mdl-dialog__actions">
+                        {this.renderActions()}
+                    </div>
+                }
+            </div>
+            <div class="mdc-dialog__scrim"/>
         </dialog> as HTMLDialogElement;
 
         return this.element;

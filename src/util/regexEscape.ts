@@ -1,4 +1,8 @@
-// https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
+/**
+ * Escapes a string that may contain special characters for regular expressions.
+ * @param string The string to escape.
+ * @see https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
+ */
 export default function(string : string) : string {
     // Referring to the table here:
     // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/regexp

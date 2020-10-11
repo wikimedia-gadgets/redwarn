@@ -10,18 +10,20 @@
 
 /* Libraries */
 
-// MDL
-import "../node_modules/material-design-lite/material.min.js";
-// Add options to change the CSS later.
-import "../node_modules/material-design-lite/material.min.css";
-
 /* IMPORT EVERYTHING HERE! */
 import Dependencies from "./ui/Dependencies";
-import MaterialDialogTest from "./tests/MaterialDialogTest";
 import RedWarnHooks from "./event/RedWarnHooks";
 import WikipediaAPI from "./wikipedia/API";
+import StyleManager from "./styles/StyleManager";
+import {RWUIDialog, RWUIDialogActionType} from "./ui/RWUIDialog";
+import { initializeStore } from "./data/RedWarnStore";
 
 (async () => {
+    // Initialize RedWarn store.
+    initializeStore();
+
+    // Load style definitions first.
+    StyleManager.initialize();
 
     /**
      * Extensions can push their own dependencies here.
@@ -45,7 +47,21 @@ import WikipediaAPI from "./wikipedia/API";
     // Initialize components here.
     // As much as possible, each component should be its own class to make everything
     // organized.
-
-    await MaterialDialogTest.execute();
+    const a = StyleManager.activeStyle.classMap["rwDialog"]({
+        title: "Test Dialog",
+        actions: [
+            {
+                type: RWUIDialogActionType.Finish,
+                text: "A",
+                action: () => {alert("A");}
+            },
+            {
+                type: RWUIDialogActionType.Execute,
+                text: "B",
+                action: () => {alert("A");}
+            }
+        ]
+    });
+    (a as RWUIDialog).show();
 
 })();

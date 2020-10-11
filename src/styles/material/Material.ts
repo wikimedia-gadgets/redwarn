@@ -34,30 +34,13 @@ const MaterialStyle : Style = {
             // Original: "https://fonts.googleapis.com/icon?family=Material+Icons"
             src:
                 "https://redwarn-lite.wmcloud.org/static/styles/Material-Icons.css",
-        },
-        {
-            // Dialog Polyfill (styles) (GoogleChrome/dialog-polyfill)
-            type: "style",
-            id: "dialogPolyfillCss",
-            // Original: "https://unpkg.com/dialog-polyfill@0.4.7/dialog-polyfill.css"
-            src:
-                "https://redwarn-lite.wmcloud.org/static/styles/dialog-polyfill.css",
-        },
-        {
-            // Dialog Polyfill (script) (GoogleChrome/dialog-polyfill)
-            type: "script",
-            id: "dialogPolyfillJs",
-            // Original: "https://unpkg.com/dialog-polyfill@0.4.7/dialog-polyfill.js"
-            src:
-                "https://redwarn-lite.wmcloud.org/static/scripts/dialog-polyfill.js",
-        },
+        }
     ],
 
     storage: new MaterialStyleStorage(),
 
     classMap: {
-        rwDialog: MaterialDialog,
-        rwButton: null
+        rwDialog: MaterialDialog.constructor
     },
 
     hooks: {

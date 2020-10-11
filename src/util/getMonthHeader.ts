@@ -13,6 +13,10 @@ export const monthNames = [
     "December",
 ];
 
-export default function(d = new Date()) : string {
-    return `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+/**
+ * Gets the month header for talk pages in the format `Month YYYY`.
+ * @param date The date to use.
+ */
+export default function(date = new Date()) : string {
+    return `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
 }

@@ -42,11 +42,15 @@ export type RWUIDialogID = string;
 export interface RWUIDialogProperties {
 
     /**
-     * The content of the MaterialDialog.
+     * The title of the dialog.
+     */
+    title? : string
+    /**
+     * The content of the dialog.
      */
     content?: ComponentChild[];
     /**
-     * The actions of the MaterialDialog. These go at the bottom of the dialog.
+     * The actions of the dialog. These go at the bottom of the dialog.
      */
     actions?: RWUIDialogAction[];
     /**
@@ -62,9 +66,11 @@ export interface RWUIDialogProperties {
 
 export abstract class RWUIDialog extends RWUIElement<RWUIDialogProperties> {
 
-    static elementName : "rwDialog" = "rwDialog";
+    public static elementName : "rwDialog" = "rwDialog";
 
     protected _result : any;
     get result() : any { return this._result; }
+
+    abstract async show(): Promise<void>;
 
 }

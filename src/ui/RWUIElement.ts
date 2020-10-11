@@ -1,18 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import {RWUIDialog} from "./RWUIDialog";
-import RWUIButton from "./RWUIButton";
 
-export default abstract class RWUIElement<PropertiesType extends Record<string, any>> {
+export type RWUIElementProperties = Record<string, any>;
 
-    protected constructor(readonly properties : PropertiesType) { }
+export default abstract class RWUIElement<PropertiesType extends RWUIElementProperties> {
+
+    public constructor(readonly properties : PropertiesType) { }
 
     abstract render() : Element;
-    onAppend(element : Element) : void { /* legitimately nothing */ }
 
 }
 
 export const RWUIElements = {
-    [RWUIDialog.elementName]: RWUIDialog,
-    [RWUIButton.elementName]: RWUIButton
+    [RWUIDialog.elementName]: RWUIDialog.constructor
 };

@@ -12,10 +12,14 @@
         "esModuleInterop": true
     },
     "include": [
-        "./src/**/*"
+        "./src/**/*.js",
+        "./src/**/*.jsx",
+        "./src/**/*.ts",
+        "./src/**/*.tsx"
     ],
     "exclude": [
-        "./node_modules",
-        "./src/old/**/*"
+        "./**/node_modules",
+        "./**/src/old/**/*",
+        "./**/src/**/libs/**/*"
     ]
 }

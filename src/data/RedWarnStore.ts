@@ -40,6 +40,10 @@ declare global {
     }
 }
 
+export function initializeStore() : void {
+    window.RedWarnStore = new RedWarnStorage();
+}
+
 window.addEventListener("blur", () => {
     window.RedWarnStore.windowFocused = false;
 });

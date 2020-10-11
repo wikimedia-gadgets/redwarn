@@ -1,4 +1,9 @@
-// https://gist.github.com/bennadel/97f7530ca0de0523008e
+/**
+ * Clones a regular expression.
+ * @param originalRegex The original regular expression.
+ * @param injectFlags Flags to be injected (optional).
+ * @see https://gist.github.com/bennadel/97f7530ca0de0523008e
+ */
 export default function(originalRegex : RegExp, injectFlags = "") : RegExp {
     const pattern = originalRegex.source;
     let flags = originalRegex.flags;

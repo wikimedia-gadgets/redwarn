@@ -104,9 +104,7 @@ rw.PendingChangesReview = {
                             <br/><br/>
                             Enter an optional comment, then confirm your review by clicking 'Submit Review' or by pressing ENTER.`;
                             let autoAccept = rw.config.rwDisableReviewAutoAccept != "disable" ? "true" : "false";
-                            dialogEngine.create(mdlContainers.generateContainer(`
-                            [[[[include pendingReviewReason.html]]]]
-                            `, 500, 350)).showModal();
+                            dialogEngine.create(mdlContainers.generateContainer(`[[[[include pendingReviewReason.html]]]]`, 500, 350)).showModal();
                         });
                     });
                 };
@@ -194,9 +192,7 @@ rw.PendingChangesReview = {
                             Confirm your review by clicking 'Submit Review' or by pressing ENTER.
                             `;
                             let autoAccept = rw.config.rwEnableReviewAutoRevert == "enable" ? "true" : "false";
-                            dialogEngine.create(mdlContainers.generateContainer(`
-                            [[[[include pendingReviewReason.html]]]]
-                            `, 500, 350)).showModal();
+                            dialogEngine.create(mdlContainers.generateContainer(`[[[[include pendingReviewReason.html]]]]`, 500, 350)).showModal();
                         });
                     });
                 };
@@ -258,9 +254,7 @@ rw.PendingChangesReview = {
                 Confirm your review by clicking 'Submit Review' or by pressing ENTER.
                 `;
                 let autoAccept = rw.config.rwEnableReviewAutoRevert == "enable" ? "true" : "false";
-                dialogEngine.create(mdlContainers.generateContainer(`
-                [[[[include pendingReviewReason.html]]]]
-                `, 500, 350)).showModal();
+                dialogEngine.create(mdlContainers.generateContainer(`[[[[include pendingReviewReason.html]]]]`, 500, 350)).showModal();
 
             });
         }

@@ -1,0 +1,28 @@
+/* DEFAULT DIALOG ANIMATION BEGIN */
+
+dialog[open] {
+    -webkit-animation: show 0.01s ease normal;
+}
+@-webkit-keyframes show{
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+dialog.closeAnimate {
+    -webkit-animation: close 0.01s ease normal;
+}
+
+@-webkit-keyframes close{
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* DIALOG ANIMATION END */

@@ -606,9 +606,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
 
             // CREATE DIALOG
             // MDL FULLY SUPPORTED HERE (container). 
-            dialogEngine.create(mdlContainers.generateContainer(`
-            [[[[include rollbackReason.html]]]]
-            `, 500, 120)).showModal(); // 500x120 dialog, see rollbackReason.html for code
+            dialogEngine.create(mdlContainers.generateContainer(`[[[[include rollbackReason.html]]]]`, 500, 120)).showModal(); // 500x120 dialog, see rollbackReason.html for code
         });
     },
 
@@ -621,9 +619,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
 
         // CREATE DIALOG
         // MDL FULLY SUPPORTED HERE (container). 
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include rollbackReason.html]]]]
-        `, 500, 120)).showModal(); // 500x120 dialog, see rollbackReason.html for code
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include rollbackReason.html]]]]`, 500, 120)).showModal(); // 500x120 dialog, see rollbackReason.html for code
     },
 
     "welcomeRevUsr" :() => {
@@ -773,9 +769,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
 
         // CREATE DIALOG
         // MDL FULLY SUPPORTED HERE (container). 
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include rollbackReason.html]]]]
-        `, 500, 120)).showModal(); // 500x120 dialog, see rollbackReason.html for code   
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include rollbackReason.html]]]]`, 500, 120)).showModal(); // 500x120 dialog, see rollbackReason.html for code   
     },
 
     "progressBar" : (progress, buffer) => {

@@ -211,9 +211,7 @@ rw.ui = {
 
             // CREATE DIALOG
             // MDL FULLY SUPPORTED HERE (container). 
-            dialogEngine.create(mdlContainers.generateContainer(`
-            [[[[include warnUserDialog.html]]]]
-            `, 500, 630)).showModal(); // 500x630 dialog, see warnUserDialog.html for code
+            dialogEngine.create(mdlContainers.generateContainer(`[[[[include warnUserDialog.html]]]]`, 500, 630)).showModal(); // 500x630 dialog, see warnUserDialog.html for code
         });
             
     }, // end beginWarn
@@ -261,9 +259,7 @@ rw.ui = {
 
         // CREATE DIALOG
         // MDL FULLY SUPPORTED HERE (container). 
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include newMsg.html]]]]
-        `, 500, 390)).showModal(); // 500x390 dialog, see newMsg.html for code
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include newMsg.html]]]]`, 500, 390)).showModal(); // 500x390 dialog, see newMsg.html for code
     },
 
 
@@ -449,9 +445,7 @@ rw.ui = {
         }
         // CREATE DIALOG
         // MDL FULLY SUPPORTED HERE (container). 
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include speedyDeletionp1.html]]]]
-        `, 500, 450)).showModal(); // 500x300 dialog, see speedyDeletionp1.html for code
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include speedyDeletionp1.html]]]]`, 500, 450)).showModal(); // 500x300 dialog, see speedyDeletionp1.html for code
     },
 
     /**
@@ -509,9 +503,7 @@ rw.ui = {
         dialogEngine.freezeScrolling();
 
         // Open preferences page with no padding, full screen
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include preferences.html]]]]
-        `, window.innerWidth, window.innerHeight, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include preferences.html]]]]`, window.innerWidth, window.innerHeight, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
     },
 
     /**
@@ -583,9 +575,7 @@ rw.ui = {
 
 
         // See adminReport.html for code
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include adminReport.html]]]]
-        `, 500, 410)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include adminReport.html]]]]`, 500, 410)).showModal();
     },
 
     /**
@@ -605,9 +595,7 @@ rw.ui = {
         // Confirm dialog (yes, no, ext...)
         addMessageHandler("sBtn", sBtnClick);
         addMessageHandler("pBtn", pBtnClick);
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include confirmDialog.html]]]]
-        `, 500, 80 + extraHeight)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include confirmDialog.html]]]]`, 500, 80 + extraHeight)).showModal();
     },
 
     /**
@@ -646,9 +634,7 @@ rw.ui = {
 
         // CREATE DIALOG
         // MDL FULLY SUPPORTED HERE (container). 
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include sendFeedback.html]]]]
-        `, 500, 390)).showModal(); // 500x390 dialog, see sendFeedback.html for code
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include sendFeedback.html]]]]`, 500, 390)).showModal(); // 500x390 dialog, see sendFeedback.html for code
     },
 
     /**
@@ -665,9 +651,7 @@ rw.ui = {
         addMessageHandler("openUAA", ()=>rw.ui.beginUAAReport(un)); // UAA report
 
         // Open the admin report selector dialog
-        dialogEngine.create(mdlContainers.generateContainer(`
-            [[[[include adminReportSelector.html]]]]
-        `, 600, 500)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include adminReportSelector.html]]]]`, 600, 500)).showModal();
     },
 
     /**
@@ -743,9 +727,7 @@ rw.ui = {
 
 
         // See uaaReport.html for code
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include uaaReport.html]]]]
-        `, 500, 410)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include uaaReport.html]]]]`, 500, 410)).showModal();
     },
 
     /**
@@ -770,9 +752,7 @@ rw.ui = {
         const isUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");
         const isOnRevPage = window.location.href.includes("diff=") || window.location.href.includes("oldid="); // for reporting revisions
 
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include extendedOptions.html]]]]
-        `, 500, 410)).showModal(); // also shrink more when not on user page or revision page
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include extendedOptions.html]]]]`, 500, 410)).showModal(); // also shrink more when not on user page or revision page
     },
 
     // CLASSES from here 
@@ -917,9 +897,7 @@ rw.ui = {
             });
             
             // Now show dialog
-            rw.ui.recentlyVisitedSelector.init(mdlContainers.generateContainer(`
-            [[[[include recentPageSelect.html]]]]
-            `, 420, 500)); // 420 hahahaha
+            rw.ui.recentlyVisitedSelector.init(mdlContainers.generateContainer(`[[[[include recentPageSelect.html]]]]`, 420, 500)); // 420 hahahaha
             rw.ui.recentlyVisitedSelector.dialog.showModal();
         },
 

@@ -41,9 +41,7 @@ rw.quickTemplate = { // Quick template UI and loader
         addMessageHandler("qTnewPack", ()=>rw.quickTemplate.newPack());
 
         // Show pack selection dialog
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include quickTemplateSelectPack.html]]]]
-        `, 500, 530)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include quickTemplateSelectPack.html]]]]`, 500, 530)).showModal();
 
         // Pack Selected Handler
         addMessageHandler("selectPack`*", cI=>{
@@ -162,9 +160,7 @@ rw.quickTemplate = { // Quick template UI and loader
 
         // Now we need to assemble the select screen
         // Show template selection dialog
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include quickTemplateSelectTemplate.html]]]]
-        `, 500, 530)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include quickTemplateSelectTemplate.html]]]]`, 500, 530)).showModal();
 
         // Continue Handler (not called in edit mode)
         addMessageHandler("qTNext`*", cI2=>{
@@ -219,9 +215,7 @@ rw.quickTemplate = { // Quick template UI and loader
         })(selectedTemplate.content.match(/{{RWTEXT\|[^}}]*\|[^{{]*}}/g)); // regex here for above function
         
         // Finally, show final submit dialog
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include quickTemplateSubmit.html]]]]
-        `, 500, 550)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include quickTemplateSubmit.html]]]]`, 500, 550)).showModal();
     },
 
     "newPack" : ()=> {
@@ -251,9 +245,7 @@ rw.quickTemplate = { // Quick template UI and loader
         });
 
         // Finally, show the dialog
-        dialogEngine.create(mdlContainers.generateContainer(`
-            [[[[include quickTemplateNewPack.html]]]]
-        `, 500, 200)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include quickTemplateNewPack.html]]]]`, 500, 200)).showModal();
     },
 
     "editTemplate" : (selectedPackI, selectedTemplateI)=>{
@@ -305,9 +297,7 @@ rw.quickTemplate = { // Quick template UI and loader
         });
 
         // Finally, open the edit template dialog
-        dialogEngine.create(mdlContainers.generateContainer(`
-            [[[[include quickTemplateEditTemplate.html]]]]
-        `, 500, 550)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include quickTemplateEditTemplate.html]]]]`, 500, 550)).showModal();
     },
 
     "publish" : (selectedPack, isNew, selectedPackI)=> { // makes a listing on the WP:REDWARN/QTPACKS page if isnew is set to true

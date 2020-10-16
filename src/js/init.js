@@ -216,7 +216,6 @@ RedWarn 16 is finally here, bringing UX improvements, bug fixes, and new feature
                 let pageIconHTML = "<div id='rwPGIconContainer' style='display:none;display: inline-block;'>"; // obj it is appended to
                 // Possible icons locations: default (page icons area) or sidebar
                 let iconsLocation = rw.config.pgIconsLocation ? rw.config.pgIconsLocation : "default"; // If set in config, use config
-                /* [[[[include pageIcons.html]]]] */
                 pageIconHTML += "</div>"; // close contianer
                 if (iconsLocation == "default") {
                     try {
@@ -311,9 +310,7 @@ RedWarn 16 is finally here, bringing UX improvements, bug fixes, and new feature
             if (rw.config.ptrRmCol) rmCol = rw.config.ptrRmCol;
             // basically multiact js but with stuff replaced
             mwBody.style.overflowY = "hidden";
-            let content = mdlContainers.generateContainer(` 
-            [[[[include recentChanges.html]]]]
-            `, window.innerWidth, window.innerHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
+            let content = mdlContainers.generateContainer(`[[[[include recentChanges.html]]]]`, window.innerWidth, window.innerHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
 
             // Init if needed
             if ($("#PTdialogContainer").length < 1) {

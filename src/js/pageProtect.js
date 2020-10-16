@@ -248,9 +248,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
             });
 
             // Open dialog
-            dialogEngine.create(mdlContainers.generateContainer(`
-            [[[[include requestPageProtect.html]]]]
-            `, 600, 630)).showModal();
+            dialogEngine.create(mdlContainers.generateContainer(`[[[[include requestPageProtect.html]]]]`, 600, 630)).showModal();
         });
     }
 };

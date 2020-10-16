@@ -286,13 +286,17 @@ function processIncludedFiles($fileContents) {
                 if (!isset($included[$file])) {
                     if (endsWith($file, "html")) {
                         $included[$file] = "`" . minify_html(file_get_contents($filePath)) . "`";
-                        return "eval(rw_includes[\"" . $file . "\"])";
                     } else {
                         if (endsWith($file, "css"))
                             $included[$file] = minify_css(file_get_contents($filePath));
                         else $included[$file] = file_get_contents($filePath);
-                        return "rw_includes[\"" . $file . "\"]";
                     }
+                }
+                
+                if (endsWith($file, "html")) {
+                    return "eval(rw_includes[\"" . $file . "\"])";
+                } else {
+                    return "rw_includes[\"" . $file . "\"]";
                 }
             }
         },

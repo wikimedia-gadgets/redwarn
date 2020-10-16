@@ -17,6 +17,7 @@ $jsRoot = __DIR__ . DIRECTORY_SEPARATOR . "src" . DIRECTORY_SEPARATOR . "js";
 $jsFiles = [
     'styles.js',
     'init.js',
+    'topIcons.js',
     'dialog.js',
     'mdlContainer.js',
     'rules.js',

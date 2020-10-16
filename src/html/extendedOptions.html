@@ -9,51 +9,54 @@
 
 <!-- Title -->
 <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">More Options</h2>
-<hr style="margin:0"/>
+<div style="height:400px;overflow:auto">
+    <hr style="margin:0"/>
+    <!-- Add additional user added options here -->
 
-<!-- BELOW IS ON REVISON AND USER PAGES ONLY - ADD TO CONTEXT MENU DIRECT REPORTING! -->
-${(isUserPage || isOnRevPage ? `
-<!-- Report to AIV button -->
-<div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
-    <span class="material-icons" style="padding-right:20px">flag</span>REPORT ${rw.info.targetUsername()} TO AIV
-    <!-- Drop down spinny icon -->
-    <expander class="material-icons" expander-content-id="rwAIVreport">expand_more</expander>
+    <!-- BELOW IS ON REVISON AND USER PAGES ONLY - ADD TO CONTEXT MENU DIRECT REPORTING! -->
+    ${(isUserPage || isOnRevPage ? `
+    <!-- Report to AIV button -->
+    <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+        <span class="material-icons" style="padding-right:20px">flag</span>REPORT ${rw.info.targetUsername()} TO AIV
+        <!-- Drop down spinny icon -->
+        <expander class="material-icons" expander-content-id="rwAIVreport">expand_more</expander>
+    </div>
+    
+    <!-- collapsed AIV report UI - targetHeight = height you need -->
+    <div class="collapsed" id="rwAIVreport" targetHeight="320px" style="padding-left:25px;padding-right: 30px;">
+        ${adminReportContent} <!-- Import from HTML to keep extendedOption.html readable - see adminReport.html -->
+    </div>
+    <!-- end AIV -->
+    <hr style="margin:0"/>
+    
+    <!-- UAA -->
+    <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+        <span class="material-icons" style="padding-right:20px">person_remove</span>REPORT ${rw.info.targetUsername()} TO UAA
+    </div>
+    <hr style="margin:0"/>
+    
+    <!-- Oversight report -->
+    <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+        <span class="material-icons" style="padding-right:20px">visibility_off</span>REPORT ${(isUserPage ? "USER" : "") + (isUserPage && isOnRevPage ? " AND/OR " : "") + (isOnRevPage ? "EDIT" : "")} TO OVERSIGHT
+    </div>
+    <hr style="margin:0"/>
+    
+    <!-- TAS report -->
+    <div class="mdl-button mdl-js-button" style="width:100%; text-align: left; color:red;">
+        <span class="material-icons" style="padding-right:20px">phone_in_talk</span>REPORT ${(isUserPage ? "USER" : "") + (isUserPage && isOnRevPage ? " AND/OR " : "") + (isOnRevPage ? "EDIT" : "")} TO WIKIMEDIA TRUST AND SAFETY
+    </div>
+    <hr style="margin:0"/>
+    ` : ``)}
+    
+    <!-- Preferences -->
+    <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+        <span class="material-icons" style="padding-right:20px">settings</span>REDWARN PREFERENCES
+    </div>
+    <hr style="margin:0"/>
+    
+    <!-- Send feedback -->
+    <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+        <span class="material-icons" style="padding-right:20px">question_answer</span>GO TO THE REDWARN TALK PAGE
+    </div>
+    <hr style="margin:0"/>
 </div>
-
-<!-- collapsed AIV report UI - targetHeight = height you need -->
-<div class="collapsed" id="rwAIVreport" targetHeight="320px" style="padding-left:25px;padding-right: 30px;">
-    ${adminReportContent} <!-- Import from HTML to keep extendedOption.html readable - see adminReport.html -->
-</div>
-<!-- end AIV -->
-<hr style="margin:0"/>
-
-<!-- UAA -->
-<div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
-    <span class="material-icons" style="padding-right:20px">person_remove</span>REPORT ${rw.info.targetUsername()} TO UAA
-</div>
-<hr style="margin:0"/>
-
-<!-- Oversight report -->
-<div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
-    <span class="material-icons" style="padding-right:20px">visibility_off</span>REPORT ${(isUserPage ? "USER" : "") + (isUserPage && isOnRevPage ? " AND/OR " : "") + (isOnRevPage ? "EDIT" : "")} TO OVERSIGHT
-</div>
-<hr style="margin:0"/>
-
-<!-- TAS report -->
-<div class="mdl-button mdl-js-button" style="width:100%; text-align: left; color:red;">
-    <span class="material-icons" style="padding-right:20px">phone_in_talk</span>REPORT ${(isUserPage ? "USER" : "") + (isUserPage && isOnRevPage ? " AND/OR " : "") + (isOnRevPage ? "EDIT" : "")} TO WIKIMEDIA TRUST AND SAFETY
-</div>
-<hr style="margin:0"/>
-` : ``)}
-
-<!-- Preferences -->
-<div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
-    <span class="material-icons" style="padding-right:20px">settings</span>REDWARN PREFERENCES
-</div>
-<hr style="margin:0"/>
-
-<!-- Send feedback -->
-<div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
-    <span class="material-icons" style="padding-right:20px">question_answer</span>GO TO THE REDWARN TALK PAGE
-</div>
-<hr style="margin:0"/>

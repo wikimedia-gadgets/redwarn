@@ -59,10 +59,69 @@ rw.topIcons = {
         "showsOnUneditablePages": true,
         "colorModifier": null, // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
         "enabled": true // to show in main screen or more options screen
-    }
+    },
+
+    {
+        "title": "Latest Revision",
+        "shortTitle": "Latest",
+        "icon": "watch_later", // material icon
+        "callback": ()=>rw.info.isLatestRevision(mw.config.get('wgRelevantPageName'), 0, ()=>{}), // when clicked
+        "showsOnUserPages": true,
+        "showsOnUneditablePages": true,
+        "colorModifier": null, // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
+        "enabled": true // to show in main screen or more options screen
+    },
     
+    {
+        "title": "More Options",
+        "shortTitle": "More",
+        "icon": "more_vert", // material icon
+        "callback": ()=>rw.ui.openExtendedOptionsDialog(), // when clicked
+        "showsOnUserPages": true,
+        "showsOnUneditablePages": true,
+        "colorModifier": null, // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
+        "enabled": true // to show in main screen or more options screen
+    }
 
 
-    // MORE OPTIONS DEFAULTS
-  ]
+    // MORE OPTIONS DEFAULTS STAY IN MORE OPTIONS - NO WAY TO MOVE THEM OUT OR CHANGE ORDER
+
+  ],
+
+  "generateHTML" : ()=>{
+    if (mw.config.get("wgNamespaceNumber") < 0) return ``; // if on special page, skip
+
+    // Generate HTML from icons and user config
+    let finalHTML = ``;
+    const pageIsUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");
+    const pageIsEditable = mw.config.get("wgIsProbablyEditable");
+    // Now generate the HTML
+    rw.topIcons.icons.forEach((icon, i)=>{
+        // Generate an ID for click handlers and tooltip
+        const iconID = "rwTopIcon"+ i;
+        // if icon enabled and (icon shows on user page and page is userpage and is editable, or icon shows on uneditable pages and page isn't editable)
+        // FOR NORMAL ICONS ONLY, other twinkle style menu handled elsewhere
+        if (icon.enabled && (((icon.showsOnUserPages && pageIsUserPage && pageIsUserPage && pageIsEditable) || (icon.showsOnUneditablePages && !pageIsEditable)))) finalHTML += `
+        <div id="${iconID}" class="icon material-icons"><span style="cursor: pointer;">${icon.icon}</span></div>
+        <div class="mdl-tooltip mdl-tooltip--large" for="${iconID}">
+            ${icon.title}
+        </div>
+        `;
+    });
+
+    return finalHTML;
+  },
+
+  "addHandlers" : ()=>{ // add handlers once icons have been rendered
+    if (mw.config.get("wgNamespaceNumber") < 0) return; // if on special page, skip
+    const pageIsUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");
+    const pageIsEditable = mw.config.get("wgIsProbablyEditable");
+    rw.topIcons.icons.forEach((icon, i)=>{
+        // Generate an ID for click handlers and tooltip
+        const iconID = "rwTopIcon"+ i;
+        // Add click handler
+        if (icon.enabled && (((icon.showsOnUserPages && pageIsUserPage && pageIsUserPage && pageIsEditable) || (icon.showsOnUneditablePages && !pageIsEditable)))) 
+        $(`#${iconID}`).click(icon.callback);
+    });
+  }
 };

@@ -216,10 +216,14 @@ RedWarn 16 is finally here, bringing UX improvements, bug fixes, and new feature
                 let pageIconHTML = "<div id='rwPGIconContainer' style='display:none;display: inline-block;'>"; // obj it is appended to
                 // Possible icons locations: default (page icons area) or sidebar
                 let iconsLocation = rw.config.pgIconsLocation ? rw.config.pgIconsLocation : "default"; // If set in config, use config
+
+                // Add to pageIconHTML from topIcons config
+                pageIconHTML += rw.topIcons.generateHTML();
+
                 pageIconHTML += "</div>"; // close contianer
                 if (iconsLocation == "default") {
                     try {
-                        $(".mw-indicators").append(pageIconHTML); // Append our icons to the page icons
+                        $(".mw-indicators").append("&nbsp;&nbsp;&nbsp;" + pageIconHTML); // Append our icons to the page icons with spacing
                     } catch (error) {
                         // Incompatible theme, use sidebar instead
                         iconsLocation = "sidebar";
@@ -278,7 +282,10 @@ RedWarn 16 is finally here, bringing UX improvements, bug fixes, and new feature
 
             // Now Register menu mdl-menu
             for (let item of document.getElementsByClassName("mdl-menu")) rw.visuals.register(item); 
-            
+
+            // Now register handlers
+            rw.topIcons.addHandlers();
+
             // Now fade in container
             $("#rwPGIconContainer").fadeIn();
             

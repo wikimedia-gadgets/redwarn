@@ -285,7 +285,7 @@ function processIncludedFiles($fileContents) {
             } else {
                 if (!isset($included[$file])) {
                     if (endsWith($file, "html")) {
-                        $included[$file] = minify_html(file_get_contents($filePath));
+                        $included[$file] = "`" . minify_html(file_get_contents($filePath)) . "`";
                         return "eval(rw_includes[\"" . $file . "\"])";
                     } else {
                         if (endsWith($file, "css"))

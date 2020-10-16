@@ -11,7 +11,7 @@ rw.topIcons = {
         "shortTitle": "Message",
         "icon": "send", // material icon
         "callback": ()=>rw.ui.newMsg(), // when clicked
-        "showsOnUserPages": true,
+        "showsOnlyOnUserPages": true,
         "showsOnUneditablePages": false,
         "colorModifier": null, // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
         "enabled": true // to show in main screen or more options screen
@@ -21,7 +21,7 @@ rw.topIcons = {
         "shortTitle": "Template",
         "icon": "library_add", // material icon
         "callback": ()=>rw.quickTemplate.openSelectPack(), // when clicked
-        "showsOnUserPages": true,
+        "showsOnlyOnUserPages": true,
         "showsOnUneditablePages": false,
         "colorModifier": null, // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
         "enabled": true // to show in main screen or more options screen
@@ -31,7 +31,7 @@ rw.topIcons = {
         "shortTitle": "Warn",
         "icon": "report", // material icon
         "callback": ()=>rw.ui.beginWarn(), // when clicked
-        "showsOnUserPages": true,
+        "showsOnlyOnUserPages": true,
         "showsOnUneditablePages": false,
         "colorModifier": null, // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
         "enabled": true // to show in main screen or more options screen
@@ -44,7 +44,7 @@ rw.topIcons = {
         "shortTitle": "Protect",
         "icon": "lock", // material icon
         "callback": ()=>rw.pageProtect.open(), // when clicked
-        "showsOnUserPages": true,
+        "showsOnlyOnUserPages": false,
         "showsOnUneditablePages": true,
         "colorModifier": null, // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
         "enabled": true // to show in main screen or more options screen
@@ -55,10 +55,11 @@ rw.topIcons = {
         "shortTitle": "Alert",
         "icon": "notification_important", // material icon
         "callback": ()=>rw.info.changeWatch.toggle(), // when clicked
-        "showsOnUserPages": true,
+        "showsOnlyOnUserPages": false,
         "showsOnUneditablePages": true,
         "colorModifier": null, // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
-        "enabled": true // to show in main screen or more options screen
+        "enabled": false, // to show in main screen or more options screen
+        "className": "rwSpyIcon" // for adding custom classes, to modify change this and the colour modifier
     },
 
     {
@@ -66,7 +67,7 @@ rw.topIcons = {
         "shortTitle": "Latest",
         "icon": "watch_later", // material icon
         "callback": ()=>rw.info.isLatestRevision(mw.config.get('wgRelevantPageName'), 0, ()=>{}), // when clicked
-        "showsOnUserPages": true,
+        "showsOnlyOnUserPages": false,
         "showsOnUneditablePages": true,
         "colorModifier": null, // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
         "enabled": true // to show in main screen or more options screen
@@ -77,7 +78,7 @@ rw.topIcons = {
         "shortTitle": "More",
         "icon": "more_vert", // material icon
         "callback": ()=>rw.ui.openExtendedOptionsDialog(), // when clicked
-        "showsOnUserPages": true,
+        "showsOnlyOnUserPages": false,
         "showsOnUneditablePages": true,
         "colorModifier": null, // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
         "enabled": true // to show in main screen or more options screen
@@ -101,8 +102,10 @@ rw.topIcons = {
         const iconID = "rwTopIcon"+ i;
         // if icon enabled and (icon shows on user page and page is userpage and is editable, or icon shows on uneditable pages and page isn't editable)
         // FOR NORMAL ICONS ONLY, other twinkle style menu handled elsewhere
-        if (icon.enabled && (((icon.showsOnUserPages && pageIsUserPage && pageIsUserPage && pageIsEditable) || (icon.showsOnUneditablePages && !pageIsEditable)))) finalHTML += `
-        <div id="${iconID}" class="icon material-icons"><span style="cursor: pointer;">${icon.icon}</span></div>
+        if ((icon.enabled && ((icon.showsOnlyOnUserPages && pageIsUserPage && pageIsEditable) || (pageIsEditable != icon.showsOnlyOnUserPages)))) finalHTML += `
+        <div id="${iconID}" class="icon material-icons"><span style="cursor: pointer;${icon.colorModifier == null ? `` : `color:`+ icon.colorModifier}" class="${icon.className}">
+        ${icon.icon}
+        </span></div>
         <div class="mdl-tooltip mdl-tooltip--large" for="${iconID}">
             ${icon.title}
         </div>
@@ -120,8 +123,38 @@ rw.topIcons = {
         // Generate an ID for click handlers and tooltip
         const iconID = "rwTopIcon"+ i;
         // Add click handler
-        if (icon.enabled && (((icon.showsOnUserPages && pageIsUserPage && pageIsUserPage && pageIsEditable) || (icon.showsOnUneditablePages && !pageIsEditable)))) 
-        $(`#${iconID}`).click(icon.callback);
+        if ((icon.enabled && ((icon.showsOnlyOnUserPages && pageIsUserPage && pageIsEditable) || (pageIsEditable != icon.showsOnlyOnUserPages)))) {
+            $(`#${iconID}`).click(icon.callback);
+        }
     });
+  },
+
+  "getHiddenHTML" : ()=> { // for more options menu, also registers handlers
+    if (mw.config.get("wgNamespaceNumber") < 0) return ``; // if on special page, skip
+
+    // Generate HTML from icons and user config
+    let finalHTML = ``;
+    const pageIsUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");
+    const pageIsEditable = mw.config.get("wgIsProbablyEditable");
+    // Now generate the HTML
+    rw.topIcons.icons.forEach((icon, i)=>{
+        // Generate an ID for click handlers and tooltip
+        const iconID = "rwTopIcon"+ i;
+        // if icon enabled and (icon shows on user page and page is userpage and is editable, or icon shows on uneditable pages and page isn't editable)
+        // FOR NORMAL ICONS ONLY, other twinkle style menu handled elsewhere
+        if ((!icon.enabled && ((icon.showsOnlyOnUserPages && pageIsUserPage && pageIsEditable) || (pageIsEditable != icon.showsOnlyOnUserPages)))) {
+            finalHTML += `
+                <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;${icon.colorModifier == null ? `` : `color:`+ icon.colorModifier}" onclick="window.parent.postMessage('${iconID}', '*');">
+                    <span class="material-icons" style="padding-right:20px">${icon.icon}</span>${icon.title}
+                </div>
+                <hr style="margin:0"/>
+            `;
+
+            // Now add click handler, close dialog then callback
+            addMessageHandler(iconID, ()=>dialogEngine.closeDialog(icon.callback));
+        }
+    });
+
+    return finalHTML;
   }
 };

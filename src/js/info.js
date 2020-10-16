@@ -652,7 +652,9 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 // Request notification perms
                 if (Notification.permission !== 'granted') Notification.requestPermission();
 
-                $("#rwSpyIcon").css("color", "green");
+                $(".rwSpyIcon").css("color", "green");
+                rw.topIcons.icons[rw.topIcons.icons.findIndex(i=>i.title == "Alert on Change")].colorModifier = "green";
+
                 rw.visuals.toast.show("Alerts Enabled - please keep this tab open.");
                 rw.info.changeWatch.active = true;
 
@@ -699,7 +701,10 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 });
             } else {
                 clearInterval(rw.info.changeWatch.timecheck); // clear updates
-                $("#rwSpyIcon").css("color", ""); // clear colour from icon
+
+                $(".rwSpyIcon").css("color", ""); // clear colour from icon
+                rw.topIcons.icons[rw.topIcons.icons.findIndex(i=>i.title == "Alert on Change")].colorModifier = null;
+
                 rw.visuals.toast.show("Alerts Disabled.");
                 rw.info.changeWatch.active = false;
             }

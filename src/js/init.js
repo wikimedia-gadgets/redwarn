@@ -155,7 +155,7 @@ RedWarn 16 is finally here, bringing UX improvements, bug fixes, and new feature
          * @method init
          * @extends rw.visuals
          */
-        "init" : (callback) => {
+        "init" : callback=> {
             // Welcome message
             console.log("RedWarn "+ rw.version + " - (c) 2020 RedWarn Contributors");
             // Load MDL and everything needed, then callback when all loaded

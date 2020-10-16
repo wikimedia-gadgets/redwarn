@@ -11,6 +11,8 @@
 
 // ==== Part 1. Defining constants ====
 
+define("DEBUG_MODE", false);
+
 $jsRoot = __DIR__ . DIRECTORY_SEPARATOR . "src" . DIRECTORY_SEPARATOR . "js";
 $jsFiles = [
     'styles.js',
@@ -226,7 +228,17 @@ function endsWith($haystack, $needle) {
 function readJSSourceFile($file) {
     global $jsRoot;
 
-    return file_get_contents($jsRoot . DIRECTORY_SEPARATOR . $file);
+    if (DEBUG_MODE) {
+        $finalJS = "";
+        foreach (explode(
+            "\n", 
+            str_replace("\r\n", "\n", file_get_contents($jsRoot . DIRECTORY_SEPARATOR . $file))
+        ) as $i => $val)
+            $finalJS .= "/* " . $i . " */ " . $val . PHP_EOL;
+        return $finalJS ;
+    } else {
+        return file_get_contents($jsRoot . DIRECTORY_SEPARATOR . $file);
+    }
 }
 
 /**
@@ -272,14 +284,16 @@ function processIncludedFiles($fileContents) {
                 return "";
             } else {
                 if (!isset($included[$file])) {
-                    if (endsWith($file, "html"))
+                    if (endsWith($file, "html")) {
                         $included[$file] = minify_html(file_get_contents($filePath));
-                    else if (endsWith($file, "css"))
-                        $included[$file] = minify_css(file_get_contents($filePath));
-                    else
-                        $included[$file] = file_get_contents($filePath);
+                        return "eval(rw_includes[\"" . $file . "\"])";
+                    } else {
+                        if (endsWith($file, "css"))
+                            $included[$file] = minify_css(file_get_contents($filePath));
+                        else $included[$file] = file_get_contents($filePath);
+                        return "rw_includes[\"" . $file . "\"]";
+                    }
                 }
-                return "eval(rw_includes[\"" . $file . "\"])";
             }
         },
         $fileContents
@@ -318,7 +332,9 @@ function getJSSources() {
             array_push($warnings, "Failed to include source file \"" . $file . "\". File does not exist.");
             return "";
         } else
-            $js .= readJSSourceFile($file) . PHP_EOL;
+            $js .= 
+                "// rw-source: " . $file . PHP_EOL .
+                readJSSourceFile($file) . PHP_EOL;
     }
 
     return processJS($js);

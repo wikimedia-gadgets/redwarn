@@ -3,7 +3,7 @@
 <!-- DIALOG CONTENT -->
 
 <!-- Close button -->
-<button class="mdl-button mdl-js-button mdl-button--icon" style="float:right;" onclick="window.parent.postMessage('closeDialog');">
+<button class="mdl-button mdl-js-button mdl-button--icon" style="float:right;" onclick="window.parent.postMessage('closeDialog', '*');">
     <i class="material-icons">close</i>
 </button>
 
@@ -51,13 +51,13 @@
     ` : ``)}
     
     <!-- Preferences -->
-    <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+    <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;" onclick="window.parent.postMessage('redwarnPref', '*');">
         <span class="material-icons" style="padding-right:20px">settings</span>REDWARN PREFERENCES
     </div>
     <hr style="margin:0"/>
     
     <!-- Send feedback -->
-    <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+    <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;" onclick="window.parent.postMessage('redwarnTalk', '*');">
         <span class="material-icons" style="padding-right:20px">question_answer</span>GO TO THE REDWARN TALK PAGE
     </div>
     <hr style="margin:0"/>

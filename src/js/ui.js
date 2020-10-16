@@ -748,11 +748,14 @@ rw.ui = {
         
 
         // Event handlers
+        addMessageHandler("redwarnPref", ()=>dialogEngine.closeDialog(()=>rw.ui.openPreferences())); // open preferences for button press
+        addMessageHandler("redwarnTalk", ()=>redirect("https://en.wikipedia.org/wiki/Wikipedia_talk:RedWarn", true));
 
         const isUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");
         const isOnRevPage = window.location.href.includes("diff=") || window.location.href.includes("oldid="); // for reporting revisions
 
         dialogEngine.create(mdlContainers.generateContainer(`[[[[include extendedOptions.html]]]]`, 500, 410)).showModal(); // also shrink more when not on user page or revision page
+
     },
 
     // CLASSES from here 

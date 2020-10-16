@@ -183,6 +183,66 @@ var onSettingsLoad = {};
                             <span class="mdl-radio__label">Mega</span>
                         </label>
                         <br><br>
+                        <!-- Page icons -->
+                        <h5>Page icons</h5>
+                        <i>Click and drag icons to reorder them, or drag an icon to or from the tray to add or remove them. Items in the tray are accessable via the "More Options" button.
+                            Please note that some items are not shown in the tray and cannot be relocated
+                        </i>
+                        <!-- Icon List -->
+                        <ul id="rwPageIconsSort" style="text-align: center;width:100%;min-height: 35px;">
+                        ${(()=>{ // (tags for IDE formatting only) <script> 
+                                // Now we generate for each icon (config should've loaded and put these in order by now)
+                                let returnStr = "";
+                                rw.topIcons.icons.forEach((icon,i)=>{
+                                    let elID = "pageIcon-"+ (icon.originalIndex == null ? i : icon.originalIndex); // get index from original if already set, else use i (basically only use i on a fresh config)
+                                    // Top row, so only add currently enabled icons
+                                    if (icon.enabled) returnStr += `
+                                    <li id="${elID}" class="icon material-icons">
+                                        <span style="cursor: pointer;
+                                                    font-size:28px;
+                                                    padding-right:5px;">
+                                            ${icon.icon}
+                                        </span>
+                                    </li>
+                                    <div class="mdl-tooltip mdl-tooltip--large" for="${elID}">
+                                        ${icon.title} 
+                                    </div>
+                                    `;
+                                });
+                                
+                                return returnStr; // </script> (tags for IDE formatting only)
+                            })()}
+                        </ul>
+
+                        <!-- Disabled Icon list -->
+                        <ul id="rwPageIconsSortDisabled" style="text-align: center;width:100%;min-height: 35px;background: #e8e4e4;">
+                            ${(()=>{ // (tags for IDE formatting only) <script> 
+                                // Now we generate for each icon (config should've loaded and put these in order by now)
+                                let returnStr = "";
+                                rw.topIcons.icons.forEach((icon,i)=>{
+                                    let elID = "pageIcon-"+ (icon.originalIndex == null ? i : icon.originalIndex); // get index from original if already set, else use i
+                                    // bottom row, so only add disabled icons
+                                    if (!icon.enabled) returnStr += `
+                                    <li id="${elID}" class="icon material-icons">
+                                        <span style="cursor: pointer;
+                                                    font-size:28px;
+                                                    padding-right:5px;">
+                                            ${icon.icon}
+                                        </span>
+                                    </li>
+                                    <div class="mdl-tooltip mdl-tooltip--large" for="${elID}">
+                                        ${icon.title} 
+                                    </div>
+                                    `;
+                                });
+                                
+                                return returnStr; // </script> (tags for IDE formatting only)
+                            })()} 
+                        </ul>
+                        <!-- END PAGE ICON SETTINGS -->
+
+
+                        <br/><br/>
                         <!-- ROLLBACK ICONS -->
                         <h5>Rollback icons</h5>
                         <i>Click and drag icons to reorder them, or drag an icon to or from the tray to add or remove them. Items in the tray are accessable via the "More Options" button. Right-click an icon to change its colour or icon.</i>

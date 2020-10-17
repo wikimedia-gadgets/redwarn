@@ -102,7 +102,7 @@ rw.topIcons = {
         const iconID = "rwTopIcon"+ i;
         // if icon enabled and (icon shows on user page and page is userpage and is editable, or icon shows on uneditable pages and page isn't editable)
         // FOR NORMAL ICONS ONLY, other twinkle style menu handled elsewhere
-        if ((icon.enabled && ((icon.showsOnlyOnUserPages && pageIsUserPage && pageIsEditable) || (pageIsEditable != icon.showsOnlyOnUserPages)))) finalHTML += `
+        if ((icon.enabled && ((icon.showsOnlyOnUserPages && pageIsUserPage && pageIsEditable) || (pageIsEditable != icon.showsOnUneditablePages) || (pageIsEditable && !icon.showsOnlyOnUserPages)))) finalHTML += `
         <div id="${iconID}" class="icon material-icons"><span style="cursor: pointer;${icon.colorModifier == null ? `` : `color:`+ icon.colorModifier}" class="${icon.className}">
         ${icon.icon}
         </span></div>
@@ -123,7 +123,7 @@ rw.topIcons = {
         // Generate an ID for click handlers and tooltip
         const iconID = "rwTopIcon"+ i;
         // Add click handler
-        if ((icon.enabled && ((icon.showsOnlyOnUserPages && pageIsUserPage && pageIsEditable) || (pageIsEditable != icon.showsOnlyOnUserPages)))) {
+        if ((icon.enabled && ((icon.showsOnlyOnUserPages && pageIsUserPage && pageIsEditable) || (pageIsEditable != icon.showsOnUneditablePages) || (pageIsEditable && !icon.showsOnlyOnUserPages)))) {
             $(`#${iconID}`).click(icon.callback);
         }
     });
@@ -142,7 +142,7 @@ rw.topIcons = {
         const iconID = "rwTopIcon"+ i;
         // if icon enabled and (icon shows on user page and page is userpage and is editable, or icon shows on uneditable pages and page isn't editable)
         // FOR NORMAL ICONS ONLY, other twinkle style menu handled elsewhere
-        if ((!icon.enabled && ((icon.showsOnlyOnUserPages && pageIsUserPage && pageIsEditable) || (pageIsEditable != icon.showsOnlyOnUserPages)))) {
+        if ((!icon.enabled && ((icon.showsOnlyOnUserPages && pageIsUserPage && pageIsEditable) || (pageIsEditable != icon.showsOnUneditablePages) || (pageIsEditable && !icon.showsOnlyOnUserPages)))) {
             finalHTML += `
                 <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;${icon.colorModifier == null ? `` : `color:`+ icon.colorModifier}" onclick="window.parent.postMessage('${iconID}', '*');">
                     <span class="material-icons" style="padding-right:20px">${icon.icon}</span>${icon.title}

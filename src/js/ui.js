@@ -510,15 +510,20 @@ rw.ui = {
      * Opens the AIV report dialog
      *
      * @param {string} un Username to report
+     * @param {boolean} doNotShowDialog If set to true, will be set to just generate slim HTMl and handlers
      * @method openAdminReport
      * @extends rw.ui
      */
-    "openAdminReport" : (un)=> { // Open admin report dialog
+    "openAdminReport" : (un, doNotShowDialog)=> { // Open admin report dialog
+        // Setup AIV page
+        const aivPage = "User:Ed6767/sandbox"; // dev
+        //const aivPage = "Wikipedia:Administrator_intervention_against_vandalism"; // PRODUCTION! 
+
         // Add toast handler
         addMessageHandler("pushToast`*", m=>rw.visuals.toast.show(m.split('`')[1],false,false,2500));
 
         // On report
-        addMessageHandler("report`*", m=>{
+        addMessageHandler("AIVreport`*", m=>{
             let reportContent = m.split('`')[1]; // report content
             let target = m.split('`')[2]; // target username
             let targetIsIP = rw.info.isUserAnon(target); // is the target an IP? (2 different types of reports)
@@ -526,8 +531,7 @@ rw.ui = {
             console.log("is ip? "+ (targetIsIP ? "yes" : "no"));
             rw.visuals.toast.show("Reporting "+ target +"...", false, false, 2000); // show toast
             // Submit the report. MUST REPLACE WITH REAL AIV WHEN DONE AND WITH SANDBOX IN DEV!    
-            //let aivPage = "User:Ed6767/sandbox"; // dev
-            let aivPage = "Wikipedia:Administrator_intervention_against_vandalism"; // PRODUCTION! 
+            
 
             $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+aivPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
                 // Grab text from latest revision of AIV page
@@ -569,13 +573,19 @@ rw.ui = {
         // Check matching user
         if (rw.info.targetUsername(un) == rw.info.getUsername()) {
             // Usernames are the same, give toast.
-            rw.visuals.toast.show("You can not report yourself, nor can you test this feature except in a genuine case.", false, false, 7500);
-            return; // DO NOT continue.
+            if (doNotShowDialog !== true) rw.visuals.toast.show("You can not report yourself, nor can you test this feature except in a genuine case.", false, false, 7500);
+            return `Sorry, you cannot report yourself, nor can you test this feature except in a genuine case.`; // DO NOT continue.
         }
 
+        const dialogContent = `[[[[include adminReport.html]]]]`;
 
-        // See adminReport.html for code
-        dialogEngine.create(mdlContainers.generateContainer(`[[[[include adminReport.html]]]]`, 500, 410)).showModal();
+        if (doNotShowDialog !== true) {
+            // See adminReport.html for code
+            dialogEngine.create(mdlContainers.generateContainer(dialogContent, 500, 410)).showModal();
+        } else {
+            // Return the code for use elsewhere
+            return dialogContent;
+        }
     },
 
     /**
@@ -651,7 +661,7 @@ rw.ui = {
         addMessageHandler("openUAA", ()=>rw.ui.beginUAAReport(un)); // UAA report
 
         // Open the admin report selector dialog
-        dialogEngine.create(mdlContainers.generateContainer(`[[[[include adminReportSelector.html]]]]`, 600, 500)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include adminReportSelector.html]]]]`, 250, 280)).showModal();
     },
 
     /**
@@ -743,7 +753,7 @@ rw.ui = {
         // USER THINGS ONLY - try and catch as will error out on non-user pages
         let adminReportContent = `[[[[include genericError.html]]]]`; // placeholder
         try {
-            adminReportContent = `[[[[include adminReport.html]]]]`;
+            adminReportContent = rw.ui.openAdminReport(null, true); // this sets up our handlers and generates the appropraite HTML
         } catch (e) {}
         
 
@@ -754,7 +764,7 @@ rw.ui = {
         const isUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");
         const isOnRevPage = window.location.href.includes("diff=") || window.location.href.includes("oldid="); // for reporting revisions
 
-        dialogEngine.create(mdlContainers.generateContainer(`[[[[include extendedOptions.html]]]]`, 500, 410)).showModal(); // also shrink more when not on user page or revision page
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include extendedOptions.html]]]]`, 500, 500)).showModal(); // also shrink more when not on user page or revision page
 
     },
 

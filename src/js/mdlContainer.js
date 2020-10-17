@@ -67,6 +67,10 @@ var mdlContainers = {
             height: 0px;
             overflow: hidden;
         }
+
+        body {
+            scroll-behavior: smooth;
+        }
         </style>
         `;
         
@@ -106,6 +110,8 @@ var mdlContainers = {
                     // Expand attached div
                     let col = $(\`#\${$(el).attr("expander-content-id")}\`)[0]; // get div element
                     $(col).css("height", $(col).attr("targetHeight")); // expand
+                    // Scroll to
+                    $(el).parent(".mdl-button").parent("div").scrollTo(el, 250);
                 } else {
                     // Shrink
                     $(el).removeClass("expanded").addClass("shrinking");
@@ -126,6 +132,14 @@ var mdlContainers = {
                 }
             });
         });
+
+        // jQuery scroll
+        jQuery.fn.scrollTo = function(elem, speed) { 
+            $(this).animate({
+                scrollTop:  $(this).scrollTop() - $(this).offset().top + $(elem).offset().top 
+            }, speed == undefined ? 1000 : speed); 
+            return this; 
+        };
         </script>
         `;
         return content; // return

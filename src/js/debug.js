@@ -1,0 +1,20 @@
+// only enabled when debug mode is on
+rw.debugMenu = {
+    "init": ()=>{
+        // Add debug icon
+        rw.topIcons.icons.push({
+            "title": "Debug Menu",
+            "shortTitle": "Debug",
+            "icon": "bug_report", // material icon
+            "callback": ()=>rw.debugMenu.open(), // when clicked
+            "showsOnlyOnUserPages": false,
+            "showsOnUneditablePages": true,
+            "colorModifier": "red", // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
+            "enabled": true // to show in main screen or more options screen
+        });
+    },
+
+    "open": ()=>{
+        dialogEngine.create(`[[[[include debugMenu.html]]]]`).showModal();
+    }
+};

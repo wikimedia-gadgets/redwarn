@@ -48,6 +48,9 @@ RedWarn 16 is finally here, bringing UX improvements, bug fixes, and new feature
     // ADDED BY BUILD SCRIPT
     "buildInfo" : `[[[[BUILDINFO]]]]`,
 
+    // DEBUG MODE - enabled by default on debug server
+    "debugMode" : `[[[[DEBUG]]]]`,
+
     // Now edited by us again
     /**
      * Defines the logo used in parts of RedWarn's UI. Please note that removing or changing this without adding attribution elsewhere may be a violation of RedWarn's license.
@@ -166,6 +169,7 @@ RedWarn 16 is finally here, bringing UX improvements, bug fixes, and new feature
                 <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/materialicons.css">
                 <script src="https://redwarn.toolforge.org/cdn/js/dialogPolyfill.js"></script> <!-- firefox being dumb -->
                 <script src="https://redwarn.toolforge.org/cdn/js/mdl.js" id="MDLSCRIPT"></script>
+                <script src="https://redwarn.toolforge.org/cdn/js/mdlLogic.js"></script> <!-- rw specific MDL logic fixes -->
                 <!-- Roboto Font -->
                 <link href="https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese" rel="stylesheet">
 
@@ -178,7 +182,7 @@ RedWarn 16 is finally here, bringing UX improvements, bug fixes, and new feature
                 }
 
                 /* MDL */
-                `+ rwStyle +`
+                ${rwStyle}
                 </style>
             `); // Append required libaries to page
 
@@ -211,6 +215,9 @@ RedWarn 16 is finally here, bringing UX improvements, bug fixes, and new feature
          * @extends rw.visuals
          */
         "pageIcons" : ()=> {
+            // If debug mode, enable debug menu
+            if (rw.debugMenu != null) rw.debugMenu.init(); // will be undefined if not
+
             // Thanks to User:Awesome Aasim for the suggestion and some sample code.
             try {
                 let pageIconHTML = "<div id='rwPGIconContainer' style='display:none;display: inline-block;'>"; // obj it is appended to

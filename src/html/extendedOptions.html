@@ -9,7 +9,9 @@
 
 <!-- Title -->
 <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">More Options</h2>
-<div style="height:400px;overflow:auto">
+<div style="height: 400px;
+overflow-y: auto;
+overflow-x: hidden;" id="buttonList">
     <hr style="margin:0"/>
     <!-- Add additional user added options here -->
 
@@ -25,7 +27,7 @@
     </div>
     
     <!-- collapsed AIV report UI - targetHeight = height you need -->
-    <div class="collapsed" id="rwAIVreport" targetHeight="320px" style="padding-left:25px;padding-right: 30px;">
+    <div class="collapsed" id="rwAIVreport" targetHeight="350px" style="padding-left:25px;padding-right: 30px;">
         ${adminReportContent} <!-- Import from HTML to keep extendedOption.html readable - see adminReport.html -->
     </div>
     <!-- end AIV -->

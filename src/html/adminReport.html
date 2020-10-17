@@ -1,5 +1,9 @@
+${doNotShowDialog !== true ? `
+<!-- Only show on our own dialog -->
+<h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Report to AIV</h2>
+` :``}
 <span>AIV is intended only <b>for reports about active, obvious, and persistent vandals and spammers.</b> When appropriate, assume good faith and ensure you have warned an editor before reporting to AIV.</span>
-<form id="reportForm">
+<form id="AIVreportForm">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
         <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="`+ rw.info.targetUsername(un).replace(/_/g, ' ') +`" name="target" readonly>
         <label class="mdl-textfield__label" for="trgtUsrVisualBox">Target</label>
@@ -34,20 +38,22 @@
 </form>
 
 <span style="float:right;">
-    <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('closeDialog', '*');">
-        CANCEL
-    </button>
-    <button id="submitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="sendReport();">
+    ${doNotShowDialog !== true ? `
+        <!-- Only show on our own dialog to close -->
+        <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('closeDialog', '*');">
+            CANCEL
+        </button>    
+        ` :``}
+    <button id="submitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="sendAIVReport();">
         REPORT
     </button>
 </span>
-
 <script>
     function pushToast(text) {window.parent.postMessage('pushToast\\\`' + text);} // Push toast to host
 
-    function sendReport() {
+    function sendAIVReport() {
         // Submit report
-        var data = $('#reportForm').serializeArray().reduce(function(obj, item) {
+        var data = $('#AIVreportForm').serializeArray().reduce(function(obj, item) {
                 obj[item.name] = item.value;
                 return obj;
                 }, {}); // form data
@@ -65,7 +71,7 @@
         }
         fullReason += " ${rw.sign()}"; // Add sig to the end (w space)
         // Push this upstairs
-        window.parent.postMessage('report\\\`'+ fullReason + '\\\`' + data.target, '*'); // Report with full reason
+        window.parent.postMessage('AIVreport\\\`'+ fullReason + '\\\`' + data.target, '*'); // Report with full reason
         window.parent.postMessage('closeDialog', '*'); // Close. We will be reopened on error.
     }
 </script>

@@ -11,7 +11,7 @@
 
 // ==== Part 1. Defining constants ====
 
-define("DEBUG_MODE", false);
+define("DEBUG_MODE", php_sapi_name() == 'cli-server'); // enable debug mode if we are running in a development server
 
 $jsRoot = __DIR__ . DIRECTORY_SEPARATOR . "src" . DIRECTORY_SEPARATOR . "js";
 $jsFiles = [
@@ -32,13 +32,16 @@ $jsFiles = [
     'firstTimeSetup.js'
 ];
 
+if (DEBUG_MODE) array_push($jsFiles, "debug.js"); // add debug if in debug mode
+
 $htmlRoot = __DIR__ . DIRECTORY_SEPARATOR . "src" . DIRECTORY_SEPARATOR . "html";
 
 $magicWords = [
     "BUILDINFO" =>
         "Build Time: " . date('d/m/Y H:i:s', time()) . "UTC" . PHP_EOL .
         "Excecuted script: " . str_replace("\\", "/", __FILE__) . PHP_EOL .
-        "User: " . get_current_user() . '@'. gethostname() .' on '. php_uname('s')
+        "User: " . get_current_user() . '@'. gethostname() .' on '. php_uname('s'),
+    "DEBUG" => DEBUG_MODE
 ];
 
 // ==== Part 2. Function definitions ====
@@ -228,18 +231,18 @@ function endsWith($haystack, $needle) {
  */
 function readJSSourceFile($file) {
     global $jsRoot;
-
-    if (DEBUG_MODE) {
-        $finalJS = "";
-        foreach (explode(
-            "\n", 
-            str_replace("\r\n", "\n", file_get_contents($jsRoot . DIRECTORY_SEPARATOR . $file))
-        ) as $i => $val)
-            $finalJS .= "/* " . $i . " */ " . $val . PHP_EOL;
-        return $finalJS ;
-    } else {
+    
+    // if (DEBUG_MODE) {
+    //     $finalJS = "";
+    //     foreach (explode(
+    //         "\n", 
+    //         str_replace("\r\n", "\n", file_get_contents($jsRoot . DIRECTORY_SEPARATOR . $file))
+    //     ) as $i => $val)
+    //         $finalJS .= "/* " . $i . " */ " . $val . PHP_EOL;
+    //     return $finalJS ;
+    // } else {
         return file_get_contents($jsRoot . DIRECTORY_SEPARATOR . $file);
-    }
+    //}
 }
 
 /**

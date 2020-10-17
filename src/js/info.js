@@ -134,6 +134,29 @@ rw.info = { // API
                     rw.rollback.icons = newRwIcons;
                 }
 
+                // Load page icons
+                if (rw.config.rwPageIcons != null) {
+                    // More info in preferences.html and rollback.html
+                    let newRwIcons = []; // object containing the new object
+                    rw.config.rwPageIcons.forEach(icon=>{ // for each icon
+                        // Add to ours at the new location
+                        newRwIcons[icon.shift] = rw.topIcons.icons[icon.index];
+                        // Now modify for each modifier in modify object
+                        for (const key in icon.modify) {
+                            if (icon.modify.hasOwnProperty(key)) {
+                                const value = icon.modify[key];
+                                newRwIcons[icon.shift][key] = value; // apply modifier
+                            }
+                        }
+
+                        // Set original index for preferences
+                        newRwIcons[icon.shift].originalIndex = icon.index; // DO NOT set this to iconIndex as iconIndex is for rendering - this is for config and preferences ONLY
+                    });
+
+                    // Now update rwrollbackicons
+                    rw.topIcons.icons = newRwIcons;
+                }
+
             } catch (err) {
                 // Corrupt config file
                 console.log(rw.config);
@@ -216,11 +239,12 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
      * @extends rw.info
      */
     "featureRestrictPermissionLevel": (l, callback, callbackIfNot)=> {
+        if (callback) callback(); return;
         // Restrict feature to users in this group
         mw.user.getGroups(g=>{
             let hasPerm = g.includes(l);
             if (!hasPerm) hasPerm = g.includes("sysop"); // admins override all feature restrictions if we don't have them
-            
+
             if ((l == "confirmed") && !hasPerm) {hasPerm = g.includes("autoconfirmed");} // Due to 2 types of confirmed user, confirmed and autoconfirmed, we have to check both
             if (hasPerm) {
                 // Has the permission needed

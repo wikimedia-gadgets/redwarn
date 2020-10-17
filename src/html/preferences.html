@@ -574,7 +574,8 @@ var onSettingsLoad = {};
                 obj[item.name] = item.value;
                 return obj;
                 }, {}); // form data
-        // Now we process the icons
+
+        // Now we process the rollback icons
         let iconModifyArray = []; // array for our changes
 
         // For each enabled icon
@@ -607,7 +608,38 @@ var onSettingsLoad = {};
 
         // Now add to config
         data.rwRollbackIcons = iconModifyArray;
-        console.log(data);
+
+        // Now process the page icons
+        iconModifyArray = []; // reset array for our changes
+        
+        $("#rwPageIconsSort > li").each((i, el)=>{ 
+            let iconIndex = parseInt($(el).attr("id").split("-")[1]);
+            iconModifyArray.push({
+                "index" : iconIndex, // original icon index 
+                "shift" : i, // where to move to
+                "modify" : { // obj of params to change
+                    "enabled": true, // set as enabled
+                    "icon" : $(el).find("span").text().trim() // get icon from inner span text
+                }
+            });
+        });
+
+        // For each disabled icon
+        $("#rwPageIconsSortDisabled > li").each((i, el)=>{ 
+            let iconIndex = parseInt($(el).attr("id").split("-")[1]);
+            iconModifyArray.push({
+                "index" : iconIndex, // original icon index 
+                "shift" : $("#rwPageIconsSort > li").length + i, // where to move to (for disbaled + the number of total enabled)
+                "modify" : { // obj of params to change
+                    "enabled": false, // set as disabled
+                    "icon" : $(el).find("span").text().trim() // get icon from inner span text
+                }
+            });
+        });
+
+        // Now add to config
+        data.rwPageIcons = iconModifyArray;
+
         // Done! Submit
         window.parent.postMessage("config\\\`"+ btoa(JSON.stringify(data))); // send to the big boss
     }
@@ -678,6 +710,16 @@ var onSettingsLoad = {};
         animation: 150
     });
     $('#rwRollbackIconsSortDisabled').sortable({
+        group: 'shared', // set both lists to same group
+        animation: 150
+    });
+
+    // Sortable for page icons
+    $('#rwPageIconsSort').sortable({
+        group: 'shared', // set both lists to same group
+        animation: 150
+    });
+    $('#rwPageIconsSortDisabled').sortable({
         group: 'shared', // set both lists to same group
         animation: 150
     });

@@ -239,7 +239,6 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
      * @extends rw.info
      */
     "featureRestrictPermissionLevel": (l, callback, callbackIfNot)=> {
-        if (callback) callback(); return;
         // Restrict feature to users in this group
         mw.user.getGroups(g=>{
             let hasPerm = g.includes(l);

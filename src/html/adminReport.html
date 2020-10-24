@@ -2,7 +2,12 @@ ${doNotShowDialog !== true ? `
 <!-- Only show on our own dialog -->
 <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Report to AIV</h2>
 ` :``}
-<span>AIV is intended only <b>for reports about active, obvious, and persistent vandals and spammers.</b> When appropriate, assume good faith and ensure you have warned an editor before reporting to AIV.</span>
+<span>
+    <!-- shows different text in production and debug modes -->
+    ${rw.debugMenu == null ? `AIV is intended only <b>for reports about active, obvious, and persistent vandals and spammers.</b>
+    When appropriate, assume good faith and ensure you have warned an editor before reporting to AIV.`:
+    `<span style="color:red">You are in developer mode, so AIV reports will be sent to User:Ed6767/sandbox. Enable production behaviour through the debug menu.</span>`}
+</span>
 <form id="AIVreportForm">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
         <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="`+ rw.info.targetUsername(un).replace(/_/g, ' ') +`" name="target" readonly>
@@ -74,4 +79,13 @@ ${doNotShowDialog !== true ? `
         window.parent.postMessage('AIVreport\\\`'+ fullReason + '\\\`' + data.target, '*'); // Report with full reason
         window.parent.postMessage('closeDialog', '*'); // Close. We will be reopened on error.
     }
+
+    // Handles notice that user has already been reported
+    window.onmessage = e=>{ // On any message we just set the text, not much logic here
+        console.log(e);
+        if (e.data == "AIVReportExist"){
+            $("#AIVreportForm").html("<h5>It looks like this user has already been reported to AIV.</h5>");
+            $("#submitBtn").hide(); // hide submit button
+        }
+    };
 </script>

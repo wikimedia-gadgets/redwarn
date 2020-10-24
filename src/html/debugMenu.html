@@ -3,3 +3,4 @@
 <button onclick="rw.ui.beginWarn(false, 'Sandbox for user warnings');">Open Warning dialog in Sandbox</button>
 <button onclick="rw.info.lastWarningLevel(prompt('Enter username:'), l=>alert(l))">Get warning level of any user</button>
 <button onclick="rw.ui.loadDialog.show('Test message...');setTimeout(()=>rw.ui.loadDialog.close(), 5000);">Show loading dialog for 5 seconds</button>
+<button onclick="rw.debugMenu = undefined; rw.debugMode = false;rw.topIcons.icons.pop();dialogEngine.closeDialog();">Enable production behavior (will break this menu)</button>

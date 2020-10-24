@@ -515,9 +515,8 @@ rw.ui = {
      * @extends rw.ui
      */
     "openAdminReport" : (un, doNotShowDialog)=> { // Open admin report dialog
-        // Setup AIV page
-        const aivPage = "User:Ed6767/sandbox"; // dev
-        //const aivPage = "Wikipedia:Administrator_intervention_against_vandalism"; // PRODUCTION! 
+        // Setup AIV page for development or production
+        const aivPage = (rw.debugMenu == null ? "Wikipedia:Administrator_intervention_against_vandalism" : "User:Ed6767/sandbox"); 
 
         // Add toast handler
         addMessageHandler("pushToast`*", m=>rw.visuals.toast.show(m.split('`')[1],false,false,2500));
@@ -530,9 +529,7 @@ rw.ui = {
             console.log("reporting "+ target + ": "+ reportContent);
             console.log("is ip? "+ (targetIsIP ? "yes" : "no"));
             rw.visuals.toast.show("Reporting "+ target +"...", false, false, 2000); // show toast
-            // Submit the report. MUST REPLACE WITH REAL AIV WHEN DONE AND WITH SANDBOX IN DEV!    
-            
-
+            // Submit the report.   
             $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+aivPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
                 // Grab text from latest revision of AIV page
                 // Check if exists
@@ -578,6 +575,17 @@ rw.ui = {
         }
 
         const dialogContent = `[[[[include adminReport.html]]]]`;
+
+        // Push a message if report has already been made
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+aivPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+            // Grab text from latest revision of AIV page
+            // Check if exists
+            let revisionWikitext =  latestR.query.pages[0].revisions[0].slots.main.content; // Set wikitext
+            if (revisionWikitext.toLowerCase().includes(rw.info.targetUsername(un).replace(/_/g, ' ').toLowerCase())) {// If report is already there
+                setTimeout(()=>dialogEngine.dialog.getElementsByTagName("iframe")[0].contentWindow.postMessage("AIVReportExist"), 500); // let dialog know after 500ms to allow dialog to open
+            }
+        });
+
 
         if (doNotShowDialog !== true) {
             // See adminReport.html for code

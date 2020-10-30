@@ -7,7 +7,7 @@ rw.debugMenu = {
             rw.debugMode = false;
             return;
         }
-        // Add debug icon
+        // Add debug icons
         rw.topIcons.icons.push({
             "title": "Debug Menu",
             "shortTitle": "Debug",
@@ -23,7 +23,21 @@ rw.debugMenu = {
             "showsOnUneditablePages": true,
             "colorModifier": "red", // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
             "enabled": true // to show in main screen or more options screen
-        });
+        },
+        
+        {
+            "title": "Go to User Warning sandbox",
+            "shortTitle": "UWSB",
+            "icon": "person_outline", // material icon
+            "callback": ()=>{
+                redirect("https://en.wikipedia.org/wiki/User_talk:Sandbox_for_user_warnings");
+            }, // when clicked
+            "showsOnlyOnUserPages": false,
+            "showsOnUneditablePages": true,
+            "colorModifier": "blue", // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
+            "enabled": true // to show in main screen or more options screen
+        }
+        );
     },
 
     "open": ()=>{

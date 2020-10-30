@@ -49,7 +49,7 @@ ${doNotShowDialog !== true ? `
             CANCEL
         </button>    
         ` :``}
-    <button id="submitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="sendAIVReport();">
+    <button id="AIVsubmitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="sendAIVReport();">
         REPORT
     </button>
 </span>
@@ -85,7 +85,10 @@ ${doNotShowDialog !== true ? `
         console.log(e);
         if (e.data == "AIVReportExist"){
             $("#AIVreportForm").html("<h5>It looks like this user has already been reported to AIV.</h5>");
-            $("#submitBtn").hide(); // hide submit button
-        }
+            $("#AIVsubmitBtn").hide(); // hide submit button
+        } else if (e.data == "UAAReportExist"){
+            $("#UAAreportForm").html("<h5>It looks like this user has already been reported to UAA.</h5>");
+            $("#UAAsubmitBtn").hide(); // hide submit button
+        } 
     };
 </script>

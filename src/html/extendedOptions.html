@@ -36,19 +36,87 @@ overflow-x: hidden;" id="buttonList">
     <!-- UAA -->
     <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
         <span class="material-icons" style="padding-right:20px">person_remove</span>REPORT ${rw.info.targetUsername()} TO UAA
+
+        <!-- Drop down spinny icon -->
+        <expander class="material-icons" expander-content-id="rwUAAreport">expand_more</expander>
     </div>
+    <!-- collapsed UAA report UI - targetHeight = height you need -->
+    <div class="collapsed" id="rwUAAreport" targetHeight="350px" style="padding-left:25px;padding-right: 30px;">
+        ${uaaReportContent} <!-- Import from HTML to keep extendedOption.html readable - see uaaReport.html -->
+    </div>
+    <!-- end UAA -->
     <hr style="margin:0"/>
     
     <!-- Oversight report -->
     <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
         <span class="material-icons" style="padding-right:20px">visibility_off</span>REPORT ${(isUserPage ? "USER" : "") + (isUserPage && isOnRevPage ? " AND/OR " : "") + (isOnRevPage ? "EDIT" : "")} TO OVERSIGHT
+        <!-- Drop down spinny icon -->
+        <expander class="material-icons" expander-content-id="rwOSreport">expand_more</expander>
     </div>
+    <div class="collapsed" id="rwOSreport" targetHeight="350px" style="padding-left:25px;padding-right: 30px;">
+        Suppression removes edits which breach privacy or defame somebody. You must never draw attention to suppressible material and links on Wikipedia or other public venues.
+        Please see the <a href="https://en.wikipedia.org/wiki/Wikipedia:Requests_for_oversight" target="_blank">requests for oversight</a> page for more information.
+        <!-- Check if email is verfied -->
+        ${(emailInfo.emailauthenticated == null ? `
+        <!-- Email not verified -->
+        <h5>You must have a verified email linked to your account to use this feature.</h5>    
+        ` : `
+        <!-- Email verified -->
+
+        `)}
+    </div>
+    <!-- end os -->
     <hr style="margin:0"/>
     
     <!-- TAS report -->
     <div class="mdl-button mdl-js-button" style="width:100%; text-align: left; color:red;">
         <span class="material-icons" style="padding-right:20px">phone_in_talk</span>REPORT ${(isUserPage ? "USER" : "") + (isUserPage && isOnRevPage ? " AND/OR " : "") + (isOnRevPage ? "EDIT" : "")} TO WIKIMEDIA TRUST AND SAFETY
+        <!-- Drop down spinny icon -->
+        <expander class="material-icons" expander-content-id="rwTASreport">expand_more</expander>
     </div>
+    <div class="collapsed" id="rwTASreport" targetHeight="350px" style="padding-left:25px;padding-right: 30px;overflow-y:auto;">
+        <div style="font-size: small;background: #ffc8c8;color: #ff3e3e;text-align: center;">
+            <span>If you are in immediate danger, contact your local emergency services.</span>
+        </div>
+
+        
+        <div style="font-size: 120%;">
+            If you see a <b>threat of physical harm</b> (including self-harm):</div><br>
+        <div style="font-size: 110%;">
+        <p><b>1. Treat all claims seriously</b>
+        </p>
+        </div>
+        <ul><li>Many threats are empty, but leave that evaluation to Foundation staff.</li>
+        <li>If you are in immediate danger, call your <a href="https://en.wikipedia.org/wiki/List_of_emergency_telephone_numbers" title="List of emergency telephone numbers" target="_blank">local emergency services</a>.</li></ul><p><br></p>
+        <div style="font-size: 110%;">
+        <p><b>2. Contact the Wikimedia Foundation</b> <br>
+            Use the form below to contact the Wikimedia Foundation
+        </p>
+        </div>
+        <ul><li>This form is for <u>threats of physical harm (including self-harm) <i>only</i></u>.</li>
+        <li>Include the name of the page where the threat was made, or a diff. RedWarn has automatically attached page information, which you can modify or add to as necessary.</li>
+        <li>This address is monitored around the clock. Staff will typically acknowledge your email immediately. They may require additional information, so keep an eye on your inbox.</li>
+        <li>Avoid emailing other addresses or telephoning the Wikimedia Foundation office, as this creates confusion.</li>
+        <li>Wikimedia Foundation Staff will take appropriate action, such as tracing locations and contacting authorities.</li></ul><p><br></p>
+        <div style="font-size: 110%;">
+        <p><b>3. Contact administrators</b><br>
+        In addition to emailing the Wikimedia Foundation as above, notify Wikipedia <a href="https://en.wikipedia.org/wiki/Wikipedia:Administrators" title="Wikipedia:Administrators" target="_blank">administrators</a> privately.
+        </p>
+        </div>
+        <ul><li>Even if you are an administrator, notify other administrators.</li>
+        <li>Use <a href="https://en.wikipedia.org/wiki/Wikipedia:Emailing_users" title="Wikipedia:Emailing users" target="_blank">email</a>, <a href="https://en.wikipedia.org/wiki/Wikipedia:IRC#List_of_useful_channels" title="Wikipedia:IRC" target="_blank">IRC</a>, or other <i>low-visibility</i> methods, <b>not high-traffic noticeboards.</b></li>
+    
+        Please see the <a href="https://en.wikipedia.org/wiki/WP:999" target="_blank">responding to threats of harm</a> guideline page for more information.
+        <!-- Check if email is verfied -->
+        ${(emailInfo.emailauthenticated == null ? `
+        <!-- Email not verified -->
+        <h5>You must have a verified email linked to your account to use this feature.</h5>    
+        ` : `
+        <!-- Email verified -->
+
+        `)}
+    </div>
+
     <hr style="margin:0"/>
     ` : ``)}
     
@@ -64,3 +132,18 @@ overflow-x: hidden;" id="buttonList">
     </div>
     <hr style="margin:0"/>
 </div>
+
+<script>
+    window.onmessage = e=>{ // On any message we just set the text, not much logic here
+        console.log(e);
+        if (e.data == "AIVReportExist"){
+            $("#AIVreportForm").html("<h5>It looks like this user has already been reported to AIV.</h5>");
+            $("#AIVsubmitBtn").hide(); // hide submit button
+        } else if (e.data == "UAAReportExist"){
+            $("#UAAreportForm").html("<h5>It looks like this user has already been reported to UAA.</h5>");
+            $("#UAAsubmitBtn").hide(); // hide submit button
+        } 
+
+        // OTHER EXTENDED OPTIONS HANLDERS HERE
+    };
+</script>

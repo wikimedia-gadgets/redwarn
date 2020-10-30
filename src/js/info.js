@@ -37,6 +37,14 @@ rw.info = { // API
      */
     "targetUsername": un=>{
         if (un) {return un;} // return username if defined
+
+        if (mw.config.get("wgRelevantUserName") == null) {
+            // Try getting revision user and returning that
+            try {
+                const target = $($("#mw-diff-ntitle2").find(".mw-userlink")[0]).text();
+                return (target == "" ? null : target); // if empty send null
+            } catch (error) {} // do nothing on error
+        }
         return mw.config.get("wgRelevantUserName");},
 
     /**
@@ -166,10 +174,9 @@ rw.info = { // API
                 rw.info.writeConfig(true, ()=>rw.ui.confirmDialog(`Sorry, but an issue has caused your RedWarn preferences to be reset to default. Would you like to report a bug?`, 
                 "Report Bug", ()=>{
                     rw.ui.reportBug(`<!-- DO NOT EDIT BELOW THIS LINE! THANK YOU -->
-                    rwConfig load - Error info: <code><nowiki>
-                    ${err.stack}</nowiki></code>
-                    [[User:${user}/redwarnConfig.js|Open user redwarnConfig.js]]
-                    `);
+redwarnConfig load - Error info: <code><nowiki>
+${err.stack}</nowiki></code>
+[[User:${user}/redwarnConfig.js|Open user redwarnConfig.js]]`);
                 },
                 
                 "DISMISS", ()=>{

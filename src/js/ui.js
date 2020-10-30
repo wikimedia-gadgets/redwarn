@@ -676,16 +676,20 @@ rw.ui = {
      * Opens the UAA report dialog for a specified user
      *
      * @param {string} un Username to report
+     * @param {boolean} htmlOnly For expanding elements, adds handlers but returns HTML
      * @method beginUAAReport
      * @extends rw.ui
      */
-    "beginUAAReport" : un=> { // Report to UAA
+    "beginUAAReport" : (un, htmlOnly)=> { // Report to UAA
 
         // Check if IP - if so, exit
         if (rw.info.isUserAnon(un)) {
+            if (htmlOnly) return "As IPs don't have usernames, you can't report them to UAA.";
             rw.ui.confirmDialog("As IPs don't have usernames, you can't report them to UAA.", "OKAY", ()=>dialogEngine.closeDialog() , "", ()=>{}, 0);
             return; // stop
         }
+
+        const uaaPage = (rw.debugMenu == null ? "Wikipedia:Usernames_for_administrator_attention" : "User:Ed6767/sandbox"); // set UAA based on debug mode
 
         // Add toast handler
         addMessageHandler("pushToast`*", m=>rw.visuals.toast.show(m.split('`')[1],false,false,2500));
@@ -696,8 +700,7 @@ rw.ui = {
             let target = m.split('`')[2]; // target username
             console.log("reporting "+ target + ": "+ reportContent);
             rw.visuals.toast.show("Reporting "+ target +"...", false, false, 2000); // show toast
-            // Submit the report. MUST REPLACE WITH REAL AIV WHEN DONE AND WITH SANDBOX IN DEV!    
-            let uaaPage = "Wikipedia:Usernames_for_administrator_attention"; // PRODUCTION: Wikipedia:Usernames_for_administrator_attention
+            // Submit the report. MUST REPLACE WITH REAL AIV WHEN DONE AND WITH SANDBOX IN DEV!   
 
             $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+uaaPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
                 // Grab text from latest revision of AIV page
@@ -738,14 +741,31 @@ rw.ui = {
 
         // Check matching user
         if (rw.info.targetUsername(un) == rw.info.getUsername()) {
+            // If HTML only
+            if (htmlOnly) return `You can not report yourself, nor can you test this feature except in a genuine case.`;
+
             // Usernames are the same, give toast.
             rw.visuals.toast.show("You can not report yourself, nor can you test this feature except in a genuine case.", false, false, 7500);
             return; // DO NOT continue.
         }
+        
+        const dialogContent = `[[[[include uaaReport.html]]]]`;
 
+        // Push a message if report has already been made
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+uaaPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+            // Grab text from latest revision of AIV page
+            // Check if exists
+            let revisionWikitext =  latestR.query.pages[0].revisions[0].slots.main.content; // Set wikitext
+            if (revisionWikitext.toLowerCase().includes(rw.info.targetUsername(un).replace(/_/g, ' ').toLowerCase())) {// If report is already there
+                setTimeout(()=>dialogEngine.dialog.getElementsByTagName("iframe")[0].contentWindow.postMessage("UAAReportExist"), 500); // let dialog know after 500ms to allow dialog to open
+            }
+        });
+
+
+        if (htmlOnly) return dialogContent; // return dialog if HTMl only
 
         // See uaaReport.html for code
-        dialogEngine.create(mdlContainers.generateContainer(`[[[[include uaaReport.html]]]]`, 500, 410)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(dialogContent, 500, 410)).showModal();
     },
 
     /**
@@ -754,7 +774,7 @@ rw.ui = {
      * @method openExtendedOptionsDialog
      * @extends rw.ui
      */
-    "openExtendedOptionsDialog" : (un)=>{
+    "openExtendedOptionsDialog" : un=>{
 
         // HTML for tabs
 
@@ -762,8 +782,13 @@ rw.ui = {
         let adminReportContent = `[[[[include genericError.html]]]]`; // placeholder
         try {
             adminReportContent = rw.ui.openAdminReport(null, true); // this sets up our handlers and generates the appropraite HTML
-        } catch (e) {}
-        
+        } catch (e) {adminReportContent+=`<hr><pre>${e.stack}</pre>`;}
+
+        // UAA report
+        let uaaReportContent = `[[[[include genericError.html]]]]`; // placeholder
+        try {
+            uaaReportContent = rw.ui.beginUAAReport(rw.info.targetUsername(), true); // this sets up our handlers and generates the appropraite HTML
+        } catch (e) {uaaReportContent+=`<hr><pre>${e.stack}</pre>`;}
 
         // Event handlers
         addMessageHandler("redwarnPref", ()=>dialogEngine.closeDialog(()=>rw.ui.openPreferences())); // open preferences for button press
@@ -772,7 +797,11 @@ rw.ui = {
         const isUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");
         const isOnRevPage = window.location.href.includes("diff=") || window.location.href.includes("oldid="); // for reporting revisions
 
-        dialogEngine.create(mdlContainers.generateContainer(`[[[[include extendedOptions.html]]]]`, 500, 500)).showModal(); // also shrink more when not on user page or revision page
+        // Get email info before loading and showing dialog (for OS and TAS reporting)
+        $.getJSON(rw.wikiAPI+"?action=query&meta=userinfo&uiprop=email&format=json", r=>{
+            const emailInfo = r.query.userinfo;
+            dialogEngine.create(mdlContainers.generateContainer(`[[[[include extendedOptions.html]]]]`, 500, 500)).showModal(); // also shrink more when not on user page or revision page
+        });
 
     },
 

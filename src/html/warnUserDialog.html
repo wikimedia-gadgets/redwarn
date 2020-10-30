@@ -385,7 +385,7 @@
             var wikiTxt = "{{subst:"+ name +"}} " + "${rw.sign()}";
             // Check if this user is an IP, if so, add the advice template to the end
             if (`+ (rw.info.isUserAnon(rw.info.targetUsername(un)) ? "true" : "false") +` == true) {
-                wikiTxt += "`+ rw.sharedIPadvice() +`";
+                wikiTxt += "${rw.sharedIPadvice()}";
             }
             document.getElementById("wikiTxt").value = wikiTxt; // set edit box
             window.parent.postMessage('generatePreview\\\`'+ wikiTxt, '*');
@@ -578,6 +578,7 @@
             $("#reasonsBox > input:visible").click();
             setTimeout(()=>{
                 $("li.mdl-menu__item[data-val='${autoSelectReasonIndex}']").click();
+                refreshLevels("${autoSelectReasonIndex}"); // update levels (will be set back to int)
             },250);
         },250);
     ` : "") +`

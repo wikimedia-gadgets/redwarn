@@ -164,11 +164,11 @@ rw.info = { // API
                 console.error(err);
                 // Reset config file to defaults
                 rw.info.writeConfig(true, ()=>rw.ui.confirmDialog(`Sorry, but an issue has caused your RedWarn preferences to be reset to default. Would you like to report a bug?`, 
-                "Open Feedback and Support", ()=>{
-                    rw.ui.sendFeedback(`<!-- DO NOT EDIT BELOW THIS LINE! THANK YOU -->
+                "Report Bug", ()=>{
+                    rw.ui.reportBug(`<!-- DO NOT EDIT BELOW THIS LINE! THANK YOU -->
                     rwConfig load - Error info: <code><nowiki>
-                    ` +err + `</nowiki></code>
-                    [[User:`+user+`/redwarnConfig.js|Open user rwConfig.js]]
+                    ${err.stack}</nowiki></code>
+                    [[User:${user}/redwarnConfig.js|Open user redwarnConfig.js]]
                     `);
                 },
                 

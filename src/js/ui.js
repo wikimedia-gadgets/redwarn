@@ -620,10 +620,10 @@ rw.ui = {
      * Shows the feedback dialog to leave bug reports and feedback
      *
      * @param {string} extraInfo
-     * @method sendFeedback
+     * @method reportBug
      * @extends rw.ui
      */
-    "sendFeedback" : extraInfo=> {
+    "reportBug" : extraInfo=> {
         // Open feedback dialog, basically same as newmsg
         // Setup preview handling
         addMessageHandler("generatePreview`*", m=>{

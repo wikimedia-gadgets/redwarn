@@ -403,7 +403,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         } else {
             // BUG!
             rw.ui.confirmDialog("A very weird error occured. (rollback getRollbackRevID failed via final else!)",
-            "REPORT BUG", ()=>rw.ui.sendFeedback("rollback getRollbackRevID failed via final else! related URL: "+ window.location.href) ,
+            "REPORT BUG", ()=>rw.ui.reportBug("rollback getRollbackRevID failed via final else! related URL: "+ window.location.href) ,
             "", ()=>{}, 0);
         }
     },

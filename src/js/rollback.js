@@ -80,7 +80,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             "color" : "black", // css colour
             "icon" : "more_vert",
             "actionType" : "func",
-            "action" : ()=>rw.rollback.selectFromDisabled() // Callback
+            "action" : ()=>rw.ui.openExtendedOptionsDialog() // Callback
         },
 
         // END DEFAULT ENABLED ICONS
@@ -352,44 +352,35 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         },100);
     },
 
-    "selectFromDisabled" : ()=>{
+    "getDisabledHTMLandHandlers" : ()=>{
         // Open a new dialog with all the disabled icons so user can select one. Click handlers are already registered, so we just call rw.rollback.clickHandlers.[elID]();
         // Load Rollback current rev icons (rev14)
         let finalIconStr = "";
         rw.rollback.icons.forEach((icon,i) => {
             if (icon.enabled) return; // if icon is enabled, we can skip
+            if (icon.name == "More Options") return; // does nothing here, so not needed
+
             let elID = "rwRollback_" + i; // get the ID for the new icons
 
             // Establish element with all the info
             finalIconStr += `
-            <div id="${elID}" class="icon material-icons">
-                <span style="cursor: pointer;
-                            font-size:28px;
-                            padding-right:5px;
-                            color:${icon.color};"
-                onclick="window.parent.postMessage('rwRollbackBtn${elID}');">
-                    ${icon.icon}
-                </span>
+            <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;" onclick="window.parent.postMessage('rwRollbackBtn${elID}', '*');">
+                <span class="material-icons" style="padding-right:20px;color:${icon.color};">${icon.icon}</span>
+                <span ${(icon.name.length > 40 ? `style="font-size: 12px;"` : "")}>${icon.name}</span><!-- shrink if over a certain size so it doesn't overflow -->
             </div>
-            <div class="mdl-tooltip" for="${elID}">
-                ${icon.name} 
-            </div>
+            <hr style="margin:0"/>
             `;
 
             // Add click event handler
             addMessageHandler("rwRollbackBtn"+ elID, ()=>{
-                dialogEngine.closeDialog(); // close dialog
-                rw.rollback.clickHandlers[elID](); // send our callback
+                dialogEngine.closeDialog(()=>{// close dialog, then
+                    rw.rollback.clickHandlers[elID](); // send our callback
+                });
             });
         });
         
-        // Now show dialog - we don't need a special one
-        rw.ui.confirmDialog(`
-        <div style="width:410px;text-align:center;height:66px;overflow:auto;margin:auto;"> <!-- outer container for icons -->
-            ${finalIconStr}
-        </div>
-        `, "CLOSE", ()=>dialogEngine.closeDialog(),
-        "", ()=>{}, 25, true); // true here removes extra linebreaks
+        // Now return HTML (rw16)
+        return finalIconStr;
     },
 
     "getRollbackrevID" : ()=>{ // Get the revision ID of what we want to rollback
@@ -782,6 +773,8 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
     },
 
     "showRollbackDoneOps" : (un, warnIndex) => {
+        // Clear get hidden handler to stop errors in more options menu
+        rw.rollback.getDisabledHTMLandHandlers = ()=>{return "";}; // return w empty string
         // Add click handlers 
         $("#RWRBDONEmrevPg").click(()=>rw.info.isLatestRevision(mw.config.get('wgRelevantPageName'), 0, ()=>{})); // go to latest revision
         $("#RWRBDONEnewUsrMsg").click(()=>rw.ui.newMsg(un)); // send message

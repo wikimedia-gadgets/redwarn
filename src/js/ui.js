@@ -775,32 +775,44 @@ rw.ui = {
      * @extends rw.ui
      */
     "openExtendedOptionsDialog" : un=>{
-
-        // HTML for tabs
-
-        // USER THINGS ONLY - try and catch as will error out on non-user pages
-        let adminReportContent = `[[[[include genericError.html]]]]`; // placeholder
-        try {
-            adminReportContent = rw.ui.openAdminReport(null, true); // this sets up our handlers and generates the appropraite HTML
-        } catch (e) {adminReportContent+=`<hr><pre>${e.stack}</pre>`;}
-
-        // UAA report
-        let uaaReportContent = `[[[[include genericError.html]]]]`; // placeholder
-        try {
-            uaaReportContent = rw.ui.beginUAAReport(rw.info.targetUsername(), true); // this sets up our handlers and generates the appropraite HTML
-        } catch (e) {uaaReportContent+=`<hr><pre>${e.stack}</pre>`;}
-
-        // Event handlers
-        addMessageHandler("redwarnPref", ()=>dialogEngine.closeDialog(()=>rw.ui.openPreferences())); // open preferences for button press
-        addMessageHandler("redwarnTalk", ()=>redirect("https://en.wikipedia.org/wiki/Wikipedia_talk:RedWarn", true));
-
-        const isUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");
-        const isOnRevPage = window.location.href.includes("diff=") || window.location.href.includes("oldid="); // for reporting revisions
-
+        rw.ui.loadDialog.show("Please wait...");
         // Get email info before loading and showing dialog (for OS and TAS reporting)
         $.getJSON(rw.wikiAPI+"?action=query&meta=userinfo&uiprop=email&format=json", r=>{
+
+            // HTML for tabs
+
+            // USER THINGS ONLY - try and catch as will error out on non-user pages
+            let adminReportContent = `[[[[include genericError.html]]]]`; // placeholder
+            try {
+                adminReportContent = rw.ui.openAdminReport(null, true); // this sets up our handlers and generates the appropraite HTML
+            } catch (e) {adminReportContent+=`<hr><pre>${e.stack}</pre>`;}
+
+            // UAA report
+            let uaaReportContent = `[[[[include genericError.html]]]]`; // placeholder
+            try {
+                uaaReportContent = rw.ui.beginUAAReport(rw.info.targetUsername(), true); // this sets up our handlers and generates the appropraite HTML
+            } catch (e) {uaaReportContent+=`<hr><pre>${e.stack}</pre>`;}
+
+            // Event handlers
+            addMessageHandler("redwarnPref", ()=>dialogEngine.closeDialog(()=>rw.ui.openPreferences())); // open preferences for button press
+            addMessageHandler("redwarnTalk", ()=>redirect("https://en.wikipedia.org/wiki/Wikipedia_talk:RedWarn", true));
+
+            const isUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");
+            const isOnRevPage = window.location.href.includes("diff=") || window.location.href.includes("oldid="); // for reporting revisions
+
+            let rollbackOptsHTML = "";
+            // Generate rollback options if on rev page 
+            if (isOnRevPage) rollbackOptsHTML = rw.rollback.getDisabledHTMLandHandlers(); // generates our HTML and all assosicated handlers for us
+
+
+            // Email information for TAS and OS reports
             const emailInfo = r.query.userinfo;
-            dialogEngine.create(mdlContainers.generateContainer(`[[[[include extendedOptions.html]]]]`, 500, 500)).showModal(); // also shrink more when not on user page or revision page
+
+            // Close loading dialog#
+            rw.ui.loadDialog.close();
+
+            // Make dialog
+            dialogEngine.create(mdlContainers.generateContainer(`[[[[include extendedOptions.html]]]]`, 500, 500)).showModal(); // todo: also shrink more when not on user page or revision page
         });
 
     },

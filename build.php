@@ -29,7 +29,8 @@ $jsFiles = [
     'multiAct.js',
     'quickTemplate.js',
     'pageProtect.js',
-    'firstTimeSetup.js'
+    'firstTimeSetup.js',
+    'preferences.js'
 ];
 
 if (DEBUG_MODE) array_push($jsFiles, "debug.js"); // add debug if in debug mode

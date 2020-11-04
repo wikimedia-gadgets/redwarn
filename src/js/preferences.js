@@ -28,19 +28,6 @@ rw.preferences = {
                 }, // end
 
                 // Page icon locations 
-                "pgIconsLocation" : { // config value as title
-                    // UI text
-                    "optionTitle" : "Location of RedWarn icons",
-                    "supportingText": "Change the location of where the RedWarn page icons appear. Depending on your Skin, your preferences may or may not be honored.",
-
-                    // Config options
-                    "options" : { // human readable: actual value - END HUMAN READABLE WITH * for default option
-                        "After Page Icons*" : "default",
-                        "Page Sidebar/Navigation": "sidebar"
-                    }
-                }, // end
-
-                // Page icon locations 
                 "dialogAnimation" : { // config value as title
                     // UI text
                     "optionTitle" : "Dialog Animation",
@@ -54,6 +41,29 @@ rw.preferences = {
                         "Disable Animation": "none"
                     }
                 }, // end
+
+                // Page icon locations 
+                "pgIconsLocation" : { // config value as title
+                    // UI text
+                    "optionTitle" : "Location of RedWarn icons",
+                    "supportingText": "Change the location of where the RedWarn page icons appear. Depending on your Skin, your preferences may or may not be honored.",
+
+                    // Config options
+                    "options" : { // human readable: actual value - END HUMAN READABLE WITH * for default option
+                        "After Page Icons*" : "default",
+                        "Page Sidebar/Navigation": "sidebar"
+                    }
+                }, // end
+
+
+                // TODO: add icons modifiers controls here
+                
+
+                // Patrol appearence, we'll just remove, not really sure people change these settings
+            },
+
+            "Behaviour" : {
+                
             }
         }
     ]

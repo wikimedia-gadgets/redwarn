@@ -5,7 +5,7 @@ rw.preferences = {
         // CARDS HERE
         {
             "cardTitle" : "Appearance",
-            "supportingImage" : "https://upload.wikimedia.org/wikipedia/commons/d/d3/Golden_Gate_Bridge_at_sunset_1.jpg",
+            "supportingImage" : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Sunset_in_Ashbourne.jpg/1280px-Sunset_in_Ashbourne.jpg",
             "content" : { // values here
 
                 // Colour theme
@@ -64,7 +64,7 @@ rw.preferences = {
         },
         {   
             "cardTitle" : "Behaviour",
-            "supportingImage" : "https://upload.wikimedia.org/wikipedia/commons/d/d3/Golden_Gate_Bridge_at_sunset_1.jpg",
+            "supportingImage" : "https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Wilkin_River_close_to_its_confluence_with_Makarora_River%2C_New_Zealand.jpg/1280px-Wilkin_River_close_to_its_confluence_with_Makarora_River%2C_New_Zealand.jpg",
             "content" : {
                 // User right-click settings
                 "rwDisableRightClickUser" : { // config value as title
@@ -83,7 +83,7 @@ rw.preferences = {
                 // Warn user automation
                 "rwautoLevelSelectDisable" : {
                     "optionTitle" : "Automation",
-                    "supportingText": "Enable or disable RedWarn's automation features, such as automatically choosing a warning level and template for you. Please note to reduce abuse, if you are not yet extended-confirmed, your preference will not be honored until you reach that level. If you have a legitimate alternate account, <a href='https://en.wikipedia.org/wiki/Wikipedia:Requests_for_permissions/Extended_confirmed'>you can request to be extended-confirmed.</a>",
+                    "supportingText": "Enable or disable RedWarn's automation features, such as automatically choosing a warning level and template for you. Please note to reduce abuse, if you are not yet extended-confirmed, your preference will not be honored until you reach that level. If you have a legitimate alternate account, <a href='https://en.wikipedia.org/wiki/Wikipedia:Requests_for_permissions/Extended_confirmed' target='_blank'>you can request to be extended-confirmed.</a>",
 
                     // Config options
                     "options" : { 
@@ -135,7 +135,7 @@ rw.preferences = {
 
                 "rollbackMethod" : {
                     "optionTitle" : "Rollback method",
-                    "supportingText": "Change the way RedWarn reverts edits. Rollback-like uses the undo feature to revert vandalism, alike to Twinkle and other tools. Meanwhile, rollback uses MediaWiki's \"rollback\" link feature. Both of these are identical in use, although rollback is much faster and more reliable. <br/> TL/DR: If you have a rollback-enabled account, the using the rollback option is highly recommended. If you do not have a rollback-enabled account and select the latter option, your preference will not be honored.",
+                    "supportingText": "Change the way RedWarn reverts edits. Rollback-like uses the undo feature to revert vandalism, alike to Twinkle and other tools. Meanwhile, rollback uses MediaWiki's \"rollback\" link feature. Both of these are identical in use, although rollback is much faster and more reliable. <br/> TL/DR: If you have a rollback-enabled account, using the rollback option is highly recommended. If you do not have a rollback-enabled account and select the latter option, your preference will not be honored.",
 
                     // Config options
                     "options" : { 
@@ -212,11 +212,62 @@ rw.preferences = {
         // Generate HTML for UI to use
         let finalHTML = ``;
         rw.preferences.options.forEach(card=>{
+            // Add the full card html
+            finalHTML += `
+            <div class="mdl-card mdl-shadow--2dp" style="width:100%"> <!-- CARD -->
+                <div class="mdl-card__title" style="color: #fff;
+                height: 176px;
+                background: url('${card.supportingImage}') center / cover;">
+                    <h2 class="mdl-card__title-text">${card.cardTitle}</h2>
+                </div>
+                <div class="mdl-card__supporting-text">
+                ${(()=>{
+                    // Generate the content and return it
 
+                    let fullOptionsStr = ``;
 
+                    // For each config option in card
+                    for (const configKey in card.content) {
+                        const option = card.content[configKey];
+                        // Append our HTML
+                        fullOptionsStr += `
+                        <span style="font-size: 18px;padding-bottom: 20px;" >${option.optionTitle}</span><br/>
+                        <p>${option.supportingText}</p>
+                        <div style="height:5px"></div> <!-- SPACER -->
+                        <!-- generated options -->
+                        ${(()=>{
+                            // Generate our options
+                            let finalRadioButtonHTML = ``;
 
-            // Finally, add the full card html
-            finalHTML += ``;
+                            for (const optText in option.options) {
+                                const optID = option.options[optText];
+                                const elID = configKey + optID;
+                                finalRadioButtonHTML += `
+                                <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="${elID}">
+                                    <input type="radio" id="${elID}" class="mdl-radio__button" name="${configKey}" value="${optID}" ${(optText.includes("*") ? `checked` : ``)} ${(option.customHTMLOpt != null ? option.customHTMLOpt : ``)}>
+                                    <span class="mdl-radio__label">${optText.replace("*", " (default)")}</span>
+                                </label>
+                                <br/>
+                                `;
+                            }
+
+                            return finalRadioButtonHTML;
+                        })()}
+                        <br /><br />
+                        `;
+                    }
+
+                    return fullOptionsStr; // finally, add it back to the card
+                })()}
+                </div>
+                <div class="mdl-card__actions mdl-card--border"> <!-- save config at the bottom of every card -->
+                    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="saveConfig();">
+                        SAVE CHANGES
+                    </a>
+                </div>
+            </div>
+            <br/><br/>
+            `;
         });
 
         return finalHTML; // return for preferences pane

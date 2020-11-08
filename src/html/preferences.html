@@ -121,256 +121,82 @@ var onSettingsLoad = {};
                     <div class="mdl-card__title" style="color: #fff;
                     height: 176px;
                     background: url('https://upload.wikimedia.org/wikipedia/commons/d/d3/Golden_Gate_Bridge_at_sunset_1.jpg') center / cover;">
-                        <h2 class="mdl-card__title-text">Appearance</h2>
+                        <h2 class="mdl-card__title-text">Page Icons</h2>
                     </div>
                     <div class="mdl-card__supporting-text">
-                        <!-- Main preferences space -->
-                        <!-- APPEARANCE TAB -->
-                        <span style="font-size: 18px;">UI Colour Scheme</span><br/>
-                        <div style="height:5px"></div> <!-- SPACER -->
-                        <!-- CONVERTED BEGIN -->
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
-                            <input type="radio" id="option-1" class="mdl-radio__button" name="colTheme" value="blue-indigo" checked  onchange="updateColourTheme();">
-                            <span class="mdl-radio__label">WikiBlue (default)</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
-                            <input type="radio" id="option-2" class="mdl-radio__button" name="colTheme" value="amber-yellow" onchange="updateColourTheme();">
-                            <span class="mdl-radio__label">Sunshine</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-3">
-                            <input type="radio" id="option-3" class="mdl-radio__button" name="colTheme" value="purple-deep_purple" onchange="updateColourTheme();">
-                            <span class="mdl-radio__label">Purple Power</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-4">
-                            <input type="radio" id="option-4" class="mdl-radio__button" name="colTheme" value="blue_grey-red" onchange="updateColourTheme();">
-                            <span class="mdl-radio__label">RedWarn Minimal</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-5">
-                            <input type="radio" id="option-5" class="mdl-radio__button" name="colTheme" value="brown-light_green" onchange="updateColourTheme();">
-                            <span class="mdl-radio__label">Forrest</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-6">
-                            <input type="radio" id="option-6" class="mdl-radio__button" name="colTheme" value="orange-deep_orange" onchange="updateColourTheme();">
-                            <span class="mdl-radio__label">Orange Juice</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-7">
-                            <input type="radio" id="option-7" class="mdl-radio__button" name="colTheme" value="pink-red" onchange="updateColourTheme();">
-                            <span class="mdl-radio__label">Candy Floss</span>
-                        </label>
-                        &nbsp;
-                        <br><br>
-                        <!-- Icon locations -->
-                        <span style="font-size: 18px;padding-bottom: 20px; cursor:help;">Location of tool icons</span><br/><div style="height:5px"></div> <!-- SPACER -->
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="pgIcoDef">
-                            <input type="radio" id="pgIcoDef" class="mdl-radio__button" name="pgIconsLocation" value="default" checked>
-                            <span class="mdl-radio__label">After Page Icons (default)</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="pgIcoSide">
-                            <input type="radio" id="pgIcoSide" class="mdl-radio__button" name="pgIconsLocation" value="sidebar">
-                            <span class="mdl-radio__label">Sidebar</span>
-                        </label>
-                        <br><br>
-                        <!-- Dialog animations -->
-                        <span style="font-size: 18px;padding-bottom: 20px; cursor:help;">Dialog Animations</span><br/><div style="height:5px"></div> <!-- SPACER -->
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="dialogAniDefault">
-                            <input type="radio" id="dialogAniDefault" class="mdl-radio__button" name="dialogAnimation" value="default" checked>
-                            <span class="mdl-radio__label">Default</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="dialogAniNone">
-                            <input type="radio" id="dialogAniNone" class="mdl-radio__button" name="dialogAnimation" value="none">
-                            <span class="mdl-radio__label">Instant</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="dialogAniSpinny">
-                            <input type="radio" id="dialogAniSpinny" class="mdl-radio__button" name="dialogAnimation" value="spinny">
-                            <span class="mdl-radio__label">Spinny</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="dialogAniMega">
-                            <input type="radio" id="dialogAniMega" class="mdl-radio__button" name="dialogAnimation" value="mega">
-                            <span class="mdl-radio__label">Mega</span>
-                        </label>
-                        <br><br> <!-- settings conversion from here 03/11/2020 - REMOVE NXT COMMIT -->
-                        <!-- Page icons - !! TODO: add back as template !!  -->
-                        <h5>Page icons</h5>
-                        <i>Click and drag icons to reorder them, or drag an icon to or from the tray to add or remove them. Items in the tray are accessable via the "More Options" button.
-                            Please note that some items are not shown in the tray and cannot be relocated
+                        
+                        <i>
+                            Click and drag options from the left which will be displayed. For technical reasons, some items cannot be removed from the more options dialog.
+                            These are highlighted in gray. Editable rollback and page icons can be customised! Right-click to change their icon and colour.
                         </i>
-                        <!-- Icon List -->
-                        <ul id="rwPageIconsSort" style="text-align: center;width:100%;min-height: 35px;">
-                        ${(()=>{ // (tags for IDE formatting only) <script> 
-                                // Now we generate for each icon (config should've loaded and put these in order by now)
-                                let returnStr = "";
-                                rw.topIcons.icons.forEach((icon,i)=>{
-                                    let elID = "pageIcon-"+ (icon.originalIndex == null ? i : icon.originalIndex); // get index from original if already set, else use i (basically only use i on a fresh config)
-                                    // Top row, so only add currently enabled icons
-                                    if (icon.enabled) returnStr += `
-                                    <li id="${elID}" class="icon material-icons">
-                                        <span style="cursor: pointer;
-                                                    font-size:28px;
-                                                    padding-right:5px;">
-                                            ${icon.icon}
-                                        </span>
-                                    </li>
-                                    <div class="mdl-tooltip mdl-tooltip--large" for="${elID}">
-                                        ${icon.title} 
-                                    </div>
-                                    `;
-                                });
-                                
-                                return returnStr; // </script> (tags for IDE formatting only)
-                            })()}
-                        </ul>
 
-                        <!-- Disabled Icon list -->
-                        <ul id="rwPageIconsSortDisabled" style="text-align: center;width:100%;min-height: 35px;background: #e8e4e4;">
-                            ${(()=>{ // (tags for IDE formatting only) <script> 
-                                // Now we generate for each icon (config should've loaded and put these in order by now)
-                                let returnStr = "";
-                                rw.topIcons.icons.forEach((icon,i)=>{
-                                    let elID = "pageIcon-"+ (icon.originalIndex == null ? i : icon.originalIndex); // get index from original if already set, else use i
-                                    // bottom row, so only add disabled icons
-                                    if (!icon.enabled) returnStr += `
-                                    <li id="${elID}" class="icon material-icons">
-                                        <span style="cursor: pointer;
-                                                    font-size:28px;
-                                                    padding-right:5px;">
-                                            ${icon.icon}
-                                        </span>
-                                    </li>
-                                    <div class="mdl-tooltip mdl-tooltip--large" for="${elID}">
-                                        ${icon.title} 
-                                    </div>
-                                    `;
-                                });
-                                
-                                return returnStr; // </script> (tags for IDE formatting only)
-                            })()} 
-                        </ul>
-                        <!-- END PAGE ICON SETTINGS -->
+                        <div style="width:100%;height:500px"> <!-- Container -->
+                        
+                            <div style="width:50%;float:left;height:100%; padding-right: 5px; overflow-x:hidden;overflow-y:auto;"> <!-- left side -->
+                                <h5>Rollback icons</h5>
+                                ${ (()=>{/* <script> /* Script tags are for IDE formatting only! */
+                                        let finalIconStr = "";
+                                        rw.rollback.icons.forEach((icon,i) => {
+                                            if (!icon.enabled) return; // if icon is not enabled, we can skip
+
+                                            let elID = "rwRollback_" + i; // get the ID for the new icons
+
+                                            // Establish element with all the info
+                                            finalIconStr += `
+                                            <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+                                                <span class="material-icons" style="padding-right:20px;color:${icon.color};">${icon.icon}</span>
+                                                <span ${(icon.name.length > 40 ? `style="font-size: 12px;"` : "")}>${icon.name}</span><!-- shrink if over a certain size so it doesn't overflow -->
+                                            </div>
+                                            <hr style="margin:0"/>
+                                            `;
+                                        });
+                                        
+                                        // Now return HTML (rw16)
+                                        return finalIconStr; // </script> <!-- tags for IDE formatting only ! -->
+                                    })()
+                                }
+
+                                <!-- end enabled rollback icons -->
 
 
-                        <br/><br/>
-                        <!-- ROLLBACK ICONS -->
-                        <h5>Rollback icons</h5>
-                        <i>Click and drag icons to reorder them, or drag an icon to or from the tray to add or remove them. Items in the tray are accessable via the "More Options" button. Right-click an icon to change its colour or icon.</i>
-                        <!-- Icon List -->
-                        <ul id="rwRollbackIconsSort" style="text-align: center;width:100%;min-height: 35px;">
-                        ${(()=>{ // (tags for IDE formatting only) <script> 
-                                // Now we generate for each icon (config should've loaded and put these in order by now)
-                                let returnStr = "";
-                                rw.rollback.icons.forEach((icon,i)=>{
-                                    let elID = "rollbackIcon-"+ (icon.originalIndex == null ? i : icon.originalIndex); // get index from original if already set, else use i (basically only use i on a fresh config)
-                                    // Top row, so only add currently enabled icons
-                                    if (icon.enabled) returnStr += `
-                                    <li id="${elID}" class="icon material-icons">
-                                        <span style="cursor: pointer;
-                                                    font-size:28px;
-                                                    padding-right:5px;
-                                                    color:${icon.color};">
-                                            ${icon.icon}
-                                        </span>
-                                    </li>
-                                    <div class="mdl-tooltip mdl-tooltip--large" for="${elID}">
-                                        ${icon.name} 
-                                    </div>
-                                    `;
-                                });
-                                
-                                return returnStr; // </script> (tags for IDE formatting only)
-                            })()}
-                        </ul>
+                                <h5>Page Icons</h5>
+                                ${
+                                    (()=>{ /* <script> /* Script tags for IDE only */
+                                        // Now generate the HTML
 
-                        <!-- Disabled Icon list -->
-                        <ul id="rwRollbackIconsSortDisabled" style="text-align: center;width:100%;min-height: 35px;background: #e8e4e4;">
-                            ${(()=>{ // (tags for IDE formatting only) <script> 
-                                // Now we generate for each icon (config should've loaded and put these in order by now)
-                                let returnStr = "";
-                                rw.rollback.icons.forEach((icon,i)=>{
-                                    let elID = "rollbackIcon-"+ (icon.originalIndex == null ? i : icon.originalIndex); // get index from original if already set, else use i
-                                    // bottom row, so only add disabled icons
-                                    if (!icon.enabled) returnStr += `
-                                    <li id="${elID}" class="icon material-icons">
-                                        <span style="cursor: pointer;
-                                                    font-size:28px;
-                                                    padding-right:5px;
-                                                    color:${icon.color};">
-                                            ${icon.icon}
-                                        </span>
-                                    </li>
-                                    <div class="mdl-tooltip mdl-tooltip--large" for="${elID}">
-                                        ${icon.name} 
-                                    </div>
-                                    `;
-                                });
-                                
-                                return returnStr; // </script> (tags for IDE formatting only)
-                            })()} 
-                        </ul>
-                        <!-- END ROLLBACK ICON SETTINGS -->
+                                        let finalHTML = ``;
+
+                                        rw.topIcons.icons.forEach((icon, i)=>{
+                                            // Generate an ID for click handlers and tooltip
+                                            const iconID = "rwTopIcon"+ i;
+                                            if (icon.enabled) // show only if icon is enabled
+                                                finalHTML += `
+                                                    <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;${icon.colorModifier == null ? `` : `color:`+ icon.colorModifier}">
+                                                        <span class="material-icons" style="padding-right:20px">${icon.icon}</span>${icon.title}
+                                                    </div>
+                                                    <hr style="margin:0"/>
+                                                `;
+                                        });
+
+                                        return finalHTML;
+                                    // </script> <!-- Script tags for IDE only ! -->
+                                    })()
+                                }
+
+                                <!-- end enabled page icons -->
+                            </div> <!-- end left side -->
+
+                            <div style="width: 49%;float:left;height:100%;border: #e6e6e6;border-width: 1px;border-left-style: solid;"> <!-- right side (more options dialog) -->
+                                <div style="padding-left:5px"> <!-- container for seperator -->
+                                    Blah
+                                </div>
+                            </div>
+                        </div>
+                        
 
 
                         <!-- END MAIN APPEARANCE SECTION -->
-                        <hr>
-                        <h4>Patrol Appearance</h4> <!-- conv 04/11 -->
-
-                        <!-- ADDITION COL -->
-                        <span style="font-size: 18px;padding-bottom: 20px;cursor:help;" id="ptraddCol">Colour of additions:</span><br/><div style="height:5px"></div> <!-- SPACER -->
-                        <div class="mdl-tooltip mdl-tooltip--large" for="ptraddCol">
-                            The background colour for changes that increase the size of a page.
-                        </div>
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="ptraddcolGreen">
-                            <input type="radio" id="ptraddcolGreen" class="mdl-radio__button" name="ptrAddCol" value="0,255,0" checked>
-                            <span class="mdl-radio__label">Green (default)</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="ptraddcolRed">
-                            <input type="radio" id="ptraddcolRed" class="mdl-radio__button" name="ptrAddCol" value="255,0,0">
-                            <span class="mdl-radio__label">Red</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="ptraddcolBlue">
-                            <input type="radio" id="ptraddcolBlue" class="mdl-radio__button" name="ptrAddCol" value="0,195,255">
-                            <span class="mdl-radio__label">Blue</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="ptraddcolYellow">
-                            <input type="radio" id="ptraddcolYellow" class="mdl-radio__button" name="ptrAddCol" value="255,255,0">
-                            <span class="mdl-radio__label">Yellow</span>
-                        </label> <br><br>
-
-                        <!-- RM COL -->
-                        <span style="font-size: 18px;padding-bottom: 20px;cursor:help;" id="ptrrmCol">Colour of removals:</span><br/><div style="height:5px"></div> <!-- SPACER -->
-                        <div class="mdl-tooltip mdl-tooltip--large" for="ptrrmCol">
-                            The background colour for changes that decrease the size of a page.
-                        </div>
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="ptrrmcolGreen">
-                            <input type="radio" id="ptrrmcolGreen" class="mdl-radio__button" name="ptrRmCol" value="0,255,0">
-                            <span class="mdl-radio__label">Green</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="ptrrmcolRed">
-                            <input type="radio" id="ptrrmcolRed" class="mdl-radio__button" name="ptrRmCol" value="255,0,0" checked>
-                            <span class="mdl-radio__label">Red (default)</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="ptrrmcolBlue">
-                            <input type="radio" id="ptrrmcolBlue" class="mdl-radio__button" name="ptrRmCol" value="0,195,255">
-                            <span class="mdl-radio__label">Blue</span>
-                        </label>
-                        &nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="ptrrmcolYellow">
-                            <input type="radio" id="ptrrmcolYellow" class="mdl-radio__button" name="ptrRmCol" value="255,255,0">
-                            <span class="mdl-radio__label">Yellow</span>
-                        </label>
+                        
                         
                         <!-- END APPEARANCE TAB-->
                     </div>
@@ -382,176 +208,9 @@ var onSettingsLoad = {};
                 </div> <!-- END APPEARANCE CARD -->
                 <br/><br/>
 
-                <!-- BEHAVIOUR CARD 04/11 -->
-                <div class="mdl-card mdl-shadow--2dp" style="width:100%">
-                    <div class="mdl-card__title" style="color: #fff;
-                    height: 176px;
-                    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Wilkin_River_close_to_its_confluence_with_Makarora_River%2C_New_Zealand.jpg/1280px-Wilkin_River_close_to_its_confluence_with_Makarora_River%2C_New_Zealand.jpg') center / cover;">
-                        <h2 class="mdl-card__title-text">Behaviour</h2>
-                    </div>
-                    <div class="mdl-card__supporting-text">
-                        <!-- BEHAVIOUR SETTINGS -->
-                        <h5>Control Features</h5>
-                        <!-- User right click menu rwDisableRightClickUser disable enable-->
-                        <span style="font-size: 18px;padding-bottom: 20px;cursor:help;" >User right-click menu</span><br/><div style="height:5px"></div> <!-- SPACER -->
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwDisableRightClickUserEnable">
-                            <input type="radio" id="rwDisableRightClickUserEnable" class="mdl-radio__button" name="rwDisableRightClickUser" value="enable" checked>
-                            <span class="mdl-radio__label">Enable on Shift+Right-click</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwDisableRightClickUserOpt2">
-                            <input type="radio" id="rwDisableRightClickUserOpt2" class="mdl-radio__button" name="rwDisableRightClickUser" value="Opt2">
-                            <span class="mdl-radio__label">Enable on right-click</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwDisableRightClickUser">
-                            <input type="radio" id="rwDisableRightClickUser" class="mdl-radio__button" name="rwDisableRightClickUser" value="disable">
-                            <span class="mdl-radio__label">Disable</span>
-                        </label>
-                        <br /><br />
+                <!-- Add generated preference elements -->
+                ${rw.preferences.generateHTML()}
 
-                        <!-- Warn User Autoselect -->
-                        <span style="font-size: 18px;padding-bottom: 20px;cursor:help;" >Warn User auto-select level</span><br/><div style="height:5px"></div> <!-- SPACER -->
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwautoLevelSelectDisableEnable">
-                            <input type="radio" id="rwautoLevelSelectDisableEnable" class="mdl-radio__button" name="rwautoLevelSelectDisable" value="enable" checked>
-                            <span class="mdl-radio__label">Enable</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwautoLevelSelectDisable">
-                            <input type="radio" id="rwautoLevelSelectDisable" class="mdl-radio__button" name="rwautoLevelSelectDisable" value="disable">
-                            <span class="mdl-radio__label">Disable</span>
-                        </label>
-                        <br /><br />
-
-                        <!-- On rollback complete default -->
-                        <span style="font-size: 18px;padding-bottom: 20px;cursor:help;" >On rollback completion</span><br/><div style="height:5px"></div> <!-- SPACER -->
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRollbackDoneOptionNothing">
-                            <input type="radio" id="rwRollbackDoneOptionNothing" class="mdl-radio__button" name="rwRollbackDoneOption" value="none" checked>
-                            <span class="mdl-radio__label">Do nothing (default)</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRollbackDoneOptionSendMsg">
-                            <input type="radio" id="rwRollbackDoneOptionSendMsg" class="mdl-radio__button" name="rwRollbackDoneOption" value="RWRBDONEnewUsrMsg">
-                            <span class="mdl-radio__label">Send message</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRollbackDoneOptionQuickTemplate">
-                            <input type="radio" id="rwRollbackDoneOptionQuickTemplate" class="mdl-radio__button" name="rwRollbackDoneOption" value="RWRBDONEwelcomeUsr">
-                            <span class="mdl-radio__label">Quick Template</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRollbackDoneOptionNewNotice">
-                            <input type="radio" id="rwRollbackDoneOptionNewNotice" class="mdl-radio__button" name="rwRollbackDoneOption" value="RWRBDONEwarnUsr">
-                            <span class="mdl-radio__label">Warn User</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRollbackDoneOptionLatestRev">
-                            <input type="radio" id="rwRollbackDoneOptionLatestRev" class="mdl-radio__button" name="rwRollbackDoneOption" value="RWRBDONEmrevPg">
-                            <span class="mdl-radio__label">Load latest revision</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <br /><br />
-
-                        <!-- Latest Revision Actions -->
-                        <span style="font-size: 18px;padding-bottom: 20px;cursor:help;" >When loading the latest revision...</span><br/><div style="height:5px"></div> <!-- SPACER -->
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwLatestRevisionOptionEnable">
-                            <input type="radio" id="rwLatestRevisionOptionEnable" class="mdl-radio__button" name="rwLatestRevisionOption" value="stayintab" checked>
-                            <span class="mdl-radio__label">Stay in this tab</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwLatestRevisionOption">
-                            <input type="radio" id="rwLatestRevisionOption" class="mdl-radio__button" name="rwLatestRevisionOption" value="newtab">
-                            <span class="mdl-radio__label">Open in a new tab</span>
-                        </label>
-                        <br /><br />
-
-                        <!-- Warn User Template Text or Template Name rwNoticeListByTemplateName -->
-                        <span style="font-size: 18px;padding-bottom: 20px;cursor:help;" >List notices with...</span><br/><div style="height:5px"></div> <!-- SPACER -->
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwNoticeListByTemplateNameDisable">
-                            <input type="radio" id="rwNoticeListByTemplateNameDisable" class="mdl-radio__button" name="rwNoticeListByTemplateName" value="disable" checked>
-                            <span class="mdl-radio__label">Template descriptions (i.e. Vandalism)</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwNoticeListByTemplateName">
-                            <input type="radio" id="rwNoticeListByTemplateName" class="mdl-radio__button" name="rwNoticeListByTemplateName" value="enable">
-                            <span class="mdl-radio__label">Template name (i.e. uw-vandalism)</span>
-                        </label>
-                        <br /><br />
-
-                        <!-- Rollback like or rollback -->
-                        <span style="font-size: 18px;padding-bottom: 20px;cursor:help;" >Rollback Method</span><br/><div style="height:5px"></div> <!-- SPACER -->
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRBOpt-rollbackLike">
-                            <input type="radio" id="rwRBOpt-rollbackLike" class="mdl-radio__button" name="rollbackMethod" value="rollbackLike" checked>
-                            <span class="mdl-radio__label">Rollback-Like</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRBOpt-rollback">
-                            <input type="radio" id="rwRBOpt-rollback" class="mdl-radio__button" name="rollbackMethod" value="rollback">
-                            <span class="mdl-radio__label">Rollback (requires permissions)</span>
-                        </label>
-                        <br /><br />
-                        <!-- Review Features -->
-                        <span style="font-size: 18px;padding-bottom: 20px;cursor:help;" >Pending Changes Review Features</span><br/><div style="height:5px"></div> <!-- SPACER -->
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwDisablePendingChangesEnable">
-                            <input type="radio" id="rwDisablePendingChangesEnable" class="mdl-radio__button" name="rwDisablePendingChanges" value="enable" checked>
-                            <span class="mdl-radio__label">Enable RedWarn</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwDisablePendingChanges">
-                            <input type="radio" id="rwDisablePendingChanges" class="mdl-radio__button" name="rwDisablePendingChanges" value="disable">
-                            <span class="mdl-radio__label">Disable RedWarn</span>
-                        </label>
-                        <br /><br />
-                        <!-- Review Auto Accept -->
-                        <span style="font-size: 18px;padding-bottom: 20px;cursor:help;" >Page Review: Auto Submit Accept</span> - Automatically accepts revision after five seconds.<br />
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwDisableReviewAutoAcceptEnable">
-                            <input type="radio" id="rwDisableReviewAutoAcceptEnable" class="mdl-radio__button" name="rwDisableReviewAutoAccept" value="enable" checked>
-                            <span class="mdl-radio__label">Enable</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwDisableReviewAutoAccept">
-                            <input type="radio" id="rwDisableReviewAutoAccept" class="mdl-radio__button" name="rwDisableReviewAutoAccept" value="disable">
-                            <span class="mdl-radio__label">Disable</span>
-                        </label>
-                        <br /><br />
-                        <!-- Review Auto Revert -->
-                        <span style="font-size: 18px;padding-bottom: 20px;cursor:help;" >Page Review: Auto Submit Revert</span> - Automatically submits revert after five seconds.<br />
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwEnableReviewAutoRevertEnable">
-                            <input type="radio" id="rwEnableReviewAutoRevertEnable" class="mdl-radio__button" name="rwEnableReviewAutoRevert" value="enable">
-                            <span class="mdl-radio__label">Enable</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwEnableReviewAutoRevert">
-                            <input type="radio" id="rwEnableReviewAutoRevert" class="mdl-radio__button" name="rwEnableReviewAutoRevert" value="disable" checked>
-                            <span class="mdl-radio__label">Disable</span>
-                        </label>
-
-                        <br /><br />
-                        <!-- Debug menu -->
-                        <span style="font-size: 18px;padding-bottom: 20px;" >Developer safe mode</span><br/>
-                        <p>This option allows developers to test RedWarn safely, and will only work on a RedWarn script provided by a development sever. 
-                            <b>IMPORTANT:</b> To safely disable debug mode, open the debug menu and enable production behaviour.</p>
-                        <div style="height:5px"></div> <!-- SPACER -->
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="debugModeEnable">
-                            <input type="radio" id="debugModeEnable" class="mdl-radio__button" name="debugMode" value="enable">
-                            <span class="mdl-radio__label">Enable</span>
-                        </label>
-                        &nbsp;&nbsp;
-                        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="debugMode">
-                            <input type="radio" id="debugMode" class="mdl-radio__button" name="debugMode" value="disable" checked>
-                            <span class="mdl-radio__label">Disable</span>
-                        </label>
-                        
-                        <br /><br />
-
-                        <!-- END BEHAVIOUR SETTINGS -->
-                    </div>
-                    <div class="mdl-card__actions mdl-card--border">
-                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="saveConfig()">
-                            SAVE CHANGES
-                        </a>
-                    </div>
-                </div> <!-- END BEHAVIOUR CARD -->
                 <br/><br/>
                 <div class="mdl-card mdl-shadow--2dp" style="width:100%"> <!-- ABOUT CARD -->
                     <div class="mdl-card__title" style="color: #fff;

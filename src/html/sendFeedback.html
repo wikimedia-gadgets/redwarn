@@ -8,6 +8,22 @@
         display: none;
     }
 </style>
+
+<!-- Check if in debug mode, else two completely different dialogs will show -->
+${(rw.debugMenu != null ? `
+<!-- Developer view -->
+<h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Bug time!</h2>
+<pre>
+    Check your console. ${(extraInfo != null ? extraInfo : "No additional info has been provided.")}
+</pre>
+<br/>
+<button id="submitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="window.parent.postMessage('closeDialog', '*');">
+    CLOSE
+</button>
+<!-- end dev view -->
+` : `
+<!-- Normal user view --> 
+
 <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Report Bug</h2>
 <p>If you've been sent to this page, an issue has occured which needs to be reported to the RedWarn team. Please add any additional info, then a message will be left on Ed6767's talk page.</p>
 <form id="newMsgForm">
@@ -84,3 +100,6 @@ ${(extraInfo != null ? extraInfo : "")}</textarea>
         window.parent.postMessage("closeDialog"); // We done here. Top will refresh or reshow if error occurs.
     }
 </script>
+
+
+`)} <!-- end -->

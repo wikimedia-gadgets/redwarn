@@ -60,7 +60,14 @@ var dialogEngine = {
         .on("webkitAnimationEnd", ()=>{
             // Animation finished
             dialogEngine.dialog.close();
-            if (callback != null) callback();
+            try {
+                if (callback != null) callback();
+            } catch (error) {
+                // On error report bug
+                console.error(error);
+                rw.ui.reportBug("Error during closeDialog callback. "+ error.stack);
+            }
+            
         });
 
         // Make sure to reenable scrolling

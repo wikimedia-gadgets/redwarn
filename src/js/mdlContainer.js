@@ -93,7 +93,22 @@ var mdlContainers = {
         </script>
         <!-- End material dropdown -->
         <body>
-        ${innerContent}
+        ${rw.config.neopolitan != null ? `<!-- RedWarn tampering warning (on all dialogs, even after polish cow is gone) -->
+            <!-- RW tamper warning -->
+            <div style="
+                width: 240px;
+                margin: 0 auto;
+                background-color: #ffc4c4;
+                padding: 16px;
+                border-radius: 2px;
+                color: #9c0000;"> <!-- Warning -->
+                    <b>Attention:</b> Tampering with RedWarn's permission system without good reason is prohibited. If you are seeing this message, your account has been automatically
+                    flagged to RedWarn's team. We review abuse on a case by case basis. To dismiss this warning, remove all modifications and reset your RedWarn config manually at
+                    you redwarnConfig.js user subpage. If you haven't tampered with RedWarn, you may be seeing this message due to a bug. If so, please let us know ASAP.<br/>
+                    <a href="#" onclick="window.parent.postMessage('closeDialog');">Close dialog</a>
+                </div>
+            <br/><br/> <!-- show content if not tampered with -->
+            ` : innerContent} 
         </body>
 
         <script>

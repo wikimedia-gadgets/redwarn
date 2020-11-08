@@ -115,6 +115,7 @@ To all normal users, if you wish to customise RedWarn, submit a request on the t
  * @see https://gist.github.com/Rodrigo54/93169db48194d470188f
  */
 function minify_css($input) {
+    if (DEBUG_MODE) return $input; // disable if in debug mode for debugging ease
     if(trim($input) === "") return $input;
     return preg_replace(
         array(
@@ -160,6 +161,7 @@ function minify_css($input) {
  * @see https://gist.github.com/Rodrigo54/93169db48194d470188f
  */
 function minify_html($input) {
+    if (DEBUG_MODE) return $input; // disable if in debug mode for debugging ease
     if(trim($input) === "") return $input;
     // Remove extra white-space(s) between HTML attribute(s)
     $input = preg_replace_callback('#<([^\/\s<>!]+)(?:\s+([^<>]*?)\s*|\s*)(\/?)>#s', function($matches) {

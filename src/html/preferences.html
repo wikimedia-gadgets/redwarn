@@ -130,9 +130,10 @@ var onSettingsLoad = {};
                             These are highlighted in gray. Editable rollback and page icons can be customised! Right-click to change their icon and colour.
                         </i>
 
-                        <div style="width:100%;height:500px"> <!-- Container -->
+                        <div style="width:100%;height:1000px"> <!-- Container -->
                         
                             <div style="width:50%;float:left;height:100%; padding-right: 5px; overflow-x:hidden;overflow-y:auto;"> <!-- left side -->
+                                <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Favourites</h2>
                                 <h5>Rollback icons</h5>
                                 ${ (()=>{/* <script> /* Script tags are for IDE formatting only! */
                                         let finalIconStr = "";
@@ -186,9 +187,92 @@ var onSettingsLoad = {};
                                 <!-- end enabled page icons -->
                             </div> <!-- end left side -->
 
-                            <div style="width: 49%;float:left;height:100%;border: #e6e6e6;border-width: 1px;border-left-style: solid;"> <!-- right side (more options dialog) -->
-                                <div style="padding-left:5px"> <!-- container for seperator -->
-                                    Blah
+                            <div style="width: 49%;float:left;height:100%;border: #e6e6e6;border-width: 1px;border-left-style: solid; overflow-x:hidden; overflow-y:auto;"> <!-- right side (more options dialog) -->
+                                <div style="padding-left:15px"> <!-- container for seperator -->
+                                    <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">More Options</h2>
+
+                                    <h5>Rollback icons</h5>
+                                    ${ (()=>{/* <script> /* Script tags are for IDE formatting only! */
+                                            let finalIconStr = "";
+                                            rw.rollback.icons.forEach((icon,i) => {
+                                                if (icon.enabled) return; // if icon is enabled, we can skip
+
+                                                let elID = "rwRollback_" + i; // get the ID for the new icons
+
+                                                // Establish element with all the info
+                                                finalIconStr += `
+                                                <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+                                                    <span class="material-icons" style="padding-right:20px;color:${icon.color};">${icon.icon}</span>
+                                                    <span ${(icon.name.length > 40 ? `style="font-size: 12px;"` : "")}>${icon.name}</span><!-- shrink if over a certain size so it doesn't overflow -->
+                                                </div>
+                                                <hr style="margin:0"/>
+                                                `;
+                                            });
+                                            
+                                            // Now return HTML (rw16)
+                                            return finalIconStr; // </script> <!-- tags for IDE formatting only ! -->
+                                        })()
+                                    } <!-- end disabled icons -->
+
+                                    <h5>Page icons</h5>
+                                    <!-- Not fixed -->
+                                    <div style="min-height: 20px;background-color: lightgrey;">
+                                    ${
+                                        (()=>{ /* <script> /* Script tags for IDE only */
+                                            // Now generate the HTML
+    
+                                            let finalHTML = ``;
+    
+                                            rw.topIcons.icons.forEach((icon, i)=>{
+                                                // Generate an ID for click handlers and tooltip
+                                                const iconID = "rwTopIcon"+ i;
+                                                if (!icon.enabled) // show only if icon is not enabled
+                                                    finalHTML += `
+                                                        <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;${icon.colorModifier == null ? `` : `color:`+ icon.colorModifier}">
+                                                            <span class="material-icons" style="padding-right:20px">${icon.icon}</span>${icon.title}
+                                                        </div>
+                                                        <hr style="margin:0"/>
+                                                    `;
+                                            });
+    
+                                            return finalHTML;
+                                        // </script> <!-- Script tags for IDE only ! -->
+                                        })()
+                                    }
+                                    </div>
+
+                                    <!-- Fixed items-->
+                                    <div style="cursor: not-allowed;">
+                                        <div class="mdl-button mdl-js-button" style="width:100%; text-align: left; cursor:not-allowed;" disabled>
+                                            <span class="material-icons" style="padding-right:20px">flag</span>REPORT USER TO AIV
+                                        </div>
+                                        <hr style="margin:0"/>
+                                        
+                                        <div class="mdl-button mdl-js-button" style="width:100%; text-align: left; cursor:not-allowed;" disabled>
+                                            <span class="material-icons" style="padding-right:20px">person_remove</span>REPORT USER TO UAA
+                                        </div>
+                                        <hr style="margin:0"/>
+
+                                        <div class="mdl-button mdl-js-button" style="width:100%; text-align: left; cursor:not-allowed;" disabled>
+                                            <span class="material-icons" style="padding-right:20px">visibility_off</span>REPORT USER/EDIT TO OVERSIGHT
+                                        </div>
+                                        <hr style="margin:0"/>
+
+                                        <div class="mdl-button mdl-js-button" style="width:100%; text-align: left; cursor:not-allowed;" disabled>
+                                            <span class="material-icons" style="padding-right:20px">phone_in_talk</span>REPORT USER/EDIT TO WIKIMEDIA TRUST AND SAFETY
+                                        </div>
+                                        <hr style="margin:0"/>
+
+                                        <div class="mdl-button mdl-js-button" style="width:100%; text-align: left; cursor:not-allowed;" disabled>
+                                            <span class="material-icons" style="padding-right:20px">settings</span>REDWARN PREFERENCES
+                                        </div>
+                                        <hr style="margin:0"/>
+
+                                        <div class="mdl-button mdl-js-button" style="width:100%; text-align: left; cursor:not-allowed;" disabled>
+                                            <span class="material-icons" style="padding-right:20px">question_answer</span>GO TO THE REDWARN TALK PAGE
+                                        </div>
+                                        <hr style="margin:0"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -152,14 +152,14 @@ rw.PendingChangesReview = {
                                     "imageParams": "",
                                     "fileVersion": "",
                                     "validatedParams": $('input[name ="validatedParams"]').attr("value"),
-                                    "wpReason" : revertString+ (comment.length > 0 ? ": "+ comment : "") + " ([[w:en:Wikipedia:RedWarn|RedWarn "+ rw.version + "]])",
+                                    "wpReason" : revertString+ (comment.length > 0 ? ": "+ comment : "") + " ([[w:en:Wikipedia:RedWarn|RW "+ rw.version + "]])",
                                     "wpSubmit": "Revert these changes"
                                 }}).done((r,sT,x)=>{
                                     // Cannot reject these changes because someone already accepted some (or all) of the edits.
                                     rw.ui.loadDialog.close();
                                     let successHandler = ()=>{
                                         // On success
-                                        rw.multiAct.open(users); // open MAT
+                                        if (rw.config.rwPendingMATDisable != "disable") rw.multiAct.open(users); // open MAT if not disabled in config
                                     };
                                     if (x.status == 302) {
                                         // Redirect, so success!
@@ -238,7 +238,7 @@ rw.PendingChangesReview = {
                         "imageParams": "",
                         "fileVersion": "",
                         "validatedParams": $('input[name ="validatedParams"]').attr("value"),
-                        "wpReason" : "Unapproving"+ (comment.length > 0 ? ": "+ comment : "") + " ([[w:en:Wikipedia:RedWarn|RedWarn "+ rw.version + "]])",
+                        "wpReason" : "Unapproving"+ (comment.length > 0 ? ": "+ comment : "") + " ([[w:en:Wikipedia:RedWarn|RW "+ rw.version + "]])",
                         "wpSubmit": "Unaccept revision"
                     }).done(r=>{
                         window.location.hash = "#rwReviewUnaccept";

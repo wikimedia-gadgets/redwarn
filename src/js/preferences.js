@@ -159,7 +159,7 @@ rw.preferences = {
                 // Pending changes auto accept
                 "rwDisableReviewAutoAccept" : {
                     "optionTitle" : "Pending change review - auto accept",
-                    "supportingText": "Choose wheter to automatically dismiss the reason prompt and accept revisions after five seconds. Override this countdown by interacting with the dialog",
+                    "supportingText": "Choose whether to automatically dismiss the reason prompt and accept revisions after five seconds. Override this countdown by interacting with the dialog",
 
                     // Config options
                     "options" : { 
@@ -171,7 +171,7 @@ rw.preferences = {
                 // auto reject
                 "rwEnableReviewAutoRevert" : {
                     "optionTitle" : "Pending change review - auto revert",
-                    "supportingText": "Choose wheter to automatically dismiss the reason prompt and revert revisions after five seconds. Override this countdown by interacting with the dialog",
+                    "supportingText": "Choose whether to automatically dismiss the reason prompt and revert revisions after five seconds. Override this countdown by interacting with the dialog",
 
                     // Config options
                     "options" : { 
@@ -179,6 +179,19 @@ rw.preferences = {
                         "Disable*": "disable"
                     }
                 },
+
+                // Pending changes open MAT
+                "rwPendingMATDisable" : {
+                    "optionTitle" : "Pending change review - open MAT after reverting",
+                    "supportingText": "Choose whether to automatically open the Multiple Action Tool after you have reviewed a change.",
+
+                    // Config options
+                    "options" : { 
+                        "Enable*" : "enable",
+                        "Disable": "disable"
+                    }
+                },
+
 
                 // developer safe mode
                 "debugMode" : {

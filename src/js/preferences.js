@@ -55,8 +55,19 @@ rw.preferences = {
                     }
                 }, // end
 
+                // Replace references to quick rollback and rollback with QRB and RB 
+                "rwRollbackShorten" : { // config value as title
+                    // UI text
+                    "optionTitle" : "Shorten references to rollback",
+                    "supportingText": "Shortern the rollback and quick rollback buttons to RB and QRB respectively. If you're experienced, this can help reduce reading times.",
 
-                // TODO: add icons modifiers controls here
+                    // Config options
+                    "options" : { 
+                        "Enable" : "enable",
+                        "Disable*": "disable"
+                    }
+                }, // end
+
                 
 
                 // Patrol appearence, we'll just remove, not really sure people change these settings

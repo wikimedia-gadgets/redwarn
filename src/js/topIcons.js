@@ -92,6 +92,23 @@ rw.topIcons = {
   "generateHTML" : ()=>{
     if (mw.config.get("wgNamespaceNumber") < 0) return ``; // if on special page, skip
 
+    // Check if more options is disabled, if so, open a dialog to prompt if user wishes to keep this option
+    if ((rw.topIcons.icons.find(o => o.title === 'More Options').enabled == false) && rw.config.rwMORemovedWarning == null) {
+        rw.ui.confirmDialog(`<b>Warning:</b> It looks like you've removed the "More Options" button from your favourites.
+        This could make areas of RedWarn, such as RedWarn preferences and other features inaccessible without scripting knowledge,
+        or blanking your RedWarn config. Would you like to open RedWarn preferences to correct this irregularity, or keep your changes?`,
+            "OPEN REDWARN PREFERENCES", ()=>{
+                dialogEngine.closeDialog(()=>rw.ui.openPreferences());
+            },
+            "<small>KEEP, I UNDERSTAND THE RISKS</small>", ()=>{
+                dialogEngine.closeDialog();//this thing turns it off
+                rw.visuals.toast.show("This dialog will not show again.");//display a toast
+                rw.config.rwMORemovedWarning = "dismissed"; // hides the dialog in future
+                rw.info.writeConfig(true, ()=>{}); // save config
+                
+            },80);
+    }
+
     // Generate HTML from icons and user config
     let finalHTML = ``;
     const pageIsUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");

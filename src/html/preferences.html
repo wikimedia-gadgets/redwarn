@@ -121,13 +121,14 @@ var onSettingsLoad = {};
                     <div class="mdl-card__title" style="color: #fff;
                     height: 176px;
                     background: url('https://upload.wikimedia.org/wikipedia/commons/d/d3/Golden_Gate_Bridge_at_sunset_1.jpg') center / cover;">
-                        <h2 class="mdl-card__title-text">Page Icons</h2>
+                        <h2 class="mdl-card__title-text">Customise</h2>
                     </div>
                     <div class="mdl-card__supporting-text">
                         
                         <i>
-                            Click and drag options from the left which will be displayed. For technical reasons, some items cannot be removed from the more options dialog.
-                            These are highlighted in gray. Editable rollback and page icons can be customised! Right-click to change their icon and colour.
+                            Click and drag on menu options to rearrange and sort icons, and move them between your favourites (that you can access immediately) and
+                            icons you use less often that you wish to access through the "more options" menu. Right-click on any icon to change its properties, such as 
+                            its icon or colour. 
                         </i>
 
                         <div style="width:100%;height:1000px"> <!-- Container -->
@@ -135,20 +136,21 @@ var onSettingsLoad = {};
                             <div style="width:50%;float:left;height:100%; padding-right: 5px; overflow-x:hidden;overflow-y:auto;"> <!-- left side -->
                                 <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Favourites</h2>
                                 <h5>Rollback icons</h5>
+                                <div style="min-height: 20px;background-color: rgb(245, 245, 245);" id="rwRollbackIconsSort">
                                 ${ (()=>{/* <script> /* Script tags are for IDE formatting only! */
                                         let finalIconStr = "";
                                         rw.rollback.icons.forEach((icon,i) => {
                                             if (!icon.enabled) return; // if icon is not enabled, we can skip
 
-                                            let elID = "rwRollback_" + i; // get the ID for the new icons
+                                            let elID = "rollbackIcon-"+ (icon.originalIndex == null ? i : icon.originalIndex); // get the ID for the new icons
 
                                             // Establish element with all the info
                                             finalIconStr += `
-                                            <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+                                            <div><div class="mdl-button mdl-js-button" style="width:100%; text-align: left;" id="${elID}">
                                                 <span class="material-icons" style="padding-right:20px;color:${icon.color};">${icon.icon}</span>
                                                 <span ${(icon.name.length > 40 ? `style="font-size: 12px;"` : "")}>${icon.name}</span><!-- shrink if over a certain size so it doesn't overflow -->
                                             </div>
-                                            <hr style="margin:0"/>
+                                            <hr style="margin:0"/></div>
                                             `;
                                         });
                                         
@@ -156,11 +158,12 @@ var onSettingsLoad = {};
                                         return finalIconStr; // </script> <!-- tags for IDE formatting only ! -->
                                     })()
                                 }
-
+                                </div>
                                 <!-- end enabled rollback icons -->
 
 
                                 <h5>Page Icons</h5>
+                                <div style="min-height: 20px;background-color: rgb(245, 245, 245);" id="rwPageIconsSort">
                                 ${
                                     (()=>{ /* <script> /* Script tags for IDE only */
                                         // Now generate the HTML
@@ -169,13 +172,13 @@ var onSettingsLoad = {};
 
                                         rw.topIcons.icons.forEach((icon, i)=>{
                                             // Generate an ID for click handlers and tooltip
-                                            const iconID = "rwTopIcon"+ i;
+                                            const iconID = "rwTopIcon-" + (icon.originalIndex == null ? i : icon.originalIndex);
                                             if (icon.enabled) // show only if icon is enabled
                                                 finalHTML += `
-                                                    <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;${icon.colorModifier == null ? `` : `color:`+ icon.colorModifier}">
+                                                    <div><div class="mdl-button mdl-js-button" style="width:100%; text-align: left;${icon.colorModifier == null ? `` : `color:`+ icon.colorModifier}" id="${iconID}">
                                                         <span class="material-icons" style="padding-right:20px">${icon.icon}</span>${icon.title}
                                                     </div>
-                                                    <hr style="margin:0"/>
+                                                    <hr style="margin:0"/></div>
                                                 `;
                                         });
 
@@ -183,7 +186,7 @@ var onSettingsLoad = {};
                                     // </script> <!-- Script tags for IDE only ! -->
                                     })()
                                 }
-
+                                </div>
                                 <!-- end enabled page icons -->
                             </div> <!-- end left side -->
 
@@ -192,20 +195,21 @@ var onSettingsLoad = {};
                                     <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">More Options</h2>
 
                                     <h5>Rollback icons</h5>
+                                    <div style="min-height: 20px;background-color: rgb(245, 245, 245);" id="rwRollbackIconsSortDisabled">
                                     ${ (()=>{/* <script> /* Script tags are for IDE formatting only! */
                                             let finalIconStr = "";
                                             rw.rollback.icons.forEach((icon,i) => {
                                                 if (icon.enabled) return; // if icon is enabled, we can skip
 
-                                                let elID = "rwRollback_" + i; // get the ID for the new icons
+                                                let elID = "rollbackIcon-"+ (icon.originalIndex == null ? i : icon.originalIndex);
 
                                                 // Establish element with all the info
                                                 finalIconStr += `
-                                                <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;">
+                                                <div><div class="mdl-button mdl-js-button" style="width:100%; text-align: left;" id="${elID}">
                                                     <span class="material-icons" style="padding-right:20px;color:${icon.color};">${icon.icon}</span>
                                                     <span ${(icon.name.length > 40 ? `style="font-size: 12px;"` : "")}>${icon.name}</span><!-- shrink if over a certain size so it doesn't overflow -->
                                                 </div>
-                                                <hr style="margin:0"/>
+                                                <hr style="margin:0"/></div>
                                                 `;
                                             });
                                             
@@ -213,10 +217,11 @@ var onSettingsLoad = {};
                                             return finalIconStr; // </script> <!-- tags for IDE formatting only ! -->
                                         })()
                                     } <!-- end disabled icons -->
+                                    </div>
 
                                     <h5>Page icons</h5>
                                     <!-- Not fixed -->
-                                    <div style="min-height: 20px;background-color: lightgrey;">
+                                    <div style="min-height: 20px;background-color: rgb(245, 245, 245);" id="rwPageIconsSortDisabled">
                                     ${
                                         (()=>{ /* <script> /* Script tags for IDE only */
                                             // Now generate the HTML
@@ -225,13 +230,13 @@ var onSettingsLoad = {};
     
                                             rw.topIcons.icons.forEach((icon, i)=>{
                                                 // Generate an ID for click handlers and tooltip
-                                                const iconID = "rwTopIcon"+ i;
+                                                const iconID = "rwTopIcon-" + (icon.originalIndex == null ? i : icon.originalIndex);
                                                 if (!icon.enabled) // show only if icon is not enabled
                                                     finalHTML += `
-                                                        <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;${icon.colorModifier == null ? `` : `color:`+ icon.colorModifier}">
+                                                        <div><div class="mdl-button mdl-js-button" style="width:100%; text-align: left;${icon.colorModifier == null ? `` : `color:`+ icon.colorModifier}" id="${iconID}">
                                                             <span class="material-icons" style="padding-right:20px">${icon.icon}</span>${icon.title}
                                                         </div>
-                                                        <hr style="margin:0"/>
+                                                        <hr style="margin:0"/></div>
                                                     `;
                                             });
     
@@ -355,29 +360,29 @@ var onSettingsLoad = {};
         let iconModifyArray = []; // array for our changes
 
         // For each enabled icon
-        $("#rwRollbackIconsSort > li").each((i, el)=>{ 
+        $("#rwRollbackIconsSort > div > .mdl-button").each((i, el)=>{ 
             let iconIndex = parseInt($(el).attr("id").split("-")[1]);
             iconModifyArray.push({
                 "index" : iconIndex, // original icon index 
                 "shift" : i, // where to move to
                 "modify" : { // obj of params to change
                     "enabled": true, // set as enabled
-                    "color" : $(el).find("span").css("color"), // get color
-                    "icon" : $(el).find("span").text().trim() // get icon from inner span text
+                    "color" : $(el).find("span.material-icons").css("color"), // get color
+                    "icon" : $(el).find("span.material-icons").text().trim() // get icon from inner span text
                 }
             });
         });
 
         // For each disabled icon
-        $("#rwRollbackIconsSortDisabled > li").each((i, el)=>{ 
+        $("#rwRollbackIconsSortDisabled > div > .mdl-button").each((i, el)=>{ 
             let iconIndex = parseInt($(el).attr("id").split("-")[1]);
             iconModifyArray.push({
                 "index" : iconIndex, // original icon index 
-                "shift" : $("#rwRollbackIconsSort > li").length + i, // where to move to (for disbaled + the number of total enabled)
+                "shift" : $("#rwRollbackIconsSort > div > .mdl-button").length + i, // where to move to (for disbaled + the number of total enabled)
                 "modify" : { // obj of params to change
                     "enabled": false, // set as disabled
-                    "color" : $(el).find("span").css("color"), // get color
-                    "icon" : $(el).find("span").text().trim() // get icon from inner span text
+                    "color" : $(el).find("span.material-icons").css("color"), // get color
+                    "icon" : $(el).find("span.material-icons").text().trim() // get icon from inner span text
                 }
             });
         });
@@ -388,27 +393,27 @@ var onSettingsLoad = {};
         // Now process the page icons
         iconModifyArray = []; // reset array for our changes
         
-        $("#rwPageIconsSort > li").each((i, el)=>{ 
+        $("#rwPageIconsSort > div > .mdl-button").each((i, el)=>{ 
             let iconIndex = parseInt($(el).attr("id").split("-")[1]);
             iconModifyArray.push({
                 "index" : iconIndex, // original icon index 
                 "shift" : i, // where to move to
                 "modify" : { // obj of params to change
                     "enabled": true, // set as enabled
-                    "icon" : $(el).find("span").text().trim() // get icon from inner span text
+                    "icon" : $(el).find("span.material-icons").text().trim() // get icon from inner span text
                 }
             });
         });
 
         // For each disabled icon
-        $("#rwPageIconsSortDisabled > li").each((i, el)=>{ 
+        $("#rwPageIconsSortDisabled > div > .mdl-button").each((i, el)=>{ 
             let iconIndex = parseInt($(el).attr("id").split("-")[1]);
             iconModifyArray.push({
                 "index" : iconIndex, // original icon index 
-                "shift" : $("#rwPageIconsSort > li").length + i, // where to move to (for disbaled + the number of total enabled)
+                "shift" : $("#rwPageIconsSort > div > .mdl-button").length + i, // where to move to (for disbaled + the number of total enabled)
                 "modify" : { // obj of params to change
                     "enabled": false, // set as disabled
-                    "icon" : $(el).find("span").text().trim() // get icon from inner span text
+                    "icon" : $(el).find("span.material-icons").text().trim() // get icon from inner span text
                 }
             });
         });
@@ -492,22 +497,22 @@ var onSettingsLoad = {};
 
     // Sortable for page icons
     $('#rwPageIconsSort').sortable({
-        group: 'shared', // set both lists to same group
+        group: 'shared2', // set both lists to same group
         animation: 150
     });
     $('#rwPageIconsSortDisabled').sortable({
-        group: 'shared', // set both lists to same group
+        group: 'shared2', // set both lists to same group
         animation: 150
     });
 
     // jQuery context menus for icons
     $(() => {
         $.contextMenu({
-            selector: 'li[id^="rollbackIcon-"]', 
+            selector: 'div[id^="rollbackIcon-"]', 
             callback: (key, options) => {
                 // If editcolor
                 if (key.startsWith("editColor-")) {
-                    $(options["$trigger"][0]).find("span").css("color", key.split("-")[1]); // Set color
+                    $(options["$trigger"][0]).find("span.material-icons").css("color", key.split("-")[1]); // Set color
                     return false; // we done (return false so user can see change with menu still open)
                 }
                 // Send callback for non-edit color changes
@@ -515,7 +520,7 @@ var onSettingsLoad = {};
                     "editIcon" : element=>{
                         // Edit icon
                         showIconSelector(icon=>{ // Open icon selector
-                            $(element).find("span").text(icon); // swap out the icon. normal code does the rest.
+                            $(element).find("span.material-icons").text(icon); // swap out the icon. normal code does the rest.
                         });
                     }
                 })[key](options["$trigger"][0]); // pass in trigger element
@@ -549,7 +554,28 @@ var onSettingsLoad = {};
                     }
                 },
             }
-        });   
+        });   // end rollback icons
+
+
+        // Page icons (only change icon)
+
+        $.contextMenu({
+            selector: 'div[id^="rwTopIcon-"]', 
+            callback: (key, options) => {
+                // Send callback for non-edit color changes
+                ({
+                    "editIcon" : element=>{
+                        // Edit icon
+                        showIconSelector(icon=>{ // Open icon selector
+                            $(element).find("span.material-icons").text(icon); // swap out the icon. normal code does the rest.
+                        });
+                    }
+                })[key](options["$trigger"][0]); // pass in trigger element
+            },
+            items: {
+                "editIcon": {name: "Change Icon"}
+            }
+        });  
     });
 
     // Colour theme preview

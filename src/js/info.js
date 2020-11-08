@@ -142,6 +142,16 @@ rw.info = { // API
                     rw.rollback.icons = newRwIcons;
                 }
 
+                if (rw.config.rwRollbackShorten == "enable") { // if rollback shortened
+                    rw.rollback.icons.forEach((el, i)=>{
+                        el.name = el.name.replace("Quick rollback", "QRB"); // replace
+                        el.name = el.name.replace("Rollback", "RB"); // replace
+                        el.name = el.name.replace("rollback", "RB"); // replace
+
+                        rw.rollback.icons[i] = el; // set back
+                    });
+                }
+
                 // Load page icons
                 if (rw.config.rwPageIcons != null) {
                     // More info in preferences.html and rollback.html

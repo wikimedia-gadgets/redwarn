@@ -22,7 +22,7 @@ var rw = {
      * @type {string}
      * @extends rw
      */
-    "version" : "16dev", // don't forget to change each version!
+    "version" : "16", // don't forget to change each version!
 
     /**
      * Defines a brief summary of this version of RedWarn. This is shown in both update notices, and a card in preferences.
@@ -34,7 +34,7 @@ var rw = {
      */
     "versionSummary": `
 <!-- RedWarn 16 -->
-RedWarn 16 is finally here, bringing UX improvements, bug fixes, and new features!
+RedWarn 16 is finally here, bringing UX improvements, emergency and oversight reports, more customisation, bug fixes, and more!
     `,
 
     /**
@@ -542,7 +542,7 @@ function initRW() {
                         dialogEngine.closeDialog();//this thing turns it off
                         rw.visuals.toast.show("You can read more later at RedWarn's page (WP:REDWARN)");//display a toast
                         
-                    },225);
+                    },120);
                 });
             } else if (rw.config.firstTimeSetupComplete == null) { // Check if first time setup has been completed
                 rw.firstTimeSetup.launch();

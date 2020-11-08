@@ -238,7 +238,7 @@
                 <hr/>
                 <h5>Thank you for trying RedWarn!</h5>
                 <p>
-                    A short introductory video will follow. If you have any issues, feature suggestions, or just need help in future, please let us know on RedWarn's talk page
+                    <!-- A short introductory video will follow. --> If you have any issues, feature suggestions, or just need help in future, please let us know on RedWarn's talk page
                     or our Discord server (the invite for which is in RedWarn preferences).
                 </p>
             </div>
@@ -325,8 +325,10 @@
         // Done! Submit
         window.parent.postMessage("config\\\`"+ btoa(JSON.stringify(data))); // send to the big boss
 
+        // Now, exit (rw16)
+        window.parent.postMessage('reload');
 
-        // Now, play video
+        // Now, play video (rw17)
         $("#prefCard").fadeOut(1000, ()=>{
             $("#video").fadeIn(1000, ()=>$("#video").find("video")[0].play());
         });

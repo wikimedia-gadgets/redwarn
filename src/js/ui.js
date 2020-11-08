@@ -23,7 +23,7 @@ rw.ui = {
     "beginWarn" : (ignoreWarnings, un, pg, customCallback, callback, hideUserInfo, autoSelectReasonIndex)=> { // if customCallback = false, callback(templatestr) (rev12) autoSelectReasonIndex(rev13) for quick rollbacks for vandalism ext..
         // Give user a warning (show dialog)
         
-        let autoLevelSelectEnable = (!hideUserInfo) && (rw.config.rwautoLevelSelectDisable != "disable"); // If autolevelselect enabled (always disabled on hideUserInfo options)
+        let autoLevelSelectEnable = (!hideUserInfo) && (rw.userIsNotEC == null) && (rw.config.rwautoLevelSelectDisable != "disable"); // If autolevelselect enabled (always disabled on hideUserInfo options)
 
         // Let's continue
 
@@ -796,6 +796,12 @@ rw.ui = {
             // Event handlers
             addMessageHandler("redwarnPref", ()=>dialogEngine.closeDialog(()=>rw.ui.openPreferences())); // open preferences for button press
             addMessageHandler("redwarnTalk", ()=>redirect("https://en.wikipedia.org/wiki/Wikipedia_talk:RedWarn", true));
+
+            // Email to TAS THIS IS LIVE!!
+            addMessageHandler("TASEmail`*", e=>dialogEngine.closeDialog(()=>rw.info.sendEmail("Emergency", atob(e.split("`")[1]))));
+
+            // Email to OS - THESE ARE LIVE 
+            addMessageHandler("OSEmail`*", e=>dialogEngine.closeDialog(()=>rw.info.sendEmail("Oversight", atob(e.split("`")[1]))));
 
             const isUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");
             const isOnRevPage = window.location.href.includes("diff=") || window.location.href.includes("oldid="); // for reporting revisions

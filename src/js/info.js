@@ -653,6 +653,52 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         });
     },
 
+    /**
+     * Sends an email to the specified user
+     *
+     * @param {string} user Username to email
+     * @param {string} content Email content
+     * @method sendEmail
+     * @extends rw.info
+     */
+    "sendEmail" : (user, content)=> {
+        rw.ui.loadDialog.show("Sending email...");
+
+        var params = {
+            action: 'emailuser',
+            target: user,
+            subject: 'Email from RedWarn User '+ rw.info.getUsername(), // i.e. email from Ed6767
+            text: content,
+            ccme: true, // by defauly copy back to me
+            format: 'json'
+        },
+        api = new mw.Api();
+    
+        api.postWithToken( 'csrf', params ).done( ( data ) => {
+            console.log(data);
+            if (data.errors == null || data.errors.length < 1) {
+                // No errors, success!
+                rw.ui.loadDialog.close();
+                rw.ui.confirmDialog(`Email sent. A copy of your email has been sent to you.`,
+                    "OKAY", ()=>{
+                        dialogEngine.closeDialog();
+                    },
+                    "", ()=>{}, 0);
+            } else {
+                // Error may have occured - give them back the email bc we don't want to screw the user over
+                rw.ui.loadDialog.close();
+                rw.ui.confirmDialog(`<div style="overflow:auto">An error may have occured. Please check your inbox. If no email is sent to you soon, please try again.<br/>
+                Here is the email you were trying to send:
+                <pre>${content}</pre></div>
+                `,
+                    "OKAY", ()=>{
+                        dialogEngine.closeDialog();
+                    },
+                    "", ()=>{}, 50);
+            }
+        } );
+    },
+
     // CLASSES
 
     /**

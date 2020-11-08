@@ -516,6 +516,9 @@ function initRW() {
             rw.visuals.pageIcons(); // page icons once config loaded
             rw.ui.registerContextMenu(); // register context menus once config loaded
 
+            // If not autoconfirmed, add a flag
+            rw.info.featureRestrictPermissionLevel("extendedconfirmed", ()=>{}, ()=>{rw.userIsNotEC = true;});
+
             // Add dialog animations from config
             $('head').append(`<style>${rwDialogAnimations[(rw.config.dialogAnimation == null ? "default" : rw.config.dialogAnimation)]}</style>`);
 

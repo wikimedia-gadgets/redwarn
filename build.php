@@ -292,7 +292,8 @@ function processIncludedFiles($fileContents) {
             } else {
                 if (!isset($included[$file])) {
                     if (endsWith($file, "html")) {
-                        $included[$file] = "`" . minify_html(file_get_contents($filePath)) . "`";
+                        // $included[$file] = "`" . minify_html(file_get_contents($filePath)) . "`";
+                        $included[$file] = "`" . file_get_contents($filePath) . "`";
                     } else {
                         if (endsWith($file, "css"))
                             $included[$file] = minify_css(file_get_contents($filePath));

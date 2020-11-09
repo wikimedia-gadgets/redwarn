@@ -215,7 +215,7 @@ ${err.stack}</nowiki></code>
         // Write config to the users page and refresh
         let finalTxt = `
 /*<nowiki>                                                    
-This is your RedWarn configuration file. It is recommended that you don't edit this yourself and use RedWarn prefrences instead.
+This is your RedWarn configuration file. It is recommended that you don't edit this yourself and use RedWarn preferences instead.
 It is writen in JSON formatting and is excecuted every time RedWarn loads.
 
 If somebody has asked you to add code to this page, DO NOT do so as it may comprimise your account and will be reverted as soon as any configuration value changes.

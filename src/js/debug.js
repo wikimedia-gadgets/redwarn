@@ -16,7 +16,7 @@ rw.debugMenu = {
                 try {
                     rw.debugMenu.open();
                 } catch (error) {
-                    alert("The debug menu isn't availible in production mode");
+                    alert("The debug menu isn't available in production mode");
                 }
             }, // when clicked
             "showsOnlyOnUserPages": false,

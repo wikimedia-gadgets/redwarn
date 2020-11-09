@@ -22,7 +22,7 @@ rw.firstTimeSetup = {
 
             // Push change
             rw.ui.loadDialog.show("Saving...");
-            rw.info.writeConfig(true, ()=>{rw.ui.loadDialog.close();});
+            rw.info.writeConfig(false);
         }); 
 
         addMessageHandler("resetConfig", rs=>{

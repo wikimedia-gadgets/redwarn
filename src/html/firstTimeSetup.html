@@ -324,13 +324,10 @@
 
         // Done! Submit
         window.parent.postMessage("config\\\`"+ btoa(JSON.stringify(data))); // send to the big boss
-
-        // Now, exit (rw16)
-        window.parent.postMessage('reload');
-
+         
         // Now, play video (rw17)
-        $("#prefCard").fadeOut(1000, ()=>{
-            $("#video").fadeIn(1000, ()=>$("#video").find("video")[0].play());
-        });
+        //$("#prefCard").fadeOut(1000, ()=>{
+        //    $("#video").fadeIn(1000, ()=>$("#video").find("video")[0].play());
+        //});
     }
 </script>

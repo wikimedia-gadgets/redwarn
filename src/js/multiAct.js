@@ -161,9 +161,9 @@ rw.multiAct = { // Multi action screen
                             // Now push to iframe
                             rw.multiAct.dialog.getElementsByTagName("iframe")[0].contentWindow.postMessage(
                                 "applyToChecked`" + btoa(r) +
-                                "`Yes`New Notice"
+                                "`Yes`Warn User"
                                 , '*');
-                        }, true); // Show new notice dialog, true at end hides user info
+                        }, true); // Show Warn User dialog, true at end hides user info
                     });
 
                     // Event Handler for new msg
@@ -242,9 +242,7 @@ rw.multiAct = { // Multi action screen
 
             // Open screen - do not use dialogEngine as other dialogs use this - allow for overlay
             // Generate container
-            let content = mdlContainers.generateContainer(`
-            [[[[include multipleAction.html]]]]
-            `, document.body.offsetWidth, document.body.offsetHeight);
+            let content = mdlContainers.generateContainer(`[[[[include multipleAction.html]]]]`, document.body.offsetWidth, document.body.offsetHeight);
             // Dialog gubbins
             // Init if needed
             if ($("#MAdialogContainer").length < 1) {

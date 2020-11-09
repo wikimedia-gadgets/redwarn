@@ -23,13 +23,7 @@ rw.ui = {
     "beginWarn" : (ignoreWarnings, un, pg, customCallback, callback, hideUserInfo, autoSelectReasonIndex)=> { // if customCallback = false, callback(templatestr) (rev12) autoSelectReasonIndex(rev13) for quick rollbacks for vandalism ext..
         // Give user a warning (show dialog)
         
-        let autoLevelSelectEnable = (!hideUserInfo) && (rw.config.rwautoLevelSelectDisable != "disable"); // If autolevelselect enabled (always disabled on hideUserInfo options)
-
-        if ((rw.info.targetUsername(un) == rw.info.getUsername()) && !ignoreWarnings) {
-            // Usernames are the same, show dialog
-            rw.ui.confirmDialog("Whoops! You cannot warn yourself here. If you'd like to test, use a sandbox.", "OKAY", ()=>dialogEngine.closeDialog(), "", ()=>{}, 0);
-            return; // DO NOT continue.
-        }
+        let autoLevelSelectEnable = (!hideUserInfo) && (rw.userIsNotEC == null) && (rw.config.rwautoLevelSelectDisable != "disable"); // If autolevelselect enabled (always disabled on hideUserInfo options), non-EC always disabled (rw16)
 
         // Let's continue
 
@@ -217,9 +211,7 @@ rw.ui = {
 
             // CREATE DIALOG
             // MDL FULLY SUPPORTED HERE (container). 
-            dialogEngine.create(mdlContainers.generateContainer(`
-            [[[[include warnUserDialog.html]]]]
-            `, 500, 630)).showModal(); // 500x630 dialog, see warnUserDialog.html for code
+            dialogEngine.create(mdlContainers.generateContainer(`[[[[include warnUserDialog.html]]]]`, 500, 630)).showModal(); // 500x630 dialog, see warnUserDialog.html for code
         });
             
     }, // end beginWarn
@@ -267,9 +259,7 @@ rw.ui = {
 
         // CREATE DIALOG
         // MDL FULLY SUPPORTED HERE (container). 
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include newMsg.html]]]]
-        `, 500, 390)).showModal(); // 500x390 dialog, see newMsg.html for code
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include newMsg.html]]]]`, 500, 390)).showModal(); // 500x390 dialog, see newMsg.html for code
     },
 
 
@@ -382,7 +372,7 @@ rw.ui = {
                         "name": "Quick Actions", 
                         "items": {
                             "sendMsg": {name: "New Message"},
-                            "newNotice": {name: "New Notice"},
+                            "newNotice": {name: "Warn User"},
                             "quickWel": {name: "Quick Template"},
                             "adminReport": {name: "Report to Admin"}
                         }
@@ -455,9 +445,7 @@ rw.ui = {
         }
         // CREATE DIALOG
         // MDL FULLY SUPPORTED HERE (container). 
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include speedyDeletionp1.html]]]]
-        `, 500, 450)).showModal(); // 500x300 dialog, see speedyDeletionp1.html for code
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include speedyDeletionp1.html]]]]`, 500, 450)).showModal(); // 500x300 dialog, see speedyDeletionp1.html for code
     },
 
     /**
@@ -515,34 +503,33 @@ rw.ui = {
         dialogEngine.freezeScrolling();
 
         // Open preferences page with no padding, full screen
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include preferences.html]]]]
-        `, window.innerWidth, window.innerHeight, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include preferences.html]]]]`, window.innerWidth, window.innerHeight, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
     },
 
     /**
      * Opens the AIV report dialog
      *
      * @param {string} un Username to report
+     * @param {boolean} doNotShowDialog If set to true, will be set to just generate slim HTMl and handlers
      * @method openAdminReport
      * @extends rw.ui
      */
-    "openAdminReport" : (un)=> { // Open admin report dialog
+    "openAdminReport" : (un, doNotShowDialog)=> { // Open admin report dialog
+        // Setup AIV page for development or production
+        const aivPage = (rw.debugMenu == null ? "Wikipedia:Administrator_intervention_against_vandalism" : "User:Ed6767/sandbox"); 
+
         // Add toast handler
         addMessageHandler("pushToast`*", m=>rw.visuals.toast.show(m.split('`')[1],false,false,2500));
 
         // On report
-        addMessageHandler("report`*", m=>{
+        addMessageHandler("AIVreport`*", m=>{
             let reportContent = m.split('`')[1]; // report content
             let target = m.split('`')[2]; // target username
             let targetIsIP = rw.info.isUserAnon(target); // is the target an IP? (2 different types of reports)
             console.log("reporting "+ target + ": "+ reportContent);
             console.log("is ip? "+ (targetIsIP ? "yes" : "no"));
             rw.visuals.toast.show("Reporting "+ target +"...", false, false, 2000); // show toast
-            // Submit the report. MUST REPLACE WITH REAL AIV WHEN DONE AND WITH SANDBOX IN DEV!    
-            //let aivPage = "User:Ed6767/sandbox"; // dev
-            let aivPage = "Wikipedia:Administrator_intervention_against_vandalism"; // PRODUCTION! 
-
+            // Submit the report.   
             $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+aivPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
                 // Grab text from latest revision of AIV page
                 // Check if exists
@@ -583,15 +570,30 @@ rw.ui = {
         // Check matching user
         if (rw.info.targetUsername(un) == rw.info.getUsername()) {
             // Usernames are the same, give toast.
-            rw.visuals.toast.show("You can not report yourself, nor can you test this feature except in a genuine case.", false, false, 7500);
-            return; // DO NOT continue.
+            if (doNotShowDialog !== true) rw.visuals.toast.show("You can not report yourself, nor can you test this feature except in a genuine case.", false, false, 7500);
+            return `Sorry, you cannot report yourself, nor can you test this feature except in a genuine case.`; // DO NOT continue.
         }
 
+        const dialogContent = `[[[[include adminReport.html]]]]`;
 
-        // See adminReport.html for code
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include adminReport.html]]]]
-        `, 500, 410)).showModal();
+        // Push a message if report has already been made
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+aivPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+            // Grab text from latest revision of AIV page
+            // Check if exists
+            let revisionWikitext =  latestR.query.pages[0].revisions[0].slots.main.content; // Set wikitext
+            if (revisionWikitext.toLowerCase().includes(rw.info.targetUsername(un).replace(/_/g, ' ').toLowerCase())) {// If report is already there
+                setTimeout(()=>dialogEngine.dialog.getElementsByTagName("iframe")[0].contentWindow.postMessage("AIVReportExist"), 500); // let dialog know after 500ms to allow dialog to open
+            }
+        });
+
+
+        if (doNotShowDialog !== true) {
+            // See adminReport.html for code
+            dialogEngine.create(mdlContainers.generateContainer(dialogContent, 500, 410)).showModal();
+        } else {
+            // Return the code for use elsewhere
+            return dialogContent;
+        }
     },
 
     /**
@@ -611,19 +613,17 @@ rw.ui = {
         // Confirm dialog (yes, no, ext...)
         addMessageHandler("sBtn", sBtnClick);
         addMessageHandler("pBtn", pBtnClick);
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include confirmDialog.html]]]]
-        `, 500, 80 + extraHeight)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include confirmDialog.html]]]]`, 500, 80 + extraHeight)).showModal();
     },
 
     /**
      * Shows the feedback dialog to leave bug reports and feedback
      *
      * @param {string} extraInfo
-     * @method sendFeedback
+     * @method reportBug
      * @extends rw.ui
      */
-    "sendFeedback" : extraInfo=> {
+    "reportBug" : extraInfo=> {
         // Open feedback dialog, basically same as newmsg
         // Setup preview handling
         addMessageHandler("generatePreview`*", m=>{
@@ -652,9 +652,7 @@ rw.ui = {
 
         // CREATE DIALOG
         // MDL FULLY SUPPORTED HERE (container). 
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include sendFeedback.html]]]]
-        `, 500, 390)).showModal(); // 500x390 dialog, see sendFeedback.html for code
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include sendFeedback.html]]]]`, 500, 390)).showModal(); // 500x390 dialog, see sendFeedback.html for code
     },
 
     /**
@@ -671,25 +669,27 @@ rw.ui = {
         addMessageHandler("openUAA", ()=>rw.ui.beginUAAReport(un)); // UAA report
 
         // Open the admin report selector dialog
-        dialogEngine.create(mdlContainers.generateContainer(`
-            [[[[include adminReportSelector.html]]]]
-        `, 600, 500)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include adminReportSelector.html]]]]`, 250, 280)).showModal();
     },
 
     /**
      * Opens the UAA report dialog for a specified user
      *
      * @param {string} un Username to report
+     * @param {boolean} htmlOnly For expanding elements, adds handlers but returns HTML
      * @method beginUAAReport
      * @extends rw.ui
      */
-    "beginUAAReport" : un=> { // Report to UAA
+    "beginUAAReport" : (un, htmlOnly)=> { // Report to UAA
 
         // Check if IP - if so, exit
         if (rw.info.isUserAnon(un)) {
+            if (htmlOnly) return "As IPs don't have usernames, you can't report them to UAA.";
             rw.ui.confirmDialog("As IPs don't have usernames, you can't report them to UAA.", "OKAY", ()=>dialogEngine.closeDialog() , "", ()=>{}, 0);
             return; // stop
         }
+
+        const uaaPage = (rw.debugMenu == null ? "Wikipedia:Usernames_for_administrator_attention" : "User:Ed6767/sandbox"); // set UAA based on debug mode
 
         // Add toast handler
         addMessageHandler("pushToast`*", m=>rw.visuals.toast.show(m.split('`')[1],false,false,2500));
@@ -700,8 +700,7 @@ rw.ui = {
             let target = m.split('`')[2]; // target username
             console.log("reporting "+ target + ": "+ reportContent);
             rw.visuals.toast.show("Reporting "+ target +"...", false, false, 2000); // show toast
-            // Submit the report. MUST REPLACE WITH REAL AIV WHEN DONE AND WITH SANDBOX IN DEV!    
-            let uaaPage = "Wikipedia:Usernames_for_administrator_attention"; // PRODUCTION: Wikipedia:Usernames_for_administrator_attention
+            // Submit the report. MUST REPLACE WITH REAL AIV WHEN DONE AND WITH SANDBOX IN DEV!   
 
             $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+uaaPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
                 // Grab text from latest revision of AIV page
@@ -742,16 +741,86 @@ rw.ui = {
 
         // Check matching user
         if (rw.info.targetUsername(un) == rw.info.getUsername()) {
+            // If HTML only
+            if (htmlOnly) return `You can not report yourself, nor can you test this feature except in a genuine case.`;
+
             // Usernames are the same, give toast.
             rw.visuals.toast.show("You can not report yourself, nor can you test this feature except in a genuine case.", false, false, 7500);
             return; // DO NOT continue.
         }
+        
+        const dialogContent = `[[[[include uaaReport.html]]]]`;
 
+        // Push a message if report has already been made
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+uaaPage+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+            // Grab text from latest revision of AIV page
+            // Check if exists
+            let revisionWikitext =  latestR.query.pages[0].revisions[0].slots.main.content; // Set wikitext
+            if (revisionWikitext.toLowerCase().includes(rw.info.targetUsername(un).replace(/_/g, ' ').toLowerCase())) {// If report is already there
+                setTimeout(()=>dialogEngine.dialog.getElementsByTagName("iframe")[0].contentWindow.postMessage("UAAReportExist"), 500); // let dialog know after 500ms to allow dialog to open
+            }
+        });
+
+
+        if (htmlOnly) return dialogContent; // return dialog if HTMl only
 
         // See uaaReport.html for code
-        dialogEngine.create(mdlContainers.generateContainer(`
-        [[[[include uaaReport.html]]]]
-        `, 500, 410)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(dialogContent, 500, 410)).showModal();
+    },
+
+    /**
+     * Opens extended options that can be opened from any page (preferences, oversight and TAS reporting)
+     * @param {string} un Username for reports. Can also be revision ID (todo)
+     * @method openExtendedOptionsDialog
+     * @extends rw.ui
+     */
+    "openExtendedOptionsDialog" : un=>{
+        rw.ui.loadDialog.show("Please wait...");
+        // Get email info before loading and showing dialog (for OS and TAS reporting)
+        $.getJSON(rw.wikiAPI+"?action=query&meta=userinfo&uiprop=email&format=json", r=>{
+
+            // HTML for tabs
+
+            // USER THINGS ONLY - try and catch as will error out on non-user pages
+            let adminReportContent = `[[[[include genericError.html]]]]`; // placeholder
+            try {
+                adminReportContent = rw.ui.openAdminReport(null, true); // this sets up our handlers and generates the appropraite HTML
+            } catch (e) {adminReportContent+=`<hr><pre>${e.stack}</pre>`;}
+
+            // UAA report
+            let uaaReportContent = `[[[[include genericError.html]]]]`; // placeholder
+            try {
+                uaaReportContent = rw.ui.beginUAAReport(rw.info.targetUsername(), true); // this sets up our handlers and generates the appropraite HTML
+            } catch (e) {uaaReportContent+=`<hr><pre>${e.stack}</pre>`;}
+
+            // Event handlers
+            addMessageHandler("redwarnPref", ()=>dialogEngine.closeDialog(()=>rw.ui.openPreferences())); // open preferences for button press
+            addMessageHandler("redwarnTalk", ()=>redirect("https://en.wikipedia.org/wiki/Wikipedia_talk:RedWarn", true));
+
+            // Email to TAS THIS IS LIVE!!
+            addMessageHandler("TASEmail`*", e=>dialogEngine.closeDialog(()=>rw.info.sendEmail("Emergency", atob(e.split("`")[1]))));
+
+            // Email to OS - THESE ARE LIVE 
+            addMessageHandler("OSEmail`*", e=>dialogEngine.closeDialog(()=>rw.info.sendEmail("Oversight", atob(e.split("`")[1]))));
+
+            const isUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");
+            const isOnRevPage = window.location.href.includes("diff=") || window.location.href.includes("oldid="); // for reporting revisions
+
+            let rollbackOptsHTML = "";
+            // Generate rollback options if on rev page 
+            if (isOnRevPage) rollbackOptsHTML = rw.rollback.getDisabledHTMLandHandlers(); // generates our HTML and all assosicated handlers for us
+
+
+            // Email information for TAS and OS reports
+            const emailInfo = r.query.userinfo;
+
+            // Close loading dialog#
+            rw.ui.loadDialog.close();
+
+            // Make dialog
+            dialogEngine.create(mdlContainers.generateContainer(`[[[[include extendedOptions.html]]]]`, 500, 500)).showModal(); // todo: also shrink more when not on user page or revision page
+        });
+
     },
 
     // CLASSES from here 
@@ -771,7 +840,7 @@ rw.ui = {
                 `);
             }
             $("#rwUILoad").html(`
-            <dialog class="mdl-dialog" id="rwUILoadDialog">
+            <dialog class="mdl-dialog" id="rwUILoadDialog" style="border-radius: 7px;">
                 ` + mdlContainers.generateContainer(`[[[[include loadingSpinner.html]]]]`, 300, 30) +`
             </dialog>
             `); // Create dialog with content from loadingSpinner.html
@@ -896,9 +965,7 @@ rw.ui = {
             });
             
             // Now show dialog
-            rw.ui.recentlyVisitedSelector.init(mdlContainers.generateContainer(`
-            [[[[include recentPageSelect.html]]]]
-            `, 420, 500)); // 420 hahahaha
+            rw.ui.recentlyVisitedSelector.init(mdlContainers.generateContainer(`[[[[include recentPageSelect.html]]]]`, 420, 500)); // 420 hahahaha
             rw.ui.recentlyVisitedSelector.dialog.showModal();
         },
 

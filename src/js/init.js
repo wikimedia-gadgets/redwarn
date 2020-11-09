@@ -22,7 +22,7 @@ var rw = {
      * @type {string}
      * @extends rw
      */
-    "version" : "15", // don't forget to change each version!
+    "version" : "16", // don't forget to change each version!
 
     /**
      * Defines a brief summary of this version of RedWarn. This is shown in both update notices, and a card in preferences.
@@ -33,8 +33,8 @@ var rw = {
      * @extends rw
      */
     "versionSummary": `
-<!-- RedWarn 15 -->
-RedWarn 15 unifies the anti-vandalism experience, including user interface improvements, UAA reports, bug fixes and more.
+<!-- RedWarn 16 -->
+RedWarn 16 is finally here, bringing UX improvements, emergency and oversight reports, more customisation, bug fixes, and more!
     `,
 
     /**
@@ -47,6 +47,9 @@ RedWarn 15 unifies the anti-vandalism experience, including user interface impro
      */
     // ADDED BY BUILD SCRIPT
     "buildInfo" : `[[[[BUILDINFO]]]]`,
+
+    // DEBUG MODE - enabled by default on debug server
+    "debugMode" : `[[[[DEBUG]]]]`,
 
     // Now edited by us again
     /**
@@ -155,7 +158,7 @@ RedWarn 15 unifies the anti-vandalism experience, including user interface impro
          * @method init
          * @extends rw.visuals
          */
-        "init" : (callback) => {
+        "init" : callback=> {
             // Welcome message
             console.log("RedWarn "+ rw.version + " - (c) 2020 RedWarn Contributors");
             // Load MDL and everything needed, then callback when all loaded
@@ -166,6 +169,7 @@ RedWarn 15 unifies the anti-vandalism experience, including user interface impro
                 <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/materialicons.css">
                 <script src="https://redwarn.toolforge.org/cdn/js/dialogPolyfill.js"></script> <!-- firefox being dumb -->
                 <script src="https://redwarn.toolforge.org/cdn/js/mdl.js" id="MDLSCRIPT"></script>
+                <script src="https://redwarn.toolforge.org/cdn/js/mdlLogic.js"></script> <!-- rw specific MDL logic fixes -->
                 <!-- Roboto Font -->
                 <link href="https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese" rel="stylesheet">
 
@@ -178,7 +182,7 @@ RedWarn 15 unifies the anti-vandalism experience, including user interface impro
                 }
 
                 /* MDL */
-                `+ rwStyle +`
+                ${rwStyle}
                 </style>
             `); // Append required libaries to page
 
@@ -211,16 +215,22 @@ RedWarn 15 unifies the anti-vandalism experience, including user interface impro
          * @extends rw.visuals
          */
         "pageIcons" : ()=> {
+            // If debug mode, enable debug menu
+            if (rw.debugMenu != null) rw.debugMenu.init(); // will be undefined if not
+
             // Thanks to User:Awesome Aasim for the suggestion and some sample code.
             try {
                 let pageIconHTML = "<div id='rwPGIconContainer' style='display:none;display: inline-block;'>"; // obj it is appended to
                 // Possible icons locations: default (page icons area) or sidebar
                 let iconsLocation = rw.config.pgIconsLocation ? rw.config.pgIconsLocation : "default"; // If set in config, use config
-                /* [[[[include pageIcons.html]]]] */
+
+                // Add to pageIconHTML from topIcons config
+                pageIconHTML += rw.topIcons.generateHTML();
+
                 pageIconHTML += "</div>"; // close contianer
                 if (iconsLocation == "default") {
                     try {
-                        $(".mw-indicators").append(pageIconHTML); // Append our icons to the page icons
+                        $(".mw-indicators").append("&nbsp;&nbsp;&nbsp;" + pageIconHTML); // Append our icons to the page icons with spacing
                     } catch (error) {
                         // Incompatible theme, use sidebar instead
                         iconsLocation = "sidebar";
@@ -279,7 +289,10 @@ RedWarn 15 unifies the anti-vandalism experience, including user interface impro
 
             // Now Register menu mdl-menu
             for (let item of document.getElementsByClassName("mdl-menu")) rw.visuals.register(item); 
-            
+
+            // Now register handlers
+            rw.topIcons.addHandlers();
+
             // Now fade in container
             $("#rwPGIconContainer").fadeIn();
             
@@ -311,9 +324,7 @@ RedWarn 15 unifies the anti-vandalism experience, including user interface impro
             if (rw.config.ptrRmCol) rmCol = rw.config.ptrRmCol;
             // basically multiact js but with stuff replaced
             mwBody.style.overflowY = "hidden";
-            let content = mdlContainers.generateContainer(` 
-            [[[[include recentChanges.html]]]]
-            `, window.innerWidth, window.innerHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
+            let content = mdlContainers.generateContainer(`[[[[include recentChanges.html]]]]`, window.innerWidth, window.innerHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
 
             // Init if needed
             if ($("#PTdialogContainer").length < 1) {
@@ -505,6 +516,9 @@ function initRW() {
             rw.visuals.pageIcons(); // page icons once config loaded
             rw.ui.registerContextMenu(); // register context menus once config loaded
 
+            // If not autoconfirmed, add a flag
+            rw.info.featureRestrictPermissionLevel("extendedconfirmed", ()=>{}, ()=>{rw.userIsNotEC = true;});
+
             // Add dialog animations from config
             $('head').append(`<style>${rwDialogAnimations[(rw.config.dialogAnimation == null ? "default" : rw.config.dialogAnimation)]}</style>`);
 
@@ -512,6 +526,8 @@ function initRW() {
             if (rw.config.lastVersion != rw.version) {
                 // We've had an update
                 rw.config.lastVersion = rw.version; // update entry 
+                // RW 16 only - rm first setup
+                rw.config.firstTimeSetupComplete = "notNeeded";
                 rw.info.writeConfig(true, ()=> { // update the config file
                     // Show an update dialog
                     rw.ui.confirmDialog(`
@@ -526,8 +542,10 @@ function initRW() {
                         dialogEngine.closeDialog();//this thing turns it off
                         rw.visuals.toast.show("You can read more later at RedWarn's page (WP:REDWARN)");//display a toast
                         
-                    },168);
+                    },120);
                 });
+            } else if (rw.config.firstTimeSetupComplete == null) { // Check if first time setup has been completed
+                rw.firstTimeSetup.launch();
             }
 
             // TODO: probably fix this mess into a URL

@@ -1,3 +1,4 @@
 public/
 .gitlab-ci.yml
 .DS_Store
+.vscode/

@@ -37,6 +37,14 @@ rw.info = { // API
      */
     "targetUsername": un=>{
         if (un) {return un;} // return username if defined
+
+        if (mw.config.get("wgRelevantUserName") == null) {
+            // Try getting revision user and returning that
+            try {
+                const target = $($("#mw-diff-ntitle2").find(".mw-userlink")[0]).text();
+                return (target == "" ? null : target); // if empty send null
+            } catch (error) {} // do nothing on error
+        }
         return mw.config.get("wgRelevantUserName");},
 
     /**
@@ -134,6 +142,39 @@ rw.info = { // API
                     rw.rollback.icons = newRwIcons;
                 }
 
+                if (rw.config.rwRollbackShorten == "enable") { // if rollback shortened
+                    rw.rollback.icons.forEach((el, i)=>{
+                        el.name = el.name.replace("Quick rollback", "QRB"); // replace
+                        el.name = el.name.replace("Rollback", "RB"); // replace
+                        el.name = el.name.replace("rollback", "RB"); // replace
+
+                        rw.rollback.icons[i] = el; // set back
+                    });
+                }
+
+                // Load page icons
+                if (rw.config.rwPageIcons != null) {
+                    // More info in preferences.html and rollback.html
+                    let newRwIcons = []; // object containing the new object
+                    rw.config.rwPageIcons.forEach(icon=>{ // for each icon
+                        // Add to ours at the new location
+                        newRwIcons[icon.shift] = rw.topIcons.icons[icon.index];
+                        // Now modify for each modifier in modify object
+                        for (const key in icon.modify) {
+                            if (icon.modify.hasOwnProperty(key)) {
+                                const value = icon.modify[key];
+                                newRwIcons[icon.shift][key] = value; // apply modifier
+                            }
+                        }
+
+                        // Set original index for preferences
+                        newRwIcons[icon.shift].originalIndex = icon.index; // DO NOT set this to iconIndex as iconIndex is for rendering - this is for config and preferences ONLY
+                    });
+
+                    // Now update rwrollbackicons
+                    rw.topIcons.icons = newRwIcons;
+                }
+
             } catch (err) {
                 // Corrupt config file
                 console.log(rw.config);
@@ -141,12 +182,11 @@ rw.info = { // API
                 console.error(err);
                 // Reset config file to defaults
                 rw.info.writeConfig(true, ()=>rw.ui.confirmDialog(`Sorry, but an issue has caused your RedWarn preferences to be reset to default. Would you like to report a bug?`, 
-                "Open Feedback and Support", ()=>{
-                    rw.ui.sendFeedback(`<!-- DO NOT EDIT BELOW THIS LINE! THANK YOU -->
-                    rwConfig load - Error info: <code><nowiki>
-                    ` +err + `</nowiki></code>
-                    [[User:`+user+`/redwarnConfig.js|Open user rwConfig.js]]
-                    `);
+                "Report Bug", ()=>{
+                    rw.ui.reportBug(`<!-- DO NOT EDIT BELOW THIS LINE! THANK YOU -->
+redwarnConfig load - Error info: <code><nowiki>
+${err.stack}</nowiki></code>
+[[User:${user}/redwarnConfig.js|Open user redwarnConfig.js]]`);
                 },
                 
                 "DISMISS", ()=>{
@@ -220,7 +260,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         mw.user.getGroups(g=>{
             let hasPerm = g.includes(l);
             if (!hasPerm) hasPerm = g.includes("sysop"); // admins override all feature restrictions if we don't have them
-            
+
             if ((l == "confirmed") && !hasPerm) {hasPerm = g.includes("autoconfirmed");} // Due to 2 types of confirmed user, confirmed and autoconfirmed, we have to check both
             if (hasPerm) {
                 // Has the permission needed
@@ -613,6 +653,52 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         });
     },
 
+    /**
+     * Sends an email to the specified user
+     *
+     * @param {string} user Username to email
+     * @param {string} content Email content
+     * @method sendEmail
+     * @extends rw.info
+     */
+    "sendEmail" : (user, content)=> {
+        rw.ui.loadDialog.show("Sending email...");
+
+        var params = {
+            action: 'emailuser',
+            target: user,
+            subject: 'Email from RedWarn User '+ rw.info.getUsername(), // i.e. email from Ed6767
+            text: content,
+            ccme: true, // by defauly copy back to me
+            format: 'json'
+        },
+        api = new mw.Api();
+    
+        api.postWithToken( 'csrf', params ).done( ( data ) => {
+            console.log(data);
+            if (data.errors == null || data.errors.length < 1) {
+                // No errors, success!
+                rw.ui.loadDialog.close();
+                rw.ui.confirmDialog(`Email sent. A copy of your email has been sent to you.`,
+                    "OKAY", ()=>{
+                        dialogEngine.closeDialog();
+                    },
+                    "", ()=>{}, 0);
+            } else {
+                // Error may have occured - give them back the email bc we don't want to screw the user over
+                rw.ui.loadDialog.close();
+                rw.ui.confirmDialog(`<div style="overflow:auto">An error may have occured. Please check your inbox. If no email is sent to you soon, please try again.<br/>
+                Here is the email you were trying to send:
+                <pre>${content}</pre></div>
+                `,
+                    "OKAY", ()=>{
+                        dialogEngine.closeDialog();
+                    },
+                    "", ()=>{}, 50);
+            }
+        } );
+    },
+
     // CLASSES
 
     /**
@@ -652,7 +738,9 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 // Request notification perms
                 if (Notification.permission !== 'granted') Notification.requestPermission();
 
-                $("#rwSpyIcon").css("color", "green");
+                $(".rwSpyIcon").css("color", "green");
+                rw.topIcons.icons[rw.topIcons.icons.findIndex(i=>i.title == "Alert on Change")].colorModifier = "green";
+
                 rw.visuals.toast.show("Alerts Enabled - please keep this tab open.");
                 rw.info.changeWatch.active = true;
 
@@ -699,10 +787,13 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 });
             } else {
                 clearInterval(rw.info.changeWatch.timecheck); // clear updates
-                $("#rwSpyIcon").css("color", ""); // clear colour from icon
+
+                $(".rwSpyIcon").css("color", ""); // clear colour from icon
+                rw.topIcons.icons[rw.topIcons.icons.findIndex(i=>i.title == "Alert on Change")].colorModifier = null;
+
                 rw.visuals.toast.show("Alerts Disabled.");
                 rw.info.changeWatch.active = false;
             }
         }
-    }  
+    }
 };

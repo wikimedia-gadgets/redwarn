@@ -1,0 +1,336 @@
+<!-- First time setup PAGE -->
+<!-- SORTABLE JS-->
+<script src="https://redwarn.toolforge.org/cdn/js/sortable.js"></script>
+<script src="https://redwarn.toolforge.org/cdn/js/jquery-sortable.js"></script>
+
+
+<script>
+    // Colour theme preview
+    function updateColourTheme() {
+        // Show loading dialog
+        window.parent.postMessage('newThemeDialog');
+        // Add stylesheet for this version
+        setTimeout(()=>$('head').append('<link rel="stylesheet" type="text/css" onload="window.parent.postMessage(\\\'loadDialogClose\\\');" href="https://redwarn.toolforge.org/cdn/css/material.' + $("input[name=colTheme]:checked").val() + '.min.css">'), 500);
+    }
+</script>
+
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <header class="mdl-layout__header">
+      <div class="mdl-layout__header-row">
+        <!-- Title -->
+        <span class="mdl-layout-title" style="width: calc(100% - 60px);">First Time Setup</span>
+  
+          <div id="close" class="icon material-icons" style="float:right;">
+          <span style="cursor: pointer; padding-right:15px;" onclick="window.parent.postMessage('closeDialog');">
+              clear
+          </span>
+          </div>
+          <div class="mdl-tooltip" for="close">
+              Close for now
+          </div>
+      </div>
+    </header>
+    <main class="mdl-layout__content" style="padding-left: 5%;padding-right: 5%;">
+        <br/><br/>
+        <div class="mdl-card mdl-shadow--2dp" style="width:100%" id="prefCard"> <!-- ABOUT CARD -->
+            <div class="mdl-card__title" style="color: #fff;
+            height: 176px;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/b/b6/Reflected_sunset.jpg') center / cover;">
+                <h2 class="mdl-card__title-text">Welcome to&nbsp;${rw.logoHTML}&nbsp;${rw.version}!</h2>
+            </div>
+            <div class="mdl-card__supporting-text"> <!--  CONTENT -->
+                <h5>Congratulations! You've successfully installed RedWarn, the user-<span id="hahaFunnyJoke">friendly</span> counter-vandalism tool.</h5>
+                <!-- Impliment very original and not outdated haha jokes -->
+                <script>$("#hahaFunnyJoke").on("click", ()=> {if (confirm("You are about to open an external link to YouTube.com - continue?")) Object.assign(document.createElement('a'), { target: '_blank', href: "https://www.youtube.com/watch?v=aqsL0QQaSP4"}).click();});</script>
+
+                <p>
+                    We hope you'll enjoy using it. RedWarn will now guide you through setting up a few prefences in order to make your RedWarn experience optimimal for you. 
+                </p>
+                <form id="config">
+                    <h5>Set a colour theme</h5>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7e/RedWarnUIColourSchemes.png" style="width: 475px;float: left;padding-right: 50px;" />
+                    <p>This will affect elements within RedWarn's interface only, such as buttons and links.</p>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
+                        <input type="radio" id="option-1" class="mdl-radio__button" name="colTheme" value="blue-indigo" checked  onchange="updateColourTheme();">
+                        <span class="mdl-radio__label">WikiBlue (default)</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
+                        <input type="radio" id="option-2" class="mdl-radio__button" name="colTheme" value="amber-yellow" onchange="updateColourTheme();">
+                        <span class="mdl-radio__label">Sunshine</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-3">
+                        <input type="radio" id="option-3" class="mdl-radio__button" name="colTheme" value="purple-deep_purple" onchange="updateColourTheme();">
+                        <span class="mdl-radio__label">Purple Power</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-4">
+                        <input type="radio" id="option-4" class="mdl-radio__button" name="colTheme" value="blue_grey-red" onchange="updateColourTheme();">
+                        <span class="mdl-radio__label">RedWarn Minimal</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-5">
+                        <input type="radio" id="option-5" class="mdl-radio__button" name="colTheme" value="brown-light_green" onchange="updateColourTheme();">
+                        <span class="mdl-radio__label">Forrest</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-6">
+                        <input type="radio" id="option-6" class="mdl-radio__button" name="colTheme" value="orange-deep_orange" onchange="updateColourTheme();">
+                        <span class="mdl-radio__label">Orange Juice</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-7">
+                        <input type="radio" id="option-7" class="mdl-radio__button" name="colTheme" value="pink-red" onchange="updateColourTheme();">
+                        <span class="mdl-radio__label">Candy Floss</span>
+                    </label>
+                    <br><br>
+
+                    <!-- Warning format -->
+                    <h5>How do your prefer to select your warning templates?</h5>
+                    <p>RedWarn can either display warning templates as their descriptor (i.e. "Vandalism"), or the template name (i.e. "uw-vandalism").
+                        If you select template name, RedWarn will show it's descriptor when you hover over it in the dropdown. Which do you prefer?</p>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwNoticeListByTemplateNameDisable">
+                        <input type="radio" id="rwNoticeListByTemplateNameDisable" class="mdl-radio__button" name="rwNoticeListByTemplateName" value="disable" checked>
+                        <span class="mdl-radio__label">Template descriptions (i.e. Vandalism)</span>
+                    </label>
+                    &nbsp;&nbsp;
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwNoticeListByTemplateName">
+                        <input type="radio" id="rwNoticeListByTemplateName" class="mdl-radio__button" name="rwNoticeListByTemplateName" value="enable">
+                        <span class="mdl-radio__label">Template name (i.e. uw-vandalism)</span>
+                    </label>
+
+                    <h5>Automation</h5>
+                    <p>
+                        RedWarn can use an algorithm to automatically select what it thinks is the best warning level for an editor.
+                        This may be influenced by ORES scores, and the last warning level that other editors have given the target editor.
+                        This option also enables automatic warning template selection when using quick rollback. <strong>Always check before you warn!</strong>
+                    </p>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwautoLevelSelectDisableEnable">
+                        <input type="radio" id="rwautoLevelSelectDisableEnable" class="mdl-radio__button" name="rwautoLevelSelectDisable" value="enable" checked>
+                        <span class="mdl-radio__label">Enable automation</span>
+                    </label>
+                    &nbsp;&nbsp;
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwautoLevelSelectDisable">
+                        <input type="radio" id="rwautoLevelSelectDisable" class="mdl-radio__button" name="rwautoLevelSelectDisable" value="disable">
+                        <span class="mdl-radio__label">Disable automation, I want to select everything manually</span>
+                    </label>
+                    <br/><br/>
+                    <span style="font-size:small;">
+                        Please note: To prevent abuse and spam, automation is disabled for autoconfirmed users.
+                        Your selected preference will only be honored if you have the "extended-confirmed" user right.
+                        You should automatically gain this when you reach 500 edits on an account that is at least 30 days old.
+                    </span>
+                    <br/><br/>
+                    <h5>What do you want to happen when you finish reverting an edit?</h5>
+                    <p>
+                        When you finish reverting an edit, RedWarn can do a number of things depending on your workflow. Which do you prefer?
+                    </p>
+                    
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRollbackDoneOptionNewNotice">
+                        <input type="radio" id="rwRollbackDoneOptionNewNotice" class="mdl-radio__button" name="rwRollbackDoneOption" value="RWRBDONEwarnUsr" checked>
+                        <span class="mdl-radio__label">Warn the user (recommended)</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRollbackDoneOptionSendMsg">
+                        <input type="radio" id="rwRollbackDoneOptionSendMsg" class="mdl-radio__button" name="rwRollbackDoneOption" value="RWRBDONEnewUsrMsg">
+                        <span class="mdl-radio__label">Send the user a talk page message</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRollbackDoneOptionQuickTemplate">
+                        <input type="radio" id="rwRollbackDoneOptionQuickTemplate" class="mdl-radio__button" name="rwRollbackDoneOption" value="RWRBDONEwelcomeUsr">
+                        <span class="mdl-radio__label">Open the Quick Template dialog</span>
+                    </label>
+                    
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRollbackDoneOptionLatestRev">
+                        <input type="radio" id="rwRollbackDoneOptionLatestRev" class="mdl-radio__button" name="rwRollbackDoneOption" value="RWRBDONEmrevPg">
+                        <span class="mdl-radio__label">Redirect to the latest revision</span>
+                    </label>
+                    <br/>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRollbackDoneOptionNothing">
+                        <input type="radio" id="rwRollbackDoneOptionNothing" class="mdl-radio__button" name="rwRollbackDoneOption" value="none">
+                        <span class="mdl-radio__label">Ask me every time</span>
+                    </label>
+                    <br/><br/>
+
+                    <!-- Rollback Icons -->
+                    <h5>Set up your rollback buttons</h5>
+                    <p>
+                        RedWarn offers many quick rollback options that you can use. You can change the order and move them by clicking and dragging.
+                        To see what an icon means, hover over it with your cursor. Icons in the gray area will be hidden under the "More options" menu.
+                        You can also change their colour and icon later on in RedWarn preferences. <!-- To cut down on extra libs and junk here that we don't really need -->
+                    </p>
+
+                    <!-- Main control bit -->
+                    <!-- Icon List -->
+                    <ul id="rwRollbackIconsSort" style="text-align: center;width:100%;min-height: 35px;">
+                        ${(()=>{ // (tags for IDE formatting only) <script> 
+                            // Now we generate for each icon (config should've loaded and put these in order by now)
+                            let returnStr = "";
+                            rw.rollback.icons.forEach((icon,i)=>{
+                                let elID = "rollbackIcon-"+ (icon.originalIndex == null ? i : icon.originalIndex); // get index from original if already set, else use i (basically only use i on a fresh config)
+                                // Top row, so only add currently enabled icons
+                                if (icon.enabled) returnStr += `
+                                <li id="${elID}" class="icon material-icons">
+                                    <span style="cursor: pointer;
+                                                font-size:28px;
+                                                padding-right:5px;
+                                                color:${icon.color};">
+                                        ${icon.icon}
+                                    </span>
+                                </li>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="${elID}">
+                                    ${icon.name} 
+                                </div>
+                                `;
+                            });
+                            
+                            return returnStr; // </script> (tags for IDE formatting only)
+                        })()}
+                    </ul>
+
+                    <!-- Disabled Icon list -->
+                    <ul id="rwRollbackIconsSortDisabled" style="text-align: center;width:100%;min-height: 35px;background: #e8e4e4;">
+                        ${(()=>{ // (tags for IDE formatting only) <script> 
+                            // Now we generate for each icon (config should've loaded and put these in order by now)
+                            let returnStr = "";
+                            rw.rollback.icons.forEach((icon,i)=>{
+                                let elID = "rollbackIcon-"+ (icon.originalIndex == null ? i : icon.originalIndex); // get index from original if already set, else use i
+                                // bottom row, so only add disabled icons
+                                if (!icon.enabled) returnStr += `
+                                <li id="${elID}" class="icon material-icons">
+                                    <span style="cursor: pointer;
+                                                font-size:28px;
+                                                padding-right:5px;
+                                                color:${icon.color};">
+                                        ${icon.icon}
+                                    </span>
+                                </li>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="${elID}">
+                                    ${icon.name} 
+                                </div>
+                                `;
+                            });
+                            
+                            return returnStr; // </script> (tags for IDE formatting only)
+                        })()} 
+                    </ul>
+                    <!-- End rollback icon things -->
+
+                    <h5>Enable rollback reverting</h5>
+                    <p>
+                        If you have rollback permissions, RedWarn can use MediaWiki's rollback feature instead for faster reversions, alike to Huggle and other tools.
+                        Enabling this will only make a speed difference, otherwise there will be no change.
+                        This preference will only be honored if you have the "rollback" user right.
+                    </p>
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRBOpt-rollbackLike">
+                        <input type="radio" id="rwRBOpt-rollbackLike" class="mdl-radio__button" name="rollbackMethod" value="rollbackLike" checked>
+                        <span class="mdl-radio__label">Don't use rollback</span>
+                    </label>
+                    &nbsp;&nbsp;
+                    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rwRBOpt-rollback">
+                        <input type="radio" id="rwRBOpt-rollback" class="mdl-radio__button" name="rollbackMethod" value="rollback">
+                        <span class="mdl-radio__label">Use rollback (recommended for eligible editors)</span>
+                    </label>
+                    <br />
+                </form>
+                <hr/>
+                <h5>Thank you for trying RedWarn!</h5>
+                <p>
+                    <!-- A short introductory video will follow. --> If you have any issues, feature suggestions, or just need help in future, please let us know on RedWarn's talk page
+                    or our Discord server (the invite for which is in RedWarn preferences).
+                </p>
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+                <a class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="startVideo();">
+                    Apply settings and continue
+                </a>
+            </div>
+        </div>
+
+        <div class="mdl-card mdl-shadow--2dp" style="width:100%;display: none;text-align: center;" id="video"> <!-- ABOUT CARD -->
+            <video controls style="height: 25%;width: 50%;margin: 0 auto;">
+                <source src="https://redwarn.toolforge.org/cdn/video/devDemoVideo.mp4" type="video/mp4" />
+            </video>
+            <br/>
+            <div class="mdl-card__actions mdl-card--border">
+                <a class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('reload');">
+                    GET STARTED AND RETURN TO WIKIPEDIA
+                </a>
+            </div>
+        </div>
+
+        <br/><br/>
+    </main>
+</div>
+
+
+<!-- Scripts -->
+<script>
+    // Sortable for rollback icons
+    $('#rwRollbackIconsSort').sortable({
+        group: 'shared', // set both lists to same group
+        animation: 150
+    });
+    $('#rwRollbackIconsSortDisabled').sortable({
+        group: 'shared', // set both lists to same group
+        animation: 150
+    });
+
+    function startVideo() {
+        // save preferences here. NOTE! If this is ran after prefs set elsewhere THEY WILL BE RESET!
+        var data = $('form').serializeArray().reduce((obj, item) => {
+                obj[item.name] = item.value;
+                return obj;
+                }, {}); // form data
+        // Now we process the icons
+        let iconModifyArray = []; // array for our changes
+
+        // For each enabled icon
+        $("#rwRollbackIconsSort > li").each((i, el)=>{ 
+            let iconIndex = parseInt($(el).attr("id").split("-")[1]);
+            iconModifyArray.push({
+                "index" : iconIndex, // original icon index 
+                "shift" : i, // where to move to
+                "modify" : { // obj of params to change
+                    "enabled": true, // set as enabled
+                    "color" : $(el).find("span").css("color"), // get color
+                    "icon" : $(el).find("span").text().trim() // get icon from inner span text
+                }
+            });
+        });
+
+        // For each disabled icon
+        $("#rwRollbackIconsSortDisabled > li").each((i, el)=>{ 
+            let iconIndex = parseInt($(el).attr("id").split("-")[1]);
+            iconModifyArray.push({
+                "index" : iconIndex, // original icon index 
+                "shift" : $("#rwRollbackIconsSort > li").length + i, // where to move to (for disbaled + the number of total enabled)
+                "modify" : { // obj of params to change
+                    "enabled": false, // set as disabled
+                    "color" : $(el).find("span").css("color"), // get color
+                    "icon" : $(el).find("span").text().trim() // get icon from inner span text
+                }
+            });
+        });
+
+        // Now add to config
+        data.rwRollbackIcons = iconModifyArray;
+        console.log(data);
+
+        // Mark that this process is complete
+        data.firstTimeSetupComplete = "yes";
+
+        // Done! Submit
+        window.parent.postMessage("config\\\`"+ btoa(JSON.stringify(data))); // send to the big boss
+
+        // Now, exit (rw16)
+        window.parent.postMessage('reload');
+
+        // Now, play video (rw17)
+        $("#prefCard").fadeOut(1000, ()=>{
+            $("#video").fadeIn(1000, ()=>$("#video").find("video")[0].play());
+        });
+    }
+</script>

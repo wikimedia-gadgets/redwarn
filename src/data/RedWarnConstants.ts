@@ -1,6 +1,6 @@
-export const RW_VERSION = "16dev";
-export const RW_VERSION_SUMMARY = `<!-- RedWarn 16 -->
-RedWarn 16.`;
+export const RW_VERSION = "17dev";
+export const RW_VERSION_SUMMARY = `<!-- RedWarn 17 -->
+RedWarn 17.`;
 
 // Since MediaWiki will convert some of these templates, we have to store these
 // as Base64 encoded strings.
@@ -14,6 +14,4 @@ export const RW_SHARED_IP_ADVICE = atob(
 export const RW_LINK = "[[w:en:WP:RW|RedWarn]]";
 export const RW_LINK_SUMMARY = "([[w:en:WP:RW|RW]])";
 
-export const RW_WIKIS_TAGGABLE = [
-    "enwiki"
-];
+export const RW_WIKIS_TAGGABLE = ["enwiki"];

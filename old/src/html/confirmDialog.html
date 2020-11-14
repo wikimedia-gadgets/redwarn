@@ -1,8 +1,10 @@
-<!-- rw-arg:content -->
-<!-- rw-arg:extraLines --> <!-- Add extra linebreaks only if noExtraLines is false -->
+${content}
+${(noExtraLines === true ? "" : "<br /><br />")} <!-- Add extra linebreaks only if noExtraLines is false -->
 <span style="float:right;">
-    <!-- rw-arg:secondButton --><!-- Only show second button if defined -->
+    `+ (sBtnTxt.length > 0 ? (`<button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('sBtn', '*');">
+        `+ sBtnTxt +`
+    </button>`) : ``) + ` <!-- Only show second button if defined -->
     <button id="submitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="window.parent.postMessage('pBtn', '*');">
-        <!-- rw-arg:pBtnText -->
+        ${pBtnTxt}
     </button>
 </span>

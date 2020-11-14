@@ -1,9 +1,19 @@
+/**
+ * RedWarn's pending changes review feature
+ * @class rw.PendingChangesReview
+ */
 rw.PendingChangesReview = {
+    /**
+     * If on a review page, and user in "reviewer" group, this initalies review controls
+     *
+     * @method reviewPage
+     * @extends rw.PendingChangesReview
+     */
     "reviewPage" : ()=> {
         // Check config if disabled
         if (rw.config.rwDisablePendingChanges == "disable") return; // if disabled, exit
-
-        // Pending changes buttons and warning (ONLY on review pages)
+        
+        // Pending changes buttons and warning (ONLY on review pages) 
         if (($("#mw-fr-reviewform").length > 0) && !($("#mw-fr-reviewformlegend").text().includes("Re-review"))) {
             rw.info.featureRestrictPermissionLevel("reviewer", ()=>{ // Restrict to pending changes reviewers
                 // Add to accept header
@@ -58,7 +68,7 @@ rw.PendingChangesReview = {
                                         "imageParams": "",
                                         "fileVersion": "",
                                         "validatedParams": $('input[name ="validatedParams"]').attr("value"),
-                                        "wpReason" : comment + " ([[w:en:Wikipedia:RW|RWv"+ rw.version + "]])",
+                                        "wpReason" : comment + " ([[w:en:Wikipedia:RedWarn|RedWarn "+ rw.version + "]])",
                                         "wpSubmit": "Accept revision"
                                 }}).done((r, sT, x)=>{ // TODO: ADD AUTOWARNING, DETECT CHANGE AND OTHER
                                     rw.ui.loadDialog.close();
@@ -83,10 +93,10 @@ rw.PendingChangesReview = {
                                         // Error
                                         rw.visuals.toast.show("Sorry, an error occured and your review has not been submitted.", false, false, 5000);
                                     }
-
+                                    
                                 });
                             });
-
+                            
                             // SHOW DIALOG
                             let reviewAction = "Accept "+ count +" Revision"+ ((count > 1) ? "s" : ""); // i.e accept 1 revision / accept 2 revisions
                             let reviewCaption = `
@@ -94,13 +104,7 @@ rw.PendingChangesReview = {
                             <br/><br/>
                             Enter an optional comment, then confirm your review by clicking 'Submit Review' or by pressing ENTER.`;
                             let autoAccept = rw.config.rwDisableReviewAutoAccept != "disable" ? "true" : "false";
-                            dialogEngine.create(mdlContainers.generateContainer(
-                            rw.static.getHTML("pendingReviewReason", {
-                                reviewAction: reviewAction,
-                                reviewCaption: reviewCaption,
-                                autoAccept: autoAccept
-                            })
-                            , 500, 350)).showModal();
+                            dialogEngine.create(mdlContainers.generateContainer(`[[[[include pendingReviewReason.html]]]]`, 500, 350)).showModal();
                         });
                     });
                 };
@@ -113,7 +117,7 @@ rw.PendingChangesReview = {
                     // When DENY button clicked.
                     rw.PendingChangesReview.confirmLatestRev(()=>{
                         rw.PendingChangesReview.getPendingChangesUsers((usr, count, users, userCount)=>{
-
+                            
                             addMessageHandler("reason`*", reasonIn=> { // ON REASON RECIEVED
                                 // Generate revert string
                                 let revertString = "Reverting "+ count +" pending edit"+ ((count > 1) ? "s" : "") + " by ";
@@ -148,14 +152,14 @@ rw.PendingChangesReview = {
                                     "imageParams": "",
                                     "fileVersion": "",
                                     "validatedParams": $('input[name ="validatedParams"]').attr("value"),
-                                    "wpReason" : revertString+ (comment.length > 0 ? ": "+ comment : "") + " ([[w:en:Wikipedia:RW|RWv"+ rw.version + "]])",
+                                    "wpReason" : revertString+ (comment.length > 0 ? ": "+ comment : "") + " ([[w:en:Wikipedia:RedWarn|RW "+ rw.version + "]])",
                                     "wpSubmit": "Revert these changes"
                                 }}).done((r,sT,x)=>{
                                     // Cannot reject these changes because someone already accepted some (or all) of the edits.
                                     rw.ui.loadDialog.close();
                                     let successHandler = ()=>{
                                         // On success
-                                        rw.multiAct.open(users); // open MAT
+                                        if (rw.config.rwPendingMATDisable != "disable") rw.multiAct.open(users); // open MAT if not disabled in config
                                     };
                                     if (x.status == 302) {
                                         // Redirect, so success!
@@ -167,7 +171,7 @@ rw.PendingChangesReview = {
                                         let el = parser.parseFromString(r, 'text/html');
                                         let resultStr = el.getElementById("mw-content-text").getElementsByTagName("p")[0].innerHTML;
                                         if (resultStr.includes("Cannot reject these changes because someone already accepted some (or all) of the edits")) {
-                                            // Show the issue
+                                            // Show the issue 
                                             rw.PendingChangesReview.confirmLatestRev(()=>successHandler(), true); // true here note a different wording
                                         } else if (r.toLowerCase().includes("internal error")) {
                                             rw.visuals.toast.show("Sorry, an error occured and your review has not been submitted");
@@ -188,13 +192,7 @@ rw.PendingChangesReview = {
                             Confirm your review by clicking 'Submit Review' or by pressing ENTER.
                             `;
                             let autoAccept = rw.config.rwEnableReviewAutoRevert == "enable" ? "true" : "false";
-                            dialogEngine.create(mdlContainers.generateContainer(
-                                rw.static.getHTML("pendingReviewReason", {
-                                    reviewAction: reviewAction,
-                                    reviewCaption: reviewCaption,
-                                    autoAccept: autoAccept
-                                })
-                            , 500, 350)).showModal();
+                            dialogEngine.create(mdlContainers.generateContainer(`[[[[include pendingReviewReason.html]]]]`, 500, 350)).showModal();
                         });
                     });
                 };
@@ -222,7 +220,7 @@ rw.PendingChangesReview = {
             $(".fr-rating-controls").hide();
             // Handlers
             $("#rReviewUnAccept").click(()=>{
-                addMessageHandler("reason`*", reasonIn=> { // ON REASON RECIEVED
+                addMessageHandler("reason`*", reasonIn=> { // ON REASON RECIEVED 
                     // Dumbest one of all, just send, reload and hope for the best
                     let comment = reasonIn.split("`")[1];
                     rw.ui.loadDialog.show("Unaccepting...");
@@ -240,7 +238,7 @@ rw.PendingChangesReview = {
                         "imageParams": "",
                         "fileVersion": "",
                         "validatedParams": $('input[name ="validatedParams"]').attr("value"),
-                        "wpReason" : "Unapproving"+ (comment.length > 0 ? ": "+ comment : "") + " ([[w:en:Wikipedia:RW|RWv"+ rw.version + "]])",
+                        "wpReason" : "Unapproving"+ (comment.length > 0 ? ": "+ comment : "") + " ([[w:en:Wikipedia:RedWarn|RW "+ rw.version + "]])",
                         "wpSubmit": "Unaccept revision"
                     }).done(r=>{
                         window.location.hash = "#rwReviewUnaccept";
@@ -256,17 +254,20 @@ rw.PendingChangesReview = {
                 Confirm your review by clicking 'Submit Review' or by pressing ENTER.
                 `;
                 let autoAccept = rw.config.rwEnableReviewAutoRevert == "enable" ? "true" : "false";
-                dialogEngine.create(mdlContainers.generateContainer(
-                    rw.static.getHTML("pendingReviewReason", {
-                        reviewAction: reviewAction,
-                        reviewCaption: reviewCaption,
-                        autoAccept: autoAccept
-                    })
-                , 500, 350)).showModal();
+                dialogEngine.create(mdlContainers.generateContainer(`[[[[include pendingReviewReason.html]]]]`, 500, 350)).showModal();
 
             });
         }
     }, // end init
+
+    /**
+     * Confirm that we are still confirming this revision - if not, the user will be prompted whether they still wish to initate the callback.
+     *
+     * @param {function} callback
+     * @param {boolean} isFailedRevert Whether or not this function was initiated via a failed revert for a different dialog wording.
+     * @method confirmLatestRev
+     * @extends rw.PendingChangesReview
+     */
     "confirmLatestRev" : (callback, isFailedRevert)=> { // Verify that this confirm is the latest revision
         $.getJSON("https://en.wikipedia.org/w/api.php?action=query&prop=revisions&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&rvslots=*&rvprop=ids%7Cuser%7Ccomment&formatversion=2&format=json", r=>{
             // We got the response
@@ -301,6 +302,13 @@ rw.PendingChangesReview = {
         });
     },
 
+    /**
+     * Calls back with the past 10 users who have had pending edits
+     *
+     * @param {function} callback callback(lastAcceptedUser, countofEdits, rwMultiActuserObject, userCount)
+     * @method getPendingChangesUsers
+     * @extends rw.PendingChangesReview
+     */
     "getPendingChangesUsers" : callback=> { // CALLBACK(last accepted usr, count, obj, userCount)
         // Get all revisions between last accepted and this one
         $.getJSON("https://en.wikipedia.org/w/api.php?action=query&prop=revisions&format=json&titles="+
@@ -317,8 +325,8 @@ rw.PendingChangesReview = {
                 let user = rev.user;
                 // Summary - revID: summary (click revid to open diff in new tab)
                 let summary = "<a target='_blank' href='https://en.wikipedia.org/w/index.php?title="+ encodeURIComponent(mw.config.get("wgRelevantPageName"))
-                                +"&diff="+ rev.revid +"&oldid="+ rev.parentid +"&diffmode=source'>"+ rev.revid +"</a>: " + rev.comment;
-
+                                +"&diff="+ rev.revid +"&oldid="+ rev.parentid +"&diffmode=source'>"+ rev.revid +"</a>: " + rev.comment; 
+            
                 // If user not in userObj, add
                 if (!(user in userObj)) {
                     userObj[user] = {

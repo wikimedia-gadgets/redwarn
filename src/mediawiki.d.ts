@@ -35,7 +35,7 @@ declare class mw {
      * global `window` object.
      * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw-property-config
      */
-    static config : Map<string, any>;
+    static config: Map<string, any>;
 
     /**
      * Display a notification message to the user.
@@ -97,14 +97,13 @@ declare class mw {
     /**
      * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.user
      */
-    static user : {
-
+    static user: {
         /**
          * Get the current user's name
          *
          * @link https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.user-method-getName
          */
-        getName() : string | null
+        getName(): string | null;
 
         /**
          * Get the current user's name
@@ -154,7 +153,6 @@ declare class mw {
  * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw
  */
 declare namespace mw {
-
     import AjaxSettings = JQuery.AjaxSettings;
 
     /**
@@ -164,7 +162,6 @@ declare namespace mw {
      * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Api
      */
     class Api {
-
         /**
          * Default options for jQuery#ajax calls. Can be overridden by passing
          * `options` to {@link mw.Api} constructor.
@@ -173,14 +170,14 @@ declare namespace mw {
          */
         private static defaultOptions: {
             /** Default query parameters for API requests **/
-            parameters: Record<string, any>,
+            parameters: Record<string, any>;
             /** Default options for jQuery#ajax **/
-            ajax: AjaxSettings,
+            ajax: AjaxSettings;
             /**
              * Whether to use U+001F when joining multi-valued parameters (since 1.28).
              * Default is true if ajax.url is not set, false otherwise for compatibility.
              **/
-            useUS: boolean
+            useUS: boolean;
         };
 
         /**
@@ -376,6 +373,9 @@ declare namespace mw {
          */
         resume() : void;
 
+        postWithEditToken(
+            params: Record<string, any>,
+            ajaxOptions?: AjaxSettings
+        ): JQueryPromise<JQueryXHR>;
     }
-
 }

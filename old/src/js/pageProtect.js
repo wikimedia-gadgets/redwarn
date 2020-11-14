@@ -1,7 +1,23 @@
+/**
+ * RedWarn's RFPP feature
+ * @class rw.pageProtect
+ */
 rw.pageProtect = { // Used for [[WP:RFPP]]
+    /**
+     * The RFPP page that RedWarn will edit
+     * @property rfppPage
+     * @type {string}
+     * @extends rw.pageProtect
+     */
     "rfppPage" : "Wikipedia:Requests_for_page_protection", // !!! FOR PRODUCTION USE Wikipedia:Requests_for_page_protection ELSE USE User:Ed6767/sandbox/rwTests/rpp !!!
     // THIS MODULE IS NOW LIVE!!!
 
+    /**
+     * An object containing the protection levels for this Wiki
+     * @property editProtectionLevels
+     * @type {object}
+     * @extends rw.pageProtect
+     */
     // Define protection levels
     "editProtectionLevels" : { //edit protection - SET IN ORDER AS DISTINGUISHES BETWEEN UPGRADE AND DOWNGRADE
         "unprotected" : { // unprotected
@@ -51,6 +67,13 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
 
 // for move protection add smallprint: move protection limit: x
 
+    /**
+     * Calls back with the current protection level of the current page
+     *
+     * @param {function} callback callback(object {edit: level, move:level})
+     * @method getCurrentPageProtection
+     * @extends rw.pageProtect
+     */
     "getCurrentPageProtection" : callback=>{ // Callback {edit: level, move:level}
         // Request protection level from mediawiki
         $.getJSON(rw.wikiAPI + "?action=query&format=json&prop=info%7Cflagged&inprop=protection&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")), r=>{
@@ -73,7 +96,13 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
             callback({"edit": editProtection, "move": moveProtection}); // done, send callback
         });
     },
-
+    
+    /**
+     * Opens the page protection dialog for this page
+     *
+     * @method open
+     * @extends rw.pageProtect
+     */
     "open" : ()=>{ // Open page protection dialog for this page
         // Get current page protection level
         rw.pageProtect.getCurrentPageProtection(protection=>{
@@ -125,7 +154,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                 } else {
                     requestType = "downgrade";
                 }
-
+                
                 // Let's submit - show load dialog
                 rw.ui.loadDialog.show("Submitting request...");
 
@@ -133,7 +162,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
 
                 // generate heading to add under for upgrade or downgrade
                 let headingToInsertUnder = "== "+ (requestType == "upgrade" ? "Current requests for increase in protection level" : "Current requests for reduction in protection level") +" ==";
-
+                
                 // Assemble text to add per page template
                 let text = `=== [[:${mw.config.get("wgRelevantPageName").replace(/_/g, ' ')}]] ===
 * {{pagelinks|${mw.config.get("wgRelevantPageName").replace(/_/g, ' ')}}}
@@ -165,7 +194,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                     // Locate where the current section is and add ours
                     let locationOfLastLine = wikiTxtLines.indexOf(headingToInsertUnder) + 1; // in case of date heading w nothing under it
                     for (let i = wikiTxtLines.indexOf(headingToInsertUnder) + 1; i < wikiTxtLines.length; i++) {
-                        if (wikiTxtLines[i].startsWith("== ")) {
+                        if (wikiTxtLines[i].startsWith("== ")) { 
                             // New section
                             locationOfLastLine = i - 1; // the line above is therefore the last
                             console.log("exiting loop: " +wikiTxtLines[locationOfLastLine]);
@@ -176,7 +205,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                             break; // exit loop
                         }
                     }
-
+                    
                     if (locationOfLastLine == wikiTxtLines.length - 1) {
                         // To prevent to end notices squishing against eachother
                         // Same as without, but we just include the date string at bottom of page
@@ -208,23 +237,18 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                             // Reshow dialog
                             dialogEngine.dialog.showModal();
                         } else {
-                            // Success!
+                            // Success! 
                             rw.ui.loadDialog.close();
                             rw.visuals.toast.show("RFPP requested.");
                         }
                     });
-
-
+                    
+                    
                 });
             });
 
             // Open dialog
-            dialogEngine.create(mdlContainers.generateContainer(
-                rw.static.getHTML("requestPageProtect", {
-                    title: protectionInfo.title,
-                    finLevelListStr: finLevelListStr
-                })
-            , 600, 630)).showModal();
+            dialogEngine.create(mdlContainers.generateContainer(`[[[[include requestPageProtect.html]]]]`, 600, 630)).showModal();
         });
     }
 };

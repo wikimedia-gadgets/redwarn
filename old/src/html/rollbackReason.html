@@ -1,7 +1,7 @@
 <!-- ROLLBACK REASON DIALOG -->
 <form id="newMsgForm" onsubmit="pushRollback();" action="#">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
-        <input class="mdl-textfield__input" type="text" name="rollbackReason" id="rollbackReason" value="/* rw-arg:reason */">
+        <input class="mdl-textfield__input" type="text" name="rollbackReason" id="rollbackReason" value="`+ reason +`">
         <label class="mdl-textfield__label" for="rollbackReason">Rollback Reason</label>
         <div class="mdl-tooltip" for="rollbackReason">
             Enter a reason for this rollback
@@ -23,10 +23,10 @@
                 obj[item.name] = item.value;
                 return obj;
                 }, {}); // form data
-
+        
         let reason = data.rollbackReason;
         // Submit it
-        window.parent.postMessage('reason`' + reason); // Push upstairs
+        window.parent.postMessage('reason\\\`' + reason); // Push upstairs
         window.parent.postMessage("closeDialog"); // We done here.
         return false; // prevent redirect
     }

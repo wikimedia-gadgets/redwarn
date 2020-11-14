@@ -41,11 +41,7 @@ rw.quickTemplate = { // Quick template UI and loader
         addMessageHandler("qTnewPack", ()=>rw.quickTemplate.newPack());
 
         // Show pack selection dialog
-        dialogEngine.create(mdlContainers.generateContainer(
-            rw.static.getHTML("quickTemplateSelectPack", {
-                finalBtnStr: finalBtnStr
-            })
-        , 500, 530)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include quickTemplateSelectPack.html]]]]`, 500, 530)).showModal();
 
         // Pack Selected Handler
         addMessageHandler("selectPack`*", cI=>{
@@ -112,7 +108,7 @@ rw.quickTemplate = { // Quick template UI and loader
                 // Set up vars
                 let nTitle = cI.split("`")[1];
                 let nAbout = cI.split("`")[2];
-
+                
                 // Add to our template array
                 rw.config.templatePacks[i].templates.push({
                     "title": nTitle,
@@ -124,12 +120,12 @@ rw.quickTemplate = { // Quick template UI and loader
                 rw.info.writeConfig(true, ()=>{ // save config
                     rw.ui.loadDialog.close();
                     rw.quickTemplate.packStore = []; // clear out packs
-
+                    
                     // Refresh selected pack
                     selectedPack = rw.quickTemplate.packs()[i];
                     // Open editor
                     rw.quickTemplate.editTemplate(i, selectedPack.templates.length - 1); // w pack index and template index
-                });
+                }); 
             });
 
             addMessageHandler("qTEdit`*", cI=>{
@@ -164,19 +160,7 @@ rw.quickTemplate = { // Quick template UI and loader
 
         // Now we need to assemble the select screen
         // Show template selection dialog
-        dialogEngine.create(mdlContainers.generateContainer(
-            rw.static.getHTML(
-                editMode ? "quickTemplateSelectTemplateEdit" : "quickTemplateSelectTemplate",
-                {
-                    packName: selectedPack.name,
-                    selectStr: finalSelectStr,
-                    editMode: editMode ? "EDIT" : "CONTINUE",
-                    selfPublishedSStyle: (selectedPack.createdBy == mw.config.get("wgUserName")) ?
-                        "" : "display: none",
-                    wtf: (editMode ? "Edit": "Next")
-                }
-            )
-        , 500, 530)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include quickTemplateSelectTemplate.html]]]]`, 500, 530)).showModal();
 
         // Continue Handler (not called in edit mode)
         addMessageHandler("qTNext`*", cI2=>{
@@ -205,7 +189,7 @@ rw.quickTemplate = { // Quick template UI and loader
         // Add handlers for submit
         addMessageHandler("qtDone`*", eD=> {
             let wikiTxtToAdd = atob(eD.split("`")[1]); // params
-
+            
             // MAKE EDIT
             rw.info.addWikiTextToUserPage(rw.info.targetUsername(un), wikiTxtToAdd, addUnderDate, "[[w:en:Wikipedia:RedWarn/QTPACKS|" + selectedPack.name + " - " + selectedTemplate.title + "]]");
         });
@@ -229,19 +213,9 @@ rw.quickTemplate = { // Quick template UI and loader
                 });
             }
         })(selectedTemplate.content.match(/{{RWTEXT\|[^}}]*\|[^{{]*}}/g)); // regex here for above function
-
+        
         // Finally, show final submit dialog
-        dialogEngine.create(mdlContainers.generateContainer(
-            rw.static.getHTML("quickTemplateSubmit", {
-                packName: selectedPack.name,
-                packTitle: selectedPack.title,
-                packAbout: selectedPack.about,
-                targetUsername: rw.info.targetUsername(un),
-                finalAdditionalInputs: finalAdditionalInputs,
-                contentStr: contentStr,
-                originalText: btoa(selectedTemplate.content)
-            })
-        , 500, 550)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include quickTemplateSubmit.html]]]]`, 500, 550)).showModal();
     },
 
     "newPack" : ()=> {
@@ -267,13 +241,11 @@ rw.quickTemplate = { // Quick template UI and loader
                 // Refresh packs and open selection screen in edit mode
                 rw.quickTemplate.selectTemplate("",rw.quickTemplate.packs().length - 1, true); // true here distingishes edit mode
             });
-
+            
         });
 
         // Finally, show the dialog
-        dialogEngine.create(mdlContainers.generateContainer(
-            rw.static.getHTML("quickTemplateNewPack")
-        , 500, 200)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include quickTemplateNewPack.html]]]]`, 500, 200)).showModal();
     },
 
     "editTemplate" : (selectedPackI, selectedTemplateI)=>{
@@ -295,15 +267,15 @@ rw.quickTemplate = { // Quick template UI and loader
             rw.info.writeConfig(true, ()=>{ // save config
                 rw.ui.loadDialog.close();
                 rw.quickTemplate.packStore = []; // clear out packs
-
+                
                 // Refresh selected pack
                 selectedPack = rw.quickTemplate.packs()[selectedPackI];
-
+                
                 // Refresh selected template
                 selectedTemplate = selectedPack.templates[selectedTemplateI];
 
                 if (callback != null) callback(); // send callback if set
-            });
+            }); 
         };
 
         // Save changes handler
@@ -325,23 +297,13 @@ rw.quickTemplate = { // Quick template UI and loader
         });
 
         // Finally, open the edit template dialog
-        dialogEngine.create(mdlContainers.generateContainer(
-            rw.static.getHTML(
-                "quickTemplateEditTemplate",
-                {
-                    packName: selectedPack.name,
-                    templateTitle: btoa(selectedTemplate.title),
-                    templateAbout: selectedTemplate.about,
-                    templateContent: selectedTemplate.content
-                }
-            )
-        , 500, 550)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include quickTemplateEditTemplate.html]]]]`, 500, 550)).showModal();
     },
 
     "publish" : (selectedPack, isNew, selectedPackI)=> { // makes a listing on the WP:REDWARN/QTPACKS page if isnew is set to true
         // Publish new pack
         rw.ui.loadDialog.show("Publishing...");
-
+ 
         let packCode = selectedPack.packCode; // get packcode from selected pack
         if (packCode == null) packCode = rw.info.getUsername() + "/" + rw.makeID(10); // Generate a new pack code if not already published
 
@@ -383,7 +345,7 @@ rw.info.writeConfig(true, ()=>{ // save config
             "format": "json",
             "token" : mw.user.tokens.get("csrfToken"),
             "title" : packPage,
-            "summary" : "Publish Autogenerated QTPack Install [[w:en:Wikipedia:RW|(RWv"+ rw.version +")]]", // summary sign here
+            "summary" : "Publish Autogenerated QTPack Install [[w:en:Wikipedia:RedWarn|(RedWarn "+ rw.version +")]]", // summary sign here
             "text": packInstallScript,
             "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
         }).done(dt => {
@@ -394,13 +356,13 @@ rw.info.writeConfig(true, ()=>{ // save config
                 rw.ui.loadDialog.close();
                 rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your pack has not been published.");
             } else {
-                // Success!
+                // Success! 
                 if (!isNew) { // if not a new pack, show update done screen and exit
                     rw.loadDialog.close();
                     rw.ui.confirmDialog("Pack updated successfully!", "DONE", ()=>dialogEngine.closeDialog() , "", ()=>{}, 0);
                     return;
-                }
-
+                } 
+                
                 // CONINUES ONLY IF NEW
                 // Now make change to config in our preferences re new change
                 rw.config.templatePacks[selectedPackI].packCode = packCode; // add packcode to template config
@@ -412,7 +374,7 @@ rw.info.writeConfig(true, ()=>{ // save config
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
                         "title" : "Wikipedia:RedWarn/help/Quick_Template/templates",
-                        "summary" : "Publish new pack [[w:en:Wikipedia:RW|(RWv"+ rw.version +")]]", // summary sign here
+                        "summary" : "Publish new pack [[w:en:Wikipedia:RedWarn|(RedWarn "+ rw.version +")]]", // summary sign here
                         "appendtext": // Add our section wikitxt here
                         `
 === ${selectedPack.name} - by ${selectedPack.createdBy} ===
@@ -431,7 +393,7 @@ rw.info.writeConfig(true, ()=>{ // save config
                             redirect("https://en.wikipedia.org/wiki/WP:REDWARN/QTPACKS"); // No rw.wikiBase due to lack of page there
                         }
                     });
-                });
+                }); 
             }
         });
     }

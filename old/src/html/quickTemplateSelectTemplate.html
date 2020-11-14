@@ -1,7 +1,42 @@
-<h2 style="font-weight: 200;font-size:45px;line-height: 48px;"><!-- rw-arg:packName --></h2>
+<h2 style="font-weight: 200;font-size:45px;line-height: 48px;">`+selectedPack.name+`</h2>
 <div style="height: 390px;overflow:auto;">
     <!-- Template radio selectors go here -->
-	<!-- rw-arg:selectStr -->
+    ` + finalSelectStr + `
+    <!-- EDIT MODE BUTTONS -->
+    <!-- DON'T REMOVE THIS LINE! `+ (editMode ? `-->
+    <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="template-NEW">
+    <input type="radio" id="template-NEW" class="mdl-radio__button" name="options" value="NEW" onchange="
+        if ($( 'input:checked' ).val() == 'NEW') {$('#createNewContainer').show();} else {$('#createNewContainer').hide();}
+    "> <!-- Toggle vis on change -->
+        <span class="mdl-radio__label">Create New Template</span>
+    </label>
+    <div id="createNewContainer" style="display:none;"><br>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 100%;">
+            <input class="mdl-textfield__input" type="text" id="createNewTitle">
+            <label class="mdl-textfield__label" for="createNewTitle">Title</label>
+        </div><br />
+        <div class="mdl-textfield mdl-js-textfield" style="width: 100%;">
+            <textarea class="mdl-textfield__input" type="text" rows= "3" id="createNewAbout"></textarea>
+            <label class="mdl-textfield__label" for="createNewAbout">Description</label>
+        </div>
+        <br />
+        <i>Click "edit" to create and begin editing your template.</i>
+    </div>
+    <hr />
+    <!-- Publish button (only if pack by us)-->
+    <!-- Don't remove this line! `+ ((selectedPack.createdBy == mw.config.get("wgUserName")) ? ` -->
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" style="width:100%;" onclick="window.parent.postMessage('qTPublish', '*');">
+        MANAGE PUBLISHING
+    </button>
+    <br /><br />
+    <!-- DON'T REMOVE THIS LINE ` : ``) + ` -->
+
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" style="width:100%;background-color:red;" onclick="window.parent.postMessage('qTdeletePack', '*');">
+        DELETE THIS PACK
+    </button>
+    
+    <!-- DON'T REMOVE THIS LINE! ` : "") + ` -->
+    <!-- END EDIT MODE BUTTONS -->
 </div>
 
 <!-- CLOSE BUTTON -->
@@ -10,7 +45,7 @@
         CANCEL
     </button>
     <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="handleNext();">
-        <!-- rw-arg:editMode -->
+        ${(editMode ? "EDIT" : "CONTINUE")}
     </button>
 </span>
 <script>
@@ -20,10 +55,10 @@
             if ($( "input:checked" ).val() == "NEW") {
                 // Create new (qTNew Title Description)
                 if ($( "#createNewTitle" ).val().length > 2) { // if long enough
-                    window.parent.postMessage('qTNew`'+ $( "#createNewTitle" ).val() + '`' + $( "#createNewAbout" ).val(), '*');
+                    window.parent.postMessage('qTNew\`'+ $( "#createNewTitle" ).val() + '\`' + $( "#createNewAbout" ).val(), '*');
                 }
             } else { // Else continue as normal (qTEdit in edit mode, qTNext normal)
-                window.parent.postMessage('qT/* rw-arg:wtf */`'+ $( "input:checked" ).val(), '*');
+                window.parent.postMessage('qT`+ (editMode ? "Edit": "Next") +`\`'+ $( "input:checked" ).val(), '*');
             }
         }
     }

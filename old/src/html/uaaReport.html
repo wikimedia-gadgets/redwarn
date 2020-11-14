@@ -1,8 +1,11 @@
-<h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Report to UAA</h2>
-<span>Please note: This form currently supports <b>username reports</b> only. Please be well aware of the username policy before reporting.</span>
-<form id="reportForm">
+${(htmlOnly != true ? `<h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Report to UAA</h2>`:``)}
+<span>
+    ${rw.debugMenu == null ? `Please note: This form currently supports <b>username reports</b> only. Please be well aware of the username policy before reporting.`:
+    `<span style="color:red">You are in developer mode, so UAA reports will be sent to User:Ed6767/sandbox. Enable production behaviour through the debug menu.</span>`}
+</span>
+<form id="UAAreportForm">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
-        <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="/* rw-arg:target */" name="target" readonly>
+        <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="`+ rw.info.targetUsername(un).replace(/_/g, ' ') +`" name="target" readonly>
         <label class="mdl-textfield__label" for="trgtUsrVisualBox">Target</label>
         <div class="mdl-tooltip" for="trgtUsrVisualBox">
             To target a different user, please visit their userpage.
@@ -35,24 +38,24 @@
 </form>
 
 <span style="float:right;">
-    <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('closeDialog', '*');">
+    ${(htmlOnly != true ? `<button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('closeDialog', '*');">
         CANCEL
-    </button>
-    <button id="submitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="sendReport();">
+    </button>`:``)}
+    <button id="UAAsubmitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="sendUAAReport();">
         REPORT
     </button>
 </span>
 
 <script>
-    function pushToast(text) {window.parent.postMessage('pushToast`' + text);} // Push toast to host
+    function pushToast(text) {window.parent.postMessage('pushToast\\\`' + text);} // Push toast to host
 
-    function sendReport() {
+    function sendUAAReport() {
         // Submit report
-        var data = $('#reportForm').serializeArray().reduce(function(obj, item) {
+        var data = $('#UAAreportForm').serializeArray().reduce(function(obj, item) {
                 obj[item.name] = item.value;
                 return obj;
                 }, {}); // form data
-
+        
         if (data.reason == "") {pushToast("Select a reason."); return;} // If no reason selected, push toast and EXIT.
 
         let fullReason = "";
@@ -64,9 +67,23 @@
             // Append the reason and comment if there is one
             fullReason = "Violation of the username as a " + data.reason.toLowerCase() + (data.comment == "" ? "" : ". "+ data.comment); // If data comment empty don't add anything otherwise make it Reason - Comment
         }
-        fullReason += " /* rw-arg:signature */"; // Add sig to the end (w space)
+        fullReason += " ${rw.sign()}"; // Add sig to the end (w space)
         // Push this upstairs
-        window.parent.postMessage('UAA`'+ fullReason + '`' + data.target, '*'); // Report with full reason
+        window.parent.postMessage('UAA\\\`'+ fullReason + '\\\`' + data.target, '*'); // Report with full reason
         window.parent.postMessage('closeDialog', '*'); // Close. We will be reopened on error.
     }
+
+
+    window.onmessage = e=>{ // On any message we just set the text, not much logic here
+        console.log(e);
+        if (e.data == "AIVReportExist"){
+            $("#AIVreportForm").html("<h5>It looks like this user has already been reported to AIV.</h5>");
+            $("#AIVsubmitBtn").hide(); // hide submit button
+        } else if (e.data == "UAAReportExist"){
+            $("#UAAreportForm").html("<h5>It looks like this user has already been reported to UAA.</h5>");
+            $("#UAAsubmitBtn").hide(); // hide submit button
+        } 
+
+        // OTHER EXTENDED OPTIONS HANLDERS HERE
+    };
 </script>

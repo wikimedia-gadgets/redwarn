@@ -1,6 +1,6 @@
 rw.rollback = { // Rollback features - this is where the business happens, people!
     "clickHandlers" : {}, // set in code
-
+    
     "icons" : [ // rev14, icon IDs and everything for current rollback - from left to right - usually loaded from config
         // WARNING: CHANGING ORDER WILL MESS UP CONFIGS.
         // DEFAULT ENABLED ICONS
@@ -80,7 +80,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             "color" : "black", // css colour
             "icon" : "more_vert",
             "actionType" : "func",
-            "action" : ()=>rw.rollback.selectFromDisabled() // Callback
+            "action" : ()=>rw.ui.openExtendedOptionsDialog() // Callback
         },
 
         // END DEFAULT ENABLED ICONS
@@ -248,7 +248,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         // Check if page is editable, if not, don't show
         if (!mw.config.get("wgIsProbablyEditable")) {
            // Can't edit, so exit
-           return;
+           return; 
         }
 
         // else, continue :)
@@ -300,15 +300,15 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         });
 
         // Finally, wrap and add more info
-        currentRevIcons = rw.static.getHTML("rollbackCurrentRevFormatting", {
-            currentRevIcons: currentRevIcons
-        }); // see HTML file
+        currentRevIcons = `[[[[include rollbackCurrentRevFormatting.html]]]]`; // see HTML file
 
         // RESTORE THIS VERSION ICONS. DO NOT FORGET TO CHANGE BOTH FOR LEFT AND RIGHT
 
+        let twinkleLoadedBeforeUs = $('div[id^="tw-revert"]').length;
+
         // On left side
         // DO NOT FORGET TO CHANGE BOTH!!
-        $('.diff-otitle').prepend(isLeftLatest ? currentRevIcons : `
+        let left = isLeftLatest ? currentRevIcons : `
         <div id="rOld1" class="icon material-icons"><span style="cursor: pointer; font-size:28px; padding-right:5px; color:purple;"
             onclick="rw.rollback.promptRestoreReason($('#mw-diff-otitle1 > strong > a').attr('href').split('&')[1].split('=')[1]);"> <!-- the revID on left -->
                 history
@@ -317,11 +317,15 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         <div class="mdl-tooltip mdl-tooltip--large" for="rOld1">
             Restore this version
         </div>
-        `
-        );
+        `;
+        if (twinkleLoadedBeforeUs) {
+            $('.diff-otitle > div[id^="tw-revert"]').after(left);
+        } else {
+            $('.diff-otitle').prepend(left); 
+        }
 
         // On the right side
-        $('.diff-ntitle').prepend(isLatest ? currentRevIcons : `
+        let right = isLatest ? currentRevIcons : `
         <div id="rOld2" class="icon material-icons"><span style="cursor: pointer; font-size:28px; padding-right:5px; color:purple;"
             onclick="rw.rollback.promptRestoreReason($('#mw-diff-ntitle1 > strong > a').attr('href').split('&')[1].split('=')[1]);"> <!-- the revID on right -->
                 history
@@ -330,62 +334,58 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         <div class="mdl-tooltip mdl-tooltip--large" for="rOld2">
             Restore this version
         </div>
-        `); // if the latest rev, show the accurate revs, else, don't
-
+        `; // if the latest rev, show the accurate revs, else, don't 
+        if (twinkleLoadedBeforeUs) {
+            $('.diff-ntitle > div[id^="tw-revert"]').after(right);
+        } else {
+            $('.diff-ntitle').prepend(right); 
+        }
+        
         setTimeout(()=>{
             // Register all tooltips after 50ms (just some processing time)
             for (let item of document.getElementsByClassName("mdl-tooltip")) {
-                rw.visuals.register(item);
-            }
+                rw.visuals.register(item); 
+            } 
 
             // Register progressbar
             rw.visuals.register($("#rwRollbackInProgressBar")[0]);
         },100);
     },
 
-    "selectFromDisabled" : ()=>{
+    "getDisabledHTMLandHandlers" : ()=>{
         // Open a new dialog with all the disabled icons so user can select one. Click handlers are already registered, so we just call rw.rollback.clickHandlers.[elID]();
         // Load Rollback current rev icons (rev14)
         let finalIconStr = "";
         rw.rollback.icons.forEach((icon,i) => {
             if (icon.enabled) return; // if icon is enabled, we can skip
+            if (icon.name == "More Options") return; // does nothing here, so not needed
+
             let elID = "rwRollback_" + i; // get the ID for the new icons
 
             // Establish element with all the info
             finalIconStr += `
-            <div id="${elID}" class="icon material-icons">
-                <span style="cursor: pointer;
-                            font-size:28px;
-                            padding-right:5px;
-                            color:${icon.color};"
-                onclick="window.parent.postMessage('rwRollbackBtn${elID}');">
-                    ${icon.icon}
-                </span>
+            <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;" onclick="window.parent.postMessage('rwRollbackBtn${elID}', '*');">
+                <span class="material-icons" style="padding-right:20px;color:${icon.color};">${icon.icon}</span>
+                <span ${(icon.name.length > 40 ? `style="font-size: 12px;"` : "")}>${icon.name}</span><!-- shrink if over a certain size so it doesn't overflow -->
             </div>
-            <div class="mdl-tooltip" for="${elID}">
-                ${icon.name} 
-            </div>
+            <hr style="margin:0"/>
             `;
 
             // Add click event handler
             addMessageHandler("rwRollbackBtn"+ elID, ()=>{
-                dialogEngine.closeDialog(); // close dialog
-                rw.rollback.clickHandlers[elID](); // send our callback
+                dialogEngine.closeDialog(()=>{// close dialog, then
+                    rw.rollback.clickHandlers[elID](); // send our callback
+                });
             });
         });
-
-        // Now show dialog - we don't need a special one
-        rw.ui.confirmDialog(`
-        <div style="width:410px;text-align:center;height:66px;overflow:auto;margin:auto;"> <!-- outer container for icons -->
-            ${finalIconStr}
-        </div>
-        `, "CLOSE", ()=>dialogEngine.closeDialog(),
-        "", ()=>{}, 25, true); // true here removes extra linebreaks
+        
+        // Now return HTML (rw16)
+        return finalIconStr;
     },
 
     "getRollbackrevID" : ()=>{ // Get the revision ID of what we want to rollback
         let isNLatest = $("#mw-diff-ntitle1").text().includes("Latest revision");
-        let isOLatest = $("#mw-diff-otitle1").text().includes("Latest revision");
+        let isOLatest = $("#mw-diff-otitle1").text().includes("Latest revision"); 
         if (isNLatest) {
             // Return the revID of the edit on the right
             return $('#mw-diff-ntitle1 > strong > a').attr('href').split('&')[1].split('=')[1];
@@ -394,7 +394,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         } else {
             // BUG!
             rw.ui.confirmDialog("A very weird error occured. (rollback getRollbackRevID failed via final else!)",
-            "REPORT BUG", ()=>rw.ui.sendFeedback("rollback getRollbackRevID failed via final else! related URL: "+ window.location.href) ,
+            "REPORT BUG", ()=>rw.ui.reportBug("rollback getRollbackRevID failed via final else! related URL: "+ window.location.href) ,
             "", ()=>{}, 0);
         }
     },
@@ -406,7 +406,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             // Fetch latest revision not by user
             rw.info.latestRevisionNotByUser(mw.config.get("wgRelevantPageName"), un, (content, summary, rID) => {
                 // Got it! Now open preview dialog
-
+               
                 // Add handler for when page loaded
                 let url = rw.wikiIndex + "?title="+ mw.config.get("wgRelevantPageName") +"&diff="+ rID +"&oldid="+ mw.util.getParamValue("diff") +"&diffmode=source#rollbackPreview";
                 redirect(url); // goto in current tab
@@ -415,11 +415,11 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
     },
 
     "apply" : (reason, callback, defaultWarnIndex)=> { // if callback set, no UW prompt will be shown, but a callback instead
-
+        
         // Now do
         // bug fix rev10, get revid from html
         // added rev13 if has rollback perms and set to use in settings, use that - prompt first time
-
+        
         // Show progress bar
         $("#rwCurrentRevRollbackBtns").hide();
         $("#rwRollbackInProgress").show();
@@ -430,19 +430,19 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         rw.info.isLatestRevision(mw.config.get("wgRelevantPageName"), rw.rollback.getRollbackrevID(), (un, crID)=>{
             // Set progress bar status
             // Set handlers for each method
-            let pseudoRollbackCallback = ()=>{ // pseudoRollback
+            let pseudoRollbackCallback = ()=>{ // pseudoRollback 
                 // Set progress
                 rw.rollback.progressBar(25);
                 // Fetch latest revision not by user
                 rw.info.latestRevisionNotByUser(mw.config.get("wgRelevantPageName"), un, (content, summary, rID, pID) => {
                     rw.rollback.progressBar(70, 70);
                     // Verify that pID is NOT the thing rev we want to rollback, else it's been overwritten
-                	if (pID == rw.rollback.getRollbackrevID()) {
-                		// looks like that there is a newer revision! redirect to it.
-                		rw.info.isLatestRevision(mw.config.get("wgRelevantPageName"), 0, ()=>{});
-                		return; // stop here.
+                    if (pID == rw.rollback.getRollbackrevID()) {
+                        // looks like that there is a newer revision! redirect to it.
+                        rw.info.isLatestRevision(mw.config.get("wgRelevantPageName"), 0, ()=>{});
+                        return; // stop here.
                     }
-
+                    
                     // Got it! Now set page content to summary
                     // Push UNDO using CSRF token
                     $.post(rw.wikiAPI, {
@@ -466,7 +466,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                             rw.visuals.toast.show("Sorry, there was an error, likely an edit conflict. Your rollback has not been applied.");
                         } else {
                             // Success!
-
+                            
                             // Hide progressbar (todo)
                             rw.rollback.progressBar(100);
 
@@ -483,7 +483,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                     });
                 });
             };
-
+            
             let rollbackCallback = ()=>{ // using rollback API
                 rw.rollback.progressBar(70, 70); // progress
                 // PUSH ROLLBACK
@@ -507,7 +507,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                             rw.visuals.toast.show("Sorry, there was an error, likely an edit conflict. Your rollback has not been applied.");
                         } else {
                             // Success!
-
+                            
                             rw.rollback.progressBar(100); // progress
 
                             // Wait a bit (100ms) to stop loadDialog glitch
@@ -596,12 +596,8 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             addMessageHandler("reason`*", rs=>rw.rollback.apply(rs.split("`")[1])); // When reason recieved, submit rollback
 
             // CREATE DIALOG
-            // MDL FULLY SUPPORTED HERE (container).
-            dialogEngine.create(mdlContainers.generateContainer(
-                rw.static.getHTML("rollbackReason", {
-                    reason: reason
-                })
-            , 500, 120)).showModal(); // 500x120 dialog, see rollbackReason.html for code
+            // MDL FULLY SUPPORTED HERE (container). 
+            dialogEngine.create(mdlContainers.generateContainer(`[[[[include rollbackReason.html]]]]`, 500, 120)).showModal(); // 500x120 dialog, see rollbackReason.html for code
         });
     },
 
@@ -613,12 +609,8 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         addMessageHandler("reason`*", rs=>rw.rollback.restore(revID, rs.split("`")[1])); // When reason recieved, submit rollback
 
         // CREATE DIALOG
-        // MDL FULLY SUPPORTED HERE (container).
-        dialogEngine.create(mdlContainers.generateContainer(
-            rw.static.getHTML("rollbackReason", {
-                reason: reason
-            })
-        , 500, 120)).showModal(); // 500x120 dialog, see rollbackReason.html for code
+        // MDL FULLY SUPPORTED HERE (container). 
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include rollbackReason.html]]]]`, 500, 120)).showModal(); // 500x120 dialog, see rollbackReason.html for code
     },
 
     "welcomeRevUsr" :() => {
@@ -634,7 +626,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
     // CONTRIBS PAGE
 
     "contribsPageIcons" : ()=>{ // Adds rollback/restore links
-
+        
         // For each (current) tag
         $("span.mw-uctop").each((i, el)=>{
             // Add rollback options (${i} inserts i at that point to ensure it is a unique ID)
@@ -665,8 +657,8 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         setTimeout(()=>{
             // Register all tooltips after 50ms (just some processing time)
             for (let item of document.getElementsByClassName("mdl-tooltip")) {
-                rw.visuals.register(item);
-            }
+                rw.visuals.register(item); 
+            } 
         },100);
     },
 
@@ -702,24 +694,24 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         let pageName =  $("#rw-currentRev"+ i).closest("li").find("a.mw-changeslist-date").attr("title");
         console.log(revID);
         console.log(pageName);
-
+        
         $("#rw-currentRev"+ i).html(
             `<span style="font-family:Roboto;color:green;">reverting...</span>`
         );
-
+        
         // Now verify is still latest
         rw.info.isLatestRevision(pageName, revID, un=>{
             // Is latest revision! Let's continue
-
+            
             // Overwrite function and values used on diff pages as we aren't on a diff page
-            rw.rollback.getRollbackrevID = ()=>{return revID;};
+            rw.rollback.getRollbackrevID = ()=>{return revID;}; 
             mw.config.values.wgRelevantPageName = pageName;
             rw.rollback.apply("vandalism (from contribs page)", ()=>{ // apply the rollback
                 // Rollback complete!
                 $("#rw-currentRev"+ i).html(
                     `<span style="font-family:Roboto;color:green;">reverted!</span>`
                 );
-            });
+            }); 
         }, ()=>{
             // Isn't the latest revision, set note to match
             $("#rw-currentRev"+ i).html(
@@ -740,24 +732,24 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             let pageName =  $("#rw-currentRev"+ i).closest("li").find("a.mw-changeslist-date").attr("title");
             console.log(revID);
             console.log(pageName);
-
+            
             $("#rw-currentRev"+ i).html(
                 `<span style="font-family:Roboto;color:green;">reverting...</span>`
             );
-
+            
             // Now verify is still latest
             rw.info.isLatestRevision(pageName, revID, un=>{
                 // Is latest revision! Let's continue
-
+                
                 // Overwrite function and values used on diff pages as we aren't on a diff page
-                rw.rollback.getRollbackrevID = ()=>{return revID;};
+                rw.rollback.getRollbackrevID = ()=>{return revID;}; 
                 mw.config.values.wgRelevantPageName = pageName;
                 rw.rollback.apply(reason + " (from contribs page)", ()=>{ // apply the rollback
                     // Rollback complete!
                     $("#rw-currentRev"+ i).html(
                         `<span style="font-family:Roboto;color:green;">reverted!</span>`
                     );
-                });
+                }); 
             }, ()=>{
                 // Isn't the latest revision, set note to match
                 $("#rw-currentRev"+ i).html(
@@ -767,37 +759,35 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         });
 
         // CREATE DIALOG
-        // MDL FULLY SUPPORTED HERE (container).
-        dialogEngine.create(mdlContainers.generateContainer(
-            rw.static.getHTML("rollbackReason", {
-                reason: reason
-            })
-        , 500, 120)).showModal(); // 500x120 dialog, see rollbackReason.html for code
+        // MDL FULLY SUPPORTED HERE (container). 
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include rollbackReason.html]]]]`, 500, 120)).showModal(); // 500x120 dialog, see rollbackReason.html for code   
     },
 
     "progressBar" : (progress, buffer) => {
         // Only if set and existing (bug)
         if ($("#rwRollbackInProgressBar").length < 1) return;
-
+        
         // Update the progress bar
         $("#rwRollbackInProgressBar")[0].MaterialProgress.setProgress(progress);
         $("#rwRollbackInProgressBar")[0].MaterialProgress.setBuffer(buffer);
     },
 
     "showRollbackDoneOps" : (un, warnIndex) => {
-        // Add click handlers
+        // Clear get hidden handler to stop errors in more options menu
+        rw.rollback.getDisabledHTMLandHandlers = ()=>{return "";}; // return w empty string
+        // Add click handlers 
         $("#RWRBDONEmrevPg").click(()=>rw.info.isLatestRevision(mw.config.get('wgRelevantPageName'), 0, ()=>{})); // go to latest revision
         $("#RWRBDONEnewUsrMsg").click(()=>rw.ui.newMsg(un)); // send message
         $("#RWRBDONEwelcomeUsr").click(()=>rw.quickTemplate.openSelectPack(un)); // quick template
-        $("#RWRBDONEwarnUsr").click(()=>rw.ui.beginWarn(false, un, mw.config.get("wgRelevantPageName"), null, null, null, (warnIndex != null ? warnIndex : null))); // new notice
+        $("#RWRBDONEwarnUsr").click(()=>rw.ui.beginWarn(false, un, mw.config.get("wgRelevantPageName"), null, null, null, (warnIndex != null ? warnIndex : null))); // Warn User
         $("#RWRBDONEreportUsr").click(()=>rw.ui.adminReportSelector(un)); // report to admin
 
         // Now perform default (if set)
         if ((rw.config.rwRollbackDoneOption != null) || (rw.config.rwRollbackDoneOption != "none")) $(`#${rw.config.rwRollbackDoneOption}`).click();
-
+        
         // Hides other icons and shows the rollback done options and also checks for defaults, also adds click handlers
         $("#rwRollbackInProgress").fadeOut(()=>{ // fade out - looks smoother
             $("#rwRollbackDoneIcons").fadeIn(); //show our icons
-        });
+        }); 
     }
 };

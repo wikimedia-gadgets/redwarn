@@ -1,16 +1,77 @@
-/*
-(c) Ed E 2020
-
-NOTICE: All cross-domain addresses in containers MUST BE ABSOLUTE (i.e https:// rather than //)
+/**
+* mdlContainers generates both HTML and blob containing all the libaries needed within RedWarn's dialog user interface
+*
+* @class mdlContainers
 */
+// NOTICE: All cross-domain addresses in containers MUST BE ABSOLUTE (i.e https:// rather than //)
 var mdlContainers = {
+    /**
+     * Appends the required themed script, link and style tags to the body HTML provided.
+     * @method generateHtml
+     * @param {string} innerContent HTML body
+     * @return {string} HTML content
+     * @extends mdlContainers
+     */
     "generateHtml" : innerContent => {
+
         let content = `
         <script src="https://redwarn.toolforge.org/cdn/js/jQuery.js"></script>
         <link href="https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese" rel="stylesheet">
         <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/materialicons.css">
         <script defer src="https://redwarn.toolforge.org/cdn/js/mdl.js"></script>
         <script src="https://redwarn.toolforge.org/cdn/js/dialogPolyfill.js"></script> <!-- firefox being dumb -->
+
+        <!-- expander element CSS -->
+        <style>
+        /* For the rotating expanders - also requires JS to trigger animation */
+        expander {
+            float: right;
+            margin-top: 5px;
+            margin-right: 25px;
+            transform-origin: center center;
+        }
+
+        expander.expanding {
+            animation: rotationIn 0.3s  ease-in-out;
+        }
+
+        expander.expanded {
+            transform: rotate(180deg);
+        }
+
+        expander.shrinking {
+            animation: rotationOut 0.3s  ease-in-out;
+        }
+
+        @keyframes rotationIn {
+            from {
+                    transform: rotate(0deg);            
+            }
+            to {
+                    transform: rotate(180deg);
+            }
+        }
+
+        @keyframes rotationOut {
+            from {
+                    transform: rotate(180deg);            
+            }
+            to {
+                    transform: rotate(0deg);
+            }
+        }
+
+        /* Collapsed divs */
+        div.collapsed {
+            transition: all 0.3s ease-in-out;
+            height: 0px;
+            overflow: hidden;
+        }
+
+        body {
+            scroll-behavior: smooth;
+        }
+        </style>
         `;
         
         // Themes
@@ -32,12 +93,82 @@ var mdlContainers = {
         </script>
         <!-- End material dropdown -->
         <body>
-        `+innerContent+`
+        ${rw.config.neopolitan != null ? `<!-- RedWarn tampering warning (on all dialogs, even after polish cow is gone) -->
+            <!-- RW tamper warning -->
+            <div style="
+                width: 240px;
+                margin: 0 auto;
+                background-color: #ffc4c4;
+                padding: 16px;
+                border-radius: 2px;
+                color: #9c0000;"> <!-- Warning -->
+                    <b>Attention:</b> Tampering with RedWarn's permission system without good reason is prohibited. If you are seeing this message, your account has been automatically
+                    flagged to RedWarn's team. We review abuse on a case by case basis. To dismiss this warning, remove all modifications and reset your RedWarn config manually at
+                    you redwarnConfig.js user subpage. If you haven't tampered with RedWarn, you may be seeing this message due to a bug. If so, please let us know ASAP.<br/>
+                    <a href="#" onclick="window.parent.postMessage('closeDialog');">Close dialog</a>
+                </div>
+            <br/><br/> <!-- show content if not tampered with -->
+            ` : innerContent} 
         </body>
+
+        <script>
+        // Expander element things
+        // ANIMATIONS ONLY for expanding elements
+        $("expander").each((i, el)=>{
+            // For each spinny expander, add a click handler for their parent
+            $(el).parent(".mdl-button").click(()=>{
+                // Check if not expanded already
+                if (!$(el).hasClass("expanded")) {
+                    // Expand
+                    $(el).addClass("expanding");
+
+                    // Expand attached div
+                    let col = $(\`#\${$(el).attr("expander-content-id")}\`)[0]; // get div element
+                    $(col).css("height", $(col).attr("targetHeight")); // expand
+                    // Scroll to
+                    $(el).parent(".mdl-button").parent("div").scrollTo(el, 250);
+                } else {
+                    // Shrink
+                    $(el).removeClass("expanded").addClass("shrinking");
+
+                    // Collapse attached div
+                    let col = $(\`#\${$(el).attr("expander-content-id")}\`)[0]; // get div element
+                    $(col).css("height", "0px"); // shrink
+                }
+            });
+
+            // When animation finishes
+            $(el).on("webkitAnimationEnd", ()=>{
+                if ($(el).hasClass("expanding")) {
+                    // Time to apply the expanded class to ensure it stays
+                    $(el).removeClass("expanding").addClass("expanded");
+                } else {
+                    $(el).removeClass("shrinking"); // just remove shrinking
+                }
+            });
+        });
+
+        // jQuery scroll
+        jQuery.fn.scrollTo = function(elem, speed) { 
+            $(this).animate({
+                scrollTop:  $(this).scrollTop() - $(this).offset().top + $(elem).offset().top 
+            }, speed == undefined ? 1000 : speed); 
+            return this; 
+        };
+        </script>
         `;
         return content; // return
     },
-
+    /**
+     * Generates an iFrame with the specified HTML content, width and height.
+     * @method generateContainer
+     * @param {string} innerContent HTML content
+     * @param {number} width width of iFrame
+     * @param {number} height height of iFrame
+     * @param {boolean} fill if set true will expand the iframe to the parent offset height and width when resized, essentially filling the page.
+     * @returns {string} iFrame HTML
+     * @extends mdlContainers
+     */
     "generateContainer" : function(innerContent, width, height, fill) { // fill sizes mdl containers in dialogEngine to ALWAYS be screen size
         if (fill) {
             // If fill mode on, fit to window
@@ -48,6 +179,6 @@ var mdlContainers = {
         }
 
         let url = URL.createObjectURL(new Blob([mdlContainers.generateHtml(innerContent)], { type: 'text/html' })); // blob url
-        return `<iframe width="`+width+`" height="`+height+`" src="`+ url + `" frameborder="0" scrolling="no" style="max-height: 100%;"></iframe>`;
+        return `<iframe width="${width}" height="${height}" src="${url}" frameborder="0" scrolling="no" style="max-height: 100%;"></iframe>`;
     }
-}
+};

@@ -10,7 +10,7 @@
             <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
             <label for="template" class="mdl-textfield__label">I'm requesting the speedy deletion of...</label>
             <ul for="template" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" style="overflow-y: scroll;height: 250px">
-                <!-- rw-arg:finalStr -->
+                `+ finalStr +`
             </ul>
         </div>
         <p id="desP">Please select a valid reason.</p>
@@ -51,9 +51,9 @@
                 }, {}); // form data
         // Submit it
         console.log(data);
-        window.parent.postMessage("csdR`"+data.reason + '`' + data.customInput); // Push upstairs
+        window.parent.postMessage("csdR\\\`"+data.reason + '\\\`' + data.customInput); // Push upstairs
         window.parent.postMessage("closeDialog"); // We done here.
-
+        
     }
     // Search reasons
     // Very basic but it works TODO: work on, including selecting best match on ENTER
@@ -70,12 +70,12 @@
 
     var refreshLevels = i=>{
         // Show the correct description and textbox
-        let speedyDeleteReasons = `/* rw-arg:speedyDeleteReasons */`;
+        let speedyDeleteReasons = `+ JSON.stringify(speedyDeleteReasons) +`;
         let reason = eval(i);
         console.log(reason);
         // Info box
         $("#desP").html('<span class="material-icons" style="float: left;padding-right: 5px; cursor:default;">info</span>' + reason.helpText);
-
+        
 
         if (reason.input != "") {
             // Requires a custom input, show
@@ -97,6 +97,6 @@
         } else {
             $("#textBcontainer").hide();
         }
-
+       
     }
 </script>

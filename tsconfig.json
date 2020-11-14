@@ -5,15 +5,21 @@
         "target": "es6",
         "outDir": "./build",
         "rootDir": "../",
+        "declaration": true,
+        "declarationDir": "./build",
         "jsx": "react",
         "jsxFactory": "TSX",
         "esModuleInterop": true
     },
     "include": [
-        "./src/**/*"
+        "./src/**/*.js",
+        "./src/**/*.jsx",
+        "./src/**/*.ts",
+        "./src/**/*.tsx"
     ],
     "exclude": [
-        "./node_modules",
-        "./src/old/**/*"
+        "./**/node_modules",
+        "./**/src/old/**/*",
+        "./**/src/**/libs/**/*"
     ]
 }

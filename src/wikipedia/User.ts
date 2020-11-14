@@ -7,11 +7,7 @@ import getMonthHeader from "../util/getMonthHeader";
 
 export default class User {
 
-    username : string;
-
-    constructor(username : string) {
-        this.username = username;
-    }
+    constructor(readonly username : string) {}
 
     async getUserPronouns(): Promise<GenderPronoun> {
         const r = await WikipediaAPI.get({

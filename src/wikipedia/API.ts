@@ -130,9 +130,10 @@ export default class WikipediaAPI {
                     latestRevisionId
                 }) by [[User:${latestUsername}]]`;
             }
-            if (RedWarnStore.dialogTracker.size > 0) {
-                return; // Do not redirect if a dialog is open.
-            }
+            // TODO think about how to fix this later
+            // if (RedWarnStore.dialogTracker.size > 0) {
+            //     return; // Do not redirect if a dialog is open.
+            // }
 
             // TODO: **config**
             // TODO page load notices

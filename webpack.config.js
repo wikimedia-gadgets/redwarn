@@ -13,7 +13,7 @@ module.exports = {
         extensions: [".ts", ".tsx", ".js"]
     },
     devServer: {
-        compress: true,
+        compress: false,
         port: 45991,
         hot: true
     },

@@ -1,7 +1,6 @@
 import {DefaultRedWarnStyles} from "./RedWarnStyles";
 import semanticDifference from "../util/semanticDifference";
 import Style from "./Style";
-import RWUIElement, {RWUIElementProperties, RWUIElements} from "../ui/RWUIElement";
 
 export default class StyleManager {
 
@@ -29,7 +28,7 @@ export default class StyleManager {
 
         // TODO Get style from configuration and use that as the style
         this.activeStyle =
-            this.styles.find(v => v.name === this.defaultStyle) ??
+            this.styles.find(v => v.name === this.defaultStyle) ?? // switch to config read
             this.styles.find(v => v.name === this.defaultStyle) ??
             null;
 
@@ -83,7 +82,6 @@ export default class StyleManager {
             }
 
             // Check
-
             finalStyles = Object.values(styleVersions);
         }
 

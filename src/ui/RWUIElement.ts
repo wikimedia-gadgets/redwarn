@@ -1,17 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import {RWUIDialog} from "./RWUIDialog";
+export interface RWUIElementProperties {}
 
-export type RWUIElementProperties = Record<string, any>;
+/**
+ * The RWUIElement is the basis of all elements used by RedWarn. The idea behind
+ * RWUIElement is to standardize UI elements (buttons, radios, sliders, etc.)
+ * while also making a system flexible enough to handle styling and custom
+ * elements.
+ */
+export default class RWUIElement {
 
-export default abstract class RWUIElement<PropertiesType extends RWUIElementProperties> {
+    public constructor(readonly properties : RWUIElementProperties) { }
 
-    public constructor(readonly properties : PropertiesType) { }
-
-    abstract render() : Element;
+    /**
+     * Renders the element.
+     */
+    render() : Element {
+        throw new Error("Illegal attempt made to render the base element.");
+    }
 
 }
-
-export const RWUIElements = {
-    [RWUIDialog.elementName]: RWUIDialog.constructor
-};

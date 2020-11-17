@@ -3,7 +3,7 @@ import {
     RedWarnHook,
     RedWarnHookEventTypes
 } from "../event/RedWarnHookEvent";
-import RWUIElement, {RWUIElements} from "../ui/RWUIElement";
+import {RWUIElements} from "../ui/RWUI";
 
 type URLString = string;
 

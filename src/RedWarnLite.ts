@@ -15,13 +15,15 @@ import Dependencies from "./ui/Dependencies";
 import RedWarnHooks from "./event/RedWarnHooks";
 import WikipediaAPI from "./wikipedia/API";
 import StyleManager from "./styles/StyleManager";
-import {RWUIDialog, RWUIDialogActionType} from "./ui/RWUIDialog";
-import { initializeStore } from "./data/RedWarnStore";
+import RedWarnStorage from "./data/RedWarnStore";
 
-(async () => {
+console.log("Starting RedWarn...");
+$(document).ready(async () => {
+    console.log("Initializing store...");
     // Initialize RedWarn store.
-    initializeStore();
+    RedWarnStorage.initializeStore();
 
+    console.log("Loading style definitions...");
     // Load style definitions first.
     StyleManager.initialize();
 
@@ -47,21 +49,23 @@ import { initializeStore } from "./data/RedWarnStore";
     // Initialize components here.
     // As much as possible, each component should be its own class to make everything
     // organized.
-    const a = StyleManager.activeStyle.classMap["rwDialog"]({
-        title: "Test Dialog",
-        actions: [
-            {
-                type: RWUIDialogActionType.Finish,
-                text: "A",
-                action: () => {alert("A");}
-            },
-            {
-                type: RWUIDialogActionType.Execute,
-                text: "B",
-                action: () => {alert("A");}
-            }
-        ]
-    });
-    (a as RWUIDialog).show();
 
-})();
+    // Testing code for the dialog and style system.
+
+    // const a = new RWUI.Dialog({
+    //     title: "Test Dialog",
+    //     actions: [
+    //         {
+    //             data: "A",
+    //             action: () => {alert("A");}
+    //         },
+    //         {
+    //             data: "B",
+    //             action: () => {alert("A");}
+    //         }
+    //     ]
+    // });
+
+    // console.log(await (a as RWUIDialog).show());
+
+});

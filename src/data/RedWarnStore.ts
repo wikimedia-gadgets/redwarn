@@ -4,28 +4,36 @@ import { APIStore, EmptyAPIStore } from "../wikipedia/API";
 
 export abstract class StyleStorage {}
 
-export class RedWarnStorage {
+/**
+ * This is a class that handles the RedWarnStore. You might be looking
+ * for {@link RedWarnStore} instead.
+ */
+export default class RedWarnStorage {
 
     // Initializations
-    public dependencies: Dependency[] = [];
+    public static dependencies: Dependency[] = [];
 
     // Worker objects
-    public random: Chance.Chance = new Chance();
+    public static random: Chance.Chance = new Chance();
 
     // API
-    public APIStore: APIStore = EmptyAPIStore;
+    public static APIStore: APIStore = EmptyAPIStore;
 
     // Wiki automated config
-    public wikiBase: string = mw.config.get("wgServer");
-    public wikiIndex: string = mw.config.get("wgServer") + mw.config.get("wgScript");
-    public wikiAPI = `${mw.config.get("wgServer") + mw.config.get("wgScriptPath")}/api.php`;
-    public wikiID: string = mw.config.get("wgWikiID");
+    public static wikiBase: string = mw.config.get("wgServer");
+    public static wikiIndex: string = mw.config.get("wgServer") + mw.config.get("wgScript");
+    public static wikiAPI = `${mw.config.get("wgServer") + mw.config.get("wgScriptPath")}/api.php`;
+    public static wikiID: string = mw.config.get("wgWikiID");
 
-    public styleStorage : StyleStorage = null;
-    public windowFocused = false;
+    public static styleStorage : StyleStorage = null;
+    public static windowFocused = false;
 
-    public registerDependency(dependency : Dependency) : void {
+    public static registerDependency(dependency : Dependency) : void {
         this.dependencies.push(dependency);
+    }
+
+    public static initializeStore() : void {
+        window.RedWarnStore = RedWarnStorage;
     }
 
 }
@@ -40,16 +48,10 @@ declare global {
     }
 }
 
-export function initializeStore() : void {
-    window.RedWarnStore = new RedWarnStorage();
-}
-
 window.addEventListener("blur", () => {
-    window.RedWarnStore.windowFocused = false;
+    RedWarnStorage.windowFocused = false;
 });
 
 window.addEventListener("focus", () => {
-    window.RedWarnStore.windowFocused = true;
+    RedWarnStorage.windowFocused = true;
 });
-
-export default window.RedWarnStore;

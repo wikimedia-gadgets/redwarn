@@ -1,4 +1,5 @@
-# redwarn-web (Development Branch)
+# redwarn-web
+
 Wikipedia editing tool.
 
 ## For full documentation, bugs, features and more info, see [WP:REDWARN](https://en.wikipedia.org/wiki/WP:REDWARN) on Wikipedia

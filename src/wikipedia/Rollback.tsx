@@ -1,3 +1,4 @@
+import { linearProgress } from "material-components-web";
 import { BaseProps, h as TSX } from "tsx-dom";
 import RedWarnStore from "../data/RedWarnStore";
 import redirect from "../util/redirect";
@@ -140,9 +141,25 @@ export default class Rollback {
                 <span id="rwRollbackInProgress" style="display:none;">
                     <div
                         id="rwRollbackInProgressBar"
-                        class="mdl-progress mdl-js-progress"
+                        role="progressbar"
+                        class="mdc-linear-progress"
+                        aria-label="RedWarn Rollback Progress Bar"
+                        aria-valuemin="0"
+                        aria-valuemax="1"
+                        aria-valuenow="0"
                         style="width:300px; display: block; margin-left: auto; margin-right: auto;"
-                    ></div>
+                    >
+                        <div class="mdc-linear-progress__buffer">
+                            <div class="mdc-linear-progress__buffer-bar"></div>
+                            <div class="mdc-linear-progress__buffer-dots"></div>
+                        </div>
+                        <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+                            <span class="mdc-linear-progress__bar-inner"></span>
+                        </div>
+                        <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+                            <span class="mdc-linear-progress__bar-inner"></span>
+                        </div>
+                    </div>
                     <div style="height:5px"></div>
                     {/* <!-- spacer --> */}
                     <span style="font-family: Roboto;font-size: 16px;">
@@ -262,17 +279,20 @@ export default class Rollback {
             rw.visuals.register($("#rwRollbackInProgressBar")[0]);
         },100); */
     }
+
     static async rollback(
         reason: string,
         defaultWarnIndex: number
     ): Promise<void> {
-        throw new Error("Method not implemented.");
+        // Show progress bar
+        $("#rwCurrentRevRollbackBtns").hide();
+        $("#rwRollbackInProgress").show();
     }
 
     static getDisabledHTMLandHandlers(): HTMLElement[] {
         // Open a new dialog with all the disabled icons so user can select one. Click handlers are already registered, so we just call rw.rollback.clickHandlers.[elID]();
         // Load Rollback current rev icons (rev14)
-        const finalIconStr = [];
+        const finalIconStr: HTMLElement[] = [];
         RollbackIcons.forEach((icon, i) => {
             if (icon.enabled) return; // if icon is enabled, we can skip
             if (icon.name == "More Options") return; // does nothing here, so not needed
@@ -285,7 +305,12 @@ export default class Rollback {
                     <div
                         class="mdl-button mdl-js-button"
                         style="width:100%; text-align: left;"
-                        onclick={`window.parent.postMessage('rwRollbackBtn${elID}', '*');`}
+                        onClick={() =>
+                            window.parent.postMessage(
+                                `rwRollbackBtn${elID}`,
+                                "*"
+                            )
+                        }
                     >
                         <span
                             class="material-icons"
@@ -306,36 +331,51 @@ export default class Rollback {
             );
 
             // Add click event handler
-            // TODO addMessageHandler dialog
-            /* addMessageHandler("rwRollbackBtn" + elID, () => {
-                dialogEngine.closeDialog(() => {
-                    // close dialog, then
-                    rw.rollback.clickHandlers[elID](); // send our callback
-                });
-            }); */
+            // TODO dialog
+            RedWarnStore.messageHandler.addMessageHandler(
+                "rwRollbackBtn" + elID,
+                () => {
+                    /* dialogEngine.closeDialog(() => {
+                        // close dialog, then
+                        rw.rollback.clickHandlers[elID](); // send our callback
+                    }); */
+                }
+            );
         });
 
         // Now return HTML (rw16)
         return finalIconStr;
     }
 
-    static showRollbackDoneOps(un: string, warnIndex: number) {
+    private static progressBarElement = new linearProgress.MDCLinearProgress(
+        $("#rwRollbackInProgressBar")[0]
+    );
+    static progressBar(progress: number, buffer: number): void {
+        if ($("#rwRollbackInProgressBar").length < 1) return;
+
+        // Update the progress bar
+        this.progressBarElement.progress = progress;
+        this.progressBarElement.buffer = buffer;
+    }
+
+    static showRollbackDoneOps(un: string, warnIndex: number): void {
         // Clear get hidden handler to stop errors in more options menu
-        rw.rollback.getDisabledHTMLandHandlers = () => {
-            return "";
+        this.getDisabledHTMLandHandlers = () => {
+            return [];
         }; // return w empty string
         // Add click handlers
         $("#RWRBDONEmrevPg").click(() =>
-            rw.info.isLatestRevision(
+            WikipediaAPI.isLatestRevision(
                 mw.config.get("wgRelevantPageName"),
                 0,
                 () => {}
             )
         ); // go to latest revision
         $("#RWRBDONEnewUsrMsg").click(() => rw.ui.newMsg(un)); // send message
-        $("#RWRBDONEwelcomeUsr").click(() =>
-            rw.quickTemplate.openSelectPack(un)
-        ); // quick template
+        $("#RWRBDONEwelcomeUsr").click(() => {
+            // TODO quick template
+            /* rw.quickTemplate.openSelectPack(un) */
+        }); // quick template
         $("#RWRBDONEwarnUsr").click(() =>
             rw.ui.beginWarn(
                 false,

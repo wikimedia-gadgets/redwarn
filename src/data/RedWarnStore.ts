@@ -1,11 +1,11 @@
 import Chance from "chance";
+import MessageHandler from "../event/MessageHandler";
 import { Dependency } from "../ui/Dependencies";
 import { APIStore, EmptyAPIStore } from "../wikipedia/API";
 
 export abstract class StyleStorage {}
 
 export class RedWarnStorage {
-
     // Initializations
     public dependencies: Dependency[] = [];
 
@@ -17,17 +17,21 @@ export class RedWarnStorage {
 
     // Wiki automated config
     public wikiBase: string = mw.config.get("wgServer");
-    public wikiIndex: string = mw.config.get("wgServer") + mw.config.get("wgScript");
-    public wikiAPI = `${mw.config.get("wgServer") + mw.config.get("wgScriptPath")}/api.php`;
+    public wikiIndex: string =
+        mw.config.get("wgServer") + mw.config.get("wgScript");
+    public wikiAPI = `${
+        mw.config.get("wgServer") + mw.config.get("wgScriptPath")
+    }/api.php`;
     public wikiID: string = mw.config.get("wgWikiID");
 
-    public styleStorage : StyleStorage = null;
+    public styleStorage: StyleStorage = null;
     public windowFocused = false;
 
-    public registerDependency(dependency : Dependency) : void {
+    public registerDependency(dependency: Dependency): void {
         this.dependencies.push(dependency);
     }
 
+    public messageHandler: MessageHandler = new MessageHandler();
 }
 
 // We're exposing the RedWarn storage for the ones who want to tinker with
@@ -40,7 +44,7 @@ declare global {
     }
 }
 
-export function initializeStore() : void {
+export function initializeStore(): void {
     window.RedWarnStore = new RedWarnStorage();
 }
 

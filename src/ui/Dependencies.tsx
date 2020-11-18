@@ -1,5 +1,6 @@
 import { h as TSX } from "tsx-dom";
 import RedWarnStore from "../data/RedWarnStore";
+import StyleManager from "../styles/StyleManager";
 
 export interface Dependency {
     type: "style" | "script";
@@ -12,9 +13,15 @@ export default class Dependencies {
      * Resolves all dependencies from {@link RedWarnStore}.
      */
     static async resolve(): Promise<void> {
-        const headElements = Dependencies.buildDependencyElements(
-            RedWarnStore.dependencies
-        );
+        console.log("Building dependencies...");
+        const headElements = [
+            ...Dependencies.buildDependencyElements(RedWarnStore.dependencies),
+            ...Dependencies.buildDependencyElements(
+                StyleManager.activeStyle.dependencies
+            ),
+        ];
+
+        console.log(`Found ${headElements.length} dependencies.`);
 
         document.head.append(...headElements);
         await Promise.all(headElements.map((e) => e.promise));
@@ -73,6 +80,10 @@ export default class Dependencies {
     ): (HTMLElement & { promise: Promise<boolean> })[] {
         const elements: (HTMLElement & { promise: Promise<boolean> })[] = [];
         for (const dependency of depsList) {
+            console.log(
+                `Loading ${dependency.type} dependency: ${dependency.src}`
+            );
+
             elements.push(this.buildDependency(dependency));
         }
         return elements;

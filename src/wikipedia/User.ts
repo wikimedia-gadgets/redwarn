@@ -175,7 +175,7 @@ export default class User {
 
     async quickWelcome(): Promise<void> {
         const isIp = mw.util.isIPAddress(this.username);
-        this.addToUserTalk(
+        await this.addToUserTalk(
             `\n${isIp ? RW_WELCOME_IP : RW_WELCOME} ${RW_SIG}\n`,
             false,
             isIp ? "Welcome! (IP)" : "Welcome!"

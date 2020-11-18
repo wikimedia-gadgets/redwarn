@@ -18,7 +18,7 @@ export default class Watch {
     static async toggle(): Promise<void> {
         if (!this.active) {
             if (Notification.permission !== "granted") {
-                Notification.requestPermission();
+                await Notification.requestPermission();
             }
 
             $("#rwSpyIcon").css("color", "green");

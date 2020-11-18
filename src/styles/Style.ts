@@ -1,6 +1,6 @@
 import { Dependency } from "../ui/Dependencies";
 import { RedWarnHook, RedWarnHookEventTypes } from "../event/RedWarnHookEvent";
-import { RWUIElements } from "../ui/RWUIElement";
+import { RWUIElements } from "../ui/RWUI";
 
 type URLString = string;
 

@@ -1,16 +1,7 @@
-import MaterialDialog from "./ui/MaterialDialog";
-import { RWUIDialog, RWUIDialogID } from "../../ui/RWUIDialog";
+import MaterialAlertDialog from "./ui/MaterialAlertDialog";
 import Style from "../Style";
-import RedWarnStore from "../../data/RedWarnStore";
 import MaterialPreInitializationHooks from "./hooks/MaterialPreInitializationHooks";
-
-export class MaterialStyleStorage {
-    // Caches
-    dialogTracker: Map<RWUIDialogID, RWUIDialog> = new Map<
-        RWUIDialogID,
-        RWUIDialog
-    >();
-}
+import { MaterialStyleStorage } from "./storage/MaterialStyleStorage";
 
 const MaterialStyle: Style = {
     name: "material",
@@ -20,6 +11,7 @@ const MaterialStyle: Style = {
         "en-US": {
             displayName: "Material",
             author: ["The RedWarn Contributors", "Google, Inc."],
+            // \u2014 is an emdash
             description:
                 "RedWarn's classic look-and-feel \u2014 an implementation of Google's Material Design.",
 
@@ -37,21 +29,23 @@ const MaterialStyle: Style = {
             src:
                 "https://redwarn-lite.wmcloud.org/static/styles/Material-Icons.css",
         },
+        {
+            type: "style",
+            id: "mdc-styles",
+            src:
+                "https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.css",
+        },
     ],
 
     storage: new MaterialStyleStorage(),
 
     classMap: {
-        rwDialog: MaterialDialog.constructor,
+        rwDialog: MaterialAlertDialog,
     },
 
     hooks: {
         preinit: [MaterialPreInitializationHooks],
     },
 };
-
-export function getMaterialStorage(): MaterialStyleStorage {
-    return RedWarnStore.styleStorage as MaterialStyleStorage;
-}
 
 export default MaterialStyle;

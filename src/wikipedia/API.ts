@@ -147,7 +147,11 @@ export default class WikipediaAPI {
             // TODO: **config**
             // TODO page load notices
             redirect(
-                WikipediaURL.getDiff(page, latestRevisionId, parentRevisionId)
+                WikipediaURL.getDiffUrl(
+                    page,
+                    latestRevisionId,
+                    parentRevisionId
+                )
             );
         }
     }
@@ -169,7 +173,7 @@ export default class WikipediaAPI {
         if (foundRevision == null) {
             // Probably no other edits. Redirect to history page and show the notice
             // TODO page load notices
-            redirect(WikipediaURL.getHistory(name));
+            redirect(WikipediaURL.getHistoryUrl(name));
             return;
         }
 

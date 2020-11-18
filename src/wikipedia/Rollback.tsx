@@ -5,8 +5,15 @@ import { BaseProps, h as TSX } from "tsx-dom";
 import RedWarnStore from "../data/RedWarnStore";
 import redirect from "../util/redirect";
 import WikipediaAPI from "./API";
+import Revision from "./Revision";
 
 export default class Rollback {
+    static welcomeRevUser(): void {
+        throw new Error("Method not implemented.");
+    }
+    static selectFromDisabled(): void {
+        throw new Error("Method not implemented.");
+    }
     static async promptRestoreReason(reason: string): Promise<void> {
         throw new Error("Method not implemented.");
     }
@@ -60,13 +67,13 @@ export default class Rollback {
                 redirect(url); // goto in current tab
             });
         }); */
-        const un = await WikipediaAPI.isLatestRevision(
+        const { user } = await WikipediaAPI.isLatestRevision(
             mw.config.get("wgRelevantPageName"),
             this.getRollbackRevId()
         );
         const { revid } = await WikipediaAPI.latestRevisionNotByUser(
             mw.config.get("wgRelevantPageName"),
-            un
+            user
         );
         const url =
             RedWarnStore.wikiIndex +
@@ -211,7 +218,10 @@ export default class Rollback {
                 </span>
                 <br />
                 <div style="height:5px"></div>
-                <button
+            </span>
+        );
+
+        /* <button
                     class="mdc-icon-button material-icons"
                     aria-label="Go to latest revision"
                     data-tooltip-id="RWRBDONEmrevPgT"
@@ -229,76 +239,37 @@ export default class Rollback {
                         Go to latest revision
                     </div>
                 </div>
-                &nbsp; &nbsp;
+                &nbsp; &nbsp; */
+
+        RollbackDoneIcons.forEach((icon) => {
+            const button = (
                 <button
                     class="mdc-icon-button material-icons"
-                    aria-label="New Message"
-                    data-tooltip-id="RWRBDONEnewUsrMsgT"
-                    id="RWRBDONEnewUsrMsg"
+                    aria-label={icon.name}
+                    data-tooltip-id={`rwRBDoneIcon_${icon.id}T`}
+                    id={`rwRBDoneIcon_${icon.id}`}
                 >
-                    send
+                    {icon.icon}
                 </button>
+            );
+            const mdcRipple = new MDCRipple(button);
+            mdcRipple.initialize();
+
+            const tooltip = (
                 <div
-                    id="RWRBDONEnewUsrMsgT"
+                    id={`rwRBDoneIcon_${icon.id}T`}
                     class="mdc-tooltip"
                     role="tooltip"
                     aria-hidden="true"
                 >
-                    <div class="mdc-tooltip__surface">New Message</div>
+                    <div class="mdc-tooltip__surface">{icon.name}</div>
                 </div>
-                &nbsp; &nbsp;
-                <button
-                    class="mdc-icon-button material-icons"
-                    aria-label="Quick Template"
-                    data-tooltip-id="RWRBDONEwelcomeUsrT"
-                    id="RWRBDONEwelcomeUsr"
-                >
-                    library_add
-                </button>
-                <div
-                    id="RWRBDONEwelcomeUsr"
-                    class="mdc-tooltip"
-                    role="tooltip"
-                    aria-hidden="true"
-                >
-                    <div class="mdc-tooltip__surface">Quick Template</div>
-                </div>
-                &nbsp; &nbsp;
-                <button
-                    class="mdc-icon-button material-icons"
-                    aria-label="Warn User"
-                    data-tooltip-id="RWRBDONEwarnUsrT"
-                    id="RWRBDONEwarnUsr"
-                >
-                    report
-                </button>
-                <div
-                    id="RWRBDONEwarnUsrT"
-                    class="mdc-tooltip"
-                    role="tooltip"
-                    aria-hidden="true"
-                >
-                    <div class="mdc-tooltip__surface">Warn User</div>
-                </div>
-                &nbsp; &nbsp;
-                <button
-                    class="mdc-icon-button material-icons"
-                    aria-label="Report to Admin"
-                    data-tooltip-id="RWRBDONEreportUsrT"
-                    id="RWRBDONEreportUsr"
-                >
-                    gavel
-                </button>
-                <div
-                    id="RWRBDONEreportUsrT"
-                    class="mdc-tooltip"
-                    role="tooltip"
-                    aria-hidden="true"
-                >
-                    <div class="mdc-tooltip__surface">Report to Admin</div>
-                </div>
-            </span>
-        );
+            );
+            const mdcTooltip = new MDCTooltip(tooltip);
+            mdcTooltip.initialize();
+
+            rollbackDoneIcons.append(button, tooltip, "&nbsp; &nbsp;");
+        });
 
         currentRevIcons = (
             <div>
@@ -357,6 +328,12 @@ export default class Rollback {
             rw.visuals.register($("#rwRollbackInProgressBar")[0]);
         },100); */
     }
+    static async promptRollbackReason(summary: string): Promise<void> {
+        await WikipediaAPI.isLatestRevision(
+            mw.config.get("wgRelevantPageName"),
+            this.getRollbackRevId()
+        );
+    }
 
     static async rollback(
         reason: string,
@@ -365,6 +342,13 @@ export default class Rollback {
         // Show progress bar
         $("#rwCurrentRevRollbackBtns").hide();
         $("#rwRollbackInProgress").show();
+
+        this.progressBar(0, 0);
+
+        const rev = await WikipediaAPI.isLatestRevision(
+            mw.config.get("wgRelevantPageName"),
+            this.getRollbackRevId()
+        );
     }
 
     static getDisabledHTMLandHandlers(): HTMLElement[] {
@@ -439,38 +423,31 @@ export default class Rollback {
         this.getDisabledHTMLandHandlers = () => {
             return [];
         }; // return w empty string
-        // Add click handlers
-        $("#RWRBDONEmrevPg").click(() =>
-            WikipediaAPI.isLatestRevision(
-                mw.config.get("wgRelevantPageName"),
-                0,
-                () => {}
-            )
-        ); // go to latest revision
-        $("#RWRBDONEnewUsrMsg").click(() => rw.ui.newMsg(un)); // send message
-        $("#RWRBDONEwelcomeUsr").click(() => {
-            // TODO quick template
-            /* rw.quickTemplate.openSelectPack(un) */
-        }); // quick template
-        $("#RWRBDONEwarnUsr").click(() =>
-            rw.ui.beginWarn(
-                false,
-                un,
-                mw.config.get("wgRelevantPageName"),
-                null,
-                null,
-                null,
-                warnIndex != null ? warnIndex : null
-            )
-        ); // Warn User
-        $("#RWRBDONEreportUsr").click(() => rw.ui.adminReportSelector(un)); // report to admin
 
+        function clickHandlerFactory(
+            handler: (username: string, warnIndex: number) => any
+        ) {
+            return function () {
+                handler(un, warnIndex);
+            };
+        }
+
+        // Add click handlers
+
+        RollbackDoneIcons.forEach((icon) => {
+            $(`#rwRBDoneIcon_${icon.id}`).on(
+                "click",
+                clickHandlerFactory(icon.action)
+            );
+        });
+
+        // TODO config
         // Now perform default (if set)
-        if (
+        /*         if (
             rw.config.rwRollbackDoneOption != null ||
             rw.config.rwRollbackDoneOption != "none"
         )
-            $(`#${rw.config.rwRollbackDoneOption}`).click();
+            $(`#${rw.config.rwRollbackDoneOption}`).click(); */
 
         // Hides other icons and shows the rollback done options and also checks for defaults, also adds click handlers
         $("#rwRollbackInProgress").fadeOut(() => {
@@ -746,6 +723,69 @@ export const RollbackIcons: RollbackIcon[] = [
         promptReason: false, // add extra info?
         summary: "[[WP:SANDBOX|test edits]]", // Set summary
         ruleIndex: 2, // used for autowarn
+    },
+];
+
+export interface RollbackDoneIcon {
+    name: string;
+    icon: string;
+    action: (username: string, warnIndex: number) => any;
+    id: string;
+}
+export const RollbackDoneIcons: RollbackDoneIcon[] = [
+    {
+        name: "Go to latest revision",
+        icon: "watch_later",
+        action: (): Promise<Revision> =>
+            WikipediaAPI.isLatestRevision(
+                mw.config.get("wgRelevantPageName"),
+                "0"
+            ),
+        id: "latestRev",
+    },
+    {
+        name: "New Message",
+        icon: "send",
+        action: (): void => {
+            // TODO new message
+            /* rw.ui.newMessage(un) */
+        },
+        id: "newMsg",
+    },
+    {
+        name: "Quick Template",
+        icon: "library_add",
+        action: (): void => {
+            // TODO quick template
+            /* rw.quickTemplate.openSelectPack(un) */
+        },
+        id: "quickTemplate",
+    },
+    {
+        name: "Warn User",
+        icon: "report",
+        action: (): void => {
+            // TODO auto warn
+            /* rw.ui.beginWarn(
+                false,
+                un,
+                mw.config.get("wgRelevantPageName"),
+                null,
+                null,
+                null,
+                warnIndex != null ? warnIndex : null
+            ) */
+        },
+        id: "warnUser",
+    },
+    {
+        name: "Report to Admin",
+        icon: "gavel",
+        action: (): void => {
+            // TODO admin report
+            /* rw.ui.adminReportSelector(un) */
+        },
+        id: "reportUser",
     },
 ];
 

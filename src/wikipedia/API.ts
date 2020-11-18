@@ -110,25 +110,31 @@ export default class WikipediaAPI {
 
     /**
      * Checks if the given revision ID is the latest revision of the page.
+     * @returns The latest revision
      */
     static async isLatestRevision(
         page: string,
         revisionId: string,
         noRedirect = false
-    ): Promise<string> {
+    ): Promise<Revision> {
         const revisions = await this.api.get({
             action: "query",
             prop: "revisions",
             titles: mw.util.wikiUrlencode(page),
             rvslots: "*",
             rvprop: ["ids", "user"],
+            rvlimit: 1,
         });
 
         const latestRevisionId = revisions.query.pages[0].revisions[0].revid;
         const parentRevisionId = revisions.query.pages[0].revisions[0].parentid;
         const latestUsername = revisions.query.pages[0].revisions[0].user;
         if (latestRevisionId == revisionId) {
-            return latestUsername;
+            return {
+                user: latestUsername,
+                revid: latestRevisionId,
+                parentid: parentRevisionId,
+            };
         } else {
             if (noRedirect) {
                 throw `Not latest revision! Latest revision (ID ${latestRevisionId}) by [[User:${latestUsername}]]`;

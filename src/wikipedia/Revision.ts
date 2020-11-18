@@ -1,8 +1,8 @@
 interface Revision {
-    content: string;
-    summary: string;
-    revid: number;
-    parentid: number;
+    content?: string;
+    summary?: string;
+    revid?: number;
+    parentid?: number;
     user?: string;
 }
 

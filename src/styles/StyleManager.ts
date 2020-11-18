@@ -1,25 +1,23 @@
-import {DefaultRedWarnStyles} from "./RedWarnStyles";
+import { DefaultRedWarnStyles } from "./RedWarnStyles";
 import semanticDifference from "../util/semanticDifference";
 import Style from "./Style";
-import RWUIElement, {RWUIElementProperties, RWUIElements} from "../ui/RWUIElement";
 
 export default class StyleManager {
-
     public static readonly defaultStyle = "material";
 
     public static ready = false;
 
-    static get styles() : Style[] {
+    static get styles(): Style[] {
         return window.RedWarnStyles;
     }
 
-    static set styles(newStyles : Style[]) {
+    static set styles(newStyles: Style[]) {
         window.RedWarnStyles = newStyles;
     }
 
-    static activeStyle : Style;
+    static activeStyle: Style;
 
-    static initialize() : void {
+    static initialize(): void {
         if (this.styles == null) {
             this.styles = DefaultRedWarnStyles;
         } else {
@@ -29,17 +27,18 @@ export default class StyleManager {
 
         // TODO Get style from configuration and use that as the style
         this.activeStyle =
-            this.styles.find(v => v.name === this.defaultStyle) ??
-            this.styles.find(v => v.name === this.defaultStyle) ??
+            this.styles.find((v) => v.name === this.defaultStyle) ??
+            this.styles.find((v) => v.name === this.defaultStyle) ??
             null;
 
         if (this.activeStyle == null) {
-            mw.notify("RedWarns styles loading failed. You might have loaded no styles at all.");
-        } else
-            this.ready = true;
+            mw.notify(
+                "RedWarns styles loading failed. You might have loaded no styles at all."
+            );
+        } else this.ready = true;
     }
 
-    static cleanStyles() : void {
+    static cleanStyles(): void {
         let finalStyles = this.styles;
 
         for (const style of this.styles) {
@@ -54,7 +53,7 @@ export default class StyleManager {
             }
 
             // Version collision checking
-            const styleVersions : Record<string, Style>= {};
+            const styleVersions: Record<string, Style> = {};
 
             if (styleVersions[style.name] == null)
                 styleVersions[style.name] = style;
@@ -62,21 +61,30 @@ export default class StyleManager {
                 // -1 means the style being loaded is older than the current.
                 // 0 means they styles are of the same version.
                 // 1 means they style being loaded is newer than the current.
-                switch (semanticDifference(style.version, styleVersions[style.name].version)) {
+                switch (
+                    semanticDifference(
+                        style.version,
+                        styleVersions[style.name].version
+                    )
+                ) {
                     case -1:
-                        mw.notify(`Older version of style "${style.name}" (${
-                            style.version
-                        }) found. Skipping.`);
+                        mw.notify(
+                            `Older version of style "${style.name}" (${style.version}) found. Skipping.`
+                        );
                         break;
                     case 0:
-                        mw.notify(`Same version of style "${style.name}" (${
-                            style.version
-                        }). Make sure you're not loading a style twice.`);
+                        mw.notify(
+                            `Same version of style "${style.name}" (${style.version}). Make sure you're not loading a style twice.`
+                        );
                         break;
                     case 1:
-                        mw.notify(`Newer version of style "${style.name}" (${
-                            style.version
-                        }) found. Discarding old version (${styleVersions[style.name].version}).`);
+                        mw.notify(
+                            `Newer version of style "${style.name}" (${
+                                style.version
+                            }) found. Discarding old version (${
+                                styleVersions[style.name].version
+                            }).`
+                        );
                         styleVersions[style.name] = style;
                         break;
                 }
@@ -89,5 +97,4 @@ export default class StyleManager {
 
         this.styles = finalStyles;
     }
-
 }

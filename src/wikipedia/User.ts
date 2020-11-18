@@ -1,13 +1,17 @@
-import {Gender, GenderDict, GenderPronoun} from "./Gender";
-import {getHighestLevel, WarningAnalysis} from "./WarningLevel";
-import {RW_LINK_SUMMARY, RW_SIG, RW_WELCOME, RW_WELCOME_IP} from "../data/RedWarnConstants";
+import { Gender, GenderDict, GenderPronoun } from "./Gender";
+import { getHighestLevel, WarningAnalysis } from "./WarningLevel";
+import {
+    RW_LINK_SUMMARY,
+    RW_SIG,
+    RW_WELCOME,
+    RW_WELCOME_IP,
+} from "../data/RedWarnConstants";
 import WikipediaAPI from "./API";
 import regexEscape from "../util/regexEscape";
 import getMonthHeader from "../util/getMonthHeader";
 
 export default class User {
-
-    constructor(readonly username : string) {}
+    constructor(readonly username: string) {}
 
     async getUserPronouns(): Promise<GenderPronoun> {
         const r = await WikipediaAPI.get({
@@ -31,19 +35,18 @@ export default class User {
     }
 
     async lastWarningLevel(): Promise<WarningAnalysis> {
-        const revisionWikitext =
-            await WikipediaAPI.getLatestRevision(`User_talk:${mw.util.wikiUrlencode(this.username)}`);
+        const revisionWikitext = await WikipediaAPI.getLatestRevision(
+            `User_talk:${mw.util.wikiUrlencode(this.username)}`
+        );
         // TODO Handle errors
 
-        if (!revisionWikitext)
-            return { level: 0 };
+        if (!revisionWikitext) return { level: 0 };
 
         const revisionWikitextLines = revisionWikitext.split("\n");
-        const warningHeaderExec =
-            (new RegExp(
-                `==\\s?${regexEscape(getMonthHeader())}\\s?==`,
-                "gi"
-            ).exec(revisionWikitext));
+        const warningHeaderExec = new RegExp(
+            `==\\s?${regexEscape(getMonthHeader())}\\s?==`,
+            "gi"
+        ).exec(revisionWikitext);
 
         if (warningHeaderExec != null) {
             // No warnings for this month.
@@ -58,7 +61,8 @@ export default class User {
         // For each line
         for (
             let i = revisionWikitextLines.indexOf(warningHeader) + 1;
-            i < revisionWikitextLines.length && revisionWikitextLines[i].startsWith("==");
+            i < revisionWikitextLines.length &&
+            revisionWikitextLines[i].startsWith("==");
             i++
         ) {
             // Add the current line to the collection of this month's notices.
@@ -76,19 +80,22 @@ export default class User {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         blacklistToast?: string
     ): Promise<void> {
-        if (this.username == null || this.username.toLowerCase() == "undefined") {
+        if (
+            this.username == null ||
+            this.username.toLowerCase() == "undefined"
+        ) {
             // Stop it from being sent to User:undefined
             // TODO: **toasts**
             // RedWarnStore.toast.show("Sorry, an error occured. (user undef.)");
             return;
         }
 
-        let revisionWikitext =
-            await WikipediaAPI.getLatestRevision(`User_talk:${mw.util.wikiUrlencode(this.username)}`);
+        let revisionWikitext = await WikipediaAPI.getLatestRevision(
+            `User_talk:${mw.util.wikiUrlencode(this.username)}`
+        );
         // TODO Handle errors
 
-        if (!revisionWikitext)
-            revisionWikitext = "";
+        if (!revisionWikitext) revisionWikitext = "";
 
         const wikiTextLines = revisionWikitext.split("\n");
         let finalText = "";
@@ -107,19 +114,17 @@ export default class User {
         // If the date header was not found, we would still want to insert the date
         // header. This will make sure that a date header exists all the time.
         const dateHeader =
-            (new RegExp(
+            new RegExp(
                 `==\\s?${regexEscape(getMonthHeader())}\\s?==`,
                 "gi"
-            ).exec(revisionWikitext))?.[0] ?? `== ${getMonthHeader()} ==`;
-
+            ).exec(revisionWikitext)?.[0] ?? `== ${getMonthHeader()} ==`;
 
         if (underDate) {
             if (dateHeader) {
                 // Locate and add text in section
 
                 // Locate where the current date section ends so we can append ours to the bottom
-                let locationOfLastLine =
-                    wikiTextLines.indexOf(dateHeader) + 1;
+                let locationOfLastLine = wikiTextLines.indexOf(dateHeader) + 1;
 
                 for (
                     let i = wikiTextLines.indexOf(dateHeader) + 1;
@@ -164,7 +169,7 @@ export default class User {
         await WikipediaAPI.editPage({
             page: `User_talk:${this.username}`,
             text: finalText,
-            summary: `${summary} ${RW_LINK_SUMMARY}`
+            summary: `${summary} ${RW_LINK_SUMMARY}`,
         }); // TODO Handle errors
     }
 
@@ -176,5 +181,4 @@ export default class User {
             isIp ? "Welcome! (IP)" : "Welcome!"
         );
     }
-
 }

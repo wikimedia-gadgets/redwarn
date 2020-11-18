@@ -1,10 +1,15 @@
-import { linearProgress } from "material-components-web";
+import { MDCTooltip } from "@material/tooltip";
+import { MDCRipple } from "@material/ripple";
+import { MDCLinearProgress } from "@material/linear-progress";
 import { BaseProps, h as TSX } from "tsx-dom";
 import RedWarnStore from "../data/RedWarnStore";
 import redirect from "../util/redirect";
 import WikipediaAPI from "./API";
 
 export default class Rollback {
+    static async promptRestoreReason(reason: string): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
     static getRollbackRevId(): string {
         const isNLatest = $("#mw-diff-ntitle1")
             .text()
@@ -112,7 +117,7 @@ export default class Rollback {
             }
 
             if (icon.enabled) {
-                const elem = (
+                /* const elem = (
                     <div id={id} class="icon material-icons">
                         <span
                             style={{
@@ -129,37 +134,177 @@ export default class Rollback {
                     <div class="mdl-tooltip mdl-tooltip--large" for={id}>
                         {icon.name}
                     </div>
+                ); */
+                const button = (
+                    <button
+                        class="mdc-icon-button material-icons"
+                        aria-label={icon.name}
+                        data-tooltip-id={`${id}T`}
+                        style={{
+                            fontSize: "28px",
+                            paddingRight: "5px",
+                            color: icon.color,
+                        }}
+                        id={id}
+                        onClick={clickHandler}
+                    >
+                        {icon.icon}
+                    </button>
                 );
-                currentRevIcons.appendChild(elem);
-                currentRevIcons.appendChild(iconElem);
+                const mdcButton = new MDCRipple(button);
+                mdcButton.initialize();
+
+                const tooltip = (
+                    <div
+                        id={`${id}T`}
+                        class="mdc-tooltip"
+                        role="tooltip"
+                        aria-hidden="true"
+                    >
+                        <div class="mdc-tooltip__surface">{icon.name}</div>
+                    </div>
+                );
+                const mdcTooltip = new MDCTooltip(tooltip);
+                mdcTooltip.initialize();
+                currentRevIcons.appendChild(button);
+                currentRevIcons.appendChild(tooltip);
             }
         });
+
+        const progressBar = (
+            <div
+                id="rwRollbackInProgressBar"
+                role="progressbar"
+                class="mdc-linear-progress"
+                aria-label="RedWarn Rollback Progress Bar"
+                aria-valuemin="0"
+                aria-valuemax="1"
+                aria-valuenow="0"
+                style="width:300px; display: block; margin-left: auto; margin-right: auto;"
+            >
+                <div class="mdc-linear-progress__buffer">
+                    <div class="mdc-linear-progress__buffer-bar"></div>
+                    <div class="mdc-linear-progress__buffer-dots"></div>
+                </div>
+                <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+                    <span class="mdc-linear-progress__bar-inner"></span>
+                </div>
+                <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+                    <span class="mdc-linear-progress__bar-inner"></span>
+                </div>
+            </div>
+        );
+        this.progressBarElement = new MDCLinearProgress(progressBar);
+        this.progressBarElement.initialize();
+
+        const rollbackDoneIcons = (
+            <span id="rwRollbackDoneIcons" style="display:none;">
+                <div style="height:5px"></div>
+                <span style="font-family: Roboto;font-size: 16px;display: inline-flex;vertical-align: middle;">
+                    <span
+                        class="material-icons"
+                        style="color:green;cursor:default;"
+                    >
+                        check_circle
+                    </span>
+                    &nbsp; &nbsp; Rollback complete
+                </span>
+                <br />
+                <div style="height:5px"></div>
+                <button
+                    class="mdc-icon-button material-icons"
+                    aria-label="Go to latest revision"
+                    data-tooltip-id="RWRBDONEmrevPgT"
+                    id="RWRBDONEmrevPg"
+                >
+                    watch_later
+                </button>
+                <div
+                    id="RWRBDONEmrevPgT"
+                    class="mdc-tooltip"
+                    role="tooltip"
+                    aria-hidden="true"
+                >
+                    <div class="mdc-tooltip__surface">
+                        Go to latest revision
+                    </div>
+                </div>
+                &nbsp; &nbsp;
+                <button
+                    class="mdc-icon-button material-icons"
+                    aria-label="New Message"
+                    data-tooltip-id="RWRBDONEnewUsrMsgT"
+                    id="RWRBDONEnewUsrMsg"
+                >
+                    send
+                </button>
+                <div
+                    id="RWRBDONEnewUsrMsgT"
+                    class="mdc-tooltip"
+                    role="tooltip"
+                    aria-hidden="true"
+                >
+                    <div class="mdc-tooltip__surface">New Message</div>
+                </div>
+                &nbsp; &nbsp;
+                <button
+                    class="mdc-icon-button material-icons"
+                    aria-label="Quick Template"
+                    data-tooltip-id="RWRBDONEwelcomeUsrT"
+                    id="RWRBDONEwelcomeUsr"
+                >
+                    library_add
+                </button>
+                <div
+                    id="RWRBDONEwelcomeUsr"
+                    class="mdc-tooltip"
+                    role="tooltip"
+                    aria-hidden="true"
+                >
+                    <div class="mdc-tooltip__surface">Quick Template</div>
+                </div>
+                &nbsp; &nbsp;
+                <button
+                    class="mdc-icon-button material-icons"
+                    aria-label="Warn User"
+                    data-tooltip-id="RWRBDONEwarnUsrT"
+                    id="RWRBDONEwarnUsr"
+                >
+                    report
+                </button>
+                <div
+                    id="RWRBDONEwarnUsrT"
+                    class="mdc-tooltip"
+                    role="tooltip"
+                    aria-hidden="true"
+                >
+                    <div class="mdc-tooltip__surface">Warn User</div>
+                </div>
+                &nbsp; &nbsp;
+                <button
+                    class="mdc-icon-button material-icons"
+                    aria-label="Report to Admin"
+                    data-tooltip-id="RWRBDONEreportUsrT"
+                    id="RWRBDONEreportUsr"
+                >
+                    gavel
+                </button>
+                <div
+                    id="RWRBDONEreportUsrT"
+                    class="mdc-tooltip"
+                    role="tooltip"
+                    aria-hidden="true"
+                >
+                    <div class="mdc-tooltip__surface">Report to Admin</div>
+                </div>
+            </span>
+        );
 
         currentRevIcons = (
             <div>
                 {currentRevIcons}
                 <span id="rwRollbackInProgress" style="display:none;">
-                    <div
-                        id="rwRollbackInProgressBar"
-                        role="progressbar"
-                        class="mdc-linear-progress"
-                        aria-label="RedWarn Rollback Progress Bar"
-                        aria-valuemin="0"
-                        aria-valuemax="1"
-                        aria-valuenow="0"
-                        style="width:300px; display: block; margin-left: auto; margin-right: auto;"
-                    >
-                        <div class="mdc-linear-progress__buffer">
-                            <div class="mdc-linear-progress__buffer-bar"></div>
-                            <div class="mdc-linear-progress__buffer-dots"></div>
-                        </div>
-                        <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
-                            <span class="mdc-linear-progress__bar-inner"></span>
-                        </div>
-                        <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
-                            <span class="mdc-linear-progress__bar-inner"></span>
-                        </div>
-                    </div>
+                    {progressBar}
                     <div style="height:5px"></div>
                     {/* <!-- spacer --> */}
                     <span style="font-family: Roboto;font-size: 16px;">
@@ -169,74 +314,7 @@ export default class Rollback {
                     <div style="height:5px"></div>
                     {/* <!-- spacer --> */}
                 </span>
-                {/* <!-- Rollback complete icons --> */}
-                <span id="rwRollbackDoneIcons" style="display:none;">
-                    {/* <!-- Done indicator --> */}
-                    <div style="height:5px"></div>
-                    {/* <!-- spacer --> */}
-                    <span style="font-family: Roboto;font-size: 16px;display: inline-flex;vertical-align: middle;">
-                        <span
-                            class="material-icons"
-                            style="color:green;cursor:default;"
-                        >
-                            check_circle
-                        </span>
-                        &nbsp;&nbsp; Rollback complete
-                    </span>
-                    <br />
-                    <div style="height:5px"></div>
-                    {/* <!-- spacer --> */}
-                    {/* <!-- CONTROL ICONS - todo add onclick events --> */}
-                    <div id="RWRBDONEmrevPg" class="icon material-icons">
-                        <span style="cursor: pointer;">watch_later</span>
-                    </div>
-                    <div
-                        class="mdl-tooltip mdl-tooltip--large"
-                        for="RWRBDONEmrevPg"
-                    >
-                        Go to latest revision
-                    </div>
-                    &nbsp;&nbsp;
-                    <div id="RWRBDONEnewUsrMsg" class="icon material-icons">
-                        <span style="cursor: pointer;">send</span>
-                    </div>
-                    <div
-                        class="mdl-tooltip mdl-tooltip--large"
-                        for="RWRBDONEnewUsrMsg"
-                    >
-                        New Message
-                    </div>
-                    &nbsp;&nbsp;
-                    <div id="RWRBDONEwelcomeUsr" class="icon material-icons">
-                        <span style="cursor: pointer;">library_add</span>
-                    </div>
-                    <div
-                        class="mdl-tooltip mdl-tooltip--large"
-                        for="RWRBDONEwelcomeUsr"
-                    >
-                        Quick Template
-                    </div>
-                    &nbsp;&nbsp;
-                    <div id="RWRBDONEwarnUsr" class="icon material-icons">
-                        <span style="cursor: pointer;">report</span>
-                    </div>
-                    <div
-                        class="mdl-tooltip mdl-tooltip--large"
-                        for="RWRBDONEwarnUsr"
-                    >
-                        Warn User
-                    </div>
-                    &nbsp;&nbsp;
-                    <div id="RWRBDONEreportUsr" class="icon material-icons">
-                        <span style="cursor: pointer;">gavel</span>
-                    </div>
-                    <div
-                        class="mdl-tooltip mdl-tooltip--large"
-                        for="RWRBDONEreportUsr"
-                    >
-                        Report to Admin
-                    </div>
-                </span>
+                {rollbackDoneIcons}
             </div>
         );
 
@@ -347,11 +425,9 @@ export default class Rollback {
         return finalIconStr;
     }
 
-    private static progressBarElement = new linearProgress.MDCLinearProgress(
-        $("#rwRollbackInProgressBar")[0]
-    );
+    private static progressBarElement: MDCLinearProgress | null;
     static progressBar(progress: number, buffer: number): void {
-        if ($("#rwRollbackInProgressBar").length < 1) return;
+        if (!this.progressBarElement) return;
 
         // Update the progress bar
         this.progressBarElement.progress = progress;
@@ -423,45 +499,6 @@ interface RollbackIconBase {
     name: string;
     color: string;
     icon: string;
-}
-
-interface RestoreProps extends BaseProps {
-    left: boolean;
-}
-
-function RestoreElement(props: RestoreProps) {
-    return (
-        <div>
-            <div
-                id={`rOld${props.left ? "1" : "2"}`}
-                class="icon material-icons"
-            >
-                <span
-                    style="cursor: pointer; font-size:28px; padding-right:5px; color:purple;"
-                    onClick={() => {
-                        Rollback.promptRestoreReason(
-                            $(
-                                `#mw-diff-${
-                                    props.left ? "o" : "n"
-                                }title1 > strong > a`
-                            )
-                                .attr("href")
-                                .split("&")[1]
-                                .split("=")[1]
-                        );
-                    }}
-                >
-                    history
-                </span>
-            </div>
-            <div
-                class="mdl-tooltip mdl-tooltip--large"
-                for={`rOld${props.left ? "1" : "2"}`}
-            >
-                Restore this version
-            </div>
-        </div>
-    );
 }
 
 export type RollbackIcon = RollbackIconBase & RollbackAction;
@@ -711,3 +748,42 @@ export const RollbackIcons: RollbackIcon[] = [
         ruleIndex: 2, // used for autowarn
     },
 ];
+
+interface RestoreProps extends BaseProps {
+    left: boolean;
+}
+
+function RestoreElement(props: RestoreProps) {
+    return (
+        <div>
+            <div
+                id={`rOld${props.left ? "1" : "2"}`}
+                class="icon material-icons"
+            >
+                <span
+                    style="cursor: pointer; font-size:28px; padding-right:5px; color:purple;"
+                    onClick={() => {
+                        Rollback.promptRestoreReason(
+                            $(
+                                `#mw-diff-${
+                                    props.left ? "o" : "n"
+                                }title1 > strong > a`
+                            )
+                                .attr("href")
+                                .split("&")[1]
+                                .split("=")[1]
+                        );
+                    }}
+                >
+                    history
+                </span>
+            </div>
+            <div
+                class="mdl-tooltip mdl-tooltip--large"
+                for={`rOld${props.left ? "1" : "2"}`}
+            >
+                Restore this version
+            </div>
+        </div>
+    );
+}

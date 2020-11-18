@@ -1,7 +1,7 @@
 import semanticDifference from "../../src/util/semanticDifference";
 
 describe("Semantic Difference tests", () => {
-    const pairs : [number, string, string][] = [
+    const pairs: [number, string, string][] = [
         [0, "1.0.0", "1.0.0"],
         [0, "1.2.2", "1.2.2"],
         [0, "0.2.0", "0.2.0"],
@@ -19,7 +19,7 @@ describe("Semantic Difference tests", () => {
         [1, "2.0.0", "1.0.0"],
         [1, "1.0.0", "0.2.0"],
         [1, "1.0.0", "0.0.2"],
-        [1, "1.0.0", "0.0.0"]
+        [1, "1.0.0", "0.0.0"],
     ];
 
     for (const pair of pairs)

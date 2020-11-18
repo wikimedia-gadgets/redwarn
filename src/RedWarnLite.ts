@@ -15,7 +15,7 @@ import Dependencies from "./ui/Dependencies";
 import RedWarnHooks from "./event/RedWarnHooks";
 import WikipediaAPI from "./wikipedia/API";
 import StyleManager from "./styles/StyleManager";
-import {RWUIDialog, RWUIDialogActionType} from "./ui/RWUIDialog";
+import { RWUIDialog, RWUIDialogActionType } from "./ui/RWUIDialog";
 import { initializeStore } from "./data/RedWarnStore";
 
 (async () => {
@@ -36,7 +36,7 @@ import { initializeStore } from "./data/RedWarnStore";
     await Promise.all([
         RedWarnHooks.executeHooks("init"),
         Dependencies.resolve(),
-        WikipediaAPI.init()
+        WikipediaAPI.init(),
     ]);
 
     /**
@@ -53,15 +53,18 @@ import { initializeStore } from "./data/RedWarnStore";
             {
                 type: RWUIDialogActionType.Finish,
                 text: "A",
-                action: () => {alert("A");}
+                action: () => {
+                    alert("A");
+                },
             },
             {
                 type: RWUIDialogActionType.Execute,
                 text: "B",
-                action: () => {alert("A");}
-            }
-        ]
+                action: () => {
+                    alert("A");
+                },
+            },
+        ],
     });
     (a as RWUIDialog).show();
-
 })();

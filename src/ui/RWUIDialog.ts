@@ -1,5 +1,5 @@
 import RWUIElement from "./RWUIElement";
-import {ComponentChild} from "tsx-dom";
+import { ComponentChild } from "tsx-dom";
 
 export enum RWUIDialogActionType {
     /**
@@ -13,7 +13,7 @@ export enum RWUIDialogActionType {
     /**
      * A task will execute synchronously and will not close the dialog.
      */
-    Execute
+    Execute,
 }
 
 interface RWUIDialogFinishAction {
@@ -32,19 +32,21 @@ interface RWUIDialogExecuteAction {
 /**
  * A MaterialDialogAction is an action that may be executed with a button inside of a MaterialDialog.
  */
-export type RWUIDialogAction =
-    (RWUIDialogFinishAction | RWUIDialogCloseAction | RWUIDialogExecuteAction) & {
-    action?: (this: RWUIDialogAction, event : MouseEvent) => void
+export type RWUIDialogAction = (
+    | RWUIDialogFinishAction
+    | RWUIDialogCloseAction
+    | RWUIDialogExecuteAction
+) & {
+    action?: (this: RWUIDialogAction, event: MouseEvent) => void;
 };
 
 export type RWUIDialogID = string;
 
 export interface RWUIDialogProperties {
-
     /**
      * The title of the dialog.
      */
-    title? : string
+    title?: string;
     /**
      * The content of the dialog.
      */
@@ -61,16 +63,15 @@ export interface RWUIDialogProperties {
     width?: string;
 
     id?: RWUIDialogID;
-
 }
 
 export abstract class RWUIDialog extends RWUIElement<RWUIDialogProperties> {
+    public static elementName: "rwDialog" = "rwDialog";
 
-    public static elementName : "rwDialog" = "rwDialog";
-
-    protected _result : any;
-    get result() : any { return this._result; }
+    protected _result: any;
+    get result(): any {
+        return this._result;
+    }
 
     abstract async show(): Promise<void>;
-
 }

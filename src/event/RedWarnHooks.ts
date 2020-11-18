@@ -1,9 +1,9 @@
-import {RedWarnHook, RedWarnHookEventTypes} from "./RedWarnHookEvent";
+import { RedWarnHook, RedWarnHookEventTypes } from "./RedWarnHookEvent";
 
 declare global {
     // noinspection JSUnusedGlobalSymbols
     interface Window {
-        RedWarnHooks : { [K in RedWarnHookEventTypes]? : RedWarnHook[] };
+        RedWarnHooks: { [K in RedWarnHookEventTypes]?: RedWarnHook[] };
     }
 }
 
@@ -15,36 +15,41 @@ declare global {
  * "hooks", which are called at specific events in RedWarn's execution.
  */
 export default class RedWarnHooks {
-
-    static get hooks() : typeof window.RedWarnHooks {
+    static get hooks(): typeof window.RedWarnHooks {
         return window.RedWarnHooks ?? (window.RedWarnHooks = {});
     }
 
-    static assertHookType(hookType : RedWarnHookEventTypes) : void {
+    static assertHookType(hookType: RedWarnHookEventTypes): void {
         if (RedWarnHooks.hooks[hookType] === undefined)
             RedWarnHooks.hooks[hookType] = [];
     }
 
-    static addHook<T extends RedWarnHookEventTypes>(hookType : T, hook : RedWarnHook) : void {
+    static addHook<T extends RedWarnHookEventTypes>(
+        hookType: T,
+        hook: RedWarnHook
+    ): void {
         this.assertHookType(hookType);
         (RedWarnHooks.hooks[hookType] as RedWarnHook[]).push(hook);
     }
 
-    static removeHook<T extends RedWarnHookEventTypes>(hookType : T, hook : RedWarnHook) : void {
+    static removeHook<T extends RedWarnHookEventTypes>(
+        hookType: T,
+        hook: RedWarnHook
+    ): void {
         this.assertHookType(hookType);
-        (RedWarnHooks.hooks[hookType] as RedWarnHook[]).filter(h => h !== hook);
+        (RedWarnHooks.hooks[hookType] as RedWarnHook[]).filter(
+            (h) => h !== hook
+        );
     }
 
     static async executeHooks<T extends RedWarnHookEventTypes>(
-        hookType : T,
-        payload : Record<string, any> = {}
-    ) : Promise<void> {
+        hookType: T,
+        payload: Record<string, any> = {}
+    ): Promise<void> {
         this.assertHookType(hookType);
-        for (const hook of (RedWarnHooks.hooks[hookType] as RedWarnHook[])) {
+        for (const hook of RedWarnHooks.hooks[hookType] as RedWarnHook[]) {
             const result = hook(payload);
             if (result instanceof Promise) await result;
         }
     }
-
-
 }

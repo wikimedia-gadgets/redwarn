@@ -3,7 +3,7 @@
  * @param string The string to escape.
  * @see https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
  */
-export default function(string : string) : string {
+export default function (string: string): string {
     // Referring to the table here:
     // https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/regexp
     // these characters should be escaped
@@ -16,23 +16,23 @@ export default function(string : string) : string {
 
     const specials = [
         // order matters for these
-        "-"
-        , "["
-        , "]"
+        "-",
+        "[",
+        "]",
         // order doesn't matter for any of these
-        , "/"
-        , "{"
-        , "}"
-        , "("
-        , ")"
-        , "*"
-        , "+"
-        , "?"
-        , "."
-        , "\\"
-        , "^"
-        , "$"
-        , "|"
+        "/",
+        "{",
+        "}",
+        "(",
+        ")",
+        "*",
+        "+",
+        "?",
+        ".",
+        "\\",
+        "^",
+        "$",
+        "|",
     ];
 
     // I choose to escape every character with '\'

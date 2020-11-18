@@ -1,8 +1,12 @@
-import {ComponentChild, h as TSX} from "tsx-dom";
+import { ComponentChild, h as TSX } from "tsx-dom";
 
 // import "../styles/mdl-dialog.css";
-import {RWUIDialog, RWUIDialogActionType, RWUIDialogProperties} from "../../../ui/RWUIDialog";
-import {getMaterialStorage} from "../Material";
+import {
+    RWUIDialog,
+    RWUIDialogActionType,
+    RWUIDialogProperties,
+} from "../../../ui/RWUIDialog";
+import { getMaterialStorage } from "../Material";
 import RedWarnStore from "../../../data/RedWarnStore";
 
 import { MDCRipple } from "@material/ripple";
@@ -17,26 +21,36 @@ const StyleStorage = getMaterialStorage();
  * To show a dialog on the DOM, use {@link MaterialDialog.show}.
  */
 export default class MaterialDialog extends RWUIDialog {
-
-    get elementName() : typeof RWUIDialog.elementName { return RWUIDialog.elementName; }
-    get prototype() : typeof MaterialDialog { return MaterialDialog; }
+    get elementName(): typeof RWUIDialog.elementName {
+        return RWUIDialog.elementName;
+    }
+    get prototype(): typeof MaterialDialog {
+        return MaterialDialog;
+    }
 
     /**
      * A unique identifier for this dialog, to allow multiple active dialogs.
      */
-    id : string;
+    id: string;
     /**
      * The properties of this MaterialDialog.
      */
-    props : RWUIDialogProperties;
+    props: RWUIDialogProperties;
     /**
      * The HTMLDialogElement which contains the actual dialog.
      */
-    element? : HTMLDialogElement;
+    element?: HTMLDialogElement;
 
-    constructor(props : RWUIDialogProperties) {
+    constructor(props: RWUIDialogProperties) {
         super(props);
-        this.id = `dialog__${props.id || RedWarnStore.random.string({length: 16, symbols: false, alpha: true})}`;
+        this.id = `dialog__${
+            props.id ||
+            RedWarnStore.random.string({
+                length: 16,
+                symbols: false,
+                alpha: true,
+            })
+        }`;
         this.props = props;
     }
 
@@ -44,7 +58,7 @@ export default class MaterialDialog extends RWUIDialog {
      * Show a dialog on screen. You can await this if you want to block until the dialog closes.
      * @returns The result - the value returned by the selected button in {@link RWUIDialogProperties.actions}.
      */
-    async show() : Promise<any> {
+    async show(): Promise<any> {
         StyleStorage.dialogTracker.set(this.id, this);
 
         document.body.appendChild(this.render());
@@ -67,7 +81,7 @@ export default class MaterialDialog extends RWUIDialog {
      * Renders the MaterialDialog's actions (as buttons).
      * @return A collection of {@link HTMLButtonElement}s, all of which are MDL buttons.
      */
-    private renderActions() : ComponentChild[] {
+    private renderActions(): ComponentChild[] {
         const buttons = [];
         for (const action of this.props.actions) {
             const buttonClasses = [];
@@ -84,10 +98,12 @@ export default class MaterialDialog extends RWUIDialog {
                     break;
             }
 
-            const buttonElement = <button class={buttonClasses.join(" ")}>
-                <div class="mdc-button__ripple"/>
-                <span class="mdc-button__label">{action.text}</span>
-            </button>;
+            const buttonElement = (
+                <button class={buttonClasses.join(" ")}>
+                    <div class="mdc-button__ripple" />
+                    <span class="mdc-button__label">{action.text}</span>
+                </button>
+            );
 
             switch (action.type) {
                 // Do the action before closing.
@@ -96,14 +112,18 @@ export default class MaterialDialog extends RWUIDialog {
                         if (action.action)
                             this._result = action.action.call(this, event);
                         this.element.close();
-                        setTimeout(() => { this.element.remove(); }, 1000);
+                        setTimeout(() => {
+                            this.element.remove();
+                        }, 1000);
                     });
                     break;
                 // Close and then do the action.
                 case RWUIDialogActionType.Close:
                     buttonElement.addEventListener("click", (event) => {
                         this.element.close();
-                        setTimeout(() => { this.element.remove(); }, 1000);
+                        setTimeout(() => {
+                            this.element.remove();
+                        }, 1000);
                         if (action.action)
                             this._result = action.action.call(this, event);
                     });
@@ -129,32 +149,32 @@ export default class MaterialDialog extends RWUIDialog {
      * NOTE: Only use this when appending to body! Otherwise, use {@link MaterialDialog.element}.
      * @returns An {@link HTMLDialogElement}.
      */
-    render() : Element {
-        this.element = <dialog
-            id={this.id}
-            class="mdc-dialog"
-            style={`width: ${this.props.width ?? "30vw"};`}>
-            <div class="mdc-dialog__container">
-                {
-                    this.props.title && <h2 class="mdc-dialog__title">
-                        {this.props.title}
-                    </h2>
-                }
-                {
-                    this.props.content && <div class="mdc-dialog__content">
-                        {...this.props.content}
-                    </div>
-                }
-                {
-                    this.props.actions && <div class="mdl-dialog__actions">
-                        {this.renderActions()}
-                    </div>
-                }
-            </div>
-            <div class="mdc-dialog__scrim"/>
-        </dialog> as HTMLDialogElement;
+    render(): Element {
+        this.element = (
+            <dialog
+                id={this.id}
+                class="mdc-dialog"
+                style={`width: ${this.props.width ?? "30vw"};`}
+            >
+                <div class="mdc-dialog__container">
+                    {this.props.title && (
+                        <h2 class="mdc-dialog__title">{this.props.title}</h2>
+                    )}
+                    {this.props.content && (
+                        <div class="mdc-dialog__content">
+                            {...this.props.content}
+                        </div>
+                    )}
+                    {this.props.actions && (
+                        <div class="mdl-dialog__actions">
+                            {this.renderActions()}
+                        </div>
+                    )}
+                </div>
+                <div class="mdc-dialog__scrim" />
+            </dialog>
+        ) as HTMLDialogElement;
 
         return this.element;
     }
-
 }

@@ -2,21 +2,24 @@ import redirect from "../util/redirect";
 import Revision from "./Revision";
 import RedWarnStore from "../data/RedWarnStore";
 import AjaxSettings = JQuery.AjaxSettings;
-import {RW_LINK_SUMMARY, RW_WIKIS_TAGGABLE} from "../data/RedWarnConstants";
+import { RW_LINK_SUMMARY, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
 import WikipediaURL from "./URL";
 import Api = mw.Api;
 
 export default class WikipediaAPI {
-
     static api: Api;
 
-    static get(parameters : Record<string, any>, ajaxOptions? : AjaxSettings)
-        : JQueryPromise<JQueryXHR> {
+    static get(
+        parameters: Record<string, any>,
+        ajaxOptions?: AjaxSettings
+    ): JQueryPromise<JQueryXHR> {
         return this.api.get(parameters, ajaxOptions);
     }
 
-    static postWithEditToken(parameters : Record<string, any>, ajaxOptions? : AjaxSettings)
-        : JQueryPromise<JQueryXHR> {
+    static postWithEditToken(
+        parameters: Record<string, any>,
+        ajaxOptions?: AjaxSettings
+    ): JQueryPromise<JQueryXHR> {
         return this.api.postWithEditToken(parameters, ajaxOptions);
     }
 
@@ -64,11 +67,11 @@ export default class WikipediaAPI {
      * @param params.text {string} The new page content.
      * @param params.summary {string} The edit summary.
      */
-    static async editPage(params : {
-        page: string
-        text: string,
-        summary?: string
-    }) : Promise<void> {
+    static async editPage(params: {
+        page: string;
+        text: string;
+        summary?: string;
+    }): Promise<void> {
         await WikipediaAPI.postWithEditToken({
             action: "edit",
             format: "json",
@@ -76,14 +79,16 @@ export default class WikipediaAPI {
             summary: `${params.summary ?? ""} ${RW_LINK_SUMMARY}`,
             text: params.text,
             // Only add tags for supported wikis.
-            tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID) ? "RedWarn" : null
+            tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
+                ? "RedWarn"
+                : null,
         });
     }
 
     /**
      * Gets the latest revision of a page.
      */
-    static async getLatestRevision(page : string) : Promise<string | null> {
+    static async getLatestRevision(page: string): Promise<string | null> {
         const revisionRequest = await WikipediaAPI.get({
             action: "query",
             prop: "revisions",
@@ -95,12 +100,12 @@ export default class WikipediaAPI {
         if (!revisionRequest.query.pages[0].missing)
             // If page isn't missing (i.e. it exists).
             return (
-                revisionRequest.query.pages[0].revisions[0].slots.main.content ??
+                revisionRequest.query.pages[0].revisions[0].slots.main
+                    .content ??
                 revisionRequest.query.pages[0].revisions[0].slots.main["*"] ??
                 null // This would be __bad__.
             );
-        else
-            return null;
+        else return null;
     }
 
     /**
@@ -126,9 +131,7 @@ export default class WikipediaAPI {
             return latestUsername;
         } else {
             if (noRedirect) {
-                throw `Not latest revision! Latest revision (ID ${
-                    latestRevisionId
-                }) by [[User:${latestUsername}]]`;
+                throw `Not latest revision! Latest revision (ID ${latestRevisionId}) by [[User:${latestUsername}]]`;
             }
             // TODO think about how to fix this later
             // if (RedWarnStore.dialogTracker.size > 0) {
@@ -137,7 +140,9 @@ export default class WikipediaAPI {
 
             // TODO: **config**
             // TODO page load notices
-            redirect(WikipediaURL.getDiff(page, latestRevisionId, parentRevisionId));
+            redirect(
+                WikipediaURL.getDiff(page, latestRevisionId, parentRevisionId)
+            );
         }
     }
 
@@ -200,7 +205,6 @@ export default class WikipediaAPI {
         RedWarnStore.APIStore.username = mw.user.getName();
         await this.getGroups();
     }
-
 }
 
 export interface APIStore {

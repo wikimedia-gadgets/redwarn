@@ -1,45 +1,52 @@
-import {getHighestLevel, WarningLevel} from "../../src/wikipedia/WarningLevel";
+import {
+    getHighestLevel,
+    WarningLevel,
+} from "../../src/wikipedia/WarningLevel";
 
 describe("WarningLevel Parser Tests", () => {
-    const highestLevel : { level: WarningLevel, content : string }[] = [
+    const highestLevel: { level: WarningLevel; content: string }[] = [
         {
             level: WarningLevel.None,
-            content: ""
+            content: "",
         },
         {
             level: WarningLevel.Notice,
-            content: "[[File:Information.svg]]"
+            content: "[[File:Information.svg]]",
         },
         {
             level: WarningLevel.Caution,
-            content: "[[File:Information orange.svg]]"
+            content: "[[File:Information orange.svg]]",
         },
         {
             level: WarningLevel.Warning,
-            content: "[[File:Nuvola apps important.svg]]"
+            content: "[[File:Nuvola apps important.svg]]",
         },
         {
             level: WarningLevel.Final,
-            content: "[[File:Stop hand nuvola.svg]]"
+            content: "[[File:Stop hand nuvola.svg]]",
         },
         {
             level: WarningLevel.Final,
-            content: "[[File:Stop hand nuvola.svg]][[File:Information orange.svg]]"
+            content:
+                "[[File:Stop hand nuvola.svg]][[File:Information orange.svg]]",
         },
         {
             level: WarningLevel.Final,
-            content: "[[File:Information orange.svg]][[File:Stop hand nuvola.svg]]"
+            content:
+                "[[File:Information orange.svg]][[File:Stop hand nuvola.svg]]",
         },
         {
             level: WarningLevel.Caution,
-            content: "[[File:Information orange.svg]][[File:Information.svg]]"
+            content: "[[File:Information orange.svg]][[File:Information.svg]]",
         },
     ];
 
     for (const patternId in highestLevel) {
         const testingPattern = highestLevel[patternId];
         test(`Highest level checks #${patternId}`, () => {
-            expect(getHighestLevel(testingPattern.content).level).toEqual(testingPattern.level);
+            expect(getHighestLevel(testingPattern.content).level).toEqual(
+                testingPattern.level
+            );
         });
     }
 });

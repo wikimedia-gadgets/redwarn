@@ -1,43 +1,37 @@
-import {Dependency} from "../ui/Dependencies";
-import {
-    RedWarnHook,
-    RedWarnHookEventTypes
-} from "../event/RedWarnHookEvent";
-import RWUIElement, {RWUIElements} from "../ui/RWUIElement";
+import { Dependency } from "../ui/Dependencies";
+import { RedWarnHook, RedWarnHookEventTypes } from "../event/RedWarnHookEvent";
+import { RWUIElements } from "../ui/RWUIElement";
 
 type URLString = string;
 
 interface Style {
-
-    name : string;
-    version : string;
+    name: string;
+    version: string;
 
     // Mapped by language.
-    meta? : {
-        [key : string]: {
-            displayName? : string;
-            description? : string;
-            author? : string | string[]; // Must be wiki usernames
+    meta?: {
+        [key: string]: {
+            displayName?: string;
+            description?: string;
+            author?: string | string[]; // Must be wiki usernames
 
-            homepage? : URLString; // URL
+            homepage?: URLString; // URL
 
-            repository? : URLString;  // URL
-            issues? : URLString;  // URL
+            repository?: URLString; // URL
+            issues?: URLString; // URL
 
-            banner? : URLString; // URL of Image
-        }
+            banner?: URLString; // URL of Image
+        };
     };
 
-    dependencies? : Dependency[];
-    storage? : Record<string, any>;
+    dependencies?: Dependency[];
+    storage?: Record<string, any>;
 
-    classMap : {
-        [ T in keyof typeof RWUIElements ]:
-            typeof RWUIElements[T]
+    classMap: {
+        [T in keyof typeof RWUIElements]: typeof RWUIElements[T];
     };
 
-    hooks?: { [key in RedWarnHookEventTypes]? : RedWarnHook[] };
-
+    hooks?: { [key in RedWarnHookEventTypes]?: RedWarnHook[] };
 }
 
 export default Style;

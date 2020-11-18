@@ -57,12 +57,11 @@ declare class mw {
      * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw-method-notify
      */
     static notify(
-        message : HTMLElement | HTMLElement[] | JQuery | mw.Message | string,
-        options? : Partial<typeof mw.notification.defaults>
-    ) : JQueryPromise<mw.Notification>;
+        message: HTMLElement | HTMLElement[] | JQuery | mw.Message | string,
+        options?: Partial<typeof mw.notification.defaults>
+    ): JQueryPromise<mw.Notification>;
 
-    static notification : {
-
+    static notification: {
         /**
          * The defaults for notify options parameter.
          * @param autoHide A boolean indicating whether the notifification should automatically
@@ -83,16 +82,15 @@ declare class mw {
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.notification-property-defaults
          */
         defaults: {
-            autoHide: boolean,
-            autoHideSeconds: "short" | "long",
-            tag?: string,
-            title? : string,
-            type? : "info" | "warn" | "error" | "success",
-            visibleTimeout : boolean,
-            id: string
-        }
-
-    }
+            autoHide: boolean;
+            autoHideSeconds: "short" | "long";
+            tag?: string;
+            title?: string;
+            type?: "info" | "warn" | "error" | "success";
+            visibleTimeout: boolean;
+            id: string;
+        };
+    };
 
     /**
      * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.user
@@ -110,17 +108,15 @@ declare class mw {
          *
          * @link https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.user-method-getName
          */
-        getGroups(callback? : (groups : string[]) => void) : Promise<string[]>
-
-    }
+        getGroups(callback?: (groups: string[]) => void): Promise<string[]>;
+    };
 
     /**
      * Utility library
      *
      * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.util
      */
-    static util : {
-
+    static util: {
         /**
          * Encode page titles for use in a URL
          *
@@ -132,7 +128,7 @@ declare class mw {
          *
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.util-method-wikiUrlencode
          */
-        wikiUrlencode(str : string) : string;
+        wikiUrlencode(str: string): string;
 
         /**
          * Check whether a string is an IP address
@@ -140,10 +136,16 @@ declare class mw {
          * @since 1.25
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.util-method-isIPAddress
          */
-        isIPAddress(address : string, allowBlock? : boolean) : boolean;
+        isIPAddress(address: string, allowBlock?: boolean): boolean;
 
-    }
-
+        /**
+         * Grab the URL parameter value for the given parameter.
+         * Returns null if not found.
+         *
+         * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.util-method-getParamValue
+         */
+        getParamValue(param: string, url?: string): string | null;
+    };
 }
 
 /**
@@ -189,12 +191,15 @@ declare namespace mw {
          * Perform API get request
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Api-method-get
          */
-        get(parameters: Record<string, any>, ajaxOptions?: AjaxSettings)
-            : JQueryPromise<JQueryXHR>;
+        get(
+            parameters: Record<string, any>,
+            ajaxOptions?: AjaxSettings
+        ): JQueryPromise<JQueryXHR>;
 
-        postWithEditToken(params: Record<string, any>, ajaxOptions?: AjaxSettings)
-            : JQueryPromise<JQueryXHR>;
-
+        postWithEditToken(
+            params: Record<string, any>,
+            ajaxOptions?: AjaxSettings
+        ): JQueryPromise<JQueryXHR>;
     }
 
     /**
@@ -206,7 +211,6 @@ declare namespace mw {
      * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Map
      */
     class Map {
-
         /**
          * @param global
          * @private
@@ -232,7 +236,7 @@ declare namespace mw {
          * an object of key/values. If no selection is passed, a new object with all key/values is returned.
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Map-method-get
          */
-        get(selection: string | string[], fallback? : any): any | null;
+        get(selection: string | string[], fallback?: any): any | null;
 
         /**
          * Get the value of one or more keys.
@@ -243,8 +247,7 @@ declare namespace mw {
          * @returns True on success, false on failure
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Map-method-set
          */
-        set(selection: string | Record<string, any>, value : any): boolean;
-
+        set(selection: string | Record<string, any>, value: any): boolean;
     }
 
     /**
@@ -256,7 +259,6 @@ declare namespace mw {
      * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Message
      */
     class Message {
-
         /**
          * Object constructor for messages.
          *
@@ -275,19 +277,19 @@ declare namespace mw {
          * This is equivalent to using the 'text' format (see text), then HTML-escaping the output.
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Message-method-escaped
          */
-        escaped() : string;
+        escaped(): string;
 
         /**
          * Check if a message exists
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Message-method-exists
          */
-        escaped() : boolean;
+        escaped(): boolean;
 
         /**
          * Add (does not replace) parameters for $N placeholder values.
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Message-method-params
          */
-        params(params : any[]) : mw.Message;
+        params(params: any[]): mw.Message;
 
         /**
          * Change format to 'parse' and convert message to string
@@ -297,7 +299,7 @@ declare namespace mw {
          * Otherwise, it is equivalent to plain.
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Message-method-parse
          */
-        parse() : string;
+        parse(): string;
 
         /**
          * Parse the message to DOM nodes, rather than HTML string like parse.
@@ -306,7 +308,7 @@ declare namespace mw {
          * @since 1.27
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Message-method-parseDom
          */
-        parseDom() : JQuery;
+        parseDom(): JQuery;
 
         /**
          * Get parsed contents of the message.
@@ -317,7 +319,7 @@ declare namespace mw {
          * This function will not be called for nonexistent messages.
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Message-method-parser
          */
-        parser() : string
+        parser(): string;
 
         /**
          * Change format to 'plain' and convert message to string
@@ -325,7 +327,7 @@ declare namespace mw {
          * This substitutes parameters, but otherwise does not change the message text.
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Message-method-plain
          */
-        plain() : string
+        plain(): string;
 
         /**
          * Change format to 'text' and convert message to string
@@ -336,13 +338,13 @@ declare namespace mw {
          * Otherwise, it is equivalent to plain
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Message-method-text
          */
-        text() : string
+        text(): string;
 
         /**
          * Convert message object to its string form based on current format.
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Message-method-toString
          */
-        toString() : string
+        toString(): string;
     }
 
     /**
@@ -353,25 +355,24 @@ declare namespace mw {
      * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Notification_
      */
     class Notification {
-
         /**
          * Close the notification.
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Notification_-method-close
          */
-        close() : void;
+        close(): void;
 
         /**
          * Pause any running auto-hide timer for this notification
          * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Notification_-method-pause
          */
-        pause() : void;
+        pause(): void;
 
         /**
          * Start autoHide timer if not already started. Does nothing if autoHide is disabled. Either
          * to resume from pause or to make the first start.
          * @https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Notification_-method-resume
          */
-        resume() : void;
+        resume(): void;
 
         postWithEditToken(
             params: Record<string, any>,

@@ -38,7 +38,7 @@ $(document).ready(async () => {
     await Promise.all([
         RedWarnHooks.executeHooks("init"),
         Dependencies.resolve(),
-        WikipediaAPI.init()
+        WikipediaAPI.init(),
     ]);
 
     /**
@@ -67,5 +67,4 @@ $(document).ready(async () => {
     // });
 
     // console.log(await (a as RWUIDialog).show());
-
 });

@@ -1,4 +1,5 @@
 import Chance from "chance";
+import MessageHandler from "../event/MessageHandler";
 import { Dependency } from "../ui/Dependencies";
 import { APIStore, EmptyAPIStore } from "../wikipedia/API";
 
@@ -9,7 +10,6 @@ export abstract class StyleStorage {}
  * for {@link RedWarnStore} instead.
  */
 export default class RedWarnStorage {
-
     // Initializations
     public static dependencies: Dependency[] = [];
 
@@ -20,22 +20,26 @@ export default class RedWarnStorage {
     public static APIStore: APIStore = EmptyAPIStore;
 
     // Wiki automated config
+
+    public static messageHandler: MessageHandler = new MessageHandler();
     public static wikiBase: string = mw.config.get("wgServer");
-    public static wikiIndex: string = mw.config.get("wgServer") + mw.config.get("wgScript");
-    public static wikiAPI = `${mw.config.get("wgServer") + mw.config.get("wgScriptPath")}/api.php`;
+    public static wikiIndex: string =
+        mw.config.get("wgServer") + mw.config.get("wgScript");
+    public static wikiAPI = `${
+        mw.config.get("wgServer") + mw.config.get("wgScriptPath")
+    }/api.php`;
     public static wikiID: string = mw.config.get("wgWikiID");
 
-    public static styleStorage : StyleStorage = null;
+    public static styleStorage: StyleStorage = null;
     public static windowFocused = false;
 
-    public static registerDependency(dependency : Dependency) : void {
+    public static registerDependency(dependency: Dependency): void {
         this.dependencies.push(dependency);
     }
 
-    public static initializeStore() : void {
+    public static initializeStore(): void {
         window.RedWarnStore = RedWarnStorage;
     }
-
 }
 
 // We're exposing the RedWarn storage for the ones who want to tinker with

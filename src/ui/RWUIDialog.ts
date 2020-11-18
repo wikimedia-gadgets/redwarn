@@ -1,5 +1,5 @@
-import RWUIElement, {RWUIElementProperties} from "./RWUIElement";
-import {ComponentChild} from "tsx-dom";
+import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
+import { ComponentChild } from "tsx-dom";
 
 export enum RWUIDialogActionType {
     /**
@@ -13,7 +13,7 @@ export enum RWUIDialogActionType {
     /**
      * A task will execute synchronously and will not close the dialog.
      */
-    Execute
+    Execute,
 }
 
 /**
@@ -22,17 +22,16 @@ export enum RWUIDialogActionType {
 export interface RWUIDialogAction {
     data: string;
     text?: string;
-    action?: (this: RWUIDialogAction, event : MouseEvent) => void
+    action?: (this: RWUIDialogAction, event: MouseEvent) => void;
 }
 
 export type RWUIDialogID = string;
 
 export interface RWUIDialogProperties extends RWUIElementProperties {
-
     /**
      * The title of the dialog.
      */
-    title? : string
+    title?: string;
     /**
      * The content of the dialog.
      */
@@ -49,7 +48,6 @@ export interface RWUIDialogProperties extends RWUIElementProperties {
     width?: string;
 
     id?: RWUIDialogID;
-
 }
 
 /**
@@ -58,16 +56,17 @@ export interface RWUIDialogProperties extends RWUIElementProperties {
  * {@link document.appendChild}, as the dialog is shown using {@link show} instead.
  */
 export class RWUIDialog extends RWUIElement {
+    public static elementName: "rwDialog" = "rwDialog";
 
-    public static elementName : "rwDialog" = "rwDialog";
-
-    protected _result : any;
+    protected _result: any;
     /**
      * The result of the dialog.
      */
-    get result() : any { return this._result; }
+    get result(): any {
+        return this._result;
+    }
 
-    public constructor(readonly properties : RWUIDialogProperties) {
+    public constructor(readonly properties: RWUIDialogProperties) {
         super(properties);
     }
 
@@ -75,7 +74,9 @@ export class RWUIDialog extends RWUIElement {
      * Shows the dialog as a modal.
      */
     async show(): Promise<void> {
-        throw new Error("The base element cannot be used as a spawnable element.")
+        throw new Error(
+            "The base element cannot be used as a spawnable element."
+        );
     }
 
     /**
@@ -83,8 +84,6 @@ export class RWUIDialog extends RWUIElement {
      * it as a modal.
      */
     render(): Element {
-        throw new Error("Illegal attempt made to render the base element.")
+        throw new Error("Illegal attempt made to render the base element.");
     }
-
-
 }

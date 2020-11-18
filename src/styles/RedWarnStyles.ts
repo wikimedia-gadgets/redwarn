@@ -8,8 +8,6 @@ declare global {
     }
 }
 
-export const DefaultRedWarnStyles = [
-    MaterialStyle
-];
+export const DefaultRedWarnStyles = [MaterialStyle];
 
 export default window.RedWarnStyles;

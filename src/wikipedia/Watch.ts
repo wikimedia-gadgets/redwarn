@@ -11,7 +11,6 @@ import redirect from "../util/redirect";
  * @deprecated Not yet usable as the watching interface is not yet developed.
  */
 export default class Watch {
-
     static active = false;
     static timecheck: number;
     static lastRevID: number;

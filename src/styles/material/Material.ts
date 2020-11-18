@@ -1,9 +1,9 @@
 import MaterialAlertDialog from "./ui/MaterialAlertDialog";
 import Style from "../Style";
 import MaterialPreInitializationHooks from "./hooks/MaterialPreInitializationHooks";
-import {MaterialStyleStorage} from "./storage/MaterialStyleStorage";
+import { MaterialStyleStorage } from "./storage/MaterialStyleStorage";
 
-const MaterialStyle : Style = {
+const MaterialStyle: Style = {
     name: "material",
     version: "1.0.0",
 
@@ -12,12 +12,13 @@ const MaterialStyle : Style = {
             displayName: "Material",
             author: ["The RedWarn Contributors", "Google, Inc."],
             // \u2014 is an emdash
-            description: "RedWarn's classic look-and-feel \u2014 an implementation of Google's Material Design.",
+            description:
+                "RedWarn's classic look-and-feel \u2014 an implementation of Google's Material Design.",
 
             homepage: "https://en.wikipedia.org/wiki/WP:RW",
             repository: "https://gitlab.com/redwarn/redwarn-dev",
-            issues: "https://gitlab.com/redwarn/redwarn-dev/-/issues"
-        }
+            issues: "https://gitlab.com/redwarn/redwarn-dev/-/issues",
+        },
     },
     dependencies: [
         {
@@ -32,21 +33,19 @@ const MaterialStyle : Style = {
             type: "style",
             id: "mdc-styles",
             src:
-                "https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.css"
-        }
+                "https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.css",
+        },
     ],
 
     storage: new MaterialStyleStorage(),
 
     classMap: {
-        rwDialog: MaterialAlertDialog
+        rwDialog: MaterialAlertDialog,
     },
 
     hooks: {
-        "preinit": [
-            MaterialPreInitializationHooks
-        ]
-    }
+        preinit: [MaterialPreInitializationHooks],
+    },
 };
 
 export default MaterialStyle;

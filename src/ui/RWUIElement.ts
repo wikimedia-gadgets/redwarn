@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+// TODO @chlod
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface RWUIElementProperties {}
 
 /**
@@ -9,14 +11,12 @@ export interface RWUIElementProperties {}
  * elements.
  */
 export default class RWUIElement {
-
-    public constructor(readonly properties : RWUIElementProperties) { }
+    public constructor(readonly properties: RWUIElementProperties) {}
 
     /**
      * Renders the element.
      */
-    render() : Element {
+    render(): Element {
         throw new Error("Illegal attempt made to render the base element.");
     }
-
 }

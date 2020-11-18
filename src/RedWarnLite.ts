@@ -15,13 +15,13 @@ import Dependencies from "./ui/Dependencies";
 import RedWarnHooks from "./event/RedWarnHooks";
 import WikipediaAPI from "./wikipedia/API";
 import StyleManager from "./styles/StyleManager";
-import RedWarnStorage from "./data/RedWarnStore";
+import RedWarnStore from "./data/RedWarnStore";
 
 console.log("Starting RedWarn...");
 $(document).ready(async () => {
     console.log("Initializing store...");
     // Initialize RedWarn store.
-    RedWarnStorage.initializeStore();
+    RedWarnStore.initializeStore();
 
     console.log("Loading style definitions...");
     // Load style definitions first.

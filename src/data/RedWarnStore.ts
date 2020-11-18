@@ -5,11 +5,7 @@ import { APIStore, EmptyAPIStore } from "../wikipedia/API";
 
 export abstract class StyleStorage {}
 
-/**
- * This is a class that handles the RedWarnStore. You might be looking
- * for {@link RedWarnStore} instead.
- */
-export default class RedWarnStorage {
+export default class RedWarnStore {
     // Initializations
     public static dependencies: Dependency[] = [];
 
@@ -38,7 +34,7 @@ export default class RedWarnStorage {
     }
 
     public static initializeStore(): void {
-        window.RedWarnStore = RedWarnStorage;
+        window.RedWarnStore = this;
     }
 }
 
@@ -48,14 +44,14 @@ export default class RedWarnStorage {
 declare global {
     // noinspection JSUnusedGlobalSymbols
     interface Window {
-        RedWarnStore: RedWarnStorage;
+        RedWarnStore: RedWarnStore;
     }
 }
 
 window.addEventListener("blur", () => {
-    RedWarnStorage.windowFocused = false;
+    RedWarnStore.windowFocused = false;
 });
 
 window.addEventListener("focus", () => {
-    RedWarnStorage.windowFocused = true;
+    RedWarnStore.windowFocused = true;
 });

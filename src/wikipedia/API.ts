@@ -144,14 +144,10 @@ export default class WikipediaAPI {
             //     return; // Do not redirect if a dialog is open.
             // }
 
-            // TODO: **config**
+            // TODO: **config** (rw.config.rwLatestRevisionOption === "newtab")
             // TODO page load notices
             redirect(
-                WikipediaURL.getDiffUrl(
-                    page,
-                    latestRevisionId,
-                    parentRevisionId
-                )
+                WikipediaURL.getDiffUrl(latestRevisionId, parentRevisionId)
             );
         }
     }

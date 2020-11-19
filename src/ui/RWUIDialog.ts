@@ -20,9 +20,25 @@ export enum RWUIDialogActionType {
  * A MaterialDialogAction is an action that may be executed with a button inside of a MaterialAlertDialog.
  */
 export interface RWUIDialogAction {
+    /**
+     * The action data, returned to MDC when an action is pressed. This
+     * should be a simple string for ease of use. If an action is not
+     * specified, this will be returned as the dialog result.
+     */
     data: string;
+    /**
+     * The text to use for the button. If unspecified, the button data
+     * will be used instead.
+     */
     text?: string;
-    action?: (this: RWUIDialogAction, event: MouseEvent) => void;
+    /**
+     * The action that the button runs. This function will be run when
+     * a button has been selected, and if it returns a value, that value
+     * will be used as the result of the dialog. If not, the button data
+     * is used instead.
+     * @param event
+     */
+    action?: (this: RWUIDialogAction, event: Event) => Promise<any> | any;
 }
 
 export type RWUIDialogID = string;
@@ -39,7 +55,7 @@ export interface RWUIDialogProperties extends RWUIElementProperties {
     /**
      * The actions of the dialog. These go at the bottom of the dialog.
      */
-    actions?: RWUIDialogAction[];
+    actions: RWUIDialogAction[];
     /**
      * The width of the dialog in whatever CSS unit specified.
      *

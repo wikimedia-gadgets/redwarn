@@ -70,8 +70,16 @@ export default class MaterialAlertDialog extends RWUIDialog {
         return new Promise((resolve) => {
             dialog.listen(
                 "MDCDialog:closed",
-                (event: Event & { detail: { action: string } }) => {
-                    this._result = event.detail.action;
+                async (event: Event & { detail: { action: string } }) => {
+                    const actionSelected = this.props.actions.find(
+                        (action) => action.data === event.detail.action
+                    );
+                    if (actionSelected != null) {
+                        this._result =
+                            (await actionSelected.action(event)) ??
+                            event.detail.action;
+                    } else this._result = event.detail.action;
+
                     const res = styleStorage.dialogTracker.get(this.id).result;
                     styleStorage.dialogTracker.delete(this.id);
                     resolve(res);

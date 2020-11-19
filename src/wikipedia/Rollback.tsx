@@ -6,7 +6,6 @@ import RedWarnStore from "../data/RedWarnStore";
 import redirect from "../util/redirect";
 import WikipediaAPI from "./API";
 import Revision from "./Revision";
-import WikipediaURL from "./URL";
 import { RW_VERSION, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
 
 export default class Rollback {
@@ -18,6 +17,7 @@ export default class Rollback {
             mw.config.get("wgRelevantPageName"),
             this.getRollbackRevId()
         );
+        await rev.user.quickWelcome();
     }
     static selectFromDisabled(): void {
         throw new Error("Method not implemented.");
@@ -81,7 +81,7 @@ export default class Rollback {
         );
         const { revid } = await WikipediaAPI.latestRevisionNotByUser(
             mw.config.get("wgRelevantPageName"),
-            user
+            user.username
         );
         const url =
             RedWarnStore.wikiIndex +
@@ -364,7 +364,7 @@ export default class Rollback {
 
             const latestRev = await WikipediaAPI.latestRevisionNotByUser(
                 mw.config.get("wgRelevantPageName"),
-                rev.user
+                rev.user.username
             );
 
             if (latestRev.parentid.toString() == Rollback.getRollbackRevId()) {
@@ -417,7 +417,7 @@ export default class Rollback {
                     if (showRollbackDoneOps) {
                         resolve(
                             Rollback.showRollbackDoneOps(
-                                rev.user,
+                                rev.user.username,
                                 defaultWarnIndex
                             )
                         );
@@ -435,7 +435,7 @@ export default class Rollback {
             try {
                 await WikipediaAPI.api.rollback(
                     mw.config.get("wgRelevantPageName"),
-                    rev.user,
+                    rev.user.username,
                     {
                         // TODO i18n
                         summary:
@@ -476,7 +476,10 @@ export default class Rollback {
             setTimeout(() => {
                 if (showRollbackDoneOps) {
                     resolve(
-                        Rollback.showRollbackDoneOps(rev.user, defaultWarnIndex)
+                        Rollback.showRollbackDoneOps(
+                            rev.user.username,
+                            defaultWarnIndex
+                        )
                     );
                 } else {
                     resolve();

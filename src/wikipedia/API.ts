@@ -5,6 +5,7 @@ import AjaxSettings = JQuery.AjaxSettings;
 import { RW_LINK_SUMMARY, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
 import WikipediaURL from "./URL";
 import Api = mw.Api;
+import User from "./User";
 
 export default class WikipediaAPI {
     static api: Api;
@@ -131,7 +132,7 @@ export default class WikipediaAPI {
         const latestUsername = revisions.query.pages[0].revisions[0].user;
         if (latestRevisionId == revisionId) {
             return {
-                user: latestUsername,
+                user: new User(latestUsername),
                 revid: latestRevisionId,
                 parentid: parentRevisionId,
             };

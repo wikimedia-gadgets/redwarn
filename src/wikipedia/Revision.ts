@@ -1,3 +1,5 @@
+import User from "./User";
+
 /**
  * A revision is an object provided by the MediaWiki API which represents
  * a change in a page's content.
@@ -16,7 +18,7 @@ interface Revision {
     parentid?: number;
 
     /** The user who published that revision. */
-    user?: string;
+    user?: User;
 }
 
 export default Revision;

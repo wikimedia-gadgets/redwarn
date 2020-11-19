@@ -7,6 +7,12 @@ import RedWarnStore from "../../../data/RedWarnStore";
 import { MDCRipple } from "@material/ripple";
 import { MDCDialog } from "@material/dialog";
 import { getMaterialStorage } from "../storage/MaterialStyleStorage";
+import MaterialButton from "./MaterialButton";
+import MaterialDialog, {
+    MaterialDialogActions,
+    MaterialDialogContent,
+    MaterialDialogTitle,
+} from "./MaterialDialog";
 
 /* TODO: Create a handling MaterialDialog which will create a specialized dialog based on
          the input type. */
@@ -96,16 +102,18 @@ export default class MaterialAlertDialog extends RWUIDialog {
         const buttons: ComponentChild[] = [];
         for (const action of this.props.actions) {
             buttons.push(
-                <button
-                    type="button"
-                    class="mdc-button mdc-dialog__button"
-                    data-mdc-dialog-action={action.data}
+                <MaterialButton
+                    dialogAction={
+                        action.text == null
+                            ? action.data
+                            : {
+                                data: action.data,
+                                text: action.text,
+                            }
+                    }
                 >
-                    <div class="mdc-button__ripple" />
-                    <span class="mdc-button__label">
-                        {action.text ?? action.data}
-                    </span>
-                </button>
+                    {action.text ?? action.data}
+                </MaterialButton>
             );
         }
 
@@ -120,34 +128,27 @@ export default class MaterialAlertDialog extends RWUIDialog {
      */
     render(): Element {
         this.element = (
-            <div id={this.id} class="mdc-dialog">
-                <div class="mdc-dialog__container">
-                    <div
-                        class="mdc-dialog__surface"
-                        role="alertdialog"
-                        aria-modal="true"
-                        aria-labelledby={this.props.title ?? "RedWarn dialog"}
-                        style={`width: ${this.props.width ?? "30vw"};`}
-                    >
-                        {this.props.title && (
-                            <h2 class="mdc-dialog__title">
-                                {this.props.title}
-                            </h2>
-                        )}
-                        {this.props.content && (
-                            <div class="mdc-dialog__content">
-                                {...this.props.content}
-                            </div>
-                        )}
-                        {this.props.actions && (
-                            <div class="mdc-dialog__actions">
-                                {this.renderActions()}
-                            </div>
-                        )}
-                    </div>
-                </div>
-                <div class="mdc-dialog__scrim" />
-            </div>
+            <MaterialDialog
+                surfaceProperties={{
+                    "style": `width: ${this.props.width ?? "30vw"};`,
+                    "aria-modal": true,
+                    "aria-labelledby": this.props.title ?? "RedWarn dialog",
+                }}
+            >
+                {this.props.title && (
+                    <MaterialDialogTitle>
+                        {this.props.title}
+                    </MaterialDialogTitle>
+                )}
+                {this.props.content && (
+                    <MaterialDialogContent>
+                        {...this.props.content}
+                    </MaterialDialogContent>
+                )}
+                <MaterialDialogActions>
+                    {this.renderActions()}
+                </MaterialDialogActions>
+            </MaterialDialog>
         ) as HTMLDialogElement;
 
         return this.element;

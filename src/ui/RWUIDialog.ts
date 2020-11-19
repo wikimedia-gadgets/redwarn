@@ -63,6 +63,10 @@ export interface RWUIDialogProperties extends RWUIElementProperties {
      */
     width?: string;
 
+    /**
+     * Used to track displayed dialogs.
+     * @internal
+     */
     id?: RWUIDialogID;
 }
 
@@ -72,7 +76,7 @@ export interface RWUIDialogProperties extends RWUIElementProperties {
  * {@link document.appendChild}, as the dialog is shown using {@link show} instead.
  */
 export class RWUIDialog extends RWUIElement {
-    public static elementName: "rwDialog" = "rwDialog";
+    public static readonly elementName: "rwDialog" = "rwDialog";
 
     protected _result: any;
     /**

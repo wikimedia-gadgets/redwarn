@@ -200,6 +200,22 @@ declare namespace mw {
             params: Record<string, any>,
             ajaxOptions?: AjaxSettings
         ): JQueryPromise<JQueryXHR>;
+
+        /**
+         * Convenience method for `action=rollback`.
+         *
+         * @param {string|mw.Title} page
+         * @param {string} user
+         * @param {Object} [params] Additional parameters
+         * @return {jQuery.Promise}
+         *
+         * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Api.plugin.rollback-method-rollback
+         */
+        rollback(
+            page: string,
+            user: string,
+            params?: Record<string, any>
+        ): JQueryPromise<Record<string, any>>;
     }
 
     /**

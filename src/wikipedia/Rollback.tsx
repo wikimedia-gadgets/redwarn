@@ -420,6 +420,61 @@ export default class Rollback {
                 return await promise;
             }
         }
+
+        async function rollbackCallback() {
+            Rollback.progressBar(70, 70);
+
+            try {
+                await WikipediaAPI.api.rollback(
+                    mw.config.get("wgRelevantPageName"),
+                    rev.user,
+                    {
+                        // TODO i18n
+                        summary:
+                            "Rollback edit(s) by [[Special:Contributions/" +
+                            rev.user +
+                            "|" +
+                            rev.user +
+                            "]] ([[User_talk:" +
+                            rev.user +
+                            "|talk]]): " +
+                            reason +
+                            " [[w:en:WP:RW|(RW " +
+                            RW_VERSION +
+                            ")]]", // summary sign here
+                        tags:
+                            RedWarnStore.wikiID === "enwiki" ? "RedWarn" : null, // Only add tags if on english wikipedia
+                    }
+                );
+            } catch (e) {
+                // Error occurred or other issue
+                console.error(e);
+                // Show rollback icons again
+                $("#rwCurrentRevRollbackBtns").show();
+                $("#rwRollbackInProgress").hide();
+                // TODO toast
+                /* rw.visuals.toast.show(
+                    "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
+                ); */
+            }
+
+            Rollback.progressBar(100, 100);
+
+            let resolve: (value?: any) => void;
+            const promise = new Promise((res) => {
+                resolve = res;
+            });
+            setTimeout(() => {
+                if (showRollbackDoneOps) {
+                    resolve(
+                        Rollback.showRollbackDoneOps(rev.user, defaultWarnIndex)
+                    );
+                } else {
+                    resolve();
+                }
+            });
+            return await promise;
+        }
     }
 
     static getDisabledHTMLandHandlers(): HTMLElement[] {

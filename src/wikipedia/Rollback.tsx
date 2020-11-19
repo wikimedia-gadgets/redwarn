@@ -21,9 +21,11 @@ export default class Rollback {
         await rev.user.quickWelcome();
     }
     static selectFromDisabled(): void {
+        // TODO: this function solely relies on dialogs, so that needs to be done first
         throw new Error("Method not implemented.");
     }
-    static async promptRestoreReason(reason: string): Promise<void> {
+    static async promptRestoreReason(revID: string): Promise<void> {
+        // TODO: this function solely relies on dialogs, so that needs to be done first
         throw new Error("Method not implemented.");
     }
     static getRollbackRevId(): string {
@@ -344,6 +346,8 @@ export default class Rollback {
         },100); */
     }
     static async promptRollbackReason(summary: string): Promise<void> {
+        // TODO: this function solely relies on dialogs, so that needs to be done first
+
         await WikipediaAPI.isLatestRevision(
             mw.config.get("wgRelevantPageName"),
             this.getRollbackRevId()
@@ -717,7 +721,7 @@ export const RollbackIcons: RollbackIcon[] = [
         color: "black", // css colour
         icon: "compare_arrows",
         actionType: "function",
-        action: () => Rollback.preview(), // Callback
+        action: (): Promise<void> => Rollback.preview(), // Callback
     },
 
     {
@@ -726,7 +730,7 @@ export const RollbackIcons: RollbackIcon[] = [
         color: "black", // css colour
         icon: "library_add",
         actionType: "function",
-        action: () => Rollback.welcomeRevUser(), // Callback
+        action: (): Promise<void> => Rollback.welcomeRevUser(), // Callback
     },
 
     {
@@ -735,7 +739,7 @@ export const RollbackIcons: RollbackIcon[] = [
         color: "black", // css colour
         icon: "more_vert",
         actionType: "function",
-        action: () => Rollback.selectFromDisabled(), // Callback
+        action: (): void => Rollback.selectFromDisabled(), // Callback
     },
 
     // END DEFAULT ENABLED ICONS

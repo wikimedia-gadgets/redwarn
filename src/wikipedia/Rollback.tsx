@@ -7,6 +7,7 @@ import redirect from "../util/redirect";
 import WikipediaAPI from "./API";
 import Revision from "./Revision";
 import { RW_VERSION, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
+import RWUI from "../ui/RWUI";
 
 export default class Rollback {
     static async welcomeRevUser(): Promise<void> {
@@ -45,19 +46,25 @@ export default class Rollback {
                 .split("=")[1];
         } else {
             // BUG!
-            // TODO dialog
-            /* rw.ui.confirmDialog(
-                "A very weird error occurred. (rollback getRollbackRevID failed via final else!)",
-                "REPORT BUG",
-                () =>
-                    rw.ui.reportBug(
+            new RWUI.Dialog({
+                title: "Error",
+                content: [
+                    "An error occurred! (rollback getRollbackRevId failed via final else!)",
+                ],
+                actions: [
+                    {
+                        data: "report",
+                        text: "Report Bug",
+                        action: () => {
+                            // TODO report bug
+                            /* rw.ui.reportBug(
                         "rollback getRollbackRevID failed via final else! related URL: " +
                             window.location.href
-                    ),
-                "",
-                () => {},
-                0
-            ); */
+                    ) */
+                        },
+                    },
+                ],
+            }).show();
         }
     }
 

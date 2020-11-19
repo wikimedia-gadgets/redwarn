@@ -161,7 +161,7 @@ export default class WikipediaAPI {
             prop: "revisions",
             titles: mw.util.wikiUrlencode(name),
             rvslots: "*",
-            rvprop: ["ids", "user", "content"],
+            rvprop: ["ids", "user", "content", "comment"],
             rvexcludeuser: username,
         });
 
@@ -174,11 +174,9 @@ export default class WikipediaAPI {
         }
 
         const latestContent = foundRevision.slots.main.content;
-        // TODO i18n
-        const summary = `Reverting edit(s) by [[Special:Contributions/${username}|${username}]] ([[User_talk:${username}|talk]]) to rev. ${foundRevision.revid} by ${foundRevision.user}`;
         return {
             content: latestContent,
-            summary: summary,
+            summary: foundRevision.comment,
             revid: foundRevision.revid,
             parentid: foundRevision.parentid,
         };

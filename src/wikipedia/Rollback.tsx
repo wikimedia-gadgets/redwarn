@@ -6,6 +6,8 @@ import RedWarnStore from "../data/RedWarnStore";
 import redirect from "../util/redirect";
 import WikipediaAPI from "./API";
 import Revision from "./Revision";
+import WikipediaURL from "./URL";
+import { RW_VERSION } from "../data/RedWarnConstants";
 
 export default class Rollback {
     static welcomeRevUser(): void {
@@ -337,7 +339,8 @@ export default class Rollback {
 
     static async rollback(
         reason: string,
-        defaultWarnIndex: number
+        defaultWarnIndex: number,
+        showRollbackDoneOps = true
     ): Promise<void> {
         // Show progress bar
         $("#rwCurrentRevRollbackBtns").hide();
@@ -349,6 +352,74 @@ export default class Rollback {
             mw.config.get("wgRelevantPageName"),
             this.getRollbackRevId()
         );
+
+        async function pseudoRollbackCallback() {
+            Rollback.progressBar(25, 0);
+
+            const latestRev = await WikipediaAPI.latestRevisionNotByUser(
+                mw.config.get("wgRelevantPageName"),
+                rev.user
+            );
+
+            if (latestRev.parentid.toString() == Rollback.getRollbackRevId()) {
+                // looks like that there is a newer revision! redirect to it.
+                WikipediaAPI.isLatestRevision(
+                    mw.config.get("wgRelevantPageName"),
+                    "0"
+                );
+                return; // stop here.
+            }
+
+            // TODO i18n
+            const summary = `Reverting edit(s) by [[Special:Contributions/${rev.user}|${rev.user}]] ([[User_talk:${rev.user}|talk]]) to rev. ${latestRev.revid} by ${latestRev.user}`;
+            const res = await WikipediaAPI.postWithEditToken({
+                action: "edit",
+                format: "json",
+                title: mw.config.get("wgRelevantPageName"),
+                summary:
+                    summary +
+                    ": " +
+                    reason +
+                    " [[w:en:WP:RW|(RW " +
+                    RW_VERSION +
+                    ")]]", // summary sign here
+                undo: rev.revid, // current
+                undoafter: latestRev.revid, // restore version
+                tags: RedWarnStore.wikiID === "enwiki" ? "RedWarn" : null, // Only add tags if on english wikipedia
+            });
+            if (!res.edit) {
+                // Error occured or other issue
+                console.error(res);
+                // Show rollback icons again (todo)
+                $("#rwCurrentRevRollbackBtns").show();
+                $("#rwRollbackInProgress").hide();
+
+                // TODO toast
+                /* rw.visuals.toast.show(
+                    "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
+                ); */
+            } else {
+                Rollback.progressBar(100, 100);
+
+                let resolve: (value?: any) => void;
+                const promise = new Promise((res) => {
+                    resolve = res;
+                });
+                setTimeout(() => {
+                    if (showRollbackDoneOps) {
+                        resolve(
+                            Rollback.showRollbackDoneOps(
+                                rev.user,
+                                defaultWarnIndex
+                            )
+                        );
+                    } else {
+                        resolve();
+                    }
+                });
+                return await promise;
+            }
+        }
     }
 
     static getDisabledHTMLandHandlers(): HTMLElement[] {

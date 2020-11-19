@@ -1,1 +1,12 @@
-old/**/*
+# Dependencies
+node_modules/
+package-lock.json
+package.json
+
+# Legacy files (which exist for reference)
+old/
+*.html
+*.js
+
+# Artifacts
+build/

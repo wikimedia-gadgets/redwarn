@@ -7,11 +7,17 @@ import redirect from "../util/redirect";
 import WikipediaAPI from "./API";
 import Revision from "./Revision";
 import WikipediaURL from "./URL";
-import { RW_VERSION } from "../data/RedWarnConstants";
+import { RW_VERSION, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
 
 export default class Rollback {
-    static welcomeRevUser(): void {
-        throw new Error("Method not implemented.");
+    static async welcomeRevUser(): Promise<void> {
+        // Send welcome to user who made most recent revision
+        // TODO toasts
+        // rw.visuals.toast.show("Please wait...", false, false, 1000);
+        const rev = await WikipediaAPI.isLatestRevision(
+            mw.config.get("wgRelevantPageName"),
+            this.getRollbackRevId()
+        );
     }
     static selectFromDisabled(): void {
         throw new Error("Method not implemented.");
@@ -353,7 +359,7 @@ export default class Rollback {
             this.getRollbackRevId()
         );
 
-        async function pseudoRollbackCallback() {
+        async function pseudoRollbackCallback(): Promise<void> {
             Rollback.progressBar(25, 0);
 
             const latestRev = await WikipediaAPI.latestRevisionNotByUser(
@@ -385,7 +391,9 @@ export default class Rollback {
                     ")]]", // summary sign here
                 undo: rev.revid, // current
                 undoafter: latestRev.revid, // restore version
-                tags: RedWarnStore.wikiID === "enwiki" ? "RedWarn" : null, // Only add tags if on english wikipedia
+                tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
+                    ? "RedWarn"
+                    : null,
             });
             if (!res.edit) {
                 // Error occured or other issue
@@ -402,7 +410,7 @@ export default class Rollback {
                 Rollback.progressBar(100, 100);
 
                 let resolve: (value?: any) => void;
-                const promise = new Promise((res) => {
+                const promise = new Promise<void>((res) => {
                     resolve = res;
                 });
                 setTimeout(() => {
@@ -421,7 +429,7 @@ export default class Rollback {
             }
         }
 
-        async function rollbackCallback() {
+        async function rollbackCallback(): Promise<void> {
             Rollback.progressBar(70, 70);
 
             try {
@@ -442,8 +450,9 @@ export default class Rollback {
                             " [[w:en:WP:RW|(RW " +
                             RW_VERSION +
                             ")]]", // summary sign here
-                        tags:
-                            RedWarnStore.wikiID === "enwiki" ? "RedWarn" : null, // Only add tags if on english wikipedia
+                        tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
+                            ? "RedWarn"
+                            : null,
                     }
                 );
             } catch (e) {
@@ -461,7 +470,7 @@ export default class Rollback {
             Rollback.progressBar(100, 100);
 
             let resolve: (value?: any) => void;
-            const promise = new Promise((res) => {
+            const promise = new Promise<void>((res) => {
                 resolve = res;
             });
             setTimeout(() => {
@@ -474,6 +483,37 @@ export default class Rollback {
                 }
             });
             return await promise;
+        }
+
+        if (WikipediaAPI.hasGroup("rollbacker")) {
+            // TODO config dialog
+            if (/* !rw.config.rollbackMethod */ false) {
+                /* rw.ui.confirmDialog(`
+                You have rollback permissions!
+                Would you like to use the faster rollback API in future or continue using a rollback-like setting?
+                You can change this in your preferences at any time.`,
+                "USE ROLLBACK", ()=>{
+                    dialogEngine.closeDialog();
+                    rw.config.rollbackMethod = "rollback";
+                    rw.info.writeConfig(true, ()=>rollbackCallback()); // save config and callback
+                },
+                "KEEP USING ROLLBACK-LIKE",()=>{
+                    dialogEngine.closeDialog();
+                    rw.config.rollbackMethod = "pseudoRollback";
+                    rw.info.writeConfig(true, ()=>pseudoRollbackCallback()); // save config and callback
+                },45); */
+            } else {
+                // Config set, complete callback - remember, this is feature restricted so we won't get here without RB perms
+                // TODO config
+                if (/* rw.config.rollbackMethod */ "rollback" == "rollback") {
+                    // Rollback selected
+                    return await rollbackCallback(); // Do rollback
+                } else {
+                    return await pseudoRollbackCallback(); // rollback-like
+                }
+            }
+        } else {
+            return await pseudoRollbackCallback();
         }
     }
 

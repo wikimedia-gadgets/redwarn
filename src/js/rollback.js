@@ -706,10 +706,14 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             // Overwrite function and values used on diff pages as we aren't on a diff page
             rw.rollback.getRollbackrevID = ()=>{return revID;}; 
             mw.config.values.wgRelevantPageName = pageName;
-            rw.rollback.apply("vandalism (from contribs page)", ()=>{ // apply the rollback
+            rw.rollback.apply("Vandalism (from [[WP:UCP|contribs]])", ()=>{ // apply the rollback
                 // Rollback complete!
                 $("#rw-currentRev"+ i).html(
-                    `<span style="font-family:Roboto;color:green;">reverted!</span>`
+                    `<span style="font-family:Roboto;color:green;"><a href="${
+                        "https://en.wikipedia.org/w/?title=" + mw.util.wikiUrlencode(
+                        pageName
+                        ) + "&action=history"
+                    }">reverted!</a></span>`
                 );
             }); 
         }, ()=>{
@@ -744,10 +748,14 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
                 // Overwrite function and values used on diff pages as we aren't on a diff page
                 rw.rollback.getRollbackrevID = ()=>{return revID;}; 
                 mw.config.values.wgRelevantPageName = pageName;
-                rw.rollback.apply(reason + " (from contribs page)", ()=>{ // apply the rollback
+                rw.rollback.apply(rollbackReason + " (from [[WP:UCP|contribs]])", ()=>{ // apply the rollback
                     // Rollback complete!
                     $("#rw-currentRev"+ i).html(
-                        `<span style="font-family:Roboto;color:green;">reverted!</span>`
+                        `<span style="font-family:Roboto;color:green;"><a href="${
+                            "https://en.wikipedia.org/w/?title=" + mw.util.wikiUrlencode(
+                            pageName
+                            ) + "&action=history"
+                        }">reverted!</a></span>`
                     );
                 }); 
             }, ()=>{

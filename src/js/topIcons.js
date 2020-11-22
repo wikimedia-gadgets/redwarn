@@ -99,7 +99,7 @@ rw.topIcons = {
         "showsOnlyOnUserPages": false,
         "showsOnUneditablePages": true,
         "colorModifier": null, // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
-        "enabled": true // to show in main screen or more options screen
+        "enabled": false // to show in main screen or more options screen
     }
   ],
 

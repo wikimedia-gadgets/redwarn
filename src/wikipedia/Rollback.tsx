@@ -10,6 +10,21 @@ import { RW_VERSION, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
 import RWUI from "../ui/RWUI";
 
 export default class Rollback {
+    static async init(): Promise<void> {
+        if ($("table.diff").length > 0) {
+            // DETECT DIFF HERE - if diff table is present
+            await this.loadIcons();
+        } else if (
+            mw.config
+                .get("wgRelevantPageName")
+                .includes("Special:Contributions")
+        ) {
+            // Special contribs page
+            // TODO contrib page icons
+            this.contribsPageIcons();
+        }
+    }
+
     static async welcomeRevUser(): Promise<void> {
         // Send welcome to user who made most recent revision
         // TODO toasts
@@ -634,6 +649,136 @@ export default class Rollback {
             // fade out - looks smoother
             $("#rwRollbackDoneIcons").fadeIn(); //show our icons
         });
+    }
+
+    // CONTRIBS PAGE
+    static contribsPageIcons() {
+        // For each (current) tag
+        $("span.mw-uctop").each((i, el) => {
+            // Add rollback options (${i} inserts i at that point to ensure it is a unique ID)
+            /* $(el).html(`current
+                    <span id="rw-currentRev${i}" style="cursor:default"> <!-- Wrapper -->
+                        <span style="font-family:Roboto;font-weight:400;"> &nbsp; <!-- Styling container -->
+                            <!-- Links -->
+                            <a style="color:green;cursor:pointer;" id="rw-currentRevPrev${i}" onclick="rw.rollback.contribsPageRollbackPreview(${i});">prev</a> &nbsp;
+                            <a style="color:red;cursor:pointer;" id="rw-currentRevRvv${i}" onclick="rw.rollback.contribsPageRollbackVandal(${i});">rvv</a> &nbsp;
+                            <a style="color:blue;cursor:pointer;" id="rw-currentRevRb${i}" onclick="rw.rollback.contribsPageRollback(${i});">rb</a>
+
+                            <!-- Tooltips -->
+                            <div class="mdl-tooltip" data-mdl-for="rw-currentRevPrev${i}">
+                                Preview Rollback
+                            </div>
+                            <div class="mdl-tooltip" data-mdl-for="rw-currentRevRvv${i}">
+                                Quick rollback Vandalism
+                            </div>
+                            <div class="mdl-tooltip" data-mdl-for="rw-currentRevRb${i}">
+                                Rollback
+                            </div>
+                        </span>
+                    </span>
+                    `); */
+            // TODO i18n
+
+            const previewLink = (
+                <a
+                    style="color:green;cursor:pointer;"
+                    id={`rw-currentRevPrev${i}`}
+                    onClick={() => this.contribsPageRollbackPreview(i)}
+                    aria-describedby={`rw-currentRevPrev${i}T`}
+                >
+                    prev
+                </a>
+            );
+            const previewTooltip = (
+                <div
+                    id={`rw-currentRevPrev${i}T`}
+                    class="mdc-tooltip"
+                    role="tooltip"
+                    aria-hidden="true"
+                >
+                    <div class="mdc-tooltip__surface">Preview Rollback</div>
+                </div>
+            );
+            const mdcPreviewTooltip = new MDCTooltip(previewTooltip);
+            mdcPreviewTooltip.initialize();
+
+            const vandalLink = (
+                <a
+                    style="color:red;cursor:pointer;"
+                    id={`rw-currentRevRvv${i}`}
+                    onClick={() => this.contribsPageRollbackVandal(i)}
+                    aria-describedby={`rw-currentRevRvv${i}T`}
+                >
+                    rvv
+                </a>
+            );
+            const vandalTooltip = (
+                <div
+                    id={`rw-currentRevRvv${i}T`}
+                    class="mdc-tooltip"
+                    role="tooltip"
+                    aria-hidden="true"
+                >
+                    <div class="mdc-tooltip__surface">
+                        Quick Rollback Vandalism
+                    </div>
+                </div>
+            );
+            const mdcVandalTooltip = new MDCTooltip(vandalTooltip);
+            mdcVandalTooltip.initialize();
+
+            const rollbackLink = (
+                <a
+                    style="color:blue;cursor:pointer;"
+                    id={`rw-currentRevRb${i}`}
+                    onClick={() => this.contribsPageRollback(i)}
+                    aria-describedby={`rw-currentRevRb${i}T`}
+                >
+                    rb
+                </a>
+            );
+            const rollbackTooltip = (
+                <div
+                    id={`rw-currentRevRb${i}T`}
+                    class="mdc-tooltip"
+                    role="tooltip"
+                    aria-hidden="true"
+                >
+                    <div class="mdc-tooltip__surface">Rollback</div>
+                </div>
+            );
+            const mdcRollbackTooltip = new MDCTooltip(rollbackTooltip);
+            mdcRollbackTooltip.initialize();
+
+            const wrapper = (
+                <span id="rw-currentRev${i}" style="cursor:default">
+                    {/* <!-- Wrapper --> */}
+                    <span style="font-family:Roboto;font-weight:400;">
+                        &nbsp; {/* <!-- Styling container --> */}
+                        {previewLink}&nbsp;
+                        {vandalLink}&nbsp;
+                        {rollbackLink}&nbsp;
+                        {previewTooltip}&nbsp;
+                        {vandalTooltip}&nbsp;
+                        {rollbackTooltip}
+                    </span>
+                </span>
+            );
+
+            $(el).append(wrapper);
+        });
+    }
+
+    static contribsPageRollback(i: number): void {
+        throw new Error("Method not implemented.");
+    }
+
+    static contribsPageRollbackVandal(i: number): void {
+        throw new Error("Method not implemented.");
+    }
+
+    static contribsPageRollbackPreview(i: number): void {
+        throw new Error("Method not implemented.");
     }
 }
 

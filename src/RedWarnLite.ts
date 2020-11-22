@@ -16,6 +16,7 @@ import RedWarnHooks from "./event/RedWarnHooks";
 import WikipediaAPI from "./wikipedia/API";
 import StyleManager from "./styles/StyleManager";
 import RedWarnStore from "./data/RedWarnStore";
+import Rollback from "./wikipedia/Rollback";
 
 console.log("Starting RedWarn...");
 $(document).ready(async () => {
@@ -39,6 +40,7 @@ $(document).ready(async () => {
         RedWarnHooks.executeHooks("init"),
         Dependencies.resolve(),
         WikipediaAPI.init(),
+        Rollback.init(),
     ]);
 
     /**

@@ -82,11 +82,25 @@ rw.topIcons = {
         "showsOnUneditablePages": true,
         "colorModifier": null, // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
         "enabled": true // to show in main screen or more options screen
-    }
+    },
 
 
     // MORE OPTIONS DEFAULTS STAY IN MORE OPTIONS - NO WAY TO MOVE THEM OUT OR CHANGE ORDER
 
+
+    // HIDDEN BY DEFAULT
+
+    // RPM STATS
+    {
+        "title": "Vandalism Statistics",
+        "shortTitle": "Stats",
+        "icon": "insights", // material icon
+        "callback": ()=>redirect("https://redwarn.toolforge.org/tools/rpm/", true), // when clicked
+        "showsOnlyOnUserPages": false,
+        "showsOnUneditablePages": true,
+        "colorModifier": null, // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
+        "enabled": true // to show in main screen or more options screen
+    }
   ],
 
   "generateHTML" : ()=>{

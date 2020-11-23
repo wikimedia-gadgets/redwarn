@@ -373,7 +373,7 @@ rw.info.writeConfig(true, ()=>{ // save config
                         "action": "edit",
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
-                        "title" : "Wikipedia:RedWarn/help/Quick_Template/templates",
+                        "title" : "Wikipedia:RedWarn/Documentation/Quick Template/templates",
                         "summary" : "Publish new pack [[w:en:Wikipedia:RedWarn|(RedWarn "+ rw.version +")]]", // summary sign here
                         "appendtext": // Add our section wikitxt here
                         `

@@ -173,6 +173,7 @@ export default class WikipediaAPI {
         redirect(WikipediaURL.getDiffUrl(latestRevisionId, parentRevisionId));
     }
 
+    // TODO documentation for whatever this function is
     static async latestRevisionNotByUser(
         name: string,
         username: string
@@ -205,9 +206,13 @@ export default class WikipediaAPI {
         };
     }
 
-    static hasGroup(perm: string): boolean {
+    /**
+     * Checks if the user has a given permission.
+     * @param permission
+     */
+    static hasGroup(permission: string): boolean {
         const g = RedWarnStore.APIStore.groups;
-        let hasGroup = g.includes(perm);
+        let hasGroup = g.includes(permission);
 
         // Administrators override all feature restrictions.
         if (!hasGroup) {
@@ -216,19 +221,26 @@ export default class WikipediaAPI {
 
         // Due to 2 types of the `confirmed` group, `confirmed` and `autoconfirmed`,
         // we have to check both.
-        if (perm === "confirmed" && !hasGroup) {
+        if (permission === "confirmed" && !hasGroup) {
             hasGroup = g.includes("autoconfirmed");
         }
 
         return hasGroup;
     }
 
+    /**
+     * Gets the user's groups.
+     */
     static async getGroups(): Promise<string[]> {
-        const groups = await mw.user.getGroups();
-        RedWarnStore.APIStore.groups = groups;
-        return groups;
+        if (!RedWarnStore.APIStore.groups) {
+            RedWarnStore.APIStore.groups = await mw.user.getGroups();
+        }
+        return RedWarnStore.APIStore.groups;
     }
 
+    /**
+     * Initialize the MediaWiki API Manager.
+     */
     static async init(): Promise<void> {
         this.api = new mw.Api();
         RedWarnStore.APIStore.username = mw.user.getName();

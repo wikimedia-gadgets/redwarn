@@ -1,6 +1,8 @@
-export const RW_VERSION = "17dev";
-export const RW_VERSION_SUMMARY = `<!-- RedWarn 17 -->
-RedWarn 17.`;
+import { version } from "../../package.json";
+
+export const RW_VERSION = version;
+export const RW_VERSION_TAG = "17dev";
+export const RW_VERSION_SUMMARY = "nothing yet";
 
 // Since MediaWiki will convert some of these templates, we have to store these
 // as Base64 encoded strings.

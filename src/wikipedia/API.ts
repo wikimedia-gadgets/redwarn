@@ -1,9 +1,10 @@
 import redirect from "../util/redirect";
 import Revision from "./Revision";
 import RedWarnStore from "../data/RedWarnStore";
-import AjaxSettings = JQuery.AjaxSettings;
 import { RW_LINK_SUMMARY, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
 import WikipediaURL from "./URL";
+import i18next from "i18next";
+import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 
 export default class WikipediaAPI {
@@ -165,7 +166,8 @@ export default class WikipediaAPI {
             rvexcludeuser: username,
         });
 
-        const foundRevision = revisions?.query?.pages?.[0]?.revisions?.[0];
+        const foundRevision: Revision =
+            revisions?.query?.pages?.[0]?.revisions?.[0];
         if (foundRevision == null) {
             // Probably no other edits. Redirect to history page and show the notice
             // TODO page load notices
@@ -174,8 +176,11 @@ export default class WikipediaAPI {
         }
 
         const latestContent = foundRevision.slots.main.content;
-        // TODO i18n
-        const summary = `Reverting edit(s) by [[Special:Contributions/${username}|${username}]] ([[User_talk:${username}|talk]]) to rev. ${foundRevision.revid} by ${foundRevision.user}`;
+        const summary = i18next.t("wikipedia:summaries.revert", {
+            username: username,
+            targetRevisionId: foundRevision.revid,
+            targetRevisionUser: foundRevision.user,
+        });
         return {
             content: latestContent,
             summary: summary,

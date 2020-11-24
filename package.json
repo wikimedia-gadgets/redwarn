@@ -11,6 +11,8 @@
         "chance": "^1.1.7",
         "css-loader": "^4.3.0",
         "dialog-polyfill": "^0.5.3",
+        "i18next": "^19.8.4",
+        "i18next-browser-languagedetector": "^6.0.1",
         "jquery": "^3.5.1",
         "material-components-web": "^7.0.0",
         "sass": "^1.27.0",

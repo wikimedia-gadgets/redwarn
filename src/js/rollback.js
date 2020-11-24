@@ -361,7 +361,6 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             if (icon.name == "More Options") return; // does nothing here, so not needed
 
             let elID = "rwRollback_" + i; // get the ID for the new icons
-
             // Establish element with all the info
             finalIconStr += `
             <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;" onclick="window.parent.postMessage('rwRollbackBtn${elID}', '*');">

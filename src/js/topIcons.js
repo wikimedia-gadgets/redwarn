@@ -173,7 +173,7 @@ rw.topIcons = {
         const iconID = "rwTopIcon"+ i;
         // if icon enabled and (icon shows on user page and page is userpage and is editable, or icon shows on uneditable pages and page isn't editable)
         // FOR NORMAL ICONS ONLY, other twinkle style menu handled elsewhere
-        if ((!icon.enabled && ((icon.showsOnlyOnUserPages && pageIsUserPage) || (pageIsEditable && !icon.showsOnlyOnUserPages) || (!pageIsEditable && icon.showsOnUneditablePages)))) {
+        if ((!icon.enabled && ((icon.showsOnlyOnUserPages && pageIsUserPage) || (pageIsEditable && !icon.showsOnlyOnUserPages) || (!pageIsEditable && icon.showsOnUneditablePages))) && icon.title != "More Options") {
             finalHTML += `
                 <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;${icon.colorModifier == null ? `` : `color:`+ icon.colorModifier}" onclick="window.parent.postMessage('${iconID}', '*');">
                     <span class="material-icons" style="padding-right:20px">${icon.icon}</span>${icon.title}

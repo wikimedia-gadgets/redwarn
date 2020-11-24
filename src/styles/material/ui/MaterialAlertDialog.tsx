@@ -132,7 +132,7 @@ export default class MaterialAlertDialog extends RWUIDialog {
                             </div>
                         )}
                         {this.props.actions && (
-                            <div class="mdl-dialog__actions">
+                            <div class="mdc-dialog__actions">
                                 {this.renderActions()}
                             </div>
                         )}

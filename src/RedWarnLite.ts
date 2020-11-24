@@ -16,9 +16,13 @@ import RedWarnHooks from "./event/RedWarnHooks";
 import WikipediaAPI from "./wikipedia/API";
 import StyleManager from "./styles/StyleManager";
 import RedWarnStore from "./data/RedWarnStore";
+import Localization from "./localization/Localization";
 
 console.log("Starting RedWarn...");
 $(document).ready(async () => {
+    // Load in languages first.
+    await Localization.init();
+
     console.log("Initializing store...");
     // Initialize RedWarn store.
     RedWarnStore.initializeStore();
@@ -30,7 +34,7 @@ $(document).ready(async () => {
     /**
      * Extensions can push their own dependencies here.
      */
-    await RedWarnHooks.executeHooks("preinit");
+    await Promise.all([RedWarnHooks.executeHooks("preinit")]);
 
     /**
      * Initialize everything

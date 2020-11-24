@@ -170,7 +170,7 @@ rw.preferences = {
                 // Pending changes auto accept
                 "rwDisableReviewAutoAccept" : {
                     "optionTitle" : "Pending change review - auto accept",
-                    "supportingText": "Choose whether to automatically dismiss the reason prompt and accept revisions after five seconds. Override this countdown by interacting with the dialog",
+                    "supportingText": "After accepting revisions choose whether to automatically dismiss the reason prompt and accept them after five seconds. Override this countdown by interacting with the dialog",
 
                     // Config options
                     "options" : { 
@@ -182,7 +182,7 @@ rw.preferences = {
                 // auto reject
                 "rwEnableReviewAutoRevert" : {
                     "optionTitle" : "Pending change review - auto revert",
-                    "supportingText": "Choose whether to automatically dismiss the reason prompt and revert revisions after five seconds. Override this countdown by interacting with the dialog",
+                    "supportingText": "After declining revisions choose whether to automatically dismiss the reason prompt and decline them after five seconds. Override this countdown by interacting with the dialog",
 
                     // Config options
                     "options" : { 

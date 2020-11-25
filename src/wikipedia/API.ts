@@ -1,9 +1,9 @@
 import redirect from "../util/redirect";
 import Revision from "./Revision";
 import RedWarnStore from "../data/RedWarnStore";
-import AjaxSettings = JQuery.AjaxSettings;
 import { RW_LINK_SUMMARY, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
 import WikipediaURL from "./URL";
+import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 import User from "./User";
 

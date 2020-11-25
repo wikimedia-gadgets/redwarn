@@ -8,6 +8,7 @@ import WikipediaAPI from "./API";
 import Revision from "./Revision";
 import { RW_VERSION, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
 import RWUI from "../ui/RWUI";
+import i18next from "i18next";
 
 export default class Rollback {
     static async init(): Promise<void> {
@@ -402,8 +403,11 @@ export default class Rollback {
                 return; // stop here.
             }
 
-            // TODO i18n
-            const summary = `Reverting edit(s) by [[Special:Contributions/${rev.user}|${rev.user}]] ([[User_talk:${rev.user}|talk]]) to rev. ${latestRev.revid} by ${latestRev.user}`;
+            const summary = i18next.t("wikipedia:summaries.revert", {
+                username: rev.user,
+                targetRevisionId: latestRev.revid,
+                targetRevisionUser: latestRev.user,
+            });
             const res = await WikipediaAPI.postWithEditToken({
                 action: "edit",
                 format: "json",

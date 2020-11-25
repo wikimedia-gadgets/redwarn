@@ -353,7 +353,7 @@ rw.multiAct = { // Multi action screen
                         <span class="material-icons" id="PastWarning-`+un+`" style="cursor:pointer;position: relative;top: 5px;padding-left: 10px;color:#a20000;" >report</span>
                         <div class="mdl-tooltip mdl-tooltip--large" for="PastWarning-`+un+`">
                             <span style="font-size:x-small;">
-                            Has been given a Level 4 Final<br/>or ONLY warning.
+                            Has been given a Level 4 Final<br/>or ONLY warning.<br/>this month.
                             </span>
                         </div>
                         `
@@ -401,7 +401,7 @@ rw.multiAct = { // Multi action screen
         }, ()=>{
             // When no perms
             rw.ui.confirmDialog(`
-            Sorry, but to prevent misuse you have to be an extended confirmed user to use the multiple action tool. Check back later!
+            Sorry, but to prevent misuse you have to be an <a href="https://en.wikipedia.org/wiki/Wikipedia:User_access_levels#Extendedconfirmed" target="_blank">extended confirmed user</a> to use the multiple action tool. Check back later!
             `,
             "OKAY", ()=>dialogEngine.closeDialog(),
             "", ()=>{}, 23);

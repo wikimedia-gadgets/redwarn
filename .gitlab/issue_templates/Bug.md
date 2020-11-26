@@ -37,3 +37,5 @@ PUT THE LOGS HERE
 - [ ] I have included the version of the browser I'm running, operating system and other scripts (if used).
 - [ ] I have included logs, exceptions and / or steps to reproduce the issue.
 - [ ] I have not used any OwO's or UwU's in this issue.
+
+/label ~bug

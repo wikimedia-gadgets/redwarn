@@ -10,7 +10,7 @@ rw.campaigns = {
                 new_releases
                 </span></div>
                 <div class="mdl-tooltip mdl-tooltip--large" for="rwCampaignTopicon">
-                    Annoncement from the RedWarn team!
+                    Announcement from the RedWarn team!
                 </div>
                 `);
 

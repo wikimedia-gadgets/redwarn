@@ -32,7 +32,7 @@ rw.ui = {
         let currentHeading = "";
         rw.rules.forEach((rule, i) => {
             // Check if category is different to current heading first
-            if (rule.catagory != currentHeading) {
+            if (rule.category != currentHeading) {
                 // Now generate a new heading and section for search to hide
                 finalListBox += `</span> <!-- close prior category -->
                 <span class="rwNoticeCatagory"> <!-- used for search -->
@@ -42,10 +42,10 @@ rw.ui = {
                     font-weight: 300;
                     width: 100%;
                     cursor: pointer;
-                ">${rule.catagory}</div>`;
+                ">${rule.category}</div>`;
 
                 // A new heading is needed
-                currentHeading = rule.catagory; // set to ours for detection
+                currentHeading = rule.category; // set to ours for detection
             }
 
             // Add appropriate list format per config

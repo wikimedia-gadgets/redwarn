@@ -387,7 +387,7 @@ rw.info.writeConfig(true, ()=>{ // save config
                             // Error occured or other issue
                             console.error(dt);
                             rw.ui.loadDialog.close();
-                            rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your pack has not been published to the QTPack page, maybe add manually.");
+                            rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your pack has not been published to the Quick Template Pack page, maybe add it manually.");
                         } else {
                             // Done! Load QTPack page
                             redirect("https://en.wikipedia.org/wiki/WP:REDWARN/QTPACKS"); // No rw.wikiBase due to lack of page there

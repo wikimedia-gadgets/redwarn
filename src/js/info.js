@@ -54,7 +54,7 @@ rw.info = { // API
                     dialogEngine.closeDialog(()=>rw.ui.confirmDialog(`
                     It looks like this user doesn't actually exist.
                     If you're trying to use a sandbox, try <a href="https://en.wikipedia.org/wiki/User_talk:Sandbox_for_user_warnings" target="_blank">WP:UWSB</a> instead.
-                    Else, you should request speedy deletion this user talk or user page under criterion U2 by adding
+                    Else, you should request the speedy deletion of this user page or user talk page under criterion <a href="https://en.wikipedia.org/wiki/Wikipedia:Criteria_for_speedy_deletion#U2._Nonexistent_user" target="_blank">U2</a> by adding:
                     <code>${(true ? "\u007B\u007B" : "wacky formatting to not delete RW page")}Db-u2\u007D\u007D</code>
                     to the top of this page. If you're still having issues, please let a member of the RedWarn team know.
                     `,

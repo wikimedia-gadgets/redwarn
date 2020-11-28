@@ -548,6 +548,9 @@ function initRW() {
                 rw.firstTimeSetup.launch();
             }
 
+            // Campaign info load
+            rw.campaigns.load();
+
             // TODO: probably fix this mess into a URL
             // HERE REALLY REALLY NEEDS CLEANUP
                 // Check if a message is in URL (i.e edit complete ext)

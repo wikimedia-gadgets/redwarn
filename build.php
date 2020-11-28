@@ -44,7 +44,8 @@ $jsFiles = [
     'quickTemplate.js',
     'pageProtect.js',
     'firstTimeSetup.js',
-    'preferences.js'
+    'preferences.js',
+    'campaigns.js'
 ];
 
 if (DEBUG_MODE) array_push($jsFiles, "debug.js"); // add debug if in debug mode

@@ -202,7 +202,7 @@ rw.ui = {
                 <span class="material-icons" id="PastWarning" style="cursor:pointer;position: relative;top: 5px;padding-left: 10px;color:#a20000;" onclick="window.parent.postMessage('adminR');">report</span>
                 <div class="mdl-tooltip mdl-tooltip--large" for="PastWarning">
                     <span style="font-size:x-small;">
-                    Has been given a Level 4 Final or ONLY warning this month.<br/>
+                    Has been given a Level 4 Final or ONLY warning.<br/>
                     Click here to report to admins for vandalism. Review user page first.
                     </span>
                 </div>
@@ -330,13 +330,13 @@ rw.ui = {
 
                         "adminReport" : un=>rw.ui.adminReportSelector(un),
 
-                        "usrPronouns": un=>{ // Show a toast with this users prefered pronouns
+                        "usrPronouns": un=>{ // Show a tost with this users prefered pronouns
                             rw.info.getUserPronouns(un, p=>{
                                 rw.visuals.toast.show(un + "'s pronouns are "+ p, false, false, 3000);
                             });
                         },
 
-                        "usrEditCount": un=>{ // Show a toast with this users Edit count
+                        "usrEditCount": un=>{ // Show a tost with this users prefered pronouns
                             rw.info.getUserEditCount(un, count=>{
                                 if (count == null) count = "an unknown number of"; // stop undefined message 
                                 rw.visuals.toast.show(un + " has made "+ count + " edits.", false, false, 3000);

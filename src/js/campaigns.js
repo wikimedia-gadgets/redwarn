@@ -38,7 +38,7 @@ rw.campaigns = {
                         rw.config["campaign_"+ c.id] = "dismissed"; // setting this value hides this campaign
                         rw.info.writeConfig(true, ()=>{}); // save config
 
-                        rw.visuals.toast.show("This message will be dismissed next time RedWarn loads.");
+                        rw.visuals.toast.show("This message will be dismissed the next time RedWarn loads.");
                     },c.dialogHeight);
                 });
             }

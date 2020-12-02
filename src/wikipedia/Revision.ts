@@ -19,6 +19,9 @@ interface Revision {
 
     /** The user who published that revision. */
     user?: User;
+
+    /** The page of the revision. */
+    page?: string;
 }
 
 export default Revision;

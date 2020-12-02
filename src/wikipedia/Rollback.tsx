@@ -11,40 +11,48 @@ import RWUI from "../ui/RWUI";
 import i18next from "i18next";
 
 export default class Rollback {
+    private constructor(public rollbackRev: Revision) {}
+
+    static async factory(rollbackRev: Revision = {}): Promise<Rollback> {
+        rollbackRev.revid ??= Rollback.detectRollbackRevId();
+        rollbackRev.page ??= mw.config.get("wgRelevantPageName");
+        rollbackRev.user ??= (
+            await WikipediaAPI.isLatestRevision(rollbackRev)
+        ).user;
+
+        return new this(rollbackRev);
+    }
+
     static async init(): Promise<void> {
         if ($("table.diff").length > 0) {
             // DETECT DIFF HERE - if diff table is present
-            await this.loadIcons();
+            const instance = await this.factory();
+            await instance.loadIcons();
         } else if (
             mw.config
                 .get("wgRelevantPageName")
                 .includes("Special:Contributions")
         ) {
             // Special contribs page
-            // TODO contrib page icons
             this.contribsPageIcons();
         }
     }
 
-    static async welcomeRevUser(): Promise<void> {
+    async welcomeRevUser(): Promise<void> {
         // Send welcome to user who made most recent revision
         // TODO toasts
         // rw.visuals.toast.show("Please wait...", false, false, 1000);
-        const rev = await WikipediaAPI.isLatestRevision(
-            mw.config.get("wgRelevantPageName"),
-            this.getRollbackRevId()
-        );
-        await rev.user.quickWelcome();
+        await this.rollbackRev.user.quickWelcome();
     }
-    static selectFromDisabled(): void {
+    selectFromDisabled(): void {
         // TODO: this function solely relies on dialogs, so that needs to be done first
         throw new Error("Method not implemented.");
     }
-    static async promptRestoreReason(revID: string): Promise<void> {
+    async promptRestoreReason(revID: string): Promise<void> {
         // TODO: this function solely relies on dialogs, so that needs to be done first
         throw new Error("Method not implemented.");
     }
-    static getRollbackRevId(): string {
+    static detectRollbackRevId(failIfNone = true): number {
         const isNLatest = $("#mw-diff-ntitle1")
             .text()
             .includes("Latest revision");
@@ -53,16 +61,16 @@ export default class Rollback {
             .includes("Latest revision");
         if (isNLatest) {
             // Return the revID of the edit on the right
-            return $("#mw-diff-ntitle1 > strong > a")
+            return +$("#mw-diff-ntitle1 > strong > a")
                 .attr("href")
                 .split("&")[1]
                 .split("=")[1];
         } else if (isOLatest) {
-            return $("#mw-diff-otitle1 > strong > a")
+            return +$("#mw-diff-otitle1 > strong > a")
                 .attr("href")
                 .split("&")[1]
                 .split("=")[1];
-        } else {
+        } else if (failIfNone) {
             // BUG!
             new RWUI.Dialog({
                 title: "Error",
@@ -84,9 +92,10 @@ export default class Rollback {
                 ],
             }).show();
         }
+        return null;
     }
 
-    static async preview(): Promise<void> {
+    async preview(): Promise<void> {
         // TODO dialog
         //rw.ui.loadDialog.show("Loading preview...");
         // Check if latest, else redirect
@@ -100,10 +109,7 @@ export default class Rollback {
                 redirect(url); // goto in current tab
             });
         }); */
-        const { user } = await WikipediaAPI.isLatestRevision(
-            mw.config.get("wgRelevantPageName"),
-            this.getRollbackRevId()
-        );
+        const { user } = await WikipediaAPI.isLatestRevision(this.rollbackRev);
         const { revid } = await WikipediaAPI.latestRevisionNotByUser(
             mw.config.get("wgRelevantPageName"),
             user.username
@@ -120,7 +126,7 @@ export default class Rollback {
         redirect(url);
     }
 
-    static async loadIcons(): Promise<void> {
+    async loadIcons(): Promise<void> {
         // Check if page is editable, if not, don't show
         if (!mw.config.get("wgIsProbablyEditable")) {
             // Can't edit, so exit
@@ -145,7 +151,7 @@ export default class Rollback {
             let clickHandler;
 
             if (icon.actionType === "function") {
-                clickHandler = icon.action;
+                clickHandler = icon.action(this);
             } else {
                 if (!icon.promptReason) {
                     clickHandler = () =>
@@ -361,16 +367,16 @@ export default class Rollback {
             rw.visuals.register($("#rwRollbackInProgressBar")[0]);
         },100); */
     }
-    static async promptRollbackReason(summary: string): Promise<void> {
+    async promptRollbackReason(summary: string): Promise<void> {
         // TODO: this function solely relies on dialogs, so that needs to be done first
 
         await WikipediaAPI.isLatestRevision(
             mw.config.get("wgRelevantPageName"),
-            this.getRollbackRevId()
+            this.detectRollbackRevId()
         );
     }
 
-    static async rollback(
+    async rollback(
         reason: string,
         defaultWarnIndex: number,
         showRollbackDoneOps = true
@@ -381,10 +387,7 @@ export default class Rollback {
 
         this.progressBar(0, 0);
 
-        const rev = await WikipediaAPI.isLatestRevision(
-            mw.config.get("wgRelevantPageName"),
-            this.getRollbackRevId()
-        );
+        const rev = await WikipediaAPI.isLatestRevision(this.rollbackRev);
 
         async function pseudoRollbackCallback(): Promise<void> {
             Rollback.progressBar(25, 0);
@@ -394,7 +397,7 @@ export default class Rollback {
                 rev.user.username
             );
 
-            if (latestRev.parentid.toString() == Rollback.getRollbackRevId()) {
+            if (latestRev.parentid === Rollback.detectRollbackRevId()) {
                 // looks like that there is a newer revision! redirect to it.
                 WikipediaAPI.isLatestRevision(
                     mw.config.get("wgRelevantPageName"),
@@ -404,9 +407,9 @@ export default class Rollback {
             }
 
             const summary = i18next.t("wikipedia:summaries.revert", {
-                username: rev.user,
+                username: rev.user.username,
                 targetRevisionId: latestRev.revid,
-                targetRevisionUser: latestRev.user,
+                targetRevisionUser: latestRev.user.username,
             });
             const res = await WikipediaAPI.postWithEditToken({
                 action: "edit",
@@ -446,7 +449,7 @@ export default class Rollback {
                 setTimeout(() => {
                     if (showRollbackDoneOps) {
                         resolve(
-                            Rollback.showRollbackDoneOps(
+                            this.showRollbackDoneOps(
                                 rev.user.username,
                                 defaultWarnIndex
                             )
@@ -506,7 +509,7 @@ export default class Rollback {
             setTimeout(() => {
                 if (showRollbackDoneOps) {
                     resolve(
-                        Rollback.showRollbackDoneOps(
+                        this.showRollbackDoneOps(
                             rev.user.username,
                             defaultWarnIndex
                         )
@@ -550,13 +553,17 @@ export default class Rollback {
         }
     }
 
-    static getDisabledHTMLandHandlers(): HTMLElement[] {
+    getDisabledHTMLandHandlers(): HTMLElement[] {
         // Open a new dialog with all the disabled icons so user can select one. Click handlers are already registered, so we just call rw.rollback.clickHandlers.[elID]();
         // Load Rollback current rev icons (rev14)
         const finalIconStr: HTMLElement[] = [];
         RollbackIcons.forEach((icon, i) => {
-            if (icon.enabled) return; // if icon is enabled, we can skip
-            if (icon.name == "More Options") return; // does nothing here, so not needed
+            if (icon.enabled) {
+                return;
+            } // if icon is enabled, we can skip
+            if (icon.name == "More Options") {
+                return;
+            } // does nothing here, so not needed
 
             const elID = "rwRollback_" + i; // get the ID for the new icons
 
@@ -608,28 +615,30 @@ export default class Rollback {
         return finalIconStr;
     }
 
-    private static progressBarElement: MDCLinearProgress | null;
-    static progressBar(progress: number, buffer: number): void {
-        if (!this.progressBarElement) return;
+    private progressBarElement: MDCLinearProgress | null;
+    progressBar(progress: number, buffer: number): void {
+        if (!this.progressBarElement) {
+            return;
+        }
 
         // Update the progress bar
         this.progressBarElement.progress = progress;
         this.progressBarElement.buffer = buffer;
     }
 
-    static showRollbackDoneOps(un: string, warnIndex: number): void {
+    showRollbackDoneOps(un: string, warnIndex: number): void {
         // Clear get hidden handler to stop errors in more options menu
         this.getDisabledHTMLandHandlers = () => {
             return [];
         }; // return w empty string
 
-        function clickHandlerFactory(
-            handler: (username: string, warnIndex: number) => any
-        ) {
-            return function () {
-                handler(un, warnIndex);
-            };
-        }
+        const clickHandlerFactory = (
+            handler: (
+                rollback: Rollback,
+                username: string,
+                warnIndex: number
+            ) => any
+        ) => () => handler(this, un, warnIndex);
 
         // Add click handlers
 
@@ -795,7 +804,7 @@ interface ActionRollback {
 
 interface ActionFunction {
     actionType: "function";
-    action: () => void;
+    action: (rollback: Rollback) => () => any;
 }
 
 type RollbackAction = ActionFunction | ActionRollback;
@@ -870,7 +879,7 @@ export const RollbackIcons: RollbackIcon[] = [
         color: "black", // css colour
         icon: "compare_arrows",
         actionType: "function",
-        action: (): Promise<void> => Rollback.preview(), // Callback
+        action: (rollback: Rollback) => () => rollback.preview(), // Callback
     },
 
     {
@@ -879,7 +888,7 @@ export const RollbackIcons: RollbackIcon[] = [
         color: "black", // css colour
         icon: "library_add",
         actionType: "function",
-        action: (): Promise<void> => Rollback.welcomeRevUser(), // Callback
+        action: (rollback: Rollback) => () => rollback.welcomeRevUser(), // Callback
     },
 
     {
@@ -888,7 +897,7 @@ export const RollbackIcons: RollbackIcon[] = [
         color: "black", // css colour
         icon: "more_vert",
         actionType: "function",
-        action: (): void => Rollback.selectFromDisabled(), // Callback
+        action: (rollback: Rollback) => () => rollback.selectFromDisabled(), // Callback
     },
 
     // END DEFAULT ENABLED ICONS
@@ -1058,18 +1067,15 @@ export const RollbackIcons: RollbackIcon[] = [
 export interface RollbackDoneIcon {
     name: string;
     icon: string;
-    action: (username: string, warnIndex: number) => any;
+    action: (rollback: Rollback, username: string, warnIndex: number) => any;
     id: string;
 }
 export const RollbackDoneIcons: RollbackDoneIcon[] = [
     {
         name: "Go to latest revision",
         icon: "watch_later",
-        action: (): Promise<Revision> =>
-            WikipediaAPI.isLatestRevision(
-                mw.config.get("wgRelevantPageName"),
-                "0"
-            ),
+        action: (rollback: Rollback): Promise<Revision> =>
+            WikipediaAPI.isLatestRevision(rollback.rollbackRev),
         id: "latestRev",
     },
     {

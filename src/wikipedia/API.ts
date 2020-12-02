@@ -98,7 +98,7 @@ export default class WikipediaAPI {
             rvprop: ["content"],
         });
 
-        if (!revisionRequest.query.pages[0].missing)
+        if (!revisionRequest.query.pages[0].missing) {
             // If page isn't missing (i.e. it exists).
             return (
                 revisionRequest.query.pages[0].revisions[0].slots.main
@@ -106,7 +106,8 @@ export default class WikipediaAPI {
                 revisionRequest.query.pages[0].revisions[0].slots.main["*"] ??
                 null // This would be __bad__.
             );
-        else return null;
+        }
+        return null;
     }
 
     /**
@@ -114,14 +115,13 @@ export default class WikipediaAPI {
      * @returns The latest revision
      */
     static async isLatestRevision(
-        page: string,
-        revisionId: string,
+        revision: Revision,
         noRedirect = false
     ): Promise<Revision> {
         const revisions = await this.api.get({
             action: "query",
             prop: "revisions",
-            titles: mw.util.wikiUrlencode(page),
+            titles: mw.util.wikiUrlencode(revision.page),
             rvslots: "*",
             rvprop: ["ids", "user"],
             rvlimit: 1,
@@ -130,7 +130,7 @@ export default class WikipediaAPI {
         const latestRevisionId = revisions.query.pages[0].revisions[0].revid;
         const parentRevisionId = revisions.query.pages[0].revisions[0].parentid;
         const latestUsername = revisions.query.pages[0].revisions[0].user;
-        if (latestRevisionId == revisionId) {
+        if (latestRevisionId === revision.revid) {
             return {
                 user: new User(latestUsername),
                 revid: latestRevisionId,
@@ -188,7 +188,9 @@ export default class WikipediaAPI {
         let hasGroup = g.includes(perm);
 
         // Administrators override all feature restrictions.
-        if (!hasGroup) hasGroup = g.includes("sysop");
+        if (!hasGroup) {
+            hasGroup = g.includes("sysop");
+        }
 
         // Due to 2 types of the `confirmed` group, `confirmed` and `autoconfirmed`,
         // we have to check both.

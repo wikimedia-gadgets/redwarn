@@ -335,7 +335,7 @@ export default class Rollback {
         const left = isLeftLatest ? (
             currentRevIcons
         ) : (
-            <RestoreElement left={true} />
+            <RestoreElement left={true} rollback={this} />
         );
         if (twinkleLoadedBeforeUs) {
             // eslint-disable-next-line quotes
@@ -347,7 +347,7 @@ export default class Rollback {
         const right = isLatest ? (
             currentRevIcons
         ) : (
-            <RestoreElement left={false} />
+            <RestoreElement left={false} rollback={this} />
         ); // if the latest rev, show the accurate revs, else, don't
         if (twinkleLoadedBeforeUs) {
             // eslint-disable-next-line quotes
@@ -370,10 +370,7 @@ export default class Rollback {
     async promptRollbackReason(summary: string): Promise<void> {
         // TODO: this function solely relies on dialogs, so that needs to be done first
 
-        await WikipediaAPI.isLatestRevision(
-            mw.config.get("wgRelevantPageName"),
-            this.detectRollbackRevId()
-        );
+        await WikipediaAPI.isLatestRevision(this.rollbackRev);
     }
 
     async rollback(
@@ -389,8 +386,8 @@ export default class Rollback {
 
         const rev = await WikipediaAPI.isLatestRevision(this.rollbackRev);
 
-        async function pseudoRollbackCallback(): Promise<void> {
-            Rollback.progressBar(25, 0);
+        const pseudoRollbackCallback = async () => {
+            this.progressBar(25, 0);
 
             const latestRev = await WikipediaAPI.latestRevisionNotByUser(
                 mw.config.get("wgRelevantPageName"),
@@ -399,10 +396,7 @@ export default class Rollback {
 
             if (latestRev.parentid === Rollback.detectRollbackRevId()) {
                 // looks like that there is a newer revision! redirect to it.
-                WikipediaAPI.isLatestRevision(
-                    mw.config.get("wgRelevantPageName"),
-                    "0"
-                );
+                WikipediaAPI.goToLatestRevision(this.rollbackRev.page);
                 return; // stop here.
             }
 
@@ -440,7 +434,7 @@ export default class Rollback {
                     "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
                 ); */
             } else {
-                Rollback.progressBar(100, 100);
+                this.progressBar(100, 100);
 
                 let resolve: (value?: any) => void;
                 const promise = new Promise<void>((res) => {
@@ -460,10 +454,10 @@ export default class Rollback {
                 });
                 return await promise;
             }
-        }
+        };
 
-        async function rollbackCallback(): Promise<void> {
-            Rollback.progressBar(70, 70);
+        const rollbackCallback = async () => {
+            this.progressBar(70, 70);
 
             try {
                 await WikipediaAPI.api.rollback(
@@ -500,7 +494,7 @@ export default class Rollback {
                 ); */
             }
 
-            Rollback.progressBar(100, 100);
+            this.progressBar(100, 100);
 
             let resolve: (value?: any) => void;
             const promise = new Promise<void>((res) => {
@@ -519,7 +513,7 @@ export default class Rollback {
                 }
             });
             return await promise;
-        }
+        };
 
         if (WikipediaAPI.hasGroup("rollbacker")) {
             // TODO config dialog
@@ -665,7 +659,7 @@ export default class Rollback {
     }
 
     // CONTRIBS PAGE
-    static contribsPageIcons() {
+    static contribsPageIcons(): void {
         // For each (current) tag
         $("span.mw-uctop").each((i, el) => {
             // Add rollback options (${i} inserts i at that point to ensure it is a unique ID)
@@ -1074,8 +1068,8 @@ export const RollbackDoneIcons: RollbackDoneIcon[] = [
     {
         name: "Go to latest revision",
         icon: "watch_later",
-        action: (rollback: Rollback): Promise<Revision> =>
-            WikipediaAPI.isLatestRevision(rollback.rollbackRev),
+        action: (rollback: Rollback): Promise<void> =>
+            WikipediaAPI.goToLatestRevision(rollback.rollbackRev.page),
         id: "latestRev",
     },
     {
@@ -1125,6 +1119,7 @@ export const RollbackDoneIcons: RollbackDoneIcon[] = [
 ];
 
 interface RestoreProps extends BaseProps {
+    rollback: Rollback;
     left: boolean;
 }
 
@@ -1138,7 +1133,7 @@ function RestoreElement(props: RestoreProps) {
                 <span
                     style="cursor: pointer; font-size:28px; padding-right:5px; color:purple;"
                     onClick={() => {
-                        Rollback.promptRestoreReason(
+                        props.rollback.promptRestoreReason(
                             $(
                                 `#mw-diff-${
                                     props.left ? "o" : "n"

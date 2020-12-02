@@ -153,6 +153,22 @@ export default class WikipediaAPI {
         }
     }
 
+    static async goToLatestRevision(page: string): Promise<void> {
+        const revisions = await this.api.get({
+            action: "query",
+            prop: "revisions",
+            titles: mw.util.wikiUrlencode(page),
+            rvslots: "*",
+            rvprop: ["ids"],
+            rvlimit: 1,
+        });
+
+        const latestRevisionId = revisions.query.pages[0].revisions[0].revid;
+        const parentRevisionId = revisions.query.pages[0].revisions[0].parentid;
+
+        redirect(WikipediaURL.getDiffUrl(latestRevisionId, parentRevisionId));
+    }
+
     static async latestRevisionNotByUser(
         name: string,
         username: string

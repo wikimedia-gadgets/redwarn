@@ -11,4 +11,5 @@
 - [ ] I know how to properly use check boxes 
 - [ ] I have not used any OwO's or UwU's in this issue.
 
-/label ~feature
+<!--- ONLY CHANGE ABOVE THIS LINE!!! -->
+/label ~feature ~"Needs Triage"

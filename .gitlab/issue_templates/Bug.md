@@ -38,4 +38,6 @@ PUT THE LOGS HERE
 - [ ] I have included logs, exceptions and / or steps to reproduce the issue.
 - [ ] I have not used any OwO's or UwU's in this issue.
 
-/label ~bug
+<!--- ONLY CHANGE ABOVE THIS LINE!!! -->
+
+/label ~bug ~"Needs Triage" 

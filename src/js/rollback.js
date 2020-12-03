@@ -95,7 +95,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             "actionType" : "rollback",
             "promptReason" : false, // add extra info?
             "summary" : "[[WP:3RR]]", // Set summary
-            "ruleIndex" : 84 // used for autowarn
+            "ruleIndex" : 85 // used for autowarn
         },
 
         {
@@ -117,7 +117,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             "actionType" : "rollback",
             "promptReason" : false, // add extra info?
             "summary" : "Likely [[WP:COPYVIO|copyright violation]]", // Set summary
-            "ruleIndex" : 79 // used for autowarn
+            "ruleIndex" : 80 // used for autowarn
         },
 
         {
@@ -139,7 +139,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             "actionType" : "rollback",
             "promptReason" : false, // add extra info?
             "summary" : "Using Wikipedia for [[WP:NOTADVERTISING|advertising and/or promotion]] is not permitted.", // Set summary
-            "ruleIndex" : 16 // used for autowarn
+            "ruleIndex" : 17 // used for autowarn
         },
 
         {
@@ -150,7 +150,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             "actionType" : "rollback",
             "promptReason" : false, // add extra info?
             "summary" : "Addition of unnecessary/inappropriate [[WP:EL|external links]]", // Set summary
-            "ruleIndex" : 19 // used for autowarn
+            "ruleIndex" : 20 // used for autowarn
         },
 
         // ORANGE
@@ -206,7 +206,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             "actionType" : "rollback",
             "promptReason" : false, // add extra info?
             "summary" : "per [[WP:NPOV]]", // Set summary
-            "ruleIndex" : 17 // used for autowarn
+            "ruleIndex" : 18 // used for autowarn
         },
 
         {
@@ -217,7 +217,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             "actionType" : "rollback",
             "promptReason" : false, // add extra info?
             "summary" : "Please use the article [[WP:TPHELP|talk page]] or [[WP:FIXIT|be bold]] and fix the problem", // Set summary
-            "ruleIndex" : 66 // used for autowarn
+            "ruleIndex" : 67 // used for autowarn
         },
 
         // BLUE
@@ -229,7 +229,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             "actionType" : "rollback",
             "promptReason" : false, // add extra info?
             "summary" : "[[WP:MOS|Manual of Style]] issues", // Set summary
-            "ruleIndex" : 31 // used for autowarn
+            "ruleIndex" : 32 // used for autowarn
         },
 
         {

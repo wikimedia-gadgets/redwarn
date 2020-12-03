@@ -545,7 +545,7 @@ rw.rules = [
         ]
     },
     {
-        "name": "Unnecessarily changing between British and American English",
+        "name": "Unnecessarily changing between different varieties of English",
         "category": "Reminders",
         "template": "uw-lang",
         "warningLevels": [

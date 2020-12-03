@@ -179,6 +179,18 @@ rw.rules = [
         ]
     },
     {
+        "name": "Creating inappropriate redirects",
+        "category": "Article Conduct Warnings",
+        "template": "uw-redirect",
+        "warningLevels": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ]
+    },
+    {
         "name": "Using Wikipedia for advertising or promotion",
         "category": "Promotions and spam",
         "template": "uw-advert",

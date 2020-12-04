@@ -1,6 +1,6 @@
 // Data originally processed from Twinkle Source at https://github.com/azatoth/twinkle
-rw.rules = [
-    {
+rw.rules = {
+    vandalism: {
         "name": "Vandalism",
         "category": "Common warnings",
         "template": "uw-vandalism",
@@ -12,7 +12,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    disruptive: { // note: currently on WP:TFD for merge with vandal
         "name": "Disruptive editing",
         "category": "Common warnings",
         "template": "uw-disruptive",
@@ -23,7 +23,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    test: {
         "name": "Editing tests",
         "category": "Common warnings",
         "template": "uw-test",
@@ -33,7 +33,7 @@ rw.rules = [
             3
         ]
     },
-    {
+    delete: {
         "name": "Removal of content, blanking",
         "category": "Common warnings",
         "template": "uw-delete",
@@ -45,7 +45,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    generic: {
         "name": "Generic warning (for template series missing level 4)",
         "category": "Common warnings",
         "template": "uw-generic",
@@ -53,7 +53,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    biog: {
         "name": "Adding unreferenced information about living persons",
         "category": "Article Conduct Warnings",
         "template": "uw-biog",
@@ -65,7 +65,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    defamatory: {
         "name": "Addition of defamatory content",
         "category": "Article Conduct Warnings",
         "template": "uw-defamatory",
@@ -77,7 +77,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    error: {
         "name": "Introducing deliberate factual errors",
         "category": "Article Conduct Warnings",
         "template": "uw-error",
@@ -88,7 +88,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    genre: {
         "name": "Frequent or mass changes to genres without consensus or reference",
         "category": "Article Conduct Warnings",
         "template": "uw-genre",
@@ -99,7 +99,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    image: {
         "name": "Image-related vandalism",
         "category": "Article Conduct Warnings",
         "template": "uw-image",
@@ -111,7 +111,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    joke: {
         "name": "Using improper humor",
         "category": "Article Conduct Warnings",
         "template": "uw-joke",
@@ -123,7 +123,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    nor: {
         "name": "Adding original research, including unpublished syntheses of sources",
         "category": "Article Conduct Warnings",
         "template": "uw-nor",
@@ -134,7 +134,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    notcensored: {
         "name": "Censorship of material",
         "category": "Article Conduct Warnings",
         "template": "uw-notcensored",
@@ -144,7 +144,7 @@ rw.rules = [
             3
         ]
     },
-    {
+    own: {
         "name": "Ownership of articles",
         "category": "Article Conduct Warnings",
         "template": "uw-own",
@@ -156,7 +156,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    tdel: {
         "name": "Removal of maintenance templates",
         "category": "Article Conduct Warnings",
         "template": "uw-tdel",
@@ -167,7 +167,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    unsourced: {
         "name": "Addition of unsourced or improperly cited material",
         "category": "Article Conduct Warnings",
         "template": "uw-unsourced",
@@ -178,7 +178,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    redirect: {
         "name": "Creating inappropriate redirects",
         "category": "Article Conduct Warnings",
         "template": "uw-redirect",
@@ -190,7 +190,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    advert: {
         "name": "Using Wikipedia for advertising or promotion",
         "category": "Promotions and spam",
         "template": "uw-advert",
@@ -202,7 +202,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    npov: {
         "name": "Not adhering to neutral point of view",
         "category": "Promotions and spam",
         "template": "uw-npov",
@@ -213,7 +213,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    paid: {
         "name": "Paid editing without disclosure under the Wikimedia Terms of Use",
         "category": "Promotions and spam",
         "template": "uw-paid",
@@ -224,7 +224,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    spam: {
         "name": "Adding spam links",
         "category": "Promotions and spam",
         "template": "uw-spam",
@@ -236,7 +236,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    agf: {
         "name": "Not assuming good faith",
         "category": "Behavior towards other editors",
         "template": "uw-agf",
@@ -246,7 +246,7 @@ rw.rules = [
             3
         ]
     },
-    {
+    harass: {
         "name": "Harassment of other users",
         "category": "Behavior towards other editors",
         "template": "uw-harass",
@@ -258,7 +258,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    npa: {
         "name": "Personal attack directed at a specific editor",
         "category": "Behavior towards other editors",
         "template": "uw-npa",
@@ -270,7 +270,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    tempabuse: {
         "name": "Improper use of warning or blocking template",
         "category": "Behavior towards other editors",
         "template": "uw-tempabuse",
@@ -279,7 +279,7 @@ rw.rules = [
             2
         ]
     },
-    {
+    afd: {
         "name": "Removing {{afd}} templates",
         "category": "Removal of deletion tags",
         "template": "uw-afd",
@@ -290,7 +290,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    blpprod: {
         "name": "Removing {{blp prod}} templates",
         "category": "Removal of deletion tags",
         "template": "uw-blpprod",
@@ -301,7 +301,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    idt: {
         "name": "Removing file deletion tags",
         "category": "Removal of deletion tags",
         "template": "uw-idt",
@@ -312,7 +312,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    speedy: {
         "name": "Removing speedy deletion tags",
         "category": "Removal of deletion tags",
         "template": "uw-speedy",
@@ -323,7 +323,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    attempt: {
         "name": "Triggering the edit filter",
         "category": "Other",
         "template": "uw-attempt",
@@ -334,7 +334,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    chat: {
         "name": "Using talk page as forum",
         "category": "Other",
         "template": "uw-chat",
@@ -345,7 +345,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    create: {
         "name": "Creating inappropriate pages",
         "category": "Other",
         "template": "uw-create",
@@ -357,7 +357,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    mos: {
         "name": "Manual of style",
         "category": "Other",
         "template": "uw-mos",
@@ -368,7 +368,7 @@ rw.rules = [
             4
         ]
     },
-    {
+    move: {
         "name": "Page moves against naming conventions or consensus",
         "category": "Other",
         "template": "uw-move",
@@ -380,7 +380,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    tpv: {
         "name": "Refactoring others' talk page comments",
         "category": "Other",
         "template": "uw-tpv",
@@ -392,7 +392,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    upload: {
         "name": "Uploading unencyclopedic images",
         "category": "Other",
         "template": "uw-upload",
@@ -404,7 +404,7 @@ rw.rules = [
             5
         ]
     },
-    {
+    aiv: {
         "name": "Bad AIV report",
         "category": "Reminders",
         "template": "uw-aiv",
@@ -412,7 +412,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    autobiography: {
         "name": "Creating autobiographies",
         "category": "Reminders",
         "template": "uw-autobiography",
@@ -420,7 +420,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    badcat: {
         "name": "Adding incorrect categories",
         "category": "Reminders",
         "template": "uw-badcat",
@@ -428,7 +428,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    badlistentry: {
         "name": "Adding inappropriate entries to lists",
         "category": "Reminders",
         "template": "uw-badlistentry",
@@ -436,7 +436,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    bite: {
         "name": "Being harsh to newcomers",
         "category": "Reminders",
         "template": "uw-bite",
@@ -444,7 +444,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    coi: {
         "name": "Conflict of interest",
         "category": "Reminders",
         "template": "uw-coi",
@@ -452,7 +452,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    controversial: {
         "name": "Introducing controversial material",
         "category": "Reminders",
         "template": "uw-controversial",
@@ -460,7 +460,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    copying: {
         "name": "Copying text to another page",
         "category": "Reminders",
         "template": "uw-copying",
@@ -468,7 +468,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    crystal: {
         "name": "Adding speculative or unconfirmed information",
         "category": "Reminders",
         "template": "uw-crystal",
@@ -476,7 +476,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    cpmove: {
         "name": "Cut and paste moves",
         "category": "Reminders",
         "template": "uw-c&pmove",
@@ -484,7 +484,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    dab: {
         "name": "Incorrect edit to a disambiguation page",
         "category": "Reminders",
         "template": "uw-dab",
@@ -492,7 +492,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    date: {
         "name": "Unnecessarily changing date formats",
         "category": "Reminders",
         "template": "uw-date",
@@ -500,7 +500,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    deadlink: {
         "name": "Removing proper sources containing dead links",
         "category": "Reminders",
         "template": "uw-deadlink",
@@ -508,7 +508,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    draftfirst: {
         "name": "User should draft in draftspace or userspace",
         "category": "Reminders",
         "template": "uw-draftfirst",
@@ -516,7 +516,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    editsummary: {
         "name": "Not using edit summary",
         "category": "Reminders",
         "template": "uw-editsummary",
@@ -524,7 +524,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    elinbody: {
         "name": "Adding external links to the body of an article",
         "category": "Reminders",
         "template": "uw-elinbody",
@@ -532,7 +532,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    english: {
         "name": "Not communicating in English",
         "category": "Reminders",
         "template": "uw-english",
@@ -540,7 +540,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    hasty: {
         "name": "Hasty addition of speedy deletion tags",
         "category": "Reminders",
         "template": "uw-hasty",
@@ -548,15 +548,15 @@ rw.rules = [
             0
         ]
     },
-    {
-        "name": "Italicize books, films, albums, magazines, TV series, etc within articles",
+    italicize: {
+        "name": "Italicize books, films, albums, magazines, TV series, etc. within articles",
         "category": "Reminders",
         "template": "uw-italicize",
         "warningLevels": [
             0
         ]
     },
-    {
+    lang: {
         "name": "Unnecessarily changing between different varieties of English",
         "category": "Reminders",
         "template": "uw-lang",
@@ -564,7 +564,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    linking: {
         "name": "Excessive addition of redlinks or repeated blue links",
         "category": "Reminders",
         "template": "uw-linking",
@@ -572,7 +572,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    minor: {
         "name": "Incorrect use of minor edits check box",
         "category": "Reminders",
         "template": "uw-minor",
@@ -580,7 +580,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    notenglish: {
         "name": "Creating non-English articles",
         "category": "Reminders",
         "template": "uw-notenglish",
@@ -588,7 +588,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    notvote: {
         "name": "We use consensus, not voting",
         "category": "Reminders",
         "template": "uw-notvote",
@@ -596,7 +596,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    plagiarism: {
         "name": "Copying from public domain sources without attribution",
         "category": "Reminders",
         "template": "uw-plagiarism",
@@ -604,7 +604,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    preview: {
         "name": "Use preview button to avoid mistakes",
         "category": "Reminders",
         "template": "uw-preview",
@@ -612,7 +612,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    redlink: {
         "name": "Indiscriminate removal of redlinks",
         "category": "Reminders",
         "template": "uw-redlink",
@@ -620,7 +620,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    selfrevert: {
         "name": "Reverting self tests",
         "category": "Reminders",
         "template": "uw-selfrevert",
@@ -628,7 +628,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    socialnetwork: {
         "name": "Wikipedia is not a social network",
         "category": "Reminders",
         "template": "uw-socialnetwork",
@@ -636,7 +636,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    sofixit: {
         "name": "Be bold and fix things yourself",
         "category": "Reminders",
         "template": "uw-sofixit",
@@ -644,7 +644,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    spoiler: {
         "name": "Adding spoiler alerts or removing spoilers from appropriate sections",
         "category": "Reminders",
         "template": "uw-spoiler",
@@ -652,7 +652,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    talkinarticle: {
         "name": "Talk in article",
         "category": "Reminders",
         "template": "uw-talkinarticle",
@@ -660,7 +660,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    tilde: {
         "name": "Not signing posts",
         "category": "Reminders",
         "template": "uw-tilde",
@@ -668,7 +668,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    toppost: {
         "name": "Posting at the top of talk pages",
         "category": "Reminders",
         "template": "uw-toppost",
@@ -676,7 +676,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    userspaceDraftFinish: {
         "name": "Stale userspace draft",
         "category": "Reminders",
         "template": "uw-userspace draft finish",
@@ -684,7 +684,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    vgscope: {
         "name": "Adding video game walkthroughs, cheats or instructions",
         "category": "Reminders",
         "template": "uw-vgscope",
@@ -692,7 +692,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    warn: {
         "name": "Place user warning templates when reverting vandalism",
         "category": "Reminders",
         "template": "uw-warn",
@@ -700,7 +700,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    wrongsummary: {
         "name": "Using inaccurate or inappropriate edit summaries",
         "category": "Reminders",
         "template": "uw-wrongsummary",
@@ -708,7 +708,7 @@ rw.rules = [
             0
         ]
     },
-    {
+    _3rr: { // need underscore since javascript can't start with number
         "name": "Potential three-revert rule violation; see also uw-ew",
         "category": "Policy Violation Warnings",
         "template": "uw-3rr",
@@ -716,7 +716,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    affiliate: {
         "name": "Affiliate marketing",
         "category": "Policy Violation Warnings",
         "template": "uw-affiliate",
@@ -724,7 +724,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    agfSock: {
         "name": "Use of multiple accounts (assuming good faith)",
         "category": "Policy Violation Warnings",
         "template": "uw-agf-sock",
@@ -732,7 +732,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    attack: {
         "name": "Creating attack pages",
         "category": "Policy Violation Warnings",
         "template": "uw-attack",
@@ -740,16 +740,16 @@ rw.rules = [
             6
         ]
     },
-    {
+    botun: {
         "name": "Bot username",
         "category": "Policy Violation Warnings",
         "template": "uw-botun",
         "warningLevels": [
             6
         ],
-        "note" : "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
+        "note": "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
     },
-    {
+    canvass: {
         "name": "Canvassing",
         "category": "Policy Violation Warnings",
         "template": "uw-canvass",
@@ -757,7 +757,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    copyright: {
         "name": "Copyright violation",
         "category": "Policy Violation Warnings",
         "template": "uw-copyright",
@@ -765,7 +765,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    copyrightLink: {
         "name": "Linking to copyrighted works violation",
         "category": "Policy Violation Warnings",
         "template": "uw-copyright-link",
@@ -773,7 +773,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    copyrightNew: {
         "name": "Copyright violation (with explanation for new users)",
         "category": "Policy Violation Warnings",
         "template": "uw-copyright-new",
@@ -781,7 +781,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    copyrightRemove: {
         "name": "Removing {{copyvio}} template from articles",
         "category": "Policy Violation Warnings",
         "template": "uw-copyright-remove",
@@ -789,7 +789,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    efsummary: {
         "name": "Edit summary triggering the edit filter",
         "category": "Policy Violation Warnings",
         "template": "uw-efsummary",
@@ -797,7 +797,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    ew: {
         "name": "Edit warring (stronger wording)",
         "category": "Policy Violation Warnings",
         "template": "uw-ew",
@@ -805,7 +805,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    ewsoft: {
         "name": "Edit warring (softer wording for newcomers)",
         "category": "Policy Violation Warnings",
         "template": "uw-ewsoft",
@@ -813,7 +813,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    hijacking: {
         "name": "Hijacking articles",
         "category": "Policy Violation Warnings",
         "template": "uw-hijacking",
@@ -821,7 +821,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    hoax: {
         "name": "Creating hoaxes",
         "category": "Policy Violation Warnings",
         "template": "uw-hoax",
@@ -829,7 +829,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    legal: {
         "name": "Making legal threats",
         "category": "Policy Violation Warnings",
         "template": "uw-legal",
@@ -837,7 +837,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    login: {
         "name": "Editing while logged out",
         "category": "Policy Violation Warnings",
         "template": "uw-login",
@@ -845,7 +845,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    multipleIPs: {
         "name": "Usage of multiple IPs",
         "category": "Policy Violation Warnings",
         "template": "uw-multipleIPs",
@@ -853,7 +853,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    pinfo: {
         "name": "Personal info",
         "category": "Policy Violation Warnings",
         "template": "uw-pinfo",
@@ -861,7 +861,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    salt: {
         "name": "Recreating salted articles under a different title",
         "category": "Policy Violation Warnings",
         "template": "uw-salt",
@@ -869,7 +869,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    socksuspect: {
         "name": "Sockpuppetry",
         "category": "Policy Violation Warnings",
         "template": "uw-socksuspect",
@@ -877,7 +877,7 @@ rw.rules = [
             6
         ]
     },
-    {
+    upv: {
         "name": "Userpage vandalism",
         "category": "Policy Violation Warnings",
         "template": "uw-upv",
@@ -885,31 +885,31 @@ rw.rules = [
             6
         ]
     },
-    {
+    username: {
         "name": "Username is against policy",
         "category": "Policy Violation Warnings",
         "template": "uw-username",
         "warningLevels": [
             6
         ],
-        "note" : "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
+        "note": "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
     },
-    {
+    coiUsername: {
         "name": "Username is against policy, and conflict of interest",
         "category": "Policy Violation Warnings",
         "template": "uw-coi-username",
         "warningLevels": [
             6
         ],
-        "note" : "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
+        "note": "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
     },
-    {
+    userpage: {
         "name": "Userpage or subpage is against policy",
         "category": "Policy Violation Warnings",
         "template": "uw-userpage",
         "warningLevels": [
             6
         ],
-        "note" : "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
+        "note": "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
     }
-];
+};

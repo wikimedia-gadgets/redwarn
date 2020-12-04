@@ -9,6 +9,8 @@ import Revision from "./Revision";
 import { RW_VERSION, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
 import RWUI from "../ui/RWUI";
 import i18next from "i18next";
+import type { MDCComponent } from "@material/base";
+import type { MDCFoundation } from "@material/base/foundation";
 
 export default class Rollback {
     private constructor(public rollbackRev: Revision) {}
@@ -135,6 +137,13 @@ export default class Rollback {
 
         // else, continue :)
 
+        interface IInitalizable {
+            el: HTMLElement;
+            component: any;
+        }
+
+        const toInit: IInitalizable[] = [];
+
         const isLatest = $("#mw-diff-ntitle1")
             .text()
             .includes("Latest revision"); // is this the latest revision diff page?
@@ -197,8 +206,7 @@ export default class Rollback {
                         {icon.icon}
                     </button>
                 );
-                const mdcButton = new MDCRipple(button);
-                mdcButton.initialize();
+                toInit.push({ el: button, component: MDCRipple });
 
                 const tooltip = (
                     <div
@@ -210,8 +218,7 @@ export default class Rollback {
                         <div class="mdc-tooltip__surface">{icon.name}</div>
                     </div>
                 );
-                const mdcTooltip = new MDCTooltip(tooltip);
-                mdcTooltip.initialize();
+                toInit.push({ el: tooltip, component: MDCTooltip });
                 currentRevIcons.appendChild(button);
                 currentRevIcons.appendChild(tooltip);
             }
@@ -291,8 +298,7 @@ export default class Rollback {
                     {icon.icon}
                 </button>
             );
-            const mdcRipple = new MDCRipple(button);
-            mdcRipple.initialize();
+            toInit.push({ el: button, component: MDCRipple });
 
             const tooltip = (
                 <div
@@ -304,8 +310,7 @@ export default class Rollback {
                     <div class="mdc-tooltip__surface">{icon.name}</div>
                 </div>
             );
-            const mdcTooltip = new MDCTooltip(tooltip);
-            mdcTooltip.initialize();
+            toInit.push({ el: tooltip, component: MDCTooltip });
 
             rollbackDoneIcons.append(button, tooltip, "&nbsp; &nbsp;");
         });
@@ -356,16 +361,9 @@ export default class Rollback {
             $(".diff-ntitle").prepend(right);
         }
 
-        // TODO visuals
-        /* setTimeout(()=>{
-            // Register all tooltips after 50ms (just some processing time)
-            for (const item of document.getElementsByClassName("mdl-tooltip")) {
-                rw.visuals.register(item);
-            }
-
-            // Register progressbar
-            rw.visuals.register($("#rwRollbackInProgressBar")[0]);
-        },100); */
+        setTimeout(() => {
+            toInit.forEach((c) => new c.component(c.el).initialize());
+        }, 100);
     }
     async promptRollbackReason(summary: string): Promise<void> {
         // TODO: this function solely relies on dialogs, so that needs to be done first
@@ -706,8 +704,6 @@ export default class Rollback {
                     <div class="mdc-tooltip__surface">Preview Rollback</div>
                 </div>
             );
-            const mdcPreviewTooltip = new MDCTooltip(previewTooltip);
-            mdcPreviewTooltip.initialize();
 
             const vandalLink = (
                 <a
@@ -731,8 +727,6 @@ export default class Rollback {
                     </div>
                 </div>
             );
-            const mdcVandalTooltip = new MDCTooltip(vandalTooltip);
-            mdcVandalTooltip.initialize();
 
             const rollbackLink = (
                 <a
@@ -754,8 +748,6 @@ export default class Rollback {
                     <div class="mdc-tooltip__surface">Rollback</div>
                 </div>
             );
-            const mdcRollbackTooltip = new MDCTooltip(rollbackTooltip);
-            mdcRollbackTooltip.initialize();
 
             const wrapper = (
                 <span id="rw-currentRev${i}" style="cursor:default">
@@ -773,6 +765,16 @@ export default class Rollback {
             );
 
             $(el).append(wrapper);
+
+            // need to initialize *after* appending to dom since mdc looks for anchor elem
+            const mdcPreviewTooltip = new MDCTooltip(previewTooltip);
+            mdcPreviewTooltip.initialize();
+
+            const mdcVandalTooltip = new MDCTooltip(vandalTooltip);
+            mdcVandalTooltip.initialize();
+
+            const mdcRollbackTooltip = new MDCTooltip(rollbackTooltip);
+            mdcRollbackTooltip.initialize();
         });
     }
 

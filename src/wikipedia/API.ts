@@ -125,7 +125,10 @@ export default class WikipediaAPI {
             rvslots: "*",
             rvprop: ["ids", "user"],
             rvlimit: 1,
+            formatversion: 2,
         });
+
+        console.log(revisions);
 
         const latestRevisionId = revisions.query.pages[0].revisions[0].revid;
         const parentRevisionId = revisions.query.pages[0].revisions[0].parentid;

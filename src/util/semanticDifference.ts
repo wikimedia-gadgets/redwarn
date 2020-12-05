@@ -13,18 +13,31 @@ export default function (
     const [versionBWhole, versionBMajor, versionBMinor, versionBPatch] =
         /(\d+)\.(\d+)\.(\d+)/g.exec(versionB) ?? [];
 
-    if (versionAWhole == null || versionBWhole == null) return null;
+    if (versionAWhole == null || versionBWhole == null) {
+        return null;
+    }
 
-    if (versionAWhole === versionBWhole) return 0;
+    if (versionAWhole === versionBWhole) {
+        return 0;
+    }
 
-    if (+versionAMajor > +versionBMajor) return 1;
-    else if (+versionAMajor < +versionBMajor) return -1;
+    if (+versionAMajor > +versionBMajor) {
+        return 1;
+    } else if (+versionAMajor < +versionBMajor) {
+        return -1;
+    }
 
-    if (+versionAMinor > +versionBMinor) return 1;
-    else if (+versionAMinor < +versionBMinor) return -1;
+    if (+versionAMinor > +versionBMinor) {
+        return 1;
+    } else if (+versionAMinor < +versionBMinor) {
+        return -1;
+    }
 
-    if (+versionAPatch > +versionBPatch) return 1;
-    else if (+versionAPatch < +versionBPatch) return -1;
+    if (+versionAPatch > +versionBPatch) {
+        return 1;
+    } else if (+versionAPatch < +versionBPatch) {
+        return -1;
+    }
 
     return 0;
 }

@@ -20,8 +20,9 @@ export default class RedWarnHooks {
     }
 
     static assertHookType(hookType: RedWarnHookEventTypes): void {
-        if (RedWarnHooks.hooks[hookType] === undefined)
+        if (RedWarnHooks.hooks[hookType] === undefined) {
             RedWarnHooks.hooks[hookType] = [];
+        }
     }
 
     static addHook<T extends RedWarnHookEventTypes>(
@@ -49,7 +50,9 @@ export default class RedWarnHooks {
         this.assertHookType(hookType);
         for (const hook of RedWarnHooks.hooks[hookType] as RedWarnHook[]) {
             const result = hook(payload);
-            if (result instanceof Promise) await result;
+            if (result instanceof Promise) {
+                await result;
+            }
         }
     }
 }

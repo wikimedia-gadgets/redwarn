@@ -78,7 +78,9 @@ export default class User {
             );
             // TODO Handle errors
 
-            if (!revisionWikitext) return { level: 0 };
+            if (!revisionWikitext) {
+                return { level: 0 };
+            }
 
             const revisionWikitextLines = revisionWikitext.split("\n");
             const warningHeaderExec = new RegExp(
@@ -143,7 +145,9 @@ export default class User {
         );
         // TODO Handle errors
 
-        if (!revisionWikitext) revisionWikitext = "";
+        if (!revisionWikitext) {
+            revisionWikitext = "";
+        }
 
         const wikiTextLines = revisionWikitext.split("\n");
         let finalText = "";

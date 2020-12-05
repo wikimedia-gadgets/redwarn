@@ -17,7 +17,9 @@ export default class Localization {
      * @private
      */
     private static assertLanguages(): void {
-        if (window.RedWarnLanguages == null) window.RedWarnLanguages = [];
+        if (window.RedWarnLanguages == null) {
+            window.RedWarnLanguages = [];
+        }
         require("./en-US/RWLEnglish");
 
         this.cleanLanguages();
@@ -31,9 +33,11 @@ export default class Localization {
     private static cleanLanguages(): void {
         // Prevent duplicate language packs.
         const loadedLanguages: string[] = [];
-        for (const language of window.RedWarnLanguages)
-            if (!loadedLanguages.includes(language.id))
+        for (const language of window.RedWarnLanguages) {
+            if (!loadedLanguages.includes(language.id)) {
                 loadedLanguages.push(language.id);
+            }
+        }
     }
 
     /**

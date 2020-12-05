@@ -164,6 +164,7 @@ export default class WikipediaAPI {
             rvslots: "*",
             rvprop: ["ids"],
             rvlimit: 1,
+            formatversion: 2,
         });
 
         const latestRevisionId = revisions.query.pages[0].revisions[0].revid;
@@ -183,6 +184,7 @@ export default class WikipediaAPI {
             rvslots: "*",
             rvprop: ["ids", "user", "content", "comment"],
             rvexcludeuser: username,
+            formatversion: 2,
         });
 
         const foundRevision = revisions?.query?.pages?.[0]?.revisions?.[0];
@@ -199,6 +201,7 @@ export default class WikipediaAPI {
             summary: foundRevision.comment,
             revid: foundRevision.revid,
             parentid: foundRevision.parentid,
+            user: new User(foundRevision.user),
         };
     }
 

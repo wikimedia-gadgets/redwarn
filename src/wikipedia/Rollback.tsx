@@ -6,7 +6,11 @@ import RedWarnStore from "../data/RedWarnStore";
 import redirect from "../util/redirect";
 import WikipediaAPI from "./API";
 import Revision from "./Revision";
-import { RW_VERSION, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
+import {
+    RW_VERSION,
+    RW_VERSION_TAG,
+    RW_WIKIS_TAGGABLE,
+} from "../data/RedWarnConstants";
 import RWUI from "../ui/RWUI";
 import i18next from "i18next";
 import type { MDCComponent } from "@material/base";
@@ -412,7 +416,7 @@ export default class Rollback {
                     ": " +
                     reason +
                     " [[w:en:WP:RW|(RW " +
-                    RW_VERSION +
+                    RW_VERSION_TAG +
                     ")]]", // summary sign here
                 undo: rev.revid, // current
                 undoafter: latestRev.revid, // restore version

@@ -58,7 +58,9 @@ export function getHighestLevel(wikitext: string): WarningAnalysis {
         (a, b) => +b[0] - +a[0]
     )) {
         if (+level > +highestWarningLevel) {
-            if (regexClone(regex).test(wikitext)) highestWarningLevel = +level;
+            if (regexClone(regex).test(wikitext)) {
+                highestWarningLevel = +level;
+            }
         }
     }
 

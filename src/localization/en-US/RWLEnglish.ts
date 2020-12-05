@@ -1,6 +1,8 @@
 import { RW_VERSION } from "../../data/RedWarnConstants";
 
-if (window.RedWarnLanguages == null) window.RedWarnLanguages = [];
+if (window.RedWarnLanguages == null) {
+    window.RedWarnLanguages = [];
+}
 
 window.RedWarnLanguages.push({
     tag: "en-US",

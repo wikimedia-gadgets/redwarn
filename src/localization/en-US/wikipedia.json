@@ -1,9 +1,5 @@
 {
-
     "summaries": {
-
         "revert": "Reverting edit(s) by [[Special:Contributions/{{username}}|{{username}}]] ([[User_talk:{{username}}|talk]]) to rev. {{targetRevisionId}} by {{targetRevisionEditor}}"
-
     }
-
 }

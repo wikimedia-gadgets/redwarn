@@ -35,7 +35,9 @@ export default class StyleManager {
             mw.notify(
                 "RedWarns styles loading failed. You might have loaded no styles at all."
             );
-        } else this.ready = true;
+        } else {
+            this.ready = true;
+        }
     }
 
     static cleanStyles(): void {
@@ -55,9 +57,9 @@ export default class StyleManager {
             // Version collision checking
             const styleVersions: Record<string, Style> = {};
 
-            if (styleVersions[style.name] == null)
+            if (styleVersions[style.name] == null) {
                 styleVersions[style.name] = style;
-            else {
+            } else {
                 // -1 means the style being loaded is older than the current.
                 // 0 means they styles are of the same version.
                 // 1 means they style being loaded is newer than the current.

@@ -203,6 +203,18 @@ rw.preferences = {
                     }
                 },
 
+                // Email send a copy
+                "rwEmailCCMe" : {
+                    "optionTitle" : "Send me a copy of the emails I send with RedWarn",
+                    "supportingText": "Change whether or not you wish to recieve a copy of the emails you send in RedWarn (such as to Wikimedia Trust and Safety and Oversight) in your inbox.",
+
+                    // Config options
+                    "options" : { 
+                        "Send me a copy*" : "enable",
+                        "Don't send me a copy": "disable"
+                    }
+                },
+
 
                 // developer safe mode
                 "debugMode" : {

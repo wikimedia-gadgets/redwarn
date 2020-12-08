@@ -689,7 +689,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
             target: user,
             subject: 'Email from RedWarn User '+ rw.info.getUsername(), // i.e. email from Ed6767
             text: content,
-            ccme: true, // by defauly copy back to me
+            ccme: rw.config.rwEmailCCMe != "disable", // by defauly copy back to me unless specifically disabled
             format: 'json'
         },
         api = new mw.Api();

@@ -383,18 +383,27 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
     },
 
     "getRollbackrevID": () => { // Get the revision ID of what we want to rollback
-        let isNLatest = $("#mw-diff-ntitle1").text().includes("Latest revision");
-        let isOLatest = $("#mw-diff-otitle1").text().includes("Latest revision");
-        if (isNLatest) {
-            // Return the revID of the edit on the right
-            return $('#mw-diff-ntitle1 > strong > a').attr('href').split('&')[1].split('=')[1];
-        } else if (isOLatest) {
-            return $('#mw-diff-otitle1 > strong > a').attr('href').split('&')[1].split('=')[1];
+        let oldId = mw.config.get("wgDiffOldId");
+        let newId = mw.config.get("wgDiffNewId");
+        if (newId == null && oldId != null) {
+            return oldId;
+        } else if (newId != null && oldId != null) {
+            return newId > oldId ? newId : oldId;
         } else {
-            // BUG!
-            rw.ui.confirmDialog("A very weird error occured. (rollback getRollbackRevID failed via final else!)",
-                "REPORT BUG", () => rw.ui.reportBug("rollback getRollbackRevID failed via final else! related URL: " + window.location.href),
-                "", () => { }, 0);
+            let isNLatest = $("#mw-diff-ntitle1").text().includes("Latest revision");
+            let isOLatest = $("#mw-diff-otitle1").text().includes("Latest revision");
+            
+            if (isNLatest) {
+                // Return the revID of the edit on the right
+                return $('#mw-diff-ntitle1 > strong > a').attr('href').split('&')[1].split('=')[1];
+            } else if (isOLatest) {
+                return $('#mw-diff-otitle1 > strong > a').attr('href').split('&')[1].split('=')[1];
+            } else {
+                // BUG!
+                rw.ui.confirmDialog("A very weird error occured. (rollback getRollbackRevID failed via final else!)",
+                    "REPORT BUG", () => rw.ui.reportBug("rollback getRollbackRevID failed via final else! related URL: " + window.location.href),
+                    "", () => { }, 0);
+            }
         }
     },
 

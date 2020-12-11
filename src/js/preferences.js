@@ -106,7 +106,7 @@ rw.preferences = {
                 // On rollback completion
                 "rwRollbackDoneOption" : {
                     "optionTitle" : "Once a rollback is complete...",
-                    "supportingText": "Change what automatically occurs when a rollback is successful. Selecting \"Warn User\" is recommended for most users.",
+                    "supportingText": "Change what occurs when a rollback is successful. Selecting \"Warn User\" is recommended for most users.",
 
                     // Config options
                     "options" : { 
@@ -206,7 +206,7 @@ rw.preferences = {
                 // Email send a copy
                 "rwEmailCCMe" : {
                     "optionTitle" : "Send me a copy of the emails I send with RedWarn",
-                    "supportingText": "Change whether or not you wish to recieve a copy of the emails you send in RedWarn (such as to Wikimedia Trust and Safety and Oversight) in your inbox.",
+                    "supportingText": "Change whether or not you wish to send a copy of the emails you send with RedWarn (such as to Wikimedia Trust and Safety and Oversight) to your email adres.",
 
                     // Config options
                     "options" : { 

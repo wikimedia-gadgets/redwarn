@@ -376,7 +376,7 @@ export default class Rollback {
 
     async rollback(
         reason: string,
-        defaultWarnIndex: keyof Warnings,
+        defaultWarnIndex?: keyof Warnings,
         showRollbackDoneOps = true
     ): Promise<void> {
         // Show progress bar
@@ -663,35 +663,20 @@ export default class Rollback {
     static contribsPageIcons(): void {
         // For each (current) tag
         $("span.mw-uctop").each((i, el) => {
-            // Add rollback options (${i} inserts i at that point to ensure it is a unique ID)
-            /* $(el).html(`current
-                    <span id="rw-currentRev${i}" style="cursor:default"> <!-- Wrapper -->
-                        <span style="font-family:Roboto;font-weight:400;"> &nbsp; <!-- Styling container -->
-                            <!-- Links -->
-                            <a style="color:green;cursor:pointer;" id="rw-currentRevPrev${i}" onclick="rw.rollback.contribsPageRollbackPreview(${i});">prev</a> &nbsp;
-                            <a style="color:red;cursor:pointer;" id="rw-currentRevRvv${i}" onclick="rw.rollback.contribsPageRollbackVandal(${i});">rvv</a> &nbsp;
-                            <a style="color:blue;cursor:pointer;" id="rw-currentRevRb${i}" onclick="rw.rollback.contribsPageRollback(${i});">rb</a>
-
-                            <!-- Tooltips -->
-                            <div class="mdl-tooltip" data-mdl-for="rw-currentRevPrev${i}">
-                                Preview Rollback
-                            </div>
-                            <div class="mdl-tooltip" data-mdl-for="rw-currentRevRvv${i}">
-                                Quick rollback Vandalism
-                            </div>
-                            <div class="mdl-tooltip" data-mdl-for="rw-currentRevRb${i}">
-                                Rollback
-                            </div>
-                        </span>
-                    </span>
-                    `); */
             // TODO i18n
+
+            const li = $(el).closest("li");
+
+            const rollback = new Rollback({
+                page: li.find("a.mw-contributions-title").text(),
+                revid: +li.attr("data-mw-revid"),
+            });
 
             const previewLink = (
                 <a
                     style="color:green;cursor:pointer;"
                     id={`rw-currentRevPrev${i}`}
-                    onClick={() => this.contribsPageRollbackPreview(i)}
+                    onClick={() => rollback.preview()}
                     aria-describedby={`rw-currentRevPrev${i}T`}
                 >
                     prev
@@ -712,7 +697,12 @@ export default class Rollback {
                 <a
                     style="color:red;cursor:pointer;"
                     id={`rw-currentRevRvv${i}`}
-                    onClick={() => this.contribsPageRollbackVandal(i)}
+                    onClick={() =>
+                        rollback.rollback(
+                            "[[WP:VANDAL|Vandalism]]",
+                            "vandalism"
+                        )
+                    }
                     aria-describedby={`rw-currentRevRvv${i}T`}
                 >
                     rvv
@@ -735,7 +725,7 @@ export default class Rollback {
                 <a
                     style="color:blue;cursor:pointer;"
                     id={`rw-currentRevRb${i}`}
-                    onClick={() => this.contribsPageRollback(i)}
+                    onClick={() => rollback.promptRollbackReason("")}
                     aria-describedby={`rw-currentRevRb${i}T`}
                 >
                     rb
@@ -779,18 +769,6 @@ export default class Rollback {
             const mdcRollbackTooltip = new MDCTooltip(rollbackTooltip);
             mdcRollbackTooltip.initialize();
         });
-    }
-
-    static contribsPageRollback(i: number): void {
-        throw new Error("Method not implemented.");
-    }
-
-    static contribsPageRollbackVandal(i: number): void {
-        throw new Error("Method not implemented.");
-    }
-
-    static contribsPageRollbackPreview(i: number): void {
-        throw new Error("Method not implemented.");
     }
 }
 

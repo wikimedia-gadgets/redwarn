@@ -15,7 +15,8 @@ module.exports = {
     devServer: {
         compress: false,
         port: 45991,
-        hot: false
+        hot: false,
+        inline: false
     },
     module: {
         rules: [

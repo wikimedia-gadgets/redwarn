@@ -19,11 +19,15 @@ export default class Rollback {
     private constructor(public rollbackRev: Revision) {}
 
     static async factory(rollbackRev: Revision = {}): Promise<Rollback> {
-        rollbackRev.revid ??= Rollback.detectRollbackRevId();
+        rollbackRev.revid ??= Rollback.detectRollbackRevId(false);
         rollbackRev.page ??= mw.config.get("wgRelevantPageName");
-        rollbackRev.user ??= (
-            await WikipediaAPI.isLatestRevision(rollbackRev)
-        ).user;
+        try {
+            rollbackRev.user ??= (
+                await WikipediaAPI.isLatestRevision(rollbackRev, true)
+            ).user;
+        } catch (e) {
+            console.log("redwarn: No latest revisions");
+        }
 
         return new this(rollbackRev);
     }
@@ -148,35 +152,108 @@ export default class Rollback {
             <span id="rwCurrentRevRollbackBtns"></span>
         ) as HTMLSpanElement;
 
-        RollbackIcons.forEach((icon, i) => {
-            const id = `rwRollback_${i}`;
-            let clickHandler;
+        if (isLatest || isLeftLatest) {
+            RollbackIcons.forEach((icon, i) => {
+                const id = `rwRollback_${i}`;
+                let clickHandler;
 
-            if (icon.actionType === "function") {
-                clickHandler = icon.action(this);
-            } else {
-                if (!icon.promptReason) {
-                    clickHandler = () =>
-                        this.rollback(icon.summary, icon.ruleIndex);
+                if (icon.actionType === "function") {
+                    clickHandler = icon.action(this);
                 } else {
-                    clickHandler = () =>
-                        this.promptRollbackReason(icon.summary);
+                    if (!icon.promptReason) {
+                        clickHandler = () =>
+                            this.rollback(icon.summary, icon.ruleIndex);
+                    } else {
+                        clickHandler = () =>
+                            this.promptRollbackReason(icon.summary);
+                    }
                 }
-            }
 
-            if (icon.enabled) {
+                if (icon.enabled) {
+                    const button = (
+                        <button
+                            class="mdc-icon-button material-icons"
+                            aria-label={icon.name}
+                            data-tooltip-id={`${id}T`}
+                            style={{
+                                fontSize: "28px",
+                                paddingRight: "5px",
+                                color: icon.color,
+                            }}
+                            id={id}
+                            onClick={clickHandler}
+                        >
+                            {icon.icon}
+                        </button>
+                    );
+                    toInit.push({ el: button, component: MDCRipple });
+
+                    const tooltip = (
+                        <div
+                            id={`${id}T`}
+                            class="mdc-tooltip"
+                            role="tooltip"
+                            aria-hidden="true"
+                        >
+                            <div class="mdc-tooltip__surface">{icon.name}</div>
+                        </div>
+                    );
+                    toInit.push({ el: tooltip, component: MDCTooltip });
+                    currentRevIcons.appendChild(button);
+                    currentRevIcons.appendChild(tooltip);
+                }
+            });
+
+            const progressBar = (
+                <div
+                    id="rwRollbackInProgressBar"
+                    role="progressbar"
+                    class="mdc-linear-progress"
+                    aria-label="RedWarn Rollback Progress Bar"
+                    aria-valuemin="0"
+                    aria-valuemax="1"
+                    aria-valuenow="0"
+                    style="width:300px; display: block; margin-left: auto; margin-right: auto;"
+                >
+                    <div class="mdc-linear-progress__buffer">
+                        <div class="mdc-linear-progress__buffer-bar"></div>
+                        <div class="mdc-linear-progress__buffer-dots"></div>
+                    </div>
+                    <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+                        <span class="mdc-linear-progress__bar-inner"></span>
+                    </div>
+                    <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+                        <span class="mdc-linear-progress__bar-inner"></span>
+                    </div>
+                </div>
+            );
+            this.progressBarElement = new MDCLinearProgress(progressBar);
+            this.progressBarElement.initialize();
+
+            const rollbackDoneIcons = (
+                <span id="rwRollbackDoneIcons" style="display:none;">
+                    <div style="height:5px"></div>
+                    <span style="font-family: Roboto;font-size: 16px;display: inline-flex;vertical-align: middle;">
+                        <span
+                            class="material-icons"
+                            style="color:green;cursor:default;"
+                        >
+                            check_circle
+                        </span>
+                        &nbsp; &nbsp; Rollback complete
+                    </span>
+                    <br />
+                    <div style="height:5px"></div>
+                </span>
+            );
+
+            RollbackDoneIcons.forEach((icon) => {
                 const button = (
                     <button
                         class="mdc-icon-button material-icons"
                         aria-label={icon.name}
-                        data-tooltip-id={`${id}T`}
-                        style={{
-                            fontSize: "28px",
-                            paddingRight: "5px",
-                            color: icon.color,
-                        }}
-                        id={id}
-                        onClick={clickHandler}
+                        data-tooltip-id={`rwRBDoneIcon_${icon.id}T`}
+                        id={`rwRBDoneIcon_${icon.id}`}
                     >
                         {icon.icon}
                     </button>
@@ -185,7 +262,7 @@ export default class Rollback {
 
                 const tooltip = (
                     <div
-                        id={`${id}T`}
+                        id={`rwRBDoneIcon_${icon.id}T`}
                         class="mdc-tooltip"
                         role="tooltip"
                         aria-hidden="true"
@@ -194,99 +271,28 @@ export default class Rollback {
                     </div>
                 );
                 toInit.push({ el: tooltip, component: MDCTooltip });
-                currentRevIcons.appendChild(button);
-                currentRevIcons.appendChild(tooltip);
-            }
-        });
 
-        const progressBar = (
-            <div
-                id="rwRollbackInProgressBar"
-                role="progressbar"
-                class="mdc-linear-progress"
-                aria-label="RedWarn Rollback Progress Bar"
-                aria-valuemin="0"
-                aria-valuemax="1"
-                aria-valuenow="0"
-                style="width:300px; display: block; margin-left: auto; margin-right: auto;"
-            >
-                <div class="mdc-linear-progress__buffer">
-                    <div class="mdc-linear-progress__buffer-bar"></div>
-                    <div class="mdc-linear-progress__buffer-dots"></div>
-                </div>
-                <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
-                    <span class="mdc-linear-progress__bar-inner"></span>
-                </div>
-                <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
-                    <span class="mdc-linear-progress__bar-inner"></span>
-                </div>
-            </div>
-        );
-        this.progressBarElement = new MDCLinearProgress(progressBar);
-        this.progressBarElement.initialize();
+                rollbackDoneIcons.append(button, tooltip, "&nbsp; &nbsp;");
+            });
 
-        const rollbackDoneIcons = (
-            <span id="rwRollbackDoneIcons" style="display:none;">
-                <div style="height:5px"></div>
-                <span style="font-family: Roboto;font-size: 16px;display: inline-flex;vertical-align: middle;">
-                    <span
-                        class="material-icons"
-                        style="color:green;cursor:default;"
-                    >
-                        check_circle
+            currentRevIcons = (
+                <div>
+                    {currentRevIcons}
+                    <span id="rwRollbackInProgress" style="display:none;">
+                        {progressBar}
+                        <div style="height:5px"></div>
+                        {/* <!-- spacer --> */}
+                        <span style="font-family: Roboto;font-size: 16px;">
+                            Reverting...
+                        </span>
+                        <br />
+                        <div style="height:5px"></div>
+                        {/* <!-- spacer --> */}
                     </span>
-                    &nbsp; &nbsp; Rollback complete
-                </span>
-                <br />
-                <div style="height:5px"></div>
-            </span>
-        );
-
-        RollbackDoneIcons.forEach((icon) => {
-            const button = (
-                <button
-                    class="mdc-icon-button material-icons"
-                    aria-label={icon.name}
-                    data-tooltip-id={`rwRBDoneIcon_${icon.id}T`}
-                    id={`rwRBDoneIcon_${icon.id}`}
-                >
-                    {icon.icon}
-                </button>
-            );
-            toInit.push({ el: button, component: MDCRipple });
-
-            const tooltip = (
-                <div
-                    id={`rwRBDoneIcon_${icon.id}T`}
-                    class="mdc-tooltip"
-                    role="tooltip"
-                    aria-hidden="true"
-                >
-                    <div class="mdc-tooltip__surface">{icon.name}</div>
+                    {rollbackDoneIcons}
                 </div>
             );
-            toInit.push({ el: tooltip, component: MDCTooltip });
-
-            rollbackDoneIcons.append(button, tooltip, "&nbsp; &nbsp;");
-        });
-
-        currentRevIcons = (
-            <div>
-                {currentRevIcons}
-                <span id="rwRollbackInProgress" style="display:none;">
-                    {progressBar}
-                    <div style="height:5px"></div>
-                    {/* <!-- spacer --> */}
-                    <span style="font-family: Roboto;font-size: 16px;">
-                        Reverting...
-                    </span>
-                    <br />
-                    <div style="height:5px"></div>
-                    {/* <!-- spacer --> */}
-                </span>
-                {rollbackDoneIcons}
-            </div>
-        );
+        }
 
         const twinkleLoadedBeforeUs = $('div[id^="tw-revert"]').length > 0;
 
@@ -301,6 +307,13 @@ export default class Rollback {
             $(".diff-otitle").prepend(left);
         }
 
+        if (!isLeftLatest) {
+            toInit.push(
+                { el: $("#rOld1")[0], component: MDCRipple },
+                { el: $("#rOld1T")[0], component: MDCRipple }
+            );
+        }
+
         const right = isLatest ? (
             currentRevIcons
         ) : (
@@ -310,6 +323,13 @@ export default class Rollback {
             $('.diff-ntitle > div[id^="tw-revert"]').after(right);
         } else {
             $(".diff-ntitle").prepend(right);
+        }
+
+        if (!isLatest) {
+            toInit.push(
+                { el: $("#rOld2")[0], component: MDCRipple },
+                { el: $("#rOld2T")[0], component: MDCRipple }
+            );
         }
 
         setTimeout(() => {
@@ -352,7 +372,7 @@ export default class Rollback {
             const summary = i18next.t("wikipedia:summaries.revert", {
                 username: rev.user.username,
                 targetRevisionId: latestRev.revid,
-                targetRevisionUser: latestRev.user.username,
+                targetRevisionEditor: latestRev.user.username,
             });
             const res = await WikipediaAPI.postWithEditToken({
                 action: "edit",
@@ -1061,33 +1081,38 @@ interface RestoreProps extends BaseProps {
 function RestoreElement(props: RestoreProps) {
     return (
         <div>
-            <div
+            <button
+                class="mdc-icon-button material-icons"
+                aria-label="Restore this version"
+                data-tooltip-id={`rOld${props.left ? "1" : "2"}T`}
                 id={`rOld${props.left ? "1" : "2"}`}
-                class="icon material-icons"
+                style={{
+                    fontSize: "28px",
+                    paddingRight: "5px",
+                    color: "purple",
+                }}
+                onClick={() => {
+                    props.rollback.promptRestoreReason(
+                        $(
+                            `#mw-diff-${
+                                props.left ? "o" : "n"
+                            }title1 > strong > a`
+                        )
+                            .attr("href")
+                            .split("&")[1]
+                            .split("=")[1]
+                    );
+                }}
             >
-                <span
-                    style="cursor: pointer; font-size:28px; padding-right:5px; color:purple;"
-                    onClick={() => {
-                        props.rollback.promptRestoreReason(
-                            $(
-                                `#mw-diff-${
-                                    props.left ? "o" : "n"
-                                }title1 > strong > a`
-                            )
-                                .attr("href")
-                                .split("&")[1]
-                                .split("=")[1]
-                        );
-                    }}
-                >
-                    history
-                </span>
-            </div>
+                history
+            </button>
             <div
-                class="mdl-tooltip mdl-tooltip--large"
-                for={`rOld${props.left ? "1" : "2"}`}
+                class="mdc-tooltip"
+                id={`rOld${props.left ? "1" : "2"}T`}
+                role="tooltip"
+                aria-hidden="true"
             >
-                Restore this version
+                <div class="mdc-tooltip__surface">Restore this version</div>
             </div>
         </div>
     );

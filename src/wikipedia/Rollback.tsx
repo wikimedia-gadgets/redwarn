@@ -1,18 +1,18 @@
-import { MDCTooltip } from "@material/tooltip";
-import { MDCRipple } from "@material/ripple";
 import { MDCLinearProgress } from "@material/linear-progress";
+import { MDCRipple } from "@material/ripple";
+import { MDCTooltip } from "@material/tooltip";
+import i18next from "i18next";
 import { BaseProps, h as TSX } from "tsx-dom";
-import RedWarnStore from "../data/RedWarnStore";
-import redirect from "../util/redirect";
-import WikipediaAPI from "./API";
-import Revision from "./Revision";
 import {
     RW_VERSION,
     RW_VERSION_TAG,
     RW_WIKIS_TAGGABLE,
 } from "../data/RedWarnConstants";
+import RedWarnStore from "../data/RedWarnStore";
 import RWUI from "../ui/RWUI";
-import i18next from "i18next";
+import redirect from "../util/redirect";
+import WikipediaAPI from "./API";
+import Revision from "./Revision";
 import { Warnings } from "./Warnings";
 
 export default class Rollback {
@@ -104,16 +104,6 @@ export default class Rollback {
         // TODO dialog
         //rw.ui.loadDialog.show("Loading preview...");
         // Check if latest, else redirect
-        /* rw.info.isLatestRevision(mw.config.get("wgRelevantPageName"), rw.rollback.getRollbackrevID(), un=>{
-            // Fetch latest revision not by user
-            rw.info.latestRevisionNotByUser(mw.config.get("wgRelevantPageName"), un, (content, summary, rID) => {
-                // Got it! Now open preview dialog
-
-                // Add handler for when page loaded
-                let url = rw.wikiIndex + "?title="+ mw.config.get("wgRelevantPageName") +"&diff="+ rID +"&oldid="+ mw.util.getParamValue("diff") +"&diffmode=source#rollbackPreview";
-                redirect(url); // goto in current tab
-            });
-        }); */
         const { user } = await WikipediaAPI.isLatestRevision(this.rollbackRev);
         const { revid } = await WikipediaAPI.latestRevisionNotByUser(
             mw.config.get("wgRelevantPageName"),
@@ -131,7 +121,7 @@ export default class Rollback {
         redirect(url);
     }
 
-    async loadIcons(): Promise<void> {
+    loadIcons(): Promise<void> {
         // Check if page is editable, if not, don't show
         if (!mw.config.get("wgIsProbablyEditable")) {
             // Can't edit, so exit
@@ -175,24 +165,6 @@ export default class Rollback {
             }
 
             if (icon.enabled) {
-                /* const elem = (
-                    <div id={id} class="icon material-icons">
-                        <span
-                            style={{
-                                cursor: "pointer",
-                                fontSize: "28px",
-                                paddingRight: "5px",
-                                color: icon.color,
-                            }}
-                            onClick={clickHandler}
-                        ></span>
-                    </div>
-                );
-                const iconElem = (
-                    <div class="mdl-tooltip mdl-tooltip--large" for={id}>
-                        {icon.name}
-                    </div>
-                ); */
                 const button = (
                     <button
                         class="mdc-icon-button material-icons"
@@ -270,26 +242,6 @@ export default class Rollback {
             </span>
         );
 
-        /* <button
-                    class="mdc-icon-button material-icons"
-                    aria-label="Go to latest revision"
-                    data-tooltip-id="RWRBDONEmrevPgT"
-                    id="RWRBDONEmrevPg"
-                >
-                    watch_later
-                </button>
-                <div
-                    id="RWRBDONEmrevPgT"
-                    class="mdc-tooltip"
-                    role="tooltip"
-                    aria-hidden="true"
-                >
-                    <div class="mdc-tooltip__surface">
-                        Go to latest revision
-                    </div>
-                </div>
-                &nbsp; &nbsp; */
-
         RollbackDoneIcons.forEach((icon) => {
             const button = (
                 <button
@@ -336,8 +288,6 @@ export default class Rollback {
             </div>
         );
 
-        // idk why eslint decides to die for me
-        // eslint-disable-next-line quotes
         const twinkleLoadedBeforeUs = $('div[id^="tw-revert"]').length > 0;
 
         const left = isLeftLatest ? (
@@ -346,7 +296,6 @@ export default class Rollback {
             <RestoreElement left={true} rollback={this} />
         );
         if (twinkleLoadedBeforeUs) {
-            // eslint-disable-next-line quotes
             $('.diff-otitle > div[id^="tw-revert"]').after(left);
         } else {
             $(".diff-otitle").prepend(left);
@@ -358,7 +307,6 @@ export default class Rollback {
             <RestoreElement left={false} rollback={this} />
         ); // if the latest rev, show the accurate revs, else, don't
         if (twinkleLoadedBeforeUs) {
-            // eslint-disable-next-line quotes
             $('.diff-ntitle > div[id^="tw-revert"]').after(right);
         } else {
             $(".diff-ntitle").prepend(right);
@@ -424,7 +372,7 @@ export default class Rollback {
                     : null,
             });
             if (!res.edit) {
-                // Error occured or other issue
+                // Error occurred or other issue
                 console.error(res);
                 // Show rollback icons again (todo)
                 $("#rwCurrentRevRollbackBtns").show();

@@ -41,7 +41,7 @@
     },
     "scripts": {
         "start": "webpack-dev-server",
-        "build": "webpack",
+        "build": "webpack -p",
         "profile": "webpack --profile"
     },
     "repository": {

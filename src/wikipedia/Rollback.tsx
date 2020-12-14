@@ -13,8 +13,7 @@ import {
 } from "../data/RedWarnConstants";
 import RWUI from "../ui/RWUI";
 import i18next from "i18next";
-import type { MDCComponent } from "@material/base";
-import type { MDCFoundation } from "@material/base/foundation";
+import { Warnings } from "./Warnings";
 
 export default class Rollback {
     private constructor(public rollbackRev: Revision) {}
@@ -377,7 +376,7 @@ export default class Rollback {
 
     async rollback(
         reason: string,
-        defaultWarnIndex: number,
+        defaultWarnIndex: keyof Warnings,
         showRollbackDoneOps = true
     ): Promise<void> {
         // Show progress bar
@@ -622,7 +621,7 @@ export default class Rollback {
         this.progressBarElement.buffer = buffer;
     }
 
-    showRollbackDoneOps(un: string, warnIndex: number): void {
+    showRollbackDoneOps(un: string, warnIndex: keyof Warnings): void {
         // Clear get hidden handler to stop errors in more options menu
         this.getDisabledHTMLandHandlers = () => {
             return [];
@@ -632,7 +631,7 @@ export default class Rollback {
             handler: (
                 rollback: Rollback,
                 username: string,
-                warnIndex: number
+                warnIndex: keyof Warnings
             ) => any
         ) => () => handler(this, un, warnIndex);
 
@@ -799,7 +798,7 @@ interface ActionRollback {
     actionType: "rollback";
     promptReason: boolean;
     summary: string;
-    ruleIndex?: number;
+    ruleIndex?: keyof Warnings;
 }
 
 interface ActionFunction {
@@ -829,7 +828,7 @@ export const RollbackIcons: RollbackIcon[] = [
         actionType: "rollback",
         promptReason: false, // add extra info? false = quick rollback, otherwise not
         summary: "[[WP:VANDAL|Vandalism]]", // Set summary
-        ruleIndex: 0, // used for autowarn
+        ruleIndex: "vandalism", // used for autowarn
     },
 
     {
@@ -840,7 +839,7 @@ export const RollbackIcons: RollbackIcon[] = [
         actionType: "rollback",
         promptReason: false, // add extra info?
         summary: "[[WP:CRV|Unexplained content removal]]", // Set summary
-        ruleIndex: 3, // used for autowarn
+        ruleIndex: "delete", // used for autowarn
     },
 
     {
@@ -912,7 +911,7 @@ export const RollbackIcons: RollbackIcon[] = [
         actionType: "rollback",
         promptReason: false, // add extra info?
         summary: "[[WP:3RR]]", // Set summary
-        ruleIndex: 84, // used for autowarn
+        ruleIndex: "_3rr", // used for autowarn
     },
 
     {
@@ -923,7 +922,7 @@ export const RollbackIcons: RollbackIcon[] = [
         actionType: "rollback",
         promptReason: false, // add extra info?
         summary: "Personal attack towards another editor ([[WP:NPA]])", // Set summary
-        ruleIndex: 22, // used for autowarn
+        ruleIndex: "npa", // used for autowarn
     },
 
     {
@@ -934,7 +933,7 @@ export const RollbackIcons: RollbackIcon[] = [
         actionType: "rollback",
         promptReason: false, // add extra info?
         summary: "Likely [[WP:COPYVIO|copyright violation]]", // Set summary
-        ruleIndex: 79, // used for autowarn
+        ruleIndex: "copyright", // used for autowarn
     },
 
     {
@@ -945,7 +944,7 @@ export const RollbackIcons: RollbackIcon[] = [
         actionType: "rollback",
         promptReason: false, // add extra info?
         summary: "Fails [[WP:BLP]]", // Set summary
-        ruleIndex: 5, // used for autowarn
+        ruleIndex: "biog", // used for autowarn
     },
 
     {
@@ -957,7 +956,7 @@ export const RollbackIcons: RollbackIcon[] = [
         promptReason: false, // add extra info?
         summary:
             "Using Wikipedia for [[WP:NOTADVERTISING|advertising and/or promotion]] is not permitted.", // Set summary
-        ruleIndex: 16, // used for autowarn
+        ruleIndex: "advert", // used for autowarn
     },
 
     {
@@ -969,7 +968,7 @@ export const RollbackIcons: RollbackIcon[] = [
         promptReason: false, // add extra info?
         summary:
             "Addition of unnecessary/inappropriate [[WP:EL|external links]]", // Set summary
-        ruleIndex: 19, // used for autowarn
+        ruleIndex: "spam", // used for autowarn
     },
 
     // ORANGE
@@ -981,7 +980,7 @@ export const RollbackIcons: RollbackIcon[] = [
         actionType: "rollback",
         promptReason: false, // add extra info?
         summary: "[[WP:RS|Not providing a reliable source]]", // Set summary
-        ruleIndex: 15, // used for autowarn
+        ruleIndex: "unsourced", // used for autowarn
     },
 
     {
@@ -992,7 +991,7 @@ export const RollbackIcons: RollbackIcon[] = [
         actionType: "rollback",
         promptReason: false, // add extra info?
         summary: "Disruptive editing", // Set summary
-        ruleIndex: 1, // used for autowarn
+        ruleIndex: "disruptive", // used for autowarn
     },
 
     {
@@ -1003,7 +1002,7 @@ export const RollbackIcons: RollbackIcon[] = [
         actionType: "rollback",
         promptReason: false, // add extra info?
         summary: "likely [[WP:PROVEIT|factual errors]]", // Set summary
-        ruleIndex: 7, // used for autowarn
+        ruleIndex: "error", // used for autowarn
     },
 
     {
@@ -1014,7 +1013,7 @@ export const RollbackIcons: RollbackIcon[] = [
         actionType: "rollback",
         promptReason: false, // add extra info?
         summary: "Joke edit", // Set summary
-        ruleIndex: 10, // used for autowarn
+        ruleIndex: "joke", // used for autowarn
     },
 
     {
@@ -1025,7 +1024,7 @@ export const RollbackIcons: RollbackIcon[] = [
         actionType: "rollback",
         promptReason: false, // add extra info?
         summary: "per [[WP:NPOV]]", // Set summary
-        ruleIndex: 17, // used for autowarn
+        ruleIndex: "npov", // used for autowarn
     },
 
     {
@@ -1037,7 +1036,7 @@ export const RollbackIcons: RollbackIcon[] = [
         promptReason: false, // add extra info?
         summary:
             "Please use the article [[WP:TPHELP|talk page]] or [[WP:FIXIT|be bold]] and fix the problem", // Set summary
-        ruleIndex: 66, // used for autowarn
+        ruleIndex: "talkinarticle", // used for autowarn
     },
 
     // BLUE
@@ -1049,7 +1048,7 @@ export const RollbackIcons: RollbackIcon[] = [
         actionType: "rollback",
         promptReason: false, // add extra info?
         summary: "[[WP:MOS|Manual of Style]] issues", // Set summary
-        ruleIndex: 31, // used for autowarn
+        ruleIndex: "mos", // used for autowarn
     },
 
     {
@@ -1060,14 +1059,18 @@ export const RollbackIcons: RollbackIcon[] = [
         actionType: "rollback",
         promptReason: false, // add extra info?
         summary: "[[WP:SANDBOX|test edits]]", // Set summary
-        ruleIndex: 2, // used for autowarn
+        ruleIndex: "test", // used for autowarn
     },
 ];
 
 export interface RollbackDoneIcon {
     name: string;
     icon: string;
-    action: (rollback: Rollback, username: string, warnIndex: number) => any;
+    action: (
+        rollback: Rollback,
+        username: string,
+        warnIndex: keyof Warnings
+    ) => any;
     id: string;
 }
 export const RollbackDoneIcons: RollbackDoneIcon[] = [

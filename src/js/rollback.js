@@ -392,7 +392,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         } else {
             let isNLatest = $("#mw-diff-ntitle1").text().includes("Latest revision");
             let isOLatest = $("#mw-diff-otitle1").text().includes("Latest revision");
-            
+
             if (isNLatest) {
                 // Return the revID of the edit on the right
                 return $('#mw-diff-ntitle1 > strong > a').attr('href').split('&')[1].split('=')[1];
@@ -673,7 +673,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
     "contribsPageRollbackPreview": i => {
         // Get revision ID
         let revID = $("#rw-currentRev" + i).closest("li").attr("data-mw-revid");
-        let pageName = $("#rw-currentRev" + i).closest("li").find("a.mw-changeslist-date").attr("title");
+        let pageName = $("#rw-currentRev" + i).closest("li").find("a.mw-contributions-title").text();
         console.log(revID);
         console.log(pageName);
         rw.ui.loadDialog.show("Loading preview...");
@@ -699,7 +699,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
     "contribsPageRollbackVandal": i => {
         // Get revision ID
         let revID = $("#rw-currentRev" + i).closest("li").attr("data-mw-revid");
-        let pageName = $("#rw-currentRev" + i).closest("li").find("a.mw-changeslist-date").attr("title");
+        let pageName = $("#rw-currentRev" + i).closest("li").find("a.mw-contributions-title").text();
         console.log(revID);
         console.log(pageName);
 
@@ -740,7 +740,7 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             let rollbackReason = rs.split("`")[1];
             // Get revision ID
             let revID = $("#rw-currentRev" + i).closest("li").attr("data-mw-revid");
-            let pageName = $("#rw-currentRev" + i).closest("li").find("a.mw-changeslist-date").attr("title");
+            let pageName = $("#rw-currentRev" + i).closest("li").find("a.mw-contributions-title").text();
             console.log(revID);
             console.log(pageName);
 

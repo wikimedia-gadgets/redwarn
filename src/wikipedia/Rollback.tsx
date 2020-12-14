@@ -229,6 +229,9 @@ export default class Rollback {
             );
             this.progressBarElement = new MDCLinearProgress(progressBar);
             this.progressBarElement.initialize();
+            this.progressBarElement.determinate = false;
+            this.progressBarElement.progress = 0;
+            this.progressBarElement.buffer = 0;
 
             const rollbackDoneIcons = (
                 <span id="rwRollbackDoneIcons" style="display:none;">
@@ -351,13 +354,11 @@ export default class Rollback {
         $("#rwCurrentRevRollbackBtns").hide();
         $("#rwRollbackInProgress").show();
 
-        this.progressBar(0, 0);
+        this.progressBarElement.open();
 
         const rev = await WikipediaAPI.isLatestRevision(this.rollbackRev);
 
         const pseudoRollbackCallback = async () => {
-            this.progressBar(25, 0);
-
             const latestRev = await WikipediaAPI.latestRevisionNotByUser(
                 mw.config.get("wgRelevantPageName"),
                 rev.user.username
@@ -403,7 +404,7 @@ export default class Rollback {
                     "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
                 ); */
             } else {
-                this.progressBar(100, 100);
+                this.progressBarElement.close();
 
                 let resolve: (value?: any) => void;
                 const promise = new Promise<void>((res) => {
@@ -426,8 +427,6 @@ export default class Rollback {
         };
 
         const rollbackCallback = async () => {
-            this.progressBar(70, 70);
-
             try {
                 await WikipediaAPI.api.rollback(
                     mw.config.get("wgRelevantPageName"),
@@ -463,7 +462,7 @@ export default class Rollback {
                 ); */
             }
 
-            this.progressBar(100, 100);
+            this.progressBarElement.close();
 
             let resolve: (value?: any) => void;
             const promise = new Promise<void>((res) => {
@@ -579,15 +578,6 @@ export default class Rollback {
     }
 
     private progressBarElement: MDCLinearProgress | null;
-    progressBar(progress: number, buffer: number): void {
-        if (!this.progressBarElement) {
-            return;
-        }
-
-        // Update the progress bar
-        this.progressBarElement.progress = progress;
-        this.progressBarElement.buffer = buffer;
-    }
 
     showRollbackDoneOps(un: string, warnIndex: keyof Warnings): void {
         // Clear get hidden handler to stop errors in more options menu

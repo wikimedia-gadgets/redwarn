@@ -9,7 +9,9 @@ export default function (originalRegex: RegExp, injectFlags = ""): RegExp {
     let flags = originalRegex.flags;
 
     for (const flag of injectFlags.toLowerCase()) {
-        if (!flags.includes(flag)) flags += flag;
+        if (!flags.includes(flag)) {
+            flags += flag;
+        }
     }
 
     // Return a clone with the additive flags.

@@ -17,14 +17,11 @@ export default class RedWarnStore {
 
     // Wiki automated config
 
-    public static messageHandler: MessageHandler = new MessageHandler();
-    public static wikiBase: string = mw.config.get("wgServer");
-    public static wikiIndex: string =
-        mw.config.get("wgServer") + mw.config.get("wgScript");
-    public static wikiAPI = `${
-        mw.config.get("wgServer") + mw.config.get("wgScriptPath")
-    }/api.php`;
-    public static wikiID: string = mw.config.get("wgWikiID");
+    public static messageHandler: MessageHandler;
+    public static wikiBase: string;
+    public static wikiIndex: string;
+    public static wikiAPI: string;
+    public static wikiID: string;
 
     public static styleStorage: StyleStorage = null;
     public static windowFocused = false;
@@ -34,6 +31,14 @@ export default class RedWarnStore {
     }
 
     public static initializeStore(): void {
+        this.messageHandler = new MessageHandler();
+        this.wikiBase = mw.config.get("wgServer");
+        this.wikiIndex = mw.config.get("wgServer") + mw.config.get("wgScript");
+        this.wikiAPI = `${
+            mw.config.get("wgServer") + mw.config.get("wgScriptPath")
+        }/api.php`;
+        this.wikiID = mw.config.get("wgWikiID");
+
         window.RedWarnStore = this;
     }
 }

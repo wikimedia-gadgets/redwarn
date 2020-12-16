@@ -10,68 +10,118 @@ import WikipediaAPI from "./API";
 import regexEscape from "../util/regexEscape";
 import getMonthHeader from "../util/getMonthHeader";
 
+interface UserInfo {
+    gender: Gender;
+    edits: number;
+    lastWarning: WarningAnalysis;
+}
+
+/**
+ * Represents a Mediawiki user.
+ */
 export default class User {
+    private memory: Partial<UserInfo> = {};
+
+    /**
+     * Creates a new user from their username.
+     * @param username The username of the user.
+     */
     constructor(readonly username: string) {}
 
-    async getUserPronouns(): Promise<GenderPronoun> {
-        const r = await WikipediaAPI.get({
-            action: "query",
-            list: "users",
-            usprop: "gender",
-            ususers: this.username,
-        });
-        const gender: Gender = r.query.users[0].gender;
-        return GenderDict.get(gender);
-    }
-
-    async getUserEditCount(): Promise<number> {
-        const r = await WikipediaAPI.get({
-            action: "query",
-            list: "users",
-            usprop: "editcount",
-            ususers: this.username,
-        });
-        return r.query.users[0].editcount;
-    }
-
-    async lastWarningLevel(): Promise<WarningAnalysis> {
-        const revisionWikitext = await WikipediaAPI.getLatestRevision(
-            `User_talk:${mw.util.wikiUrlencode(this.username)}`
-        );
-        // TODO Handle errors
-
-        if (!revisionWikitext) return { level: 0 };
-
-        const revisionWikitextLines = revisionWikitext.split("\n");
-        const warningHeaderExec = new RegExp(
-            `==\\s?${regexEscape(getMonthHeader())}\\s?==`,
-            "gi"
-        ).exec(revisionWikitext);
-
-        if (warningHeaderExec != null) {
-            // No warnings for this month.
-            return { level: 0 };
+    /**
+     * Get a user's pronouns from Wikipedia.
+     * @param forceRecheck If set to `true`, RedWarn will grab the latest data from
+     *        Wikipedia and overwrite the stored value.
+     * @returns The user's gender pronouns.
+     */
+    async getUserPronouns(forceRecheck = false): Promise<GenderPronoun> {
+        if (!this.memory.gender || forceRecheck) {
+            const r = await WikipediaAPI.get({
+                action: "query",
+                list: "users",
+                usprop: "gender",
+                ususers: this.username,
+            });
+            this.memory.gender = r.query.users[0].gender;
         }
-
-        const warningHeader = warningHeaderExec[0];
-
-        // Set highest to nothing so if there is a date header with nothing in it,
-        // then no warning will be reported.
-        let monthNotices = "";
-        // For each line
-        for (
-            let i = revisionWikitextLines.indexOf(warningHeader) + 1;
-            i < revisionWikitextLines.length &&
-            revisionWikitextLines[i].startsWith("==");
-            i++
-        ) {
-            // Add the current line to the collection of this month's notices.
-            monthNotices += revisionWikitextLines[i];
-        }
-
-        return getHighestLevel(monthNotices);
+        return GenderDict.get(this.memory.gender);
     }
 
+    /**
+     * Get the user's edit count.
+     * @param forceRecheck If set to `true`, RedWarn will grab the latest data from
+     *        Wikipedia and overwrite the stored value.
+     * @returns The user's edit count.
+     */
+    async getUserEditCount(forceRecheck = false): Promise<number> {
+        if (!this.memory.edits || forceRecheck) {
+            const r = await WikipediaAPI.get({
+                action: "query",
+                list: "users",
+                usprop: "editcount",
+                ususers: this.username,
+            });
+            this.memory.edits = r.query.users[0].editcount;
+        }
+        return this.memory.edits;
+    }
+
+    /**
+     * Gets the user's last warning level.
+     * @param forceRecheck If set to `true`, RedWarn will grab the latest data from
+     *        Wikipedia and overwrite the stored value.
+     */
+    async lastWarningLevel(forceRecheck = false): Promise<WarningAnalysis> {
+        if (!this.memory.lastWarning || forceRecheck) {
+            const revisionWikitext = await WikipediaAPI.getLatestRevision(
+                `User_talk:${mw.util.wikiUrlencode(this.username)}`
+            );
+            // TODO Handle errors
+
+            if (!revisionWikitext) {
+                return { level: 0 };
+            }
+
+            const revisionWikitextLines = revisionWikitext.split("\n");
+            const warningHeaderExec = new RegExp(
+                `==\\s?${regexEscape(getMonthHeader())}\\s?==`,
+                "gi"
+            ).exec(revisionWikitext);
+
+            if (warningHeaderExec != null) {
+                // No warnings for this month.
+                return { level: 0 };
+            }
+
+            const warningHeader = warningHeaderExec[0];
+
+            // Set highest to nothing so if there is a date header with nothing in it,
+            // then no warning will be reported.
+            let monthNotices = "";
+            // For each line
+            for (
+                let i = revisionWikitextLines.indexOf(warningHeader) + 1;
+                i < revisionWikitextLines.length &&
+                revisionWikitextLines[i].startsWith("==");
+                i++
+            ) {
+                // Add the current line to the collection of this month's notices.
+                monthNotices += revisionWikitextLines[i];
+            }
+
+            this.memory.lastWarning = getHighestLevel(monthNotices);
+        }
+        return this.memory.lastWarning;
+    }
+
+    /**
+     * Appends text to the user's talk page.
+     * @param text The text to add.
+     * @param underDate The date header to look for.
+     * @param summary The edit summary to use.
+     * @param blacklist If the page already contains this text, insertion is skipped.
+     * @param blacklistToast Whether or not to show a toast if the insertion was skipped.
+     */
     async addToUserTalk(
         text: string,
         underDate: boolean,
@@ -95,7 +145,9 @@ export default class User {
         );
         // TODO Handle errors
 
-        if (!revisionWikitext) revisionWikitext = "";
+        if (!revisionWikitext) {
+            revisionWikitext = "";
+        }
 
         const wikiTextLines = revisionWikitext.split("\n");
         let finalText = "";
@@ -173,6 +225,9 @@ export default class User {
         }); // TODO Handle errors
     }
 
+    /**
+     * Welcomes the user.
+     */
     async quickWelcome(): Promise<void> {
         const isIp = mw.util.isIPAddress(this.username);
         await this.addToUserTalk(

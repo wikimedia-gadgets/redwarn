@@ -5,9 +5,6 @@
     "main": "src/RedWarnLite.ts",
     "dependencies": {
         "@material/tooltip": "^8.0.0",
-        "@types/chance": "^1.1.0",
-        "@types/dialog-polyfill": "^0.5.0",
-        "@types/jquery": "^3.5.1",
         "chance": "^1.1.7",
         "css-loader": "^4.3.0",
         "dialog-polyfill": "^0.5.3",
@@ -25,6 +22,9 @@
         "webpack-cli": "^3.3.12"
     },
     "devDependencies": {
+        "@types/chance": "^1.1.0",
+        "@types/dialog-polyfill": "^0.5.0",
+        "@types/jquery": "^3.5.1",
         "@types/jest": "^26.0.14",
         "@types/jsdom": "^16.2.4",
         "@typescript-eslint/eslint-plugin": "^4.1.1",

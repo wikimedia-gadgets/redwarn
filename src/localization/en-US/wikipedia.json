@@ -1,5 +1,6 @@
 {
     "summaries": {
-        "revert": "Reverting edit(s) by [[Special:Contributions/{{username}}|{{username}}]] ([[User_talk:{{username}}|talk]]) to rev. {{targetRevisionId}} by {{targetRevisionEditor}}"
+        "revert": "Reverting edit(s) by [[Special:Contributions/{{username}}|{{username}}]] ([[User_talk:{{username}}|talk]]) to rev. {{targetRevisionId}} by {{targetRevisionEditor}}: {{reason}} [[wikipedia:en:WP:RW|(RW {{version})]]",
+        "rollback": "Rollback edit(s) by [[Special:Contributions/{{username}}|{{username}}]] ([[User_talk:{{username}}|talk]]): {{reason}} [[wikipedia:en:WP:RW|(RW {{version})]]"
     }
 }

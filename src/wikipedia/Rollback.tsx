@@ -374,18 +374,14 @@ export default class Rollback {
                 username: rev.user.username,
                 targetRevisionId: latestRev.revid,
                 targetRevisionEditor: latestRev.user.username,
+                version: RW_VERSION_TAG,
+                reason,
             });
             const res = await WikipediaAPI.postWithEditToken({
                 action: "edit",
                 format: "json",
                 title: mw.config.get("wgRelevantPageName"),
-                summary:
-                    summary +
-                    ": " +
-                    reason +
-                    " [[w:en:WP:RW|(RW " +
-                    RW_VERSION_TAG +
-                    ")]]", // summary sign here
+                summary,
                 undo: rev.revid, // current
                 undoafter: latestRev.revid, // restore version
                 tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
@@ -428,23 +424,16 @@ export default class Rollback {
 
         const rollbackCallback = async () => {
             try {
+                const summary = i18next.t("wikipedia:summaries.rollback", {
+                    username: rev.user.username,
+                    reason,
+                    version: RW_VERSION_TAG,
+                });
                 await WikipediaAPI.api.rollback(
                     mw.config.get("wgRelevantPageName"),
                     rev.user.username,
                     {
-                        // TODO i18n
-                        summary:
-                            "Rollback edit(s) by [[Special:Contributions/" +
-                            rev.user +
-                            "|" +
-                            rev.user +
-                            "]] ([[User_talk:" +
-                            rev.user +
-                            "|talk]]): " +
-                            reason +
-                            " [[w:en:WP:RW|(RW " +
-                            RW_VERSION +
-                            ")]]", // summary sign here
+                        summary,
                         tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
                             ? "RedWarn"
                             : null,

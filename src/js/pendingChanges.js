@@ -68,7 +68,7 @@ rw.PendingChangesReview = {
                                         "imageParams": "",
                                         "fileVersion": "",
                                         "validatedParams": $('input[name ="validatedParams"]').attr("value"),
-                                        "wpReason" : comment + " ([[w:en:Wikipedia:RedWarn|RedWarn "+ rw.version + "]])",
+                                        "wpReason" : comment + " ([[w:en:Wikipedia:RedWarn|RW "+ rw.version + "]])",
                                         "wpSubmit": "Accept revision"
                                 }}).done((r, sT, x)=>{ // TODO: ADD AUTOWARNING, DETECT CHANGE AND OTHER
                                     rw.ui.loadDialog.close();

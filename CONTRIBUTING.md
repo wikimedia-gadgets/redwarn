@@ -1,27 +1,6 @@
 # Contributing to redwarn-web
 
-### Bug Reporting
-
-Report bugs via [The issue board](https://gitlab.com/redwarn/redwarn-web/-/issues) or email [incoming+redwarn-redwarn-web-19374445-issue-@incoming.gitlab.com](mailto:incoming+redwarn-redwarn-web-19374445-issue-@incoming.gitlab.com) for more sensitive bugs. Please be detailed in your bug reports, as it will help us to locate the source of the bug and fix it as fast as possible!
-
-**Great Bug Reports** tend to have:
-
-- A quick summary and/or background
-- Steps to reproduce
-  - Be specific!
-  - Give sample code if you can. [My stackoverflow question](http://stackoverflow.com/q/12488905/180626) includes sample code that *anyone* with a base R setup can run to reproduce what I was seeing
-- What you expected would happen
-- What actually happens
-- Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
-
-### Feature proposals
-
-Please propose your features via [The issue board](https://gitlab.com/redwarn/redwarn-web/-/issues) and append them with the 'feature' label. Please also be detailed in your proposal so we can determine whether it is feasible or should be implemented.
-
-### Adding code from external sources.
-
-If you add code from an external source/reuse code within Redwarn, please make sure it falls under the (list licenses) license, and make it clear where you have got the code from, this will help us avoid licensing issues down the road.
-
+## Developing RedWarn
 ### Making a submission to this repo
 
 When pushing submissions to this repo we require that you make a seperate fork for you to make your modification on as you see fit then sent back via a merge request. We do however have some rules surrounding the formatting of your contribution.
@@ -33,21 +12,54 @@ When pushing submissions to this repo we require that you make a seperate fork f
 
 ### Setting up a development environment
 
-You can contribute on any operating system. Your help is greatly appreciated.
+You can contribute on any operating system, as long as you have PHP (and git, obviously) installed. Execute the following steps in whichever shell you prefer ([cmd](https://en.wikipedia.org/wiki/Cmd.exe), [PowerShell](https://en.wikipedia.org/wiki/PowerShell), [bash](https://en.wikipedia.org/wiki/Bash_%28Unix_shell%29), etc...)
 
-<details>
-    <summary>Dependencies</summary>
-    <li>
-    You need PHP installed.
-    </li>
-</details>
+1. Clone this repository to your computer.
+```bash
+git clone https://gitlab.com/redwarn/redwarn-web.git
+```
+2. Enter the directory of the cloned repository.
+```bash
+cd redwarn-web
+```
+3. On Wikipedia, disable the [active RedWarn version](https://en.wikipedia.org/wiki/User:RedWarn/.js) in your [`common.js`](https://en.wikipedia.org/wiki/Special:MyPage/common.js) (or the script for whichever skin you use) by removing or commenting the line which imports it.
+4. Insert the following into your [`common.js`](https://en.wikipedia.org/wiki/Special:MyPage/common.js)
+```js
+mw.loader.load('http://localhost:9696/build.php');
+```
+5. In the directory of `redwarn-web`, run the following to start the PHP Web Server used to serve the RedWarn script.
+```bash
+php -S localhost:9696
+```
+5. Every time you edit a file, simply refresh the Wikipedia page and the changes you made will be immediately applied.
+6. If you want to build a finished script for release, run the following.
+```bash
+php build.php > ./release/redwarn-web.js
+```
 
-0. Clone this repo to your computer (`git clone https://gitlab.com/redwarn/redwarn-web.git`)
-1. Navigate to the directory redwarn-web is in.
-3. Make sure your [common.js](https://en.wikipedia.org/wiki/Special:MyPage/common.js) has the production Redwarn disabled (either by removed or commented out) and append `mw.loader.load('http://localhost:9696/build.php')` to your [common.js](https://en.wikipedia.org/wiki/Special:MyPage/common.js).
-4. In the directory of redwarn-git run `php -S localhost:9696` to start the dev server.
-5. Happy contributing! Every time you save a file, simply refresh your page and the changes you made will be immediately visible.
-6. If you want to build a finished script, run `php build.php > ./release/redwarn-web.js`.
+<b>NOTE</b>: If you do not use the development server and instead decide to edit directly, RedWarn will not work. Elements will be missing, and the user interface will fail entirely. This is a common mistake made when editing RedWarn.
 
-<b>IMPORTANT</b>: if you do not use the dev server and instead decide to edit directly, RW will not work direct from source. Elements will be missing, especially in the UI. This is a common mistake made when editing RedWarn.
+Happy contributing!
 
+### Adding code from external sources.
+
+If you add code from an external source/reuse code within Redwarn, please make sure it is compatible with RedWarn's Apache 2.0 License, and make it clear where you got the code from, as this will help us avoid licensing issues down the road.
+
+## Issues and Features
+### Bug Reporting
+
+Report bugs via [the issue board](https://gitlab.com/redwarn/redwarn-web/-/issues) or through email [incoming+redwarn-redwarn-web-19374445-issue-@incoming.gitlab.com](mailto:incoming+redwarn-redwarn-web-19374445-issue-@incoming.gitlab.com) for more sensitive bugs. Please be detailed in your bug reports, as it will help us to locate the source of the bug and fix it as fast as possible.
+
+**Great bug reports** tend to have:
+
+- A quick summary and/or background
+- A list of steps to reproduce
+- An explanation of what you expected would happen
+- A summary of what actually happens
+- Additional notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
+
+You may use the provided issue templates, which will automatically create the backbone of a report based on these qualities.
+
+### Feature proposals
+
+Please propose your features via [the issue board](https://gitlab.com/redwarn/redwarn-web/-/issues), appending the issue with the 'feature' label, or via the [Wikipedia talk page](https://en.wikipedia.org/wiki/WT:RW). Please also be detailed in your proposal so we can determine whether it is feasible or should be implemented.

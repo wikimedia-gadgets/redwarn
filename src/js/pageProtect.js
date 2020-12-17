@@ -21,7 +21,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
     // Define protection levels
     "editProtectionLevels" : { //edit protection - SET IN ORDER AS DISTINGUISHES BETWEEN UPGRADE AND DOWNGRADE
         "unprotected" : { // unprotected
-            "title" : "Page is not edit protected",
+            "title" : "Page is not protected",
             "name" : "no protection",
             "image" : "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Semi-protection-unlocked.svg/320px-Semi-protection-unlocked.svg.png"
         },
@@ -40,7 +40,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
         },
 
         "extendedconfirmed" : {
-            "title" : "Page is extended protected",
+            "title" : "Page is extended-protected",
             "name" : "extended protection",
             "image" : "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Extended-protection-shackle.svg/240px-Extended-protection-shackle.svg.png"
         },

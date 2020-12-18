@@ -280,7 +280,7 @@ export default class Rollback {
                 );
                 toInit.push({ el: tooltip, component: MDCTooltip });
 
-                rollbackDoneIcons.append(button, tooltip, "&nbsp; &nbsp;");
+                $(rollbackDoneIcons).append(button, tooltip, "&nbsp;");
             });
 
             currentRevIcons = (
@@ -372,10 +372,14 @@ export default class Rollback {
                 rev.user.username
             );
 
-            if (latestRev.parentid === Rollback.detectRollbackRevId()) {
-                // looks like that there is a newer revision! redirect to it.
-                WikipediaAPI.goToLatestRevision(this.rollbackRev.page);
-                return; // stop here.
+            if (latestRev.parentid === this.rollbackRev.revid) {
+                if (this.noRedirects) {
+                    // TODO show toast
+                } else {
+                    // looks like that there is a newer revision! redirect to it.
+                    WikipediaAPI.goToLatestRevision(this.rollbackRev.page);
+                    return; // stop here.
+                }
             }
 
             const summary = i18next.t("wikipedia:summaries.revert", {

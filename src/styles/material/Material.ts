@@ -16,8 +16,8 @@ const MaterialStyle: Style = {
                 "RedWarn's classic look-and-feel \u2014 an implementation of Google's Material Design.",
 
             homepage: "https://en.wikipedia.org/wiki/WP:RW",
-            repository: "https://gitlab.com/redwarn/redwarn-dev",
-            issues: "https://gitlab.com/redwarn/redwarn-dev/-/issues",
+            repository: "https://gitlab.com/redwarn/redwarn-web",
+            issues: "https://gitlab.com/redwarn/redwarn-web/-/issues",
         },
     },
     dependencies: [
@@ -26,14 +26,25 @@ const MaterialStyle: Style = {
             type: "style",
             id: "material-icons",
             // Original: "https://fonts.googleapis.com/icon?family=Material+Icons"
-            src:
-                "https://redwarn-lite.wmcloud.org/static/styles/Material-Icons.css",
+            src: "https://redwarn.toolforge.org/cdn/css/materialicons.css",
         },
         {
             type: "style",
             id: "mdc-styles",
             src:
                 "https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.css",
+        },
+        {
+            type: "style",
+            id: "mdc-tooltip-styles",
+            src:
+                "https://unpkg.com/@material/tooltip@8.0.0/dist/mdc.tooltip.min.css",
+        },
+        {
+            type: "style",
+            id: "roboto",
+            src:
+                "https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese",
         },
     ],
 

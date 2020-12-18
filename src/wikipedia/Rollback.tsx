@@ -115,13 +115,13 @@ export default class Rollback {
             this.noRedirects
         );
         const { revid } = await WikipediaAPI.latestRevisionNotByUser(
-            mw.config.get("wgRelevantPageName"),
+            this.rollbackRev.page,
             user.username
         );
         const url =
             RedWarnStore.wikiIndex +
             "?title=" +
-            mw.config.get("wgRelevantPageName") +
+            this.rollbackRev.page +
             "&diff=" +
             revid +
             "&oldid=" +
@@ -368,7 +368,7 @@ export default class Rollback {
 
         const pseudoRollbackCallback = async () => {
             const latestRev = await WikipediaAPI.latestRevisionNotByUser(
-                mw.config.get("wgRelevantPageName"),
+                this.rollbackRev.page,
                 rev.user.username
             );
 
@@ -392,7 +392,7 @@ export default class Rollback {
             const res = await WikipediaAPI.postWithEditToken({
                 action: "edit",
                 format: "json",
-                title: mw.config.get("wgRelevantPageName"),
+                title: this.rollbackRev.page,
                 summary,
                 undo: rev.revid, // current
                 undoafter: latestRev.revid, // restore version
@@ -442,7 +442,7 @@ export default class Rollback {
                     version: RW_VERSION_TAG,
                 });
                 await WikipediaAPI.api.rollback(
-                    mw.config.get("wgRelevantPageName"),
+                    this.rollbackRev.page,
                     rev.user.username,
                     {
                         summary,

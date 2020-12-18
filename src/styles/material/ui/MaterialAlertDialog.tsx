@@ -13,9 +13,8 @@ import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
+import generateId from "../../../util/generateId";
 
-/* TODO: Create a handling MaterialDialog which will create a specialized dialog based on
-                             the input type. */
 /**
  * The MaterialAlertDialog is a handling class used to show dialogs on the screen. This will
  * automatically handle dialog actions, content, etc.
@@ -38,14 +37,7 @@ export default class MaterialAlertDialog extends RWUIDialog {
 
     public constructor(props: RWUIDialogProperties) {
         super(props);
-        this.id = `dialog__${
-            props.id ||
-            RedWarnStore.random.string({
-                length: 16,
-                symbols: false,
-                alpha: true,
-            })
-        }`;
+        this.id = `dialog__${props.id || generateId(16)}`;
         this.props = props;
     }
 

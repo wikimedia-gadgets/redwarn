@@ -658,7 +658,7 @@ export default class Rollback {
                     id={`rw-currentRevRvv${i}`}
                     onClick={() =>
                         rollback.rollback(
-                            "[[WP:VANDAL|Vandalism]]",
+                            "[[WP:VANDAL|Possible vandalism]]",
                             "vandalism"
                         )
                     }
@@ -764,7 +764,7 @@ export const RollbackIcons: RollbackIcon[] = [
         icon: "delete_forever",
         actionType: "rollback",
         promptReason: false, // add extra info? false = quick rollback, otherwise not
-        summary: "[[WP:VANDAL|Vandalism]]", // Set summary
+        summary: "[[WP:VANDAL|Possible vandalism]]", // Set summary
         ruleIndex: "vandalism", // used for autowarn
     },
 

@@ -76,7 +76,7 @@ export interface RWUIDialogProperties extends RWUIElementProperties {
  * {@link document.appendChild}, as the dialog is shown using {@link show} instead.
  */
 export class RWUIDialog extends RWUIElement {
-    public static readonly elementName: "rwDialog" = "rwDialog";
+    public static readonly elementName = "rwDialog";
 
     protected _result: any;
     /**

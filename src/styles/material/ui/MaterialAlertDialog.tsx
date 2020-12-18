@@ -15,7 +15,7 @@ import MaterialDialog, {
 } from "./MaterialDialog";
 
 /* TODO: Create a handling MaterialDialog which will create a specialized dialog based on
-         the input type. */
+                             the input type. */
 /**
  * The MaterialAlertDialog is a handling class used to show dialogs on the screen. This will
  * automatically handle dialog actions, content, etc.
@@ -23,13 +23,6 @@ import MaterialDialog, {
  * To show a dialog on the DOM, use {@link MaterialAlertDialog.show}.
  */
 export default class MaterialAlertDialog extends RWUIDialog {
-    get elementName(): typeof RWUIDialog.elementName {
-        return RWUIDialog.elementName;
-    }
-    get prototype(): typeof MaterialAlertDialog {
-        return MaterialAlertDialog;
-    }
-
     /**
      * A unique identifier for this dialog, to allow multiple active dialogs.
      */
@@ -84,7 +77,9 @@ export default class MaterialAlertDialog extends RWUIDialog {
                         this._result =
                             (await actionSelected.action(event)) ??
                             event.detail.action;
-                    } else this._result = event.detail.action;
+                    } else {
+                        this._result = event.detail.action;
+                    }
 
                     const res = styleStorage.dialogTracker.get(this.id).result;
                     styleStorage.dialogTracker.delete(this.id);
@@ -107,9 +102,9 @@ export default class MaterialAlertDialog extends RWUIDialog {
                         action.text == null
                             ? action.data
                             : {
-                                data: action.data,
-                                text: action.text,
-                            }
+                                  data: action.data,
+                                  text: action.text,
+                              }
                     }
                 >
                     {action.text ?? action.data}

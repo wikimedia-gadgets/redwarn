@@ -3,11 +3,7 @@ import { MDCRipple } from "@material/ripple";
 import { MDCTooltip } from "@material/tooltip";
 import i18next from "i18next";
 import { BaseProps, h as TSX } from "tsx-dom";
-import {
-    RW_VERSION,
-    RW_VERSION_TAG,
-    RW_WIKIS_TAGGABLE,
-} from "../data/RedWarnConstants";
+import { RW_VERSION_TAG, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
 import RedWarnStore from "../data/RedWarnStore";
 import RWUI from "../ui/RWUI";
 import redirect from "../util/redirect";
@@ -16,9 +12,15 @@ import Revision from "./Revision";
 import { Warnings } from "./Warnings";
 
 export default class Rollback {
-    private constructor(public rollbackRev: Revision) {}
+    private constructor(
+        public rollbackRev: Revision,
+        private noRedirects = false
+    ) {}
 
-    static async factory(rollbackRev: Revision = {}): Promise<Rollback> {
+    static async factory(
+        rollbackRev: Revision = {},
+        noRedirects?: boolean
+    ): Promise<Rollback> {
         rollbackRev.revid ??= Rollback.detectRollbackRevId(false);
         rollbackRev.page ??= mw.config.get("wgRelevantPageName");
         try {
@@ -29,7 +31,7 @@ export default class Rollback {
             console.log("redwarn: No latest revisions");
         }
 
-        return new this(rollbackRev);
+        return new this(rollbackRev, noRedirects);
     }
 
     static async init(): Promise<void> {
@@ -108,15 +110,18 @@ export default class Rollback {
         // TODO dialog
         //rw.ui.loadDialog.show("Loading preview...");
         // Check if latest, else redirect
-        const { user } = await WikipediaAPI.isLatestRevision(this.rollbackRev);
+        const { user } = await WikipediaAPI.isLatestRevision(
+            this.rollbackRev,
+            this.noRedirects
+        );
         const { revid } = await WikipediaAPI.latestRevisionNotByUser(
-            mw.config.get("wgRelevantPageName"),
+            this.rollbackRev.page,
             user.username
         );
         const url =
             RedWarnStore.wikiIndex +
             "?title=" +
-            mw.config.get("wgRelevantPageName") +
+            this.rollbackRev.page +
             "&diff=" +
             revid +
             "&oldid=" +
@@ -125,9 +130,9 @@ export default class Rollback {
         redirect(url);
     }
 
-    loadIcons(): Promise<void> {
+    loadIcons(checkIfEditable = true): Promise<void> {
         // Check if page is editable, if not, don't show
-        if (!mw.config.get("wgIsProbablyEditable")) {
+        if (checkIfEditable && !mw.config.get("wgIsProbablyEditable")) {
             // Can't edit, so exit
             return;
         }
@@ -275,7 +280,7 @@ export default class Rollback {
                 );
                 toInit.push({ el: tooltip, component: MDCTooltip });
 
-                rollbackDoneIcons.append(button, tooltip, "&nbsp; &nbsp;");
+                $(rollbackDoneIcons).append(button, tooltip, "&nbsp;");
             });
 
             currentRevIcons = (
@@ -342,7 +347,7 @@ export default class Rollback {
     async promptRollbackReason(summary: string): Promise<void> {
         // TODO: this function solely relies on dialogs, so that needs to be done first
 
-        await WikipediaAPI.isLatestRevision(this.rollbackRev);
+        await WikipediaAPI.isLatestRevision(this.rollbackRev, this.noRedirects);
     }
 
     async rollback(
@@ -356,18 +361,25 @@ export default class Rollback {
 
         this.progressBarElement.open();
 
-        const rev = await WikipediaAPI.isLatestRevision(this.rollbackRev);
+        const rev = await WikipediaAPI.isLatestRevision(
+            this.rollbackRev,
+            this.noRedirects
+        );
 
         const pseudoRollbackCallback = async () => {
             const latestRev = await WikipediaAPI.latestRevisionNotByUser(
-                mw.config.get("wgRelevantPageName"),
+                this.rollbackRev.page,
                 rev.user.username
             );
 
-            if (latestRev.parentid === Rollback.detectRollbackRevId()) {
-                // looks like that there is a newer revision! redirect to it.
-                WikipediaAPI.goToLatestRevision(this.rollbackRev.page);
-                return; // stop here.
+            if (latestRev.parentid === this.rollbackRev.revid) {
+                if (this.noRedirects) {
+                    // TODO show toast
+                } else {
+                    // looks like that there is a newer revision! redirect to it.
+                    WikipediaAPI.goToLatestRevision(this.rollbackRev.page);
+                    return; // stop here.
+                }
             }
 
             const summary = i18next.t("wikipedia:summaries.revert", {
@@ -380,7 +392,7 @@ export default class Rollback {
             const res = await WikipediaAPI.postWithEditToken({
                 action: "edit",
                 format: "json",
-                title: mw.config.get("wgRelevantPageName"),
+                title: this.rollbackRev.page,
                 summary,
                 undo: rev.revid, // current
                 undoafter: latestRev.revid, // restore version
@@ -430,7 +442,7 @@ export default class Rollback {
                     version: RW_VERSION_TAG,
                 });
                 await WikipediaAPI.api.rollback(
-                    mw.config.get("wgRelevantPageName"),
+                    this.rollbackRev.page,
                     rev.user.username,
                     {
                         summary,
@@ -646,7 +658,7 @@ export default class Rollback {
                     id={`rw-currentRevRvv${i}`}
                     onClick={() =>
                         rollback.rollback(
-                            "[[WP:VANDAL|Vandalism]]",
+                            "[[WP:VANDAL|Possible vandalism]]",
                             "vandalism"
                         )
                     }
@@ -752,7 +764,7 @@ export const RollbackIcons: RollbackIcon[] = [
         icon: "delete_forever",
         actionType: "rollback",
         promptReason: false, // add extra info? false = quick rollback, otherwise not
-        summary: "[[WP:VANDAL|Vandalism]]", // Set summary
+        summary: "[[WP:VANDAL|Possible vandalism]]", // Set summary
         ruleIndex: "vandalism", // used for autowarn
     },
 

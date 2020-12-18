@@ -18,6 +18,7 @@ import StyleManager from "./styles/StyleManager";
 import RedWarnStore from "./data/RedWarnStore";
 import Localization from "./localization/Localization";
 import Rollback from "./wikipedia/Rollback";
+import RTRC from "./integrations/RTRC";
 
 console.log("Starting RedWarn...");
 $(document).ready(async () => {
@@ -51,6 +52,8 @@ $(document).ready(async () => {
      * Send notice that RedWarn is done loading.
      */
     await RedWarnHooks.executeHooks("postinit");
+
+    RTRC.init(); // webpack won't compile RTRC if I use redwarn hooks
 
     // Initialize components here.
     // As much as possible, each component should be its own class to make everything

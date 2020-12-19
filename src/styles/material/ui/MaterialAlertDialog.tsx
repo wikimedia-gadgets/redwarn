@@ -2,7 +2,6 @@ import { ComponentChild, h as TSX } from "tsx-dom";
 
 // import "../styles/mdl-dialog.css";
 import { RWUIDialog, RWUIDialogProperties } from "../../../ui/RWUIDialog";
-import RedWarnStore from "../../../data/RedWarnStore";
 
 import { MDCRipple } from "@material/ripple";
 import { MDCDialog } from "@material/dialog";

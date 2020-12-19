@@ -13,8 +13,11 @@ RedWarn is primarily maintained and developed by the RedWarn contributors.
 - **[@ChlodAlejandro](https://gitlab.com/ChlodAlejandro)** - ([\[\[User:Chlod\]\]](https://en.wikipedia.org/wiki/User:Chlod)) - additional development and design
 - **[@leijurv](https://gitlab.com/leijurv)** - ([\[\[User:Leijurv\]\]](https://en.wikipedia.org/wiki/User:Leijurv)) - additional development and design
 - **[@sportshead](https://gitlab.com/sportshead)** - ([\[\[User:Sportzpikachu\]\]](https://en.wikipedia.org/wiki/User:Sportzpikachu)) - additional development and design
+- **[@Asartea](https://gitlab.com/Asartea)** - ([\[\[User:Asartea\]\]](https://en.wikipedia.org/wiki/User:Asartea)) - documentation and copyediting
+- **[@Berrely](https://gitlab.com/Berrely)** - ([\[\[User:Berrely\]\]](https://en.wikipedia.org/wiki/User:Berrely)) - documentation
 - **[and everyone else on the RedWarn development team](https://gitlab.com/groups/redwarn/-/group_members)**
-- **[with some additional development.](https://en.wikipedia.org/wiki/WP:RW#Credits)**
+- **[with some additional development from Wikipedia editors](https://en.wikipedia.org/wiki/WP:RW#Credits)**
+- **[and other contributors.](https://gitlab.com/redwarn/redwarn-web/-/graphs/master)**
 
 ## Development
 

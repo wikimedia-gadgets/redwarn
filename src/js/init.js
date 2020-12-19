@@ -191,6 +191,9 @@ RedWarn 16 is finally here, bringing UX improvements, emergency and oversight re
 
             // Show redwarn only spans
             $(".RedWarnOnlyVisuals").show();
+
+            // Hide no redwarn spans
+            $(".NoRedWarnVisuals").hide();
             
             // wait for load
             waitForMDLLoad(callback);

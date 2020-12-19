@@ -35,7 +35,7 @@ export default class MaterialAlertDialog extends RWUIDialog {
      */
     element?: HTMLDialogElement;
 
-    public constructor(props: RWUIDialogProperties) {
+    constructor(props: RWUIDialogProperties) {
         super(props);
         this.id = `dialog__${props.id || generateId(16)}`;
         this.props = props;

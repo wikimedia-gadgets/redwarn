@@ -11,8 +11,6 @@ export interface RWUIElementProperties {}
  * elements.
  */
 export default class RWUIElement {
-    public constructor(readonly properties: RWUIElementProperties) {}
-
     /**
      * Renders the element.
      */

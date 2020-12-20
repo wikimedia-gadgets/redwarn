@@ -1,7 +1,11 @@
 import { ComponentChild, h as TSX } from "tsx-dom";
 
 // import "../styles/mdl-dialog.css";
-import { RWUIDialog, RWUIDialogProperties } from "../../../ui/RWUIDialog";
+import {
+    RWUIDialog,
+    RWUIDialogAction,
+    RWUIDialogProperties,
+} from "../../../ui/RWUIDialog";
 
 import { MDCRipple } from "@material/ripple";
 import { MDCDialog } from "@material/dialog";
@@ -13,6 +17,10 @@ import MaterialDialog, {
     MaterialDialogTitle,
 } from "./MaterialDialog";
 import generateId from "../../../util/generateId";
+
+export interface MaterialAlertDialogProps extends RWUIDialogProperties {
+    actions: RWUIDialogAction[];
+}
 
 /**
  * The MaterialAlertDialog is a handling class used to show dialogs on the screen. This will
@@ -26,15 +34,11 @@ export default class MaterialAlertDialog extends RWUIDialog {
      */
     id: string;
     /**
-     * The properties of this MaterialAlertDialog.
-     */
-    props: RWUIDialogProperties;
-    /**
      * The HTMLDialogElement which contains the actual dialog.
      */
     element?: HTMLDialogElement;
 
-    constructor(props: RWUIDialogProperties) {
+    constructor(readonly props: MaterialAlertDialogProps) {
         super(props);
         this.id = `dialog__${props.id || generateId(16)}`;
         this.props = props;

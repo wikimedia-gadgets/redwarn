@@ -55,14 +55,13 @@ export interface RWUIDialogProperties extends RWUIElementProperties {
     /**
      * The actions of the dialog. These go at the bottom of the dialog.
      */
-    actions: RWUIDialogAction[];
+    actions: any;
     /**
      * The width of the dialog in whatever CSS unit specified.
      *
      * @default 30vw
      */
     width?: string;
-
     /**
      * Used to track displayed dialogs.
      * @internal
@@ -86,8 +85,8 @@ export class RWUIDialog extends RWUIElement {
         return this._result;
     }
 
-    public constructor(readonly properties: RWUIDialogProperties) {
-        super(properties);
+    constructor(readonly props: RWUIDialogProperties) {
+        super();
     }
 
     /**

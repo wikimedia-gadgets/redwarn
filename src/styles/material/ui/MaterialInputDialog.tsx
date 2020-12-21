@@ -1,6 +1,6 @@
 import { ComponentChild, h as TSX } from "tsx-dom";
 
-import { RWUIDialog, RWUIDialogProperties } from "../../../ui/RWUIDialog";
+import { RWUIInputDialog } from "../../../ui/RWUIDialog";
 
 import { MDCRipple } from "@material/ripple";
 import { MDCDialog } from "@material/dialog";
@@ -15,30 +15,6 @@ import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
-import generateId from "../../../util/generateId";
-
-export interface RWIconButton {
-    icon: string;
-    action?: (this: HTMLElement, event: MouseEvent) => any;
-}
-
-export interface OKCancelActions {
-    ok: string;
-    cancel: string;
-}
-
-export interface MaterialInputDialogProps
-    extends Omit<RWUIDialogProperties, "content" | "actions"> {
-    label: string;
-    defaultText?: string;
-    leadingIcon?: RWIconButton;
-    trailingIcon?: RWIconButton;
-    helperText?: string;
-    maxCharacterCount?: number;
-    prefix?: string;
-    suffix?: string;
-    actions: OKCancelActions;
-}
 
 /**
  * The MaterialInputDialog is a handling class used to get input from users on the screen. This will
@@ -46,15 +22,7 @@ export interface MaterialInputDialogProps
  *
  * To show a dialog on the DOM, use {@link MaterialInputDialog.show}.
  */
-export default class MaterialInputDialog extends RWUIDialog {
-    /**
-     * A unique identifier for this dialog, to allow multiple active dialogs.
-     */
-    id: string;
-    /**
-     * The HTMLDialogElement which contains the actual dialog.
-     */
-    element?: HTMLDialogElement;
+export default class MaterialInputDialog extends RWUIInputDialog {
     /**
      * The upgraded MDC components
      */
@@ -65,11 +33,6 @@ export default class MaterialInputDialog extends RWUIDialog {
         trailingIcon?: MDCTextFieldIcon;
         helperText?: MDCTextFieldHelperText;
     };
-
-    constructor(readonly props: MaterialInputDialogProps) {
-        super(props);
-        this.id = `dialog__${props.id || generateId(16)}`;
-    }
 
     /**
      * Show a dialog on screen. You can await this if you want to block until the dialog closes.
@@ -151,9 +114,9 @@ export default class MaterialInputDialog extends RWUIDialog {
      * Renders a MaterialInputDialog.
      *
      * NOTE: Only use this when appending to body! Otherwise, use {@link MaterialInputDialog.element}.
-     * @returns An {@link HTMLDialogElement}.
+     * @returns A {@link HTMLDialogElement}.
      */
-    render(): Element {
+    render(): HTMLDialogElement {
         this.element = (
             <MaterialDialog
                 surfaceProperties={{

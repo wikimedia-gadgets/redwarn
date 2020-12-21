@@ -1,11 +1,6 @@
 import { ComponentChild, h as TSX } from "tsx-dom";
 
-// import "../styles/mdl-dialog.css";
-import {
-    RWUIDialog,
-    RWUIDialogAction,
-    RWUIDialogProperties,
-} from "../../../ui/RWUIDialog";
+import { RWUIAlertDialog } from "../../../ui/RWUIDialog";
 
 import { MDCRipple } from "@material/ripple";
 import { MDCDialog } from "@material/dialog";
@@ -16,11 +11,6 @@ import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
-import generateId from "../../../util/generateId";
-
-export interface MaterialAlertDialogProps extends RWUIDialogProperties {
-    actions: RWUIDialogAction[];
-}
 
 /**
  * The MaterialAlertDialog is a handling class used to show dialogs on the screen. This will
@@ -28,22 +18,7 @@ export interface MaterialAlertDialogProps extends RWUIDialogProperties {
  *
  * To show a dialog on the DOM, use {@link MaterialAlertDialog.show}.
  */
-export default class MaterialAlertDialog extends RWUIDialog {
-    /**
-     * A unique identifier for this dialog, to allow multiple active dialogs.
-     */
-    id: string;
-    /**
-     * The HTMLDialogElement which contains the actual dialog.
-     */
-    element?: HTMLDialogElement;
-
-    constructor(readonly props: MaterialAlertDialogProps) {
-        super(props);
-        this.id = `dialog__${props.id || generateId(16)}`;
-        this.props = props;
-    }
-
+export default class MaterialAlertDialog extends RWUIAlertDialog {
     /**
      * Show a dialog on screen. You can await this if you want to block until the dialog closes.
      * @returns The result - the value returned by the selected button in {@link RWUIDialogProperties.actions}.
@@ -114,9 +89,9 @@ export default class MaterialAlertDialog extends RWUIDialog {
      * Renders a MaterialAlertDialog.
      *
      * NOTE: Only use this when appending to body! Otherwise, use {@link MaterialAlertDialog.element}.
-     * @returns An {@link HTMLDialogElement}.
+     * @returns A {@link HTMLDialogElement}.
      */
-    render(): Element {
+    render(): HTMLDialogElement {
         this.element = (
             <MaterialDialog
                 surfaceProperties={{

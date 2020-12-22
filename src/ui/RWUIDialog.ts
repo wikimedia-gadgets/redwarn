@@ -155,3 +155,23 @@ export abstract class RWUIInputDialog extends RWUIDialog {
         super(props);
     }
 }
+
+export interface RWUISelectionDialogItem {
+    icon?: string;
+    iconColor?: string;
+    color?: string;
+    content: string;
+    data: string;
+}
+
+export interface RWUISelectionDialogProps extends RWUIDialogProperties {
+    items: RWUISelectionDialogItem[];
+}
+
+export abstract class RWUISelectionDialog extends RWUIDialog {
+    public static readonly elementName = "rwSelectionDialog";
+
+    constructor(readonly props: RWUISelectionDialogProps) {
+        super(props);
+    }
+}

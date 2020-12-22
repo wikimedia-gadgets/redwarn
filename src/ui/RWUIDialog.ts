@@ -115,7 +115,14 @@ export interface RWUIAlertDialogProps extends RWUIDialogProperties {
     content?: ComponentChild[];
 }
 
-export abstract class RWUIAlertDialog extends RWUIDialog {
+export class RWUIAlertDialog extends RWUIDialog {
+    show(): Promise<void> {
+        throw new Error("Attempted to call abstract method");
+    }
+    render(): HTMLDialogElement {
+        throw new Error("Attempted to call abstract method");
+    }
+
     public static readonly elementName = "rwAlertDialog";
 
     constructor(readonly props: RWUIAlertDialogProps) {
@@ -148,7 +155,14 @@ export interface RWUIInputDialogProps extends RWUIDialogProperties {
     actions: OKCancelActions;
 }
 
-export abstract class RWUIInputDialog extends RWUIDialog {
+export class RWUIInputDialog extends RWUIDialog {
+    show(): Promise<void> {
+        throw new Error("Attempted to call abstract method");
+    }
+    render(): HTMLDialogElement {
+        throw new Error("Attempted to call abstract method");
+    }
+
     public static readonly elementName = "rwInputDialog";
 
     constructor(readonly props: RWUIInputDialogProps) {
@@ -168,7 +182,14 @@ export interface RWUISelectionDialogProps extends RWUIDialogProperties {
     items: RWUISelectionDialogItem[];
 }
 
-export abstract class RWUISelectionDialog extends RWUIDialog {
+export class RWUISelectionDialog extends RWUIDialog {
+    show(): Promise<void> {
+        throw new Error("Attempted to call abstract method");
+    }
+    render(): HTMLDialogElement {
+        throw new Error("Attempted to call abstract method");
+    }
+
     public static readonly elementName = "rwSelectionDialog";
 
     constructor(readonly props: RWUISelectionDialogProps) {

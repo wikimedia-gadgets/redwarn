@@ -23,7 +23,7 @@ export default class MaterialAlertDialog extends RWUIAlertDialog {
      * Show a dialog on screen. You can await this if you want to block until the dialog closes.
      * @returns The result - the value returned by the selected button in {@link RWUIDialogProperties.actions}.
      */
-    async show(): Promise<any> {
+    show(): Promise<any> {
         const styleStorage = getMaterialStorage();
         styleStorage.dialogTracker.set(this.id, this);
 

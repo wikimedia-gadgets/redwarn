@@ -12,4 +12,4 @@
 - [ ] I have not used any OwO's or UwU's in this issue.
 
 <!--- ONLY CHANGE ABOVE THIS LINE!!! -->
-/label ~feature ~"Needs Triage"
+/label ~feature ~"priority::needs triage" 

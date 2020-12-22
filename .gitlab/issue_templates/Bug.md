@@ -40,4 +40,4 @@ PUT THE LOGS HERE
 
 <!--- ONLY CHANGE ABOVE THIS LINE!!! -->
 
-/label ~bug ~"Needs Triage" 
+/label ~bug ~"priority::needs triage" 

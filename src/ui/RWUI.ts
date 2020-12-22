@@ -1,5 +1,9 @@
 import StyleManager from "../styles/StyleManager";
-import { RWUIAlertDialog, RWUIInputDialog } from "./RWUIDialog";
+import {
+    RWUIAlertDialog,
+    RWUIInputDialog,
+    RWUISelectionDialog,
+} from "./RWUIDialog";
 
 /**
  * Redirect class for easy access.
@@ -13,6 +17,10 @@ export default class RWUI {
     static get InputDialog(): typeof RWUIInputDialog {
         return StyleManager.activeStyle.classMap.rwInputDialog;
     }
+    /** Alias of {@link StyleManager.activeStyle.classMap.rwSelectionDialog} */
+    static get SelectionDialog(): typeof RWUISelectionDialog {
+        return StyleManager.activeStyle.classMap.rwSelectionDialog;
+    }
 }
 
 /**
@@ -21,4 +29,5 @@ export default class RWUI {
 export const RWUIElements = {
     [RWUIAlertDialog.elementName]: RWUIAlertDialog,
     [RWUIInputDialog.elementName]: RWUIInputDialog,
+    [RWUISelectionDialog.elementName]: RWUISelectionDialog,
 };

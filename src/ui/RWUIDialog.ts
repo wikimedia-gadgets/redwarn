@@ -50,10 +50,6 @@ export interface RWUIDialogProperties extends RWUIElementProperties {
      */
     title?: string;
     /**
-     * The actions of the dialog. These go at the bottom of the dialog.
-     */
-    actions: any;
-    /**
      * The width of the dialog in whatever CSS unit specified.
      *
      * @default 30vw
@@ -109,6 +105,9 @@ export abstract class RWUIDialog extends RWUIElement {
 }
 
 export interface RWUIAlertDialogProps extends RWUIDialogProperties {
+    /**
+     * The actions of the dialog. These go at the bottom of the dialog.
+     */
     actions: RWUIDialogAction[];
     /**
      * The content of the dialog.
@@ -143,6 +142,9 @@ export interface RWUIInputDialogProps extends RWUIDialogProperties {
     maxCharacterCount?: number;
     prefix?: string;
     suffix?: string;
+    /**
+     * The actions of the dialog. These go at the bottom of the dialog.
+     */
     actions: OKCancelActions;
 }
 

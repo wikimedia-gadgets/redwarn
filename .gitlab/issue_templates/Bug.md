@@ -9,7 +9,7 @@
 
 ## Possible Solution
 <!--- Not obligatory, but suggest a fix/reason for the bug -->
-<!--- I'd rather you leave it blank then just say "fix it" -->
+<!--- We'd rather you leave it blank then just say "fix it" -->
 
 ## Steps to Reproduce
 <!--- Provide a link to a live example, or an unambiguous set of steps to -->
@@ -21,6 +21,7 @@
 
 ## Some information
 Operating system:
+<!--- When in doubt, find your browser's About page or dialog. -->
 Browser version (e.g. `Chrome 80`): 
 Other scripts (if used): 
 

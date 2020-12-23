@@ -16,11 +16,6 @@
     }
 }
 
-@keyframes spin {
-    from { transform: rotateZ(0deg) }
-    to { transform: rotateZ(260deg) }
-}
-
 /* MW INDICATORS to stop tooltip clashes */
 .mw-indicators,
 #rwPGIconContainer {

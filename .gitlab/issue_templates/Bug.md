@@ -19,9 +19,8 @@
 3.
 4.
 
-
 ## Some information
-Operating system: 
+Operating system:
 Browser version (e.g. `Chrome 80`): 
 Other scripts (if used): 
 
@@ -33,11 +32,12 @@ Other scripts (if used):
 PUT THE LOGS HERE
 ```
 
-## Final checklist
-- [ ] I know how to properly use check boxes 
-- [ ] I have included the version of the browser I'm running, operating system and other scripts (if used).
-- [ ] I have included logs, exceptions and / or steps to reproduce the issue.
-- [ ] I have not used any OwO's or UwU's in this issue.
+<!--- Before submitting, make sure that you:
+ - have included the version of the browser you're running, operating system, and other scripts (if used).
+ - have included logs, exceptions and / or steps to reproduce the issue.
+ 
+ After that, please submit your issue request.
+-->
 
 <!--- ONLY CHANGE ABOVE THIS LINE!!! -->
 

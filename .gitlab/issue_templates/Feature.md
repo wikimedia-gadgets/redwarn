@@ -1,5 +1,6 @@
 ## Describe your suggestion
 <!-- With as much detail as possible, describe what your suggestion would do for RedWarn. -->
+<!--- IMPORTANT: If you want to upload images, please upload them to Gitlab or Imgur. -->
 
 ## Settings
 <!-- If applicable, what settings/customizability should be offered to tweak the functionality of your suggestion. -->

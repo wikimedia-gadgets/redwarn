@@ -1,4 +1,5 @@
 <!--- Provide a general summary of the issue in the Title above -->
+<!--- IMPORTANT: If you want to upload images, please upload them to Gitlab or Imgur. -->
 
 ## Expected Behavior
 <!--- Tell us what you expected to happen -->

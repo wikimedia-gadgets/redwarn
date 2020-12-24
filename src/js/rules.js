@@ -429,7 +429,7 @@ rw.rules = {
         ]
     },
     badlistentry: {
-        "name": "Adding inappropriate entries to lists",
+        "name": "Adding non-notable entries to lists",
         "category": "Reminders",
         "template": "uw-badlistentry",
         "warningLevels": [

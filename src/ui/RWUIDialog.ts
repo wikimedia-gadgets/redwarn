@@ -176,6 +176,7 @@ export interface RWUISelectionDialogItem {
     color?: string;
     content: string;
     data: string;
+    action?: (event: Event) => any;
 }
 
 export interface RWUISelectionDialogProps extends RWUIDialogProperties {

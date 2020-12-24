@@ -10,13 +10,9 @@ export interface RWUIElementProperties {}
  * while also making a system flexible enough to handle styling and custom
  * elements.
  */
-export default class RWUIElement {
-    public constructor(readonly properties: RWUIElementProperties) {}
-
+export default abstract class RWUIElement {
     /**
      * Renders the element.
      */
-    render(): Element {
-        throw new Error("Illegal attempt made to render the base element.");
-    }
+    abstract render(): Element;
 }

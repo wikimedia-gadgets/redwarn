@@ -10,7 +10,8 @@
         "resolveJsonModule": true,
         "jsx": "react",
         "jsxFactory": "TSX",
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "lib": ["esnext", "dom"]
     },
     "include": [
         "./src/**/*.js",

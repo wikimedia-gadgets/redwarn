@@ -1,4 +1,3 @@
-import Chance from "chance";
 import MessageHandler from "../event/MessageHandler";
 import { Dependency } from "../ui/Dependencies";
 import { APIStore, EmptyAPIStore } from "../wikipedia/API";
@@ -8,9 +7,6 @@ export abstract class StyleStorage {}
 export default class RedWarnStore {
     // Initializations
     public static dependencies: Dependency[] = [];
-
-    // Worker objects
-    public static random: Chance.Chance = new Chance();
 
     // API
     public static APIStore: APIStore = EmptyAPIStore;

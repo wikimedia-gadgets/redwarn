@@ -23,7 +23,7 @@
     },
     "rules": {
         "@typescript-eslint/no-explicit-any": "off",
-        "indent": [
+        /* "indent": [
             "error",
             4,
             {
@@ -35,7 +35,7 @@
                     "parameters": "off"
                 }
             }
-        ],
+        ], */
         "semi": ["error", "always"],
         "@typescript-eslint/no-unused-vars": [
             "warn",

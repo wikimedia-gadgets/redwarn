@@ -2,6 +2,8 @@ import MaterialAlertDialog from "./ui/MaterialAlertDialog";
 import Style from "../Style";
 import MaterialPreInitializationHooks from "./hooks/MaterialPreInitializationHooks";
 import { MaterialStyleStorage } from "./storage/MaterialStyleStorage";
+import MaterialInputDialog from "./ui/MaterialInputDialog";
+import MaterialSelectionDialog from "./ui/MaterialSelectionDialog";
 
 const MaterialStyle: Style = {
     name: "material",
@@ -51,7 +53,9 @@ const MaterialStyle: Style = {
     storage: new MaterialStyleStorage(),
 
     classMap: {
-        rwDialog: MaterialAlertDialog,
+        rwAlertDialog: MaterialAlertDialog,
+        rwInputDialog: MaterialInputDialog,
+        rwSelectionDialog: MaterialSelectionDialog,
     },
 
     hooks: {

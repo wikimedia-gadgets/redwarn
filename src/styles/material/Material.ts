@@ -34,13 +34,13 @@ const MaterialStyle: Style = {
             type: "style",
             id: "mdc-styles",
             src:
-                "https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.css",
+                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@8.0.0.tooltip.min.css",
         },
         {
             type: "style",
             id: "mdc-tooltip-styles",
             src:
-                "https://unpkg.com/@material/tooltip@8.0.0/dist/mdc.tooltip.min.css",
+                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@8.0.0.tooltip.min.css",
         },
         {
             type: "style",

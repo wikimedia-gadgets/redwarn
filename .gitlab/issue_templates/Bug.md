@@ -22,8 +22,8 @@
 ## Some information
 Operating system:
 <!--- When in doubt, find your browser's About page or dialog. -->
-Browser version (e.g. `Chrome 80`): 
-Other scripts (if used): 
+Browser version (e.g. `Chrome 80`):
+Other scripts (if used, please link to your common.js and/or skin.js):
 
 ## Exception, error or logs
 <!--- Open your developer console and copy/paste the logs into here. -->
@@ -33,13 +33,13 @@ Other scripts (if used):
 PUT THE LOGS HERE
 ```
 
-<!--- Before submitting, make sure that you:
- - have included the version of the browser you're running, operating system, and other scripts (if used).
- - have included logs, exceptions and / or steps to reproduce the issue.
- 
- After that, please submit your issue request.
--->
+## Final checklist
+- [ ] I know how to properly use check boxes
+- [ ] I have included the version of the browser I'm running, operating system and other scripts (if used).
+- [ ] I have included logs, exceptions and / or steps to reproduce the issue.
+- [ ] I have not used any OwO's or UwU's in this issue.
+
 
 <!--- ONLY CHANGE ABOVE THIS LINE!!! -->
 
-/label ~"type::bug" ~"priority::needs triage" 
+/label ~"type::bug" ~"priority::needs triage"

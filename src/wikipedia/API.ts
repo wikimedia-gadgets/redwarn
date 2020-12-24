@@ -24,41 +24,6 @@ export default class WikipediaAPI {
         return this.api.postWithEditToken(parameters, ajaxOptions);
     }
 
-    /*
-    static sendAPIRequest(
-        query: string,
-        method: "get" | "post" = "get",
-        settings = {}
-    ): Promise<any> {
-        return new Promise((res, rej) => {
-            $.ajax(
-                RedWarnStore.wikiAPI + query,
-                Object.assign(
-                    {
-                        dataType: "json",
-                        method: method.toUpperCase(),
-                    },
-                    settings
-                )
-            )
-                .done(res)
-                .fail((_, __, error) => rej(error));
-        });
-    }
-    */
-
-    /*
-    static async getRollbackToken(): Promise<string> {
-        if (this.hasPermission("rollbacker")) {
-            const token = await this.sendAPIRequest(
-                "?action=query&meta=tokens&type=rollback&format=json"
-            );
-            RedWarnStore.APIStore.rollbackToken = token;
-            return token;
-        }
-    }
-    */
-
     /**
      * Edits a page.
      *
@@ -245,17 +210,26 @@ export default class WikipediaAPI {
         this.api = new mw.Api();
         RedWarnStore.APIStore.username = mw.user.getName();
         await this.getGroups();
+        RedWarnStore.APIStore.emailEnabled =
+            (
+                await this.get({
+                    action: "query",
+                    meta: "userinfo",
+                    uiprop: "email",
+                    format: "json",
+                })
+            ).query.userinfo.emailauthenticated != null;
     }
 }
 
 export interface APIStore {
-    rollbackToken: string;
     groups: string[];
     username: string;
+    emailEnabled: boolean;
 }
 
 export const EmptyAPIStore: APIStore = {
-    rollbackToken: "",
     groups: [],
     username: "",
+    emailEnabled: false,
 };

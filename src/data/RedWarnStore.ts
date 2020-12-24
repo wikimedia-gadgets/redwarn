@@ -13,6 +13,10 @@ export default class RedWarnStore {
 
     // Wiki automated config
 
+    /**
+     * @deprecated Only for backwards compatibility
+     * !!! DO NOT USE FOR NEW FEATURES !!!
+     */
     public static messageHandler: MessageHandler;
     public static wikiBase: string;
     public static wikiIndex: string;

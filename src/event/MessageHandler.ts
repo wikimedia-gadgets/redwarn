@@ -1,6 +1,14 @@
+/**
+ * @deprecated Only for backwards compatibility
+ * !!! DO NOT USE FOR NEW FEATURES !!!
+ */
 export default class MessageHandler {
     private handlers: Map<string, MessageHandlerCallback> = new Map();
 
+    /**
+     * @deprecated Only for backwards compatibility
+     * !!! DO NOT USE FOR NEW FEATURES !!!
+     */
     public addMessageHandler(
         msg: string,
         callback: MessageHandlerCallback
@@ -8,6 +16,10 @@ export default class MessageHandler {
         this.handlers.set(msg, callback);
     }
 
+    /**
+     * @deprecated Only for backwards compatibility
+     * !!! DO NOT USE FOR NEW FEATURES !!!
+     */
     constructor() {
         window.addEventListener("message", (e) => {
             if (this.handlers.has(e.data)) {

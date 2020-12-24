@@ -6,6 +6,7 @@ import { BaseProps, h as TSX } from "tsx-dom";
 import { RW_VERSION_TAG, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
 import RedWarnStore from "../data/RedWarnStore";
 import RWUI from "../ui/RWUI";
+import { RWUISelectionDialogItem } from "../ui/RWUIDialog";
 import redirect from "../util/redirect";
 import WikipediaAPI from "./API";
 import Revision from "./Revision";
@@ -516,10 +517,10 @@ export default class Rollback {
         }
     }
 
-    getDisabledHTMLandHandlers(): HTMLElement[] {
+    getDisabledIcons(): RWUISelectionDialogItem[] {
         // Open a new dialog with all the disabled icons so user can select one. Click handlers are already registered, so we just call rw.rollback.clickHandlers.[elID]();
         // Load Rollback current rev icons (rev14)
-        const finalIconStr: HTMLElement[] = [];
+        const icons: RWUISelectionDialogItem[] = [];
         RollbackIcons.forEach((icon, i) => {
             if (icon.enabled) {
                 return;
@@ -528,63 +529,40 @@ export default class Rollback {
                 return;
             } // does nothing here, so not needed
 
-            const elID = "rwRollback_" + i; // get the ID for the new icons
+            let clickHandler;
+
+            if (icon.actionType === "function") {
+                clickHandler = icon.action(this);
+            } else {
+                if (!icon.promptReason) {
+                    clickHandler = () =>
+                        this.rollback(icon.summary, icon.ruleIndex);
+                } else {
+                    clickHandler = () =>
+                        this.promptRollbackReason(icon.summary);
+                }
+            }
+
+            const elID = `rollback${i}`; // get the ID for the new icons
 
             // Establish element with all the info
-            finalIconStr.push(
-                <div>
-                    <div
-                        class="mdl-button mdl-js-button"
-                        style="width:100%; text-align: left;"
-                        onClick={() =>
-                            window.parent.postMessage(
-                                `rwRollbackBtn${elID}`,
-                                "*"
-                            )
-                        }
-                    >
-                        <span
-                            class="material-icons"
-                            style={`padding-right:20px;color:${icon.color};`}
-                        >
-                            {icon.icon}
-                        </span>
-                        <span
-                            style={
-                                icon.name.length > 40 ? "font-size: 12px;" : ""
-                            }
-                        >
-                            {icon.name}
-                        </span>
-                    </div>
-                    <hr style="margin:0" />
-                </div>
-            );
-
-            // Add click event handler
-            // TODO dialog
-            RedWarnStore.messageHandler.addMessageHandler(
-                "rwRollbackBtn" + elID,
-                () => {
-                    /* dialogEngine.closeDialog(() => {
-                        // close dialog, then
-                        rw.rollback.clickHandlers[elID](); // send our callback
-                    }); */
-                }
-            );
+            icons.push({
+                icon: icon.icon,
+                iconColor: icon.color,
+                data: elID,
+                content: icon.name,
+                action: clickHandler,
+            });
         });
 
-        // Now return HTML (rw16)
-        return finalIconStr;
+        return icons;
     }
 
     private progressBarElement: MDCLinearProgress | null;
 
     showRollbackDoneOps(un: string, warnIndex: keyof Warnings): void {
         // Clear get hidden handler to stop errors in more options menu
-        this.getDisabledHTMLandHandlers = () => {
-            return [];
-        }; // return w empty string
+        this.getDisabledIcons = () => []; // return empty
 
         const clickHandlerFactory = (
             handler: (

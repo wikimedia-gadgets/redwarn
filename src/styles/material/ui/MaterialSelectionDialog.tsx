@@ -55,6 +55,11 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
                     "aria-labelledby": this.props.title ?? "RedWarn dialog",
                 }}
             >
+                <MaterialButton
+                    dialogAction="close"
+                    icon="close"
+                    style={{ float: "right" }}
+                />
                 {this.props.title && (
                     <MaterialDialogTitle>
                         {this.props.title}

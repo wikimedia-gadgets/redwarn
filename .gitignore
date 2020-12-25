@@ -6,6 +6,8 @@
 # Old .gitignore
 public
 *.old
+# we shouldn't be changing old
+old/
 
 # System files
 desktop.ini

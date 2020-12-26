@@ -95,7 +95,7 @@ export abstract class RWUIDialog extends RWUIElement {
     /**
      * Shows the dialog as a modal.
      */
-    abstract show(): Promise<void>;
+    abstract show(): Promise<any>;
 
     /**
      * Renders the dialog. This only creates the dialog body, and does not show
@@ -116,7 +116,7 @@ export interface RWUIAlertDialogProps extends RWUIDialogProperties {
 }
 
 export class RWUIAlertDialog extends RWUIDialog {
-    show(): Promise<void> {
+    show(): Promise<any> {
         throw new Error("Attempted to call abstract method");
     }
     render(): HTMLDialogElement {
@@ -156,7 +156,7 @@ export interface RWUIInputDialogProps extends RWUIDialogProperties {
 }
 
 export class RWUIInputDialog extends RWUIDialog {
-    show(): Promise<void> {
+    show(): Promise<any> {
         throw new Error("Attempted to call abstract method");
     }
     render(): HTMLDialogElement {
@@ -184,7 +184,7 @@ export interface RWUISelectionDialogProps extends RWUIDialogProperties {
 }
 
 export class RWUISelectionDialog extends RWUIDialog {
-    show(): Promise<void> {
+    show(): Promise<any> {
         throw new Error("Attempted to call abstract method");
     }
     render(): HTMLDialogElement {

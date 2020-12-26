@@ -10,7 +10,7 @@ import { MDCRipple } from "@material/ripple";
 import { MDCDialog } from "@material/dialog";
 
 export default class MaterialSelectionDialog extends RWUISelectionDialog {
-    show(): Promise<void> {
+    show(): Promise<any> {
         const styleStorage = getMaterialStorage();
         styleStorage.dialogTracker.set(this.id, this);
 

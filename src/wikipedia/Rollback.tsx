@@ -56,10 +56,6 @@ export default class Rollback {
         // rw.visuals.toast.show("Please wait...", false, false, 1000);
         await this.rollbackRev.user.quickWelcome();
     }
-    selectFromDisabled(): void {
-        // TODO: this function solely relies on dialogs, so that needs to be done first
-        throw new Error("Method not implemented.");
-    }
     async promptRestoreReason(revID: string): Promise<void> {
         // TODO: this function solely relies on dialogs, so that needs to be done first
         throw new Error("Method not implemented.");
@@ -811,7 +807,8 @@ export const RollbackIcons: RollbackIcon[] = [
         color: "black", // css colour
         icon: "more_vert",
         actionType: "function",
-        action: (rollback: Rollback) => () => rollback.selectFromDisabled(), // Callback
+        action: (rollback: Rollback) => () =>
+            RWUI.openExtendedOptionsDialog({ rollback }), // Callback
     },
 
     // END DEFAULT ENABLED ICONS

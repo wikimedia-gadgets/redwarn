@@ -373,9 +373,15 @@ export default class Rollback {
         }, 100);
     }
     async promptRollbackReason(summary: string): Promise<void> {
-        // TODO: this function solely relies on dialogs, so that needs to be done first
-
         await WikipediaAPI.isLatestRevision(this.rollbackRev, this.noRedirects);
+        const dialog = new RWUI.InputDialog({
+            ...i18next.t("ui:rollback"),
+            defaultText: summary,
+        });
+        const reason = await dialog.show();
+        if (reason !== null) {
+            this.rollback(reason);
+        }
     }
 
     async rollback(

@@ -21,7 +21,7 @@ export default class Localization {
         if (window.RedWarnLanguages == null) {
             window.RedWarnLanguages = [];
         }
-        import("./en-US/RWLEnglish");
+        require("./en-US/RWLEnglish");
 
         this.cleanLanguages();
     }

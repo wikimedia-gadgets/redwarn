@@ -1,5 +1,6 @@
 {
     "redwarn": {
-        "name": "RedWarn"
+        "name": "RedWarn",
+        "advert": "[[m:w:wp:RW|(RW $t(common:redwarn.version))]]"
     }
 }

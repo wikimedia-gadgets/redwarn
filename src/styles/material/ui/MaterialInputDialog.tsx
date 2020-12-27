@@ -15,6 +15,7 @@ import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
+import i18next from "i18next";
 
 /**
  * The MaterialInputDialog is a handling class used to get input from users on the screen. This will
@@ -102,10 +103,11 @@ export default class MaterialInputDialog extends RWUIInputDialog {
     private renderActions(): ComponentChild[] {
         return [
             <MaterialButton dialogAction="confirm">
-                {this.props.actions?.ok ?? "OK"}
+                {this.props.actions?.ok ?? i18next.t<string>("ui:okCancel.ok")}
             </MaterialButton>,
             <MaterialButton dialogAction="cancel">
-                {this.props.actions?.ok ?? "Cancel"}
+                {this.props.actions?.ok ??
+                    i18next.t<string>("ui:okCancel.cancel")}
             </MaterialButton>,
         ];
     }

@@ -1,6 +1,7 @@
 {
     "summaries": {
-        "revert": "Reverting edit(s) by [[Special:Contributions/{{username}}|{{username}}]] ([[User_talk:{{username}}|talk]]) to rev. {{targetRevisionId}} by {{targetRevisionEditor}}: {{reason}} [[m:w:wp:RW|(RW {{version}})]]",
-        "rollback": "Rollback edit(s) by [[Special:Contributions/{{username}}|{{username}}]] ([[User_talk:{{username}}|talk]]): {{reason}} [[m:w:wp:RW|(RW {{version}})]]"
+        "revert": "Reverting edit(s) by [[Special:Contributions/{{username}}|{{username}}]] ([[User_talk:{{username}}|talk]]) to rev. {{targetRevisionId}} by {{targetRevisionEditor}}: {{reason}} $t(common:redwarn.advert)",
+        "rollback": "Rollback edit(s) by [[Special:Contributions/{{username}}|{{username}}]] ([[User_talk:{{username}}|talk]]): {{reason}} $t(common:redwarn.advert)",
+        "restore": "Restoring revision {{revID}} by {{revUser}}: {{reason}} $t(common:redwarn.advert)"
     }
 }

@@ -24,5 +24,6 @@ window.RedWarnLanguages.push({
     namespaces: {
         common: import("./common.json"),
         wikipedia: import("./wikipedia.json"),
+        ui: import("./ui.json"),
     },
 });

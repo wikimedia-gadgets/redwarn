@@ -1,5 +1,6 @@
 import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+import { RW_VERSION_TAG } from "../data/RedWarnConstants";
 import RedWarnLanguage from "./RedWarnLanguage";
 
 declare global {
@@ -60,6 +61,12 @@ export default class Localization {
                     true
                 );
             }
+            i18next.addResource(
+                language.tag,
+                "common",
+                "redwarn.version",
+                RW_VERSION_TAG
+            );
         }
     }
 }

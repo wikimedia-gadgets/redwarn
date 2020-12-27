@@ -1,0 +1,14 @@
+{
+    "restore": {
+        "label": "Restore Reason",
+        "helperText": "Enter a reason for this restore"
+    },
+    "rollback": {
+        "label": "Rollback Reason",
+        "helperText": "Enter a reason for this rollback"
+    },
+    "okCancel": {
+        "ok": "OK",
+        "cancel": "CANCEL"
+    }
+}

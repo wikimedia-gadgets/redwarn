@@ -22,7 +22,7 @@ window.RedWarnLanguages.push({
         },
     },
     namespaces: {
-        common: require("./common.json"),
-        wikipedia: require("./wikipedia.json"),
+        common: import("./common.json"),
+        wikipedia: import("./wikipedia.json"),
     },
 });

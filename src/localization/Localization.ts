@@ -20,7 +20,7 @@ export default class Localization {
         if (window.RedWarnLanguages == null) {
             window.RedWarnLanguages = [];
         }
-        require("./en-US/RWLEnglish");
+        import("./en-US/RWLEnglish");
 
         this.cleanLanguages();
     }

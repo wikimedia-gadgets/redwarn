@@ -6,6 +6,7 @@ import WikipediaURL from "./URL";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 import User from "./User";
+import { getMaterialStorage } from "../styles/material/storage/MaterialStyleStorage";
 
 export default class WikipediaAPI {
     static api: Api;
@@ -77,6 +78,7 @@ export default class WikipediaAPI {
 
     /**
      * Checks if the given revision ID is the latest revision of the page.
+     * @throws Error
      * @returns The latest revision
      */
     static async isLatestRevision(
@@ -108,11 +110,9 @@ export default class WikipediaAPI {
             if (noRedirect) {
                 throw `Not latest revision! Latest revision (ID ${latestRevisionId}) by [[User:${latestUsername}]]`;
             }
-            // TODO think about how to fix this later
-            // if (RedWarnStore.dialogTracker.size > 0) {
-            //     return; // Do not redirect if a dialog is open.
-            // }
-
+            if (getMaterialStorage().dialogTracker.size > 0) {
+                return; // Do not redirect if a dialog is open.
+            }
             // TODO: **config** (rw.config.rwLatestRevisionOption === "newtab")
             // TODO page load notices
             redirect(

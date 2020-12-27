@@ -56,23 +56,36 @@ export default class WikipediaAPI {
     /**
      * Gets the latest revision of a page.
      */
-    static async getLatestRevision(page: string): Promise<string | null> {
+    static async getLatestRevision(page: string): Promise<Revision | null> {
         const revisionRequest = await WikipediaAPI.get({
             action: "query",
             prop: "revisions",
             titles: page,
             rvslots: "*",
-            rvprop: ["content"],
+            rvprop: ["ids", "user", "content"],
+            rvlimit: 1,
         });
 
         if (!revisionRequest.query.pages[0].missing) {
             // If page isn't missing (i.e. it exists).
-            return (
+            /* return (
                 revisionRequest.query.pages[0].revisions[0].slots.main
                     .content ??
                 revisionRequest.query.pages[0].revisions[0].slots.main["*"] ??
                 null // This would be __bad__.
-            );
+            ); */
+            return {
+                content:
+                    revisionRequest.query.pages[0].revisions[0].slots.main
+                        .content ??
+                    revisionRequest.query.pages[0].revisions[0].slots.main[
+                        "*"
+                    ] ??
+                    null, // This would be __bad__.
+                revid: revisionRequest.query.pages[0].revisions[0].revid,
+                parentid: revisionRequest.query.pages[0].revisions[0].parentid,
+                user: revisionRequest.query.pages[0].revisions[0].user,
+            };
         }
         return null;
     }

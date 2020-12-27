@@ -73,9 +73,11 @@ export default class User {
      */
     async lastWarningLevel(forceRecheck = false): Promise<WarningAnalysis> {
         if (!this.memory.lastWarning || forceRecheck) {
-            const revisionWikitext = await WikipediaAPI.getLatestRevision(
-                `User_talk:${mw.util.wikiUrlencode(this.username)}`
-            );
+            const revisionWikitext = (
+                await WikipediaAPI.getLatestRevision(
+                    `User_talk:${mw.util.wikiUrlencode(this.username)}`
+                )
+            ).content;
             // TODO Handle errors
 
             if (!revisionWikitext) {
@@ -140,9 +142,11 @@ export default class User {
             return;
         }
 
-        let revisionWikitext = await WikipediaAPI.getLatestRevision(
-            `User_talk:${mw.util.wikiUrlencode(this.username)}`
-        );
+        let revisionWikitext = (
+            await WikipediaAPI.getLatestRevision(
+                `User_talk:${mw.util.wikiUrlencode(this.username)}`
+            )
+        ).content;
         // TODO Handle errors
 
         if (!revisionWikitext) {

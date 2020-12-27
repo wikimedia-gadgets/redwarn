@@ -136,8 +136,8 @@ export interface RWIconButton {
 }
 
 export interface OKCancelActions {
-    ok: string;
-    cancel: string;
+    ok?: string;
+    cancel?: string;
 }
 
 export interface RWUIInputDialogProps extends RWUIDialogProperties {
@@ -152,7 +152,7 @@ export interface RWUIInputDialogProps extends RWUIDialogProperties {
     /**
      * The actions of the dialog. These go at the bottom of the dialog.
      */
-    actions: OKCancelActions;
+    actions?: OKCancelActions;
 }
 
 export class RWUIInputDialog extends RWUIDialog {

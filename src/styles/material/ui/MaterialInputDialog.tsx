@@ -102,10 +102,10 @@ export default class MaterialInputDialog extends RWUIInputDialog {
     private renderActions(): ComponentChild[] {
         return [
             <MaterialButton dialogAction="confirm">
-                {this.props.actions.ok ?? "OK"}
+                {this.props.actions?.ok ?? "OK"}
             </MaterialButton>,
             <MaterialButton dialogAction="cancel">
-                {this.props.actions.ok ?? "Cancel"}
+                {this.props.actions?.ok ?? "Cancel"}
             </MaterialButton>,
         ];
     }

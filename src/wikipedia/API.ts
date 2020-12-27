@@ -54,9 +54,12 @@ export default class WikipediaAPI {
     }
 
     /**
-     * Gets the latest revision of a page.
+     * Gets a revision of a page. Assumes latest if revid is not provided.
      */
-    static async getLatestRevision(page: string): Promise<Revision | null> {
+    static async getRevision(
+        page: string,
+        revid?: number
+    ): Promise<Revision | null> {
         const revisionRequest = await WikipediaAPI.get({
             action: "query",
             prop: "revisions",
@@ -64,6 +67,7 @@ export default class WikipediaAPI {
             rvslots: "*",
             rvprop: ["ids", "user", "content"],
             rvlimit: 1,
+            ...(revid && { rvstartid: revid, rvendid: revid }),
         });
 
         if (!revisionRequest.query.pages[0].missing) {
@@ -84,7 +88,9 @@ export default class WikipediaAPI {
                     null, // This would be __bad__.
                 revid: revisionRequest.query.pages[0].revisions[0].revid,
                 parentid: revisionRequest.query.pages[0].revisions[0].parentid,
-                user: revisionRequest.query.pages[0].revisions[0].user,
+                user: new User(
+                    revisionRequest.query.pages[0].revisions[0].user
+                ),
             };
         }
         return null;

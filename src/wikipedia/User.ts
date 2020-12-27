@@ -74,7 +74,7 @@ export default class User {
     async lastWarningLevel(forceRecheck = false): Promise<WarningAnalysis> {
         if (!this.memory.lastWarning || forceRecheck) {
             const revisionWikitext = (
-                await WikipediaAPI.getLatestRevision(
+                await WikipediaAPI.getRevision(
                     `User_talk:${mw.util.wikiUrlencode(this.username)}`
                 )
             ).content;
@@ -143,7 +143,7 @@ export default class User {
         }
 
         let revisionWikitext = (
-            await WikipediaAPI.getLatestRevision(
+            await WikipediaAPI.getRevision(
                 `User_talk:${mw.util.wikiUrlencode(this.username)}`
             )
         ).content;

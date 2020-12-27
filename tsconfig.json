@@ -11,8 +11,7 @@
         "jsx": "react",
         "jsxFactory": "TSX",
         "esModuleInterop": true,
-        "lib": ["esnext", "dom"],
-        "importHelpers": true
+        "lib": ["esnext", "dom"]
     },
     "include": [
         "./src/**/*.js",

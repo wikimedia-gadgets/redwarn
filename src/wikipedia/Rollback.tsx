@@ -56,9 +56,40 @@ export default class Rollback {
         // rw.visuals.toast.show("Please wait...", false, false, 1000);
         await this.rollbackRev.user.quickWelcome();
     }
-    async promptRestoreReason(revID: string): Promise<void> {
-        // TODO: this function solely relies on dialogs, so that needs to be done first
-        throw new Error("Method not implemented.");
+    async promptRestoreReason(revID: number): Promise<void> {
+        const dialog = new RWUI.InputDialog(i18next.t("ui:restore"));
+        const reason = await dialog.show();
+        if (reason !== null) {
+            this.restore(revID, reason);
+        }
+    }
+    async restore(revID: number, reason: string): Promise<void> {
+        const latest = await WikipediaAPI.getRevision(this.rollbackRev.page);
+        const restoreRev = await WikipediaAPI.getRevision(
+            this.rollbackRev.page,
+            revID
+        );
+        const result = await WikipediaAPI.postWithEditToken({
+            action: "edit",
+            title: this.rollbackRev.page,
+            summary: i18next.t("wikipedia:summaries.restore", {
+                revID,
+                revUser: restoreRev.user.username,
+                reason,
+            }),
+            undo: latest.revid,
+            undoafter: revID,
+            tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
+                ? "RedWarn"
+                : null,
+        });
+        if (!result.edit) {
+            console.error(result);
+            // TODO toasts
+            //rw.visuals.toast.show("Sorry, there was an error, likely an edit conflict. This edit has not been restored.");
+        } else if (!this.noRedirects) {
+            WikipediaAPI.goToLatestRevision(this.rollbackRev.page);
+        }
     }
     static detectRollbackRevId(failIfNone = true): number {
         const isNLatest = $("#mw-diff-ntitle1")
@@ -1059,7 +1090,7 @@ function RestoreElement(props: RestoreProps) {
                 }}
                 onClick={() => {
                     props.rollback.promptRestoreReason(
-                        $(
+                        +$(
                             `#mw-diff-${
                                 props.left ? "o" : "n"
                             }title1 > strong > a`

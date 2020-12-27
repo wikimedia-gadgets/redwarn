@@ -35,3 +35,5 @@ interface Style {
 }
 
 export default Style;
+
+export abstract class StyleStorage {}

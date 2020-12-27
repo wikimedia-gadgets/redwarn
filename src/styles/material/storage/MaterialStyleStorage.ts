@@ -1,5 +1,6 @@
 import { RWUIDialog, RWUIDialogID } from "../../../ui/RWUIDialog";
-import RedWarnStore, { StyleStorage } from "../../../data/RedWarnStore";
+import RedWarnStore from "../../../data/RedWarnStore";
+import { StyleStorage } from "../../Style";
 
 export class MaterialStyleStorage extends StyleStorage {
     // Caches

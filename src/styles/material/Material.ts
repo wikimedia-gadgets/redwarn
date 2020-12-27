@@ -40,7 +40,7 @@ const MaterialStyle: Style = {
             type: "style",
             id: "mdc-tooltip-styles",
             src:
-                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@8.0.0.tooltip.min.css",
+                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@8.0.0.min.css",
         },
         {
             type: "style",

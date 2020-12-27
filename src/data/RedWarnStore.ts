@@ -1,8 +1,7 @@
 import MessageHandler from "../event/MessageHandler";
+import { StyleStorage } from "../styles/Style";
 import { Dependency } from "../ui/Dependencies";
 import { APIStore, EmptyAPIStore } from "../wikipedia/API";
-
-export abstract class StyleStorage {}
 
 export default class RedWarnStore {
     // Initializations

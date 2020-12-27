@@ -5,6 +5,7 @@
     "main": "src/RedWarnLite.ts",
     "dependencies": {
         "@material/dialog": "^8.0.0",
+        "@material/linear-progress": "^8.0.0",
         "@material/ripple": "^8.0.0",
         "@material/textfield": "^8.0.0",
         "@material/tooltip": "^8.0.0",

@@ -7,6 +7,7 @@ import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 import User from "./User";
 import { getMaterialStorage } from "../styles/material/storage/MaterialStyleStorage";
+import i18next from "i18next";
 
 export default class WikipediaAPI {
     static api: Api;
@@ -92,7 +93,6 @@ export default class WikipediaAPI {
             rvslots: "*",
             rvprop: ["ids", "user"],
             rvlimit: 1,
-            formatversion: 2,
         });
 
         console.log(revisions);
@@ -129,7 +129,6 @@ export default class WikipediaAPI {
             rvslots: "*",
             rvprop: ["ids"],
             rvlimit: 1,
-            formatversion: 2,
         });
 
         const latestRevisionId = revisions.query.pages[0].revisions[0].revid;
@@ -150,7 +149,6 @@ export default class WikipediaAPI {
             rvslots: "*",
             rvprop: ["ids", "user", "content", "comment"],
             rvexcludeuser: username,
-            formatversion: 2,
         });
 
         const foundRevision = revisions?.query?.pages?.[0]?.revisions?.[0];
@@ -207,7 +205,14 @@ export default class WikipediaAPI {
      * Initialize the MediaWiki API Manager.
      */
     static async init(): Promise<void> {
-        this.api = new mw.Api();
+        this.api = new mw.Api({
+            parameters: { formatversion: 2 },
+            ajax: {
+                headers: {
+                    "Api-User-Agent": i18next.t("common:redwarn.userAgent"),
+                },
+            },
+        });
         RedWarnStore.APIStore.username = mw.user.getName();
         await this.getGroups();
         RedWarnStore.APIStore.emailEnabled =

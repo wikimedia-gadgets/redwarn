@@ -183,14 +183,14 @@ declare namespace mw {
          */
         private static defaultOptions: {
             /** Default query parameters for API requests **/
-            parameters: Record<string, any>;
+            parameters?: Record<string, any>;
             /** Default options for jQuery#ajax **/
-            ajax: AjaxSettings;
+            ajax?: AjaxSettings;
             /**
              * Whether to use U+001F when joining multi-valued parameters (since 1.28).
              * Default is true if ajax.url is not set, false otherwise for compatibility.
              **/
-            useUS: boolean;
+            useUS?: boolean;
         };
 
         /**

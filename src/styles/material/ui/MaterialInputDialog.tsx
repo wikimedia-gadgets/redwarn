@@ -48,11 +48,15 @@ export default class MaterialInputDialog extends RWUIInputDialog {
         console.log(this.element);
 
         // Upgrade the newly-inserted MDC element.
-        new MDCRipple(this.element.querySelector("button"));
+        $(this.element)
+            .find("button")
+            .each((_, el) => void new MDCRipple(el));
 
-        this.MDCComponents.textField = new MDCTextField(
-            this.element.querySelector(".mdc-text-field")
-        );
+        this.MDCComponents = {
+            textField: new MDCTextField(
+                this.element.querySelector(".mdc-text-field")
+            ),
+        };
         this.MDCComponents.characterCounter =
             this.props.maxCharacterCount &&
             new MDCTextFieldCharacterCounter(
@@ -126,6 +130,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                     "aria-modal": true,
                     "aria-labelledby": this.props.title ?? "RedWarn dialog",
                 }}
+                id={this.id}
             >
                 {this.props.title && (
                     <MaterialDialogTitle>

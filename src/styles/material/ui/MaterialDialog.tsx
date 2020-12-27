@@ -4,15 +4,17 @@ export interface MaterialDialogProperties {
     containerProperties?: JSX.HTMLAttributes & Record<string, any>;
     surfaceProperties?: JSX.HTMLAttributes & Record<string, any>;
     children: ComponentChildren;
+    id: string;
 }
 
 export default function ({
     containerProperties,
     surfaceProperties,
     children,
+    id,
 }: MaterialDialogProperties): JSX.Element {
     return (
-        <div id={this.id} class="mdc-dialog">
+        <div id={id} class="mdc-dialog">
             <div class="mdc-dialog__container" {...containerProperties}>
                 <div class="mdc-dialog__surface" {...surfaceProperties}>
                     {children}

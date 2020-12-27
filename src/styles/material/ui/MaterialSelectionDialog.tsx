@@ -54,6 +54,7 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
                     "aria-modal": true,
                     "aria-labelledby": this.props.title ?? "RedWarn dialog",
                 }}
+                id={this.id}
             >
                 <MaterialButton
                     dialogAction="close"

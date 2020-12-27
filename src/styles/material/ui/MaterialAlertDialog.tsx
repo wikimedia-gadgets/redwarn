@@ -101,6 +101,7 @@ export default class MaterialAlertDialog extends RWUIAlertDialog {
                     "aria-modal": true,
                     "aria-labelledby": this.props.title ?? "RedWarn dialog",
                 }}
+                id={this.id}
             >
                 {this.props.title && (
                     <MaterialDialogTitle>

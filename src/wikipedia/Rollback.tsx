@@ -12,20 +12,26 @@ import WikipediaAPI from "./API";
 import Revision from "./Revision";
 import WikipediaURL from "./URL";
 import { Warnings } from "./Warnings";
+import {
+    RollbackOption,
+    RollbackOptions,
+} from "../definitions/RollbackOptions";
+import { RollbackDoneOptions } from "../definitions/RollbackDoneOptions";
 
-function getRollbackIconClickHandler(
+function getRollbackOptionClickHandler(
     context: Rollback,
-    icon: RollbackIcon
+    option: RollbackOption
 ): () => void {
     let clickHandler;
 
-    if (icon.actionType === "function") {
-        clickHandler = icon.action(context);
+    if (option.actionType === "function") {
+        clickHandler = option.action(context);
     } else {
-        if (!icon.promptReason) {
-            clickHandler = () => this.rollback(icon.summary, icon.ruleIndex);
+        if (!option.promptReason) {
+            clickHandler = () =>
+                this.rollback(option.summary, option.ruleIndex);
         } else {
-            clickHandler = () => this.promptRollbackReason(icon.summary);
+            clickHandler = () => this.promptRollbackReason(option.summary);
         }
     }
 
@@ -66,14 +72,14 @@ export default class Rollback {
         if ($("table.diff").length > 0) {
             // DETECT DIFF HERE - if diff table is present
             const instance = await this.factory();
-            await instance.loadIcons();
+            await instance.loadOptions();
         } else if (
             mw.config
                 .get("wgRelevantPageName")
                 .includes("Special:Contributions")
         ) {
             // Special contribs page
-            this.contribsPageIcons();
+            this.contribsPageOptions();
         }
     }
 
@@ -194,7 +200,7 @@ export default class Rollback {
         redirect(url);
     }
 
-    loadIcons(checkIfEditable = true): Promise<void> {
+    loadOptions(checkIfEditable = true): Promise<void> {
         // Check if page is editable, if not, don't show
         if (checkIfEditable && !mw.config.get("wgIsProbablyEditable")) {
             // Can't edit, so exit
@@ -217,29 +223,32 @@ export default class Rollback {
             .text()
             .includes("Latest revision"); // is the left side the latest revision? (rev13 bug fix)
 
-        let currentRevIcons = (
+        let currentRevisionOptions = (
             <span id="rwCurrentRevRollbackBtns" />
         ) as HTMLSpanElement;
 
         if (isLatest || isLeftLatest) {
-            RollbackIcons.forEach((icon, i) => {
+            RollbackOptions.forEach((option, i) => {
                 const id = `rwRollback_${i}`;
 
-                if (icon.enabled) {
+                if (option.enabled) {
                     const button = (
                         <button
                             class="mdc-icon-button material-icons"
-                            aria-label={icon.name}
+                            aria-label={option.name}
                             data-tooltip-id={`${id}T`}
                             style={{
                                 fontSize: "28px",
                                 paddingRight: "5px",
-                                color: icon.color,
+                                color: option.color,
                             }}
                             id={id}
-                            onClick={getRollbackIconClickHandler(this, icon)}
+                            onClick={getRollbackOptionClickHandler(
+                                this,
+                                option
+                            )}
                         >
-                            {icon.icon}
+                            {option.icon}
                         </button>
                     );
                     toInit.push({ el: button, component: MDCRipple });
@@ -251,12 +260,14 @@ export default class Rollback {
                             role="tooltip"
                             aria-hidden="true"
                         >
-                            <div class="mdc-tooltip__surface">{icon.name}</div>
+                            <div class="mdc-tooltip__surface">
+                                {option.name}
+                            </div>
                         </div>
                     );
                     toInit.push({ el: tooltip, component: MDCTooltip });
-                    currentRevIcons.appendChild(button);
-                    currentRevIcons.appendChild(tooltip);
+                    currentRevisionOptions.appendChild(button);
+                    currentRevisionOptions.appendChild(tooltip);
                 }
             });
 
@@ -289,8 +300,8 @@ export default class Rollback {
             this.progressBarElement.progress = 0;
             this.progressBarElement.buffer = 0;
 
-            const rollbackDoneIcons = (
-                <span id="rwRollbackDoneIcons" style="display:none;">
+            const rollbackDoneOptions = (
+                <span id="rwRollbackDoneOptions" style="display:none;">
                     <div style="height:5px" />
                     <span style="font-family: Roboto;font-size: 16px;display: inline-flex;vertical-align: middle;">
                         <span
@@ -306,37 +317,37 @@ export default class Rollback {
                 </span>
             );
 
-            RollbackDoneIcons.forEach((icon) => {
+            RollbackDoneOptions.forEach((option) => {
                 const button = (
                     <button
                         class="mdc-icon-button material-icons"
-                        aria-label={icon.name}
-                        data-tooltip-id={`rwRBDoneIcon_${icon.id}T`}
-                        id={`rwRBDoneIcon_${icon.id}`}
+                        aria-label={option.name}
+                        data-tooltip-id={`rwRBDoneIcon_${option.id}T`}
+                        id={`rwRBDoneOption_${option.id}`}
                     >
-                        {icon.icon}
+                        {option.icon}
                     </button>
                 );
                 toInit.push({ el: button, component: MDCRipple });
 
                 const tooltip = (
                     <div
-                        id={`rwRBDoneIcon_${icon.id}T`}
+                        id={`rwRBDoneOption_${option.id}T`}
                         class="mdc-tooltip"
                         role="tooltip"
                         aria-hidden="true"
                     >
-                        <div class="mdc-tooltip__surface">{icon.name}</div>
+                        <div class="mdc-tooltip__surface">{option.name}</div>
                     </div>
                 );
                 toInit.push({ el: tooltip, component: MDCTooltip });
 
-                $(rollbackDoneIcons).append(button, tooltip, "&nbsp;");
+                $(rollbackDoneOptions).append(button, tooltip, "&nbsp;");
             });
 
-            currentRevIcons = (
+            currentRevisionOptions = (
                 <div>
-                    {currentRevIcons}
+                    {currentRevisionOptions}
                     <span id="rwRollbackInProgress" style="display:none;">
                         {progressBar}
                         <div style="height:5px" />
@@ -348,7 +359,7 @@ export default class Rollback {
                         <div style="height:5px" />
                         {/* <!-- spacer --> */}
                     </span>
-                    {rollbackDoneIcons}
+                    {rollbackDoneOptions}
                 </div>
             );
         }
@@ -356,7 +367,7 @@ export default class Rollback {
         const twinkleLoadedBeforeUs = $('div[id^="tw-revert"]').length > 0;
 
         const left = isLeftLatest ? (
-            currentRevIcons
+            currentRevisionOptions
         ) : (
             <RestoreElement left={true} rollback={this} />
         );
@@ -374,7 +385,7 @@ export default class Rollback {
         }
 
         const right = isLatest ? (
-            currentRevIcons
+            currentRevisionOptions
         ) : (
             <RestoreElement left={false} rollback={this} />
         ); // if the latest rev, show the accurate revs, else, don't
@@ -452,7 +463,7 @@ export default class Rollback {
         if (!res.edit) {
             // Error occurred or other issue
             console.error(res);
-            // Show rollback icons again (todo)
+            // Show rollback options again (todo)
             $("#rwCurrentRevRollbackBtns").show();
             $("#rwRollbackInProgress").hide();
 
@@ -496,7 +507,7 @@ export default class Rollback {
         } catch (e) {
             // Error occurred or other issue
             console.error(e);
-            // Show rollback icons again
+            // Show rollback options again
             $("#rwCurrentRevRollbackBtns").show();
             $("#rwRollbackInProgress").hide();
             // TODO toast
@@ -569,27 +580,27 @@ export default class Rollback {
         }
     }
 
-    getDisabledIcons(): RWUISelectionDialogItem[] {
-        // Open a new dialog with all the disabled icons so user can select one. Click handlers are already registered, so we just call rw.rollback.clickHandlers.[elID]();
-        // Load Rollback current rev icons (rev14)
+    getDisabledOptions(): RWUISelectionDialogItem[] {
+        // Open a new dialog with all the disabled options so user can select one. Click handlers are already registered, so we just call rw.rollback.clickHandlers.[elID]();
+        // Load Rollback current rev options (rev14)
         const icons: RWUISelectionDialogItem[] = [];
-        RollbackIcons.forEach((icon, i) => {
-            if (icon.enabled) {
+        RollbackOptions.forEach((option, i) => {
+            if (option.enabled) {
                 return;
-            } // if icon is enabled, we can skip
-            if (icon.name == "More Options") {
+            } // if option is enabled, we can skip
+            if (option.name == "More Options") {
                 return;
             } // does nothing here, so not needed
 
-            const elID = `rollback${i}`; // get the ID for the new icons
+            const elID = `rollback${i}`; // get the ID for the new options
 
             // Establish element with all the info
             icons.push({
-                icon: icon.icon,
-                iconColor: icon.color,
+                icon: option.icon,
+                iconColor: option.color,
                 data: elID,
-                content: icon.name,
-                action: getRollbackIconClickHandler(this, icon),
+                content: option.name,
+                action: getRollbackOptionClickHandler(this, option),
             });
         });
 
@@ -600,7 +611,7 @@ export default class Rollback {
 
     showRollbackDoneOps(un: string, warnIndex: keyof Warnings): void {
         // Clear get hidden handler to stop errors in more options menu
-        this.getDisabledIcons = () => []; // return empty
+        this.getDisabledOptions = () => []; // return empty
 
         const clickHandlerFactory = (
             handler: (
@@ -612,10 +623,10 @@ export default class Rollback {
 
         // Add click handlers
 
-        RollbackDoneIcons.forEach((icon) => {
-            $(`#rwRBDoneIcon_${icon.id}`).on(
+        RollbackDoneOptions.forEach((option) => {
+            $(`#rwRBDoneOption_${option.id}`).on(
                 "click",
-                clickHandlerFactory(icon.action)
+                clickHandlerFactory(option.action)
             );
         });
 
@@ -627,15 +638,15 @@ export default class Rollback {
         )
             $(`#${rw.config.rwRollbackDoneOption}`).click(); */
 
-        // Hides other icons and shows the rollback done options and also checks for defaults, also adds click handlers
+        // Hides other options and shows the rollback done options and also checks for defaults, also adds click handlers
         $("#rwRollbackInProgress").fadeOut(() => {
             // fade out - looks smoother
-            $("#rwRollbackDoneIcons").fadeIn(); //show our icons
+            $("#rwRollbackDoneOptions").fadeIn(); //show our options
         });
     }
 
     // CONTRIBS PAGE
-    static contribsPageIcons(): void {
+    static contribsPageOptions(): void {
         // For each (current) tag
         $("span.mw-uctop").each((i, el) => {
             // TODO i18n

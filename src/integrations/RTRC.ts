@@ -21,7 +21,7 @@ export default class RTRC {
                     },
                     true
                 );
-                rollback.loadIcons(false);
+                rollback.loadOptions(false);
             });
         }
     }

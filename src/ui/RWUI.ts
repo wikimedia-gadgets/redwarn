@@ -33,7 +33,7 @@ export default class RWUI {
         ctx: ExtendedOptionsContext
     ): Promise<any> {
         const items: RWUISelectionDialogItem[] = [];
-        const rollbackIcons = ctx.rollback?.getDisabledIcons() ?? [];
+        const rollbackIcons = ctx.rollback?.getDisabledOptions() ?? [];
         if (rollbackIcons.length > 0) {
             items.push(...rollbackIcons);
         }

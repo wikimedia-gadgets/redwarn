@@ -22,6 +22,7 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
             .find("button")
             .each((_, el) => new MDCRipple(el).initialize());
         const dialog = new MDCDialog(this.element);
+        dialog.autoStackButtons = false;
         dialog.initialize();
         dialog.open();
 
@@ -48,6 +49,19 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
         });
     }
     render(): HTMLDialogElement {
+        const buttons = this.props.items.flatMap((item) => [
+            <MaterialButton
+                dialogAction={item.data}
+                icon={item.icon}
+                iconColor={item.iconColor}
+                style={{ width: "100%", textAlign: "left" }}
+                contentStyle={item.content.length > 40 && { fontSize: "12px" }}
+            >
+                {item.content}
+            </MaterialButton>,
+            <hr />,
+        ]);
+        console.log(buttons);
         this.element = (
             <MaterialDialog
                 surfaceProperties={{
@@ -57,32 +71,15 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
                 }}
                 id={this.id}
             >
-                <MaterialButton
-                    dialogAction="close"
-                    icon="close"
-                    style={{ float: "right" }}
-                />
-                {this.props.title && (
-                    <MaterialDialogTitle>
-                        {this.props.title}
-                    </MaterialDialogTitle>
-                )}
-                <MaterialDialogContent>
-                    {...this.props.items.flatMap((item) => [
-                        <MaterialButton
-                            dialogAction={item.data}
-                            icon={item.icon}
-                            iconColor={item.iconColor}
-                            style={{ width: "100%", textAlign: "left" }}
-                            contentStyle={
-                                item.content.length > 40 && { fontSize: "12px" }
-                            }
-                        >
-                            {item.content}
-                        </MaterialButton>,
-                        <hr />,
-                    ])}
-                </MaterialDialogContent>
+                <MaterialDialogTitle>
+                    {this.props.title}
+                    <MaterialButton
+                        dialogAction="close"
+                        icon="close"
+                        style={{ float: "right" }}
+                    />
+                </MaterialDialogTitle>
+                <MaterialDialogContent>{...buttons}</MaterialDialogContent>
             </MaterialDialog>
         ) as HTMLDialogElement;
         return this.element;

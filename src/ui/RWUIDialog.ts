@@ -180,6 +180,7 @@ export interface RWUISelectionDialogItem {
 }
 
 export interface RWUISelectionDialogProps extends RWUIDialogProperties {
+    title: string;
     items: RWUISelectionDialogItem[];
 }
 

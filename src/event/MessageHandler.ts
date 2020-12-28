@@ -25,7 +25,7 @@ export default class MessageHandler {
             if (this.handlers.has(e.data)) {
                 this.handlers.get(e.data)(e.data); // Execute handler if exact
             } else {
-                for (const event in this.handlers.keys) {
+                for (const event of this.handlers.keys()) {
                     if (
                         event.substr(event.length - 1) == "*" &&
                         e.data.includes(event.substr(0, event.length - 2))

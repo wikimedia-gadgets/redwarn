@@ -8,7 +8,8 @@ export default class RTRC {
             (mw.config.get("wgTitle") === "Krinkle/RTRC" &&
                 mw.config.get("wgAction") === "view") ||
             (mw.config.get("wgCanonicalSpecialPageName") === "Blankpage" &&
-                mw.config.get("wgTitle").split("/", 2)[1] === "RTRC"); // https://github.com/Krinkle/mw-gadget-rtrc/blob/f84d47fa8e776d31ad6f83764930a352a695d572/src/rtrc.js#L1655-L1656
+                // https://github.com/Krinkle/mw-gadget-rtrc/blob/f84d47fa8e776d31ad6f83764930a352a695d572/src/rtrc.js#L1655-L1656
+                mw.config.get("wgTitle").split("/", 2)[1] === "RTRC");
         if (this.onRTRC) {
             mw.hook("wikipage.diff").add(async (diff: JQuery) => {
                 const rollback = await Rollback.factory(

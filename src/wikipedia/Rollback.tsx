@@ -2,7 +2,7 @@ import { MDCLinearProgress } from "@material/linear-progress";
 import { MDCRipple } from "@material/ripple";
 import { MDCTooltip } from "@material/tooltip";
 import i18next from "i18next";
-import { BaseProps, h } from "@sportshead/tsx-dom";
+import { BaseProps, h } from "tsx-dom";
 import { RW_VERSION_TAG, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
 import RedWarnStore from "../data/RedWarnStore";
 import RWUI from "../ui/RWUI";
@@ -11,6 +11,26 @@ import redirect from "../util/redirect";
 import WikipediaAPI from "./API";
 import Revision from "./Revision";
 import { Warnings } from "./Warnings";
+import WikipediaURL from "./URL";
+
+function getRollbackIconClickHandler(
+    context: Rollback,
+    icon: RollbackIcon
+): () => void {
+    let clickHandler;
+
+    if (icon.actionType === "function") {
+        clickHandler = icon.action(context);
+    } else {
+        if (!icon.promptReason) {
+            clickHandler = () => this.rollback(icon.summary, icon.ruleIndex);
+        } else {
+            clickHandler = () => this.promptRollbackReason(icon.summary);
+        }
+    }
+
+    return clickHandler;
+}
 
 export default class Rollback {
     private constructor(
@@ -92,44 +112,55 @@ export default class Rollback {
         }
     }
     static detectRollbackRevId(failIfNone = true): number {
-        const isNLatest = $("#mw-diff-ntitle1")
-            .text()
-            .includes("Latest revision");
-        const isOLatest = $("#mw-diff-otitle1")
-            .text()
-            .includes("Latest revision");
-        if (isNLatest) {
-            // Return the revID of the edit on the right
-            return +$("#mw-diff-ntitle1 > strong > a")
-                .attr("href")
-                .split("&")[1]
-                .split("=")[1];
-        } else if (isOLatest) {
-            return +$("#mw-diff-otitle1 > strong > a")
-                .attr("href")
-                .split("&")[1]
-                .split("=")[1];
-        } else if (failIfNone) {
-            // BUG!
-            new RWUI.Dialog({
-                title: "Error",
-                content: [
-                    "An error occurred! (rollback getRollbackRevId failed via final else!)",
-                ],
-                actions: [
-                    {
-                        data: "report",
-                        text: "Report Bug",
-                        action: () => {
-                            // TODO report bug
-                            /* rw.ui.reportBug(
-                        "rollback getRollbackRevID failed via final else! related URL: " +
-                            window.location.href
-                    ) */
-                        },
-                    },
-                ],
-            }).show();
+        const oldId = mw.config.get("wgDiffOldId");
+        const newId = mw.config.get("wgDiffNewId");
+        if (newId == null && oldId != null) {
+            return oldId;
+        } else if (newId != null && oldId != null) {
+            return newId > oldId ? newId : oldId;
+        } else {
+            const isNLatest = $("#mw-diff-ntitle1")
+                .text()
+                .includes("Latest revision");
+            const isOLatest = $("#mw-diff-otitle1")
+                .text()
+                .includes("Latest revision");
+
+            if (isNLatest) {
+                // Return the revID of the edit on the right
+                return +$("#mw-diff-ntitle1 > strong > a")
+                    .attr("href")
+                    .split("&")[1]
+                    .split("=")[1];
+            } else if (isOLatest) {
+                return +$("#mw-diff-otitle1 > strong > a")
+                    .attr("href")
+                    .split("&")[1]
+                    .split("=")[1];
+            } else {
+                if (failIfNone) {
+                    // BUG!
+                    new RWUI.Dialog({
+                        title: "Error",
+                        content: [
+                            "An error occurred! (rollback getRollbackRevId failed via final else!)",
+                        ],
+                        actions: [
+                            {
+                                data: "report",
+                                text: "Report Bug",
+                                action: () => {
+                                    // TODO report bug
+                                    /* rw.ui.reportBug(
+                                "rollback getRollbackRevID failed via final else! related URL: " +
+                                    window.location.href
+                            ) */
+                                },
+                            },
+                        ],
+                    }).show();
+                }
+            }
         }
         return null;
     }
@@ -146,15 +177,11 @@ export default class Rollback {
             this.rollbackRev.page,
             user.username
         );
-        const url =
-            RedWarnStore.wikiIndex +
-            "?title=" +
-            this.rollbackRev.page +
-            "&diff=" +
-            revid +
-            "&oldid=" +
-            mw.util.getParamValue("diff") +
-            "&diffmode=source#rollbackPreview";
+        const url = WikipediaURL.getDiffUrl(
+            `${revid}`,
+            mw.util.getParamValue("diff"),
+            "rollbackPreview"
+        );
         redirect(url);
     }
 
@@ -182,25 +209,12 @@ export default class Rollback {
             .includes("Latest revision"); // is the left side the latest revision? (rev13 bug fix)
 
         let currentRevIcons = (
-            <span id="rwCurrentRevRollbackBtns"></span>
+            <span id="rwCurrentRevRollbackBtns" />
         ) as HTMLSpanElement;
 
         if (isLatest || isLeftLatest) {
             RollbackIcons.forEach((icon, i) => {
                 const id = `rwRollback_${i}`;
-                let clickHandler;
-
-                if (icon.actionType === "function") {
-                    clickHandler = icon.action(this);
-                } else {
-                    if (!icon.promptReason) {
-                        clickHandler = () =>
-                            this.rollback(icon.summary, icon.ruleIndex);
-                    } else {
-                        clickHandler = () =>
-                            this.promptRollbackReason(icon.summary);
-                    }
-                }
 
                 if (icon.enabled) {
                     const button = (
@@ -214,7 +228,7 @@ export default class Rollback {
                                 color: icon.color,
                             }}
                             id={id}
-                            onClick={clickHandler}
+                            onClick={getRollbackIconClickHandler(this, icon)}
                         >
                             {icon.icon}
                         </button>
@@ -249,14 +263,14 @@ export default class Rollback {
                     style="width:300px; display: block; margin-left: auto; margin-right: auto;"
                 >
                     <div class="mdc-linear-progress__buffer">
-                        <div class="mdc-linear-progress__buffer-bar"></div>
-                        <div class="mdc-linear-progress__buffer-dots"></div>
+                        <div class="mdc-linear-progress__buffer-bar" />
+                        <div class="mdc-linear-progress__buffer-dots" />
                     </div>
                     <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
-                        <span class="mdc-linear-progress__bar-inner"></span>
+                        <span class="mdc-linear-progress__bar-inner" />
                     </div>
                     <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
-                        <span class="mdc-linear-progress__bar-inner"></span>
+                        <span class="mdc-linear-progress__bar-inner" />
                     </div>
                 </div>
             );
@@ -268,7 +282,7 @@ export default class Rollback {
 
             const rollbackDoneIcons = (
                 <span id="rwRollbackDoneIcons" style="display:none;">
-                    <div style="height:5px"></div>
+                    <div style="height:5px" />
                     <span style="font-family: Roboto;font-size: 16px;display: inline-flex;vertical-align: middle;">
                         <span
                             class="material-icons"
@@ -279,7 +293,7 @@ export default class Rollback {
                         &nbsp; &nbsp; Rollback complete
                     </span>
                     <br />
-                    <div style="height:5px"></div>
+                    <div style="height:5px" />
                 </span>
             );
 
@@ -316,13 +330,13 @@ export default class Rollback {
                     {currentRevIcons}
                     <span id="rwRollbackInProgress" style="display:none;">
                         {progressBar}
-                        <div style="height:5px"></div>
+                        <div style="height:5px" />
                         {/* <!-- spacer --> */}
                         <span style="font-family: Roboto;font-size: 16px;">
                             Reverting...
                         </span>
                         <br />
-                        <div style="height:5px"></div>
+                        <div style="height:5px" />
                         {/* <!-- spacer --> */}
                     </span>
                     {rollbackDoneIcons}
@@ -562,20 +576,6 @@ export default class Rollback {
                 return;
             } // does nothing here, so not needed
 
-            let clickHandler;
-
-            if (icon.actionType === "function") {
-                clickHandler = icon.action(this);
-            } else {
-                if (!icon.promptReason) {
-                    clickHandler = () =>
-                        this.rollback(icon.summary, icon.ruleIndex);
-                } else {
-                    clickHandler = () =>
-                        this.promptRollbackReason(icon.summary);
-                }
-            }
-
             const elID = `rollback${i}`; // get the ID for the new icons
 
             // Establish element with all the info
@@ -584,7 +584,7 @@ export default class Rollback {
                 iconColor: icon.color,
                 data: elID,
                 content: icon.name,
-                action: clickHandler,
+                action: getRollbackIconClickHandler(this, icon),
             });
         });
 

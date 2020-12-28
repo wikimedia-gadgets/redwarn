@@ -3,27 +3,16 @@ import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
-import { h } from "@sportshead/tsx-dom";
+import { h } from "tsx-dom";
 import MaterialButton from "./MaterialButton";
 import { getMaterialStorage } from "../storage/MaterialStyleStorage";
-import { MDCRipple } from "@material/ripple";
-import { MDCDialog } from "@material/dialog";
+import { registerMaterialDialog, upgradeMaterialDialog } from "../Material";
 
 export default class MaterialSelectionDialog extends RWUISelectionDialog {
     show(): Promise<any> {
         const styleStorage = getMaterialStorage();
-        styleStorage.dialogTracker.set(this.id, this);
-
-        document.body.appendChild(this.render());
-
-        console.log(this.element);
-
-        $(this.element)
-            .find("button")
-            .each((_, el) => new MDCRipple(el).initialize());
-        const dialog = new MDCDialog(this.element);
-        dialog.initialize();
-        dialog.open();
+        registerMaterialDialog(this);
+        const dialog = upgradeMaterialDialog(this);
 
         return new Promise((resolve) => {
             dialog.listen(

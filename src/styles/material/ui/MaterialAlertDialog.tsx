@@ -1,9 +1,7 @@
-import { ComponentChild, h } from "@sportshead/tsx-dom";
+import { ComponentChild, h } from "tsx-dom";
 
 import { RWUIAlertDialog } from "../../../ui/RWUIDialog";
 
-import { MDCRipple } from "@material/ripple";
-import { MDCDialog } from "@material/dialog";
 import { getMaterialStorage } from "../storage/MaterialStyleStorage";
 import MaterialButton from "./MaterialButton";
 import MaterialDialog, {
@@ -11,6 +9,7 @@ import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
+import { registerMaterialDialog, upgradeMaterialDialog } from "../Material";
 
 /**
  * The MaterialAlertDialog is a handling class used to show dialogs on the screen. This will
@@ -25,19 +24,8 @@ export default class MaterialAlertDialog extends RWUIAlertDialog {
      */
     show(): Promise<any> {
         const styleStorage = getMaterialStorage();
-        styleStorage.dialogTracker.set(this.id, this);
-
-        document.body.appendChild(this.render());
-
-        console.log(this.element);
-
-        // Upgrade the newly-inserted MDC element.
-        $(this.element)
-            .find("button")
-            .each((_, el) => new MDCRipple(el).initialize());
-        const dialog = new MDCDialog(this.element);
-        dialog.initialize();
-        dialog.open();
+        registerMaterialDialog(this);
+        const dialog = upgradeMaterialDialog(this);
 
         return new Promise((resolve) => {
             dialog.listen(

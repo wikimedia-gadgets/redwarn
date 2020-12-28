@@ -1,5 +1,5 @@
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
-import { ComponentChild } from "@sportshead/tsx-dom";
+import { ComponentChild } from "tsx-dom";
 import generateId from "../util/generateId";
 
 export enum RWUIDialogActionType {
@@ -86,7 +86,7 @@ export abstract class RWUIDialog extends RWUIElement {
         return this._result;
     }
 
-    constructor(readonly props: RWUIDialogProperties) {
+    protected constructor(readonly props: RWUIDialogProperties) {
         super();
         this.id = `dialog__${props.id || generateId(16)}`;
         this.props.width ??= "30vw";

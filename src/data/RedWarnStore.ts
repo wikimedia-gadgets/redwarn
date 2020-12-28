@@ -1,8 +1,10 @@
+// noinspection JSDeprecatedSymbols
 import MessageHandler from "../event/MessageHandler";
 import { StyleStorage } from "../styles/Style";
 import { Dependency } from "../ui/Dependencies";
 import { APIStore, EmptyAPIStore } from "../wikipedia/API";
 
+// noinspection JSDeprecatedSymbols
 export default class RedWarnStore {
     // Initializations
     public static dependencies: Dependency[] = [];

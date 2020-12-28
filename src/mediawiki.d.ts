@@ -38,8 +38,19 @@ declare class mw {
     static config: Map<string, any>;
 
     /**
+     * Create an instance of mw.hook.
+     *
+     * @method hook
+     * @member mw
+     * @param {string} name Name of hook.
+     * @return {mw.hook}
+     * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.hook
+     */
+    static hook<T extends unknown[], U extends string>(name: U): mw.Hook<T>;
+
+    /**
      * Display a notification message to the user.
-     * @param options.autoHide A boolean indicating whether the notifification should automatically
+     * @param options.autoHide A boolean indicating whether the notification should automatically
      * be hidden after shown. Or if it should persist.
      * @param options.autoHideSeconds Key to autoHideSeconds for number of seconds for timeout of
      * auto-hide notifications.
@@ -64,7 +75,7 @@ declare class mw {
     static notification: {
         /**
          * The defaults for notify options parameter.
-         * @param autoHide A boolean indicating whether the notifification should automatically
+         * @param autoHide A boolean indicating whether the notification should automatically
          * be hidden after shown. Or if it should persist.
          * @param autoHideSeconds Key to autoHideSeconds for number of seconds for timeout of
          * auto-hide notifications.
@@ -146,17 +157,6 @@ declare class mw {
          */
         getParamValue(param: string, url?: string): string | null;
     };
-
-    /**
-     * Create an instance of mw.hook.
-     *
-     * @method hook
-     * @member mw
-     * @param {string} name Name of hook.
-     * @return {mw.hook}
-     * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.hook
-     */
-    static hook<T extends unknown[], U extends string>(name: U): mw.Hook<T>;
 }
 
 /**
@@ -227,6 +227,72 @@ declare namespace mw {
             user: string,
             params?: Record<string, any>
         ): JQueryPromise<Record<string, any>>;
+    }
+
+    /**
+     * Registry and firing of events.
+     *
+     * MediaWiki has various interface components that are extended, enhanced
+     * or manipulated in some other way by extensions, gadgets and even
+     * in core itself.
+     *
+     * This framework helps streamlining the timing of when these other
+     * code paths fire their plugins (instead of using document-ready,
+     * which can and should be limited to firing only once).
+     *
+     * Features like navigating to other wiki pages, previewing an edit
+     * and editing itself – without a refresh – can then retrigger these
+     * hooks accordingly to ensure everything still works as expected.
+     *
+     * Example usage:
+     *
+     *     mw.hook( 'wikipage.content' ).add( fn ).remove( fn );
+     *     mw.hook( 'wikipage.content' ).fire( $content );
+     *
+     * Handlers can be added and fired for arbitrary event names at any time. The same
+     * event can be fired multiple times. The last run of an event is memorized
+     * (similar to `$(document).ready` and `$.Deferred().done`).
+     * This means if an event is fired, and a handler added afterwards, the added
+     * function will be fired right away with the last given event data.
+     *
+     * Like Deferreds and Promises, the mw.hook object is both detachable and chainable.
+     * Thus allowing flexible use and optimal maintainability and authority control.
+     * You can pass around the `add` and/or `fire` method to another piece of code
+     * without it having to know the event name (or `mw.hook` for that matter).
+     *
+     *     var h = mw.hook( 'bar.ready' );
+     *     new mw.Foo( .. ).fetch( { callback: h.fire } );
+     *
+     * Note: Events are documented with an underscore instead of a dot in the event
+     * name due to jsduck not supporting dots in that position.
+     *
+     * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.hook
+     */
+    interface Hook<T extends any[]> {
+        /**
+         * Register a hook handler
+         *
+         * @param {...Function} handler Function to bind.
+         * @chainable
+         */
+        add: (...handler: ((...payload: T) => any)[]) => Hook<T>;
+
+        /**
+         * Unregister a hook handler
+         *
+         * @param {...Function} handler Function to unbind.
+         * @chainable
+         */
+        remove: (...handler: ((...payload: T) => any)[]) => Hook<T>;
+
+        /**
+         * Run a hook.
+         *
+         * @param {...any} data
+         * @return {mw.Hook}
+         * @chainable
+         */
+        fire: (...payload: T) => Hook<T>;
     }
 
     /**
@@ -401,75 +467,30 @@ declare namespace mw {
          */
         resume(): void;
 
-        postWithEditToken(
-            params: Record<string, any>,
-            ajaxOptions?: AjaxSettings
-        ): JQueryPromise<JQueryXHR>;
+        // postWithEditToken(
+        //     params: Record<string, any>,
+        //     ajaxOptions?: AjaxSettings
+        // ): JQueryPromise<JQueryXHR>;
     }
 
     /**
-     * Registry and firing of events.
+     * Parse titles into an object structure. Note that when using the constructor directly,
+     * passing invalid titles will result in an exception. Use newFromText to use the logic
+     * directly and get null for invalid titles which is easier to work with.
      *
-     * MediaWiki has various interface components that are extended, enhanced
-     * or manipulated in some other way by extensions, gadgets and even
-     * in core itself.
+     * Note that in the constructor and newFromText method, namespace is the default namespace
+     * only, and can be overridden by a namespace prefix in title. If you do not want this
+     * behavior, use makeTitle.
      *
-     * This framework helps streamlining the timing of when these other
-     * code paths fire their plugins (instead of using document-ready,
-     * which can and should be limited to firing only once).
-     *
-     * Features like navigating to other wiki pages, previewing an edit
-     * and editing itself – without a refresh – can then retrigger these
-     * hooks accordingly to ensure everything still works as expected.
-     *
-     * Example usage:
-     *
-     *     mw.hook( 'wikipage.content' ).add( fn ).remove( fn );
-     *     mw.hook( 'wikipage.content' ).fire( $content );
-     *
-     * Handlers can be added and fired for arbitrary event names at any time. The same
-     * event can be fired multiple times. The last run of an event is memorized
-     * (similar to `$(document).ready` and `$.Deferred().done`).
-     * This means if an event is fired, and a handler added afterwards, the added
-     * function will be fired right away with the last given event data.
-     *
-     * Like Deferreds and Promises, the mw.hook object is both detachable and chainable.
-     * Thus allowing flexible use and optimal maintainability and authority control.
-     * You can pass around the `add` and/or `fire` method to another piece of code
-     * without it having to know the event name (or `mw.hook` for that matter).
-     *
-     *     var h = mw.hook( 'bar.ready' );
-     *     new mw.Foo( .. ).fetch( { callback: h.fire } );
-     *
-     * Note: Events are documented with an underscore instead of a dot in the event
-     * name due to jsduck not supporting dots in that position.
-     *
-     * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.hook
+     * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Title
      */
-    interface Hook<T extends any[]> {
+    class Title {
         /**
-         * Register a hook handler
-         *
-         * @param {...Function} handler Function to bind.
-         * @chainable
+         * @param title Title of the page. If no second argument given, this will be searched for a namespace
+         * @param namespace If given, will used as default namespace for the given title. Defaults to `NS_MAIN`.
+         * @throws Error When the title is invalid.
+         * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Title-method-constructor
          */
-        add: (...handler: ((...payload: T) => any)[]) => Hook<T>;
-
-        /**
-         * Unregister a hook handler
-         *
-         * @param {...Function} handler Function to unbind.
-         * @chainable
-         */
-        remove: (...handler: ((...payload: T) => any)[]) => Hook<T>;
-
-        /**
-         * Run a hook.
-         *
-         * @param {...Mixed} data
-         * @return {mw.Hook}
-         * @chainable
-         */
-        fire: (...payload: T) => Hook<T>;
+        constructor(title: string, namespace?: number);
     }
 }

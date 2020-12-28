@@ -1,6 +1,6 @@
 # RedWarn Language Packs
 
-In case you want to create your own language pack, you'll want to copy the `RWLEnglish.ts` file (as a basis), along with the `RedWarnLanguage.ts` file (as a backbone). `RedWarnLanguage.ts` defines the structure of each language pack, while `RWLEnglish.ts` serves as a fully-populated list of keys that you can uses as a basis when translating.
+In case you want to create your own language pack, you'll want to copy the `RWLEnglish.ts` file (as a basis), along with the `RedWarnLanguage.ts` file (as a backbone). `RedWarnLanguage.ts` defines the structure of each language pack, while `RWLEnglish.ts` serves as a fully-populated list of keys that you can use as a basis when translating.
 
 ## Creating
 

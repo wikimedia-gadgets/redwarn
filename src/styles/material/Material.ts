@@ -1,9 +1,15 @@
 import MaterialAlertDialog from "./ui/MaterialAlertDialog";
 import Style from "../Style";
 import MaterialPreInitializationHooks from "./hooks/MaterialPreInitializationHooks";
-import { MaterialStyleStorage } from "./storage/MaterialStyleStorage";
+import {
+    getMaterialStorage,
+    MaterialStyleStorage,
+} from "./storage/MaterialStyleStorage";
 import MaterialInputDialog from "./ui/MaterialInputDialog";
 import MaterialSelectionDialog from "./ui/MaterialSelectionDialog";
+import { MDCRipple } from "@material/ripple";
+import { MDCDialog } from "@material/dialog";
+import { RWUIDialog } from "../../ui/RWUIDialog";
 
 const MaterialStyle: Style = {
     name: "material",
@@ -64,3 +70,24 @@ const MaterialStyle: Style = {
 };
 
 export default MaterialStyle;
+
+export function upgradeMaterialDialogButtons(dialog: RWUIDialog) {
+    $(dialog.element)
+        .find("button")
+        .each((_, el) => new MDCRipple(el).initialize());
+}
+
+export function upgradeMaterialDialog(dialog: RWUIDialog): MDCDialog {
+    upgradeMaterialDialogButtons(dialog);
+
+    const mdcDialog = new MDCDialog(dialog.element);
+    mdcDialog.initialize();
+    mdcDialog.open();
+
+    return mdcDialog;
+}
+
+export function registerMaterialDialog(dialog: RWUIDialog) {
+    getMaterialStorage().dialogTracker.set(dialog.id, dialog);
+    document.body.appendChild(dialog.render());
+}

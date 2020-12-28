@@ -40,7 +40,7 @@
         "@typescript-eslint/no-unused-vars": [
             "warn",
             {
-                "varsIgnorePattern": "TSX"
+                "varsIgnorePattern": "h"
             }
         ],
         "camelcase": ["warn"],

@@ -3,7 +3,7 @@ import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
-import { h as TSX } from "tsx-dom";
+import { h } from "tsx-dom";
 import MaterialButton from "./MaterialButton";
 import { getMaterialStorage } from "../storage/MaterialStyleStorage";
 import { MDCRipple } from "@material/ripple";

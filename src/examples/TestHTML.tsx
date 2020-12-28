@@ -1,4 +1,4 @@
-import { h as TSX } from "tsx-dom";
+import { h } from "tsx-dom";
 
 export default function TestHTML(name: string): Element {
     return (

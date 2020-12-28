@@ -1,4 +1,4 @@
-import { BaseProps, ComponentChildren, h as TSX } from "tsx-dom";
+import { BaseProps, ComponentChildren, h } from "tsx-dom";
 
 export interface MaterialDialogProperties {
     containerProperties?: JSX.HTMLAttributes & Record<string, any>;

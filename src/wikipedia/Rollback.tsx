@@ -32,9 +32,16 @@ function getRollbackIconClickHandler(
     return clickHandler;
 }
 
+interface RollbackContext {
+    reason: string;
+    targetRevision: Revision;
+    defaultWarnIndex?: keyof Warnings;
+    showRollbackDoneOptions?: boolean;
+}
+
 export default class Rollback {
     private constructor(
-        public rollbackRev: Revision,
+        public rollbackRevision: Revision,
         private noRedirects = false
     ) {}
 
@@ -74,7 +81,7 @@ export default class Rollback {
         // Send welcome to user who made most recent revision
         // TODO toasts
         // rw.visuals.toast.show("Please wait...", false, false, 1000);
-        await this.rollbackRev.user.quickWelcome();
+        await this.rollbackRevision.user.quickWelcome();
     }
     async promptRestoreReason(revID: number): Promise<void> {
         const dialog = new RWUI.InputDialog(i18next.t("ui:restore"));
@@ -84,14 +91,16 @@ export default class Rollback {
         }
     }
     async restore(revID: number, reason: string): Promise<void> {
-        const latest = await WikipediaAPI.getRevision(this.rollbackRev.page);
+        const latest = await WikipediaAPI.getRevision(
+            this.rollbackRevision.page
+        );
         const restoreRev = await WikipediaAPI.getRevision(
-            this.rollbackRev.page,
+            this.rollbackRevision.page,
             revID
         );
         const result = await WikipediaAPI.postWithEditToken({
             action: "edit",
-            title: this.rollbackRev.page,
+            title: this.rollbackRevision.page,
             summary: i18next.t("wikipedia:summaries.restore", {
                 revID,
                 revUser: restoreRev.user.username,
@@ -108,7 +117,7 @@ export default class Rollback {
             // TODO toasts
             //rw.visuals.toast.show("Sorry, there was an error, likely an edit conflict. This edit has not been restored.");
         } else if (!this.noRedirects) {
-            WikipediaAPI.goToLatestRevision(this.rollbackRev.page);
+            WikipediaAPI.goToLatestRevision(this.rollbackRevision.page);
         }
     }
     static detectRollbackRevId(failIfNone = true): number {
@@ -170,11 +179,11 @@ export default class Rollback {
         //rw.ui.loadDialog.show("Loading preview...");
         // Check if latest, else redirect
         const { user } = await WikipediaAPI.isLatestRevision(
-            this.rollbackRev,
+            this.rollbackRevision,
             this.noRedirects
         );
         const { revid } = await WikipediaAPI.latestRevisionNotByUser(
-            this.rollbackRev.page,
+            this.rollbackRevision.page,
             user.username
         );
         const url = WikipediaURL.getDiffUrl(
@@ -387,7 +396,10 @@ export default class Rollback {
         }, 100);
     }
     async promptRollbackReason(summary: string): Promise<void> {
-        await WikipediaAPI.isLatestRevision(this.rollbackRev, this.noRedirects);
+        await WikipediaAPI.isLatestRevision(
+            this.rollbackRevision,
+            this.noRedirects
+        );
         const dialog = new RWUI.InputDialog({
             ...i18next.t("ui:rollback"),
             defaultText: summary,
@@ -398,10 +410,114 @@ export default class Rollback {
         }
     }
 
+    async pseudoRollback({
+        targetRevision,
+        defaultWarnIndex,
+        reason,
+        showRollbackDoneOptions,
+    }: RollbackContext) {
+        const latestRev = await WikipediaAPI.latestRevisionNotByUser(
+            this.rollbackRevision.page,
+            targetRevision.user.username
+        );
+
+        if (latestRev.parentid === this.rollbackRevision.revid) {
+            if (this.noRedirects) {
+                // TODO show toast
+            } else {
+                // looks like that there is a newer revision! redirect to it.
+                WikipediaAPI.goToLatestRevision(this.rollbackRevision.page);
+                return; // stop here.
+            }
+        }
+
+        const summary = i18next.t("wikipedia:summaries.revert", {
+            username: targetRevision.user.username,
+            targetRevisionId: latestRev.revid,
+            targetRevisionEditor: latestRev.user.username,
+            version: RW_VERSION_TAG,
+            reason,
+        });
+        const res = await WikipediaAPI.postWithEditToken({
+            action: "edit",
+            format: "json",
+            title: this.rollbackRevision.page,
+            summary,
+            undo: targetRevision.revid, // current
+            undoafter: latestRev.revid, // restore version
+            tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
+                ? "RedWarn"
+                : null,
+        });
+        if (!res.edit) {
+            // Error occurred or other issue
+            console.error(res);
+            // Show rollback icons again (todo)
+            $("#rwCurrentRevRollbackBtns").show();
+            $("#rwRollbackInProgress").hide();
+
+            // TODO toast
+            /* rw.visuals.toast.show(
+                "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
+            ); */
+        } else {
+            this.progressBarElement.close();
+            return showRollbackDoneOptions
+                ? this.showRollbackDoneOps(
+                      targetRevision.user.username,
+                      defaultWarnIndex
+                  )
+                : null;
+        }
+    }
+
+    async standardRollback({
+        targetRevision,
+        defaultWarnIndex,
+        reason,
+        showRollbackDoneOptions,
+    }: RollbackContext) {
+        try {
+            const summary = i18next.t("wikipedia:summaries.rollback", {
+                username: targetRevision.user.username,
+                reason,
+                version: RW_VERSION_TAG,
+            });
+            await WikipediaAPI.api.rollback(
+                this.rollbackRevision.page,
+                targetRevision.user.username,
+                {
+                    summary,
+                    tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
+                        ? "RedWarn"
+                        : null,
+                }
+            );
+        } catch (e) {
+            // Error occurred or other issue
+            console.error(e);
+            // Show rollback icons again
+            $("#rwCurrentRevRollbackBtns").show();
+            $("#rwRollbackInProgress").hide();
+            // TODO toast
+            /* rw.visuals.toast.show(
+                "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
+            ); */
+        }
+
+        this.progressBarElement.close();
+        return showRollbackDoneOptions
+            ? this.showRollbackDoneOps(
+                  targetRevision.user.username,
+                  defaultWarnIndex
+              )
+            : null;
+    }
+
     async rollback(
         reason: string,
         defaultWarnIndex?: keyof Warnings,
-        showRollbackDoneOps = true
+        showRollbackDoneOptions = true
     ): Promise<void> {
         // Show progress bar
         $("#rwCurrentRevRollbackBtns").hide();
@@ -409,127 +525,16 @@ export default class Rollback {
 
         this.progressBarElement.open();
 
-        const rev = await WikipediaAPI.isLatestRevision(
-            this.rollbackRev,
+        const targetRevision = await WikipediaAPI.isLatestRevision(
+            this.rollbackRevision,
             this.noRedirects
         );
 
-        const pseudoRollbackCallback = async () => {
-            const latestRev = await WikipediaAPI.latestRevisionNotByUser(
-                this.rollbackRev.page,
-                rev.user.username
-            );
-
-            if (latestRev.parentid === this.rollbackRev.revid) {
-                if (this.noRedirects) {
-                    // TODO show toast
-                } else {
-                    // looks like that there is a newer revision! redirect to it.
-                    WikipediaAPI.goToLatestRevision(this.rollbackRev.page);
-                    return; // stop here.
-                }
-            }
-
-            const summary = i18next.t("wikipedia:summaries.revert", {
-                username: rev.user.username,
-                targetRevisionId: latestRev.revid,
-                targetRevisionEditor: latestRev.user.username,
-                version: RW_VERSION_TAG,
-                reason,
-            });
-            const res = await WikipediaAPI.postWithEditToken({
-                action: "edit",
-                format: "json",
-                title: this.rollbackRev.page,
-                summary,
-                undo: rev.revid, // current
-                undoafter: latestRev.revid, // restore version
-                tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
-                    ? "RedWarn"
-                    : null,
-            });
-            if (!res.edit) {
-                // Error occurred or other issue
-                console.error(res);
-                // Show rollback icons again (todo)
-                $("#rwCurrentRevRollbackBtns").show();
-                $("#rwRollbackInProgress").hide();
-
-                // TODO toast
-                /* rw.visuals.toast.show(
-                    "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
-                ); */
-            } else {
-                this.progressBarElement.close();
-
-                let resolve: (value?: any) => void;
-                const promise = new Promise<void>((res) => {
-                    resolve = res;
-                });
-                setTimeout(() => {
-                    if (showRollbackDoneOps) {
-                        resolve(
-                            this.showRollbackDoneOps(
-                                rev.user.username,
-                                defaultWarnIndex
-                            )
-                        );
-                    } else {
-                        resolve();
-                    }
-                });
-                return await promise;
-            }
-        };
-
-        const rollbackCallback = async () => {
-            try {
-                const summary = i18next.t("wikipedia:summaries.rollback", {
-                    username: rev.user.username,
-                    reason,
-                    version: RW_VERSION_TAG,
-                });
-                await WikipediaAPI.api.rollback(
-                    this.rollbackRev.page,
-                    rev.user.username,
-                    {
-                        summary,
-                        tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
-                            ? "RedWarn"
-                            : null,
-                    }
-                );
-            } catch (e) {
-                // Error occurred or other issue
-                console.error(e);
-                // Show rollback icons again
-                $("#rwCurrentRevRollbackBtns").show();
-                $("#rwRollbackInProgress").hide();
-                // TODO toast
-                /* rw.visuals.toast.show(
-                    "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
-                ); */
-            }
-
-            this.progressBarElement.close();
-
-            let resolve: (value?: any) => void;
-            const promise = new Promise<void>((res) => {
-                resolve = res;
-            });
-            setTimeout(() => {
-                if (showRollbackDoneOps) {
-                    resolve(
-                        this.showRollbackDoneOps(
-                            rev.user.username,
-                            defaultWarnIndex
-                        )
-                    );
-                } else {
-                    resolve();
-                }
-            });
-            return await promise;
+        const context: RollbackContext = {
+            targetRevision: targetRevision,
+            defaultWarnIndex: defaultWarnIndex,
+            reason: reason,
+            showRollbackDoneOptions: showRollbackDoneOptions,
         };
 
         if (WikipediaAPI.hasGroup("rollbacker")) {
@@ -554,13 +559,13 @@ export default class Rollback {
                 // TODO config
                 if (/* rw.config.rollbackMethod */ "rollback" == "rollback") {
                     // Rollback selected
-                    return await rollbackCallback(); // Do rollback
+                    return await this.standardRollback(context); // Do rollback
                 } else {
-                    return await pseudoRollbackCallback(); // rollback-like
+                    return await this.pseudoRollback(context); // rollback-like
                 }
             }
         } else {
-            return await pseudoRollbackCallback();
+            return await this.pseudoRollback(context);
         }
     }
 
@@ -1027,7 +1032,7 @@ export const RollbackDoneIcons: RollbackDoneIcon[] = [
         name: "Go to latest revision",
         icon: "watch_later",
         action: (rollback: Rollback): Promise<void> =>
-            WikipediaAPI.goToLatestRevision(rollback.rollbackRev.page),
+            WikipediaAPI.goToLatestRevision(rollback.rollbackRevision.page),
         id: "latestRev",
     },
     {

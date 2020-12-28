@@ -40,7 +40,7 @@ export default class RWUI {
 
         // TODO topIcons
 
-        const targetUser = ctx.user ?? ctx.rollback?.rollbackRev.user;
+        const targetUser = ctx.user ?? ctx.rollback?.rollbackRevision.user;
 
         if (targetUser) {
             // TODO AIV

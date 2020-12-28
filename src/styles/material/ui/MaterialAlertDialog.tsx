@@ -1,6 +1,6 @@
 import { ComponentChild, h } from "tsx-dom";
 
-import { RWUIAlertDialog } from "../../../ui/RWUIDialog";
+import { RWUIAlertDialog } from "../../../ui/elements/RWUIDialog";
 
 import { getMaterialStorage } from "../storage/MaterialStyleStorage";
 import MaterialButton from "./MaterialButton";

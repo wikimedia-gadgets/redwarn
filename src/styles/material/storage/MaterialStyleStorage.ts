@@ -1,4 +1,4 @@
-import { RWUIDialog, RWUIDialogID } from "../../../ui/RWUIDialog";
+import { RWUIDialog, RWUIDialogID } from "../../../ui/elements/RWUIDialog";
 import RedWarnStore from "../../../data/RedWarnStore";
 import { StyleStorage } from "../../Style";
 

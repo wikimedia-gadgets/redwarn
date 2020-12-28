@@ -1,4 +1,4 @@
-import { RWUISelectionDialog } from "../../../ui/RWUIDialog";
+import { RWUISelectionDialog } from "../../../ui/elements/RWUIDialog";
 import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle,

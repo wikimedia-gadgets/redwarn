@@ -9,7 +9,7 @@ import MaterialInputDialog from "./ui/MaterialInputDialog";
 import MaterialSelectionDialog from "./ui/MaterialSelectionDialog";
 import { MDCRipple } from "@material/ripple";
 import { MDCDialog } from "@material/dialog";
-import { RWUIDialog } from "../../ui/RWUIDialog";
+import { RWUIDialog } from "../../ui/elements/RWUIDialog";
 
 const MaterialStyle: Style = {
     name: "material",

@@ -6,7 +6,7 @@ import { BaseProps, h } from "tsx-dom";
 import { RW_VERSION_TAG, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
 import RedWarnStore from "../data/RedWarnStore";
 import RWUI from "../ui/RWUI";
-import { RWUISelectionDialogItem } from "../ui/RWUIDialog";
+import { RWUISelectionDialogItem } from "../ui/elements/RWUIDialog";
 import redirect from "../util/redirect";
 import WikipediaAPI from "./API";
 import Revision from "./Revision";

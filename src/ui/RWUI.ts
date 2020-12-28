@@ -7,7 +7,7 @@ import {
     RWUIInputDialog,
     RWUISelectionDialog,
     RWUISelectionDialogItem,
-} from "./RWUIDialog";
+} from "./elements/RWUIDialog";
 
 /**
  * Redirect class for easy access. UI elements of RedWarn are also created here.

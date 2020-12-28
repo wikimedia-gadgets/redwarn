@@ -1,6 +1,6 @@
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 import { ComponentChild } from "tsx-dom";
-import generateId from "../util/generateId";
+import generateId from "../../util/generateId";
 
 export enum RWUIDialogActionType {
     /**

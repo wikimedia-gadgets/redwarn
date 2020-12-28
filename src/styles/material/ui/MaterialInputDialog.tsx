@@ -1,6 +1,6 @@
 import { h } from "tsx-dom";
 
-import { RWUIInputDialog } from "../../../ui/RWUIDialog";
+import { RWUIInputDialog } from "../../../ui/elements/RWUIDialog";
 
 import { MDCTextField } from "@material/textfield";
 import { MDCTextFieldCharacterCounter } from "@material/textfield/character-counter";

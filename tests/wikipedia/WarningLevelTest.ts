@@ -1,6 +1,6 @@
 import {
-    getHighestLevel,
     WarningLevel,
+    getHighestLevel,
 } from "../../src/wikipedia/WarningLevel";
 
 describe("WarningLevel Parser Tests", () => {

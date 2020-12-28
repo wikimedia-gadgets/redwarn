@@ -1,5 +1,5 @@
 import { Gender, GenderDict, GenderPronoun } from "./Gender";
-import { getHighestLevel, WarningAnalysis } from "./WarningLevel";
+import { WarningAnalysis, getHighestLevel } from "./WarningLevel";
 import {
     RW_LINK_SUMMARY,
     RW_SIG,

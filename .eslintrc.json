@@ -8,6 +8,9 @@
     },
     "extends": [
         "plugin:@typescript-eslint/recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:import/typescript",
         "prettier",
         "prettier/@typescript-eslint"
     ],
@@ -23,19 +26,6 @@
     },
     "rules": {
         "@typescript-eslint/no-explicit-any": "off",
-        /* "indent": [
-            "error",
-            4,
-            {
-                "SwitchCase": 1,
-                "FunctionDeclaration": {
-                    "parameters": "off"
-                },
-                "FunctionExpression": {
-                    "parameters": "off"
-                }
-            }
-        ], */
         "semi": ["error", "always"],
         "@typescript-eslint/no-unused-vars": [
             "warn",
@@ -57,5 +47,8 @@
         "curly": "error"
         // temporary so that `eslint --fix` doesn't break stuff
         // "linebreak-style": ["error", "windows"]
+    },
+    "settings": {
+        "import/parsers": { "@typescript-eslint/parser": [".ts", ".tsx"] }
     }
 }

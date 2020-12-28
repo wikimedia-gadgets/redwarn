@@ -22,8 +22,9 @@ describe("Semantic Difference tests", () => {
         [1, "1.0.0", "0.0.0"],
     ];
 
-    for (const pair of pairs)
+    for (const pair of pairs) {
         test(`${pair[1]} and ${pair[2]}`, () => {
             expect(semanticDifference(pair[1], pair[2])).toEqual(pair[0]);
         });
+    }
 });

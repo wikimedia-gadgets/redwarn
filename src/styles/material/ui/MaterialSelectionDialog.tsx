@@ -54,32 +54,61 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
                 dialogAction={item.data}
                 icon={item.icon}
                 iconColor={item.iconColor}
-                style={{ width: "100%", textAlign: "left" }}
-                contentStyle={item.content.length > 40 && { fontSize: "12px" }}
+                style={{
+                    width: "100%",
+                    textAlign: "left",
+                    display: "inline-block",
+                }}
+                contentStyle={{
+                    ...(item.content.length > 40 && { fontSize: "12px" }),
+                    marginLeft: "10px",
+                }}
             >
                 {item.content}
             </MaterialButton>,
-            <hr />,
+            <hr style={{ margin: "0" }} />,
         ]);
         console.log(buttons);
         this.element = (
             <MaterialDialog
                 surfaceProperties={{
-                    "style": `width: ${this.props.width ?? "30vw"};`,
+                    "style": {
+                        width: this.props.width ?? "30vw",
+                        height: "60vh",
+                    },
                     "aria-modal": true,
                     "aria-labelledby": this.props.title ?? "RedWarn dialog",
                 }}
                 id={this.id}
             >
-                <MaterialDialogTitle>
-                    {this.props.title}
+                <MaterialDialogTitle
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        fontWeight: "200",
+                        fontSize: "45px",
+                        lineHeight: "48px",
+                        borderStyle: "none",
+                        marginTop: "4vh",
+                    }}
+                >
+                    <span style={{ float: "left" }}>{this.props.title}</span>
                     <MaterialButton
                         dialogAction="close"
                         icon="close"
-                        style={{ float: "right" }}
+                        style={{ right: "0", position: "absolute" }}
                     />
                 </MaterialDialogTitle>
-                <MaterialDialogContent>{...buttons}</MaterialDialogContent>
+                <MaterialDialogContent
+                    style={{
+                        height: "400px",
+                        overflowY: "auto",
+                        overflowX: "hidden",
+                    }}
+                >
+                    <hr style={{ margin: "0" }} />
+                    {...buttons}
+                </MaterialDialogContent>
             </MaterialDialog>
         ) as HTMLDialogElement;
         return this.element;

@@ -25,14 +25,35 @@ export default function ({
     );
 }
 
-export function MaterialDialogTitle({ children }: BaseProps): JSX.Element {
-    return <h2 class="mdc-dialog__title">{children}</h2>;
+export function MaterialDialogTitle({
+    children,
+    style,
+}: BaseProps & { style?: Partial<CSSStyleDeclaration> }): JSX.Element {
+    return (
+        <h2 class="mdc-dialog__title" style={style}>
+            {children}
+        </h2>
+    );
 }
 
-export function MaterialDialogContent({ children }: BaseProps): JSX.Element {
-    return <h2 class="mdc-dialog__content">{children}</h2>;
+export function MaterialDialogContent({
+    children,
+    style,
+}: BaseProps & { style?: Partial<CSSStyleDeclaration> }): JSX.Element {
+    return (
+        <h2 class="mdc-dialog__content" style={style}>
+            {children}
+        </h2>
+    );
 }
 
-export function MaterialDialogActions({ children }: BaseProps): JSX.Element {
-    return <h2 class="mdc-dialog__actions">{children}</h2>;
+export function MaterialDialogActions({
+    children,
+    style,
+}: BaseProps & { style?: Partial<CSSStyleDeclaration> }): JSX.Element {
+    return (
+        <h2 class="mdc-dialog__actions" style={style}>
+            {children}
+        </h2>
+    );
 }

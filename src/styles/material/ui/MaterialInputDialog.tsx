@@ -150,22 +150,25 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                         {this.props.title}
                     </MaterialDialogTitle>
                 )}
-                <MaterialDialogContent>
+                <MaterialDialogContent style={{ width: "100%" }}>
                     <label
                         class={`mdc-text-field mdc-text-field--outlined${
-                            this.props.leadingIcon &&
-                            " mdc-text-field--with-leading-icon"
+                            (this.props.leadingIcon &&
+                                " mdc-text-field--with-leading-icon") ??
+                            ""
                         }${
-                            this.props.trailingIcon &&
-                            " mdc-text-field--with-trailing-icon"
+                            (this.props.trailingIcon &&
+                                " mdc-text-field--with-trailing-icon") ??
+                            ""
                         }`}
+                        style={{ width: "100%" }}
                     >
                         <span class="mdc-notched-outline">
                             <span class="mdc-notched-outline__leading"></span>
                             <span class="mdc-notched-outline__notch">
                                 <span
                                     class="mdc-floating-label"
-                                    id={`${this.id}_label`}
+                                    for={`${this.id}_input`}
                                 >
                                     {this.props.label}
                                 </span>
@@ -193,7 +196,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                         <input
                             type="text"
                             class="mdc-text-field__input"
-                            aria-labelledby={`${this.id}_label`}
+                            id={`${this.id}_input`}
                             {...(this.props.helperText && {
                                 "aria-controls": `${this.id}_helper`,
                                 "aria-describedby": `${this.id}_helper`,

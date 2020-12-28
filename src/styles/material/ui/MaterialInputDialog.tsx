@@ -50,36 +50,45 @@ export default class MaterialInputDialog extends RWUIInputDialog {
         // Upgrade the newly-inserted MDC element.
         $(this.element)
             .find("button")
-            .each((_, el) => void new MDCRipple(el));
+            .each((_, el) => new MDCRipple(el).initialize());
 
         this.MDCComponents = {
             textField: new MDCTextField(
                 this.element.querySelector(".mdc-text-field")
             ),
         };
+        this.MDCComponents.textField.initialize();
+
         this.MDCComponents.characterCounter =
             this.props.maxCharacterCount &&
             new MDCTextFieldCharacterCounter(
                 this.element.querySelector(".mdc-text-field-character-counter")
             );
+        this.MDCComponents.characterCounter?.initialize();
 
         this.MDCComponents.leadingIcon =
             this.props.leadingIcon &&
             new MDCTextFieldIcon(
                 this.element.querySelector(`#${this.id}_leadIcon`)
             );
+        this.MDCComponents.leadingIcon?.initialize();
+
         this.MDCComponents.trailingIcon =
             this.props.trailingIcon &&
             new MDCTextFieldIcon(
                 this.element.querySelector(`#${this.id}_trailIcon`)
             );
+        this.MDCComponents.trailingIcon?.initialize();
+
         this.MDCComponents.helperText =
             this.props.helperText &&
             new MDCTextFieldHelperText(
                 this.element.querySelector(".mdc-text-field-helper-text")
             );
+        this.MDCComponents.helperText?.initialize();
 
         const dialog = new MDCDialog(this.element);
+        dialog.initialize();
         dialog.open();
 
         return new Promise((resolve) => {
@@ -102,18 +111,22 @@ export default class MaterialInputDialog extends RWUIInputDialog {
 
     /**
      * Renders the MaterialInputDialog's actions (as buttons).
-     * @return A collection of {@link HTMLButtonElement}s, all of which are MDC buttons.
+     * @return A MaterialDialogActions element
      */
-    private renderActions(): ComponentChild[] {
-        return [
-            <MaterialButton dialogAction="confirm">
-                {this.props.actions?.ok ?? i18next.t<string>("ui:okCancel.ok")}
-            </MaterialButton>,
-            <MaterialButton dialogAction="cancel">
-                {this.props.actions?.ok ??
-                    i18next.t<string>("ui:okCancel.cancel")}
-            </MaterialButton>,
-        ];
+    private renderActions(): ReturnType<typeof MaterialDialogActions> {
+        return (
+            <MaterialDialogActions>
+                <MaterialButton dialogAction="confirm">
+                    {this.props.actions?.ok ??
+                        i18next.t<string>("ui:okCancel.ok")}
+                </MaterialButton>
+
+                <MaterialButton dialogAction="cancel">
+                    {this.props.actions?.cancel ??
+                        i18next.t<string>("ui:okCancel.cancel")}
+                </MaterialButton>
+            </MaterialDialogActions>
+        );
     }
 
     /**
@@ -231,9 +244,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                         ) : null}
                     </div>
                 </MaterialDialogContent>
-                <MaterialDialogActions>
-                    {...this.renderActions()}
-                </MaterialDialogActions>
+                {this.renderActions()}
             </MaterialDialog>
         ) as HTMLDialogElement;
 

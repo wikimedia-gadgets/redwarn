@@ -34,8 +34,9 @@ export default class MaterialAlertDialog extends RWUIAlertDialog {
         // Upgrade the newly-inserted MDC element.
         $(this.element)
             .find("button")
-            .each((_, el) => void new MDCRipple(el));
+            .each((_, el) => new MDCRipple(el).initialize());
         const dialog = new MDCDialog(this.element);
+        dialog.initialize();
         dialog.open();
 
         return new Promise((resolve) => {

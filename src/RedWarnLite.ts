@@ -10,15 +10,15 @@
 
 /* Libraries */
 
+import RedWarnStore from "./data/RedWarnStore";
+import RedWarnHooks from "./event/RedWarnHooks";
+import RTRC from "./integrations/RTRC";
+import Localization from "./localization/Localization";
+import StyleManager from "./styles/StyleManager";
 /* IMPORT EVERYTHING HERE! */
 import Dependencies from "./ui/Dependencies";
-import RedWarnHooks from "./event/RedWarnHooks";
 import WikipediaAPI from "./wikipedia/API";
-import StyleManager from "./styles/StyleManager";
-import RedWarnStore from "./data/RedWarnStore";
-import Localization from "./localization/Localization";
 import Rollback from "./wikipedia/Rollback";
-import RTRC from "./integrations/RTRC";
 
 console.log("Starting RedWarn...");
 // noinspection JSDeprecatedSymbols

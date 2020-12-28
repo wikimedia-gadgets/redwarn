@@ -1,5 +1,5 @@
-import { DefaultRedWarnStyles } from "./RedWarnStyles";
 import semanticDifference from "../util/semanticDifference";
+import { DefaultRedWarnStyles } from "./RedWarnStyles";
 import Style from "./Style";
 
 export default class StyleManager {

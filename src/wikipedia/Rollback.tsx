@@ -5,13 +5,13 @@ import i18next from "i18next";
 import { BaseProps, h } from "tsx-dom";
 import { RW_VERSION_TAG, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
 import RedWarnStore from "../data/RedWarnStore";
-import RWUI from "../ui/RWUI";
 import { RWUISelectionDialogItem } from "../ui/elements/RWUIDialog";
+import RWUI from "../ui/RWUI";
 import redirect from "../util/redirect";
 import WikipediaAPI from "./API";
 import Revision from "./Revision";
-import { Warnings } from "./Warnings";
 import WikipediaURL from "./URL";
+import { Warnings } from "./Warnings";
 
 function getRollbackIconClickHandler(
     context: Rollback,

@@ -1,11 +1,12 @@
+import { MDCTextField } from "@material/textfield";
+import { MDCTextFieldCharacterCounter } from "@material/textfield/character-counter";
+import { MDCTextFieldHelperText } from "@material/textfield/helper-text";
+import { MDCTextFieldIcon } from "@material/textfield/icon";
+import i18next from "i18next";
 import { h } from "tsx-dom";
 
 import { RWUIInputDialog } from "../../../ui/elements/RWUIDialog";
-
-import { MDCTextField } from "@material/textfield";
-import { MDCTextFieldCharacterCounter } from "@material/textfield/character-counter";
-import { MDCTextFieldIcon } from "@material/textfield/icon";
-import { MDCTextFieldHelperText } from "@material/textfield/helper-text";
+import { registerMaterialDialog, upgradeMaterialDialog } from "../Material";
 import { getMaterialStorage } from "../storage/MaterialStyleStorage";
 import MaterialButton from "./MaterialButton";
 import MaterialDialog, {
@@ -13,8 +14,6 @@ import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
-import i18next from "i18next";
-import { registerMaterialDialog, upgradeMaterialDialog } from "../Material";
 
 /**
  * The MaterialInputDialog is a handling class used to get input from users on the screen. This will

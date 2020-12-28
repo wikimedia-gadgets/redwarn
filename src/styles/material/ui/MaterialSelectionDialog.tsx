@@ -1,12 +1,12 @@
+import { h } from "tsx-dom";
 import { RWUISelectionDialog } from "../../../ui/elements/RWUIDialog";
+import { registerMaterialDialog, upgradeMaterialDialog } from "../Material";
+import { getMaterialStorage } from "../storage/MaterialStyleStorage";
+import MaterialButton from "./MaterialButton";
 import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
-import { h } from "tsx-dom";
-import MaterialButton from "./MaterialButton";
-import { getMaterialStorage } from "../storage/MaterialStyleStorage";
-import { registerMaterialDialog, upgradeMaterialDialog } from "../Material";
 
 export default class MaterialSelectionDialog extends RWUISelectionDialog {
     show(): Promise<any> {

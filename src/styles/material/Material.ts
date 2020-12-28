@@ -1,15 +1,15 @@
-import MaterialAlertDialog from "./ui/MaterialAlertDialog";
+import { MDCDialog } from "@material/dialog";
+import { MDCRipple } from "@material/ripple";
+import { RWUIDialog } from "../../ui/elements/RWUIDialog";
 import Style from "../Style";
 import MaterialPreInitializationHooks from "./hooks/MaterialPreInitializationHooks";
 import {
     getMaterialStorage,
     MaterialStyleStorage,
 } from "./storage/MaterialStyleStorage";
+import MaterialAlertDialog from "./ui/MaterialAlertDialog";
 import MaterialInputDialog from "./ui/MaterialInputDialog";
 import MaterialSelectionDialog from "./ui/MaterialSelectionDialog";
-import { MDCRipple } from "@material/ripple";
-import { MDCDialog } from "@material/dialog";
-import { RWUIDialog } from "../../ui/elements/RWUIDialog";
 
 const MaterialStyle: Style = {
     name: "material",

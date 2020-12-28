@@ -1,6 +1,6 @@
-import WikipediaAPI from "./API";
 import RedWarnStore from "../data/RedWarnStore";
 import redirect from "../util/redirect";
+import WikipediaAPI from "./API";
 
 /**
  * Responsible for watching page changes.

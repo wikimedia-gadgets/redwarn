@@ -1,6 +1,7 @@
 import { ComponentChild, h } from "tsx-dom";
 
 import { RWUIAlertDialog } from "../../../ui/elements/RWUIDialog";
+import { registerMaterialDialog, upgradeMaterialDialog } from "../Material";
 
 import { getMaterialStorage } from "../storage/MaterialStyleStorage";
 import MaterialButton from "./MaterialButton";
@@ -9,7 +10,6 @@ import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
-import { registerMaterialDialog, upgradeMaterialDialog } from "../Material";
 
 /**
  * The MaterialAlertDialog is a handling class used to show dialogs on the screen. This will

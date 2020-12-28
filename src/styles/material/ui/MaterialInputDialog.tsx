@@ -232,7 +232,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                     </div>
                 </MaterialDialogContent>
                 <MaterialDialogActions>
-                    {this.renderActions()}
+                    {...this.renderActions()}
                 </MaterialDialogActions>
             </MaterialDialog>
         ) as HTMLDialogElement;

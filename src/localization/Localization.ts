@@ -49,6 +49,7 @@ export default class Localization {
         await i18next.use(LanguageDetector).init({
             fallbackLng: this.fallbackLanguage,
             debug: true,
+            returnObjects: true,
         });
 
         // Register all namespaces from all languages.

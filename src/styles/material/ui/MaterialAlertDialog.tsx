@@ -1,4 +1,4 @@
-import { ComponentChild, h } from "tsx-dom";
+import { ComponentChild, h } from "@sportshead/tsx-dom";
 
 import { RWUIAlertDialog } from "../../../ui/RWUIDialog";
 

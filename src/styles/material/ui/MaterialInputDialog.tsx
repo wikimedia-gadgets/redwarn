@@ -1,4 +1,4 @@
-import { h } from "tsx-dom";
+import { h } from "@sportshead/tsx-dom";
 
 import { RWUIInputDialog } from "../../../ui/RWUIDialog";
 

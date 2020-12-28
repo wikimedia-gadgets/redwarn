@@ -1,4 +1,4 @@
-import { h } from "tsx-dom";
+import { h } from "@sportshead/tsx-dom";
 
 /**
  * Redirects a user to another page.

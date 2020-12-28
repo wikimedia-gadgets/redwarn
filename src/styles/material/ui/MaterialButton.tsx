@@ -1,4 +1,4 @@
-import { BaseProps, h } from "tsx-dom";
+import { BaseProps, h } from "@sportshead/tsx-dom";
 
 export interface MaterialButtonProperties extends BaseProps {
     dialogAction?: string | { data: string; text: string };

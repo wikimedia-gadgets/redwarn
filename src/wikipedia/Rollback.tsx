@@ -322,7 +322,7 @@ export default class Rollback {
                     <button
                         class="mdc-icon-button material-icons"
                         aria-label={option.name}
-                        data-tooltip-id={`rwRBDoneIcon_${option.id}T`}
+                        data-tooltip-id={`rwRBDoneOption_${option.id}T`}
                         id={`rwRBDoneOption_${option.id}`}
                     >
                         {option.icon}

@@ -12,14 +12,17 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
     show(): Promise<any> {
         const styleStorage = getMaterialStorage();
         registerMaterialDialog(this);
-        const dialog = upgradeMaterialDialog(this);
+        const dialog = upgradeMaterialDialog(
+            this,
+            new Map([["autoStackButtons", false]])
+        );
 
         return new Promise((resolve) => {
             dialog.listen(
                 "MDCDialog:closed",
                 async (event: Event & { detail: { action: string } }) => {
                     const actionSelected = this.props.items.find(
-                        (item) => item.data === event.detail.action
+                        (item) => item.data === event.detail?.action
                     ).action;
                     if (actionSelected != null) {
                         this._result =

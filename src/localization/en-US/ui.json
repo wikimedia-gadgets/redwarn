@@ -3,18 +3,18 @@
         "label": "Restore Reason",
         "helperText": "Enter a reason for this restore",
         "actions": {
-            "ok": "RESTORE"
+            "ok": "Restore"
         }
     },
     "rollback": {
         "label": "Rollback Reason",
         "helperText": "Enter a reason for this rollback",
         "actions": {
-            "ok": "ROLLBACk"
+            "ok": "Rollback"
         }
     },
     "okCancel": {
         "ok": "OK",
-        "cancel": "CANCEL"
+        "cancel": "Cancel"
     }
 }

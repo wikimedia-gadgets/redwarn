@@ -1,30 +1,18 @@
-import { RWUISelectionDialog } from "../../../ui/RWUIDialog";
+import { h } from "tsx-dom";
+import { RWUISelectionDialog } from "../../../ui/elements/RWUIDialog";
+import { registerMaterialDialog, upgradeMaterialDialog } from "../Material";
+import { getMaterialStorage } from "../storage/MaterialStyleStorage";
+import MaterialButton from "./MaterialButton";
 import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
-import { h } from "@sportshead/tsx-dom";
-import MaterialButton from "./MaterialButton";
-import { getMaterialStorage } from "../storage/MaterialStyleStorage";
-import { MDCRipple } from "@material/ripple";
-import { MDCDialog } from "@material/dialog";
 
 export default class MaterialSelectionDialog extends RWUISelectionDialog {
     show(): Promise<any> {
         const styleStorage = getMaterialStorage();
-        styleStorage.dialogTracker.set(this.id, this);
-
-        document.body.appendChild(this.render());
-
-        console.log(this.element);
-
-        $(this.element)
-            .find("button")
-            .each((_, el) => new MDCRipple(el).initialize());
-        const dialog = new MDCDialog(this.element);
-        dialog.autoStackButtons = false;
-        dialog.initialize();
-        dialog.open();
+        registerMaterialDialog(this);
+        const dialog = upgradeMaterialDialog(this);
 
         return new Promise((resolve) => {
             dialog.listen(

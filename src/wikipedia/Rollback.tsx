@@ -2,19 +2,52 @@ import { MDCLinearProgress } from "@material/linear-progress";
 import { MDCRipple } from "@material/ripple";
 import { MDCTooltip } from "@material/tooltip";
 import i18next from "i18next";
-import { BaseProps, h } from "@sportshead/tsx-dom";
+import { BaseProps, h } from "tsx-dom";
 import { RW_VERSION_TAG, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
 import RedWarnStore from "../data/RedWarnStore";
+import { RWUISelectionDialogItem } from "../ui/elements/RWUIDialog";
 import RWUI from "../ui/RWUI";
-import { RWUISelectionDialogItem } from "../ui/RWUIDialog";
 import redirect from "../util/redirect";
 import WikipediaAPI from "./API";
 import Revision from "./Revision";
+import WikipediaURL from "./URL";
 import { Warnings } from "./Warnings";
+import {
+    RollbackOption,
+    RollbackOptions,
+} from "../definitions/RollbackOptions";
+import { RollbackDoneOptions } from "../definitions/RollbackDoneOptions";
+
+function getRollbackOptionClickHandler(
+    context: Rollback,
+    option: RollbackOption
+): () => void {
+    let clickHandler;
+
+    if (option.actionType === "function") {
+        clickHandler = option.action(context);
+    } else {
+        if (!option.promptReason) {
+            clickHandler = () =>
+                this.rollback(option.summary, option.ruleIndex);
+        } else {
+            clickHandler = () => this.promptRollbackReason(option.summary);
+        }
+    }
+
+    return clickHandler;
+}
+
+interface RollbackContext {
+    reason: string;
+    targetRevision: Revision;
+    defaultWarnIndex?: keyof Warnings;
+    showRollbackDoneOptions?: boolean;
+}
 
 export default class Rollback {
     private constructor(
-        public rollbackRev: Revision,
+        public rollbackRevision: Revision,
         private noRedirects = false
     ) {}
 
@@ -39,14 +72,14 @@ export default class Rollback {
         if ($("table.diff").length > 0) {
             // DETECT DIFF HERE - if diff table is present
             const instance = await this.factory();
-            await instance.loadIcons();
+            await instance.loadOptions();
         } else if (
             mw.config
                 .get("wgRelevantPageName")
                 .includes("Special:Contributions")
         ) {
             // Special contribs page
-            this.contribsPageIcons();
+            this.contribsPageOptions();
         }
     }
 
@@ -54,7 +87,7 @@ export default class Rollback {
         // Send welcome to user who made most recent revision
         // TODO toasts
         // rw.visuals.toast.show("Please wait...", false, false, 1000);
-        await this.rollbackRev.user.quickWelcome();
+        await this.rollbackRevision.user.quickWelcome();
     }
     async promptRestoreReason(revID: number): Promise<void> {
         const dialog = new RWUI.InputDialog(i18next.t("ui:restore"));
@@ -64,14 +97,16 @@ export default class Rollback {
         }
     }
     async restore(revID: number, reason: string): Promise<void> {
-        const latest = await WikipediaAPI.getRevision(this.rollbackRev.page);
+        const latest = await WikipediaAPI.getRevision(
+            this.rollbackRevision.page
+        );
         const restoreRev = await WikipediaAPI.getRevision(
-            this.rollbackRev.page,
+            this.rollbackRevision.page,
             revID
         );
         const result = await WikipediaAPI.postWithEditToken({
             action: "edit",
-            title: this.rollbackRev.page,
+            title: this.rollbackRevision.page,
             summary: i18next.t("wikipedia:summaries.restore", {
                 revID,
                 revUser: restoreRev.user.username,
@@ -88,48 +123,59 @@ export default class Rollback {
             // TODO toasts
             //rw.visuals.toast.show("Sorry, there was an error, likely an edit conflict. This edit has not been restored.");
         } else if (!this.noRedirects) {
-            WikipediaAPI.goToLatestRevision(this.rollbackRev.page);
+            WikipediaAPI.goToLatestRevision(this.rollbackRevision.page);
         }
     }
     static detectRollbackRevId(failIfNone = true): number {
-        const isNLatest = $("#mw-diff-ntitle1")
-            .text()
-            .includes("Latest revision");
-        const isOLatest = $("#mw-diff-otitle1")
-            .text()
-            .includes("Latest revision");
-        if (isNLatest) {
-            // Return the revID of the edit on the right
-            return +$("#mw-diff-ntitle1 > strong > a")
-                .attr("href")
-                .split("&")[1]
-                .split("=")[1];
-        } else if (isOLatest) {
-            return +$("#mw-diff-otitle1 > strong > a")
-                .attr("href")
-                .split("&")[1]
-                .split("=")[1];
-        } else if (failIfNone) {
-            // BUG!
-            new RWUI.Dialog({
-                title: "Error",
-                content: [
-                    "An error occurred! (rollback getRollbackRevId failed via final else!)",
-                ],
-                actions: [
-                    {
-                        data: "report",
-                        text: "Report Bug",
-                        action: () => {
-                            // TODO report bug
-                            /* rw.ui.reportBug(
-                        "rollback getRollbackRevID failed via final else! related URL: " +
-                            window.location.href
-                    ) */
-                        },
-                    },
-                ],
-            }).show();
+        const oldId = mw.config.get("wgDiffOldId");
+        const newId = mw.config.get("wgDiffNewId");
+        if (newId == null && oldId != null) {
+            return oldId;
+        } else if (newId != null && oldId != null) {
+            return newId > oldId ? newId : oldId;
+        } else {
+            const isNLatest = $("#mw-diff-ntitle1")
+                .text()
+                .includes("Latest revision");
+            const isOLatest = $("#mw-diff-otitle1")
+                .text()
+                .includes("Latest revision");
+
+            if (isNLatest) {
+                // Return the revID of the edit on the right
+                return +$("#mw-diff-ntitle1 > strong > a")
+                    .attr("href")
+                    .split("&")[1]
+                    .split("=")[1];
+            } else if (isOLatest) {
+                return +$("#mw-diff-otitle1 > strong > a")
+                    .attr("href")
+                    .split("&")[1]
+                    .split("=")[1];
+            } else {
+                if (failIfNone) {
+                    // BUG!
+                    new RWUI.Dialog({
+                        title: "Error",
+                        content: [
+                            "An error occurred! (rollback getRollbackRevId failed via final else!)",
+                        ],
+                        actions: [
+                            {
+                                data: "report",
+                                text: "Report Bug",
+                                action: () => {
+                                    // TODO report bug
+                                    /* rw.ui.reportBug(
+                                "rollback getRollbackRevID failed via final else! related URL: " +
+                                    window.location.href
+                            ) */
+                                },
+                            },
+                        ],
+                    }).show();
+                }
+            }
         }
         return null;
     }
@@ -139,26 +185,22 @@ export default class Rollback {
         //rw.ui.loadDialog.show("Loading preview...");
         // Check if latest, else redirect
         const { user } = await WikipediaAPI.isLatestRevision(
-            this.rollbackRev,
+            this.rollbackRevision,
             this.noRedirects
         );
         const { revid } = await WikipediaAPI.latestRevisionNotByUser(
-            this.rollbackRev.page,
+            this.rollbackRevision.page,
             user.username
         );
-        const url =
-            RedWarnStore.wikiIndex +
-            "?title=" +
-            this.rollbackRev.page +
-            "&diff=" +
-            revid +
-            "&oldid=" +
-            mw.util.getParamValue("diff") +
-            "&diffmode=source#rollbackPreview";
+        const url = WikipediaURL.getDiffUrl(
+            `${revid}`,
+            mw.util.getParamValue("diff"),
+            "rollbackPreview"
+        );
         redirect(url);
     }
 
-    loadIcons(checkIfEditable = true): Promise<void> {
+    loadOptions(checkIfEditable = true): Promise<void> {
         // Check if page is editable, if not, don't show
         if (checkIfEditable && !mw.config.get("wgIsProbablyEditable")) {
             // Can't edit, so exit
@@ -181,42 +223,32 @@ export default class Rollback {
             .text()
             .includes("Latest revision"); // is the left side the latest revision? (rev13 bug fix)
 
-        let currentRevIcons = (
-            <span id="rwCurrentRevRollbackBtns"></span>
+        let currentRevisionOptions = (
+            <span id="rwCurrentRevRollbackBtns" />
         ) as HTMLSpanElement;
 
         if (isLatest || isLeftLatest) {
-            RollbackIcons.forEach((icon, i) => {
+            RollbackOptions.forEach((option, i) => {
                 const id = `rwRollback_${i}`;
-                let clickHandler;
 
-                if (icon.actionType === "function") {
-                    clickHandler = icon.action(this);
-                } else {
-                    if (!icon.promptReason) {
-                        clickHandler = () =>
-                            this.rollback(icon.summary, icon.ruleIndex);
-                    } else {
-                        clickHandler = () =>
-                            this.promptRollbackReason(icon.summary);
-                    }
-                }
-
-                if (icon.enabled) {
+                if (option.enabled) {
                     const button = (
                         <button
                             class="mdc-icon-button material-icons"
-                            aria-label={icon.name}
+                            aria-label={option.name}
                             data-tooltip-id={`${id}T`}
                             style={{
                                 fontSize: "28px",
                                 paddingRight: "5px",
-                                color: icon.color,
+                                color: option.color,
                             }}
                             id={id}
-                            onClick={clickHandler}
+                            onClick={getRollbackOptionClickHandler(
+                                this,
+                                option
+                            )}
                         >
-                            {icon.icon}
+                            {option.icon}
                         </button>
                     );
                     toInit.push({ el: button, component: MDCRipple });
@@ -228,12 +260,14 @@ export default class Rollback {
                             role="tooltip"
                             aria-hidden="true"
                         >
-                            <div class="mdc-tooltip__surface">{icon.name}</div>
+                            <div class="mdc-tooltip__surface">
+                                {option.name}
+                            </div>
                         </div>
                     );
                     toInit.push({ el: tooltip, component: MDCTooltip });
-                    currentRevIcons.appendChild(button);
-                    currentRevIcons.appendChild(tooltip);
+                    currentRevisionOptions.appendChild(button);
+                    currentRevisionOptions.appendChild(tooltip);
                 }
             });
 
@@ -249,14 +283,14 @@ export default class Rollback {
                     style="width:300px; display: block; margin-left: auto; margin-right: auto;"
                 >
                     <div class="mdc-linear-progress__buffer">
-                        <div class="mdc-linear-progress__buffer-bar"></div>
-                        <div class="mdc-linear-progress__buffer-dots"></div>
+                        <div class="mdc-linear-progress__buffer-bar" />
+                        <div class="mdc-linear-progress__buffer-dots" />
                     </div>
                     <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
-                        <span class="mdc-linear-progress__bar-inner"></span>
+                        <span class="mdc-linear-progress__bar-inner" />
                     </div>
                     <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
-                        <span class="mdc-linear-progress__bar-inner"></span>
+                        <span class="mdc-linear-progress__bar-inner" />
                     </div>
                 </div>
             );
@@ -266,9 +300,9 @@ export default class Rollback {
             this.progressBarElement.progress = 0;
             this.progressBarElement.buffer = 0;
 
-            const rollbackDoneIcons = (
-                <span id="rwRollbackDoneIcons" style="display:none;">
-                    <div style="height:5px"></div>
+            const rollbackDoneOptions = (
+                <span id="rwRollbackDoneOptions" style="display:none;">
+                    <div style="height:5px" />
                     <span style="font-family: Roboto;font-size: 16px;display: inline-flex;vertical-align: middle;">
                         <span
                             class="material-icons"
@@ -279,53 +313,53 @@ export default class Rollback {
                         &nbsp; &nbsp; Rollback complete
                     </span>
                     <br />
-                    <div style="height:5px"></div>
+                    <div style="height:5px" />
                 </span>
             );
 
-            RollbackDoneIcons.forEach((icon) => {
+            RollbackDoneOptions.forEach((option) => {
                 const button = (
                     <button
                         class="mdc-icon-button material-icons"
-                        aria-label={icon.name}
-                        data-tooltip-id={`rwRBDoneIcon_${icon.id}T`}
-                        id={`rwRBDoneIcon_${icon.id}`}
+                        aria-label={option.name}
+                        data-tooltip-id={`rwRBDoneIcon_${option.id}T`}
+                        id={`rwRBDoneOption_${option.id}`}
                     >
-                        {icon.icon}
+                        {option.icon}
                     </button>
                 );
                 toInit.push({ el: button, component: MDCRipple });
 
                 const tooltip = (
                     <div
-                        id={`rwRBDoneIcon_${icon.id}T`}
+                        id={`rwRBDoneOption_${option.id}T`}
                         class="mdc-tooltip"
                         role="tooltip"
                         aria-hidden="true"
                     >
-                        <div class="mdc-tooltip__surface">{icon.name}</div>
+                        <div class="mdc-tooltip__surface">{option.name}</div>
                     </div>
                 );
                 toInit.push({ el: tooltip, component: MDCTooltip });
 
-                $(rollbackDoneIcons).append(button, tooltip, "&nbsp;");
+                $(rollbackDoneOptions).append(button, tooltip, "&nbsp;");
             });
 
-            currentRevIcons = (
+            currentRevisionOptions = (
                 <div>
-                    {currentRevIcons}
+                    {currentRevisionOptions}
                     <span id="rwRollbackInProgress" style="display:none;">
                         {progressBar}
-                        <div style="height:5px"></div>
+                        <div style="height:5px" />
                         {/* <!-- spacer --> */}
                         <span style="font-family: Roboto;font-size: 16px;">
                             Reverting...
                         </span>
                         <br />
-                        <div style="height:5px"></div>
+                        <div style="height:5px" />
                         {/* <!-- spacer --> */}
                     </span>
-                    {rollbackDoneIcons}
+                    {rollbackDoneOptions}
                 </div>
             );
         }
@@ -333,7 +367,7 @@ export default class Rollback {
         const twinkleLoadedBeforeUs = $('div[id^="tw-revert"]').length > 0;
 
         const left = isLeftLatest ? (
-            currentRevIcons
+            currentRevisionOptions
         ) : (
             <RestoreElement left={true} rollback={this} />
         );
@@ -351,7 +385,7 @@ export default class Rollback {
         }
 
         const right = isLatest ? (
-            currentRevIcons
+            currentRevisionOptions
         ) : (
             <RestoreElement left={false} rollback={this} />
         ); // if the latest rev, show the accurate revs, else, don't
@@ -373,7 +407,10 @@ export default class Rollback {
         }, 100);
     }
     async promptRollbackReason(summary: string): Promise<void> {
-        await WikipediaAPI.isLatestRevision(this.rollbackRev, this.noRedirects);
+        await WikipediaAPI.isLatestRevision(
+            this.rollbackRevision,
+            this.noRedirects
+        );
         const dialog = new RWUI.InputDialog({
             ...i18next.t("ui:rollback"),
             defaultText: summary,
@@ -384,10 +421,114 @@ export default class Rollback {
         }
     }
 
+    async pseudoRollback({
+        targetRevision,
+        defaultWarnIndex,
+        reason,
+        showRollbackDoneOptions,
+    }: RollbackContext) {
+        const latestRev = await WikipediaAPI.latestRevisionNotByUser(
+            this.rollbackRevision.page,
+            targetRevision.user.username
+        );
+
+        if (latestRev.parentid === this.rollbackRevision.revid) {
+            if (this.noRedirects) {
+                // TODO show toast
+            } else {
+                // looks like that there is a newer revision! redirect to it.
+                WikipediaAPI.goToLatestRevision(this.rollbackRevision.page);
+                return; // stop here.
+            }
+        }
+
+        const summary = i18next.t("wikipedia:summaries.revert", {
+            username: targetRevision.user.username,
+            targetRevisionId: latestRev.revid,
+            targetRevisionEditor: latestRev.user.username,
+            version: RW_VERSION_TAG,
+            reason,
+        });
+        const res = await WikipediaAPI.postWithEditToken({
+            action: "edit",
+            format: "json",
+            title: this.rollbackRevision.page,
+            summary,
+            undo: targetRevision.revid, // current
+            undoafter: latestRev.revid, // restore version
+            tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
+                ? "RedWarn"
+                : null,
+        });
+        if (!res.edit) {
+            // Error occurred or other issue
+            console.error(res);
+            // Show rollback options again (todo)
+            $("#rwCurrentRevRollbackBtns").show();
+            $("#rwRollbackInProgress").hide();
+
+            // TODO toast
+            /* rw.visuals.toast.show(
+                "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
+            ); */
+        } else {
+            this.progressBarElement.close();
+            return showRollbackDoneOptions
+                ? this.showRollbackDoneOps(
+                      targetRevision.user.username,
+                      defaultWarnIndex
+                  )
+                : null;
+        }
+    }
+
+    async standardRollback({
+        targetRevision,
+        defaultWarnIndex,
+        reason,
+        showRollbackDoneOptions,
+    }: RollbackContext) {
+        try {
+            const summary = i18next.t("wikipedia:summaries.rollback", {
+                username: targetRevision.user.username,
+                reason,
+                version: RW_VERSION_TAG,
+            });
+            await WikipediaAPI.api.rollback(
+                this.rollbackRevision.page,
+                targetRevision.user.username,
+                {
+                    summary,
+                    tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
+                        ? "RedWarn"
+                        : null,
+                }
+            );
+        } catch (e) {
+            // Error occurred or other issue
+            console.error(e);
+            // Show rollback options again
+            $("#rwCurrentRevRollbackBtns").show();
+            $("#rwRollbackInProgress").hide();
+            // TODO toast
+            /* rw.visuals.toast.show(
+                "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
+            ); */
+        }
+
+        this.progressBarElement.close();
+        return showRollbackDoneOptions
+            ? this.showRollbackDoneOps(
+                  targetRevision.user.username,
+                  defaultWarnIndex
+              )
+            : null;
+    }
+
     async rollback(
         reason: string,
         defaultWarnIndex?: keyof Warnings,
-        showRollbackDoneOps = true
+        showRollbackDoneOptions = true
     ): Promise<void> {
         // Show progress bar
         $("#rwCurrentRevRollbackBtns").hide();
@@ -395,127 +536,16 @@ export default class Rollback {
 
         this.progressBarElement.open();
 
-        const rev = await WikipediaAPI.isLatestRevision(
-            this.rollbackRev,
+        const targetRevision = await WikipediaAPI.isLatestRevision(
+            this.rollbackRevision,
             this.noRedirects
         );
 
-        const pseudoRollbackCallback = async () => {
-            const latestRev = await WikipediaAPI.latestRevisionNotByUser(
-                this.rollbackRev.page,
-                rev.user.username
-            );
-
-            if (latestRev.parentid === this.rollbackRev.revid) {
-                if (this.noRedirects) {
-                    // TODO show toast
-                } else {
-                    // looks like that there is a newer revision! redirect to it.
-                    WikipediaAPI.goToLatestRevision(this.rollbackRev.page);
-                    return; // stop here.
-                }
-            }
-
-            const summary = i18next.t("wikipedia:summaries.revert", {
-                username: rev.user.username,
-                targetRevisionId: latestRev.revid,
-                targetRevisionEditor: latestRev.user.username,
-                version: RW_VERSION_TAG,
-                reason,
-            });
-            const res = await WikipediaAPI.postWithEditToken({
-                action: "edit",
-                format: "json",
-                title: this.rollbackRev.page,
-                summary,
-                undo: rev.revid, // current
-                undoafter: latestRev.revid, // restore version
-                tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
-                    ? "RedWarn"
-                    : null,
-            });
-            if (!res.edit) {
-                // Error occurred or other issue
-                console.error(res);
-                // Show rollback icons again (todo)
-                $("#rwCurrentRevRollbackBtns").show();
-                $("#rwRollbackInProgress").hide();
-
-                // TODO toast
-                /* rw.visuals.toast.show(
-                    "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
-                ); */
-            } else {
-                this.progressBarElement.close();
-
-                let resolve: (value?: any) => void;
-                const promise = new Promise<void>((res) => {
-                    resolve = res;
-                });
-                setTimeout(() => {
-                    if (showRollbackDoneOps) {
-                        resolve(
-                            this.showRollbackDoneOps(
-                                rev.user.username,
-                                defaultWarnIndex
-                            )
-                        );
-                    } else {
-                        resolve();
-                    }
-                });
-                return await promise;
-            }
-        };
-
-        const rollbackCallback = async () => {
-            try {
-                const summary = i18next.t("wikipedia:summaries.rollback", {
-                    username: rev.user.username,
-                    reason,
-                    version: RW_VERSION_TAG,
-                });
-                await WikipediaAPI.api.rollback(
-                    this.rollbackRev.page,
-                    rev.user.username,
-                    {
-                        summary,
-                        tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
-                            ? "RedWarn"
-                            : null,
-                    }
-                );
-            } catch (e) {
-                // Error occurred or other issue
-                console.error(e);
-                // Show rollback icons again
-                $("#rwCurrentRevRollbackBtns").show();
-                $("#rwRollbackInProgress").hide();
-                // TODO toast
-                /* rw.visuals.toast.show(
-                    "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
-                ); */
-            }
-
-            this.progressBarElement.close();
-
-            let resolve: (value?: any) => void;
-            const promise = new Promise<void>((res) => {
-                resolve = res;
-            });
-            setTimeout(() => {
-                if (showRollbackDoneOps) {
-                    resolve(
-                        this.showRollbackDoneOps(
-                            rev.user.username,
-                            defaultWarnIndex
-                        )
-                    );
-                } else {
-                    resolve();
-                }
-            });
-            return await promise;
+        const context: RollbackContext = {
+            targetRevision: targetRevision,
+            defaultWarnIndex: defaultWarnIndex,
+            reason: reason,
+            showRollbackDoneOptions: showRollbackDoneOptions,
         };
 
         if (WikipediaAPI.hasGroup("rollbacker")) {
@@ -540,51 +570,37 @@ export default class Rollback {
                 // TODO config
                 if (/* rw.config.rollbackMethod */ "rollback" == "rollback") {
                     // Rollback selected
-                    return await rollbackCallback(); // Do rollback
+                    return await this.standardRollback(context); // Do rollback
                 } else {
-                    return await pseudoRollbackCallback(); // rollback-like
+                    return await this.pseudoRollback(context); // rollback-like
                 }
             }
         } else {
-            return await pseudoRollbackCallback();
+            return await this.pseudoRollback(context);
         }
     }
 
-    getDisabledIcons(): RWUISelectionDialogItem[] {
-        // Open a new dialog with all the disabled icons so user can select one. Click handlers are already registered, so we just call rw.rollback.clickHandlers.[elID]();
-        // Load Rollback current rev icons (rev14)
+    getDisabledOptions(): RWUISelectionDialogItem[] {
+        // Open a new dialog with all the disabled options so user can select one. Click handlers are already registered, so we just call rw.rollback.clickHandlers.[elID]();
+        // Load Rollback current rev options (rev14)
         const icons: RWUISelectionDialogItem[] = [];
-        RollbackIcons.forEach((icon, i) => {
-            if (icon.enabled) {
+        RollbackOptions.forEach((option, i) => {
+            if (option.enabled) {
                 return;
-            } // if icon is enabled, we can skip
-            if (icon.name == "More Options") {
+            } // if option is enabled, we can skip
+            if (option.name == "More Options") {
                 return;
             } // does nothing here, so not needed
 
-            let clickHandler;
-
-            if (icon.actionType === "function") {
-                clickHandler = icon.action(this);
-            } else {
-                if (!icon.promptReason) {
-                    clickHandler = () =>
-                        this.rollback(icon.summary, icon.ruleIndex);
-                } else {
-                    clickHandler = () =>
-                        this.promptRollbackReason(icon.summary);
-                }
-            }
-
-            const elID = `rollback${i}`; // get the ID for the new icons
+            const elID = `rollback${i}`; // get the ID for the new options
 
             // Establish element with all the info
             icons.push({
-                icon: icon.icon,
-                iconColor: icon.color,
+                icon: option.icon,
+                iconColor: option.color,
                 data: elID,
-                content: icon.name,
-                action: clickHandler,
+                content: option.name,
+                action: getRollbackOptionClickHandler(this, option),
             });
         });
 
@@ -595,7 +611,7 @@ export default class Rollback {
 
     showRollbackDoneOps(un: string, warnIndex: keyof Warnings): void {
         // Clear get hidden handler to stop errors in more options menu
-        this.getDisabledIcons = () => []; // return empty
+        this.getDisabledOptions = () => []; // return empty
 
         const clickHandlerFactory = (
             handler: (
@@ -607,10 +623,10 @@ export default class Rollback {
 
         // Add click handlers
 
-        RollbackDoneIcons.forEach((icon) => {
-            $(`#rwRBDoneIcon_${icon.id}`).on(
+        RollbackDoneOptions.forEach((option) => {
+            $(`#rwRBDoneOption_${option.id}`).on(
                 "click",
-                clickHandlerFactory(icon.action)
+                clickHandlerFactory(option.action)
             );
         });
 
@@ -622,15 +638,15 @@ export default class Rollback {
         )
             $(`#${rw.config.rwRollbackDoneOption}`).click(); */
 
-        // Hides other icons and shows the rollback done options and also checks for defaults, also adds click handlers
+        // Hides other options and shows the rollback done options and also checks for defaults, also adds click handlers
         $("#rwRollbackInProgress").fadeOut(() => {
             // fade out - looks smoother
-            $("#rwRollbackDoneIcons").fadeIn(); //show our icons
+            $("#rwRollbackDoneOptions").fadeIn(); //show our options
         });
     }
 
     // CONTRIBS PAGE
-    static contribsPageIcons(): void {
+    static contribsPageOptions(): void {
         // For each (current) tag
         $("span.mw-uctop").each((i, el) => {
             // TODO i18n
@@ -741,340 +757,6 @@ export default class Rollback {
         });
     }
 }
-
-interface ActionRollback {
-    actionType: "rollback";
-    promptReason: boolean;
-    summary: string;
-    ruleIndex?: keyof Warnings;
-}
-
-interface ActionFunction {
-    actionType: "function";
-    action: (rollback: Rollback) => () => any;
-}
-
-type RollbackAction = ActionFunction | ActionRollback;
-
-interface RollbackIconBase {
-    enabled: boolean;
-    name: string;
-    color: string;
-    icon: string;
-}
-
-export type RollbackIcon = RollbackIconBase & RollbackAction;
-export const RollbackIcons: RollbackIcon[] = [
-    // rev14, icon IDs and everything for current rollback - from left to right - usually loaded from config
-    // WARNING: CHANGING ORDER WILL MESS UP CONFIGS.
-    // DEFAULT ENABLED ICONS
-    {
-        enabled: true, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback vandalism",
-        color: "red", // css colour
-        icon: "delete_forever",
-        actionType: "rollback",
-        promptReason: false, // add extra info? false = quick rollback, otherwise not
-        summary: "[[WP:VANDAL|Possible vandalism]]", // Set summary
-        ruleIndex: "vandalism", // used for autowarn
-    },
-
-    {
-        enabled: true, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback unexplained content removal",
-        color: "orange", // css colour
-        icon: "format_indent_increase",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary: "[[WP:CRV|Unexplained content removal]]", // Set summary
-        ruleIndex: "delete", // used for autowarn
-    },
-
-    {
-        enabled: true, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback non-constructive edit",
-        color: "gold", // css colour
-        icon: "work_outline",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary: "non-constructive", // Set summary
-    },
-
-    {
-        enabled: true, // true is a default rollback icon, false can be added via preferences
-        name: "Rollback",
-        color: "blue", // css colour
-        icon: "replay",
-        actionType: "rollback",
-        promptReason: true, // add extra info?
-        summary: "", // Set summary
-    },
-
-    {
-        enabled: true, // true is a default rollback icon, false can be added via preferences
-        name: "Assume Good Faith and Rollback",
-        color: "green", // css colour
-        icon: "thumb_up",
-        actionType: "rollback",
-        promptReason: true, // add extra info?
-        summary: "Reverting [[WP:AGF|good faith]] edits", // Set summary
-    },
-
-    {
-        enabled: true, // true is a default rollback icon, false can be added via preferences
-        name: "Preview Rollback",
-        color: "black", // css colour
-        icon: "compare_arrows",
-        actionType: "function",
-        action: (rollback: Rollback) => () => rollback.preview(), // Callback
-    },
-
-    {
-        enabled: true, // true is a default rollback icon, false can be added via preferences
-        name: "Quick Template",
-        color: "black", // css colour
-        icon: "library_add",
-        actionType: "function",
-        action: (rollback: Rollback) => () => rollback.welcomeRevUser(), // Callback
-    },
-
-    {
-        enabled: true, // true is a default rollback icon, false can be added via preferences
-        name: "More Options",
-        color: "black", // css colour
-        icon: "more_vert",
-        actionType: "function",
-        action: (rollback: Rollback) => () =>
-            RWUI.openExtendedOptionsDialog({ rollback }), // Callback
-    },
-
-    // END DEFAULT ENABLED ICONS
-    // DEFAULT DISABLED ICONS
-
-    // RED
-    {
-        enabled: false, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback 3RR",
-        color: "red", // css colour
-        icon: "filter_3",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary: "[[WP:3RR]]", // Set summary
-        ruleIndex: "_3rr", // used for autowarn
-    },
-
-    {
-        enabled: false, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback personal attacks towards another editor",
-        color: "red", // css colour
-        icon: "offline_bolt",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary: "Personal attack towards another editor ([[WP:NPA]])", // Set summary
-        ruleIndex: "npa", // used for autowarn
-    },
-
-    {
-        enabled: false, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback copyright violation",
-        color: "red", // css colour
-        icon: "copyright",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary: "Likely [[WP:COPYVIO|copyright violation]]", // Set summary
-        ruleIndex: "copyright", // used for autowarn
-    },
-
-    {
-        enabled: false, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback BLP violation",
-        color: "red", // css colour
-        icon: "face",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary: "Fails [[WP:BLP]]", // Set summary
-        ruleIndex: "biog", // used for autowarn
-    },
-
-    {
-        enabled: false, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback advertising/promotional",
-        color: "red", // css colour
-        icon: "monetization_on",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary:
-            "Using Wikipedia for [[WP:NOTADVERTISING|advertising and/or promotion]] is not permitted.", // Set summary
-        ruleIndex: "advert", // used for autowarn
-    },
-
-    {
-        enabled: false, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback unnecessary or inappropriate external links",
-        color: "red", // css colour
-        icon: "link_off",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary:
-            "Addition of unnecessary/inappropriate [[WP:EL|external links]]", // Set summary
-        ruleIndex: "spam", // used for autowarn
-    },
-
-    // ORANGE
-    {
-        enabled: false, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback no reliable source",
-        color: "orange", // css colour
-        icon: "history_edu",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary: "[[WP:RS|Not providing a reliable source]]", // Set summary
-        ruleIndex: "unsourced", // used for autowarn
-    },
-
-    {
-        enabled: false, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback disruptive editing",
-        color: "orange", // css colour
-        icon: "error",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary: "Disruptive editing", // Set summary
-        ruleIndex: "disruptive", // used for autowarn
-    },
-
-    {
-        enabled: false, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback factual errors",
-        color: "orange", // css colour
-        icon: "menu_book",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary: "likely [[WP:PROVEIT|factual errors]]", // Set summary
-        ruleIndex: "error", // used for autowarn
-    },
-
-    {
-        enabled: false, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback joke edit",
-        color: "orange", // css colour
-        icon: "child_care",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary: "Joke edit", // Set summary
-        ruleIndex: "joke", // used for autowarn
-    },
-
-    {
-        enabled: false, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback NPOV issues",
-        color: "orange", // css colour
-        icon: "campaign",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary: "per [[WP:NPOV]]", // Set summary
-        ruleIndex: "npov", // used for autowarn
-    },
-
-    {
-        enabled: false, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback talk in article",
-        color: "orange", // css colour
-        icon: "announcement",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary:
-            "Please use the article [[WP:TPHELP|talk page]] or [[WP:FIXIT|be bold]] and fix the problem", // Set summary
-        ruleIndex: "talkinarticle", // used for autowarn
-    },
-
-    // BLUE
-    {
-        enabled: false, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback manual of style issues",
-        color: "blue", // css colour
-        icon: "brush",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary: "[[WP:MOS|Manual of Style]] issues", // Set summary
-        ruleIndex: "mos", // used for autowarn
-    },
-
-    {
-        enabled: false, // true is a default rollback icon, false can be added via preferences
-        name: "Quick rollback test edits",
-        color: "blue", // css colour
-        icon: "build",
-        actionType: "rollback",
-        promptReason: false, // add extra info?
-        summary: "[[WP:SANDBOX|test edits]]", // Set summary
-        ruleIndex: "test", // used for autowarn
-    },
-];
-
-export interface RollbackDoneIcon {
-    name: string;
-    icon: string;
-    action: (
-        rollback: Rollback,
-        username: string,
-        warnIndex: keyof Warnings
-    ) => any;
-    id: string;
-}
-export const RollbackDoneIcons: RollbackDoneIcon[] = [
-    {
-        name: "Go to latest revision",
-        icon: "watch_later",
-        action: (rollback: Rollback): Promise<void> =>
-            WikipediaAPI.goToLatestRevision(rollback.rollbackRev.page),
-        id: "latestRev",
-    },
-    {
-        name: "New Message",
-        icon: "send",
-        action: (): void => {
-            // TODO new message
-            /* rw.ui.newMessage(un) */
-        },
-        id: "newMsg",
-    },
-    {
-        name: "Quick Template",
-        icon: "library_add",
-        action: (): void => {
-            // TODO quick template
-            /* rw.quickTemplate.openSelectPack(un) */
-        },
-        id: "quickTemplate",
-    },
-    {
-        name: "Warn User",
-        icon: "report",
-        action: (): void => {
-            // TODO auto warn
-            /* rw.ui.beginWarn(
-                false,
-                un,
-                mw.config.get("wgRelevantPageName"),
-                null,
-                null,
-                null,
-                warnIndex != null ? warnIndex : null
-            ) */
-        },
-        id: "warnUser",
-    },
-    {
-        name: "Report to Admin",
-        icon: "gavel",
-        action: (): void => {
-            // TODO admin report
-            /* rw.ui.adminReportSelector(un) */
-        },
-        id: "reportUser",
-    },
-];
 
 interface RestoreProps extends BaseProps {
     rollback: Rollback;

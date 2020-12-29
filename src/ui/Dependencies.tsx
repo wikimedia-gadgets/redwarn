@@ -1,4 +1,4 @@
-import { h } from "@sportshead/tsx-dom";
+import { h } from "tsx-dom";
 import RedWarnStore from "../data/RedWarnStore";
 import StyleManager from "../styles/StyleManager";
 

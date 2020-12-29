@@ -4,7 +4,8 @@
  */
 export default function (
     baseURL: string | URL,
-    queryParameters?: Record<string, any>
+    queryParameters?: Record<string, any>,
+    fragment?: string
 ): string {
     let url;
 
@@ -25,6 +26,10 @@ export default function (
                 url.searchParams.set(parameter, queryParameters[parameter]);
             }
         }
+    }
+
+    if (fragment != null) {
+        url.hash = fragment;
     }
 
     return url.toString();

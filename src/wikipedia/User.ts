@@ -1,14 +1,14 @@
-import { Gender, GenderDict, GenderPronoun } from "./Gender";
-import { WarningAnalysis, getHighestLevel } from "./WarningLevel";
 import {
     RW_LINK_SUMMARY,
     RW_SIG,
     RW_WELCOME,
     RW_WELCOME_IP,
 } from "../data/RedWarnConstants";
-import WikipediaAPI from "./API";
-import regexEscape from "../util/regexEscape";
 import getMonthHeader from "../util/getMonthHeader";
+import regexEscape from "../util/regexEscape";
+import WikipediaAPI from "./API";
+import { Gender, GenderDict, GenderPronoun } from "./Gender";
+import { getHighestLevel, WarningAnalysis } from "./WarningLevel";
 
 interface UserInfo {
     gender: Gender;

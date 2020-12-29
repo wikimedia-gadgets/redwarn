@@ -9,7 +9,6 @@
         "@material/ripple": "^8.0.0",
         "@material/textfield": "^8.0.0",
         "@material/tooltip": "^8.0.0",
-        "@sportshead/tsx-dom": "^1.0.0",
         "css-loader": "^4.3.0",
         "dialog-polyfill": "^0.5.3",
         "i18next": "^19.8.4",
@@ -20,6 +19,7 @@
         "style-loader": "^1.2.1",
         "ts-loader": "^8.0.3",
         "tslib": "^2.0.3",
+        "tsx-dom": "^1.1.0",
         "typescript": "^4.0.2",
         "webpack": "^4.44.1",
         "webpack-cli": "^3.3.12"

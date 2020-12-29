@@ -7,7 +7,7 @@ import {
     RWUIInputDialog,
     RWUISelectionDialog,
     RWUISelectionDialogItem,
-} from "./RWUIDialog";
+} from "./elements/RWUIDialog";
 
 /**
  * Redirect class for easy access. UI elements of RedWarn are also created here.
@@ -33,14 +33,14 @@ export default class RWUI {
         ctx: ExtendedOptionsContext
     ): Promise<any> {
         const items: RWUISelectionDialogItem[] = [];
-        const rollbackIcons = ctx.rollback?.getDisabledIcons() ?? [];
+        const rollbackIcons = ctx.rollback?.getDisabledOptions() ?? [];
         if (rollbackIcons.length > 0) {
             items.push(...rollbackIcons);
         }
 
         // TODO topIcons
 
-        const targetUser = ctx.user ?? ctx.rollback?.rollbackRev.user;
+        const targetUser = ctx.user ?? ctx.rollback?.rollbackRevision.user;
 
         if (targetUser) {
             // TODO AIV

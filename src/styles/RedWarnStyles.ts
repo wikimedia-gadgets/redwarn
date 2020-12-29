@@ -1,5 +1,5 @@
-import Style from "./Style";
 import MaterialStyle from "./material/Material";
+import Style from "./Style";
 
 declare global {
     // noinspection JSUnusedGlobalSymbols

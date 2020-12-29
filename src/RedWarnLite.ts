@@ -10,17 +10,18 @@
 
 /* Libraries */
 
+import RedWarnStore from "./data/RedWarnStore";
+import RedWarnHooks from "./event/RedWarnHooks";
+import RTRC from "./integrations/RTRC";
+import Localization from "./localization/Localization";
+import StyleManager from "./styles/StyleManager";
 /* IMPORT EVERYTHING HERE! */
 import Dependencies from "./ui/Dependencies";
-import RedWarnHooks from "./event/RedWarnHooks";
 import WikipediaAPI from "./wikipedia/API";
-import StyleManager from "./styles/StyleManager";
-import RedWarnStore from "./data/RedWarnStore";
-import Localization from "./localization/Localization";
 import Rollback from "./wikipedia/Rollback";
-import RTRC from "./integrations/RTRC";
 
 console.log("Starting RedWarn...");
+// noinspection JSDeprecatedSymbols
 $(document).ready(async () => {
     // Load in languages first.
     await Localization.init();
@@ -46,14 +47,13 @@ $(document).ready(async () => {
         Dependencies.resolve(),
         WikipediaAPI.init(),
         Rollback.init(),
+        RTRC.init(),
     ]);
 
     /**
      * Send notice that RedWarn is done loading.
      */
     await RedWarnHooks.executeHooks("postinit");
-
-    RTRC.init(); // webpack won't compile RTRC if I use redwarn hooks
 
     // Initialize components here.
     // As much as possible, each component should be its own class to make everything

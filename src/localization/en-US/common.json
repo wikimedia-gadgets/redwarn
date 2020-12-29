@@ -1,7 +1,7 @@
 {
     "redwarn": {
         "name": "RedWarn",
-        "advert": "[[m:w:wp:RW|(RW $t(common:redwarn.version))]]",
+        "signature": "[[m:w:wp:RW|(RW $t(common:redwarn.version))]]",
         "userAgent": "RedWarn/$t(common:redwarn.version) ([[m:w:wt:RW]]; https://w.wiki/s6j/; incoming+redwarn-redwarn-web-19374445-issue-@incoming.gitlab.com)"
     }
 }

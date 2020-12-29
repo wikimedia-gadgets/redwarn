@@ -1,13 +1,12 @@
-import { h } from "@sportshead/tsx-dom";
-
-import { RWUIInputDialog } from "../../../ui/RWUIDialog";
-
-import { MDCRipple } from "@material/ripple";
-import { MDCDialog } from "@material/dialog";
 import { MDCTextField } from "@material/textfield";
 import { MDCTextFieldCharacterCounter } from "@material/textfield/character-counter";
-import { MDCTextFieldIcon } from "@material/textfield/icon";
 import { MDCTextFieldHelperText } from "@material/textfield/helper-text";
+import { MDCTextFieldIcon } from "@material/textfield/icon";
+import i18next from "i18next";
+import { h } from "tsx-dom";
+
+import { RWUIInputDialog } from "../../../ui/elements/RWUIDialog";
+import { registerMaterialDialog, upgradeMaterialDialog } from "../Material";
 import { getMaterialStorage } from "../storage/MaterialStyleStorage";
 import MaterialButton from "./MaterialButton";
 import MaterialDialog, {
@@ -15,7 +14,6 @@ import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
-import i18next from "i18next";
 
 /**
  * The MaterialInputDialog is a handling class used to get input from users on the screen. This will
@@ -41,16 +39,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
      */
     show(): Promise<any> {
         const styleStorage = getMaterialStorage();
-        styleStorage.dialogTracker.set(this.id, this);
-
-        document.body.appendChild(this.render());
-
-        console.log(this.element);
-
-        // Upgrade the newly-inserted MDC element.
-        $(this.element)
-            .find("button")
-            .each((_, el) => new MDCRipple(el).initialize());
+        registerMaterialDialog(this);
 
         this.MDCComponents = {
             textField: new MDCTextField(
@@ -87,9 +76,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
             );
         this.MDCComponents.helperText?.initialize();
 
-        const dialog = new MDCDialog(this.element);
-        dialog.initialize();
-        dialog.open();
+        const dialog = upgradeMaterialDialog(this);
 
         return new Promise((resolve) => {
             dialog.listen(
@@ -164,7 +151,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                         style={{ width: "100%" }}
                     >
                         <span class="mdc-notched-outline">
-                            <span class="mdc-notched-outline__leading"></span>
+                            <span class="mdc-notched-outline__leading" />
                             <span class="mdc-notched-outline__notch">
                                 <span
                                     class="mdc-floating-label"
@@ -173,7 +160,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                                     {this.props.label}
                                 </span>
                             </span>
-                            <span class="mdc-notched-outline__trailing"></span>
+                            <span class="mdc-notched-outline__trailing" />
                         </span>
                         {this.props.prefix && (
                             <span class="mdc-text-field__affix mdc-text-field__affix--prefix">

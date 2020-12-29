@@ -373,7 +373,7 @@ rw.info.writeConfig(true, ()=>{ // save config
                         "action": "edit",
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
-                        "title" : "Wikipedia:RedWarn/help/Quick_Template/templates",
+                        "title" : "Wikipedia:RedWarn/Documentation/Quick_Template/templates",
                         "summary" : "Publish new pack [[w:en:Wikipedia:RedWarn|(RedWarn "+ rw.version +")]]", // summary sign here
                         "appendtext": // Add our section wikitxt here
                         `
@@ -387,7 +387,7 @@ rw.info.writeConfig(true, ()=>{ // save config
                             // Error occured or other issue
                             console.error(dt);
                             rw.ui.loadDialog.close();
-                            rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your pack has not been published to the QTPack page, maybe add manually.");
+                            rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your pack has not been published to the Quick Template Pack page, maybe add it manually.");
                         } else {
                             // Done! Load QTPack page
                             redirect("https://en.wikipedia.org/wiki/WP:REDWARN/QTPACKS"); // No rw.wikiBase due to lack of page there

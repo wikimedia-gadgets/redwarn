@@ -27,10 +27,10 @@ rw.preferences = {
                     }
                 }, // end
 
-                // Page icon locations 
+                // Dialog animations 
                 "dialogAnimation" : { // config value as title
                     // UI text
-                    "optionTitle" : "Dialog Animation",
+                    "optionTitle" : "Dialog Animations",
                     "supportingText": "Change the animation used when a RedWarn dialog opens/closes.",
 
                     // Config options
@@ -80,21 +80,21 @@ rw.preferences = {
                 // User right-click settings
                 "rwDisableRightClickUser" : { // config value as title
                     // UI text
-                    "optionTitle" : "Open quick user action menu with...",
-                    "supportingText": "Change the way the menu that allows you to access options such as viewing a users pronouns, warning a user and other tools when you right-click on a user link or signiture. Some browsers, such as Firefox, may override the default option of opening the menu on Shift+Right-click.",
+                    "optionTitle" : "Open Quick User action menu with...",
+                    "supportingText": "Change the way you open the Quick User action menu. This menu allows you to access features such as warning a user, reporting them and other tools when right-clicking on a user link or signature. Some browsers, such as Firefox, may override the default option of opening the menu on Shift+Right-click.",
 
                     // Config options
                     "options" : { 
                         "Open when I hold shift and right-click a user link*" : "enable",
                         "Open when I right-click a user link": "Opt2",
-                        "Disable quick user action menu": "disable"
+                        "Disable the Quick User action menu": "disable"
                     }
                 },
 
                 // Warn user automation
                 "rwautoLevelSelectDisable" : {
                     "optionTitle" : "Automation",
-                    "supportingText": "Enable or disable RedWarn's automation features, such as automatically choosing a warning level and template for you. Please note to reduce abuse, if you are not yet extended-confirmed, your preference will not be honored until you reach that level. If you have a legitimate alternate account, <a href='https://en.wikipedia.org/wiki/Wikipedia:Requests_for_permissions/Extended_confirmed' target='_blank'>you can request to be extended-confirmed.</a>",
+                    "supportingText": "Enable or disable RedWarn's automation features, such as automatically choosing a warning level and template for you. Please note that in order to reduce abuse, your preference will not be honored unless you are a extended-confirmed user. If you have a legitimate alternate account, <a href='https://en.wikipedia.org/wiki/Wikipedia:Requests_for_permissions/Extended_confirmed' target='_blank'>you can request that the extended-confrimed right be granted to it.</a>",
 
                     // Config options
                     "options" : { 
@@ -106,7 +106,7 @@ rw.preferences = {
                 // On rollback completion
                 "rwRollbackDoneOption" : {
                     "optionTitle" : "Once a rollback is complete...",
-                    "supportingText": "Change what automatically occurs when a rollback is successful. Selecting \"Warn User\" is recommended for most users.",
+                    "supportingText": "Change what occurs when a rollback is successful. Selecting \"Warn User\" is recommended for most users.",
 
                     // Config options
                     "options" : { 
@@ -121,7 +121,7 @@ rw.preferences = {
                 // On rollback completion
                 "rwLatestRevisionOption" : {
                     "optionTitle" : "When I am redirected to the latest revision...",
-                    "supportingText": "Change what happens when you click the \"Latest Revision\" button, or you are automatically redirected to the latest revision. Please note that the new tab option may be blocked by your browser pop-up blocker.",
+                    "supportingText": "Change what happens when you click the \"Latest Revision\" button, or when you are automatically redirected to the latest revision. Please note that the new tab option may be blocked by your browser pop-up blocker.",
 
                     // Config options
                     "options" : { 
@@ -137,7 +137,7 @@ rw.preferences = {
 
                     // Config options
                     "options" : { 
-                        "Template descriptions (e.g. Vandalism)*" : "disable",
+                        "Template description (e.g. Vandalism)*" : "disable",
                         "Template name (i.e. uw-vandalism)": "enable"
                     }
                 },
@@ -146,7 +146,7 @@ rw.preferences = {
 
                 "rollbackMethod" : {
                     "optionTitle" : "Rollback method",
-                    "supportingText": "Change the way RedWarn reverts edits. Rollback-like uses the undo feature to revert vandalism, alike to Twinkle and other tools. Meanwhile, rollback uses MediaWiki's \"rollback\" link feature. Both of these are identical in use, although rollback is much faster and more reliable. <br/> TL/DR: If you have a rollback-enabled account, using the rollback option is highly recommended. If you do not have a rollback-enabled account and select the latter option, your preference will not be honored.",
+                    "supportingText": "Change the way RedWarn reverts edits. Rollback-like uses the undo feature to revert vandalism, similar to Twinkle and other tools. Meanwhile, rollback uses MediaWiki's \"rollback\" link feature. Both of these are identical in use, although rollback is much faster and more reliable. <br/> TL/DR: If you have a rollback-enabled account, using the rollback option is highly recommended. If you do not have a rollback-enabled account and select the latter option, your preference will not be honored.",
 
                     // Config options
                     "options" : { 
@@ -170,7 +170,7 @@ rw.preferences = {
                 // Pending changes auto accept
                 "rwDisableReviewAutoAccept" : {
                     "optionTitle" : "Pending change review - auto accept",
-                    "supportingText": "Choose whether to automatically dismiss the reason prompt and accept revisions after five seconds. Override this countdown by interacting with the dialog",
+                    "supportingText": "After accepting revisions choose whether to automatically dismiss the reason prompt and accept them after five seconds. Override this countdown by interacting with the dialog",
 
                     // Config options
                     "options" : { 
@@ -182,7 +182,7 @@ rw.preferences = {
                 // auto reject
                 "rwEnableReviewAutoRevert" : {
                     "optionTitle" : "Pending change review - auto revert",
-                    "supportingText": "Choose whether to automatically dismiss the reason prompt and revert revisions after five seconds. Override this countdown by interacting with the dialog",
+                    "supportingText": "After declining revisions choose whether to automatically dismiss the reason prompt and decline them after five seconds. Override this countdown by interacting with the dialog",
 
                     // Config options
                     "options" : { 
@@ -200,6 +200,18 @@ rw.preferences = {
                     "options" : { 
                         "Enable*" : "enable",
                         "Disable": "disable"
+                    }
+                },
+
+                // Email send a copy
+                "rwEmailCCMe" : {
+                    "optionTitle" : "Send me a copy of the emails I send with RedWarn",
+                    "supportingText": "Change whether or not you wish to send a copy of the emails you send with RedWarn (such as to Wikimedia Trust and Safety and Oversight) to your email adres.",
+
+                    // Config options
+                    "options" : { 
+                        "Send me a copy*" : "enable",
+                        "Don't send me a copy": "disable"
                     }
                 },
 

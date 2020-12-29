@@ -8,9 +8,5 @@
 ## Context
 <!-- Describe how your suggestion would improve RedWarn, or the reason behind it being added. -->
 
-## Final checklist
-- [ ] I know how to properly use check boxes
-- [ ] I have not used any OwO's or UwU's in this issue.
-
 <!--- ONLY CHANGE ABOVE THIS LINE!!! -->
 /label ~"type::feature" ~"priority::needs triage"

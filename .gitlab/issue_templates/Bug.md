@@ -34,11 +34,8 @@ PUT THE LOGS HERE
 ```
 
 ## Final checklist
-- [ ] I know how to properly use check boxes
 - [ ] I have included the version of the browser I'm running, operating system and other scripts (if used).
 - [ ] I have included logs, exceptions and / or steps to reproduce the issue.
-- [ ] I have not used any OwO's or UwU's in this issue.
-
 
 <!--- ONLY CHANGE ABOVE THIS LINE!!! -->
 

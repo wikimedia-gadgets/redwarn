@@ -47,8 +47,9 @@ $(document).ready(async () => {
         Dependencies.resolve(),
         WikipediaAPI.init(),
         Rollback.init(),
-        RTRC.init(),
     ]);
+
+    RTRC.init();
 
     /**
      * Send notice that RedWarn is done loading.

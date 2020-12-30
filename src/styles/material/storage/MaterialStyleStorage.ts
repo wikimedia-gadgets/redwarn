@@ -1,6 +1,7 @@
 import RedWarnStore from "rww/data/RedWarnStore";
 import { RWUIDialog, RWUIDialogID } from "rww/ui/elements/RWUIDialog";
 import { StyleStorage } from "../../Style";
+import MaterialToast from "../ui/MaterialToast";
 
 export class MaterialStyleStorage extends StyleStorage {
     // Caches
@@ -8,6 +9,7 @@ export class MaterialStyleStorage extends StyleStorage {
         RWUIDialogID,
         RWUIDialog
     >();
+    toastQueue: MaterialToast[] = [];
 }
 
 export function getMaterialStorage(): MaterialStyleStorage {

@@ -50,7 +50,7 @@ export default class RedWarnStore {
 declare global {
     // noinspection JSUnusedGlobalSymbols
     interface Window {
-        RedWarnStore: RedWarnStore;
+        RedWarnStore: typeof RedWarnStore;
     }
 }
 

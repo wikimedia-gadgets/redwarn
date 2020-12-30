@@ -28,8 +28,8 @@ import User from "./wikipedia/User";
 import { Warnings } from "./wikipedia/Warnings";
 import Watch from "./wikipedia/Watch";
 
-console.log("Starting RedWarn...");
-$(document).on("ready", async () => {
+$(document).ready(async () => {
+    console.log("Starting RedWarn...");
     if (window.rw != null) {
         mw.notify(
             "You have two versions of RedWarn installed at once! Please edit your common.js or skin js files to ensure that you only use one instance to prevent issues.",

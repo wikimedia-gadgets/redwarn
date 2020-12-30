@@ -29,9 +29,9 @@ function getRollbackOptionClickHandler(
     } else {
         if (!option.promptReason) {
             clickHandler = () =>
-                this.rollback(option.summary, option.ruleIndex);
+                context.rollback(option.summary, option.ruleIndex);
         } else {
-            clickHandler = () => this.promptRollbackReason(option.summary);
+            clickHandler = () => context.promptRollbackReason(option.summary);
         }
     }
 

@@ -1,16 +1,17 @@
 /* eslint-disable */
+const { CheckerPlugin } = require("awesome-typescript-loader");
 const path = require("path");
 
 module.exports = {
     mode: process.env.NODE_ENV === "production" ? "production" : "development",
-    devtool: 'eval-cheap-module-source-map',
+    devtool: "source-map",
     entry: ["./src/RedWarnLite.ts"],
     output: {
         path: path.resolve(__dirname, "build"),
         filename: "redwarn.js"
     },
     resolve: {
-        extensions: [".js", ".ts", ".tsx"]
+        extensions: [".js", ".ts", ".tsx", ".json"]
     },
     devServer: {
         compress: false,
@@ -30,7 +31,9 @@ module.exports = {
                 ]
             },
             {
+                enforce: "pre",
                 test: /\.jsx?$/,
+                use: ["source-map-loader"],
                 exclude: [
                     path.resolve(__dirname, "build"),
                     path.resolve(__dirname, "tests"),
@@ -42,5 +45,8 @@ module.exports = {
                 use: ["style-loader", "css-loader"]
             }
         ]
-    }
+    },
+    plugins: [
+        new CheckerPlugin()
+    ]
 };

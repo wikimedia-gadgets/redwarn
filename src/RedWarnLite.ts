@@ -8,23 +8,26 @@
  *
  **/
 
-/* Libraries */
+/* IMPORT EVERYTHING HERE! */
 
 import RedWarnStore from "./data/RedWarnStore";
 import RedWarnHooks from "./event/RedWarnHooks";
 import RTRC from "./integrations/RTRC";
 import Localization from "./localization/Localization";
 import StyleManager from "./styles/StyleManager";
-/* IMPORT EVERYTHING HERE! */
 import Dependencies from "./ui/Dependencies";
 import WikipediaAPI from "./wikipedia/API";
-import Rollback from "./wikipedia/Rollback";
+import RWUI from "./ui/RWUI";
+import MediaWiki from "./wikipedia/MediaWiki";
 
 console.log("Starting RedWarn...");
 // noinspection JSDeprecatedSymbols
 $(document).ready(async () => {
     // Load in languages first.
     await Localization.init();
+
+    // Verify our MediaWiki installation.
+    if (!MediaWiki.mwCheck()) return;
 
     console.log("Initializing store...");
     // Initialize RedWarn store.
@@ -37,7 +40,7 @@ $(document).ready(async () => {
     /**
      * Extensions can push their own dependencies here.
      */
-    await Promise.all([RedWarnHooks.executeHooks("preinit")]);
+    await Promise.all([RedWarnHooks.executeHooks("preInit")]);
 
     /**
      * Initialize everything
@@ -45,8 +48,7 @@ $(document).ready(async () => {
     await Promise.all([
         RedWarnHooks.executeHooks("init"),
         Dependencies.resolve(),
-        WikipediaAPI.init(),
-        Rollback.init(),
+        WikipediaAPI.init()
     ]);
 
     RTRC.init();
@@ -54,7 +56,14 @@ $(document).ready(async () => {
     /**
      * Send notice that RedWarn is done loading.
      */
-    await RedWarnHooks.executeHooks("postinit");
+    await RedWarnHooks.executeHooks("postInit");
+
+    // Inject all UI elements
+    await RedWarnHooks.executeHooks("preUIInject");
+
+    await RWUI.inject();
+
+    await RedWarnHooks.executeHooks("postUIInject");
 
     // Initialize components here.
     // As much as possible, each component should be its own class to make everything

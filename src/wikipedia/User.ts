@@ -1,14 +1,11 @@
-import {
-    RW_LINK_SUMMARY,
-    RW_SIG,
-    RW_WELCOME,
-    RW_WELCOME_IP,
-} from "../data/RedWarnConstants";
+import {RW_SIG, RW_WELCOME, RW_WELCOME_IP,} from "../data/RedWarnConstants";
 import getMonthHeader from "../util/getMonthHeader";
 import regexEscape from "../util/regexEscape";
 import WikipediaAPI from "./API";
-import { Gender, GenderDict, GenderPronoun } from "./Gender";
-import { getHighestLevel, WarningAnalysis } from "./WarningLevel";
+import {Gender, GenderDict, GenderPronoun} from "./Gender";
+import {getHighestLevel, WarningAnalysis} from "./WarningLevel";
+import Page from "./Page";
+import i18next from "i18next";
 
 interface UserInfo {
     gender: Gender;
@@ -20,7 +17,7 @@ interface UserInfo {
  * Represents a Mediawiki user.
  */
 export default class User {
-    private memory: Partial<UserInfo> = {};
+    private cache: Partial<UserInfo> = {};
 
     /**
      * Creates a new user from their username.
@@ -34,17 +31,17 @@ export default class User {
      *        Wikipedia and overwrite the stored value.
      * @returns The user's gender pronouns.
      */
-    async getUserPronouns(forceRecheck = false): Promise<GenderPronoun> {
-        if (!this.memory.gender || forceRecheck) {
+    async getPronouns(forceRecheck = false): Promise<GenderPronoun> {
+        if (!this.cache.gender || forceRecheck) {
             const r = await WikipediaAPI.get({
                 action: "query",
                 list: "users",
                 usprop: "gender",
                 ususers: this.username,
             });
-            this.memory.gender = r.query.users[0].gender;
+            this.cache.gender = r.query.users[0].gender;
         }
-        return GenderDict.get(this.memory.gender);
+        return GenderDict.get(this.cache.gender);
     }
 
     /**
@@ -53,17 +50,17 @@ export default class User {
      *        Wikipedia and overwrite the stored value.
      * @returns The user's edit count.
      */
-    async getUserEditCount(forceRecheck = false): Promise<number> {
-        if (!this.memory.edits || forceRecheck) {
+    async getEditCount(forceRecheck = false): Promise<number> {
+        if (!this.cache.edits || forceRecheck) {
             const r = await WikipediaAPI.get({
                 action: "query",
                 list: "users",
                 usprop: "editcount",
                 ususers: this.username,
             });
-            this.memory.edits = r.query.users[0].editcount;
+            this.cache.edits = r.query.users[0].editcount;
         }
-        return this.memory.edits;
+        return this.cache.edits;
     }
 
     /**
@@ -71,13 +68,9 @@ export default class User {
      * @param forceRecheck If set to `true`, RedWarn will grab the latest data from
      *        Wikipedia and overwrite the stored value.
      */
-    async lastWarningLevel(forceRecheck = false): Promise<WarningAnalysis> {
-        if (!this.memory.lastWarning || forceRecheck) {
-            const revisionWikitext = (
-                await WikipediaAPI.getRevision(
-                    `User_talk:${mw.util.wikiUrlencode(this.username)}`
-                )
-            ).content;
+    async getLastWarningLevel(forceRecheck = false): Promise<WarningAnalysis> {
+        if (!this.cache.lastWarning || forceRecheck) {
+            const revisionWikitext = (await Page.fromTitle(`User talk:${this.username}`).getLatestRevision()).content;
             // TODO Handle errors
 
             if (!revisionWikitext) {
@@ -111,16 +104,16 @@ export default class User {
                 monthNotices += revisionWikitextLines[i];
             }
 
-            this.memory.lastWarning = getHighestLevel(monthNotices);
+            this.cache.lastWarning = getHighestLevel(monthNotices);
         }
-        return this.memory.lastWarning;
+        return this.cache.lastWarning;
     }
 
     /**
      * Appends text to the user's talk page.
      * @param text The text to add.
      * @param underDate The date header to look for.
-     * @param summary The edit summary to use.
+     * @param summary The edit comment to use.
      * @param blacklist If the page already contains this text, insertion is skipped.
      * @param blacklistToast Whether or not to show a toast if the insertion was skipped.
      */
@@ -142,11 +135,7 @@ export default class User {
             return;
         }
 
-        let revisionWikitext = (
-            await WikipediaAPI.getRevision(
-                `User_talk:${mw.util.wikiUrlencode(this.username)}`
-            )
-        ).content;
+        let revisionWikitext = (await Page.fromTitle(`User talk:${this.username}`).getLatestRevision()).content;
         // TODO Handle errors
 
         if (!revisionWikitext) {
@@ -222,11 +211,9 @@ export default class User {
         finalText = wikiTextLines.join("\n");
         console.log(finalText);
 
-        await WikipediaAPI.editPage({
-            page: `User_talk:${this.username}`,
-            text: finalText,
-            summary: `${summary} ${RW_LINK_SUMMARY}`,
-        }); // TODO Handle errors
+        await Page.fromTitle(`User talk:${this.username}`)
+            .edit(finalText, `${summary} ${i18next.t("common:redwarn.signature")}`);
+        // TODO Handle errors
     }
 
     /**

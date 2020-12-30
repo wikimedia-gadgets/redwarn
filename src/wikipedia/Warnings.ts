@@ -1,4 +1,4 @@
-import { WarningLevel } from "./WarningLevel";
+import {WarningLevel} from "./WarningLevel";
 
 export enum WarningCategory {
     COMMON = "Common warnings",
@@ -311,7 +311,7 @@ export const Warnings = {
         warningLevels: [0],
     },
     editsummary: {
-        name: "Not using edit summary",
+        name: "Not using edit comment",
         category: WarningCategory.REMIND,
         template: "uw-editsummary",
         warningLevels: [0],
@@ -519,7 +519,7 @@ export const Warnings = {
         warningLevels: [6],
     },
     efsummary: {
-        name: "Edit summary triggering the edit filter",
+        name: "Edit comment triggering the edit filter",
         category: WarningCategory.POLICY,
         template: "uw-efsummary",
         warningLevels: [6],

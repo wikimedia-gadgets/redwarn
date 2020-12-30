@@ -20,7 +20,7 @@ export enum WarningLevel {
 }
 
 /**
- * The Warning Analysis is a summary of the user's collective issued warnings.
+ * The Warning Analysis is a comment of the user's collective issued warnings.
  */
 export interface WarningAnalysis {
     /** The highest warning level for a user. **/

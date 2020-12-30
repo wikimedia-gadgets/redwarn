@@ -1,12 +1,9 @@
-import { MDCDialog } from "@material/dialog";
-import { MDCRipple } from "@material/ripple";
-import { RWUIDialog } from "../../ui/elements/RWUIDialog";
+import {MDCDialog} from "@material/dialog";
+import {MDCRipple} from "@material/ripple";
+import {RWUIDialog} from "../../ui/elements/RWUIDialog";
 import Style from "../Style";
 import MaterialPreInitializationHooks from "./hooks/MaterialPreInitializationHooks";
-import {
-    getMaterialStorage,
-    MaterialStyleStorage,
-} from "./storage/MaterialStyleStorage";
+import {getMaterialStorage, MaterialStyleStorage,} from "./storage/MaterialStyleStorage";
 import MaterialAlertDialog from "./ui/MaterialAlertDialog";
 import MaterialInputDialog from "./ui/MaterialInputDialog";
 import MaterialSelectionDialog from "./ui/MaterialSelectionDialog";
@@ -65,13 +62,13 @@ const MaterialStyle: Style = {
     },
 
     hooks: {
-        preinit: [MaterialPreInitializationHooks],
+        preInit: [MaterialPreInitializationHooks],
     },
 };
 
 export default MaterialStyle;
 
-export function upgradeMaterialDialogButtons(dialog: RWUIDialog) {
+export function upgradeMaterialDialogButtons(dialog: RWUIDialog) : void {
     $(dialog.element)
         .find("button")
         .each((_, el) => new MDCRipple(el).initialize());
@@ -87,7 +84,7 @@ export function upgradeMaterialDialog(dialog: RWUIDialog): MDCDialog {
     return mdcDialog;
 }
 
-export function registerMaterialDialog(dialog: RWUIDialog) {
+export function registerMaterialDialog(dialog: RWUIDialog) : void {
     getMaterialStorage().dialogTracker.set(dialog.id, dialog);
     document.body.appendChild(dialog.render());
 }

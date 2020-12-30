@@ -1,4 +1,4 @@
-import { Warnings } from "../wikipedia/Warnings";
+import {Warnings} from "../wikipedia/Warnings";
 import RWUI from "../ui/RWUI";
 import Rollback from "../wikipedia/Rollback";
 
@@ -35,7 +35,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "delete_forever",
         actionType: "rollback",
         promptReason: false, // add extra info? false = quick rollback, otherwise not
-        summary: "[[WP:VANDAL|Possible vandalism]]", // Set summary
+        summary: "[[WP:VANDAL|Possible vandalism]]", // Set comment
         ruleIndex: "vandalism", // used for autowarn
     },
 
@@ -46,7 +46,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "format_indent_increase",
         actionType: "rollback",
         promptReason: false, // add extra info?
-        summary: "[[WP:CRV|Unexplained content removal]]", // Set summary
+        summary: "[[WP:CRV|Unexplained content removal]]", // Set comment
         ruleIndex: "delete", // used for autowarn
     },
 
@@ -57,7 +57,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "work_outline",
         actionType: "rollback",
         promptReason: false, // add extra info?
-        summary: "non-constructive", // Set summary
+        summary: "non-constructive", // Set comment
     },
 
     {
@@ -67,7 +67,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "replay",
         actionType: "rollback",
         promptReason: true, // add extra info?
-        summary: "", // Set summary
+        summary: "", // Set comment
     },
 
     {
@@ -77,7 +77,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "thumb_up",
         actionType: "rollback",
         promptReason: true, // add extra info?
-        summary: "Reverting [[WP:AGF|good faith]] edits", // Set summary
+        summary: "Reverting [[WP:AGF|good faith]] edits", // Set comment
     },
 
     {
@@ -119,7 +119,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "filter_3",
         actionType: "rollback",
         promptReason: false, // add extra info?
-        summary: "[[WP:3RR]]", // Set summary
+        summary: "[[WP:3RR]]", // Set comment
         ruleIndex: "_3rr", // used for autowarn
     },
 
@@ -130,7 +130,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "offline_bolt",
         actionType: "rollback",
         promptReason: false, // add extra info?
-        summary: "Personal attack towards another editor ([[WP:NPA]])", // Set summary
+        summary: "Personal attack towards another editor ([[WP:NPA]])", // Set comment
         ruleIndex: "npa", // used for autowarn
     },
 
@@ -141,7 +141,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "copyright",
         actionType: "rollback",
         promptReason: false, // add extra info?
-        summary: "Likely [[WP:COPYVIO|copyright violation]]", // Set summary
+        summary: "Likely [[WP:COPYVIO|copyright violation]]", // Set comment
         ruleIndex: "copyright", // used for autowarn
     },
 
@@ -152,7 +152,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "face",
         actionType: "rollback",
         promptReason: false, // add extra info?
-        summary: "Fails [[WP:BLP]]", // Set summary
+        summary: "Fails [[WP:BLP]]", // Set comment
         ruleIndex: "biog", // used for autowarn
     },
 
@@ -164,7 +164,7 @@ export const RollbackOptions: RollbackOption[] = [
         actionType: "rollback",
         promptReason: false, // add extra info?
         summary:
-            "Using Wikipedia for [[WP:NOTADVERTISING|advertising and/or promotion]] is not permitted.", // Set summary
+            "Using Wikipedia for [[WP:NOTADVERTISING|advertising and/or promotion]] is not permitted.", // Set comment
         ruleIndex: "advert", // used for autowarn
     },
 
@@ -176,7 +176,7 @@ export const RollbackOptions: RollbackOption[] = [
         actionType: "rollback",
         promptReason: false, // add extra info?
         summary:
-            "Addition of unnecessary/inappropriate [[WP:EL|external links]]", // Set summary
+            "Addition of unnecessary/inappropriate [[WP:EL|external links]]", // Set comment
         ruleIndex: "spam", // used for autowarn
     },
 
@@ -188,7 +188,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "history_edu",
         actionType: "rollback",
         promptReason: false, // add extra info?
-        summary: "[[WP:RS|Not providing a reliable source]]", // Set summary
+        summary: "[[WP:RS|Not providing a reliable source]]", // Set comment
         ruleIndex: "unsourced", // used for autowarn
     },
 
@@ -199,7 +199,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "error",
         actionType: "rollback",
         promptReason: false, // add extra info?
-        summary: "Disruptive editing", // Set summary
+        summary: "Disruptive editing", // Set comment
         ruleIndex: "disruptive", // used for autowarn
     },
 
@@ -210,7 +210,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "menu_book",
         actionType: "rollback",
         promptReason: false, // add extra info?
-        summary: "likely [[WP:PROVEIT|factual errors]]", // Set summary
+        summary: "likely [[WP:PROVEIT|factual errors]]", // Set comment
         ruleIndex: "error", // used for autowarn
     },
 
@@ -221,7 +221,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "child_care",
         actionType: "rollback",
         promptReason: false, // add extra info?
-        summary: "Joke edit", // Set summary
+        summary: "Joke edit", // Set comment
         ruleIndex: "joke", // used for autowarn
     },
 
@@ -232,7 +232,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "campaign",
         actionType: "rollback",
         promptReason: false, // add extra info?
-        summary: "per [[WP:NPOV]]", // Set summary
+        summary: "per [[WP:NPOV]]", // Set comment
         ruleIndex: "npov", // used for autowarn
     },
 
@@ -244,7 +244,7 @@ export const RollbackOptions: RollbackOption[] = [
         actionType: "rollback",
         promptReason: false, // add extra info?
         summary:
-            "Please use the article [[WP:TPHELP|talk page]] or [[WP:FIXIT|be bold]] and fix the problem", // Set summary
+            "Please use the article [[WP:TPHELP|talk page]] or [[WP:FIXIT|be bold]] and fix the problem", // Set comment
         ruleIndex: "talkinarticle", // used for autowarn
     },
 
@@ -256,7 +256,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "brush",
         actionType: "rollback",
         promptReason: false, // add extra info?
-        summary: "[[WP:MOS|Manual of Style]] issues", // Set summary
+        summary: "[[WP:MOS|Manual of Style]] issues", // Set comment
         ruleIndex: "mos", // used for autowarn
     },
 
@@ -267,7 +267,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "build",
         actionType: "rollback",
         promptReason: false, // add extra info?
-        summary: "[[WP:SANDBOX|test edits]]", // Set summary
+        summary: "[[WP:SANDBOX|test edits]]", // Set comment
         ruleIndex: "test", // used for autowarn
     },
 ];

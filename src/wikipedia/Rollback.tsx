@@ -1,22 +1,19 @@
-import { MDCLinearProgress } from "@material/linear-progress";
-import { MDCRipple } from "@material/ripple";
-import { MDCTooltip } from "@material/tooltip";
+import {MDCLinearProgress} from "@material/linear-progress";
+import {MDCRipple} from "@material/ripple";
+import {MDCTooltip} from "@material/tooltip";
 import i18next from "i18next";
-import { BaseProps, h } from "tsx-dom";
-import { RW_VERSION_TAG, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
+import {BaseProps, h} from "tsx-dom";
+import {RW_VERSION_TAG, RW_WIKIS_TAGGABLE} from "../data/RedWarnConstants";
 import RedWarnStore from "../data/RedWarnStore";
-import { RWUISelectionDialogItem } from "../ui/elements/RWUIDialog";
+import {RWUISelectionDialogItem} from "../ui/elements/RWUIDialog";
 import RWUI from "../ui/RWUI";
 import redirect from "../util/redirect";
 import WikipediaAPI from "./API";
 import Revision from "./Revision";
 import WikipediaURL from "./URL";
-import { Warnings } from "./Warnings";
-import {
-    RollbackOption,
-    RollbackOptions,
-} from "../definitions/RollbackOptions";
-import { RollbackDoneOptions } from "../definitions/RollbackDoneOptions";
+import {Warnings} from "./Warnings";
+import {RollbackOption, RollbackOptions,} from "../definitions/RollbackOptions";
+import {RollbackDoneOptions} from "../definitions/RollbackDoneOptions";
 
 function getRollbackOptionClickHandler(
     context: Rollback,
@@ -48,14 +45,14 @@ interface RollbackContext {
 export default class Rollback {
     private constructor(
         public rollbackRevision: Revision,
-        private noRedirects = false
+        private redirectOnUpdate = true
     ) {}
 
     static async factory(
-        rollbackRev: Revision = {},
+        rollbackRev: Revision = new Revision(),
         noRedirects?: boolean
     ): Promise<Rollback> {
-        rollbackRev.revid ??= Rollback.detectRollbackRevId(false);
+        rollbackRev.revisionID ??= Rollback.getRevisionId(true);
         rollbackRev.page ??= mw.config.get("wgRelevantPageName");
         try {
             rollbackRev.user ??= (
@@ -81,6 +78,22 @@ export default class Rollback {
             // Special contribs page
             this.contribsPageOptions();
         }
+    }
+
+    /**
+     * Determines whether the given page is a diff page, and whether or not it
+     * displays a single revision (if that revision is the only page revision) or
+     * two revisions (a normal diff page).
+     *
+     * wgDiffOldId is "false" if there is only one revision. Both wgDiffOldId and
+     * wgDiffNewId are null when the page is not a revision page.
+     *
+     * @returns `"onlyrev"` if the view shows the only page revision.
+     * `true` if the diff view shows two revisions.
+     * `false` if the page is not a diff page.
+     */
+    static isDiffPage() : true | "onlyrev" | false {
+        return mw.config.get("wgDiffOldId") === false ? "onlyrev" : !!mw.config.get("wgDiffNewId");
     }
 
     async welcomeRevUser(): Promise<void> {
@@ -112,7 +125,7 @@ export default class Rollback {
                 revUser: restoreRev.user.username,
                 reason,
             }),
-            undo: latest.revid,
+            undo: latest.revisionID,
             undoafter: revID,
             tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
                 ? "RedWarn"
@@ -122,63 +135,50 @@ export default class Rollback {
             console.error(result);
             // TODO toasts
             //rw.visuals.toast.show("Sorry, there was an error, likely an edit conflict. This edit has not been restored.");
-        } else if (!this.noRedirects) {
+        } else if (!this.redirectOnUpdate) {
             WikipediaAPI.goToLatestRevision(this.rollbackRevision.page);
         }
     }
-    static detectRollbackRevId(failIfNone = true): number {
+
+    /**
+     * Grab the newer revision ID from the diff view. This also handles situations
+     * where the diff view is reversed.
+     *
+     * @private
+     * @param newer Whether or not to get the newer revision of the two.
+     * @returns The newer revision if the `newer` parameter is `true` (default).
+     *          `null` if the page is not a valid diff page.
+     */
+    private static getRevisionId(newer = true): number {
         const oldId = mw.config.get("wgDiffOldId");
         const newId = mw.config.get("wgDiffNewId");
-        if (newId == null && oldId != null) {
-            return oldId;
-        } else if (newId != null && oldId != null) {
-            return newId > oldId ? newId : oldId;
-        } else {
-            const isNLatest = $("#mw-diff-ntitle1")
-                .text()
-                .includes("Latest revision");
-            const isOLatest = $("#mw-diff-otitle1")
-                .text()
-                .includes("Latest revision");
 
-            if (isNLatest) {
-                // Return the revID of the edit on the right
-                return +$("#mw-diff-ntitle1 > strong > a")
-                    .attr("href")
-                    .split("&")[1]
-                    .split("=")[1];
-            } else if (isOLatest) {
-                return +$("#mw-diff-otitle1 > strong > a")
-                    .attr("href")
-                    .split("&")[1]
-                    .split("=")[1];
-            } else {
-                if (failIfNone) {
-                    // BUG!
-                    new RWUI.Dialog({
-                        title: "Error",
-                        content: [
-                            "An error occurred! (rollback getRollbackRevId failed via final else!)",
-                        ],
-                        actions: [
-                            {
-                                data: "report",
-                                text: "Report Bug",
-                                action: () => {
-                                    // TODO report bug
-                                    /* rw.ui.reportBug(
-                                "rollback getRollbackRevID failed via final else! related URL: " +
-                                    window.location.href
-                            ) */
-                                },
-                            },
-                        ],
-                    }).show();
-                }
-            }
-        }
-        return null;
+        if (!newId && !!oldId) {
+            return oldId;
+        } else if (!!newId && !oldId) {
+            return newId;
+        } else if (newId != null && oldId != null) {
+            return (newId > oldId && newer) || (newId < oldId && !newer) ? newId : oldId;
+        } else
+            {return null;}
     }
+
+    /**
+     * Grab the newer revision ID from the diff view. This also handles situations
+     * where the diff view is reversed.
+     *
+     * @returns The newer revision. `null` if the page is not a valid diff page.
+     */
+    static getNewerRevisionId : typeof Rollback.getRevisionId =
+        () => Rollback.getRevisionId(true);
+    /**
+     * Grab the older revision ID from the diff view. This also handles situations
+     * where the diff view is reversed.
+     *
+     * @returns The older revision. `null` if the page is not a valid diff page.
+     */
+    static getOlderRevisionId : typeof Rollback.getRevisionId =
+        () => Rollback.getRevisionId(false);
 
     async preview(): Promise<void> {
         // TODO dialog
@@ -186,14 +186,14 @@ export default class Rollback {
         // Check if latest, else redirect
         const { user } = await WikipediaAPI.isLatestRevision(
             this.rollbackRevision,
-            this.noRedirects
+            this.redirectOnUpdate
         );
-        const { revid } = await WikipediaAPI.latestRevisionNotByUser(
+        const { revisionID } = await WikipediaAPI.latestRevisionNotByUser(
             this.rollbackRevision.page,
             user.username
         );
         const url = WikipediaURL.getDiffUrl(
-            `${revid}`,
+            `${revisionID}`,
             mw.util.getParamValue("diff"),
             "rollbackPreview"
         );
@@ -409,7 +409,7 @@ export default class Rollback {
     async promptRollbackReason(summary: string): Promise<void> {
         await WikipediaAPI.isLatestRevision(
             this.rollbackRevision,
-            this.noRedirects
+            this.redirectOnUpdate
         );
         const dialog = new RWUI.InputDialog({
             ...i18next.t("ui:rollback"),
@@ -426,14 +426,14 @@ export default class Rollback {
         defaultWarnIndex,
         reason,
         showRollbackDoneOptions,
-    }: RollbackContext) {
+    }: RollbackContext) : Promise<void> {
         const latestRev = await WikipediaAPI.latestRevisionNotByUser(
             this.rollbackRevision.page,
             targetRevision.user.username
         );
 
-        if (latestRev.parentid === this.rollbackRevision.revid) {
-            if (this.noRedirects) {
+        if (latestRev.parentID === this.rollbackRevision.revisionID) {
+            if (this.redirectOnUpdate) {
                 // TODO show toast
             } else {
                 // looks like that there is a newer revision! redirect to it.
@@ -444,7 +444,7 @@ export default class Rollback {
 
         const summary = i18next.t("wikipedia:summaries.revert", {
             username: targetRevision.user.username,
-            targetRevisionId: latestRev.revid,
+            targetRevisionId: latestRev.revisionID,
             targetRevisionEditor: latestRev.user.username,
             version: RW_VERSION_TAG,
             reason,
@@ -454,8 +454,8 @@ export default class Rollback {
             format: "json",
             title: this.rollbackRevision.page,
             summary,
-            undo: targetRevision.revid, // current
-            undoafter: latestRev.revid, // restore version
+            undo: targetRevision.revisionID, // current
+            undoafter: latestRev.revisionID, // restore version
             tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
                 ? "RedWarn"
                 : null,
@@ -487,7 +487,7 @@ export default class Rollback {
         defaultWarnIndex,
         reason,
         showRollbackDoneOptions,
-    }: RollbackContext) {
+    }: RollbackContext) : Promise<void> {
         try {
             const summary = i18next.t("wikipedia:summaries.rollback", {
                 username: targetRevision.user.username,
@@ -538,7 +538,7 @@ export default class Rollback {
 
         const targetRevision = await WikipediaAPI.isLatestRevision(
             this.rollbackRevision,
-            this.noRedirects
+            this.redirectOnUpdate
         );
 
         const context: RollbackContext = {
@@ -655,7 +655,7 @@ export default class Rollback {
 
             const rollback = new Rollback({
                 page: li.find("a.mw-contributions-title").text(),
-                revid: +li.attr("data-mw-revid"),
+                revisionID: +li.attr("data-mw-revisionID"),
             });
 
             const previewLink = (

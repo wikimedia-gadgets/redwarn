@@ -43,8 +43,7 @@
         // Space rules to utterly piss on everyone
         "space-before-blocks": "warn",
         "key-spacing": "warn",
-        "keyword-spacing": "warn",
-        "curly": "error"
+        "keyword-spacing": "warn"
         // temporary so that `eslint --fix` doesn't break stuff
         // "linebreak-style": ["error", "windows"]
     },

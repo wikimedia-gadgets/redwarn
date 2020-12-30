@@ -1,4 +1,4 @@
-import { version } from "../../package.json";
+import {version} from "../../package.json";
 
 export const RW_VERSION = version;
 export const RW_VERSION_TAG = "17dev";
@@ -14,6 +14,4 @@ export const RW_SHARED_IP_ADVICE = atob(
 );
 
 export const RW_LINK = "[[w:en:WP:RW|RedWarn]]";
-export const RW_LINK_SUMMARY = "([[w:en:WP:RW|RW]])";
-
 export const RW_WIKIS_TAGGABLE = ["enwiki"];

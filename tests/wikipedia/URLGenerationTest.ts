@@ -73,10 +73,14 @@ describe("URL generation tests", () => {
             // Check if the leading part (protocol, host, port, path, etc.)
             expect(pair[0].split("?")[0]).toEqual(pair[1].split("?")[0]);
 
+            const url1Params = url1.searchParams;
+            const url2Params = url2.searchParams;
+
+            url1Params.sort();
+            url2Params.sort();
+
             // Check the query parameters if they match.
-            expect(
-                JSON.stringify([...url1.searchParams.entries()].sort())
-            ).toEqual(JSON.stringify([...url2.searchParams.entries()].sort()));
+            expect(url1Params.toString()).toEqual(url2Params.toString());
         });
     }
 });

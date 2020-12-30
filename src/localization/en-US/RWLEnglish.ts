@@ -1,4 +1,4 @@
-import { RW_VERSION } from "../../data/RedWarnConstants";
+import { RW_VERSION } from "rww/data/RedWarnConstants";
 
 if (window.RedWarnLanguages == null) {
     window.RedWarnLanguages = [];

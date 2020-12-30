@@ -3,9 +3,9 @@ import {
     RW_SIG,
     RW_WELCOME,
     RW_WELCOME_IP,
-} from "../data/RedWarnConstants";
-import getMonthHeader from "../util/getMonthHeader";
-import regexEscape from "../util/regexEscape";
+} from "rww/data/RedWarnConstants";
+import getMonthHeader from "rww/util/getMonthHeader";
+import regexEscape from "rww/util/regexEscape";
 import WikipediaAPI from "./API";
 import { Gender, GenderDict, GenderPronoun } from "./Gender";
 import { getHighestLevel, WarningAnalysis } from "./WarningLevel";

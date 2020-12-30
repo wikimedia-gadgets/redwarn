@@ -3,11 +3,11 @@ import { MDCRipple } from "@material/ripple";
 import { MDCTooltip } from "@material/tooltip";
 import i18next from "i18next";
 import { BaseProps, h } from "tsx-dom";
-import { RW_VERSION_TAG, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
-import RedWarnStore from "../data/RedWarnStore";
-import { RWUISelectionDialogItem } from "../ui/elements/RWUIDialog";
-import RWUI from "../ui/RWUI";
-import redirect from "../util/redirect";
+import { RW_VERSION_TAG, RW_WIKIS_TAGGABLE } from "rww/data/RedWarnConstants";
+import RedWarnStore from "rww/data/RedWarnStore";
+import { RWUISelectionDialogItem } from "rww/ui/elements/RWUIDialog";
+import RWUI from "rww/ui/RWUI";
+import redirect from "rww/util/redirect";
 import WikipediaAPI from "./API";
 import Revision from "./Revision";
 import WikipediaURL from "./URL";
@@ -15,8 +15,8 @@ import { Warnings } from "./Warnings";
 import {
     RollbackOption,
     RollbackOptions,
-} from "../definitions/RollbackOptions";
-import { RollbackDoneOptions } from "../definitions/RollbackDoneOptions";
+} from "rww/definitions/RollbackOptions";
+import { RollbackDoneOptions } from "rww/definitions/RollbackDoneOptions";
 
 function getRollbackOptionClickHandler(
     context: Rollback,

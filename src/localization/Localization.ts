@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
-import { RW_VERSION_TAG } from "../data/RedWarnConstants";
+import { RW_VERSION_TAG } from "rww/data/RedWarnConstants";
 import RedWarnLanguage from "./RedWarnLanguage";
 
 declare global {

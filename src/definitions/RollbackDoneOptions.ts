@@ -1,6 +1,6 @@
-import { Warnings } from "../wikipedia/Warnings";
-import WikipediaAPI from "../wikipedia/API";
-import Rollback from "../wikipedia/Rollback";
+import { Warnings } from "rww/wikipedia/Warnings";
+import WikipediaAPI from "rww/wikipedia/API";
+import Rollback from "rww/wikipedia/Rollback";
 
 export interface RollbackDoneOption {
     name: string;

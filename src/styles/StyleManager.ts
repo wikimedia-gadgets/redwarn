@@ -1,4 +1,4 @@
-import semanticDifference from "../util/semanticDifference";
+import semanticDifference from "rww/util/semanticDifference";
 import { DefaultRedWarnStyles } from "./RedWarnStyles";
 import Style from "./Style";
 

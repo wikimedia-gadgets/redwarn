@@ -1,8 +1,8 @@
 import i18next from "i18next";
-import { RW_LINK_SUMMARY, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
-import RedWarnStore from "../data/RedWarnStore";
-import { getMaterialStorage } from "../styles/material/storage/MaterialStyleStorage";
-import redirect from "../util/redirect";
+import { RW_LINK_SUMMARY, RW_WIKIS_TAGGABLE } from "rww/data/RedWarnConstants";
+import RedWarnStore from "rww/data/RedWarnStore";
+import { getMaterialStorage } from "rww/styles/material/storage/MaterialStyleStorage";
+import redirect from "rww/util/redirect";
 import Revision from "./Revision";
 import WikipediaURL from "./URL";
 import User from "./User";

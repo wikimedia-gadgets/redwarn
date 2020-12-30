@@ -1,6 +1,6 @@
 import { MDCDialog } from "@material/dialog";
 import { MDCRipple } from "@material/ripple";
-import { RWUIDialog } from "../../ui/elements/RWUIDialog";
+import { RWUIDialog } from "rww/ui/elements/RWUIDialog";
 import Style from "../Style";
 import MaterialPreInitializationHooks from "./hooks/MaterialPreInitializationHooks";
 import {

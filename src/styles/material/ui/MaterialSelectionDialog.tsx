@@ -1,5 +1,5 @@
 import { h } from "tsx-dom";
-import { RWUISelectionDialog } from "../../../ui/elements/RWUIDialog";
+import { RWUISelectionDialog } from "rww/ui/elements/RWUIDialog";
 import { registerMaterialDialog, upgradeMaterialDialog } from "../Material";
 import { getMaterialStorage } from "../storage/MaterialStyleStorage";
 import MaterialButton from "./MaterialButton";

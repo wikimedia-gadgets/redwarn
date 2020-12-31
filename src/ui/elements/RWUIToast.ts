@@ -1,5 +1,4 @@
 import generateId from "rww/util/generateId";
-import { ComponentChild } from "tsx-dom";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 
 export interface RWUIToastProperties extends RWUIElementProperties {
@@ -28,6 +27,8 @@ export enum RWUIToastStyle {
 }
 
 export abstract class RWUIToast extends RWUIElement {
+    public static readonly elementName = "rwToast";
+
     /**
      * A unique identifier for this dialog, to allow multiple active toasts.
      */

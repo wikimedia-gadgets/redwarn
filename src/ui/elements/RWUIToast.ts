@@ -5,6 +5,12 @@ export interface RWUIToastProperties extends RWUIElementProperties {
     content: string;
     action?: RWUIToastAction;
     /**
+     * Time, in milliseconds, for the toast to automatically close. Must be
+     * between 4000 and 10000.
+     * @default 5000
+     */
+    timeout?: number;
+    /**
      * Used to track displayed dialogs.
      * @internal
      */

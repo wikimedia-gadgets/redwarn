@@ -1,4 +1,4 @@
-import { version } from "rww/../package.json";
+import { version } from "../../package.json";
 
 export const RW_VERSION = version;
 export const RW_VERSION_TAG = "17dev";

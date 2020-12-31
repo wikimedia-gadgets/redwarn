@@ -1,10 +1,15 @@
 import generateId from "rww/util/generateId";
-import { ComponentChild } from "tsx-dom";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 
 export interface RWUIToastProperties extends RWUIElementProperties {
     content: string;
     action?: RWUIToastAction;
+    /**
+     * Time, in milliseconds, for the toast to automatically close. Must be
+     * between 4000 and 10000.
+     * @default 5000
+     */
+    timeout?: number;
     /**
      * Used to track displayed dialogs.
      * @internal
@@ -27,7 +32,9 @@ export enum RWUIToastStyle {
     Stacked,
 }
 
-export abstract class RWUIToast extends RWUIElement {
+export class RWUIToast extends RWUIElement {
+    public static readonly elementName = "rwToast";
+
     /**
      * A unique identifier for this dialog, to allow multiple active toasts.
      */
@@ -38,20 +45,32 @@ export abstract class RWUIToast extends RWUIElement {
      */
     element?: HTMLDivElement;
 
-    protected constructor(readonly props: RWUIToastProperties) {
+    constructor(readonly props: RWUIToastProperties) {
         super();
         this.id = `toast__${props.id || generateId(16)}`;
         this.props.style ??= RWUIToastStyle.Normal;
     }
 
     /**
+     * Helper function to create and instantly show a toast.
+     */
+    static quickShow(props: RWUIToastProperties): Promise<void> {
+        const toast = new this(props);
+        return toast.show();
+    }
+
+    /**
      * Shows the toast.
      */
-    abstract show(): Promise<void>;
+    show(): Promise<void> {
+        throw new Error("Attempted to call abstract method");
+    }
 
     /**
      * Renders the toast. This only creates the toast body, and does not show
      * it.
      */
-    abstract render(): HTMLDivElement;
+    render(): HTMLDivElement {
+        throw new Error("Attempted to call abstract method");
+    }
 }

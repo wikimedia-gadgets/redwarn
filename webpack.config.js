@@ -16,7 +16,6 @@ module.exports = {
         }
     },
     devServer: {
-        publicPath: 'build',
         compress: false,
         port: 45991,
         hot: false,

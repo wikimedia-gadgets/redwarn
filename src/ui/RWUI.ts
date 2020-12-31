@@ -9,6 +9,7 @@ import {
 } from "./elements/RWUIDialog";
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 import { RollbackContext } from "rww/definitions/RollbackContext";
+import { RWUIToast } from "./elements/RWUIToast";
 
 /**
  * Redirect class for easy access. UI elements of RedWarn are also created here.
@@ -25,6 +26,10 @@ export default class RWUI {
     /** Alias of {@link StyleManager.activeStyle.classMap.rwSelectionDialog} */
     static get SelectionDialog(): typeof RWUISelectionDialog {
         return StyleManager.activeStyle.classMap.rwSelectionDialog;
+    }
+    /** Alias of {@link StyleManager.activeStyle.classMap.rwToast} */
+    static get Toast(): typeof RWUIToast {
+        return StyleManager.activeStyle.classMap.rwToast;
     }
 
     /**
@@ -88,4 +93,5 @@ export const RWUIElements = {
     [RWUIAlertDialog.elementName]: RWUIAlertDialog,
     [RWUIInputDialog.elementName]: RWUIInputDialog,
     [RWUISelectionDialog.elementName]: RWUISelectionDialog,
+    [RWUIToast.elementName]: RWUIToast,
 };

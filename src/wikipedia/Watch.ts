@@ -1,4 +1,6 @@
+import i18next from "i18next";
 import RedWarnStore from "rww/data/RedWarnStore";
+import RWUI from "rww/ui/RWUI";
 import redirect from "rww/util/redirect";
 import WikipediaAPI from "./API";
 
@@ -22,8 +24,7 @@ export default class Watch {
             }
 
             $("#rwSpyIcon").css("color", "green");
-            // TODO: **toasts**
-            // rw.toast.show("Alerts Enabled - please keep this tab open.");
+            RWUI.Toast.quickShow({ content: i18next.t("ui:toasts.watching") });
 
             this.active = true;
             const r = await WikipediaAPI.api.get({
@@ -120,8 +121,9 @@ export default class Watch {
         } else {
             clearInterval(this.timecheck);
             $("#rwSpyIcon").css("color", "");
-            // TODO: **toasts**
-            // rw.toast.show("Alerts Disabled");
+            RWUI.Toast.quickShow({
+                content: i18next.t("ui:toasts.stoppedWatching"),
+            });
             this.active = false;
         }
     }

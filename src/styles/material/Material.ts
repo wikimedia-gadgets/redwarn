@@ -10,6 +10,7 @@ import {
 import MaterialAlertDialog from "./ui/MaterialAlertDialog";
 import MaterialInputDialog from "./ui/MaterialInputDialog";
 import MaterialSelectionDialog from "./ui/MaterialSelectionDialog";
+import MaterialToast from "./ui/MaterialToast";
 
 const MaterialStyle: Style = {
     name: "material",
@@ -40,13 +41,13 @@ const MaterialStyle: Style = {
             type: "style",
             id: "mdc-styles",
             src:
-                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@8.0.0.tooltip.min.css",
+                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@8.0.0.min.css",
         },
         {
             type: "style",
             id: "mdc-tooltip-styles",
             src:
-                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@8.0.0.min.css",
+                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@8.0.0.tooltip.min.css",
         },
         {
             type: "style",
@@ -62,6 +63,7 @@ const MaterialStyle: Style = {
         rwAlertDialog: MaterialAlertDialog,
         rwInputDialog: MaterialInputDialog,
         rwSelectionDialog: MaterialSelectionDialog,
+        rwToast: MaterialToast,
     },
 
     hooks: {

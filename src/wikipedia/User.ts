@@ -1,11 +1,13 @@
+import i18next from "i18next";
 import { RW_SIG, RW_WELCOME, RW_WELCOME_IP } from "rww/data/RedWarnConstants";
+import RWUI from "rww/ui/RWUI";
 import getMonthHeader from "rww/util/getMonthHeader";
 import regexEscape from "rww/util/regexEscape";
 import WikipediaAPI from "./API";
 import { Gender, GenderDict, GenderPronoun } from "./Gender";
 import { getHighestLevel, WarningAnalysis } from "./WarningLevel";
 import Page from "./Page";
-import i18next from "i18next";
+
 
 interface UserInfo {
     gender: Gender;
@@ -133,9 +135,9 @@ export default class User {
             this.username == null ||
             this.username.toLowerCase() == "undefined"
         ) {
-            // Stop it from being sent to User:undefined
-            // TODO: **toasts**
-            // RedWarnStore.toast.show("Sorry, an error occured. (user undef.)");
+            RWUI.Toast.quickShow({
+                content: i18next.t("ui:toasts.userUndefined"),
+            });
             return;
         }
 

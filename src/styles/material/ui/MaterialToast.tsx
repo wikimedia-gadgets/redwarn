@@ -28,6 +28,7 @@ export default class MaterialToast extends RWUIToast {
         document.body.appendChild(this.render());
         const snackbar = new MDCSnackbar(this.element);
         snackbar.initialize();
+        snackbar.timeoutMs = this.props.timeout ?? 5000;
         snackbar.open();
 
         snackbar.listen(

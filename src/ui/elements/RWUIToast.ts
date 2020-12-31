@@ -26,7 +26,7 @@ export enum RWUIToastStyle {
     Stacked,
 }
 
-export abstract class RWUIToast extends RWUIElement {
+export class RWUIToast extends RWUIElement {
     public static readonly elementName = "rwToast";
 
     /**
@@ -39,7 +39,7 @@ export abstract class RWUIToast extends RWUIElement {
      */
     element?: HTMLDivElement;
 
-    protected constructor(readonly props: RWUIToastProperties) {
+    constructor(readonly props: RWUIToastProperties) {
         super();
         this.id = `toast__${props.id || generateId(16)}`;
         this.props.style ??= RWUIToastStyle.Normal;
@@ -48,11 +48,15 @@ export abstract class RWUIToast extends RWUIElement {
     /**
      * Shows the toast.
      */
-    abstract show(): Promise<void>;
+    show(): Promise<void> {
+        throw new Error("Attempted to call abstract method");
+    }
 
     /**
      * Renders the toast. This only creates the toast body, and does not show
      * it.
      */
-    abstract render(): HTMLDivElement;
+    render(): HTMLDivElement {
+        throw new Error("Attempted to call abstract method");
+    }
 }

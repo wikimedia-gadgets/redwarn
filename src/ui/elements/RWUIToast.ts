@@ -52,6 +52,14 @@ export class RWUIToast extends RWUIElement {
     }
 
     /**
+     * Helper function to create and instantly show a toast.
+     */
+    static quickShow(props: RWUIToastProperties): Promise<void> {
+        const toast = new this(props);
+        return toast.show();
+    }
+
+    /**
      * Shows the toast.
      */
     show(): Promise<void> {

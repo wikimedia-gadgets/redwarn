@@ -1,13 +1,51 @@
-# This file is a template, and might need editing before it works on your project.
-# Full project: https://gitlab.com/pages/plain-html
-image: php:latest
+image: node:12
 
-pages:
+build_npm:
+    stage: build
+    script:
+        - npm install
+    cache:
+        key: "$CI_COMMIT_REF_SLUG"
+        paths:
+            - node_modules/
+        policy: push
+    only:
+        refs:
+            - master
+            - dev
+            - dev-rwTS
+        changes: 
+            - package.json
+            - package-lock.json
+
+test_jest:
+    stage: test
+    script:
+        - npm run test
+    cache:
+        key: "$CI_COMMIT_REF_SLUG"
+        paths:
+            - node_modules/
+        policy: pull
+    only:
+        - master
+        - dev
+        - dev-rwTS
+
+deploy:
     stage: deploy
     script:
-        - php build.php > public/redwarn.js
-    artifacts:
+        - npm run build-prod
+    cache:
+        key: "$CI_COMMIT_REF_SLUG"
         paths:
-            - public
-    only:
+            - node_modules/
+        policy: pull
+    artifacts:
+        name: "redwarn-$CI_COMMIT_REF_NAME"
+        paths:
+            - build/
+    only: 
+        - master
         - dev
+        - dev-rwTS

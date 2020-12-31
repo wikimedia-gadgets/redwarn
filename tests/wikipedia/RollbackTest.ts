@@ -1,23 +1,26 @@
 import RedWarnStore from "../../src/data/RedWarnStore";
 import Rollback from "../../src/wikipedia/Rollback";
-import RedWarnWebTests from "../RedWarnWebTests";
+import RedWarnWebTestUtils from "../RedWarnWebTestUtils";
 
 describe("Rollback flow tests", () => {
     // Mock English Wikipedia
     RedWarnStore.wikiIndex = "https://en.wikipedia.org/w/index.php";
 
-    function mockMW(oldId : number | null | false, newId : number | null | false) {
+    function mockMW(
+        oldId: number | null | false,
+        newId: number | null | false
+    ) {
         (global as any).mw = {
             config: {
-                get(parameter : string) : number | null | false {
+                get(parameter: string): number | null | false {
                     switch (parameter) {
                         case "wgDiffOldId":
                             return oldId;
                         case "wgDiffNewId":
                             return newId;
                     }
-                }
-            }
+                },
+            },
         };
     }
 
@@ -29,34 +32,34 @@ describe("Rollback flow tests", () => {
         expected: [number, number];
     }
 
-    const testCases : { [key : string]: RollbackTestCase } = {
+    const testCases: { [key: string]: RollbackTestCase } = {
         "Invalid diff page": {
             oldId: null,
             newId: null,
             testHTML: "blank",
-            expected: [ null, null ]
+            expected: [null, null],
         },
         "Single revision (only revision)": {
             oldId: 67890,
             newId: 67890,
             testHTML: "diff_onlyrev",
-            expected: [ 67890, 67890 ]
+            expected: [67890, 67890],
         },
         "Older revision | Newer revision": {
             oldId: 12345,
             newId: 67890,
             testHTML: "diff_on",
-            expected: [ 12345, 67890 ]
+            expected: [12345, 67890],
         },
         "Newer revision | Older revision": {
             oldId: 67890,
             newId: 12345,
             testHTML: "diff_no",
-            expected: [ 12345, 67890 ]
-        }
+            expected: [12345, 67890],
+        },
     };
 
-    RedWarnWebTests.initialize();
+    RedWarnWebTestUtils.initialize();
 
     for (const testName of Object.keys(testCases)) {
         test(testName, () => {

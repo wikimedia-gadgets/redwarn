@@ -1,7 +1,7 @@
 {
     "name": "redwarn-web",
     "version": "0.2.0",
-    "description": "Wikipedia anti-vandalism tool.",
+    "description": "Wikipedia patrol and counter-vandalism tool.",
     "main": "src/RedWarnLite.ts",
     "dependencies": {
         "@material/dialog": "^8.0.0",
@@ -50,7 +50,9 @@
     },
     "scripts": {
         "start": "webpack serve --config webpack.config.js",
-        "build": "webpack -p",
+        "build": "webpack",
+        "build-prod": "cross-env NODE_ENV=production webpack",
+        "build-dev": "cross-env NODE_ENV=development webpack",
         "profile": "webpack --profile",
         "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
     },

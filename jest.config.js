@@ -14,6 +14,9 @@ module.exports = {
         "node_modules[/\\\\](?!@material)"
     ],
     testRegex: "(/tests/)(.*?)(Tests?)(\\.tsx?|\\.jsx?)$",
-    moduleFileExtensions: ["ts", "tsx", "js"]
+    moduleFileExtensions: ["ts", "tsx", "js"],
+    moduleNameMapper: {
+        "^rww(.*)$": "<rootDir>/src$1"
+    }
 
 };

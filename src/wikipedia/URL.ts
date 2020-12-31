@@ -37,8 +37,8 @@ export default class WikipediaURL {
      * @param additionalURIComponents Additional URI components to include.
      */
     static getDiffUrl(
-        targetRevisionID: number,
-        sourceRevisionID?: number,
+        targetRevisionID: number | string,
+        sourceRevisionID?: number | string,
         additionalURIComponents?: URIComponents
     ): string {
         return url(

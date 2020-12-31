@@ -1,9 +1,11 @@
+import i18next from "i18next";
 import {
     RW_LINK_SUMMARY,
     RW_SIG,
     RW_WELCOME,
     RW_WELCOME_IP,
 } from "rww/data/RedWarnConstants";
+import RWUI from "rww/ui/RWUI";
 import getMonthHeader from "rww/util/getMonthHeader";
 import regexEscape from "rww/util/regexEscape";
 import WikipediaAPI from "./API";
@@ -136,9 +138,9 @@ export default class User {
             this.username == null ||
             this.username.toLowerCase() == "undefined"
         ) {
-            // Stop it from being sent to User:undefined
-            // TODO: **toasts**
-            // RedWarnStore.toast.show("Sorry, an error occured. (user undef.)");
+            RWUI.Toast.quickShow({
+                content: i18next.t("ui:toasts.userUndefined"),
+            });
             return;
         }
 

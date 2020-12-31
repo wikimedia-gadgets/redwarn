@@ -85,8 +85,7 @@ export default class Rollback {
 
     async welcomeRevUser(): Promise<void> {
         // Send welcome to user who made most recent revision
-        // TODO toasts
-        // rw.visuals.toast.show("Please wait...", false, false, 1000);
+        RWUI.Toast.quickShow({ content: i18next.t("ui:toasts.pleaseWait") });
         await this.rollbackRevision.user.quickWelcome();
     }
     async promptRestoreReason(revID: number): Promise<void> {
@@ -120,8 +119,9 @@ export default class Rollback {
         });
         if (!result.edit) {
             console.error(result);
-            // TODO toasts
-            //rw.visuals.toast.show("Sorry, there was an error, likely an edit conflict. This edit has not been restored.");
+            RWUI.Toast.quickShow({
+                content: i18next.t("ui:toasts.restoreError"),
+            });
         } else if (!this.noRedirects) {
             WikipediaAPI.goToLatestRevision(this.rollbackRevision.page);
         }
@@ -426,7 +426,7 @@ export default class Rollback {
         defaultWarnIndex,
         reason,
         showRollbackDoneOptions,
-    }: RollbackContext) {
+    }: RollbackContext): Promise<void> {
         const latestRev = await WikipediaAPI.latestRevisionNotByUser(
             this.rollbackRevision.page,
             targetRevision.user.username
@@ -434,7 +434,9 @@ export default class Rollback {
 
         if (latestRev.parentid === this.rollbackRevision.revid) {
             if (this.noRedirects) {
-                // TODO show toast
+                RWUI.Toast.quickShow({
+                    content: i18next.t("ui:toasts.newerRev"),
+                });
             } else {
                 // looks like that there is a newer revision! redirect to it.
                 WikipediaAPI.goToLatestRevision(this.rollbackRevision.page);
@@ -467,10 +469,9 @@ export default class Rollback {
             $("#rwCurrentRevRollbackBtns").show();
             $("#rwRollbackInProgress").hide();
 
-            // TODO toast
-            /* rw.visuals.toast.show(
-                "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
-            ); */
+            RWUI.Toast.quickShow({
+                content: i18next.t("ui:toasts.rollbackError"),
+            });
         } else {
             this.progressBarElement.close();
             return showRollbackDoneOptions
@@ -487,7 +488,7 @@ export default class Rollback {
         defaultWarnIndex,
         reason,
         showRollbackDoneOptions,
-    }: RollbackContext) {
+    }: RollbackContext): Promise<void> {
         try {
             const summary = i18next.t("wikipedia:summaries.rollback", {
                 username: targetRevision.user.username,
@@ -510,10 +511,9 @@ export default class Rollback {
             // Show rollback options again
             $("#rwCurrentRevRollbackBtns").show();
             $("#rwRollbackInProgress").hide();
-            // TODO toast
-            /* rw.visuals.toast.show(
-                "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
-            ); */
+            RWUI.Toast.quickShow({
+                content: i18next.t("ui:toasts.rollbackError"),
+            });
         }
 
         this.progressBarElement.close();

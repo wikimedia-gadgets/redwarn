@@ -1,0 +1,7 @@
+{
+    "redwarn": {
+        "name": "Name of RedWarn, translated.",
+        "signature": "This is a link to RedWarn's page on enwiki (WP:RW)",
+        "userAgent": "Unless you know what you are doing, this usually shouldn't be changed, just copy the en-US one."
+    }
+}

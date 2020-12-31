@@ -1,0 +1,29 @@
+{
+    "restore": {
+        "label": "The title of the dialog prompting users for a reason to restore.",
+        "helperText": "Text prompting the users to enter a reason",
+        "actions": {
+            "ok": "The text of the restore button"
+        }
+    },
+    "rollback": {
+        "label": "The title of the dialog prompting users for a reason to restore.",
+        "helperText": "Text prompting the users to enter a reason",
+        "actions": {
+            "ok": "The text of the rollback button"
+        }
+    },
+    "okCancel": {
+        "ok": "Self-explanatory, default ok button",
+        "cancel": "Default cancel button"
+    },
+    "toasts": {
+        "pleaseWait": "Self-explanatory, used when something is loading",
+        "restoreError": "Used when a restore throws an error",
+        "rollbackError": "Used when an attempted rollback throws an error",
+        "newerRev": "While attempting to rollback, a newer revision was detected, so the rollback cannot continue",
+        "userUndefined": "Used when a user is undefined, usually when the user doesn't exist, can't be found, or is suppressed/oversighted",
+        "watching": "Used to notify the user that the alert on page change function has successfully been enabled. Should also tell the user to keep the tab open.",
+        "stoppedWatching": "Used to notify the user that the alert on page change function has successfully been disabled."
+    }
+}

@@ -1,4 +1,4 @@
-import semanticDifference from "../util/semanticDifference";
+import semanticDifference from "rww/util/semanticDifference";
 import i18next from "i18next";
 
 const mwChecks = {

@@ -1,6 +1,6 @@
 import { RWUIToast } from "rww/ui/elements/RWUIToast";
 import { h } from "tsx-dom";
-import { getMaterialStorage } from "../storage/MaterialStyleStorage";
+import { getMaterialStorage } from "rww/styles/material/storage/MaterialStyleStorage";
 import { MDCSnackbar } from "@material/snackbar";
 
 /**
@@ -69,7 +69,7 @@ export default class MaterialToast extends RWUIToast {
                                 type="button"
                                 class="mdc-button mdc-snackbar__action"
                             >
-                                <div class="mdc-button__ripple"></div>
+                                <div class="mdc-button__ripple" />
                                 <span class="mdc-button__label">
                                     {this.props.action.text}
                                 </span>

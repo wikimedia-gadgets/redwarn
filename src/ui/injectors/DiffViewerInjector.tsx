@@ -1,18 +1,18 @@
-import Rollback from "../../wikipedia/Rollback";
-import Revision from "../../wikipedia/Revision";
+import Rollback from "rww/wikipedia/Rollback";
+import Revision from "rww/wikipedia/Revision";
 import {
     RollbackOption,
     RollbackOptions,
-} from "../../definitions/RollbackOptions";
+} from "rww/definitions/RollbackOptions";
 import { MDCRipple } from "@material/ripple";
 import { MDCTooltip } from "@material/tooltip";
 import { MDCLinearProgress } from "@material/linear-progress";
-import { RollbackDoneOptions } from "../../definitions/RollbackDoneOptions";
+import { RollbackDoneOptions } from "rww/definitions/RollbackDoneOptions";
 import { BaseProps, h } from "tsx-dom";
-import Page from "../../wikipedia/Page";
-import { Warnings } from "../../wikipedia/Warnings";
+import Page from "rww/wikipedia/Page";
+import { Warnings } from "rww/wikipedia/Warnings";
 import { RWUISelectionDialogItem } from "../elements/RWUIDialog";
-import { RollbackContext } from "../../definitions/RollbackContext";
+import { RollbackContext } from "rww/definitions/RollbackContext";
 
 function getRollbackOptionClickHandler(
     context: RollbackContext,

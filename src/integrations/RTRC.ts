@@ -1,9 +1,9 @@
 import Rollback from "rww/wikipedia/Rollback";
 import User from "rww/wikipedia/User";
-import { RollbackContext } from "../definitions/RollbackContext";
-import Revision from "../wikipedia/Revision";
-import Page from "../wikipedia/Page";
-import DiffViewerInjector from "../ui/injectors/DiffViewerInjector";
+import { RollbackContext } from "rww/definitions/RollbackContext";
+import Revision from "rww/wikipedia/Revision";
+import Page from "rww/wikipedia/Page";
+import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 
 export default class RTRC {
     private static onRTRC: boolean;

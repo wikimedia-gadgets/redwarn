@@ -1,7 +1,7 @@
 import Revision from "./Revision";
 import WikipediaAPI from "./API";
-import { RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
-import RedWarnStore from "../data/RedWarnStore";
+import { RW_WIKIS_TAGGABLE } from "rww/data/RedWarnConstants";
+import RedWarnStore from "rww/data/RedWarnStore";
 import i18next from "i18next";
 import User from "./User";
 

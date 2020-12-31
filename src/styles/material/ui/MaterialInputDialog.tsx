@@ -6,8 +6,11 @@ import i18next from "i18next";
 import { h } from "tsx-dom";
 
 import { RWUIInputDialog } from "rww/ui/elements/RWUIDialog";
-import { registerMaterialDialog, upgradeMaterialDialog } from "../Material";
-import { getMaterialStorage } from "../storage/MaterialStyleStorage";
+import {
+    registerMaterialDialog,
+    upgradeMaterialDialog,
+} from "rww/styles/material/Material";
+import { getMaterialStorage } from "rww/styles/material/storage/MaterialStyleStorage";
 import MaterialButton from "./MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,

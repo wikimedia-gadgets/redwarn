@@ -1,15 +1,15 @@
 import i18next from "i18next";
-import { RW_VERSION_TAG, RW_WIKIS_TAGGABLE } from "../data/RedWarnConstants";
-import RedWarnStore from "../data/RedWarnStore";
-import RWUI from "../ui/RWUI";
-import redirect from "../util/redirect";
+import { RW_VERSION_TAG, RW_WIKIS_TAGGABLE } from "rww/data/RedWarnConstants";
+import RedWarnStore from "rww/data/RedWarnStore";
+import RWUI from "rww/ui/RWUI";
+import redirect from "rww/util/redirect";
 import WikipediaAPI from "./API";
 import Revision from "./Revision";
 import WikipediaURL from "./URL";
 import { Warnings } from "./Warnings";
 import Page from "./Page";
-import DiffViewerInjector from "../ui/injectors/DiffViewerInjector";
-import { RollbackContext } from "../definitions/RollbackContext";
+import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
+import { RollbackContext } from "rww/definitions/RollbackContext";
 
 // interface RollbackContext {
 //     reason: string;

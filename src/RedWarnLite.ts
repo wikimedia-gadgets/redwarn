@@ -27,7 +27,6 @@ import WikipediaURL from "./wikipedia/URL";
 import User from "./wikipedia/User";
 import { Warnings } from "./wikipedia/Warnings";
 import Watch from "./wikipedia/Watch";
-
 import MediaWiki from "./wikipedia/MediaWiki";
 
 $(document).ready(async () => {

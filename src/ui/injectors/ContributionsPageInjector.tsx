@@ -1,8 +1,8 @@
-import Rollback from "../../wikipedia/Rollback";
+import Rollback from "rww/wikipedia/Rollback";
 import { MDCTooltip } from "@material/tooltip";
 import { h } from "tsx-dom";
-import { RollbackContext } from "../../definitions/RollbackContext";
-import Revision from "../../wikipedia/Revision";
+import { RollbackContext } from "rww/definitions/RollbackContext";
+import Revision from "rww/wikipedia/Revision";
 
 export default class DiffViewerInjector {
     /**

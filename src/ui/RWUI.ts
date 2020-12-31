@@ -7,8 +7,8 @@ import {
     RWUISelectionDialog,
     RWUISelectionDialogItem,
 } from "./elements/RWUIDialog";
-import DiffViewerInjector from "./injectors/DiffViewerInjector";
-import { RollbackContext } from "../definitions/RollbackContext";
+import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
+import { RollbackContext } from "rww/definitions/RollbackContext";
 
 /**
  * Redirect class for easy access. UI elements of RedWarn are also created here.

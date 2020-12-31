@@ -82,8 +82,9 @@ export default class Rollback {
 
         if (!result.edit) {
             console.error(result);
-            // TODO toasts
-            //rw.visuals.toast.show("Sorry, there was an error, likely an edit conflict. This edit has not been restored.");
+            RWUI.Toast.quickShow({
+                content: i18next.t("ui:toasts.pleaseWait"),
+            });
             return false;
         }
 
@@ -149,7 +150,10 @@ export default class Rollback {
                         latestRevision.parentID
                     )
                 );
-            // TODO toast on else
+            else
+                RWUI.Toast.quickShow({
+                    content: i18next.t("ui:toasts.newerRev"),
+                });
         } else return latestRevision;
     }
 
@@ -241,10 +245,9 @@ export default class Rollback {
             $("#rwCurrentRevRollbackBtns").show();
             $("#rwRollbackInProgress").hide();
 
-            // TODO toast
-            /* rw.visuals.toast.show(
-                "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
-            ); */
+            RWUI.Toast.quickShow({
+                content: i18next.t("ui:toasts.rollbackError"),
+            });
         } else {
             if (fromInjector) {
                 progressBar.close();
@@ -288,10 +291,9 @@ export default class Rollback {
             // Show rollback options again
             $("#rwCurrentRevRollbackBtns").show();
             $("#rwRollbackInProgress").hide();
-            // TODO toast
-            /* rw.visuals.toast.show(
-                "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied."
-            ); */
+            RWUI.Toast.quickShow({
+                content: i18next.t("ui:toasts.rollbackError"),
+            });
         }
 
         if (fromInjector) {

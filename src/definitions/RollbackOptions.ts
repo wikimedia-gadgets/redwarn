@@ -1,6 +1,5 @@
-import { Warnings } from "../wikipedia/Warnings";
-import RWUI from "../ui/RWUI";
-import Rollback from "../wikipedia/Rollback";
+import { Warnings } from "rww/wikipedia/Warnings";
+import RWUI from "rww/ui/RWUI";
 import { RollbackContext } from "./RollbackContext";
 
 interface ActionRollback {

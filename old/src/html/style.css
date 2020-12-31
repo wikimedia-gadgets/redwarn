@@ -1,6 +1,42 @@
+@keyframes pgIconsFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes pgIconsIndicatorsFadeIn {
+    from {
+        max-width: 0;
+    }
+    to {
+        max-width: 100%;
+    }
+}
+
 /* MW INDICATORS to stop tooltip clashes */
-.mw-indicators {
+.mw-indicators,
+#rwPGIconContainer {
     z-index: 1;
+    overflow: unset;
+}
+
+/* Indicators-situated page icons */
+#content #rwPGIconContainer {
+    margin: 0 0 0 12px;
+    float: right;
+    font-size: 0.875em;
+    line-height: 1.6;
+    position: relative;
+    padding-top: 0.4em;
+    overflow: hidden;
+    height: 2em;
+}
+
+#content #rwPGIconContainer.rw--upgraded {
+    animation: pgIconsFadeIn 0.2s ease-in-out, pgIconsIndicatorsFadeIn 0.3s ease-in-out;
 }
 
 .mdl-tooltip {

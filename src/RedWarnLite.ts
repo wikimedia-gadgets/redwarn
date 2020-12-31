@@ -8,21 +8,38 @@
  *
  **/
 
-/* IMPORT EVERYTHING HERE! */
+/* Libraries */
 
+import i18next from "i18next";
 import RedWarnStore from "./data/RedWarnStore";
 import RedWarnHooks from "./event/RedWarnHooks";
 import RTRC from "./integrations/RTRC";
 import Localization from "./localization/Localization";
 import StyleManager from "./styles/StyleManager";
+/* IMPORT EVERYTHING HERE! */
 import Dependencies from "./ui/Dependencies";
-import WikipediaAPI from "./wikipedia/API";
 import RWUI from "./ui/RWUI";
+import WikipediaAPI from "./wikipedia/API";
+import Rollback from "./wikipedia/Rollback";
+import * as RedWarnConstants from "./data/RedWarnConstants";
+import * as Util from "./util";
+import WikipediaURL from "./wikipedia/URL";
+import User from "./wikipedia/User";
+import { Warnings } from "./wikipedia/Warnings";
+import Watch from "./wikipedia/Watch";
+
 import MediaWiki from "./wikipedia/MediaWiki";
 
-console.log("Starting RedWarn...");
-// noinspection JSDeprecatedSymbols
 $(document).ready(async () => {
+    console.log("Starting RedWarn...");
+    if (window.rw != null) {
+        mw.notify(
+            "You have two versions of RedWarn installed at once! Please edit your common.js or skin js files to ensure that you only use one instance to prevent issues.",
+            { type: "error", title: "WARNING!!" }
+        );
+        throw "Two instances of RedWarn detected"; // die
+    }
+
     // Load in languages first.
     await Localization.init();
 
@@ -48,7 +65,7 @@ $(document).ready(async () => {
     await Promise.all([
         RedWarnHooks.executeHooks("init"),
         Dependencies.resolve(),
-        WikipediaAPI.init()
+        WikipediaAPI.init(),
     ]);
 
     RTRC.init();
@@ -64,6 +81,9 @@ $(document).ready(async () => {
     await RWUI.inject();
 
     await RedWarnHooks.executeHooks("postUIInject");
+
+    window.RedWarn = RedWarn;
+    window.rw = RedWarn;
 
     // Initialize components here.
     // As much as possible, each component should be its own class to make everything
@@ -87,3 +107,65 @@ $(document).ready(async () => {
 
     // console.log(await (a as RWUIDialog).show());
 });
+
+export default class RedWarn {
+    static get RedWarnStore(): typeof RedWarnStore {
+        return RedWarnStore;
+    }
+    static get RedWarnHooks(): typeof RedWarnHooks {
+        return RedWarnHooks;
+    }
+    static get Localization(): typeof Localization {
+        return Localization;
+    }
+    static get i18next(): typeof i18next {
+        return i18next;
+    }
+    static get WikipediaAPI(): typeof WikipediaAPI {
+        return WikipediaAPI;
+    }
+    static get Rollback(): typeof Rollback {
+        return Rollback;
+    }
+    static get StyleManager(): typeof StyleManager {
+        return StyleManager;
+    }
+    static get RWUI(): typeof RWUI {
+        return RWUI;
+    }
+    static get RedWarnConstants(): typeof RedWarnConstants {
+        return RedWarnConstants;
+    }
+    static get RTRC(): typeof RTRC {
+        return RTRC;
+    }
+    static get Util(): typeof Util {
+        return Util;
+    }
+    static get WikipediaURL(): typeof WikipediaURL {
+        return WikipediaURL;
+    }
+    static get User(): typeof User {
+        return User;
+    }
+    static get Warnings(): typeof Warnings {
+        return Warnings;
+    }
+    static get Dependencies(): typeof Dependencies {
+        return Dependencies;
+    }
+
+    /**
+     * @deprecated not yet implemented
+     */
+    static get Watch(): typeof Watch {
+        return Watch;
+    }
+}
+
+declare global {
+    interface Window {
+        RedWarn: typeof RedWarn;
+        rw: typeof RedWarn;
+    }
+}

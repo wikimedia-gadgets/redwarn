@@ -1,6 +1,6 @@
 import { h } from "tsx-dom";
-import RedWarnStore from "../data/RedWarnStore";
-import StyleManager from "../styles/StyleManager";
+import RedWarnStore from "rww/data/RedWarnStore";
+import StyleManager from "rww/styles/StyleManager";
 
 export interface Dependency {
     type: "style" | "script";

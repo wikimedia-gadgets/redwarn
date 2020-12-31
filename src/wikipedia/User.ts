@@ -1,9 +1,9 @@
-import {RW_SIG, RW_WELCOME, RW_WELCOME_IP,} from "../data/RedWarnConstants";
-import getMonthHeader from "../util/getMonthHeader";
-import regexEscape from "../util/regexEscape";
+import { RW_SIG, RW_WELCOME, RW_WELCOME_IP } from "rww/data/RedWarnConstants";
+import getMonthHeader from "rww/util/getMonthHeader";
+import regexEscape from "rww/util/regexEscape";
 import WikipediaAPI from "./API";
-import {Gender, GenderDict, GenderPronoun} from "./Gender";
-import {getHighestLevel, WarningAnalysis} from "./WarningLevel";
+import { Gender, GenderDict, GenderPronoun } from "./Gender";
+import { getHighestLevel, WarningAnalysis } from "./WarningLevel";
 import Page from "./Page";
 import i18next from "i18next";
 
@@ -70,7 +70,11 @@ export default class User {
      */
     async getLastWarningLevel(forceRecheck = false): Promise<WarningAnalysis> {
         if (!this.cache.lastWarning || forceRecheck) {
-            const revisionWikitext = (await Page.fromTitle(`User talk:${this.username}`).getLatestRevision()).content;
+            const revisionWikitext = (
+                await Page.fromTitle(
+                    `User talk:${this.username}`
+                ).getLatestRevision()
+            ).content;
             // TODO Handle errors
 
             if (!revisionWikitext) {
@@ -135,7 +139,11 @@ export default class User {
             return;
         }
 
-        let revisionWikitext = (await Page.fromTitle(`User talk:${this.username}`).getLatestRevision()).content;
+        let revisionWikitext = (
+            await Page.fromTitle(
+                `User talk:${this.username}`
+            ).getLatestRevision()
+        ).content;
         // TODO Handle errors
 
         if (!revisionWikitext) {
@@ -211,8 +219,10 @@ export default class User {
         finalText = wikiTextLines.join("\n");
         console.log(finalText);
 
-        await Page.fromTitle(`User talk:${this.username}`)
-            .edit(finalText, `${summary} ${i18next.t("common:redwarn.signature")}`);
+        await Page.fromTitle(`User talk:${this.username}`).edit(
+            finalText,
+            `${summary} ${i18next.t("common:redwarn.signature")}`
+        );
         // TODO Handle errors
     }
 

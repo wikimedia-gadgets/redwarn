@@ -82,11 +82,25 @@ rw.topIcons = {
         "showsOnUneditablePages": true,
         "colorModifier": null, // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
         "enabled": true // to show in main screen or more options screen
-    }
+    },
 
 
     // MORE OPTIONS DEFAULTS STAY IN MORE OPTIONS - NO WAY TO MOVE THEM OUT OR CHANGE ORDER
 
+
+    // HIDDEN BY DEFAULT
+
+    // RPM STATS
+    {
+        "title": "Vandalism Statistics",
+        "shortTitle": "Stats",
+        "icon": "insights", // material icon
+        "callback": ()=>redirect("https://redwarn.toolforge.org/tools/rpm/", true), // when clicked
+        "showsOnlyOnUserPages": false,
+        "showsOnUneditablePages": true,
+        "colorModifier": null, // if not empty will be used for things like turning notif bell green, for this would have to call a redraw func unless we add a defined class for each
+        "enabled": false // to show in main screen or more options screen
+    }
   ],
 
   "generateHTML" : ()=>{
@@ -159,7 +173,7 @@ rw.topIcons = {
         const iconID = "rwTopIcon"+ i;
         // if icon enabled and (icon shows on user page and page is userpage and is editable, or icon shows on uneditable pages and page isn't editable)
         // FOR NORMAL ICONS ONLY, other twinkle style menu handled elsewhere
-        if ((!icon.enabled && ((icon.showsOnlyOnUserPages && pageIsUserPage) || (pageIsEditable && !icon.showsOnlyOnUserPages) || (!pageIsEditable && icon.showsOnUneditablePages)))) {
+        if ((!icon.enabled && ((icon.showsOnlyOnUserPages && pageIsUserPage) || (pageIsEditable && !icon.showsOnlyOnUserPages) || (!pageIsEditable && icon.showsOnUneditablePages))) && icon.title != "More Options") {
             finalHTML += `
                 <div class="mdl-button mdl-js-button" style="width:100%; text-align: left;${icon.colorModifier == null ? `` : `color:`+ icon.colorModifier}" onclick="window.parent.postMessage('${iconID}', '*');">
                     <span class="material-icons" style="padding-right:20px">${icon.icon}</span>${icon.title}

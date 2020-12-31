@@ -152,15 +152,67 @@ RedWarn 16 is finally here, bringing UX improvements, emergency and oversight re
      */
     "visuals" : {
         /**
+         * Load an external resource in a blocking manner. Inserts to head by default.
+         *
+         * @param type {"css"|"js"} The type of resource to load
+         * @param src {string} Link to the resource to load
+         * @param target {Element} The element to push to
+         * @method init
+         * @extends rw.visuals
+         */
+        "blockingLoad" : async (type, src, target = document.head) => {
+            var resolver = null, rejector = null;
+            var loadPromise = new Promise((res, rej) => {
+                resolver = res;
+                rejector = rej;
+            });
+            if (type === "js") {
+                var script = document.createElement("script");
+                script.onload = resolver;
+                script.src = src;
+                target.appendChild(script);
+                
+                await loadPromise;
+                return script;
+            } else if (type === "css") {
+                var style = document.createElement("link");
+                style.setAttribute("rel", "stylesheet");
+                style.setAttribute("type", "text/css");
+                style.onload = resolver;
+                style.onerror = rejector;
+                style.href = src;
+                target.appendChild(style);
+                
+                await loadPromise;
+                return style;
+            } else {
+                var style = document.createElement("link");
+                style.setAttribute("rel", type);
+                style.onload = resolver;
+                style.onerror = rejector;
+                style.href = src;
+                target.appendChild(style);
+                
+                await loadPromise;
+                return style;
+            }
+        },
+        /**
          * Adds RedWarn's styles, libaries and other elements to the current page and waits for them to load, then excecutes the callback function
          *
          * @param {function} callback 
          * @method init
          * @extends rw.visuals
          */
-        "init" : callback=> {
+        "init" : async (callback) => {
             // Welcome message
             console.log("RedWarn "+ rw.version + " - (c) 2020 RedWarn Contributors");
+            
+            // Load in required resources (resources that have to be loaded prior to element renders)
+            
+            await rw.visuals.blockingLoad("css", "https://redwarn.toolforge.org/cdn/css/materialicons.css");
+            if (document.fonts) await document.fonts.load('24px "Material Icons"');
+            
             // Load MDL and everything needed, then callback when all loaded
             $('head').append(`
                 <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/jqueryContextMenu.css">
@@ -191,6 +243,9 @@ RedWarn 16 is finally here, bringing UX improvements, emergency and oversight re
 
             // Show redwarn only spans
             $(".RedWarnOnlyVisuals").show();
+
+            // Hide no redwarn spans
+            $(".NoRedWarnVisuals").hide();
             
             // wait for load
             waitForMDLLoad(callback);
@@ -220,7 +275,7 @@ RedWarn 16 is finally here, bringing UX improvements, emergency and oversight re
 
             // Thanks to User:Awesome Aasim for the suggestion and some sample code.
             try {
-                let pageIconHTML = "<div id='rwPGIconContainer' style='display:none;display: inline-block;'>"; // obj it is appended to
+                let pageIconHTML = "<div id='rwPGIconContainer'>"; // obj it is appended to
                 // Possible icons locations: default (page icons area) or sidebar
                 let iconsLocation = rw.config.pgIconsLocation ? rw.config.pgIconsLocation : "default"; // If set in config, use config
 
@@ -230,8 +285,10 @@ RedWarn 16 is finally here, bringing UX improvements, emergency and oversight re
                 pageIconHTML += "</div>"; // close contianer
                 if (iconsLocation == "default") {
                     try {
-                        $(".mw-indicators").append("&nbsp;&nbsp;&nbsp;" + pageIconHTML); // Append our icons to the page icons with spacing
+                        $(".mw-indicators").before(pageIconHTML); // Append our icons to the page icons with spacing
+                        $("#rwPGIconContainer").addClass("rw--upgraded");
                     } catch (error) {
+                        console.error(error);
                         // Incompatible theme, use sidebar instead
                         iconsLocation = "sidebar";
                     }
@@ -282,7 +339,6 @@ RedWarn 16 is finally here, bringing UX improvements, emergency and oversight re
                 mw.notify("RedWarn isn't compatible with this theme.");
                 return; // Exit
             }
-            
 
             // Now register all tooltips
             for (let item of document.getElementsByClassName("mdl-tooltip")) rw.visuals.register(item); 
@@ -292,9 +348,6 @@ RedWarn 16 is finally here, bringing UX improvements, emergency and oversight re
 
             // Now register handlers
             rw.topIcons.addHandlers();
-
-            // Now fade in container
-            $("#rwPGIconContainer").fadeIn();
             
             // That's done :)
         }
@@ -492,12 +545,12 @@ function initRW() {
         rw.info.featureRestrictPermissionLevel("confirmed", false, ()=>{
             // We don't have permission
             // Add red lock to the top right to show that RedWarn cannot be used
-            document.getElementsByClassName("mw-indicators mw-body-content")[0].innerHTML = `
-            <div id="Lock" class="icon material-icons"><span style="cursor: help; color:red;" onclick="">lock</span></div>
-            <div class="mdl-tooltip" for="Lock">
-                You must be Autoconfirmed or Confirmed to use RedWarn.  Please refer the user guide for more information.
-            </div>
-            `;
+            $( `<div id='rwPGIconContainer'>
+                <div id="Lock" class="icon material-icons"><span style="cursor: help; color:red;" onclick="">lock</span></div>
+                <div class="mdl-tooltip" for="Lock">
+                    You must be Autoconfirmed or Confirmed to use RedWarn.  Please refer the user guide for more information.
+                </div>
+            </div>` ).insertBefore($(".mw-indicators"));
             // Now register that
             for (let item of document.getElementsByClassName("mdl-tooltip")) {
                 rw.visuals.register(item); 
@@ -547,6 +600,9 @@ function initRW() {
             } else if (rw.config.firstTimeSetupComplete == null) { // Check if first time setup has been completed
                 rw.firstTimeSetup.launch();
             }
+
+            // Campaign info load
+            rw.campaigns.load();
 
             // TODO: probably fix this mess into a URL
             // HERE REALLY REALLY NEEDS CLEANUP

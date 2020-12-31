@@ -1,4 +1,4 @@
-import regexClone from "../util/regexClone";
+import regexClone from "rww/util/regexClone";
 
 /**
  * The Warning Level is derived from the English Wikipedia's four-level tier

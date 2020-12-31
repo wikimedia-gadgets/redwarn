@@ -1,5 +1,5 @@
 import { ComponentChild } from "tsx-dom";
-import generateId from "../../util/generateId";
+import generateId from "rww/util/generateId";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 
 export enum RWUIDialogActionType {

@@ -1,5 +1,5 @@
-import Rollback from "../wikipedia/Rollback";
-import User from "../wikipedia/User";
+import Rollback from "rww/wikipedia/Rollback";
+import User from "rww/wikipedia/User";
 import { RollbackContext } from "../definitions/RollbackContext";
 import Revision from "../wikipedia/Revision";
 import Page from "../wikipedia/Page";

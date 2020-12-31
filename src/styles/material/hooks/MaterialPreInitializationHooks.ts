@@ -1,4 +1,4 @@
-import RedWarnStore from "../../../data/RedWarnStore";
+import RedWarnStore from "rww/data/RedWarnStore";
 
 import { MaterialStyleStorage } from "../storage/MaterialStyleStorage";
 

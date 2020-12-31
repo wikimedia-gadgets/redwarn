@@ -1,9 +1,12 @@
-import {MDCDialog} from "@material/dialog";
-import {MDCRipple} from "@material/ripple";
-import {RWUIDialog} from "../../ui/elements/RWUIDialog";
+import { MDCDialog } from "@material/dialog";
+import { MDCRipple } from "@material/ripple";
+import { RWUIDialog } from "rww/ui/elements/RWUIDialog";
 import Style from "../Style";
 import MaterialPreInitializationHooks from "./hooks/MaterialPreInitializationHooks";
-import {getMaterialStorage, MaterialStyleStorage,} from "./storage/MaterialStyleStorage";
+import {
+    getMaterialStorage,
+    MaterialStyleStorage,
+} from "./storage/MaterialStyleStorage";
 import MaterialAlertDialog from "./ui/MaterialAlertDialog";
 import MaterialInputDialog from "./ui/MaterialInputDialog";
 import MaterialSelectionDialog from "./ui/MaterialSelectionDialog";
@@ -68,23 +71,39 @@ const MaterialStyle: Style = {
 
 export default MaterialStyle;
 
-export function upgradeMaterialDialogButtons(dialog: RWUIDialog) : void {
+export function upgradeMaterialDialogButtons(dialog: RWUIDialog): void {
     $(dialog.element)
         .find("button")
         .each((_, el) => new MDCRipple(el).initialize());
 }
 
-export function upgradeMaterialDialog(dialog: RWUIDialog): MDCDialog {
+type WritableKeys<T> = {
+    [P in keyof T]-?: (<U>() => U extends { [Q in P]: T[P] } ? 1 : 2) extends <
+        U
+    >() => U extends { -readonly [Q in P]: T[P] } ? 1 : 2
+        ? P
+        : never;
+}[keyof T]; // https://stackoverflow.com/a/49579497/12573645
+
+export function upgradeMaterialDialog(
+    dialog: RWUIDialog,
+    options?: Map<WritableKeys<MDCDialog>, any>
+): MDCDialog {
     upgradeMaterialDialogButtons(dialog);
 
     const mdcDialog = new MDCDialog(dialog.element);
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    options?.forEach((v, k) => (mdcDialog[k] = v));
+
     mdcDialog.initialize();
     mdcDialog.open();
 
     return mdcDialog;
 }
 
-export function registerMaterialDialog(dialog: RWUIDialog) : void {
+export function registerMaterialDialog(dialog: RWUIDialog): void {
     getMaterialStorage().dialogTracker.set(dialog.id, dialog);
     document.body.appendChild(dialog.render());
 }

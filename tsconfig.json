@@ -13,6 +13,10 @@
         "lib": ["esnext", "dom"],
         "importHelpers": true,
         "sourceMap": true,
+        "baseUrl": "./",
+        "paths": {
+            "rww/*": ["src/*"]
+        },
         "allowJs": true
     },
     "include": [

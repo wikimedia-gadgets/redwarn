@@ -1,6 +1,6 @@
-import RedWarnStore from "../data/RedWarnStore";
-import StyleManager from "../styles/StyleManager";
-import User from "../wikipedia/User";
+import RedWarnStore from "rww/data/RedWarnStore";
+import StyleManager from "rww/styles/StyleManager";
+import User from "rww/wikipedia/User";
 import {
     RWUIAlertDialog,
     RWUIInputDialog,

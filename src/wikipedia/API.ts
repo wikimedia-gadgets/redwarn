@@ -1,6 +1,9 @@
 import i18next from "i18next";
-import RedWarnStore from "../data/RedWarnStore";
-import redirect from "../util/redirect";
+import { RW_LINK_SUMMARY, RW_WIKIS_TAGGABLE } from "rww/data/RedWarnConstants";
+import RedWarnStore from "rww/data/RedWarnStore";
+import { getMaterialStorage } from "rww/styles/material/storage/MaterialStyleStorage";
+import redirect from "rww/util/redirect";
+import Revision from "./Revision";
 import WikipediaURL from "./URL";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;

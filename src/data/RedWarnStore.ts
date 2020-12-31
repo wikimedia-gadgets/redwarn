@@ -1,8 +1,8 @@
 // noinspection JSDeprecatedSymbols
-import MessageHandler from "../event/MessageHandler";
-import { StyleStorage } from "../styles/Style";
-import { Dependency } from "../ui/Dependencies";
-import { APIStore, EmptyAPIStore } from "../wikipedia/API";
+import MessageHandler from "rww/event/MessageHandler";
+import { StyleStorage } from "rww/styles/Style";
+import { Dependency } from "rww/ui/Dependencies";
+import { APIStore, EmptyAPIStore } from "rww/wikipedia/API";
 
 // noinspection JSDeprecatedSymbols
 export default class RedWarnStore {
@@ -50,7 +50,7 @@ export default class RedWarnStore {
 declare global {
     // noinspection JSUnusedGlobalSymbols
     interface Window {
-        RedWarnStore: RedWarnStore;
+        RedWarnStore: typeof RedWarnStore;
     }
 }
 

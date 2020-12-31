@@ -42,8 +42,28 @@ rw.info = { // API
             // Try getting revision user and returning that
             try {
                 const target = $($("#mw-diff-ntitle2").find(".mw-userlink")[0]).text();
-                return (target == "" ? null : target); // if empty send null
-            } catch (error) {} // do nothing on error
+
+                if (target == "" || target == null) throw Error(); // go to catch if target is still empty
+
+                return target; // return target
+            } catch (error) {
+                // On error
+                // No target found, only show dialog if on userpage
+                if (mw.config.get("wgCanonicalNamespace").includes("User")) setTimeout(()=>{ // wait 500 ms to make sure we don't get overriden by a new opening dialog
+                    // Close and show a note to the user
+                    dialogEngine.closeDialog(()=>rw.ui.confirmDialog(`
+                    It looks like this user doesn't actually exist.
+                    If you're trying to use a sandbox, try <a href="https://en.wikipedia.org/wiki/User_talk:Sandbox_for_user_warnings" target="_blank">WP:UWSB</a> instead.
+                    Else, you should request the speedy deletion of this user page or user talk page under criterion <a href="https://en.wikipedia.org/wiki/Wikipedia:Criteria_for_speedy_deletion#U2._Nonexistent_user" target="_blank">U2</a> by adding:
+                    <code>${(true ? "\u007B\u007B" : "wacky formatting to not delete RW page")}Db-u2\u007D\u007D</code>
+                    to the top of this page. If you're still having issues, please let a member of the RedWarn team know.
+                    `,
+                    "OKAY", ()=>dialogEngine.closeDialog(),
+                    "", null ,65));
+                }, 500);
+
+                return undefined; // to make sure other things handle it properly
+            }
         }
         return mw.config.get("wgRelevantUserName");},
 
@@ -416,8 +436,8 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
      * @extends rw.info
      */
     "addWikiTextToUserPage" : (user, text, underDate, summary, blacklist, blacklistToast, callback) => {
-        if ((user == null) || (user.toLowerCase() == "undefined")) {
-            // Stop it from being sent to User:undefined
+        if ((user == null) || (user.toLowerCase() == "undefined") || (user.toLowerCase() == "null")) {
+            // Stop it from being sent to User:undefined or User:null
             // TODO: Add callback because likely bug
             rw.visuals.toast.show("Sorry, an error occured. (user undef.)");
             return;
@@ -669,7 +689,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
             target: user,
             subject: 'Email from RedWarn User '+ rw.info.getUsername(), // i.e. email from Ed6767
             text: content,
-            ccme: true, // by defauly copy back to me
+            ccme: rw.config.rwEmailCCMe != "disable", // by defauly copy back to me unless specifically disabled
             format: 'json'
         },
         api = new mw.Api();

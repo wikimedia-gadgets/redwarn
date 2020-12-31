@@ -56,7 +56,7 @@ overflow-x: hidden;" id="buttonList">
         <!-- Drop down spinny icon -->
         <expander class="material-icons" expander-content-id="rwOSreport">expand_more</expander>
     </div>
-    <div class="collapsed" id="rwOSreport" targetHeight="350px" style="padding-left:25px;padding-right: 30px;">
+    <div class="collapsed" id="rwOSreport" targetHeight="420px" style="padding-left:25px;padding-right: 30px;">
         Suppression removes edits which breach privacy (especially of minors) or defame somebody. You must never draw attention to suppressible material and links on Wikipedia or other public venues.
         Please read the <a href="https://en.wikipedia.org/wiki/Wikipedia:Requests_for_oversight" target="_blank">requests for oversight</a> page for more information before continuing.
         <!-- Check if email is verfied -->
@@ -78,13 +78,18 @@ Regards,
 ${rw.info.getUsername()}
             </textarea><br/><br/>
 
-            <span style="float:right;">
-                <!-- send email on click -->
-                <button id="TASsubmitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                onclick="window.parent.postMessage('OSEmail\`' + btoa($('#OSReportBox').text()), '*');">
-                    SEND EMAIL
-                </button>
-            </span>
+            <!-- Confirmation checkbox 21/11/2020 issue #31 -->
+            <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="OSconfirmCheckbox">
+                <input type="checkbox" id="OSconfirmCheckbox" class="mdl-checkbox__input" onchange="document.getElementById('OSsubmitBtn').disabled = !this.checked;">
+                <span class="mdl-checkbox__label">I have read all related policy pages and have checked my email for errors</span>
+            </label>
+            <br/><br/><br/>
+            <!-- send email on click -->
+            <button id="OSsubmitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+            style="width: 100%;"
+            onclick="window.parent.postMessage('OSEmail\`' + btoa(document.getElementById('OSReportBox').value), '*');" disabled>
+                SEND EMAIL
+            </button>
         `)}
     </div>
     <!-- end os -->
@@ -96,7 +101,7 @@ ${rw.info.getUsername()}
         <!-- Drop down spinny icon -->
         <expander class="material-icons" expander-content-id="rwTASreport">expand_more</expander>
     </div>
-    <div class="collapsed" id="rwTASreport" targetHeight="350px" style="padding-left:25px;padding-right: 30px;overflow-y:auto;">
+    <div class="collapsed" id="rwTASreport" targetHeight="420px" style="padding-left:25px;padding-right: 30px;overflow-y:auto;">
         <div style="font-size: small;background: #ffc8c8;color: #ff3e3e;text-align: center;">
             <span>If you are in immediate danger, contact your local emergency services.</span>
         </div>
@@ -120,13 +125,20 @@ Regards,
 ${rw.info.getUsername()}
             </textarea><br/><br/>
 
-            <span style="float:right;">
-                <!-- send email on click -->
-                <button id="TASsubmitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
-                onclick="window.parent.postMessage('TASEmail\`' + btoa($('#tasReportBox').text()), '*');">
-                    SEND EMAIL
-                </button>
-            </span>
+            <!-- Confirmation checkbox 21/11/2020 issue #31 -->
+            <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="TASconfirmCheckbox">
+                <input type="checkbox" id="TASconfirmCheckbox" class="mdl-checkbox__input" onchange="document.getElementById('TASsubmitBtn').disabled = !this.checked;">
+                <span class="mdl-checkbox__label">I have read all related policy pages and have checked my email for errors</span>
+            </label>
+            <br/><br/><br/>
+            
+            <!-- send email on click -->
+            <button id="TASsubmitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+            style="width: 100%;"
+            onclick="window.parent.postMessage('TASEmail\`' + btoa(document.getElementById('tasReportBox').value), '*');" disabled>
+                SEND EMAIL
+            </button>
+
         `)}
     </div>
 

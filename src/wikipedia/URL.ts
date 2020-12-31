@@ -1,5 +1,5 @@
-import RedWarnStore from "../data/RedWarnStore";
-import url from "../util/url";
+import RedWarnStore from "rww/data/RedWarnStore";
+import url from "rww/util/url";
 
 export interface URIComponents {
     query?: URLSearchParams;

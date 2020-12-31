@@ -1,5 +1,5 @@
-import RedWarnStore from "../data/RedWarnStore";
-import redirect from "../util/redirect";
+import RedWarnStore from "rww/data/RedWarnStore";
+import redirect from "rww/util/redirect";
 import WikipediaAPI from "./API";
 
 /**

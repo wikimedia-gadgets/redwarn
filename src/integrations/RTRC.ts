@@ -1,5 +1,9 @@
 import Rollback from "../wikipedia/Rollback";
 import User from "../wikipedia/User";
+import { RollbackContext } from "../definitions/RollbackContext";
+import Revision from "../wikipedia/Revision";
+import Page from "../wikipedia/Page";
+import DiffViewerInjector from "../ui/injectors/DiffViewerInjector";
 
 export default class RTRC {
     private static onRTRC: boolean;
@@ -12,16 +16,17 @@ export default class RTRC {
                 mw.config.get("wgTitle").split("/", 2)[1] === "RTRC");
         if (this.onRTRC) {
             mw.hook("wikipage.diff").add(async (diff: JQuery) => {
-                const rollback = await Rollback.factory(
-                    {
-                        page: diff.find("strong > a").attr("title"),
+                const context = new RollbackContext(
+                    Revision.fromID(Rollback.getNewerRevisionId(), {
+                        page: Page.fromTitle(
+                            diff.find("strong > a").attr("title")
+                        ),
                         user: new User(
                             diff.find("#mw-diff-ntitle2 > a > bdi").text()
                         ),
-                    },
-                    true
+                    })
                 );
-                rollback.loadOptions(false);
+                DiffViewerInjector.loadOptions(context, false);
             });
         }
     }

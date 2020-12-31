@@ -30,16 +30,6 @@ module.exports = {
                 ]
             },
             {
-                enforce: "pre",
-                test: /\.jsx?$/,
-                use: ["source-map-loader"],
-                exclude: [
-                    path.resolve(__dirname, "build"),
-                    path.resolve(__dirname, "tests"),
-                    path.resolve(__dirname, "old")
-                ]
-            },
-            {
                 test: /\.css$/,
                 use: ["style-loader", "css-loader"]
             }

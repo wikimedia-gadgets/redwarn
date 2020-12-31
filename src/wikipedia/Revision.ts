@@ -3,14 +3,18 @@ import WikipediaAPI from "./API";
 import Page from "./Page";
 
 // Function names of the Revision class.
-type RevisionFunctions = "populate" | "isPopulated" | "isLatestRevision" | "getContent";
+type RevisionFunctions =
+    | "populate"
+    | "isPopulated"
+    | "getLatestRevision"
+    | "isLatestRevision"
+    | "getContent";
 
 /**
  * A revision is an object provided by the MediaWiki API which represents
  * a change in a page's content.
  */
 export default class Revision {
-
     /** The ID of the revision. */
     revisionID: number;
 
@@ -27,15 +31,15 @@ export default class Revision {
     user?: User;
 
     /** The timestamp that the revision was made. */
-    timestamp? : number;
+    timestamp?: number;
 
     /** The size of the revision. */
-    size? : number;
+    size?: number;
 
     /** The content of the page as of the given revision. */
     content?: string;
 
-    private constructor(object? : Omit<Revision, RevisionFunctions>) {
+    private constructor(object?: Omit<Revision, RevisionFunctions>) {
         if (!!object) {
             Object.assign(this, object);
         }
@@ -48,10 +52,13 @@ export default class Revision {
      * @returns An unpopulated Revision object.
      */
     static fromID(
-        revisionID : number,
+        revisionID: number,
         additionalProperties?: Partial<Omit<Revision, RevisionFunctions>>
-    ) : Revision {
-        return new Revision({revisionID: revisionID, ...(additionalProperties ?? {})});
+    ): Revision {
+        return new Revision({
+            revisionID: revisionID,
+            ...(additionalProperties ?? {}),
+        });
     }
 
     /**
@@ -59,15 +66,17 @@ export default class Revision {
      * @param revisionID The revision ID to use.
      * * @returns A populated Revision object.
      */
-    static async fromIDToPopulated(revisionID : number) : Promise<Revision> {
-        return await Revision.populate(new Revision({revisionID: revisionID}));
+    static async fromIDToPopulated(revisionID: number): Promise<Revision> {
+        return await Revision.populate(
+            new Revision({ revisionID: revisionID })
+        );
     }
 
     /**
      * Create a `Revision` object from a page's latest revision. This is automatically populated.
      * @param page The page to get the latest revision from.
      */
-    static fromPageLatestRevision(page : Page) : Revision;
+    static fromPageLatestRevision(page: Page): Revision;
     /**
      * Create a `Revision` object from a revision ID and MediaWiki API call results. This assumes
      * that an API request has already been made. Depending on the `apiResult`, the created object
@@ -75,25 +84,36 @@ export default class Revision {
      * @param revisionID The ID of the revision.
      * @param apiResult The result of the API request.
      */
-    static fromPageLatestRevision(revisionID : number, apiResult : Record<string, any>) : Revision;
-    static fromPageLatestRevision(arg1 : Page | number, apiResult? : Record<string, any>) : Revision {
+    static fromPageLatestRevision(
+        revisionID: number,
+        apiResult: Record<string, any>
+    ): Revision;
+    static fromPageLatestRevision(
+        arg1: Page | number,
+        apiResult?: Record<string, any>
+    ): Revision {
         if (typeof arg1 === "number") {
-            const revision = new Revision({revisionID: arg1});
+            const revision = new Revision({ revisionID: arg1 });
             Object.assign(revision, apiResult);
             return revision;
         } else {
-            const pageData : Record<string, any> = Object.values(apiResult["query"]["pages"])[0];
-            const revisionData : Record<string, any> = pageData["revisions"][0];
+            const pageData: Record<string, any> = Object.values(
+                apiResult["query"]["pages"]
+            )[0];
+            const revisionData: Record<string, any> = pageData["revisions"][0];
 
             return new Revision({
                 revisionID: revisionData["revid"],
                 parentID: revisionData["parentid"],
-                page: Page.fromIDAndTitle(pageData["pageid"], pageData["title"]),
+                page: Page.fromIDAndTitle(
+                    pageData["pageid"],
+                    pageData["title"]
+                ),
                 comment: revisionData["comment"],
                 user: new User(revisionData["user"]),
-                timestamp: (new Date(revisionData["timestamp"])).getTime(),
+                timestamp: new Date(revisionData["timestamp"]).getTime(),
                 size: revisionData["size"],
-                content: revisionData["slots"]?.["main"]?.["*"]
+                content: revisionData["slots"]?.["main"]?.["*"],
             });
         }
     }
@@ -102,7 +122,7 @@ export default class Revision {
      * Populates all missing values of a revision. This also mutates the original object.
      * @param revision The revision to populate.
      */
-    static async populate(revision : Revision) : Promise<Revision> {
+    static async populate(revision: Revision): Promise<Revision> {
         const toPopulate = ["ids"];
         if (!revision.comment) toPopulate.push("comment");
         if (!revision.user) toPopulate.push("user");
@@ -117,24 +137,34 @@ export default class Revision {
                 prop: "revisions",
                 revids: `${revision.revisionID}`,
                 rvprop: toPopulate.join("|"),
-                rvslots: "main"
+                rvslots: "main",
             });
 
-            if (revisionInfoRequest["query"]["badrevids"].length > 0) {
+            if (revisionInfoRequest["query"]["badrevids"]) {
                 throw new Error("Invalid revision ID");
             }
 
-            const pageData : Record<string, any> = Object.values(revisionInfoRequest["query"]["pages"])[0];
-            const revisionData : Record<string, any> = pageData["revisions"][0];
+            const pageData: Record<string, any> = Object.values(
+                revisionInfoRequest["query"]["pages"]
+            )[0];
+            const revisionData: Record<string, any> = pageData["revisions"][0];
 
             // Page is always provided. IDs are required (see toPopulate declaration).
-            revision.page = Page.fromIDAndTitle(pageData["pageid"], pageData["title"]);
+            revision.page = Page.fromIDAndTitle(
+                pageData["pageid"],
+                pageData["title"]
+            );
             revision.content = revisionData["revid"];
-            if (!!revisionData["comment"]) revision.comment = revisionData["comment"];
+            if (!!revisionData["comment"])
+                revision.comment = revisionData["comment"];
             if (!!revisionData["user"]) revision.user = revisionData["user"];
-            if (!!revisionData["timestamp"]) revision.timestamp = (new Date(revisionData["timestamp"])).getTime();
+            if (!!revisionData["timestamp"])
+                revision.timestamp = new Date(
+                    revisionData["timestamp"]
+                ).getTime();
             if (!!revisionData["size"]) revision.size = revisionData["size"];
-            if (!!revisionData["slots"]?.["main"]?.["*"]) revision.content = revisionData["slots"]["main"]["*"];
+            if (!!revisionData["slots"]?.["main"]?.["*"])
+                revision.content = revisionData["slots"]["main"]["*"];
         }
 
         return revision;
@@ -144,7 +174,7 @@ export default class Revision {
      * Get the revision content. If the content has already been taken before, the cached
      * version is used.
      */
-    async getContent() : Promise<string> {
+    async getContent(): Promise<string> {
         if (this.content) return this.content;
 
         const revisionInfoRequest = await WikipediaAPI.get({
@@ -153,11 +183,14 @@ export default class Revision {
             prop: "revisions",
             revids: `${this.revisionID}`,
             rvprop: "content",
-            rvslots: "main"
+            rvslots: "main",
         });
 
-        const pageData : Record<string, any> = Object.values(revisionInfoRequest["query"]["pages"])[0];
-        this.content = pageData["revisions"]?.[0]?.["slots"]?.["main"]?.["*"] ?? null;
+        const pageData: Record<string, any> = Object.values(
+            revisionInfoRequest["query"]["pages"]
+        )[0];
+        this.content =
+            pageData["revisions"]?.[0]?.["slots"]?.["main"]?.["*"] ?? null;
         return this.content;
     }
 
@@ -165,18 +198,24 @@ export default class Revision {
      * Checks if all of the revision's properties are filled. Use this before
      * using {@link populate} in order to conserve data usage.
      */
-    isPopulated() : boolean {
-        return Object.values(this).reduce((p, n) : boolean => p && n[1] != null, true);
+    isPopulated(): boolean {
+        return Object.entries(this).reduce(
+            (p, n): boolean => p && n[1] != null && n[0] !== "content",
+            true
+        );
     }
 
     /**
      * Populates all missing values of the revision. This also mutates the original object.
      */
-    async populate() : Promise<Revision> {
+    async populate(): Promise<Revision> {
         return Revision.populate(this);
     }
 
-    async isLatestRevision() : Promise<boolean> {
+    /**
+     * Get the page's latest revision.
+     */
+    async getLatestRevision(): Promise<Revision> {
         if (!!this.page) {
             // Big oh noes. We'll have to send an additional request just to get the page name.
             const revisionInfoRequest = await WikipediaAPI.get({
@@ -185,31 +224,25 @@ export default class Revision {
                 prop: "revisions",
                 revids: `${this.revisionID}`,
                 rvprop: "",
-                rvslots: "main"
+                rvslots: "main",
             });
 
-            const pageData : Record<string, any> = Object.values(revisionInfoRequest["query"]["pages"])[0];
-            this.page = Page.fromIDAndTitle(pageData["pageid"], pageData["title"]);
+            const pageData: Record<string, any> = Object.values(
+                revisionInfoRequest["query"]["pages"]
+            )[0];
+            this.page = Page.fromIDAndTitle(
+                pageData["pageid"],
+                pageData["title"]
+            );
         }
 
-        const pageIdentifier = this.page.getIdentifier();
-
-        const pageRevisionsRequest = await WikipediaAPI.api.get({
-            action: "query",
-            prop: "revisions",
-            [typeof pageIdentifier === "number" ? "pageids" : "titles"]: pageIdentifier,
-            rvslots: "*",
-            rvprop: ["ids", "user"],
-            rvlimit: 1,
-        });
-
-        const pageData : Record<string, any> = Object.values(pageRevisionsRequest["query"]["pages"])[0];
-        const revisionData : Record<string, any> = pageData["revisions"][0];
-
-        const latestRevisionId = revisionData["revid"];
-        return latestRevisionId === this.revisionID;
+        return this.page.getLatestRevision();
     }
 
+    /**
+     * Check if this revision is the page's latest revision.
+     */
+    async isLatestRevision(): Promise<boolean> {
+        return (await this.getLatestRevision()).revisionID === this.revisionID;
+    }
 }
-
-

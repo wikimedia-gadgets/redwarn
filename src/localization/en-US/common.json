@@ -7,6 +7,7 @@
         "init": {
             "error": "An error occured while loading RedWarn.",
             "mwChecks": {
+                "*": "A MediaWiki installation assertion check failed.",
                 "version": "This version of MediaWiki is unsupported. A version of at least 1.30.0 is required."
             }
         }

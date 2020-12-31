@@ -1,12 +1,12 @@
 import { Warnings } from "../wikipedia/Warnings";
 import WikipediaAPI from "../wikipedia/API";
-import Rollback from "../wikipedia/Rollback";
+import { RollbackContext } from "./RollbackContext";
 
 export interface RollbackDoneOption {
     name: string;
     icon: string;
     action: (
-        rollback: Rollback,
+        context: RollbackContext,
         username: string,
         warnIndex: keyof Warnings
     ) => any;
@@ -17,8 +17,8 @@ export const RollbackDoneOptions: RollbackDoneOption[] = [
     {
         name: "Go to latest revision",
         icon: "watch_later",
-        action: (rollback: Rollback): Promise<void> =>
-            WikipediaAPI.goToLatestRevision(rollback.rollbackRevision.page),
+        action: (context: RollbackContext): Promise<void> =>
+            WikipediaAPI.goToLatestRevision(context.targetRevision.page.title),
         id: "latestRev",
     },
     {

@@ -2,12 +2,14 @@
  * Creates a URL string from a given set of parameters. This automatically
  * handles escaping.
  */
+import { URIComponents } from "../wikipedia/URL";
+
 export default function (
     baseURL: string | URL,
     queryParameters?: Record<string, any>,
-    fragment?: string
+    additionalURIComponents?: URIComponents
 ): string {
-    let url;
+    let url: URL;
 
     if (typeof baseURL === "string") {
         const a = document.createElement("a");
@@ -28,8 +30,15 @@ export default function (
         }
     }
 
-    if (fragment != null) {
-        url.hash = fragment;
+    if (!!additionalURIComponents) {
+        if (!!additionalURIComponents.fragment) {
+            url.hash = additionalURIComponents.fragment;
+        }
+        if (!!additionalURIComponents.query) {
+            additionalURIComponents.query.forEach((value, key) => {
+                url.searchParams.append(key, value);
+            });
+        }
     }
 
     return url.toString();

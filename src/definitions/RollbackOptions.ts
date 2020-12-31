@@ -1,6 +1,7 @@
-import {Warnings} from "../wikipedia/Warnings";
+import { Warnings } from "../wikipedia/Warnings";
 import RWUI from "../ui/RWUI";
 import Rollback from "../wikipedia/Rollback";
+import { RollbackContext } from "./RollbackContext";
 
 interface ActionRollback {
     actionType: "rollback";
@@ -11,7 +12,7 @@ interface ActionRollback {
 
 interface ActionFunction {
     actionType: "function";
-    action: (rollback: Rollback) => () => any;
+    action: (rollbackContext: RollbackContext) => () => any;
 }
 
 type RollbackAction = ActionFunction | ActionRollback;
@@ -86,7 +87,9 @@ export const RollbackOptions: RollbackOption[] = [
         color: "black", // css colour
         icon: "compare_arrows",
         actionType: "function",
-        action: (rollback: Rollback) => () => rollback.preview(), // Callback
+        action: (rollbackContext: RollbackContext) => () => {
+            Rollback.preview(rollbackContext);
+        }, // Callback
     },
 
     {
@@ -95,7 +98,9 @@ export const RollbackOptions: RollbackOption[] = [
         color: "black", // css colour
         icon: "library_add",
         actionType: "function",
-        action: (rollback: Rollback) => () => rollback.welcomeRevUser(), // Callback
+        action: (rollbackContext: RollbackContext) => async () => {
+            await rollbackContext.targetRevision.user.quickWelcome();
+        }, // Callback
     },
 
     {
@@ -104,8 +109,8 @@ export const RollbackOptions: RollbackOption[] = [
         color: "black", // css colour
         icon: "more_vert",
         actionType: "function",
-        action: (rollback: Rollback) => () =>
-            RWUI.openExtendedOptionsDialog({ rollback }), // Callback
+        action: (rollbackContext: RollbackContext) => () =>
+            RWUI.openExtendedOptionsDialog({ rollbackContext }), // Callback
     },
 
     // END DEFAULT ENABLED ICONS

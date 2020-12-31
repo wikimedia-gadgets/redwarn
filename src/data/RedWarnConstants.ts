@@ -14,6 +14,4 @@ export const RW_SHARED_IP_ADVICE = atob(
 );
 
 export const RW_LINK = "[[w:en:WP:RW|RedWarn]]";
-export const RW_LINK_SUMMARY = "([[w:en:WP:RW|RW]])";
-
 export const RW_WIKIS_TAGGABLE = ["enwiki"];

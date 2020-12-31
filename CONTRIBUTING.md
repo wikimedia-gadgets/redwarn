@@ -6,7 +6,7 @@ You can report bugs through [the issue tracker](https://gitlab.com/redwarn/redwa
 
 **Good bug reports** tend to have:
 
--   A quick summary and/or background of what you were doing that led to the bug,
+-   A quick comment and/or background of what you were doing that led to the bug,
 -   The steps in order to reproduce the bug (if you know),
     -   Be as specific as possible.
     -   Provide screenshots of the issue if you can.

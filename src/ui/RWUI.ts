@@ -1,6 +1,5 @@
 import RedWarnStore from "rww/data/RedWarnStore";
 import StyleManager from "rww/styles/StyleManager";
-import Rollback from "rww/wikipedia/Rollback";
 import User from "rww/wikipedia/User";
 import {
     RWUIAlertDialog,
@@ -8,6 +7,8 @@ import {
     RWUISelectionDialog,
     RWUISelectionDialogItem,
 } from "./elements/RWUIDialog";
+import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
+import { RollbackContext } from "rww/definitions/RollbackContext";
 import { RWUIToast } from "./elements/RWUIToast";
 
 /**
@@ -38,14 +39,17 @@ export default class RWUI {
         ctx: ExtendedOptionsContext
     ): Promise<any> {
         const items: RWUISelectionDialogItem[] = [];
-        const rollbackIcons = ctx.rollback?.getDisabledOptions() ?? [];
+        const rollbackIcons =
+            (ctx.rollbackContext &&
+                DiffViewerInjector.getDisabledOptions(ctx.rollbackContext)) ??
+            [];
         if (rollbackIcons.length > 0) {
             items.push(...rollbackIcons);
         }
 
         // TODO topIcons
 
-        const targetUser = ctx.user ?? ctx.rollback?.rollbackRevision.user;
+        const targetUser = ctx.user ?? ctx.rollbackContext?.targetRevision.user;
 
         if (targetUser) {
             // TODO AIV
@@ -64,11 +68,22 @@ export default class RWUI {
 
         return dialog.show();
     }
+
+    /**
+     * Run all injectors.
+     *
+     * Injectors are responsible for modifying existing MediaWiki DOM. This allows
+     * for non-invasive DOM procedures, and allows a separation between UI and DOM-
+     * modifying code from actual API functionality.
+     */
+    static async inject(): Promise<any> {
+        return Promise.all([DiffViewerInjector.init()]);
+    }
 }
 
 export interface ExtendedOptionsContext {
     user?: User;
-    rollback?: Rollback;
+    rollbackContext?: RollbackContext;
 }
 
 /**

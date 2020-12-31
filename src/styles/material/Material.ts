@@ -1,7 +1,7 @@
 import { MDCDialog } from "@material/dialog";
 import { MDCRipple } from "@material/ripple";
 import { RWUIDialog } from "rww/ui/elements/RWUIDialog";
-import Style from "../Style";
+import Style from "rww/styles/Style";
 import MaterialPreInitializationHooks from "./hooks/MaterialPreInitializationHooks";
 import {
     getMaterialStorage,
@@ -67,7 +67,7 @@ const MaterialStyle: Style = {
     },
 
     hooks: {
-        preinit: [MaterialPreInitializationHooks],
+        preInit: [MaterialPreInitializationHooks],
     },
 };
 

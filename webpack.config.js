@@ -10,10 +10,10 @@ module.exports = {
         filename: "redwarn.js"
     },
     resolve: {
-        extensions: [".js", ".ts", ".tsx"],
+        extensions: [".js", ".ts", ".tsx", ".json"],
         alias: {
-            rww: path.resolve(__dirname, "src"),
-        },
+            rww: path.resolve(__dirname, "src")
+        }
     },
     devServer: {
         compress: false,

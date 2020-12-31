@@ -44,7 +44,6 @@
         "space-before-blocks": "warn",
         "key-spacing": "warn",
         "keyword-spacing": "warn",
-        "curly": "error",
         "import/no-unresolved": "off" // ts does this for us anyways, and eslint can't handle webpack aliases
         // temporary so that `eslint --fix` doesn't break stuff
         // "linebreak-style": ["error", "windows"]

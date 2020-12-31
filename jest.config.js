@@ -1,9 +1,19 @@
 module.exports = {
 
-    transform: {
-        "^.+\\.tsx?$": "ts-jest",
+    globals: {
+        "ts-jest": {
+            useESM: true,
+        },
     },
-    testRegex: "(/tests/)(.*?)(\\.tsx?|\\.jsx?)$",
+    preset: "ts-jest",
+    testEnvironment: "jsdom",
+    transform: {
+        '^.+\\.m?[tj]sx?$': 'ts-jest'
+    },
+    transformIgnorePatterns: [
+        "node_modules[/\\\\](?!@material)"
+    ],
+    testRegex: "(/tests/)(.*?)(Tests?)(\\.tsx?|\\.jsx?)$",
     moduleFileExtensions: ["ts", "tsx", "js"]
 
 };

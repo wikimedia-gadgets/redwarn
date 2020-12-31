@@ -2,7 +2,7 @@
 
  Since it's too much of a bother to convert the ENTIRE MediaWiki JS
  API into TypeScript definitions (and since attempts to convert the
- existing JSDoc declarations have failed), these declarations are
+ existing JSDuck declarations have failed), these declarations are
  manually written. Their types are manually taken from the docs.
 
  https://doc.wikimedia.org/mediawiki-core/master/js/
@@ -24,6 +24,7 @@
  * Exposed globally as `mw`, with `mediaWiki` as alias.
  * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare class mw {
     /**
      * Map of configuration values.
@@ -207,6 +208,15 @@ declare namespace mw {
             ajaxOptions?: AjaxSettings
         ): JQueryPromise<JQueryXHR>;
 
+        /**
+         * Post to API with csrf token. If we have no token, get one and try to post. If
+         * we have a cached token try using that, and if it fails, blank out the cached
+         * token and start over.
+         *
+         * @param params API parameters
+         * @param ajaxOptions
+         * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.Api.plugin.edit-method-postWithEditToken
+         */
         postWithEditToken(
             params: Record<string, any>,
             ajaxOptions?: AjaxSettings

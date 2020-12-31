@@ -1,10 +1,9 @@
 {
     "compilerOptions": {
         "noImplicitAny": true,
-        "module": "CommonJS",
+        "module": "commonjs",
         "target": "es6",
         "outDir": "./build",
-        "rootDir": "../",
         "declaration": true,
         "declarationDir": "./build",
         "resolveJsonModule": true,
@@ -17,7 +16,8 @@
         "baseUrl": "./",
         "paths": {
             "rww/*": ["src/*"]
-        }
+        },
+        "allowJs": true
     },
     "include": [
         "./src/**/*.js",

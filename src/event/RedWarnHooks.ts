@@ -1,4 +1,4 @@
-import { RedWarnHook, RedWarnHookEventTypes } from "./RedWarnHookEvent";
+import {RedWarnHook, RedWarnHookEventTypes} from "./RedWarnHookEvent";
 
 declare global {
     // noinspection JSUnusedGlobalSymbols
@@ -55,4 +55,5 @@ export default class RedWarnHooks {
             }
         }
     }
+
 }

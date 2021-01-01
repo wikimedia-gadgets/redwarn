@@ -55,7 +55,7 @@
         <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
         <label for="template" class="mdl-textfield__label">${(rw.config.rwNoticeListByTemplateName != "enable") ? `Reason` : `Template`}</label> <!-- show reason or template based on config-->
         <ul for="template" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" style="overflow-y: scroll;height: 300px">
-            `+ finalListBox +`
+            ${finalListBox}
         </ul>
     </div>
 
@@ -244,6 +244,14 @@
         <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('closeDialog', '*');">
             CANCEL
         </button>
+
+        <!-- advanced button only shows if we're not hiding user info and not forcing advanced in pref -->
+        ${(!hideUserInfo && rw.config.rwWarnUserAdvanced !== "enable") ? `
+        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" onclick="window.parent.postMessage('advancedToggle', '*');">
+            ${advancedMode ? `BASIC` : `ADVANCED`}
+        </button>
+        ` : ``}
+        
         <button id="submitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="submitEdit();">
             `+ (customCallback ? customCallback : `Warn User`) + ` <!-- use custom button if requested -->
         </button>

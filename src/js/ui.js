@@ -5,23 +5,13 @@
 // Most UI elements
 // See also dialog.js (dialogEngine) and mdlContainer.js (mdlContainer)
 rw.ui = {
-    "revisionBrowser": url => {
-        // Show new container for revision reviewing
-        dialogEngine.create(mdlContainers.generateContainer(`
-        <div id="close" class="icon material-icons" style="float:right;">
-            <span style="cursor: pointer; padding-right:15px;" onclick="window.parent.postMessage('closeDialog');">
-                clear
-            </span>
-        </div>
-        <div class="mdl-tooltip" for="close">
-            Close
-        </div>
-         <iframesrc="`+ url + `" frameborder="0" style="height:95%;"></iframe>
-        `, window.innerWidth - 70, window.innerHeight - 50)).showModal();
-    },
 
-    "beginWarn": (ignoreWarnings, un, pg, customCallback, callback, hideUserInfo, autoSelectReasonIndex) => { // if customCallback = false, callback(templatestr) (rev12) autoSelectReasonIndex(rev13) for quick rollbacks for vandalism ext..
+    "beginWarn": (ignoreWarnings, un, pg, customCallback, callback, hideUserInfo, autoSelectReasonIndex, advancedMode) => { // if customCallback = false, callback(templatestr) (rev12) autoSelectReasonIndex(rev13) for quick rollbacks for vandalism ext..
         // Give user a warning (show dialog)
+
+        // If we're in advanced mode by default
+        if (rw.config.rwWarnUserAdvanced == "enable") advancedMode = true;
+        if (hideUserInfo === true) advancedMode = false; // force off if hiding user info
 
         let autoLevelSelectEnable = (!hideUserInfo) && (rw.userIsNotEC == null) && (rw.config.rwautoLevelSelectDisable != "disable"); // If autolevelselect enabled (always disabled on hideUserInfo options), non-EC always disabled (rw16)
 
@@ -110,6 +100,12 @@ rw.ui = {
 
         // Add admin report handler
         addMessageHandler("adminR", () => rw.ui.adminReportSelector(un));
+
+        // Add toggle advanced mode handler (RW16.1)
+        addMessageHandler("advancedToggle", ()=>{
+            // Close and reopen with same args but toggle advancedMode
+            dialogEngine.closeDialog(()=>rw.ui.beginWarn(ignoreWarnings, un, pg, customCallback, callback, hideUserInfo, autoSelectReasonIndex, (advancedMode === true ? false : true)));
+        });
 
         // Add recent page handelr
         addMessageHandler("openRecentPageSelector", () => rw.ui.recentlyVisitedSelector.showDialog(p => {
@@ -215,7 +211,50 @@ rw.ui = {
 
             // CREATE DIALOG
             // MDL FULLY SUPPORTED HERE (container).
-            dialogEngine.create(mdlContainers.generateContainer(`[[[[include warnUserDialog.html]]]]`, 500, 630)).showModal(); // 500x630 dialog, see warnUserDialog.html for code
+
+            // Advanced mode things here
+
+            if (!advancedMode) {
+                // we don't need to do anything else, just open the dialog
+                dialogEngine.create(mdlContainers.generateContainer(`[[[[include warnUserDialog.html]]]]`, 500, 630)).showModal(); // 500x630 dialog, see warnUserDialog.html for code
+            } else {
+                const continueFunc = ()=>{ // split to allow for the intro dialog
+                    // Show loading dialog as this takes time and CPU
+                    rw.ui.loadDialog.show(`
+                    Looking for past warnings, please wait...
+                    `, true);
+
+                    // Get warning info
+                    rw.info.warningInfo(rw.info.targetUsername(un), warningInfo=>{
+                        // Close loading dialog
+                        rw.ui.loadDialog.close();
+
+                        // Now just show our dialog but bigger, code in warnUserDialog.html handles everything else
+                        dialogEngine.create(mdlContainers.generateContainer(`[[[[include warnUserDialog.html]]]]`, 800, 630)).showModal();
+                    });
+                };
+
+                // Prompt user with the dialog (for freezing issue)
+                if (rw.config.rwWarnUserAdvancedNoteDismissed == null) {
+                    rw.ui.confirmDialog(`
+<h5>Advanced Mode</h5>
+Welcome to advanced warning mode! This feature looks through the past 50 user talk page revisions, allowing you to find and restore older warnings, and is useful for problematic editors who may have hidden warnings in the page history.<br/><br/>
+<b>Important:</b> Please be aware that this can take a while to process on longer pages with larger changes, so if the progress bar freezes, please be paitent as RedWarn is still processing in the background.
+                    `, 
+                    "Got it, thanks",
+                    ()=>dialogEngine.closeDialog(continueFunc), // continue on close
+
+                    "Don't show again", ()=>{
+                        // write into config that this is the case
+                        dialogEngine.closeDialog();
+                        rw.config.rwWarnUserAdvancedNoteDismissed = true;
+                        rw.info.writeConfig(true, ()=>{}); // save
+                        continueFunc(); // continue
+                    }, 200);
+                } else continueFunc(); // continue if dismissed
+            }
+
+            
         });
 
     }, // end beginWarn
@@ -838,7 +877,7 @@ rw.ui = {
     "loadDialog": {
         // Loading dialog
         "hasInit": false,
-        "init": text => {
+        "init": (text, biggerStyle) => {
             if (!rw.ui.loadDialog.hasInit) { // Only continue if we haven't already appended our container div
                 $("body").append(`
                 <div id="rwUILoad">
@@ -847,7 +886,7 @@ rw.ui = {
             }
             $("#rwUILoad").html(`
             <dialog class="mdl-dialog" id="rwUILoadDialog" style="border-radius: 7px;">
-                ` + mdlContainers.generateContainer(`[[[[include loadingSpinner.html]]]]`, 300, 30) + `
+                ${mdlContainers.generateContainer(`[[[[include loadingSpinner.html]]]]`, (biggerStyle ? 400 : 300), (biggerStyle ? 60 : 30))}
             </dialog>
             `); // Create dialog with content from loadingSpinner.html
 
@@ -866,11 +905,12 @@ rw.ui = {
          * Opens a loading dialog with the given text
          *
          * @param {string} text
+         * @param {boolean} biggerStyle - a diffferent larger style with a vertical progress bar
          * @method show
          * @extends rw.ui.loadDialog
          */
-        "show": text => { // Init and create a new loading dialog
-            rw.ui.loadDialog.init(text); // init
+        "show": (text, biggerStyle) => { // Init and create a new loading dialog
+            rw.ui.loadDialog.init(text, biggerStyle); // init
             rw.ui.loadDialog.setText(text); // set our text
             // Show dialog
             rw.ui.loadDialog.dialog.showModal();

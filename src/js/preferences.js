@@ -103,6 +103,18 @@ rw.preferences = {
                     }
                 },
 
+                // Warn user advanced by default
+                "rwWarnUserAdvanced" : {
+                    "optionTitle" : "Automatically open Warn User in advanced mode",
+                    "supportingText": "Open RedWarn's warn user dialog in advanced mode by default. Please note you will have to wait for longer for the advanced mode to initalise.",
+
+                    // Config options
+                    "options" : { 
+                        "Enable" : "enable",
+                        "Disable*": "disable"
+                    }
+                },
+
                 // On rollback completion
                 "rwRollbackDoneOption" : {
                     "optionTitle" : "Once a rollback is complete...",

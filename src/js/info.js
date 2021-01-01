@@ -423,7 +423,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
     },// End lastWarningLevel
 
     /**
-     * Scans the past 50 revisions for warnings from this month for a user - WARNING: this is pretty CPU intensive
+     * Scans the past 50 revisions for warnings from this month for a user - WARNING: this is pretty CPU intensive - make sure you show a load dialog!
      *
      * @param {string} username
      * @param {function} callback
@@ -434,7 +434,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         // Get past 51 page revisions, we calculate a diff for 50 only
         $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:"+username+"&rvslots=*&rvprop=content|user|timestamp|size&formatversion=2&rvlimit=51&format=json", r=>{
             if (r.query.pages[0].missing) { // If page is missing, i.e it doesn't exist
-                // TODO: handle a callback here!!
+                callback([]); // nothing, no warnings recorded
                 return; // exit
             }
 
@@ -453,23 +453,27 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 let editChange = Diff.diffChars(r.query.pages[0].revisions[i+1].slots.main.content, editContent);
 
                 // Merge all addition changes into one string
-                const addedWikiText = (()=>{let result = ""; editChange.forEach(change=>{if (change.added===true) result+=change.value;});})();
+                const addedWikiText = (()=>{let result = ""; editChange.forEach(change=>{if (change.added===true) result+=change.value;}); return result;})();
 
                 // Now locate warnings within those changes
 
                 // Run regex on it
                 const regexResult = /<!--\s*Template:uw-(.*?)\s*-->/gi.exec(addedWikiText);
-                if (regexResult == null) return; // no match, move on
-                console.log("Located warning template uw-"+ regexResult[1]); 
+                if (regexResult == null) return; // no match, move on to next rev
+
+                // Note down the template
+                const warningTemplate = regexResult.pop(); // last in array = last warning name, we always favour the last one because warnings may have been restored
+
+                console.log("Located warning template uw-"+ warningTemplate); 
 
                 let warningLevel = 6; // assume 6 = unknown here
-                let matchedRule = {"name": "Unknown - this warning doesn't seem to be in RedWarn", "template": "uw-"+ regexResult[1]};
+                let matchedRule = {"name": "Unknown - this warning doesn't seem to be in RedWarn", "template": "uw-"+ warningTemplate};
 
                 // Now locate within our rules
                 for (const ruleKey in rw.rules) {
                     if (rw.rules.hasOwnProperty.call(rw.rules, ruleKey)) {
                         const rule = rw.rules[ruleKey];
-                        if (("uw-"+ regexResult[1]).includes(rule.template)) {
+                        if (("uw-"+ warningTemplate).includes(rule.template)) {
                             // Find warning level and map
                             warningLevel = ({
                                 "": 0, // handle nothing as a 0 reminder
@@ -478,26 +482,25 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                                 "3": 3,
                                 "4": 4,
                                 "4im": 5
-                            })[("uw-"+ regexResult[1]).replace(rule.template, "")]; // select by rming template from the regexMatch
+                            })[("uw-"+ warningTemplate).replace(rule.template, "")]; // select by rming template from the regexMatch
                             
                             matchedRule = rule;
-                            // Don't exit here, we should favour the last warning, just in case the warnings were restored
+                            break; // we're done in this loop as we've found it
                         }
                     }
                 }
 
-                // We've finished looking through all the rules
-                console.log("Result: ", matchedRule, "Warning level:" + warningLevel);
-                console.log(`${editedBy} gave a ${[
-                    "reminder/policy warning",
-                    "level one notice",
-                    "level two caution",
-                    "level three warning",
-                    "level four final warning",
-                    "level four ONLY warning",
-                    "unknown"][warningLevel]} for ${matchedRule.name} (${matchedRule.template})`);
-                
+                // We've finished looking through all the rules, so add it to the array
+                warningArray.push({
+                    "warnedBy": editedBy,
+                    "rule": matchedRule,
+                    "level": warningLevel,
+                    "timestamp": editTimestamp
+                });
             });
+
+            // All done
+            callback(warningArray);
         });
     },
 

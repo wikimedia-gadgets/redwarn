@@ -126,9 +126,7 @@ export default class User {
         text: string,
         underDate: boolean,
         summary: string,
-        blacklist?: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        blacklistToast?: string
+        blacklist?: string
     ): Promise<void> {
         if (
             this.username == null ||
@@ -158,8 +156,9 @@ export default class User {
         if (blacklist) {
             if (revisionWikitext.includes(blacklist)) {
                 // Don't continue and show toast
-                // TODO: **toasts**
-                // RedWarnStore.visuals.toast.show(blacklistToast, false, false, 5000);
+                RWUI.Toast.quickShow({
+                    content: i18next.t("ui:toasts.blacklist"),
+                });
                 return;
             }
         }

@@ -358,7 +358,7 @@ rw.info.writeConfig(true, ()=>{ // save config
             } else {
                 // Success! 
                 if (!isNew) { // if not a new pack, show update done screen and exit
-                    rw.loadDialog.close();
+                    rw.ui.loadDialog.close();
                     rw.ui.confirmDialog("Pack updated successfully!", "DONE", ()=>dialogEngine.closeDialog() , "", ()=>{}, 0);
                     return;
                 } 

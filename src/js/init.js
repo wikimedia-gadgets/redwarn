@@ -1,4 +1,4 @@
-// (c) Ed.E and contributors 2020
+// (c) Ed.E and contributors 2020/2021
 
 if (rw != null) {
     // Double init, rm the old version and hope for the best
@@ -22,7 +22,7 @@ var rw = {
      * @type {string}
      * @extends rw
      */
-    "version" : "16", // don't forget to change each version!
+    "version" : "16.1dev", // don't forget to change each version!
 
     /**
      * Defines a brief summary of this version of RedWarn. This is shown in both update notices, and a card in preferences.
@@ -33,8 +33,8 @@ var rw = {
      * @extends rw
      */
     "versionSummary": `
-<!-- RedWarn 16 -->
-RedWarn 16 is finally here, bringing UX improvements, emergency and oversight reports, more customisation, bug fixes, and more!
+<!-- RedWarn 16.1 -->
+RedWarn 16.1 brings further UX improvements and feature additions.
     `,
 
     /**

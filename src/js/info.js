@@ -342,7 +342,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
     },
 
     /**
-     * Detects and calls back with the highest warning level this user has recieved this month.
+     * Detects and calls back with the highest warning level this user has recieved this month. RW16.1: See also rw.info.warningInfo()
      *
      * @param {string} user
      * @param {function} callback callback(int warningLevel [0 none 1 notice 2 caution 3 warning 4 final warning], string thisMonthsNotices (wikitext), string userPg (wikitext))
@@ -421,6 +421,11 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
 
         });
     },// End lastWarningLevel
+
+    "warningInfo": (username, callback)=>{
+        // Regex match warning templates
+        /<!--\s*Template:uw-(.*?)\s*-->/gi.exec("blah")[1]; // "vand1"
+    },
 
     /**
      * Adds given WikiText to a users talk page.

@@ -442,7 +442,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
             let warningArray = []; // included in callback
             // Now for each revision
             r.query.pages[0].revisions.forEach((edit, i)=>{
-                if (i==49) return; // we can't process the 51st edit, so exit
+                if (i==49 || i > r.query.pages[0].revisions.length - 2) return; // we can't process the 51st edit, so exit
                 const editSize = edit.size - r.query.pages[0].revisions[i+1].size; // size difference betweem this and the prev edit
                 if (editSize > 7500 || editSize < 0) return; // skip edits over 7.5KB, we can safely assume these aren't warnings are we don't wanna crash the browser, we also ignore removals
                 const editedBy = edit.user;
@@ -492,7 +492,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
 
                 // We've finished looking through all the rules, so add it to the array
                 warningArray.push({
-                    "warnedBy": editedBy,
+                    "from": editedBy,
                     "rule": matchedRule,
                     "level": warningLevel,
                     "timestamp": editTimestamp

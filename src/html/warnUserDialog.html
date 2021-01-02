@@ -15,10 +15,21 @@
         display: none;
     }
 </style>
-<div id="noticeFmContainer">
+
+${advancedMode ? `
+<!-- Advanced mode only section -->
+<div style="width: 285px; float:left; height:100%; overflow-x:hidden;overflow-y: auto;">
+<h6>Warning History</h6>
+${finalWarningHistoryHTML}
+</div>
+
+    ` : ``}
+
+
+
+<!-- Ordinary dialog content -->
+<div id="noticeFmContainer" style="width:500px;float:right;"> <!-- fix to 500px -->
     <h2 style="font-weight: 200;">Warn User</h2>
-
-
 
     <!-- FORM -->
     <form id="newNoticeForm">

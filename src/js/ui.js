@@ -226,6 +226,13 @@ rw.ui = {
 
                     // Get warning info
                     rw.info.warningInfo(rw.info.targetUsername(un), warningInfo=>{
+                        // Generate our list
+                        let finalWarningHistoryHTML = ``;
+                        warningInfo.forEach(warning => { //todo
+                            finalWarningHistoryHTML += `${warning.from} ${warning.level} ${warning.rule.name}<br/>`;
+                        });
+
+
                         // Close loading dialog
                         rw.ui.loadDialog.close();
 

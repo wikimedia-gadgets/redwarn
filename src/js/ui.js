@@ -158,7 +158,7 @@ rw.ui = {
         // Check most recent warning level
 
         rw.info.lastWarningLevel(rw.info.targetUsername(un), (w, usrPgMonth, userPg) => {
-            let lastWarning = [ // Return HTML for last warning level.
+            const lastWarning = [ // Return HTML for last warning level.
                 // NO PAST WARNING
                 `
                 <span class="material-icons" id="PastWarning" style="cursor:help;position: relative;top: 5px;padding-left: 10px;color:green;">thumb_up</span>
@@ -218,7 +218,14 @@ rw.ui = {
                 // we don't need to do anything else, just open the dialog
                 dialogEngine.create(mdlContainers.generateContainer(`[[[[include warnUserDialog.html]]]]`, 500, 630)).showModal(); // 500x630 dialog, see warnUserDialog.html for code
             } else {
+                // This isn't called immediately, collapse and see below
                 const continueFunc = ()=>{ // split to allow for the intro dialog
+                    // Check we're not warning ourselves
+                    if (rw.info.getUsername() == rw.info.targetUsername(un)) {
+                        rw.ui.confirmDialog(`You cannot warn yourself.`, "OKAY", ()=>dialogEngine.closeDialog(), "", ()=>{}, 0);
+                        return; // stop here
+                    }
+
                     // Show loading dialog as this takes time and CPU
                     rw.ui.loadDialog.show(`
                     Looking for past warnings, please wait...
@@ -228,8 +235,94 @@ rw.ui = {
                     rw.info.warningInfo(rw.info.targetUsername(un), warningInfo=>{
                         // Generate our list
                         let finalWarningHistoryHTML = ``;
-                        warningInfo.forEach(warning => { //todo
-                            finalWarningHistoryHTML += `${warning.from} ${warning.level} ${warning.rule.name}<br/>`;
+                        warningInfo.forEach((warning,i) => { //todo
+                            finalWarningHistoryHTML += `
+                            <hr/>
+                            <!-- Warning level -->
+                            ${
+                                [ // Return HTML for last warning level.
+                                    // Reminder
+                                    `
+                                    <span class="material-icons" id="WarningHistoryIndicator${i}" style="cursor:help;position: relative;top: 5px;font-size:20px;color:BlueViolet;">error_outline</span>
+                                    <div class="mdl-tooltip mdl-tooltip--large" for="WarningHistoryIndicator${i}">
+                                        <span style="font-size:x-small;">
+                                        Recieved a reminder/policy violation notice
+                                        </span>
+                                    </div>
+                                    <span style="font-size:11px;"><b>${warning.from}</b> gave ${rw.info.targetUsername(un)} a reminder or policy violation warning for:</span> 
+                                    `,
+                    
+                                    // NOTICE
+                                    `
+                                    <span class="material-icons" id="WarningHistoryIndicator${i}" style="cursor:help;position: relative;top: 5px;font-size:20px;color:blue;">info</span>
+                                    <div class="mdl-tooltip mdl-tooltip--large" for="WarningHistoryIndicator${i}">
+                                        <span style="font-size:x-small;">
+                                        Level 1 notice
+                                        </span>
+                                    </div>
+                                    <span style="font-size:11px;"><b>${warning.from}</b> gave ${rw.info.targetUsername(un)} level 1 notice for:</span>
+                                    `,
+                                    // CAUTION
+                                    `
+                                    <span class="material-icons" id="WarningHistoryIndicator${i}" style="cursor:help;position: relative;top: 5px;font-size:20px;color:orange;">announcement</span>
+                                    <div class="mdl-tooltip mdl-tooltip--large" for="WarningHistoryIndicator${i}">
+                                        <span style="font-size:x-small;">
+                                        Level 2 caution
+                                        </span>
+                                    </div>
+                                    <span style="font-size:11px;"><b>${warning.from}</b> gave ${rw.info.targetUsername(un)} level 2 caution for:</span>
+                                    `,
+                                    // Warning- in red. RedWarn, get it? This is the peak of programming humour.
+                                    `
+                                    <span class="material-icons" id="WarningHistoryIndicator${i}" style="cursor:help;position: relative;top: 5px;font-size:20px; color:red;">report_problem</span>
+                                    <div class="mdl-tooltip mdl-tooltip--large" for="WarningHistoryIndicator${i}">
+                                        <span style="font-size:x-small;">
+                                        Level 3 warning
+                                        </span>
+                                        <span style="font-size:11px;"><b>${warning.from}</b> gave ${rw.info.targetUsername(un)} level 3 warning for:</span>
+                                    </div>
+                                    `,
+                    
+                                    // Final Warning (dark red)
+                                    `
+                                    <span class="material-icons" id="WarningHistoryIndicator${i}" style="cursor:pointer;position: relative;top: 5px;font-size:20px;color:#a20000;" onclick="window.parent.postMessage('adminR');">report</span>
+                                    <div class="mdl-tooltip mdl-tooltip--large" for="WarningHistoryIndicator${i}">
+                                        <span style="font-size:x-small;">
+                                        Level 4 Final warning<br/>
+                                        Click here to report to admins for vandalism. Review user page first.
+                                        </span>
+                                    </div>
+                                    <span style="font-size:11px;"><b>${warning.from}</b> gave ${rw.info.targetUsername(un)} final warning for:</span>
+                                    `,
+
+                                    // Only Warning (red)
+                                    `
+                                    <span class="material-icons" id="WarningHistoryIndicator${i}" style="cursor:pointer;position: relative;top: 5px;font-size:20px;color:red;" onclick="window.parent.postMessage('adminR');">report</span>
+                                    <div class="mdl-tooltip mdl-tooltip--large" for="WarningHistoryIndicator${i}">
+                                        <span style="font-size:x-small;">
+                                        Level 4 ONLY warning.<br/>
+                                        Click here to report to admins for vandalism. Review user page first.
+                                        </span>
+                                    </div>
+                                    <span style="font-size:11px;"><b>${warning.from}</b> gave ${rw.info.targetUsername(un)} ONLY warning for:</span>
+                                    `,
+                                ][warning.level]
+
+                            }
+                            <br/> <!-- warning rule and timestamp and reuse button to reinput into existing form -->
+                            ${warning.rule.name}<br/>
+                            <span style="
+                            font-variant: all-petite-caps;
+                            font-weight: 500;
+                            font-size: 11px;
+                            color: #505050;
+                            ">${new Date(warning.timestamp).toUTCString()} ${
+                                // Only show extra buttons if it's recognised, else there will be an error
+                                ( warning.rule.key != "" ?
+                                `- <a href="#" onclick="autoSelect('${warning.rule.key}');">REUSE</a>`
+                                : ``)}
+                            </span><br/>
+                            `;
                         });
 
 

@@ -467,7 +467,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 console.log("Located warning template uw-"+ warningTemplate); 
 
                 let warningLevel = 6; // assume 6 = unknown here
-                let matchedRule = {"name": "Unknown - this warning doesn't seem to be in RedWarn", "template": "uw-"+ warningTemplate};
+                let matchedRule = {"name": "Unknown - this warning doesn't seem to be in RedWarn", "template": "uw-"+ warningTemplate, "key": ""};
 
                 // Now locate within our rules
                 for (const ruleKey in rw.rules) {
@@ -484,6 +484,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                                 "4im": 5
                             })[("uw-"+ warningTemplate).replace(rule.template, "")]; // select by rming template from the regexMatch
                             
+                            rule.key = ruleKey; // set key for dialog
                             matchedRule = rule;
                             break; // we're done in this loop as we've found it
                         }

@@ -302,6 +302,8 @@ ${finalWarningHistoryHTML}
 </div>
 
 <script>
+    // THIS MESS NEEDS SORTING - todo
+
     function showThisMonthsUsrMsgs() {
         $("#noticeFmContainer").hide();
         $("#usrPgPrev").hide();
@@ -590,15 +592,29 @@ ${finalWarningHistoryHTML}
        
     }, 100);
 
-    // If autoselect enabled and autoselect index set, apply to that index
-    `+ ((autoLevelSelectEnable) && (autoSelectReasonIndex != null) ? `
+    // Autoselect code
+    function autoSelect(ruleKey, level) {
         // Activate click event for this index after 250ms
         setTimeout(()=>{
             $("#reasonsBox > input:visible").click();
             setTimeout(()=>{
-                $("li.mdl-menu__item[data-val='${autoSelectReasonIndex}']").click();
-                refreshLevels("${autoSelectReasonIndex}"); // update levels (will be set back to int)
+                $("li.mdl-menu__item[data-val='"+ ruleKey +"']").click();
+                refreshLevels(ruleKey); // update levels (will be set back to int)
+
+                if (level != null) { // if we're autoselecting a level
+                    setTimeout(()=>{
+                        // we can only select between 1-5 (5 being 4im)
+                        if (level > 0 && level < 6) $("level"+ [
+                            "1", "2", "3", "4", "4im"
+                        ][level-1]);
+                    }, 250);
+                }
             },250);
         },250);
+    }
+
+    // If autoselect enabled and autoselect index set, apply to that index
+    `+ ((autoLevelSelectEnable) && (autoSelectReasonIndex != null) ? `
+        autoSelect('${autoSelectReasonIndex}'); // excecute autoselect
     ` : "") +`
 </script>

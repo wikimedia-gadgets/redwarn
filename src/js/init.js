@@ -206,7 +206,7 @@ RedWarn 16.1 brings further UX improvements and feature additions.
          */
         "init" : async (callback) => {
             // Welcome message
-            console.log("RedWarn "+ rw.version + " - (c) 2020 RedWarn Contributors");
+            console.log("RedWarn "+ rw.version + " - (c) 2021 RedWarn Contributors");
             
             // Load in required resources (resources that have to be loaded prior to element renders)
             

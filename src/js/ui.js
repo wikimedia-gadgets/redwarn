@@ -48,13 +48,22 @@ rw.ui = {
                 if (rule.name.length > 62) {
                     // Too long to fit
                     style = "font-size:14px";
-                }
+                } // TODO 03/01/2021:
                 finalListBox += `<li
                 class="mdl-menu__item"
-                data-val="`+ i + `"
+                data-val="${i}"
                 onmousedown="refreshLevels('${i}');"
-                style="`+ style + `">
+                style="${style}">
                     ${rule.name} <!-- ${rule.template} (comment for search) -->
+
+                    <!-- favourite button -->
+                    <span class="material-icons" id="favourite${i}" style="cursor:help;position: relative;top: 11px;float:right;">star_outline</span>
+                    <div class="mdl-tooltip mdl-tooltip--large" for="favourite${i}">
+                        <span style="font-size:x-small;">
+                        Add to favourites
+                        </span>
+                    </div>
+                    
                 </li>`; // add dataselected if = autoSelectReasonIndex & autoselect is enabled
             } else {
                 // List by template name
@@ -319,7 +328,7 @@ rw.ui = {
                             ">${new Date(warning.timestamp).toUTCString()} ${
                                 // Only show extra buttons if it's recognised, else there will be an error
                                 ( warning.rule.key != "" ?
-                                `- <a href="#" onclick="autoSelect('${warning.rule.key}');">REUSE</a>`
+                                `- <a href="#" onclick="autoSelect('${warning.rule.key}', ${warning.level});">REUSE</a>`
                                 : ``)}
                             </span><br/>
                             `;

@@ -604,9 +604,9 @@ ${finalWarningHistoryHTML}
                 if (level != null) { // if we're autoselecting a level
                     setTimeout(()=>{
                         // we can only select between 1-5 (5 being 4im)
-                        if (level > 0 && level < 6) $("level"+ [
+                        if (level > 0 && level < 6) $("#level"+ [
                             "1", "2", "3", "4", "4im"
-                        ][level-1]);
+                        ][level-1]).click();
                     }, 250);
                 }
             },250);

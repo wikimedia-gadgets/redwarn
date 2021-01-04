@@ -49,22 +49,15 @@ rw.ui = {
                     // Too long to fit
                     style = "font-size:14px";
                 } // TODO 03/01/2021:
-                finalListBox += `<li
+                finalListBox += `
+                <li
                 class="mdl-menu__item"
                 data-val="${i}"
                 onmousedown="refreshLevels('${i}');"
                 style="${style}">
                     ${rule.name} <!-- ${rule.template} (comment for search) -->
-
-                    <!-- favourite button -->
-                    <span class="material-icons" id="favourite${i}" style="cursor:help;position: relative;top: 11px;float:right;">star_outline</span>
-                    <div class="mdl-tooltip mdl-tooltip--large" for="favourite${i}">
-                        <span style="font-size:x-small;">
-                        Add to favourites
-                        </span>
-                    </div>
-                    
-                </li>`; // add dataselected if = autoSelectReasonIndex & autoselect is enabled
+                </li>
+                `; // add dataselected if = autoSelectReasonIndex & autoselect is enabled
             } else {
                 // List by template name
                 let style = "";

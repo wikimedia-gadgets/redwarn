@@ -41,6 +41,16 @@ var onSettingsLoad = {};
             Don't apply changes and Close
         </div>
     </div>
+
+    <!-- Tabs -->
+    <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+        <a href="#scroll-tab-1" class="mdl-layout__tab is-active">Tutorials</a>
+        <a href="#scroll-tab-2" class="mdl-layout__tab">Buttons</a>
+        <a href="#scroll-tab-3" class="mdl-layout__tab">Warnings</a>
+        <a href="#scroll-tab-4" class="mdl-layout__tab">Appearance</a>
+        <a href="#scroll-tab-5" class="mdl-layout__tab">Behaviour</a>
+        <a href="#scroll-tab-6" class="mdl-layout__tab">About</a>
+      </div>
   </header>
   <main class="mdl-layout__content" style="padding-left: 5%;">
     <form id="config">
@@ -283,9 +293,95 @@ var onSettingsLoad = {};
                         </div>
                         
 
-
-                        <!-- END MAIN APPEARANCE SECTION -->
                         
+                        <!-- END MORE OPTIONS SECTION -->
+
+                        <hr/> <!-- warn user -->
+                        <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Warn User</h2>
+                        <!-- Left side (actual warnings and search box )-->
+                        <div style="width:50%;float:left;height:100%; padding-right: 5px; overflow-x:hidden;overflow-y:auto;">
+
+                            <!-- Generate list of warnings -->
+                            ${(()=>{ // Tags for HTML formatting only <script>
+                                let currentHeading = "";
+                                let finalHTML = ``;
+
+                                for (let i in rw.rules) {
+                                    if (!rw.rules.hasOwnProperty(i)) continue;
+                                    let rule = rw.rules[i];
+                                    // Check if category is different to current heading first
+                                    if (rule.category != currentHeading) {
+                                        // Now generate a new heading and section for search to hide
+                                        finalHTML += `<hr/></span><br/><br/> <!-- close prior category -->
+                                        <span class="rwNoticeCatagory"> <!-- used for search -->
+                                        <div class="rwNoticeCatagoryHead" style="
+                                            text-align: center;
+                                            font-family: Roboto;
+                                            font-weight: 300;
+                                            width: 100%;
+                                        ">${rule.category}</div>`;
+
+                                        // A new heading is needed
+                                        currentHeading = rule.category; // set to ours for detection
+                                    }
+
+                                    
+                                    // Standard listing by rule description
+                                    let style = "";
+                                    if (rule.name.length > 62) {
+                                        // Too long to fit
+                                        style = "font-size:14px";
+                                    }
+
+                                    finalHTML += `
+                                    <hr/>
+                                    <div
+                                    style="${style}">
+                                        <!-- Action buttons -->
+                                        <span style="float:right">
+                                            <span id="editBtn${i}" class="icon material-icons">edit</span>
+                                            <span class="mdl-tooltip" data-mdl-for="editBtn${i}">
+                                            Edit
+                                            </span>
+                                            <span id="delBtn${i}" class="icon material-icons">delete_forever</span>
+                                            <span class="mdl-tooltip" data-mdl-for="delBtn${i}">
+                                            Delete
+                                            </span>
+                                        </span>
+                                        <!-- Main title -->
+                                        <span>${rule.name}</span><br/>
+
+                                        <!-- Note which warning levels are supported -->
+                                        <span style="font-size:9px">Templates: <b>${
+                                            (()=>{
+                                                let finalHTML = "";
+                                                rule.warningLevels.forEach(l => {
+                                                    // Add our corresponding level with a comma for grammar if not the first item
+                                                    finalHTML += (finalHTML == "" ? "": ", ") + rule.template + [
+                                                        ` (reminder)`,
+                                                        `1`,
+                                                        `2`,
+                                                        `3`,
+                                                        `4`,
+                                                        `4im`,
+                                                        ` (policy violation)`
+                                                    ][l];
+                                                });
+                                                return finalHTML;
+                                            })()
+                                        }</b></span>
+                                    </div>
+                                    `;
+                                };
+                                finalHTML += `<hr/></span><br/><br/>`; // close final catagory
+                                return finalHTML;
+                            // Tags for HTML formatting only </script>
+                            })()}
+                        </div> 
+
+                        <!-- right side -->
+                        <div style="width: 49%;float:left;height:100%;border: #e6e6e6;border-width: 1px;border-left-style: solid; overflow-x:hidden; overflow-y:auto;"> 
+                        </div>
                         
                         <!-- END APPEARANCE TAB-->
                     </div>

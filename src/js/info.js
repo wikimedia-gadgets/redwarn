@@ -467,7 +467,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 console.log("Located warning template uw-"+ warningTemplate); 
 
                 let warningLevel = 6; // assume 6 = unknown here
-                let matchedRule = {"name": "Unknown - this warning doesn't seem to be in RedWarn", "template": "uw-"+ warningTemplate, "key": ""};
+                let matchedRule = {"name": "Unknown - this warning doesn't seem to be in RedWarn's database", "template": "uw-"+ warningTemplate, "key": ""};
 
                 // Now locate within our rules
                 for (const ruleKey in rw.rules) {
@@ -476,7 +476,10 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                         if (("uw-"+ warningTemplate).includes(rule.template)) {
                             // Find warning level and map
                             warningLevel = ({
-                                "": 0, // handle nothing as a 0 reminder
+                                // handle nothing as a 0 reminder
+                                undefined: 0, 
+                                "": 0, 
+
                                 "1": 1,
                                 "2": 2,
                                 "3": 3,

@@ -281,8 +281,8 @@ rw.ui = {
                                         <span style="font-size:x-small;">
                                         Level 3 warning
                                         </span>
-                                        <span style="font-size:11px;"><b>${warning.from}</b> gave ${rw.info.targetUsername(un)} level 3 warning for:</span>
                                     </div>
+                                    <span style="font-size:11px;"><b>${warning.from}</b> gave ${rw.info.targetUsername(un)} level 3 warning for:</span>
                                     `,
                     
                                     // Final Warning (dark red)
@@ -308,10 +308,21 @@ rw.ui = {
                                     </div>
                                     <span style="font-size:11px;"><b>${warning.from}</b> gave ${rw.info.targetUsername(un)} ONLY warning for:</span>
                                     `,
+
+                                    // Unknown
+                                    `
+                                    <span class="material-icons" id="WarningHistoryIndicator${i}" style="cursor:help;position: relative;top: 5px;font-size:20px;color:red;">error_outline</span>
+                                    <div class="mdl-tooltip mdl-tooltip--large" for="WarningHistoryIndicator${i}">
+                                        <span style="font-size:x-small;">
+                                        Unknown warning
+                                        </span>
+                                    </div>
+                                    <span style="font-size:11px;"><b>${warning.from}</b> gave ${rw.info.targetUsername(un)} an unknown warning</span> 
+                                    `
                                 ][warning.level]
 
                             }
-                            <br/> <!-- warning rule and timestamp and reuse button to reinput into existing form -->
+                            <br/> <!-- warning rule and timestamp and reuse button to reinput into existing form  -->
                             ${warning.rule.name}<br/>
                             <span style="
                             font-variant: all-petite-caps;

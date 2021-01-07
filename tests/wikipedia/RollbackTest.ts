@@ -2,7 +2,7 @@ import RedWarnWebTestUtils from "../RedWarnWebTestUtils";
 import RedWarnStore from "../../src/data/RedWarnStore";
 import { Rollback } from "../../src/mediawiki/Rollback";
 
-RedWarnWebTestUtils.initialize();
+RedWarnWebTestUtils();
 
 describe("Rollback flow tests", () => {
     // Mock English Wikipedia

@@ -6,18 +6,32 @@ import Api = mw.Api;
 export class MediaWikiAPI {
     static api: Api;
 
-    static get(
+    static async get(
         parameters: Record<string, any>,
         ajaxOptions?: AjaxSettings
-    ): JQueryPromise<JQueryXHR> {
-        return this.api.get(parameters, ajaxOptions);
+    ): Promise<JQueryXHR> {
+        try {
+            return await this.api.get(parameters, ajaxOptions);
+        } catch (error) {
+            console.error(
+                `Error occured while running MediaWiki API get call: ${error.message}`
+            );
+            throw error;
+        }
     }
 
-    static postWithEditToken(
+    static async postWithEditToken(
         parameters: Record<string, any>,
         ajaxOptions?: AjaxSettings
-    ): JQueryPromise<JQueryXHR> {
-        return this.api.postWithEditToken(parameters, ajaxOptions);
+    ): Promise<JQueryXHR> {
+        try {
+            return await this.api.postWithEditToken(parameters, ajaxOptions);
+        } catch (error) {
+            console.error(
+                `Error occured while running MediaWiki API postWithEditToken call: ${error.message}`
+            );
+            throw error;
+        }
     }
 
     /**

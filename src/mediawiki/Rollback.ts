@@ -70,7 +70,7 @@ export class Rollback {
         const latestRevision = await targetRevision.page.getLatestRevision();
         const result = await MediaWikiAPI.postWithEditToken({
             action: "edit",
-            pageids: targetRevision.page.pageID,
+            pageid: targetRevision.page.pageID,
             summary: i18next.t("mediawiki:summaries.restore", {
                 revID: targetRevision.revisionID,
                 revUser: targetRevision.user.username,
@@ -217,7 +217,7 @@ export class Rollback {
         const { fromInjector, progressBar, targetRevision } = context;
 
         if (!targetRevision.isPopulated()) targetRevision.populate();
-        const latestRevision = await targetRevision.page.getLatestRevisionNotByUser(
+        const latestCleanRevision = await targetRevision.page.getLatestRevisionNotByUser(
             targetRevision.user.username
         );
 
@@ -225,18 +225,18 @@ export class Rollback {
 
         const summary = i18next.t("mediawiki:summaries.revert", {
             username: targetRevision.user.username,
-            targetRevisionId: latestRevision.revisionID,
-            targetRevisionEditor: latestRevision.user.username,
+            targetRevisionId: latestCleanRevision.revisionID,
+            targetRevisionEditor: latestCleanRevision.user.username,
             version: RW_VERSION_TAG,
             reason,
         });
         const res = await MediaWikiAPI.postWithEditToken({
             action: "edit",
             format: "json",
-            title: targetRevision.page,
+            pageid: targetRevision.page.pageID,
             summary,
             undo: targetRevision.revisionID, // current
-            undoafter: latestRevision.revisionID, // restore version
+            undoafter: latestCleanRevision.revisionID, // restore version
             tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
                 ? "RedWarn"
                 : null,

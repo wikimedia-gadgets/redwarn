@@ -155,7 +155,7 @@ export class Page {
             action: "edit",
             format: "json",
             [typeof pageIdentifier === "number"
-                ? "pageids"
+                ? "pageid"
                 : "titles"]: pageIdentifier,
             summary: `${comment ?? ""} ${i18next.t(
                 "common:redwarn.signature"

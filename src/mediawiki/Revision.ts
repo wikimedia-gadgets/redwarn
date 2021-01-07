@@ -78,11 +78,6 @@ export class Revision {
     }
 
     /**
-     * Create a `Revision` object from a page's latest revision. This is automatically populated.
-     * @param page The page to get the latest revision from.
-     */
-    static fromPageLatestRevision(page: Page): Revision;
-    /**
      * Create a `Revision` object from a revision ID and MediaWiki API call results. This assumes
      * that an API request has already been made. Depending on the `apiResult`, the created object
      * may or may not be fully populated.
@@ -92,35 +87,22 @@ export class Revision {
     static fromPageLatestRevision(
         revisionID: number,
         apiResult: Record<string, any>
-    ): Revision;
-    static fromPageLatestRevision(
-        arg1: Page | number,
-        apiResult?: Record<string, any>
     ): Revision {
-        if (typeof arg1 === "number") {
-            const revision = new Revision({ revisionID: arg1 });
-            Object.assign(revision, apiResult);
-            return revision;
-        } else {
-            const pageData: Record<string, any> = Object.values(
-                apiResult["query"]["pages"]
-            )[0];
-            const revisionData: Record<string, any> = pageData["revisions"][0];
+        const pageData: Record<string, any> = Object.values(
+            apiResult["query"]["pages"]
+        )[0];
+        const revisionData: Record<string, any> = pageData["revisions"][0];
 
-            return new Revision({
-                revisionID: revisionData["revid"],
-                parentID: revisionData["parentid"],
-                page: Page.fromIDAndTitle(
-                    pageData["pageid"],
-                    pageData["title"]
-                ),
-                comment: revisionData["comment"],
-                user: new User(revisionData["user"]),
-                timestamp: new Date(revisionData["timestamp"]).getTime(),
-                size: revisionData["size"],
-                content: revisionData["slots"]?.["main"]?.["*"],
-            });
-        }
+        return new Revision({
+            revisionID: revisionID,
+            parentID: revisionData["parentid"],
+            page: Page.fromIDAndTitle(pageData["pageid"], pageData["title"]),
+            comment: revisionData["comment"],
+            user: new User(revisionData["user"]),
+            timestamp: new Date(revisionData["timestamp"]).getTime(),
+            size: revisionData["size"],
+            content: revisionData["slots"]?.["main"]?.["*"],
+        });
     }
 
     /**
@@ -162,7 +144,8 @@ export class Revision {
             revision.content = revisionData["revid"];
             if (!!revisionData["comment"])
                 revision.comment = revisionData["comment"];
-            if (!!revisionData["user"]) revision.user = revisionData["user"];
+            if (!!revisionData["user"])
+                revision.user = new User(revisionData["user"]);
             if (!!revisionData["timestamp"])
                 revision.timestamp = new Date(
                     revisionData["timestamp"]
@@ -223,6 +206,8 @@ export class Revision {
     async getLatestRevision(): Promise<Revision> {
         if (!!this.page) {
             // Big oh noes. We'll have to send an additional request just to get the page name.
+            console.warn("Page of revision was not set. This is inefficient!");
+            console.warn(new Error().stack);
             const revisionInfoRequest = await MediaWikiAPI.get({
                 action: "query",
                 format: "json",

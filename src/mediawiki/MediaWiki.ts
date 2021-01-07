@@ -12,6 +12,10 @@ const mwChecks = {
 
 type MediaWikiCheck = keyof typeof mwChecks;
 
+/**
+ * The MediaWiki class is responsible for checks and actions against the MediaWiki
+ * JavaScript interface, the primary interface allowing wiki-to-userscript interaction.
+ */
 export default class MediaWiki {
     /**
      * Run all MediaWiki checks and return whichever fails.
@@ -54,3 +58,18 @@ export default class MediaWiki {
         } else return true;
     }
 }
+
+// To avoid circular imports, all imports MUST come explicitly from this
+// index file and this index file alone.
+
+export * from "./User";
+export * from "./ClientUser";
+export * from "./Gender";
+export * from "./Page";
+export * from "./Revision";
+export * from "./Rollback";
+export * from "./URL";
+export * from "./WarningLevel";
+export * from "./Warnings";
+export * from "./Watch";
+export * from "./API";

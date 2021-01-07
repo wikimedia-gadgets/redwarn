@@ -1,5 +1,4 @@
-import Rollback from "rww/wikipedia/Rollback";
-import Revision from "rww/wikipedia/Revision";
+import { Page, Revision, Rollback } from "rww/mediawiki/MediaWiki";
 import {
     RollbackOption,
     RollbackOptions,
@@ -9,8 +8,7 @@ import { MDCTooltip } from "@material/tooltip";
 import { MDCLinearProgress } from "@material/linear-progress";
 import { RollbackDoneOptions } from "rww/definitions/RollbackDoneOptions";
 import { BaseProps, h } from "tsx-dom";
-import Page from "rww/wikipedia/Page";
-import { Warnings } from "rww/wikipedia/Warnings";
+import { Warnings } from "rww/mediawiki/Warnings";
 import { RWUISelectionDialogItem } from "../elements/RWUIDialog";
 import { RollbackContext } from "rww/definitions/RollbackContext";
 

@@ -3,14 +3,16 @@ import { RW_VERSION_TAG, RW_WIKIS_TAGGABLE } from "rww/data/RedWarnConstants";
 import RedWarnStore from "rww/data/RedWarnStore";
 import RWUI from "rww/ui/RWUI";
 import redirect from "rww/util/redirect";
-import MediaWikiAPI from "./API";
-import Revision from "./Revision";
-import MediaWikiURL from "./URL";
+import {
+    ClientUser,
+    MediaWikiAPI,
+    MediaWikiURL,
+    Page,
+    Revision,
+} from "rww/mediawiki/MediaWiki";
 import { Warnings } from "./Warnings";
-import Page from "./Page";
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 import { RollbackContext } from "rww/definitions/RollbackContext";
-import ClientUser from "rww/mediawiki/ClientUser";
 
 // interface RollbackContext {
 //     reason: string;
@@ -19,7 +21,7 @@ import ClientUser from "rww/mediawiki/ClientUser";
 //     targetRevision: Revision;
 // }
 
-export default class Rollback {
+export class Rollback {
     /**
      * Determines whether the given page is a diff page, and whether or not it
      * displays a single revision (if that revision is the only page revision) or

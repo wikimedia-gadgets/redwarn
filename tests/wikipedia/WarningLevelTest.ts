@@ -1,7 +1,7 @@
 import {
-    WarningLevel,
     getHighestLevel,
-} from "../../src/wikipedia/WarningLevel";
+    WarningLevel,
+} from "../../src/mediawiki/WarningLevel";
 
 describe("WarningLevel Parser Tests", () => {
     const highestLevel: { level: WarningLevel; content: string }[] = [

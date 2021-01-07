@@ -2,10 +2,9 @@ import { RW_SIG, RW_WELCOME, RW_WELCOME_IP } from "rww/data/RedWarnConstants";
 import RWUI from "rww/ui/RWUI";
 import getMonthHeader from "rww/util/getMonthHeader";
 import regexEscape from "rww/util/regexEscape";
-import MediaWikiAPI from "./API";
+import { MediaWikiAPI, Page } from "rww/mediawiki/MediaWiki";
 import { Gender, GenderDict, GenderPronoun } from "./Gender";
 import { getHighestLevel, WarningAnalysis } from "./WarningLevel";
-import Page from "./Page";
 import i18next from "i18next";
 
 interface UserInfo {
@@ -17,7 +16,7 @@ interface UserInfo {
 /**
  * Represents a Mediawiki user.
  */
-export default class User {
+export class User {
     private cache: Partial<UserInfo> = {};
 
     /**

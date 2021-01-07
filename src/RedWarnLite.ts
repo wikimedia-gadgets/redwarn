@@ -16,18 +16,18 @@ import RedWarnHooks from "./event/RedWarnHooks";
 import RTRC from "./integrations/RTRC";
 import Localization from "./localization/Localization";
 import StyleManager from "./styles/StyleManager";
-/* IMPORT EVERYTHING HERE! */
 import Dependencies from "./ui/Dependencies";
 import RWUI from "./ui/RWUI";
-import WikipediaAPI from "./wikipedia/API";
-import Rollback from "./wikipedia/Rollback";
+import MediaWiki, {
+    MediaWikiAPI,
+    MediaWikiURL,
+    Rollback,
+    User,
+    Warnings,
+    Watch,
+} from "./mediawiki/MediaWiki";
 import * as RedWarnConstants from "./data/RedWarnConstants";
 import * as Util from "./util";
-import WikipediaURL from "./wikipedia/URL";
-import User from "./wikipedia/User";
-import { Warnings } from "./wikipedia/Warnings";
-import Watch from "./wikipedia/Watch";
-import MediaWiki from "./wikipedia/MediaWiki";
 
 $(document).ready(async () => {
     console.log("Starting RedWarn...");
@@ -64,7 +64,7 @@ $(document).ready(async () => {
     await Promise.all([
         RedWarnHooks.executeHooks("init"),
         Dependencies.resolve(),
-        WikipediaAPI.init(),
+        MediaWikiAPI.init(),
     ]);
 
     RTRC.init();
@@ -120,8 +120,8 @@ export default class RedWarn {
     static get i18next(): typeof i18next {
         return i18next;
     }
-    static get WikipediaAPI(): typeof WikipediaAPI {
-        return WikipediaAPI;
+    static get MediaWikiAPI(): typeof MediaWikiAPI {
+        return MediaWikiAPI;
     }
     static get Rollback(): typeof Rollback {
         return Rollback;
@@ -141,8 +141,8 @@ export default class RedWarn {
     static get Util(): typeof Util {
         return Util;
     }
-    static get WikipediaURL(): typeof WikipediaURL {
-        return WikipediaURL;
+    static get MediaWikiURL(): typeof MediaWikiURL {
+        return MediaWikiURL;
     }
     static get User(): typeof User {
         return User;

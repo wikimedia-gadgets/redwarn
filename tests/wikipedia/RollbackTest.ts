@@ -1,6 +1,8 @@
-import RedWarnStore from "../../src/data/RedWarnStore";
-import Rollback from "../../src/wikipedia/Rollback";
 import RedWarnWebTestUtils from "../RedWarnWebTestUtils";
+import RedWarnStore from "../../src/data/RedWarnStore";
+import { Rollback } from "../../src/mediawiki/Rollback";
+
+RedWarnWebTestUtils.initialize();
 
 describe("Rollback flow tests", () => {
     // Mock English Wikipedia
@@ -58,8 +60,6 @@ describe("Rollback flow tests", () => {
             expected: [12345, 67890],
         },
     };
-
-    RedWarnWebTestUtils.initialize();
 
     for (const testName of Object.keys(testCases)) {
         test(testName, () => {

@@ -1,6 +1,6 @@
 import { Direction } from "./Direction";
 import { MDCLinearProgress } from "@material/linear-progress";
-import Revision from "rww/mediawiki/Revision";
+import { Revision } from "rww/mediawiki/MediaWiki";
 
 export class RollbackContext {
     public readonly direction: Direction;

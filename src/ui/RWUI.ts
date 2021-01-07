@@ -1,5 +1,5 @@
 import StyleManager from "rww/styles/StyleManager";
-import User from "rww/mediawiki/User";
+import { ClientUser, User } from "rww/mediawiki/MediaWiki";
 import {
     RWUIAlertDialog,
     RWUIInputDialog,
@@ -9,7 +9,6 @@ import {
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 import { RollbackContext } from "rww/definitions/RollbackContext";
 import { RWUIToast } from "./elements/RWUIToast";
-import ClientUser from "rww/mediawiki/ClientUser";
 
 /**
  * Redirect class for easy access. UI elements of RedWarn are also created here.

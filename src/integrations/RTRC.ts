@@ -1,8 +1,5 @@
-import Rollback from "rww/mediawiki/Rollback";
-import User from "rww/mediawiki/User";
+import { Page, Revision, Rollback, User } from "rww/mediawiki/MediaWiki";
 import { RollbackContext } from "rww/definitions/RollbackContext";
-import Revision from "rww/mediawiki/Revision";
-import Page from "rww/mediawiki/Page";
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 
 export default class RTRC {

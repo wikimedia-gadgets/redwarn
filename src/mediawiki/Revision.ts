@@ -1,8 +1,10 @@
-import User from "./User";
-import MediaWikiAPI from "./API";
-import Page from "./Page";
+import {
+    MediaWikiAPI,
+    MediaWikiURL,
+    Page,
+    User,
+} from "rww/mediawiki/MediaWiki";
 import redirect from "rww/util/redirect";
-import MediaWikiURL from "rww/mediawiki/URL";
 
 // Function names of the Revision class.
 type RevisionFunctions =
@@ -17,7 +19,7 @@ type RevisionFunctions =
  * A revision is an object provided by the MediaWiki API which represents
  * a change in a page's content.
  */
-export default class Revision {
+export class Revision {
     /** The ID of the revision. */
     revisionID: number;
 

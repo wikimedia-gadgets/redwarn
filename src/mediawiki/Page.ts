@@ -1,9 +1,7 @@
-import Revision from "./Revision";
-import MediaWikiAPI from "./API";
+import { MediaWikiAPI, Revision, User } from "rww/mediawiki/MediaWiki";
 import { RW_WIKIS_TAGGABLE } from "rww/data/RedWarnConstants";
 import RedWarnStore from "rww/data/RedWarnStore";
 import i18next from "i18next";
-import User from "./User";
 
 export type PageFunctions =
     | "getIdentifier"
@@ -16,7 +14,7 @@ export type PageFunctions =
  * pages stem from one namespace. Since a `Page` object cannot be manually constructed, it must
  * be created using a page ID or using its title.
  */
-export default class Page {
+export class Page {
     /** The ID of the page. */
     pageID?: number;
 

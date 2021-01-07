@@ -1,9 +1,9 @@
 import i18next from "i18next";
-import ClientUser from "rww/mediawiki/ClientUser";
+import { ClientUser } from "rww/mediawiki/MediaWiki";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 
-export default class MediaWikiAPI {
+export class MediaWikiAPI {
     static api: Api;
 
     static get(
@@ -34,6 +34,7 @@ export default class MediaWikiAPI {
             },
         });
 
+        // Initialize the current user.
         await ClientUser.i.init();
     }
 }

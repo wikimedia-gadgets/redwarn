@@ -9,7 +9,7 @@ export interface URIComponents {
 /**
  * Utility class for generating a URL on Wikipedia.
  */
-export default class MediaWikiURL {
+export class MediaWikiURL {
     /**
      * Get the link to a page's revision history.
      * @param page The page to find the history for.

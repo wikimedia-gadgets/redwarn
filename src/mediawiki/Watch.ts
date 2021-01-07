@@ -2,7 +2,7 @@ import i18next from "i18next";
 import RedWarnStore from "rww/data/RedWarnStore";
 import RWUI from "rww/ui/RWUI";
 import redirect from "rww/util/redirect";
-import MediaWikiAPI from "./API";
+import { MediaWikiAPI } from "rww/mediawiki/MediaWiki";
 
 /**
  * Responsible for watching page changes.
@@ -12,7 +12,7 @@ import MediaWikiAPI from "./API";
  *
  * @deprecated Not yet usable as the watching interface is not yet developed.
  */
-export default class Watch {
+export class Watch {
     static active = false;
     static timecheck: number;
     static lastRevID: number;

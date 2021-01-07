@@ -47,7 +47,7 @@
         "webpack": "^5.11.1",
         "webpack-cli": "^4.3.0",
         "webpack-dev-server": "^3.11.1",
-        "wrapper-webpack-plugin": "git+https://github.com/godmodelabs/wrapper-webpack-plugin.git"
+        "wrapper-webpack-plugin": "github:redwarnwp/wrapper-webpack-plugin"
     },
     "scripts": {
         "start": "webpack serve --config webpack.config.js",

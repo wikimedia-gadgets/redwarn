@@ -2,7 +2,7 @@
  * Creates a URL string from a given set of parameters. This automatically
  * handles escaping.
  */
-import { URIComponents } from "rww/wikipedia/URL";
+import { URIComponents } from "rww/mediawiki/URL";
 
 export default function (
     baseURL: string | URL,

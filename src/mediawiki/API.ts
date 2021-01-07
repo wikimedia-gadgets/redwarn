@@ -1,7 +1,5 @@
 import i18next from "i18next";
-import RedWarnStore from "rww/data/RedWarnStore";
-import redirect from "rww/util/redirect";
-import MediaWikiURL from "./URL";
+import ClientUser from "rww/mediawiki/ClientUser";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 
@@ -22,58 +20,11 @@ export default class MediaWikiAPI {
         return this.api.postWithEditToken(parameters, ajaxOptions);
     }
 
-    static async goToLatestRevision(page: string): Promise<void> {
-        const revisions = await this.api.get({
-            action: "query",
-            prop: "revisions",
-            titles: mw.util.wikiUrlencode(page),
-            rvslots: "*",
-            rvprop: ["ids"],
-            rvlimit: 1,
-        });
-
-        const latestRevisionId = revisions.query.pages[0].revisions[0].revid;
-        const parentRevisionId = revisions.query.pages[0].revisions[0].parentid;
-
-        redirect(MediaWikiURL.getDiffUrl(latestRevisionId, parentRevisionId));
-    }
-
-    /**
-     * Checks if the user has a given permission.
-     * @param permission
-     */
-    static hasGroup(permission: string): boolean {
-        const g = RedWarnStore.APIStore.groups;
-        let hasGroup = g.includes(permission);
-
-        // Administrators override all feature restrictions.
-        if (!hasGroup) {
-            hasGroup = g.includes("sysop");
-        }
-
-        // Due to 2 types of the `confirmed` group, `confirmed` and `autoconfirmed`,
-        // we have to check both.
-        if (permission === "confirmed" && !hasGroup) {
-            hasGroup = g.includes("autoconfirmed");
-        }
-
-        return hasGroup;
-    }
-
-    /**
-     * Gets the user's groups.
-     */
-    static async getGroups(): Promise<string[]> {
-        if (!RedWarnStore.APIStore.groups) {
-            RedWarnStore.APIStore.groups = await mw.user.getGroups();
-        }
-        return RedWarnStore.APIStore.groups;
-    }
-
     /**
      * Initialize the MediaWiki API Manager.
      */
     static async init(): Promise<void> {
+        // Create the API interface.
         this.api = new mw.Api({
             parameters: { formatversion: 2 },
             ajax: {
@@ -82,28 +33,7 @@ export default class MediaWikiAPI {
                 },
             },
         });
-        RedWarnStore.APIStore.username = mw.user.getName();
-        await this.getGroups();
-        RedWarnStore.APIStore.emailEnabled =
-            (
-                await this.get({
-                    action: "query",
-                    meta: "userinfo",
-                    uiprop: "email",
-                    format: "json",
-                })
-            ).query.userinfo.emailauthenticated != null;
+
+        await ClientUser.i.init();
     }
 }
-
-export interface APIStore {
-    groups: string[];
-    username: string;
-    emailEnabled: boolean;
-}
-
-export const EmptyAPIStore: APIStore = {
-    groups: [],
-    username: "",
-    emailEnabled: false,
-};

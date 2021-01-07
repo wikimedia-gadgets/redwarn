@@ -1,5 +1,4 @@
-import { Warnings } from "rww/wikipedia/Warnings";
-import WikipediaAPI from "rww/wikipedia/API";
+import { Warnings } from "rww/mediawiki/Warnings";
 import { RollbackContext } from "rww/definitions/RollbackContext";
 
 export interface RollbackDoneOption {
@@ -17,8 +16,8 @@ export const RollbackDoneOptions: RollbackDoneOption[] = [
     {
         name: "Go to latest revision",
         icon: "watch_later",
-        action: (context: RollbackContext): Promise<void> =>
-            WikipediaAPI.goToLatestRevision(context.targetRevision.page.title),
+        action: async (context: RollbackContext): Promise<void> =>
+            (await context.targetRevision.page.getLatestRevision()).navigate(),
         id: "latestRev",
     },
     {

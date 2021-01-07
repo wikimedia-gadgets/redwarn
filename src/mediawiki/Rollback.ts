@@ -10,6 +10,7 @@ import { Warnings } from "./Warnings";
 import Page from "./Page";
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 import { RollbackContext } from "rww/definitions/RollbackContext";
+import ClientUser from "rww/mediawiki/ClientUser";
 
 // interface RollbackContext {
 //     reason: string;
@@ -320,7 +321,7 @@ export default class Rollback {
 
         await Rollback.redirectIfNotLatest(targetRevision);
 
-        if (MediaWikiAPI.hasGroup("rollbacker")) {
+        if (ClientUser.i.inGroup("rollbacker")) {
             // TODO config dialog
             if (/* !rw.config.rollbackMethod */ false) {
                 /* rw.ui.confirmDialog(`

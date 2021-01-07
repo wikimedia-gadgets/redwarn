@@ -1,6 +1,8 @@
 import User from "./User";
 import MediaWikiAPI from "./API";
 import Page from "./Page";
+import redirect from "rww/util/redirect";
+import MediaWikiURL from "rww/mediawiki/URL";
 
 // Function names of the Revision class.
 type RevisionFunctions =
@@ -8,7 +10,8 @@ type RevisionFunctions =
     | "isPopulated"
     | "getLatestRevision"
     | "isLatestRevision"
-    | "getContent";
+    | "getContent"
+    | "navigate";
 
 /**
  * A revision is an object provided by the MediaWiki API which represents
@@ -244,5 +247,12 @@ export default class Revision {
      */
     async isLatestRevision(): Promise<boolean> {
         return (await this.getLatestRevision()).revisionID === this.revisionID;
+    }
+
+    /**
+     * Navigate to the given revision's diff page.
+     */
+    navigate(): void {
+        redirect(MediaWikiURL.getDiffUrl(this.revisionID));
     }
 }

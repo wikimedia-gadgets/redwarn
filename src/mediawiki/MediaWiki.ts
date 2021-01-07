@@ -5,6 +5,9 @@ const mwChecks = {
     version: () => {
         return semanticDifference(mw.config.get("wgVersion"), "1.30.0") !== -1;
     },
+    user: () => {
+        return mw.user.getName() !== null;
+    },
 };
 
 type MediaWikiCheck = keyof typeof mwChecks;

@@ -1,6 +1,5 @@
-import RedWarnStore from "rww/data/RedWarnStore";
 import StyleManager from "rww/styles/StyleManager";
-import User from "rww/wikipedia/User";
+import User from "rww/mediawiki/User";
 import {
     RWUIAlertDialog,
     RWUIInputDialog,
@@ -10,6 +9,7 @@ import {
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 import { RollbackContext } from "rww/definitions/RollbackContext";
 import { RWUIToast } from "./elements/RWUIToast";
+import ClientUser from "rww/mediawiki/ClientUser";
 
 /**
  * Redirect class for easy access. UI elements of RedWarn are also created here.
@@ -56,7 +56,7 @@ export default class RWUI {
             // TODO UAA
         }
 
-        if (RedWarnStore.APIStore.emailEnabled) {
+        if (ClientUser.i.emailEnabled) {
             // TODO oversight
             // TODO 911
         }

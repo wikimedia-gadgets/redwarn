@@ -2,15 +2,11 @@
 import MessageHandler from "rww/event/MessageHandler";
 import { StyleStorage } from "rww/styles/Style";
 import { Dependency } from "rww/ui/Dependencies";
-import { APIStore, EmptyAPIStore } from "rww/wikipedia/API";
 
 // noinspection JSDeprecatedSymbols
 export default class RedWarnStore {
     // Initializations
     public static dependencies: Dependency[] = [];
-
-    // API
-    public static APIStore: APIStore = EmptyAPIStore;
 
     // Wiki automated config
 

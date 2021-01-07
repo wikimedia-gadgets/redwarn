@@ -1,4 +1,4 @@
-import {WarningLevel} from "./WarningLevel";
+import { WarningLevel } from "./WarningLevel";
 
 export enum WarningCategory {
     COMMON = "Common warnings",

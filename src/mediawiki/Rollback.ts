@@ -3,9 +3,9 @@ import { RW_VERSION_TAG, RW_WIKIS_TAGGABLE } from "rww/data/RedWarnConstants";
 import RedWarnStore from "rww/data/RedWarnStore";
 import RWUI from "rww/ui/RWUI";
 import redirect from "rww/util/redirect";
-import WikipediaAPI from "./API";
+import MediaWikiAPI from "./API";
 import Revision from "./Revision";
-import WikipediaURL from "./URL";
+import MediaWikiURL from "./URL";
 import { Warnings } from "./Warnings";
 import Page from "./Page";
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
@@ -65,10 +65,10 @@ export default class Rollback {
     ): Promise<boolean> {
         if (!targetRevision.isPopulated()) targetRevision.populate();
         const latestRevision = await targetRevision.page.getLatestRevision();
-        const result = await WikipediaAPI.postWithEditToken({
+        const result = await MediaWikiAPI.postWithEditToken({
             action: "edit",
             pageids: targetRevision.page.pageID,
-            summary: i18next.t("wikipedia:summaries.restore", {
+            summary: i18next.t("mediawiki:summaries.restore", {
                 revID: targetRevision.revisionID,
                 revUser: targetRevision.user.username,
                 reason,
@@ -145,7 +145,7 @@ export default class Rollback {
         if (latestRevision.revisionID !== targetRevision.revisionID) {
             if (redirectOnChange)
                 redirect(
-                    WikipediaURL.getDiffUrl(
+                    MediaWikiURL.getDiffUrl(
                         latestRevision.revisionID,
                         latestRevision.parentID
                     )
@@ -176,7 +176,7 @@ export default class Rollback {
             latestRevision.page.pageID
         ).getLatestRevisionNotByUser(targetRevision.user.username);
 
-        const url = WikipediaURL.getDiffUrl(
+        const url = MediaWikiURL.getDiffUrl(
             revisionID,
             +mw.util.getParamValue("diff"),
             {
@@ -220,14 +220,14 @@ export default class Rollback {
 
         this.redirectIfNotLatest(targetRevision, context.redirectOnChange);
 
-        const summary = i18next.t("wikipedia:summaries.revert", {
+        const summary = i18next.t("mediawiki:summaries.revert", {
             username: targetRevision.user.username,
             targetRevisionId: latestRevision.revisionID,
             targetRevisionEditor: latestRevision.user.username,
             version: RW_VERSION_TAG,
             reason,
         });
-        const res = await WikipediaAPI.postWithEditToken({
+        const res = await MediaWikiAPI.postWithEditToken({
             action: "edit",
             format: "json",
             title: targetRevision.page,
@@ -270,12 +270,12 @@ export default class Rollback {
         try {
             if (!targetRevision.isPopulated()) targetRevision.populate();
 
-            const summary = i18next.t("wikipedia:summaries.rollback", {
+            const summary = i18next.t("mediawiki:summaries.rollback", {
                 username: targetRevision.user.username,
                 reason,
                 version: RW_VERSION_TAG,
             });
-            await WikipediaAPI.api.rollback(
+            await MediaWikiAPI.api.rollback(
                 targetRevision.page.title,
                 targetRevision.user.username,
                 {
@@ -320,7 +320,7 @@ export default class Rollback {
 
         await Rollback.redirectIfNotLatest(targetRevision);
 
-        if (WikipediaAPI.hasGroup("rollbacker")) {
+        if (MediaWikiAPI.hasGroup("rollbacker")) {
             // TODO config dialog
             if (/* !rw.config.rollbackMethod */ false) {
                 /* rw.ui.confirmDialog(`

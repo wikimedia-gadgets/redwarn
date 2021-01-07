@@ -2,7 +2,7 @@ import i18next from "i18next";
 import RedWarnStore from "rww/data/RedWarnStore";
 import RWUI from "rww/ui/RWUI";
 import redirect from "rww/util/redirect";
-import WikipediaAPI from "./API";
+import MediaWikiAPI from "./API";
 
 /**
  * Responsible for watching page changes.
@@ -27,7 +27,7 @@ export default class Watch {
             RWUI.Toast.quickShow({ content: i18next.t("ui:toasts.watching") });
 
             this.active = true;
-            const r = await WikipediaAPI.api.get({
+            const r = await MediaWikiAPI.api.get({
                 action: "query",
                 prop: "revisions",
                 titles: mw.util.wikiUrlencode(
@@ -39,7 +39,7 @@ export default class Watch {
 
             this.lastRevID = r.query.pages[0].revisions[0].revid;
             this.timecheck = window.setInterval(() => {
-                WikipediaAPI.api
+                MediaWikiAPI.api
                     .get({
                         action: "query",
                         prop: "revisions",

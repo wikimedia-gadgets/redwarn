@@ -2,7 +2,7 @@ import { RW_SIG, RW_WELCOME, RW_WELCOME_IP } from "rww/data/RedWarnConstants";
 import RWUI from "rww/ui/RWUI";
 import getMonthHeader from "rww/util/getMonthHeader";
 import regexEscape from "rww/util/regexEscape";
-import WikipediaAPI from "./API";
+import MediaWikiAPI from "./API";
 import { Gender, GenderDict, GenderPronoun } from "./Gender";
 import { getHighestLevel, WarningAnalysis } from "./WarningLevel";
 import Page from "./Page";
@@ -34,7 +34,7 @@ export default class User {
      */
     async getPronouns(forceRecheck = false): Promise<GenderPronoun> {
         if (!this.cache.gender || forceRecheck) {
-            const r = await WikipediaAPI.get({
+            const r = await MediaWikiAPI.get({
                 action: "query",
                 list: "users",
                 usprop: "gender",
@@ -53,7 +53,7 @@ export default class User {
      */
     async getEditCount(forceRecheck = false): Promise<number> {
         if (!this.cache.edits || forceRecheck) {
-            const r = await WikipediaAPI.get({
+            const r = await MediaWikiAPI.get({
                 action: "query",
                 list: "users",
                 usprop: "editcount",
@@ -120,13 +120,15 @@ export default class User {
      * @param underDate The date header to look for.
      * @param summary The edit comment to use.
      * @param blacklist If the page already contains this text, insertion is skipped.
-     * @param blacklistToast Whether or not to show a toast if the insertion was skipped.
      */
     async addToUserTalk(
         text: string,
         underDate: boolean,
         summary: string,
-        blacklist?: string
+        blacklist?: {
+            target: string;
+            message: string;
+        }
     ): Promise<void> {
         if (
             this.username == null ||
@@ -154,10 +156,10 @@ export default class User {
 
         // Check blacklist (if defined)
         if (blacklist) {
-            if (revisionWikitext.includes(blacklist)) {
+            if (revisionWikitext.includes(blacklist.target)) {
                 // Don't continue and show toast
                 RWUI.Toast.quickShow({
-                    content: i18next.t("ui:toasts.blacklist"),
+                    content: blacklist.message,
                 });
                 return;
             }

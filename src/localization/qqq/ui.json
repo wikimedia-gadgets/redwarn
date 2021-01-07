@@ -24,7 +24,6 @@
         "newerRev": "While attempting to rollback, a newer revision was detected, so the rollback cannot continue",
         "userUndefined": "Used when a user is undefined, usually when the user doesn't exist, can't be found, or is suppressed/oversighted",
         "watching": "Used to notify the user that the alert on page change function has successfully been enabled. Should also tell the user to keep the tab open.",
-        "stoppedWatching": "Used to notify the user that the alert on page change function has successfully been disabled.",
-        "blacklist": "Used to notify the user that ?"
+        "stoppedWatching": "Used to notify the user that the alert on page change function has successfully been disabled."
     }
 }

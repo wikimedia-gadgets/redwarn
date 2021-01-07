@@ -26,48 +26,9 @@
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 declare class mw {
-    /**
-     * Map of configuration values.
-     *
-     * Check out [the complete list of configuration values](https://www.mediawiki.org/wiki/Manual:Interface/JavaScript#mw.config)
-     * on mediawiki.org.
-     *
-     * If `$wgLegacyJavaScriptGlobals` is true, this Map will add its values to the
-     * global `window` object.
-     * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw-property-config
-     */
     static config: Map<string, any>;
-
-    /**
-     * Create an instance of mw.hook.
-     *
-     * @method hook
-     * @member mw
-     * @param {string} name Name of hook.
-     * @return {mw.hook}
-     * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw.hook
-     */
     static hook<T extends unknown[], U extends string>(name: U): mw.Hook<T>;
 
-    /**
-     * Display a notification message to the user.
-     * @param options.autoHide A boolean indicating whether the notification should automatically
-     * be hidden after shown. Or if it should persist.
-     * @param options.autoHideSeconds Key to autoHideSeconds for number of seconds for timeout of
-     * auto-hide notifications.
-     * @param options.tag An optional string. When a notification is tagged only one message with that
-     * tag will be displayed. Trying to display a new notification with the same tag as one
-     * already being displayed will cause the other notification to be closed and this new
-     * notification to open up inside the same place as the previous notification.
-     * @param options.title An optional title for the notification. Will be displayed above the
-     * content. Usually in bold.
-     * @param options.type An optional string for the type of the message used for styling:
-     * Examples: 'info', 'warn', 'error', 'success'.
-     * @param options.visibleTimeout A boolean indicating if the autoHide timeout should be based on
-     * time the page was visible to user. Or if it should use wall clock time.
-     * @param options.id HTML ID to set on the notification element.
-     * @see https://doc.wikimedia.org/mediawiki-core/master/js/#!/api/mw-method-notify
-     */
     static notify(
         message: HTMLElement | HTMLElement[] | JQuery | mw.Message | string,
         options?: Partial<typeof mw.notification.defaults>

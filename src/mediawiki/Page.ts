@@ -1,5 +1,5 @@
 import Revision from "./Revision";
-import WikipediaAPI from "./API";
+import MediaWikiAPI from "./API";
 import { RW_WIKIS_TAGGABLE } from "rww/data/RedWarnConstants";
 import RedWarnStore from "rww/data/RedWarnStore";
 import i18next from "i18next";
@@ -70,7 +70,7 @@ export default class Page {
         const pageIdentifier = page.getIdentifier();
 
         // Returns one revision from one page (the given page).
-        const revisionInfoRequest = await WikipediaAPI.get({
+        const revisionInfoRequest = await MediaWikiAPI.get({
             action: "query",
             format: "json",
             prop: "revisions",
@@ -153,7 +153,7 @@ export default class Page {
     async edit(content: string, comment?: string): Promise<void> {
         const pageIdentifier = this.getIdentifier();
 
-        await WikipediaAPI.postWithEditToken({
+        await MediaWikiAPI.postWithEditToken({
             action: "edit",
             format: "json",
             [typeof pageIdentifier === "number"

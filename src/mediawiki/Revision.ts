@@ -1,5 +1,5 @@
 import User from "./User";
-import WikipediaAPI from "./API";
+import MediaWikiAPI from "./API";
 import Page from "./Page";
 
 // Function names of the Revision class.
@@ -131,7 +131,7 @@ export default class Revision {
 
         if (toPopulate.length > 0) {
             // Returns one revision (revision revision) from one slot (main) from one page.
-            const revisionInfoRequest = await WikipediaAPI.get({
+            const revisionInfoRequest = await MediaWikiAPI.get({
                 action: "query",
                 format: "json",
                 prop: "revisions",
@@ -177,7 +177,7 @@ export default class Revision {
     async getContent(): Promise<string> {
         if (this.content) return this.content;
 
-        const revisionInfoRequest = await WikipediaAPI.get({
+        const revisionInfoRequest = await MediaWikiAPI.get({
             action: "query",
             format: "json",
             prop: "revisions",
@@ -218,7 +218,7 @@ export default class Revision {
     async getLatestRevision(): Promise<Revision> {
         if (!!this.page) {
             // Big oh noes. We'll have to send an additional request just to get the page name.
-            const revisionInfoRequest = await WikipediaAPI.get({
+            const revisionInfoRequest = await MediaWikiAPI.get({
                 action: "query",
                 format: "json",
                 prop: "revisions",

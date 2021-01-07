@@ -23,7 +23,7 @@ window.RedWarnLanguages.push({
     },
     namespaces: {
         common: require("./common.json"),
-        wikipedia: require("./wikipedia.json"),
+        mediawiki: require("./mediawiki.json"),
         ui: require("./ui.json"),
     },
 });

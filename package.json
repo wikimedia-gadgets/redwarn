@@ -36,6 +36,7 @@
         "jsdom": "^16.4.0",
         "lint-staged": "^10.5.1",
         "prettier": "2.1.2",
+        "rimraf": "^3.0.2",
         "sass": "^1.27.0",
         "sass-loader": "^10.0.3",
         "source-map-loader": "^2.0.0",
@@ -43,6 +44,7 @@
         "ts-jest": "^26.4.4",
         "ts-loader": "^8.0.12",
         "tslib": "^2.0.3",
+        "types-mediawiki": "github:wikimedia-gadgets/types-mediawiki",
         "typescript": "^4.0.2",
         "webpack": "^5.11.1",
         "webpack-cli": "^4.3.0",
@@ -50,11 +52,12 @@
         "wrapper-webpack-plugin": "github:redwarnwp/wrapper-webpack-plugin"
     },
     "scripts": {
-        "start": "webpack serve --config webpack.config.js",
         "build": "webpack",
         "build-prod": "cross-env NODE_ENV=production webpack",
         "build-dev": "cross-env NODE_ENV=development webpack",
+        "clean": "rimraf build",
         "profile": "webpack --profile",
+        "start": "webpack serve --config webpack.config.js",
         "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
     },
     "repository": {

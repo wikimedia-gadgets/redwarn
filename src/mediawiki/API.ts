@@ -1,11 +1,11 @@
 import i18next from "i18next";
 import RedWarnStore from "rww/data/RedWarnStore";
 import redirect from "rww/util/redirect";
-import WikipediaURL from "./URL";
+import MediaWikiURL from "./URL";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 
-export default class WikipediaAPI {
+export default class MediaWikiAPI {
     static api: Api;
 
     static get(
@@ -35,7 +35,7 @@ export default class WikipediaAPI {
         const latestRevisionId = revisions.query.pages[0].revisions[0].revid;
         const parentRevisionId = revisions.query.pages[0].revisions[0].parentid;
 
-        redirect(WikipediaURL.getDiffUrl(latestRevisionId, parentRevisionId));
+        redirect(MediaWikiURL.getDiffUrl(latestRevisionId, parentRevisionId));
     }
 
     /**

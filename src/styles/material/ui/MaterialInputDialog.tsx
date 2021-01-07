@@ -142,7 +142,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                 )}
                 <MaterialDialogContent style={{ width: "100%" }}>
                     <label
-                        class={`mdc-text-field mdc-text-field--outlined${
+                        class={`rw-mdc-full-width mdc-text-field mdc-text-field--outlined${
                             (this.props.leadingIcon &&
                                 " mdc-text-field--with-leading-icon") ??
                             ""
@@ -151,7 +151,6 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                                 " mdc-text-field--with-trailing-icon") ??
                             ""
                         }`}
-                        style={{ width: "100%" }}
                     >
                         <span class="mdc-notched-outline">
                             <span class="mdc-notched-outline__leading" />

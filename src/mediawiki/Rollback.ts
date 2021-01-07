@@ -202,11 +202,12 @@ export class Rollback {
     ): Promise<void> {
         await Rollback.redirectIfNotLatest(context.targetRevision);
         const dialog = new RWUI.InputDialog({
+            width: "40vw",
             ...i18next.t("ui:rollback"),
             defaultText: defaultReason,
         });
         const reason = await dialog.show();
-        if (reason !== null) return this.rollback(context, reason);
+        if (reason != null) return this.rollback(context, reason);
     }
 
     static async pseudoRollback(

@@ -12,6 +12,8 @@ import MaterialInputDialog from "./ui/MaterialInputDialog";
 import MaterialSelectionDialog from "./ui/MaterialSelectionDialog";
 import MaterialToast from "./ui/MaterialToast";
 
+import "./css/globals.css";
+
 const MaterialStyle: Style = {
     name: "material",
     version: "1.0.0",

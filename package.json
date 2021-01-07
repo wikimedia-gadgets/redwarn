@@ -15,7 +15,6 @@
         "i18next": "^19.8.4",
         "i18next-browser-languagedetector": "^6.0.1",
         "jquery": "^3.5.1",
-        "ts-loader": "^8.0.12",
         "tsx-dom": "^1.1.0"
     },
     "devDependencies": {
@@ -42,11 +41,13 @@
         "source-map-loader": "^2.0.0",
         "style-loader": "^1.2.1",
         "ts-jest": "^26.4.4",
+        "ts-loader": "^8.0.12",
         "tslib": "^2.0.3",
         "typescript": "^4.0.2",
         "webpack": "^5.11.1",
         "webpack-cli": "^4.3.0",
-        "webpack-dev-server": "^3.11.1"
+        "webpack-dev-server": "^3.11.1",
+        "wrapper-webpack-plugin": "git+https://github.com/godmodelabs/wrapper-webpack-plugin.git"
     },
     "scripts": {
         "start": "webpack serve --config webpack.config.js",

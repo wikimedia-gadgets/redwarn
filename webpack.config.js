@@ -1,5 +1,10 @@
 /* eslint-disable */
+const fs = require("fs");
 const path = require("path");
+const {
+    ProgressPlugin
+} = require("webpack");
+const WrapperPlugin = require('wrapper-webpack-plugin');
 
 module.exports = {
     mode: process.env.NODE_ENV === "production" ? "production" : "development",
@@ -21,6 +26,18 @@ module.exports = {
         hot: false,
         inline: false
     },
+    plugins: [
+        new ProgressPlugin({
+            activeModules: true,
+            entries: true,
+            modules: true,
+            dependencies: true
+        }),
+        new WrapperPlugin({
+            header: fs.readFileSync(path.resolve(__dirname, "meta", "header.js"), "utf8"),
+            footer: fs.readFileSync(path.resolve(__dirname, "meta", "footer.js"), "utf8")
+        })
+    ],
     module: {
         rules: [
             {

@@ -13,6 +13,7 @@ import {
 import { Warnings } from "./Warnings";
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 import { RollbackContext } from "rww/definitions/RollbackContext";
+import Config, { rollbackMethod } from "rww/config";
 
 // interface RollbackContext {
 //     reason: string;
@@ -255,7 +256,6 @@ export class Rollback {
         } else {
             if (fromInjector) {
                 progressBar.close();
-                // TODO Read directly from config instead of relying on instance variable. (showRollbackDoneOptions)
                 return DiffViewerInjector.showRollbackDoneOptions(
                     context,
                     targetRevision.user.username,
@@ -325,39 +325,67 @@ export class Rollback {
         await Rollback.redirectIfNotLatest(targetRevision);
 
         if (ClientUser.i.inGroup("rollbacker")) {
-            // TODO config dialog
-            if (/* !rw.config.rollbackMethod */ false) {
-                /* rw.ui.confirmDialog(`
-                You have rollback permissions!
-                Would you like to use the faster rollback API in future or continue using a rollback-like setting?
-                You can change this in your preferences at any time.`,
-                "USE ROLLBACK", ()=>{
-                    dialogEngine.closeDialog();
-                    rw.config.rollbackMethod = "rollback";
-                    rw.info.writeConfig(true, ()=>rollbackCallback()); // save config and callback
-                },
-                "KEEP USING ROLLBACK-LIKE",()=>{
-                    dialogEngine.closeDialog();
-                    rw.config.rollbackMethod = "pseudoRollback";
-                    rw.info.writeConfig(true, ()=>pseudoRollbackCallback()); // save config and callback
-                },45); */
-            } else {
-                // Config set, complete callback - remember, this is feature restricted so we won't get here without RB perms
-                // TODO config
-                if (/* rw.config.rollbackMethod */ "rollback" == "rollback") {
-                    // Rollback selected
+            switch (
+                Config.rollbackMethod.value as rollbackMethod // need to cast since inferred type is weird in switch/case
+            ) {
+                case rollbackMethod.Rollback:
                     return await this.standardRollback(
                         context,
                         reason,
                         defaultWarnIndex
-                    ); // Do rollback
-                } else {
+                    );
+                case rollbackMethod.Revert:
                     return await this.pseudoRollback(
                         context,
                         reason,
                         defaultWarnIndex
-                    ); // rollback-like
-                }
+                    );
+                default:
+                    console.error(
+                        `rollbackMethod is invalid (${Config.rollbackMethod.value}), resetting`
+                    );
+                // fall through
+                case rollbackMethod.Unset:
+                    const dialog = new RWUI.Dialog({
+                        actions: [
+                            {
+                                data: "rollback",
+                                action: async () => {
+                                    Config.rollbackMethod.value =
+                                        rollbackMethod.Rollback;
+                                    await Config.save();
+                                    return await this.standardRollback(
+                                        context,
+                                        reason,
+                                        defaultWarnIndex
+                                    );
+                                },
+                                text: i18next.t(
+                                    "ui:rollbackAvailableDialog.actions.rollback"
+                                ),
+                            },
+                            {
+                                data: "revert",
+                                action: async () => {
+                                    Config.rollbackMethod.value =
+                                        rollbackMethod.Revert;
+                                    await Config.save();
+                                    return await this.pseudoRollback(
+                                        context,
+                                        reason,
+                                        defaultWarnIndex
+                                    );
+                                },
+                                text: i18next.t(
+                                    "ui:rollbackAvailableDialog.actions.revert"
+                                ),
+                            },
+                        ],
+                        content: i18next.t(
+                            "ui:rollbackAvailableDialog.content"
+                        ),
+                    });
+                    return await dialog.show();
             }
         } else {
             return await this.pseudoRollback(context, reason, defaultWarnIndex);

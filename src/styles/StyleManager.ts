@@ -1,3 +1,4 @@
+import Config from "rww/config";
 import semanticDifference from "rww/util/semanticDifference";
 import { DefaultRedWarnStyles } from "./RedWarnStyles";
 import Style from "./Style";
@@ -25,9 +26,8 @@ export default class StyleManager {
             this.cleanStyles();
         }
 
-        // TODO Get style from configuration and use that as the style
         this.activeStyle =
-            this.styles.find((v) => v.name === this.defaultStyle) ?? // switch to config read
+            this.styles.find((v) => v.name === Config.style.value) ??
             this.styles.find((v) => v.name === this.defaultStyle) ??
             null;
 

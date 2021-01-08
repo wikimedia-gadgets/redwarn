@@ -28,6 +28,7 @@ import MediaWiki, {
 } from "./mediawiki/MediaWiki";
 import * as RedWarnConstants from "./data/RedWarnConstants";
 import * as Util from "./util";
+import Config from "./config";
 
 $(document).ready(async () => {
     console.log("Starting RedWarn...");
@@ -153,6 +154,15 @@ export default class RedWarn {
     static get Dependencies(): typeof Dependencies {
         return Dependencies;
     }
+    static get Config(): typeof Config {
+        return Config;
+    }
+    static config: {
+        new: {
+            [key: string]: unknown;
+        };
+        [key: string]: unknown;
+    };
 
     /**
      * @deprecated not yet implemented

@@ -26,5 +26,12 @@
         "watching": "Alerts Enabled - please keep this tab open.",
         "stoppedWatching": "Alerts Disabled.",
         "blacklist": "(todo)"
+    },
+    "rollbackAvailableDialog": {
+        "actions": {
+            "rollback": "Use Rollback",
+            "revert": "Keep Using Rollback-Like"
+        },
+        "content": "You have rollback permissions!\nWould you like to use the faster rollback API in future or continue using a rollback-like setting?\nYou can change this in your preferences at any time."
     }
 }

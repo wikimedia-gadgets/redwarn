@@ -13,6 +13,7 @@ import Page from "rww/wikipedia/Page";
 import { Warnings } from "rww/wikipedia/Warnings";
 import { RWUISelectionDialogItem } from "../elements/RWUIDialog";
 import { RollbackContext } from "rww/definitions/RollbackContext";
+import Config from "rww/config";
 
 function getRollbackOptionClickHandler(
     context: RollbackContext,
@@ -335,13 +336,11 @@ export default class DiffViewerInjector {
             );
         });
 
-        // TODO config
-        // Now perform default (if set)
-        /*         if (
-            rw.config.rwRollbackDoneOption != null ||
-            rw.config.rwRollbackDoneOption != "none"
-        )
-            $(`#${rw.config.rwRollbackDoneOption}`).click(); */
+        if (Config.rollbackDoneOption.value !== "none") {
+            $(`#rwRBDoneOption_${Config.rollbackDoneOption.value}`).trigger(
+                "click"
+            );
+        }
 
         // Hides other options and shows the rollback done options and also checks for defaults, also adds click handlers
         $("#rwRollbackInProgress").fadeOut(() => {

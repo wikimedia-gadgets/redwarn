@@ -3,15 +3,38 @@ import {
     RW_NOWIKI_END,
     RW_VERSION,
 } from "rww/data/RedWarnConstants";
+import StyleManager from "rww/styles/StyleManager";
 import Page from "rww/wikipedia/Page";
 import { Setting } from "./Setting";
 
+export enum rollbackMethod {
+    Unset,
+    Rollback,
+    Revert,
+}
+
 export default class Config {
+    /** Last version of RedWarn that was used */
     public static latestVersion = new Setting(RW_VERSION, "latestVersion");
+    /** Rollback done option that is automatically executed on rollback complete */
     public static rollbackDoneOption = new Setting(
         "warnUser",
         "rollbackDoneOption"
     );
+    /** Order warnings by template name or reason */
+    public static orderNoticesByTemplateName = new Setting(
+        false,
+        "orderNoticesByTemplateName"
+    );
+    /** Array of viewed campaigns */
+    public static campaigns = new Setting<string[]>([], "campaigns");
+    /** Method of rollback */
+    public static rollbackMethod = new Setting(
+        rollbackMethod.Unset,
+        "rollbackMethod"
+    );
+    /** Style of UI */
+    public static style = new Setting(StyleManager.defaultStyle, "style");
 
     static async refresh(): Promise<void> {
         await $.ajax(

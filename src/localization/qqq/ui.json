@@ -26,5 +26,12 @@
         "watching": "Used to notify the user that the alert on page change function has successfully been enabled. Should also tell the user to keep the tab open.",
         "stoppedWatching": "Used to notify the user that the alert on page change function has successfully been disabled.",
         "blacklist": "Used to notify the user that ?"
+    },
+    "rollbackAvailableDialog": {
+        "actions": {
+            "rollback": "Text of the button to use system rollback",
+            "revert": "Text of the button to keep using rollback like (revert)"
+        },
+        "content": "Used to ask users with the rollback permission if they want to use rollback or rollback like"
     }
 }

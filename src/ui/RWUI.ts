@@ -5,6 +5,7 @@ import {
     RWUIInputDialog,
     RWUISelectionDialog,
     RWUISelectionDialogItem,
+    RWUIWarnDialog,
 } from "./elements/RWUIDialog";
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 import { RollbackContext } from "rww/definitions/RollbackContext";
@@ -25,6 +26,10 @@ export default class RWUI {
     /** Alias of {@link StyleManager.activeStyle.classMap.rwSelectionDialog} */
     static get SelectionDialog(): typeof RWUISelectionDialog {
         return StyleManager.activeStyle.classMap.rwSelectionDialog;
+    }
+    /** Alias of {@link StyleManager.activeStyle.classMap.rwWarnDialog} */
+    static get WarnDialog(): typeof RWUIWarnDialog {
+        return StyleManager.activeStyle.classMap.rwWarnDialog;
     }
     /** Alias of {@link StyleManager.activeStyle.classMap.rwToast} */
     static get Toast(): typeof RWUIToast {
@@ -92,5 +97,6 @@ export const RWUIElements = {
     [RWUIAlertDialog.elementName]: RWUIAlertDialog,
     [RWUIInputDialog.elementName]: RWUIInputDialog,
     [RWUISelectionDialog.elementName]: RWUISelectionDialog,
+    [RWUIWarnDialog.elementName]: RWUIWarnDialog,
     [RWUIToast.elementName]: RWUIToast,
 };

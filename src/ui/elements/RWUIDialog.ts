@@ -1,6 +1,9 @@
 import { ComponentChild } from "tsx-dom";
 import generateId from "rww/util/generateId";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
+import { RollbackContext } from "rww/definitions/RollbackContext";
+import { User } from "rww/mediawiki/User";
+import { Warnings } from "rww/mediawiki/Warnings";
 
 export enum RWUIDialogActionType {
     /**
@@ -195,6 +198,31 @@ export class RWUISelectionDialog extends RWUIDialog {
     public static readonly elementName = "rwSelectionDialog";
 
     constructor(readonly props: RWUISelectionDialogProps) {
+        super(props);
+    }
+}
+
+export interface RWUIWarnDialogProps extends RWUIDialogProperties {
+    rollbackContext?: RollbackContext;
+    targetUser?: User;
+    defaultWarnReason?: keyof Warnings;
+    /**
+     * The actions of the dialog. These go at the bottom of the dialog.
+     */
+    actions?: OKCancelActions;
+}
+
+export class RWUIWarnDialog extends RWUIDialog {
+    show(): Promise<any> {
+        throw new Error("Attempted to call abstract method");
+    }
+    render(): HTMLDialogElement {
+        throw new Error("Attempted to call abstract method");
+    }
+
+    public static readonly elementName = "rwWarnDialog";
+
+    constructor(readonly props: RWUIWarnDialogProps) {
         super(props);
     }
 }

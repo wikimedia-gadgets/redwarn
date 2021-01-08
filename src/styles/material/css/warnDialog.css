@@ -1,0 +1,28 @@
+.rw-mdc-warnDialog {
+    width: 40vw;
+    height: 80vh;
+}
+
+.rw-mdc-warnDialog-user {
+    min-height: 100px;
+}
+
+.rw-mdc-warnDialog-user--overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /*noinspection CssUnresolvedCustomProperty*/
+    background-color: var(--mdc-theme-background);
+}
+
+.rw-mdc-warnDialog-user--loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.rw-mdc-warnDialog-user--loading .mdc-text-field {
+}

@@ -7,7 +7,7 @@ import {
 } from "rww/styles/material/Material";
 
 import { getMaterialStorage } from "rww/styles/material/storage/MaterialStyleStorage";
-import MaterialButton from "./MaterialButton";
+import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,

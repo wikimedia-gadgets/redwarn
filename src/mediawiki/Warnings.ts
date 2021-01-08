@@ -1,5 +1,8 @@
 import { WarningLevel } from "./WarningLevel";
 
+// TODO Move this to wiki-specific definition files.
+// TODO i18n
+
 export enum WarningCategory {
     COMMON = "Common warnings",
     ARTICLE = "Article Conduct Warnings",

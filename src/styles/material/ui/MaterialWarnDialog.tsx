@@ -1,5 +1,7 @@
+import "../css/warnDialog.css";
+
 import { h } from "tsx-dom";
-import { RWUISelectionDialog } from "rww/ui/elements/RWUIDialog";
+import { RWUIWarnDialog } from "rww/ui/elements/RWUIDialog";
 import {
     registerMaterialDialog,
     upgradeMaterialDialog,
@@ -10,8 +12,9 @@ import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
+import MaterialWarnDialogUser from "./components/MaterialWarnDialogUser";
 
-export default class MaterialSelectionDialog extends RWUISelectionDialog {
+export default class MaterialWarnDialog extends RWUIWarnDialog {
     show(): Promise<any> {
         const styleStorage = getMaterialStorage();
         registerMaterialDialog(this);
@@ -24,16 +27,7 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
             dialog.listen(
                 "MDCDialog:closed",
                 async (event: Event & { detail: { action: string } }) => {
-                    const actionSelected = this.props.items.find(
-                        (item) => item.data === event.detail?.action
-                    ).action;
-                    if (actionSelected != null) {
-                        this._result =
-                            (await actionSelected(event)) ??
-                            event.detail.action;
-                    } else {
-                        this._result = event.detail.action;
-                    }
+                    // TODO get warn results
 
                     const res = styleStorage.dialogTracker.get(this.id).result;
                     styleStorage.dialogTracker.delete(this.id);
@@ -43,32 +37,13 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
         });
     }
     render(): HTMLDialogElement {
-        const buttons = this.props.items.flatMap((item) => [
-            <MaterialButton
-                dialogAction={item.data}
-                icon={item.icon}
-                iconColor={item.iconColor}
-                style={{
-                    width: "100%",
-                    textAlign: "left",
-                    display: "inline-block",
-                }}
-                contentStyle={{
-                    ...(item.content.length > 40 && { fontSize: "12px" }),
-                    marginLeft: "10px",
-                }}
-            >
-                {item.content}
-            </MaterialButton>,
-            <hr style={{ margin: "0" }} />,
-        ]);
-        console.log(buttons);
         this.element = (
             <MaterialDialog
                 surfaceProperties={{
+                    "class": "rw-mdc-warnDialog mdc-dialog__surface",
                     "style": {
-                        width: this.props.width ?? "30vw",
-                        height: "60vh",
+                        width: this.props.width ?? "40vw",
+                        height: "80vh",
                     },
                     "aria-modal": true,
                     "aria-labelledby": this.props.title ?? "RedWarn dialog",
@@ -101,7 +76,7 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
                     }}
                 >
                     <hr style={{ margin: "0" }} />
-                    {...buttons}
+                    <MaterialWarnDialogUser />
                 </MaterialDialogContent>
             </MaterialDialog>
         ) as HTMLDialogElement;

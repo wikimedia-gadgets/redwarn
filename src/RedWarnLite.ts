@@ -105,6 +105,11 @@ $(document).ready(async () => {
     // });
 
     // console.log(await (a as RWUIDialog).show());
+    // new RWUI.InputDialog({
+    //     label: "hoi",
+    //     maxCharacterCount: 12
+    // }).show();
+    // new RWUI.WarnDialog({}).show();
 });
 
 export default class RedWarn {

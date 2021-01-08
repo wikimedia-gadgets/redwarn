@@ -11,12 +11,15 @@ import {
     upgradeMaterialDialog,
 } from "rww/styles/material/Material";
 import { getMaterialStorage } from "rww/styles/material/storage/MaterialStyleStorage";
-import MaterialButton from "./MaterialButton";
+import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
+import MaterialTextInput, {
+    MaterialTextInputUpgrade,
+} from "rww/styles/material/ui/components/MaterialTextInput";
 
 /**
  * The MaterialInputDialog is a handling class used to get input from users on the screen. This will
@@ -35,6 +38,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
         trailingIcon?: MDCTextFieldIcon;
         helperText?: MDCTextFieldHelperText;
     };
+    textFieldElement: JSX.Element;
 
     /**
      * Show a dialog on screen. You can await this if you want to block until the dialog closes.
@@ -44,40 +48,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
         const styleStorage = getMaterialStorage();
         registerMaterialDialog(this);
 
-        this.MDCComponents = {
-            textField: new MDCTextField(
-                this.element.querySelector(".mdc-text-field")
-            ),
-        };
-        this.MDCComponents.textField.initialize();
-
-        this.MDCComponents.characterCounter =
-            this.props.maxCharacterCount &&
-            new MDCTextFieldCharacterCounter(
-                this.element.querySelector(".mdc-text-field-character-counter")
-            );
-        this.MDCComponents.characterCounter?.initialize();
-
-        this.MDCComponents.leadingIcon =
-            this.props.leadingIcon &&
-            new MDCTextFieldIcon(
-                this.element.querySelector(`#${this.id}_leadIcon`)
-            );
-        this.MDCComponents.leadingIcon?.initialize();
-
-        this.MDCComponents.trailingIcon =
-            this.props.trailingIcon &&
-            new MDCTextFieldIcon(
-                this.element.querySelector(`#${this.id}_trailIcon`)
-            );
-        this.MDCComponents.trailingIcon?.initialize();
-
-        this.MDCComponents.helperText =
-            this.props.helperText &&
-            new MDCTextFieldHelperText(
-                this.element.querySelector(".mdc-text-field-helper-text")
-            );
-        this.MDCComponents.helperText?.initialize();
+        this.MDCComponents = MaterialTextInputUpgrade(this.textFieldElement);
 
         const dialog = upgradeMaterialDialog(this);
 
@@ -126,6 +97,9 @@ export default class MaterialInputDialog extends RWUIInputDialog {
      * @returns A {@link HTMLDialogElement}.
      */
     render(): HTMLDialogElement {
+        this.textFieldElement = (
+            <MaterialTextInput id={this.id} {...this.props} />
+        );
         this.element = (
             <MaterialDialog
                 surfaceProperties={{
@@ -141,100 +115,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                     </MaterialDialogTitle>
                 )}
                 <MaterialDialogContent style={{ width: "100%" }}>
-                    <label
-                        class={`rw-mdc-full-width mdc-text-field mdc-text-field--outlined${
-                            (this.props.leadingIcon &&
-                                " mdc-text-field--with-leading-icon") ??
-                            ""
-                        }${
-                            (this.props.trailingIcon &&
-                                " mdc-text-field--with-trailing-icon") ??
-                            ""
-                        }`}
-                    >
-                        <span class="mdc-notched-outline">
-                            <span class="mdc-notched-outline__leading" />
-                            <span class="mdc-notched-outline__notch">
-                                <span
-                                    class="mdc-floating-label"
-                                    for={`${this.id}_input`}
-                                >
-                                    {this.props.label}
-                                </span>
-                            </span>
-                            <span class="mdc-notched-outline__trailing" />
-                        </span>
-                        {this.props.prefix && (
-                            <span class="mdc-text-field__affix mdc-text-field__affix--prefix">
-                                {this.props.prefix}
-                            </span>
-                        )}
-                        {this.props.leadingIcon && (
-                            <i
-                                class="material-icons mdc-text-field__icon mdc-text-field__icon--leading"
-                                id={`${this.id}_leadIcon`}
-                                {...(this.props.leadingIcon.action && {
-                                    tabIndex: 0,
-                                    role: "button",
-                                    onClick: this.props.leadingIcon.action,
-                                })}
-                            >
-                                {this.props.leadingIcon.icon}
-                            </i>
-                        )}
-                        <input
-                            type="text"
-                            class="mdc-text-field__input"
-                            id={`${this.id}_input`}
-                            {...(this.props.helperText && {
-                                "aria-controls": `${this.id}_helper`,
-                                "aria-describedby": `${this.id}_helper`,
-                            })}
-                            {...(this.props.defaultText && {
-                                value: this.props.defaultText,
-                            })}
-                            {...(this.props.maxCharacterCount && {
-                                maxLength: this.props.maxCharacterCount,
-                            })}
-                        />
-                        {this.props.trailingIcon && (
-                            <i
-                                class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing"
-                                id={`${this.id}_trailIcon`}
-                                {...(this.props.trailingIcon.action && {
-                                    tabIndex: 0,
-                                    role: "button",
-                                    onClick: this.props.trailingIcon.action,
-                                })}
-                            >
-                                {this.props.trailingIcon.icon}
-                            </i>
-                        )}
-                        {this.props.suffix && (
-                            <span class="mdc-text-field__affix mdc-text-field__affix--suffix">
-                                {this.props.suffix}
-                            </span>
-                        )}
-                    </label>
-                    <div class="mdc-text-field-helper-line">
-                        {this.props.helperText ? (
-                            <div
-                                id={`${this.id}_helper`}
-                                class="mdc-text-field-helper-text"
-                                aria-hidden="true"
-                            >
-                                {this.props.helperText}
-                            </div>
-                        ) : null}
-                        {this.props.maxCharacterCount ? (
-                            <div
-                                id={`${this.id}_char`}
-                                class="mdc-text-field-character-counter"
-                            >
-                                0 / {this.props.maxCharacterCount}
-                            </div>
-                        ) : null}
-                    </div>
+                    {this.textFieldElement}
                 </MaterialDialogContent>
                 {this.renderActions()}
             </MaterialDialog>

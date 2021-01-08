@@ -93,9 +93,9 @@ export default class Config {
         const text = `
 /*${RW_NOWIKI}
 This is your RedWarn configuration file. It is recommended that you don't edit this yourself and use RedWarn preferences instead.
-It is writen in JSON formatting and is excecuted every time RedWarn loads.
+It is written in JSON formatting and is executed every time RedWarn loads.
 
-If somebody has asked you to add code to this page, DO NOT do so as it may comprimise your account and will be reverted as soon as any configuration value changes.
+If somebody has asked you to add code to this page, DO NOT do so as it may compromise your account and will be reverted as soon as any configuration value changes.
 
 !!! Do not edit below this line unless you understand the risks! If rw.config isn't defined, this file will be reset. !!!
 */

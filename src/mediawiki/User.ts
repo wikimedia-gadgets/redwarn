@@ -6,12 +6,15 @@ import {
     Gender,
     GenderDict,
     GenderPronoun,
+    getHighestWarningLevel,
     MediaWikiAPI,
     Page,
     Revision,
     WarningAnalysis,
+    WarningLevel,
 } from "rww/mediawiki/MediaWiki";
 import i18next from "i18next";
+import { PageMissingError } from "rww/errors/MediaWikiErrors";
 
 /**
  * Represents a Mediawiki user.
@@ -204,58 +207,52 @@ export class User {
      *        Wikipedia and overwrite the stored value.
      */
     async getLastWarningLevel(forceRecheck = false): Promise<WarningAnalysis> {
-        // Under repair.
-        return;
-        // if (!this.warningAnalysis || forceRecheck) {
-        //     const talkPage = this.talkPage;
-        //     try {
-        //         const talkPageWikitext = (await talkPage.getLatestRevision()).content;
-        //
-        //         if (!talkPageWikitext) {
-        //             return {
-        //                 level: WarningLevel.None,
-        //                 notices: null,
-        //                 page: talkPage
-        //             };
-        //         }
-        //
-        //         const revisionWikitextLines = talkPageWikitext.split("\n");
-        //         const warningHeaderExec = new RegExp(
-        //             `==\\s?${regexEscape(getMonthHeader())}\\s?==`,
-        //             "gi"
-        //         ).exec(talkPageWikitext);
-        //
-        //         if (warningHeaderExec != null) {
-        //             // No warnings for this month.
-        //             return { level: 0 };
-        //         }
-        //
-        //         const warningHeader = warningHeaderExec[0];
-        //
-        //         let monthNotices = "";
-        //         for (
-        //             let i = revisionWikitextLines.indexOf(warningHeader) + 1;
-        //             i < revisionWikitextLines.length &&
-        //             revisionWikitextLines[i].startsWith("==");
-        //             i++
-        //         ) {
-        //             // Add the current line to the collection of this month's notices.
-        //             monthNotices += revisionWikitextLines[i];
-        //         }
-        //
-        //         this.warningAnalysis = getHighestWarningLevel(monthNotices);
-        //     } catch (e) {
-        //         if (e instanceof PageMissingError) {
-        //             return {
-        //                 level: WarningLevel.None,
-        //                 notices: null,
-        //                 page: talkPage
-        //             };
-        //         } else
-        //             throw e;
-        //     }
-        // }
-        // return this.warningAnalysis;
+        if (!this.warningAnalysis || forceRecheck) {
+            const talkPage = this.talkPage;
+            try {
+                const talkPageWikitext = (await talkPage.getLatestRevision())
+                    .content;
+                if (!talkPageWikitext) {
+                    this.warningAnalysis = {
+                        level: WarningLevel.None,
+                        notices: null,
+                        page: talkPage,
+                    };
+                }
+
+                const monthHeader = getMonthHeader();
+                const talkPageSections = talkPage.latestCachedRevision.findSections(
+                    2
+                );
+                if (
+                    typeof talkPageSections["*"] === "string" ||
+                    !talkPageSections["*"][monthHeader]
+                )
+                    this.warningAnalysis = {
+                        level: WarningLevel.None,
+                        notices: null,
+                        page: talkPage,
+                    };
+                else {
+                    const monthNotices = talkPageSections["*"][monthHeader];
+
+                    this.warningAnalysis = {
+                        level: getHighestWarningLevel(monthNotices),
+                        notices: monthNotices,
+                        page: talkPage,
+                    };
+                }
+            } catch (e) {
+                if (e instanceof PageMissingError) {
+                    this.warningAnalysis = {
+                        level: WarningLevel.None,
+                        notices: null,
+                        page: talkPage,
+                    };
+                } else throw e;
+            }
+        }
+        return this.warningAnalysis;
     }
 
     /**

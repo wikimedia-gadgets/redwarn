@@ -1,3 +1,4 @@
+// TODO Either use MediaWiki API > query > meta > allmessages, or use per-wiki definitions.
 export const monthNames = [
     "January",
     "February",

@@ -1,3 +1,19 @@
 .rw-mdc-full-width {
     width: 100%;
 }
+
+@keyframes dummy {
+    from {
+    }
+    to {
+    }
+}
+
+[data-rw-mdc-tooltip],
+.mdc-icon-button {
+    animation: dummy 0s;
+}
+
+.bullet {
+    margin: 0 0.5em;
+}

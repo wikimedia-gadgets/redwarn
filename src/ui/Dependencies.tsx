@@ -1,6 +1,7 @@
 import { h } from "tsx-dom";
 import RedWarnStore from "rww/data/RedWarnStore";
 import StyleManager from "rww/styles/StyleManager";
+import { generateId } from "rww/util";
 
 export interface Dependency {
     type: "style" | "script";
@@ -34,7 +35,12 @@ export default class Dependencies {
      */
     static loadDependency(dependency: Dependency): Promise<boolean> {
         const depElement = this.buildDependency(dependency);
-        document.head.append(depElement);
+        let oldElement;
+        if ((oldElement = document.getElementById(depElement.id)) == null)
+            document.head.append(depElement);
+        else {
+            oldElement.parentElement.replaceChild(depElement, oldElement);
+        }
         return depElement.promise;
     }
 
@@ -50,6 +56,7 @@ export default class Dependencies {
         if (dependency.type === "script") {
             e = (
                 <script
+                    id={`rw_dep-${dependency.id ?? generateId(8)}`}
                     type="application/javascript"
                     onLoad={() => {
                         resolver(true);
@@ -61,7 +68,7 @@ export default class Dependencies {
         } else {
             e = (
                 <link
-                    id={dependency.id ?? `rw_dep-${dependency.id}`}
+                    id={`rw_dep-${dependency.id ?? generateId(8)}`}
                     rel="stylesheet"
                     type="text/css"
                     onLoad={() => {

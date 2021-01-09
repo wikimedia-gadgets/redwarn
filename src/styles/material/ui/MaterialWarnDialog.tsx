@@ -36,6 +36,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
             );
         });
     }
+
     render(): HTMLDialogElement {
         this.element = (
             <MaterialDialog
@@ -76,7 +77,10 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                     }}
                 >
                     <hr style={{ margin: "0" }} />
-                    <MaterialWarnDialogUser />
+                    <MaterialWarnDialogUser
+                        user={this.props.targetUser}
+                        warnDialog={this}
+                    />
                 </MaterialDialogContent>
             </MaterialDialog>
         ) as HTMLDialogElement;

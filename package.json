@@ -5,6 +5,7 @@
     "main": "src/RedWarnLite.ts",
     "dependencies": {
         "@material/dialog": "^8.0.0",
+        "@material/fab": "^9.0.0",
         "@material/linear-progress": "^8.0.0",
         "@material/ripple": "^8.0.0",
         "@material/snackbar": "^9.0.0",
@@ -14,7 +15,10 @@
         "dialog-polyfill": "^0.5.3",
         "i18next": "^19.8.4",
         "i18next-browser-languagedetector": "^6.0.1",
+        "install": "^0.13.0",
         "jquery": "^3.5.1",
+        "moment": "^2.29.1",
+        "npm": "^6.14.11",
         "tsx-dom": "^1.1.0"
     },
     "devDependencies": {

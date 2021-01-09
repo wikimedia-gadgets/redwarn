@@ -12,5 +12,6 @@
                 "user": "The current user is not a logged-in user or is an IP address."
             }
         }
-    }
+    },
+    "bullet": "•"
 }

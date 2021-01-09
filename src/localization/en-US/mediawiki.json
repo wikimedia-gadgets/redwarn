@@ -3,5 +3,26 @@
         "revert": "Reverting edit(s) by [[Special:Contributions/{{username}}|{{username}}]] ([[User_talk:{{username}}|talk]]) to rev. {{targetRevisionId}} by {{targetRevisionEditor}}: {{reason}} $t(common:redwarn.signature)",
         "rollback": "Rollback edit(s) by [[Special:Contributions/{{username}}|{{username}}]] ([[User_talk:{{username}}|talk]]): {{reason}} $t(common:redwarn.signature)",
         "restore": "Restoring revision {{revID}} by {{revUser}}: {{reason}} $t(common:redwarn.signature)"
+    },
+
+    "warn": {
+
+        "user": {
+
+            "highestLevel": "Highest warning level",
+
+            "levelInfo": "The user's highest warning level.",
+            "levelInfo_none": "User has not received any warnings this month.",
+            "levelInfo_notice": "User has received a level 1 notice this month.",
+            "levelInfo_caution": "User has received a level 2 notice this month.",
+            "levelInfo_warning": "User has received a level 3 warning this month.",
+            "levelInfo_final": "User has received a level 4 final warning this month. $t(mediawiki:warn.user.report).",
+            "levelInfo_policyviolation": "User has received an immediate level 4 final warning this month. $t(mediawiki:warn.user.report)",
+
+            "report": "Click to report to AIV.",
+            "overview": "{{edits}} edits"
+
+        }
+
     }
 }

@@ -35,11 +35,19 @@ export class User {
     /** The user's latest edit. `null` if they have never made an edit. */
     latestEdit?: Revision | null;
 
+    private _userPage: Page;
     get userPage(): Page {
-        return Page.fromTitle(`User:${this.username}`);
+        return (
+            this._userPage ??
+            (this._userPage = Page.fromTitle(`User:${this.username}`))
+        );
     }
+    private _talkPage: Page;
     get talkPage(): Page {
-        return Page.fromTitle(`User talk:${this.username}`);
+        return (
+            this._talkPage ??
+            (this._talkPage = Page.fromTitle(`User talk:${this.username}`))
+        );
     }
 
     /** An analysis of the user's warning state. */
@@ -61,7 +69,7 @@ export class User {
         username: string,
         additionalProperties?: Partial<User>
     ): User {
-        return User.fromUsername(username, additionalProperties);
+        return new User(username, additionalProperties);
     }
 
     /**
@@ -91,7 +99,6 @@ export class User {
             action: "query",
             format: "json",
             list: ["users", "usercontribs"],
-            continue: toPopulate,
             usprop: toPopulate,
             uclimit: 1,
             ...(typeof identifier === "string"
@@ -113,6 +120,7 @@ export class User {
         if (userData.invalid != null)
             throw new Error("The provided username is invalid.");
 
+        if (!user.id) user.id = userData["userid"];
         if (!user.editCount) user.editCount = userData["editcount"];
         if (!user.registered)
             user.registered = new Date(userData["registration"]);
@@ -156,9 +164,14 @@ export class User {
      * using {@link populate} in order to conserve data usage.
      */
     isPopulated(): boolean {
-        return Object.entries(this).reduce(
-            (p, n: any): boolean => p && n[1] !== undefined,
-            true
+        return !(
+            this.id == null ||
+            this.editCount == null ||
+            this.registered == null ||
+            this.groups == null ||
+            this.gender == null ||
+            this.blocked == null ||
+            this.latestEdit === undefined
         );
     }
 
@@ -206,41 +219,41 @@ export class User {
      * @param forceRecheck If set to `true`, RedWarn will grab the latest data from
      *        Wikipedia and overwrite the stored value.
      */
-    async getLastWarningLevel(forceRecheck = false): Promise<WarningAnalysis> {
+    async getWarningAnalysis(forceRecheck = false): Promise<WarningAnalysis> {
         if (!this.warningAnalysis || forceRecheck) {
             const talkPage = this.talkPage;
             try {
-                const talkPageWikitext = (await talkPage.getLatestRevision())
-                    .content;
+                const talkPageLatestRevision = await talkPage.getLatestRevision();
+                const talkPageWikitext = talkPageLatestRevision.content;
                 if (!talkPageWikitext) {
                     this.warningAnalysis = {
                         level: WarningLevel.None,
                         notices: null,
                         page: talkPage,
                     };
-                }
+                } else {
+                    const monthHeader = getMonthHeader();
+                    const talkPageSections = talkPageLatestRevision.findSections(
+                        2
+                    );
+                    if (
+                        typeof talkPageSections["*"] === "string" ||
+                        !talkPageSections["*"][monthHeader]
+                    )
+                        this.warningAnalysis = {
+                            level: WarningLevel.None,
+                            notices: null,
+                            page: talkPage,
+                        };
+                    else {
+                        const monthNotices = talkPageSections["*"][monthHeader];
 
-                const monthHeader = getMonthHeader();
-                const talkPageSections = talkPage.latestCachedRevision.findSections(
-                    2
-                );
-                if (
-                    typeof talkPageSections["*"] === "string" ||
-                    !talkPageSections["*"][monthHeader]
-                )
-                    this.warningAnalysis = {
-                        level: WarningLevel.None,
-                        notices: null,
-                        page: talkPage,
-                    };
-                else {
-                    const monthNotices = talkPageSections["*"][monthHeader];
-
-                    this.warningAnalysis = {
-                        level: getHighestWarningLevel(monthNotices),
-                        notices: monthNotices,
-                        page: talkPage,
-                    };
+                        this.warningAnalysis = {
+                            level: getHighestWarningLevel(monthNotices),
+                            notices: monthNotices,
+                            page: talkPage,
+                        };
+                    }
                 }
             } catch (e) {
                 if (e instanceof PageMissingError) {

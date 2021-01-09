@@ -3,6 +3,8 @@ import { RW_WIKIS_TAGGABLE } from "rww/data/RedWarnConstants";
 import RedWarnStore from "rww/data/RedWarnStore";
 import i18next from "i18next";
 import { PageInvalidError, PageMissingError } from "rww/errors/MediaWikiErrors";
+import { url as buildURL } from "rww/util";
+import redirect from "rww/util/redirect";
 
 /**
  * A page is an object in a MediaWiki installation. All revisions stem from one page, and all
@@ -21,6 +23,16 @@ export class Page {
 
     /** The latest revision cached by RedWarn. */
     latestCachedRevision?: Revision;
+
+    /**
+     * Returns the URL of the page.
+     */
+    get url(): string {
+        const identifier = this.getIdentifier();
+        return buildURL(RedWarnStore.wikiIndex, {
+            [typeof identifier === "string" ? "title" : "curid"]: identifier,
+        });
+    }
 
     private constructor(object?: Partial<Page>) {
         if (!!object) {
@@ -129,7 +141,10 @@ export class Page {
     async getLatestRevision(options?: {
         excludeUser: User;
     }): Promise<Revision> {
-        return Page.getLatestRevision(this, options);
+        return (this.latestCachedRevision = await Page.getLatestRevision(
+            this,
+            options
+        ));
     }
 
     /**
@@ -173,5 +188,19 @@ export class Page {
                 ? "RedWarn"
                 : null,
         });
+    }
+
+    /**
+     * Redirects to the page.
+     */
+    redirect(): void {
+        redirect(this.url);
+    }
+
+    /**
+     * Opens the page in a new tab.
+     */
+    openInNewTab(): void {
+        open(this.url);
     }
 }

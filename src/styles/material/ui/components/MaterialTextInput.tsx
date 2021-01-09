@@ -166,7 +166,7 @@ export interface MaterialTextInputComponents {
  * @param element
  */
 export function MaterialTextInputUpgrade(
-    element: JSX.Element
+    element: Element
 ): MaterialTextInputComponents {
     if (!element.hasAttribute("data-mdc-textinput"))
         throw new Error("Not a valid MaterialTextInput");
@@ -205,6 +205,8 @@ export function MaterialTextInputUpgrade(
     components.helperText?.initialize();
 
     trackingObject["components"] = components;
+
+    element.classList.add("rw-mdc--upgraded");
 
     return components;
 }

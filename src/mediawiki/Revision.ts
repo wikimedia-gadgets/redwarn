@@ -83,7 +83,6 @@ export class Revision {
             apiResult["query"]["pages"]
         )[0];
         const revisionData: Record<string, any> = pageData["revisions"][0];
-
         return new Revision({
             revisionID: revisionID,
             parentID: revisionData["parentid"],
@@ -92,7 +91,7 @@ export class Revision {
             user: User.fromUsername(revisionData["user"]),
             time: new Date(revisionData["timestamp"]),
             size: revisionData["size"],
-            content: revisionData["slots"]?.["main"]?.["*"],
+            content: revisionData["slots"]?.["main"]?.["content"],
         });
     }
 
@@ -140,8 +139,8 @@ export class Revision {
             if (!!revisionData["timestamp"])
                 revision.time = new Date(revisionData["timestamp"]);
             if (!!revisionData["size"]) revision.size = revisionData["size"];
-            if (!!revisionData["slots"]?.["main"]?.["*"])
-                revision.content = revisionData["slots"]["main"]["*"];
+            if (!!revisionData["slots"]?.["main"]?.["content"])
+                revision.content = revisionData["slots"]["main"]["content"];
         }
 
         return revision;
@@ -167,7 +166,8 @@ export class Revision {
             revisionInfoRequest["query"]["pages"]
         )[0];
         this.content =
-            pageData["revisions"]?.[0]?.["slots"]?.["main"]?.["*"] ?? null;
+            pageData["revisions"]?.[0]?.["slots"]?.["main"]?.["content"] ??
+            null;
         return this.content;
     }
 
@@ -176,9 +176,14 @@ export class Revision {
      * using {@link populate} in order to conserve data usage.
      */
     isPopulated(): boolean {
-        return Object.entries(this).reduce(
-            (p, n): boolean => p && n[1] != null && n[0] !== "content",
-            true
+        return !(
+            this.page == null ||
+            this.comment == null ||
+            this.parentID == null ||
+            this.user == null ||
+            this.time == null ||
+            this.size == null ||
+            this.content == null
         );
     }
 

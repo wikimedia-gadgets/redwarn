@@ -109,7 +109,9 @@ $(document).ready(async () => {
     //     label: "hoi",
     //     maxCharacterCount: 12
     // }).show();
-    new RWUI.WarnDialog({}).show();
+    new RWUI.WarnDialog({
+        targetUser: User.fromUsername("Sandbox for user warnings"),
+    }).show();
 });
 
 export default class RedWarn {

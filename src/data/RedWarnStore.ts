@@ -15,9 +15,14 @@ export default class RedWarnStore {
      * !!! DO NOT USE FOR NEW FEATURES !!!
      */
     public static messageHandler: MessageHandler;
+
+    // wiki/w/
     public static wikiBase: string;
+    // wiki/w/index.php
     public static wikiIndex: string;
+    // wiki/w/api.php
     public static wikiAPI: string;
+    // "enwiki"
     public static wikiID: string;
 
     public static styleStorage: StyleStorage = null;

@@ -38,12 +38,42 @@ export interface WarningAnalysis {
  * level corresponding to that signature is used, with the highest level being
  * the final value.
  */
-const WarningSignatures: { [key in WarningLevel]?: RegExp } = {
+export const WarningSignatures: { [key in WarningLevel]?: RegExp } = {
     [WarningLevel.Notice]: /<!--\s*Template:uw-.+?1\s*-->/gi,
     [WarningLevel.Caution]: /<!--\s*Template:uw-.+?2\s*-->/gi,
     [WarningLevel.Warning]: /<!--\s*Template:uw-.+?3\s*-->/gi,
     [WarningLevel.Final]: /<!--\s*Template:uw-.+?4\s*-->/gi,
     [WarningLevel.PolicyViolation]: /<!--\s*Template:uw-.+?4im\s*-->/gi,
+};
+
+// TODO isolate MDC icons from redwarn icons (icon map?)
+export const WarningIcons: {
+    [key in WarningLevel]: { icon: string; iconColor: string };
+} = {
+    [WarningLevel.None]: {
+        icon: "check_circle",
+        iconColor: "green",
+    },
+    [WarningLevel.Notice]: {
+        icon: "info",
+        iconColor: "blue",
+    },
+    [WarningLevel.Caution]: {
+        icon: "announcement",
+        iconColor: "orange",
+    },
+    [WarningLevel.Warning]: {
+        icon: "warning",
+        iconColor: "red",
+    },
+    [WarningLevel.Final]: {
+        icon: "report", // This one has hard edges
+        iconColor: "darkred",
+    },
+    [WarningLevel.PolicyViolation]: {
+        icon: "new_releases", // This one has star-like edges
+        iconColor: "darkred",
+    },
 };
 
 /**

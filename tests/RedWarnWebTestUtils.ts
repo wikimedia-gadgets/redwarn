@@ -9,7 +9,3 @@ globalAny.mw = {
         },
     },
 };
-
-export default function (): void {
-    // Just so it isn't an unused variable.
-}

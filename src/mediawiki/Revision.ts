@@ -6,15 +6,6 @@ import {
 } from "rww/mediawiki/MediaWiki";
 import redirect from "rww/util/redirect";
 
-// Function names of the Revision class.
-type RevisionFunctions =
-    | "populate"
-    | "isPopulated"
-    | "getLatestRevision"
-    | "isLatestRevision"
-    | "getContent"
-    | "navigate";
-
 /**
  * A revision is an object provided by the MediaWiki API which represents
  * a change in a page's content.
@@ -36,7 +27,7 @@ export class Revision {
     user?: User;
 
     /** The timestamp that the revision was made. */
-    timestamp?: number;
+    time?: Date;
 
     /** The size of the revision. */
     size?: number;
@@ -44,7 +35,7 @@ export class Revision {
     /** The content of the page as of the given revision. */
     content?: string;
 
-    private constructor(object?: Omit<Revision, RevisionFunctions>) {
+    private constructor(object?: Partial<Revision>) {
         if (!!object) {
             Object.assign(this, object);
         }
@@ -58,7 +49,7 @@ export class Revision {
      */
     static fromID(
         revisionID: number,
-        additionalProperties?: Partial<Omit<Revision, RevisionFunctions>>
+        additionalProperties?: Partial<Revision>
     ): Revision {
         return new Revision({
             revisionID: revisionID,
@@ -98,8 +89,8 @@ export class Revision {
             parentID: revisionData["parentid"],
             page: Page.fromIDAndTitle(pageData["pageid"], pageData["title"]),
             comment: revisionData["comment"],
-            user: new User(revisionData["user"]),
-            timestamp: new Date(revisionData["timestamp"]).getTime(),
+            user: User.fromUsername(revisionData["user"]),
+            time: new Date(revisionData["timestamp"]),
             size: revisionData["size"],
             content: revisionData["slots"]?.["main"]?.["*"],
         });
@@ -113,7 +104,7 @@ export class Revision {
         const toPopulate = ["ids"];
         if (!revision.comment) toPopulate.push("comment");
         if (!revision.user) toPopulate.push("user");
-        if (!revision.timestamp) toPopulate.push("timestamp");
+        if (!revision.time) toPopulate.push("timestamp");
         if (!revision.size) toPopulate.push("size");
 
         if (toPopulate.length > 0) {
@@ -123,7 +114,7 @@ export class Revision {
                 format: "json",
                 prop: "revisions",
                 revids: `${revision.revisionID}`,
-                rvprop: toPopulate.join("|"),
+                rvprop: toPopulate,
                 rvslots: "main",
             });
 
@@ -145,11 +136,9 @@ export class Revision {
             if (!!revisionData["comment"])
                 revision.comment = revisionData["comment"];
             if (!!revisionData["user"])
-                revision.user = new User(revisionData["user"]);
+                revision.user = User.fromUsername(revisionData["user"]);
             if (!!revisionData["timestamp"])
-                revision.timestamp = new Date(
-                    revisionData["timestamp"]
-                ).getTime();
+                revision.time = new Date(revisionData["timestamp"]);
             if (!!revisionData["size"]) revision.size = revisionData["size"];
             if (!!revisionData["slots"]?.["main"]?.["*"])
                 revision.content = revisionData["slots"]["main"]["*"];
@@ -242,4 +231,87 @@ export class Revision {
     navigate(): void {
         redirect(MediaWikiURL.getDiffUrl(this.revisionID));
     }
+
+    // Anyone with a better idea, please change this. PLEASE.
+    findSections(lowestHeadingLevel: 1): StrObj<string>;
+    findSections(lowestHeadingLevel: 2): StrObj<StrObj<string>>;
+    findSections(lowestHeadingLevel: 3): StrObj<StrObj<StrObj<string>>>;
+    findSections(lowestHeadingLevel: 4): StrObj<StrObj<StrObj<StrObj<string>>>>;
+    findSections(
+        lowestHeadingLevel: 5
+    ): StrObj<StrObj<StrObj<StrObj<StrObj<string>>>>>;
+    findSections(
+        lowestHeadingLevel: 6
+    ): StrObj<StrObj<StrObj<StrObj<StrObj<StrObj<string>>>>>>;
+
+    /**
+     * Splits wikitext down to the section level defined. If text exists before the
+     * first subsection of a section, the "*" key is used.
+     *
+     * @returns Page content split into sections.
+     */
+    findSections(lowestHeadingLevel = 2): Record<string, any> {
+        if (!this.content) {
+            throw new Error(
+                "Page content does not exist. Populate this revision first."
+            );
+        }
+
+        if (lowestHeadingLevel < 1) lowestHeadingLevel = 1;
+        if (lowestHeadingLevel === 1) return { "*": this.content };
+        if (lowestHeadingLevel > 6) lowestHeadingLevel = 6;
+
+        const extractSections = (
+            wikitext: string,
+            level = 2
+        ): Record<string, any> => {
+            const searchingRegex = new RegExp(
+                `^(={${level}})\\s*(${level < 6 ? "[^=]" : "."}+?)\\s*\\1\$\n`,
+                "gim"
+            );
+            const foundSections: Record<string, string | any> = {};
+
+            let lastIndex = 0;
+            let previousSectionMatch = null;
+            let sectionMatch = null;
+            while ((sectionMatch = searchingRegex.exec(wikitext)) != null) {
+                if (!!previousSectionMatch) {
+                    foundSections[previousSectionMatch[2]] = wikitext.substring(
+                        lastIndex, // Right after the section heading.
+                        searchingRegex.lastIndex - sectionMatch[0].length // Right before the next section
+                    );
+                } else {
+                    foundSections["*"] = wikitext.substring(
+                        0, // Right after the section heading.
+                        searchingRegex.lastIndex - sectionMatch[0].length // Right before the next section
+                    );
+                }
+                previousSectionMatch = sectionMatch;
+                lastIndex = searchingRegex.lastIndex;
+            }
+
+            // There's still one more by this point.
+            if (!!previousSectionMatch) {
+                foundSections[previousSectionMatch[2]] = wikitext.substring(
+                    lastIndex // Right after the section heading.
+                );
+            }
+
+            if (lowestHeadingLevel > level) {
+                Object.entries(foundSections).forEach(([k, v]) => {
+                    console.log([k, v]);
+                    const extractedContents = extractSections(v, level + 1);
+                    if (Object.keys(extractedContents).length > 1) {
+                        foundSections[k] = extractedContents;
+                    }
+                });
+            }
+
+            return foundSections;
+        };
+
+        return { "*": extractSections(this.content) };
+    }
 }
+
+type StrObj<T> = Record<string, string | T>;

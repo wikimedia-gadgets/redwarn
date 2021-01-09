@@ -1,4 +1,4 @@
-import { WarningLevel } from "./WarningLevel";
+import { WarningLevel } from "rww/mediawiki/MediaWiki";
 
 // TODO Move this to wiki-specific definition files.
 // TODO i18n

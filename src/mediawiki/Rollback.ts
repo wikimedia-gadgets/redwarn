@@ -9,8 +9,8 @@ import {
     MediaWikiURL,
     Page,
     Revision,
+    Warnings,
 } from "rww/mediawiki/MediaWiki";
-import { Warnings } from "./Warnings";
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 import { RollbackContext } from "rww/definitions/RollbackContext";
 

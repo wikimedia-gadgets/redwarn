@@ -1,7 +1,10 @@
 import RWUIElement from "rww/ui/elements/RWUIElement";
 import { h } from "tsx-dom";
 import { User } from "rww/mediawiki/User";
-import MaterialTextInput from "rww/styles/material/ui/components/MaterialTextInput";
+import MaterialTextInput, {
+    MaterialTextInputComponents,
+    MaterialTextInputUpgrade,
+} from "rww/styles/material/ui/components/MaterialTextInput";
 
 interface OverlayContentLoading {
     type: "loading";
@@ -28,23 +31,29 @@ class MaterialWarnDialogUser extends RWUIElement {
         root?: JSX.Element;
         overlay?: JSX.Element;
         main?: JSX.Element;
+        targetUserInput?: {
+            element: JSX.Element;
+            components: MaterialTextInputComponents;
+        };
     } = {};
 
     get active(): boolean {
         return this.elementSet.root.classList.contains(
-            "rw-mdc-warnDialog--active"
+            "rw-mdc-warnDialog-user--active"
         );
     }
     set active(value: boolean) {
         if (value != null) {
             if (value)
-                this.elementSet.root.classList.add("rw-mdc-warnDialog--active");
+                this.elementSet.root.classList.add(
+                    "rw-mdc-warnDialog-user--active"
+                );
             else
                 this.elementSet.root.classList.remove(
                     "rw-mdc-warnDialog--active"
                 );
         }
-        this.elementSet.root.classList.toggle("rw-mdc-warnDialog--active");
+        this.elementSet.root.classList.toggle("rw-mdc-warnDialog-user--active");
     }
 
     constructor(readonly props: MaterialWarnDialogUserProps = {}) {
@@ -61,17 +70,22 @@ class MaterialWarnDialogUser extends RWUIElement {
                 : {
                       type: "input",
                       onFinish: (newName) => {
-                          this.props.user = new User(newName);
+                          console.log(`new user: ${newName}`);
+                          this.props.user = User.fromUsername(newName);
                           this.renderMain();
                           this.refresh();
                           this.active = true;
                       },
                   };
         }
+
+        // Clear `targetUserInput` in case it gets removed.
+        this.elementSet.targetUserInput = undefined;
+
         switch (overlayInfo.type) {
             case "loading":
                 return (
-                    <div class={"rw-mdc-warnDialog-user--loading"}>
+                    <div class="rw-mdc-warnDialog-user--loading">
                         <div
                             style={{
                                 fontSize: "xx-large",
@@ -79,19 +93,27 @@ class MaterialWarnDialogUser extends RWUIElement {
                         >
                             {this.props.user.username}
                         </div>
-                        <div
-                            style={{
-                                fontSize: "normal",
-                            }}
-                        >
-                            Loading user information...
-                        </div>
+                        <div>Loading user information...</div>
                     </div>
                 );
             case "input":
+                const textInput = (
+                    <MaterialTextInput width={"80%"} label={"Target User"} />
+                );
+                this.elementSet.targetUserInput = {
+                    element: textInput,
+                    components: MaterialTextInputUpgrade(textInput),
+                };
+
+                textInput.querySelector("input").onblur = () => {
+                    // MediaWiki trims the start and end of article names. Might as well.
+                    const content = this.elementSet.targetUserInput.components.textField.value.trim();
+                    if (content.length > 0)
+                        (overlayInfo as OverlayContentInput).onFinish(content);
+                };
                 return (
                     <div class={"rw-mdc-warnDialog-user--input"}>
-                        <MaterialTextInput label={"Target User"} />
+                        {textInput}
                     </div>
                 );
         }
@@ -120,8 +142,8 @@ class MaterialWarnDialogUser extends RWUIElement {
         // Oh, how I miss setState()...
         const root = (
             <div class={"rw-mdc-warnDialog-user mdc-card mdc-card--outlined"}>
-                {this.elementSet.main}
-                {this.elementSet.overlay}
+                {this.renderMain()}
+                {this.renderOverlay()}
             </div>
         );
         if (this.elementSet.root)

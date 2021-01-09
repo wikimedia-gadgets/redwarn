@@ -18,7 +18,7 @@ export default class RTRC {
                         page: Page.fromTitle(
                             diff.find("strong > a").attr("title")
                         ),
-                        user: new User(
+                        user: User.fromUsername(
                             diff.find("#mw-diff-ntitle2 > a > bdi").text()
                         ),
                     })

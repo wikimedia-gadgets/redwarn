@@ -1,6 +1,23 @@
 import semanticDifference from "rww/util/semanticDifference";
 import i18next from "i18next";
 
+// To avoid circular imports, all imports MUST come explicitly from this
+// index file and this index file alone.
+
+export * from "./API";
+export * from "./URL";
+export * from "./Gender";
+export * from "./WarningLevel";
+export * from "./Warnings";
+export * from "./Watch";
+export * from "./Page";
+export * from "./Revision";
+export * from "./Rollback";
+export * from "./User";
+export * from "./ClientUser";
+
+// Actual MediaWiki class found below.
+
 const mwChecks = {
     version: () => {
         return semanticDifference(mw.config.get("wgVersion"), "1.30.0") !== -1;
@@ -58,18 +75,3 @@ export default class MediaWiki {
         } else return true;
     }
 }
-
-// To avoid circular imports, all imports MUST come explicitly from this
-// index file and this index file alone.
-
-export * from "./User";
-export * from "./ClientUser";
-export * from "./Gender";
-export * from "./Page";
-export * from "./Revision";
-export * from "./Rollback";
-export * from "./URL";
-export * from "./WarningLevel";
-export * from "./Warnings";
-export * from "./Watch";
-export * from "./API";

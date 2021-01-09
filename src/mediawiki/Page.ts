@@ -2,12 +2,7 @@ import { MediaWikiAPI, Revision, User } from "rww/mediawiki/MediaWiki";
 import { RW_WIKIS_TAGGABLE } from "rww/data/RedWarnConstants";
 import RedWarnStore from "rww/data/RedWarnStore";
 import i18next from "i18next";
-
-export type PageFunctions =
-    | "getIdentifier"
-    | "getLatestRevision"
-    | "getLatestRevisionNotByUser"
-    | "edit";
+import { PageInvalidError, PageMissingError } from "rww/errors/MediaWikiErrors";
 
 /**
  * A page is an object in a MediaWiki installation. All revisions stem from one page, and all
@@ -24,7 +19,10 @@ export class Page {
     /** The number that represents the namespace this page belongs to (i.e. its namespace ID). */
     namespace?: number;
 
-    private constructor(object?: Omit<Page, PageFunctions>) {
+    /** The latest revision cached by RedWarn. */
+    latestCachedRevision?: Revision;
+
+    private constructor(object?: Partial<Page>) {
         if (!!object) {
             Object.assign(this, object);
         }
@@ -75,19 +73,20 @@ export class Page {
             [typeof pageIdentifier === "number"
                 ? "pageids"
                 : "titles"]: pageIdentifier,
-            rvprop: [
-                "ids",
-                "comment",
-                "user",
-                "timestamp",
-                "size",
-                "content",
-            ].join("|"),
+            rvprop: ["ids", "comment", "user", "timestamp", "size", "content"],
             rvslots: "main",
             rvexcludeuser: options?.excludeUser?.username ?? undefined,
         });
 
         if (revisionInfoRequest["query"]["pages"]["-1"]) {
+            if (!!revisionInfoRequest["query"]["pages"]["-1"]["missing"])
+                throw new PageMissingError(page);
+            if (!!revisionInfoRequest["query"]["pages"]["-1"]["invalid"])
+                throw new PageInvalidError(
+                    page,
+                    revisionInfoRequest["query"]["pages"]["-1"]["invalidreason"]
+                );
+
             throw new Error("Invalid page ID or title.");
         }
 
@@ -104,10 +103,10 @@ export class Page {
             return null;
 
         // Title is always provided. IDs are required (see toPopulate declaration).
-        return Revision.fromPageLatestRevision(
+        return (page.latestCachedRevision = Revision.fromPageLatestRevision(
             pageData["revisions"][0]["revid"],
             revisionInfoRequest
-        );
+        ));
     }
 
     /**
@@ -134,11 +133,20 @@ export class Page {
     }
 
     /**
+     * Checks if the page's latest revision has been cached.
+     */
+    hasLatestRevision(): boolean {
+        return !!this.latestCachedRevision;
+    }
+
+    /**
      * Gets the latest revision of the page which was not by a given user.
      * @param username The user.
      */
     async getLatestRevisionNotByUser(username: string): Promise<Revision> {
-        return this.getLatestRevision({ excludeUser: new User(username) });
+        return this.getLatestRevision({
+            excludeUser: User.fromUsername(username),
+        });
     }
 
     /**

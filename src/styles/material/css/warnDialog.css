@@ -15,6 +15,20 @@
     height: 100%;
     /*noinspection CssUnresolvedCustomProperty*/
     background-color: var(--mdc-theme-background);
+
+    transition: opacity 0.2s ease;
+    opacity: 1;
+}
+
+.rw-mdc-warnDialog-user.rw-mdc-warnDialog-user--active
+    .rw-mdc-warnDialog-user--overlay {
+    pointer-events: none;
+    opacity: 0;
+}
+
+.rw-mdc-warnDialog-user--overlay > div {
+    width: 100%;
+    height: 100%;
 }
 
 .rw-mdc-warnDialog-user--loading {
@@ -24,5 +38,33 @@
     flex-direction: column;
 }
 
-.rw-mdc-warnDialog-user--loading .mdc-text-field {
+.rw-mdc-warnDialog-user--loading :first-child {
+    font-size: xx-large;
+}
+
+@keyframes rw-mdc-colorPulsate {
+    0% {
+        color: gray;
+    }
+    50% {
+        color: darkgray;
+    }
+    100% {
+        color: gray;
+    }
+}
+
+.rw-mdc-warnDialog-user--loading :first-child {
+    font-size: xx-large;
+}
+
+.rw-mdc-warnDialog-user--loading :last-child {
+    font-size: smaller;
+    animation: rw-mdc-colorPulsate 1s linear infinite;
+}
+
+.rw-mdc-warnDialog-user--input {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

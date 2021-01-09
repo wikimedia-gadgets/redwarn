@@ -16,7 +16,7 @@ interface MaterialTextInputProps extends BaseProps {
     maxCharacterCount?: number;
     prefix?: string;
     suffix?: string;
-    fullWidth?: boolean;
+    width?: string;
     outlined?: boolean;
 }
 
@@ -40,9 +40,14 @@ const MaterialTextInputTrack = new Map<
 export default function (props: MaterialTextInputProps): JSX.Element {
     const id = props.id ?? generateId(8);
     const element = (
-        <span data-mdc-textinput={props.id}>
+        <span
+            data-mdc-textinput={id}
+            style={{
+                width: props.width ?? "100%",
+            }}
+        >
             <label
-                class={`mdc-text-field ${
+                class={`rw-mdc-full-width mdc-text-field ${
                     (props.outlined && " mdc-text-field--outlined") ??
                     " mdc-text-field--outlined"
                 }${
@@ -53,9 +58,6 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                     (props.trailingIcon &&
                         " mdc-text-field--with-trailing-icon") ??
                     ""
-                }${
-                    (props.fullWidth && " rw-mdc-full-width") ??
-                    " rw-mdc-full-width"
                 }`}
             >
                 <span class="mdc-notched-outline">
@@ -143,7 +145,7 @@ export default function (props: MaterialTextInputProps): JSX.Element {
             </div>
         </span>
     );
-    MaterialTextInputTrack.set(props.id, {
+    MaterialTextInputTrack.set(id, {
         element: element,
         props: props,
         components: null,

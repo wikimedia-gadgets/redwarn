@@ -11,7 +11,13 @@ export class MediaWikiAPI {
         ajaxOptions?: AjaxSettings
     ): Promise<JQueryXHR> {
         try {
-            return await this.api.get(parameters, ajaxOptions);
+            const finalParameters = Object.assign({}, parameters);
+            for (const key of Object.keys(finalParameters)) {
+                if (Array.isArray(finalParameters[key]))
+                    finalParameters[key] = finalParameters[key].join("|");
+            }
+
+            return await this.api.get(finalParameters, ajaxOptions);
         } catch (error) {
             console.error(
                 `Error occured while running MediaWiki API get call: ${error.message}`

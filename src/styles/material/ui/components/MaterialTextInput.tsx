@@ -18,6 +18,7 @@ interface MaterialTextInputProps extends BaseProps {
     suffix?: string;
     width?: string;
     outlined?: boolean;
+    autofocus?: boolean;
 }
 
 // Private storage variable. No need to put it into {@link MaterialStyleStorage}
@@ -103,6 +104,9 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                     })}
                     {...(props.maxCharacterCount && {
                         maxLength: props.maxCharacterCount,
+                    })}
+                    {...(props.autofocus && {
+                        autofocus: true,
                     })}
                 />
                 {props.trailingIcon && (

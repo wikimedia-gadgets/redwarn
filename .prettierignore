@@ -10,3 +10,6 @@ old/
 
 # Artifacts
 build/
+
+# CSS
+*.css/

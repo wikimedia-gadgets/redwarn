@@ -9,6 +9,10 @@
 
         "user": {
 
+            "load_wait": "Please be patient while the user information is being loaded.",
+            "loading": "Loading user information...",
+            "input": "Target User",
+
             "highestLevel": "Highest warning level",
 
             "levelInfo": "The user's highest warning level.",
@@ -20,8 +24,8 @@
             "levelInfo_policyviolation": "User has received an immediate level 4 final warning this month. $t(mediawiki:warn.user.report)",
 
             "report": "Click to report to AIV.",
-            "overview": "{{edits}} edits"
-
+            "edits": "{{edits}} edits",
+            "age": "Created {{localeAge}}"
         }
 
     },

@@ -43,8 +43,8 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                 surfaceProperties={{
                     "class": "rw-mdc-warnDialog mdc-dialog__surface",
                     "style": {
-                        width: this.props.width ?? "40vw",
-                        height: "80vh",
+                        width: this.props.width ?? "50vw",
+                        height: "95vh",
                     },
                     "aria-modal": true,
                     "aria-labelledby": this.props.title ?? "RedWarn dialog",

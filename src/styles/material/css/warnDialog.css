@@ -1,6 +1,10 @@
+#p-personal {
+    z-index: 1;
+}
+
 .rw-mdc-warnDialog {
-    width: 40vw;
-    height: 80vh;
+    width: 50vw;
+    height: 95vh;
 }
 
 .rw-mdc-warnDialog-user {
@@ -72,7 +76,6 @@
 .rw-mdc-warnDialog-user table > tr:first-child > td:first-child {
     border-right: 1px solid lightgray;
     width: 100%;
-    padding: 8px;
 }
 
 .rw-mdc-warnDialog-user table > tr:first-child > td:last-child,
@@ -84,6 +87,10 @@
     border-bottom: 1px solid lightgray;
 }
 
+.rw-mdc-warnDialog-user--main {
+    padding: 8px;
+}
+
 .rw-mdc-warnDialog-user--username {
     font-size: xx-large;
 }
@@ -93,6 +100,7 @@
     text-transform: uppercase;
 }
 
+.rw-mdc-warnDialog-user--username a,
 .rw-mdc-warnDialog-user--overview a {
     color: inherit;
 }

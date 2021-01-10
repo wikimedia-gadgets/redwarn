@@ -15,6 +15,7 @@ import {
 } from "rww/mediawiki/MediaWiki";
 import i18next from "i18next";
 import { PageMissingError } from "rww/errors/MediaWikiErrors";
+import Group, { GroupsFromNames } from "rww/definitions/Group";
 
 // ipv4 and ipv6: https://stackoverflow.com/a/17871737
 const ipRegex = /^(((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])|(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]+|::(ffff(:0{1,4})?:)?((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])))$/gi;
@@ -132,7 +133,7 @@ export class User {
             const talkPage = this.talkPage;
             try {
                 const talkPageLatestRevision = await talkPage.getLatestRevision();
-                const talkPageWikitext = talkPageLatestRevision.content;
+                const talkPageWikitext = talkPageLatestRevision?.content;
                 if (!talkPageWikitext) {
                     this.warningAnalysis = {
                         level: WarningLevel.None,
@@ -314,7 +315,7 @@ export class UserAccount extends User {
     /** The date that the user registered */
     registered?: Date;
     /** The groups of the user. */
-    groups?: string[];
+    groups?: Group[];
     /** The user's gender. */
     gender?: Gender;
     /** The user's block information (if they are blocked) */
@@ -379,7 +380,9 @@ export class UserAccount extends User {
         if (!user.registered)
             user.registered = new Date(userData["registration"]);
         if (!user.groups)
-            user.groups = userData["groups"].filter((v: string) => v !== "*");
+            user.groups = GroupsFromNames(
+                userData["groups"].filter((v: string) => v !== "*")
+            );
         if (!user.gender) user.gender = userData["gender"];
         if (!user.blocked && !!userData["blockid"])
             user.blocked = {

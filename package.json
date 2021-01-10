@@ -4,6 +4,7 @@
     "description": "Wikipedia patrol and counter-vandalism tool.",
     "main": "src/RedWarnLite.ts",
     "dependencies": {
+        "@material/chips": "^9.0.0",
         "@material/dialog": "^8.0.0",
         "@material/fab": "^9.0.0",
         "@material/linear-progress": "^8.0.0",

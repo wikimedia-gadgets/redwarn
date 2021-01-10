@@ -16,6 +16,8 @@ import RWUI from "rww/ui/RWUI";
 import i18next from "i18next";
 import moment from "moment";
 import Bullet from "./Bullet";
+import { capitalize } from "rww/util";
+import { MDCChipSet } from "@material/chips";
 
 interface OverlayContentLoading {
     type: "loading";
@@ -37,7 +39,12 @@ interface MaterialWarnDialogUserProps {
 /**
  * The actual user card. Used when the user is loaded.
  */
-function MaterialWarnDialogUserCard({ user }: { user: User }): JSX.Element {
+function MaterialWarnDialogUserCard({
+    parent,
+}: {
+    parent: MaterialWarnDialogUser;
+}): JSX.Element {
+    const user = parent.user;
     if (!user.isPopulated() || !user.warningAnalysis) {
         throw new Error(
             "MaterialWarnDialogUserCard called without the User being fully-populated."
@@ -46,32 +53,81 @@ function MaterialWarnDialogUserCard({ user }: { user: User }): JSX.Element {
 
     const warningIcon = WarningIcons[user.warningAnalysis.level];
 
-    return (
+    const card = (
         <table>
             <tr>
                 <td rowSpan={2}>
-                    <div class={"rw-mdc-warnDialog-user--username"}>
-                        {user.username}
+                    <div class={"rw-mdc-warnDialog-user--main"}>
+                        <div class={"rw-mdc-warnDialog-user--username"}>
+                            <a
+                                onClick={() => {
+                                    parent.clearUser();
+                                }}
+                                data-rw-mdc-tooltip={"Change the target user."}
+                            >
+                                {user.username}
+                            </a>
+                        </div>
+                        {user instanceof UserAccount ? (
+                            <div class={"rw-mdc-warnDialog-user--overview"}>
+                                <a>
+                                    {`${i18next.t("mediawiki:warn.user.edits", {
+                                        edits: user.editCount.toLocaleString(),
+                                    })}`}
+                                </a>
+                                <Bullet />
+                                <a>{`${i18next.t("mediawiki:warn.user.age", {
+                                    localeAge: moment(
+                                        user.registered
+                                    ).fromNow(),
+                                })}`}</a>
+                            </div>
+                        ) : (
+                            <div class={"rw-mdc-warnDialog-user--overview"}>
+                                {/* TODO Eventually replace with per-wiki page */}
+                                <a href="/wiki/w:en:IP_address" target="_blank">
+                                    {`${i18next.t("mediawiki:ip")}`}
+                                </a>
+                            </div>
+                        )}
                     </div>
-                    {user instanceof UserAccount ? (
-                        <div class={"rw-mdc-warnDialog-user--overview"}>
-                            <a>
-                                {`${i18next.t("mediawiki:warn.user.overview", {
-                                    edits: user.editCount.toLocaleString(),
-                                })}`}
-                            </a>
-                            <Bullet />
-                            <a>{moment(user.registered).fromNow()}</a>
-                        </div>
-                    ) : (
-                        <div class={"rw-mdc-warnDialog-user--overview"}>
-                            <a href="/wiki/w:en:IP_address" target="_blank">
-                                {`${i18next.t("mediawiki:ip")}`}
-                            </a>
-                        </div>
-                    )}
                     {user instanceof UserAccount && (
-                        <div class={"rw-mdc-warnDialog-user--groups"}></div>
+                        <div
+                            class={
+                                "rw-mdc-warnDialog-user--groups mdc-chip-set"
+                            }
+                        >
+                            {user.groups.map<JSX.Element>(
+                                (group): JSX.Element => {
+                                    return (
+                                        <a
+                                            target={group.page && "_blank"}
+                                            href={
+                                                group.page &&
+                                                `/wiki/${group.page}`
+                                            }
+                                        >
+                                            <div class="mdc-chip" role="row">
+                                                <div class="mdc-chip__ripple" />
+                                                <span role="gridcell">
+                                                    <span
+                                                        role="button"
+                                                        tabIndex={0}
+                                                        class="mdc-chip__primary-action"
+                                                    >
+                                                        <span class="mdc-chip__text">
+                                                            {capitalize(
+                                                                group.displayName
+                                                            )}
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        </a>
+                                    );
+                                }
+                            )}
+                        </div>
                     )}
                 </td>
                 <td>
@@ -108,6 +164,11 @@ function MaterialWarnDialogUserCard({ user }: { user: User }): JSX.Element {
             </tr>
         </table>
     );
+
+    if (card.querySelector(".mdc-chip-set"))
+        new MDCChipSet(card.querySelector(".mdc-chip-set"));
+
+    return card;
 }
 
 export default function (props: MaterialWarnDialogUserProps): JSX.Element {
@@ -138,7 +199,7 @@ class MaterialWarnDialogUser extends RWUIElement {
         else this.elementSet.root.classList.remove("rw-mdc-warnDialog--active");
     }
 
-    private user: User;
+    user: User;
     private updating: boolean;
 
     constructor(readonly props: MaterialWarnDialogUserProps) {
@@ -168,17 +229,31 @@ class MaterialWarnDialogUser extends RWUIElement {
             case "loading":
                 return (
                     <div class="rw-mdc-warnDialog-user--loading">
-                        <div class={"rw-mdc-warnDialog-user--username"}>
+                        <div
+                            class={"rw-mdc-warnDialog-user--username"}
+                            onClick={() => {
+                                if (!this.updating) this.updateUser(this.user);
+                                else
+                                    new RWUI.Toast({
+                                        content: i18next.t(
+                                            "mediawiki:warn.user.load_wait"
+                                        ),
+                                    }).show();
+                            }}
+                        >
                             {this.user.username}
                         </div>
-                        <div>Loading user information...</div>
+                        <div>{`${i18next.t(
+                            "mediawiki:warn.user.loading"
+                        )}`}</div>
                     </div>
                 );
             case "input":
                 const textInput = (
                     <MaterialTextInput
                         width={"80%"}
-                        label={"Target UserAccount"}
+                        label={i18next.t("mediawiki:warn.user.input")}
+                        autofocus
                     />
                 );
                 this.elementSet.targetUserInput = {
@@ -186,12 +261,28 @@ class MaterialWarnDialogUser extends RWUIElement {
                     components: MaterialTextInputUpgrade(textInput),
                 };
 
-                textInput.querySelector("input").onblur = () => {
-                    // MediaWiki trims the start and end of article names. Might as well.
-                    const content = this.elementSet.targetUserInput.components.textField.value.trim();
-                    if (content.length > 0)
-                        (overlayInfo as OverlayContentInput).onFinish(content);
-                };
+                textInput
+                    .querySelector("input")
+                    .addEventListener("blur", () => {
+                        // MediaWiki trims the start and end of article names. Might as well.
+                        const content = this.elementSet.targetUserInput.components.textField.value.trim();
+                        if (content.length > 0)
+                            (overlayInfo as OverlayContentInput).onFinish(
+                                content
+                            );
+                    });
+                textInput
+                    .querySelector("input")
+                    .addEventListener("keyup", (event) => {
+                        if (event.key === "Enter") {
+                            // MediaWiki trims the start and end of article names. Might as well.
+                            const content = this.elementSet.targetUserInput.components.textField.value.trim();
+                            if (content.length > 0)
+                                (overlayInfo as OverlayContentInput).onFinish(
+                                    content
+                                );
+                        }
+                    });
                 return (
                     <div class={"rw-mdc-warnDialog-user--input"}>
                         {textInput}
@@ -215,13 +306,22 @@ class MaterialWarnDialogUser extends RWUIElement {
                 {!!this.user &&
                 this.user.isPopulated() &&
                 !!this.user.warningAnalysis ? (
-                    <MaterialWarnDialogUserCard user={this.user} />
+                    <MaterialWarnDialogUserCard parent={this} />
                 ) : (
                     ""
                 )}
             </div>
         );
         return this.elementSet.main;
+    }
+
+    /**
+     * Removes the target user and resets the input field.
+     */
+    async clearUser(): Promise<void> {
+        this.user = undefined;
+        this.active = false;
+        this.refresh();
     }
 
     /**
@@ -279,19 +379,15 @@ class MaterialWarnDialogUser extends RWUIElement {
 
         this.elementSet.root = root;
 
-        if (
+        this.active =
             !!this.user &&
             this.user.isPopulated() &&
-            !!this.user.warningAnalysis
-        )
-            this.active = true;
-        else {
-            this.active = false;
-            if (!this.updating && !this.active)
-                // Execute asynchronously to prevent repeat calls.
-                setTimeout(() => {
-                    this.updateUser(this.props.user);
-                });
+            !!this.user.warningAnalysis;
+
+        if (!!this.elementSet.targetUserInput) {
+            if ($(this.elementSet.targetUserInput.element).is(":visible")) {
+                this.elementSet.targetUserInput.components.textField.focus();
+            }
         }
     }
 
@@ -300,6 +396,17 @@ class MaterialWarnDialogUser extends RWUIElement {
      */
     render(): JSX.Element {
         this.refresh();
+        if (
+            (!this.user ||
+                !this.user.isPopulated() ||
+                !this.user.warningAnalysis) &&
+            !this.updating &&
+            !this.active
+        )
+            // Execute asynchronously to prevent repeat calls.
+            setTimeout(() => {
+                this.updateUser(this.props.user);
+            });
         return this.elementSet.root;
     }
 }

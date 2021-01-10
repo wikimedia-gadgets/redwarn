@@ -115,7 +115,7 @@ $(document).ready(async () => {
     //     maxCharacterCount: 12
     // }).show();
     new RWUI.WarnDialog({
-        targetUser: User.fromUsername("192.0.2.16"),
+        targetUser: User.fromUsername("Chlod"),
     }).show();
 });
 

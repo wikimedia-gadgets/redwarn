@@ -6,8 +6,7 @@ import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 
 export class MediaWikiAPI {
-    private static groups = new Map<string, Group>();
-
+    static groups: Map<string, Group>;
     static api: Api;
 
     static async get(
@@ -60,6 +59,7 @@ export class MediaWikiAPI {
 
         // Initialize the current user.
         await ClientUser.i.init();
+        await this.loadGroupNames();
     }
 
     static async loadGroupNames(): Promise<Map<string, Group>> {
@@ -86,29 +86,33 @@ export class MediaWikiAPI {
             for (const message of userGroupMemberTitles["query"][
                 "allmessages"
             ]) {
-                const groupName = /^group-(.+)-member$/g.exec(
+                const groupNameExec = /^group-(.+)-member$/g.exec(
                     message["name"]
-                )[1];
+                );
+                if (groupNameExec == null) continue;
+                const groupName = groupNameExec[1];
                 if (!groups.has(groupName))
                     groups.set(groupName, {
                         name: groupName,
-                        displayName: message["*"],
+                        displayName: message["content"],
                     });
-                else groups.get(groupName).displayName = message["*"];
+                else groups.get(groupName).displayName = message["content"];
             }
 
             for (const message of userGroupPages["query"]["allmessages"]) {
-                const groupName = /^grouppage-(.+)$/g.exec(message["name"])[1];
+                const groupNameExec = /^grouppage-(.+)$/g.exec(message["name"]);
+                if (groupNameExec == null) continue;
+                const groupName = groupNameExec[1];
                 if (!groups.has(groupName))
                     groups.set(groupName, {
                         name: groupName,
-                        page: message["*"].replace(
+                        page: message["content"].replace(
                             /{{ns:project}}/gi,
                             "Project:"
                         ),
                     });
                 else
-                    groups.get(groupName).page = message["*"].replace(
+                    groups.get(groupName).page = message["content"].replace(
                         /{{ns:project}}/gi,
                         "Project:"
                     );
@@ -128,7 +132,7 @@ export class MediaWikiAPI {
                 groups: { [key: string]: Group };
             }>("mw-groups", null);
 
-            if (!groups || groups.timestamp > Date.now() - 604800000) {
+            if (!groups || groups.timestamp < Date.now() - 604800000) {
                 return (this.groups = await loadGroups());
             } else {
                 return (this.groups = new Map<string, Group>(

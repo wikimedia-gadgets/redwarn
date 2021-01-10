@@ -5,29 +5,5 @@
         "restore": "Restoring revision {{revID}} by {{revUser}}: {{reason}} $t(common:redwarn.signature)"
     },
 
-    "warn": {
-
-        "user": {
-
-            "load_wait": "Please be patient while the user information is being loaded.",
-            "loading": "Loading user information...",
-            "input": "Target User",
-
-            "highestLevel": "Highest warning level",
-
-            "levelInfo": "The user's highest warning level.",
-            "levelInfo_none": "User has not received any warnings this month.",
-            "levelInfo_notice": "User has received a level 1 notice this month.",
-            "levelInfo_caution": "User has received a level 2 notice this month.",
-            "levelInfo_warning": "User has received a level 3 warning this month.",
-            "levelInfo_final": "User has received a level 4 final warning this month. $t(mediawiki:warn.user.report).",
-            "levelInfo_policyviolation": "User has received an immediate level 4 final warning this month. $t(mediawiki:warn.user.report)",
-
-            "report": "Click to report to AIV.",
-            "edits": "{{edits}} edits",
-            "age": "Created {{localeAge}}"
-        }
-
-    },
     "ip": "Anonymous IP editor"
 }

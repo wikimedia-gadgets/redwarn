@@ -41,6 +41,10 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.txt$/,
+                use: ["text-loader"]
+            },
+            {
                 test: /\.tsx?$/,
                 use: ["ts-loader"],
                 exclude: [

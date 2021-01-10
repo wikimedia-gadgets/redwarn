@@ -1,6 +1,7 @@
 import RWUIElement from "rww/ui/elements/RWUIElement";
 import { h } from "tsx-dom";
 import {
+    Page,
     User,
     UserAccount,
     WarningIcons,
@@ -19,6 +20,7 @@ import Bullet from "./Bullet";
 import { capitalize, generateId } from "rww/util";
 import { MDCChipSet } from "@material/chips";
 import MaterialMenu, { openMenu } from "./MaterialMenu";
+import showPlainMediaWikiIFrameDialog from "rww/styles/material/util/showPlainMediaWikiIFrameDialog";
 
 interface OverlayContentLoading {
     type: "loading";
@@ -72,13 +74,41 @@ function MaterialWarnDialogUserCard({
                         </div>
                         {user instanceof UserAccount ? (
                             <div class={"rw-mdc-warnDialog-user--overview"}>
-                                <a>
-                                    {`${i18next.t("mediawiki:warn.user.edits", {
+                                <a
+                                    onClick={() => {
+                                        showPlainMediaWikiIFrameDialog(
+                                            Page.fromTitle(
+                                                `Special:Contributions/${user.username}`
+                                            ),
+                                            {
+                                                disableRedWarn: true,
+                                                safeMode: true,
+                                            }
+                                        );
+                                    }}
+                                    data-rw-mdc-tooltip={i18next.t(
+                                        "ui:warn.user.show.contributions"
+                                    )}
+                                >
+                                    {`${i18next.t("ui:warn.user.edits", {
                                         edits: user.editCount.toLocaleString(),
                                     })}`}
                                 </a>
                                 <Bullet />
-                                <a>{`${i18next.t("mediawiki:warn.user.age", {
+                                <a
+                                    onClick={() => {
+                                        showPlainMediaWikiIFrameDialog(
+                                            user.userPage,
+                                            {
+                                                disableRedWarn: true,
+                                                safeMode: true,
+                                            }
+                                        );
+                                    }}
+                                    data-rw-mdc-tooltip={i18next.t(
+                                        "ui:warn.user.show.userpage"
+                                    )}
+                                >{`${i18next.t("ui:warn.user.age", {
                                     localeAge: moment(
                                         user.registered
                                     ).fromNow(),
@@ -135,8 +165,8 @@ function MaterialWarnDialogUserCard({
                 <td>
                     <MaterialIconButton
                         {...warningIcon}
-                        label={i18next.t("mediawiki:warn.user.highestLevel")}
-                        tooltip={`${i18next.t(`mediawiki:warn.user.levelInfo`, {
+                        label={i18next.t("ui:warn.user.highestLevel")}
+                        tooltip={`${i18next.t(`ui:warn.user.levelInfo`, {
                             context: `${WarningLevel[
                                 user.warningAnalysis.level
                             ].toLowerCase()}`,
@@ -259,23 +289,21 @@ class MaterialWarnDialogUser extends RWUIElement {
                                 else
                                     new RWUI.Toast({
                                         content: i18next.t(
-                                            "mediawiki:warn.user.load_wait"
+                                            "ui:warn.user.load_wait"
                                         ),
                                     }).show();
                             }}
                         >
                             {this.user.username}
                         </div>
-                        <div>{`${i18next.t(
-                            "mediawiki:warn.user.loading"
-                        )}`}</div>
+                        <div>{`${i18next.t("ui:warn.user.loading")}`}</div>
                     </div>
                 );
             case "input":
                 const textInput = (
                     <MaterialTextInput
                         width={"80%"}
-                        label={i18next.t("mediawiki:warn.user.input")}
+                        label={i18next.t("ui:warn.user.input")}
                         autofocus
                     />
                 );

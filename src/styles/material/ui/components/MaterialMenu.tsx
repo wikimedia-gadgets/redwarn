@@ -85,7 +85,6 @@ export default function (props: MaterialMenuProps): JSX.Element {
             props.id,
             new MDCMenu(menu.querySelector(".mdc-menu"))
         );
-        console.log("upgraded");
     });
 
     return menu;

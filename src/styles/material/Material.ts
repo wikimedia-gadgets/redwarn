@@ -14,6 +14,7 @@ import MaterialWarnDialog from "rww/styles/material/ui/MaterialWarnDialog";
 import MaterialToast from "./ui/MaterialToast";
 
 import "./css/globals.css";
+import MaterialIFrameDialog from "rww/styles/material/ui/MaterialIFrameDialog";
 
 const MaterialStyle: Style = {
     name: "material",
@@ -67,6 +68,7 @@ const MaterialStyle: Style = {
         rwInputDialog: MaterialInputDialog,
         rwSelectionDialog: MaterialSelectionDialog,
         rwWarnDialog: MaterialWarnDialog,
+        rwIFrameDialog: MaterialIFrameDialog,
         rwToast: MaterialToast,
     },
 

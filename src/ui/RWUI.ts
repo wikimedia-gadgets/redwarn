@@ -2,6 +2,7 @@ import StyleManager from "rww/styles/StyleManager";
 import { ClientUser, UserAccount } from "rww/mediawiki/MediaWiki";
 import {
     RWUIAlertDialog,
+    RWUIIFrameDialog,
     RWUIInputDialog,
     RWUISelectionDialog,
     RWUISelectionDialogItem,
@@ -30,6 +31,10 @@ export default class RWUI {
     /** Alias of {@link StyleManager.activeStyle.classMap.rwWarnDialog} */
     static get WarnDialog(): typeof RWUIWarnDialog {
         return StyleManager.activeStyle.classMap.rwWarnDialog;
+    }
+    /** Alias of {@link StyleManager.activeStyle.classMap.rwIFrameDialog} */
+    static get IFrameDialog(): typeof RWUIIFrameDialog {
+        return StyleManager.activeStyle.classMap.rwIFrameDialog;
     }
     /** Alias of {@link StyleManager.activeStyle.classMap.rwToast} */
     static get Toast(): typeof RWUIToast {
@@ -98,5 +103,6 @@ export const RWUIElements = {
     [RWUIInputDialog.elementName]: RWUIInputDialog,
     [RWUISelectionDialog.elementName]: RWUISelectionDialog,
     [RWUIWarnDialog.elementName]: RWUIWarnDialog,
+    [RWUIIFrameDialog.elementName]: RWUIIFrameDialog,
     [RWUIToast.elementName]: RWUIToast,
 };

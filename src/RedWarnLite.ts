@@ -32,6 +32,13 @@ import Lockr from "lockr";
 
 $(document).ready(async () => {
     console.log("Starting RedWarn...");
+
+    if (document.body.classList.contains("rw-disable")) {
+        // We've been prevented from running on this page.
+        console.log("Page is blocking RedWarn loading. Shutting down...");
+        return;
+    }
+
     if (window.rw != null) {
         mw.notify(
             "You have two versions of RedWarn installed at once! Please edit your common.js or skin js files to ensure that you only use one instance to prevent issues.",

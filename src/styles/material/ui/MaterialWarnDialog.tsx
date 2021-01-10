@@ -9,10 +9,12 @@ import {
 import { getMaterialStorage } from "rww/styles/material/storage/MaterialStyleStorage";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
+    MaterialDialogActions,
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
 import MaterialWarnDialogUser from "./components/MaterialWarnDialogUser";
+import i18next from "i18next";
 
 export default class MaterialWarnDialog extends RWUIWarnDialog {
     show(): Promise<any> {
@@ -27,7 +29,10 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
             dialog.listen(
                 "MDCDialog:closed",
                 async (event: Event & { detail: { action: string } }) => {
-                    // TODO get warn results
+                    if (event.detail.action === "cancel") this._result = null;
+                    else {
+                        // TODO get warn results
+                    }
 
                     const res = styleStorage.dialogTracker.get(this.id).result;
                     styleStorage.dialogTracker.delete(this.id);
@@ -61,13 +66,11 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         borderStyle: "none",
                         marginTop: "4vh",
                     }}
+                    tabIndex={0}
                 >
-                    <span style={{ float: "left" }}>{this.props.title}</span>
-                    <MaterialButton
-                        dialogAction="close"
-                        icon="close"
-                        style={{ right: "0", position: "absolute" }}
-                    />
+                    <span style={{ float: "left" }}>
+                        {this.props.title ?? "Warn User"}
+                    </span>
                 </MaterialDialogTitle>
                 <MaterialDialogContent
                     style={{
@@ -82,6 +85,15 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         warnDialog={this}
                     />
                 </MaterialDialogContent>
+                <MaterialDialogActions>
+                    <MaterialButton dialogAction="confirm">
+                        {i18next.t<string>("ui:warn.ok")}
+                    </MaterialButton>
+
+                    <MaterialButton dialogAction="cancel">
+                        {i18next.t<string>("ui:okCancel.cancel")}
+                    </MaterialButton>
+                </MaterialDialogActions>
             </MaterialDialog>
         ) as HTMLDialogElement;
         return this.element;

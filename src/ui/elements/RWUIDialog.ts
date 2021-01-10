@@ -4,6 +4,7 @@ import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 import { RollbackContext } from "rww/definitions/RollbackContext";
 import { User } from "rww/mediawiki/User";
 import { Warnings } from "rww/mediawiki/Warnings";
+import { Dependency } from "rww/ui/Dependencies";
 
 export enum RWUIDialogActionType {
     /**
@@ -54,8 +55,6 @@ export interface RWUIDialogProperties extends RWUIElementProperties {
     title?: string;
     /**
      * The width of the dialog in whatever CSS unit specified.
-     *
-     * @default 30vw
      */
     width?: string;
     /**
@@ -206,10 +205,6 @@ export interface RWUIWarnDialogProps extends RWUIDialogProperties {
     rollbackContext?: RollbackContext;
     targetUser?: User;
     defaultWarnReason?: keyof Warnings;
-    /**
-     * The actions of the dialog. These go at the bottom of the dialog.
-     */
-    actions?: OKCancelActions;
 }
 
 export class RWUIWarnDialog extends RWUIDialog {
@@ -223,6 +218,42 @@ export class RWUIWarnDialog extends RWUIDialog {
     public static readonly elementName = "rwWarnDialog";
 
     constructor(readonly props: RWUIWarnDialogProps) {
+        super(props);
+    }
+}
+
+export interface RWUIIFrameDialogProps extends RWUIDialogProperties {
+    /**
+     * The height of the dialog in whatever CSS unit specified.
+     */
+    height?: string;
+    src: string;
+    dependencies?: Dependency[];
+    customStyle?: string | string[];
+    customScripts?: string | string[];
+    actions?: RWUIDialogAction[];
+
+    /**
+     * Whether or not to disable RedWarn in the IFrame. This is intended
+     * for events where a MediaWiki page of the same wiki is loaded, causing
+     * the RedWarn userscript to load as well.
+     *
+     * This should always append the `rw-disable` class onto the body.
+     */
+    disableRedWarn?: boolean;
+}
+
+export class RWUIIFrameDialog extends RWUIDialog {
+    show(): Promise<any> {
+        throw new Error("Attempted to call abstract method");
+    }
+    render(): HTMLDialogElement {
+        throw new Error("Attempted to call abstract method");
+    }
+
+    public static readonly elementName = "rwIFrameDialog";
+
+    constructor(readonly props: RWUIIFrameDialogProps) {
         super(props);
     }
 }

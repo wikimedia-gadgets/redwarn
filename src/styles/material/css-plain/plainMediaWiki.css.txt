@@ -1,0 +1,8 @@
+#mw-head, #mw-panel, #mw-head-base, #mw-page-base, .mw-contributions-footer, footer {
+    display: none;
+}
+
+#content {
+    margin-left: 0;
+    border: 0;
+}

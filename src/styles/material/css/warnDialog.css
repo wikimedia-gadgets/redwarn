@@ -100,6 +100,11 @@
     text-transform: uppercase;
 }
 
+.rw-mdc-warnDialog-user--overview .mdc-tooltip {
+    font-size: initial;
+    text-transform: initial;
+}
+
 .rw-mdc-warnDialog-user--username a,
 .rw-mdc-warnDialog-user--overview a {
     color: inherit;

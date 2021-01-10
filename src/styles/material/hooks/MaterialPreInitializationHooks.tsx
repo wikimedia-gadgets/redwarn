@@ -8,6 +8,7 @@ import { generateId } from "rww/util";
 export default function (): void {
     RedWarnStore.styleStorage = new MaterialStyleStorage();
 
+    // MDC Tooltip upgrade
     document.addEventListener("animationstart", (event) => {
         if (!(event.target instanceof Element)) return;
         if (!event.target.hasAttribute("data-rw-mdc-tooltip")) return;

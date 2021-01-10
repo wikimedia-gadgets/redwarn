@@ -1,4 +1,5 @@
 import { BaseProps, h } from "tsx-dom";
+import expandDataAttributes from "rww/styles/material/util/expandDataAttributes";
 
 export interface MaterialButtonProperties extends BaseProps {
     dialogAction?: string | { data: string; text: string };
@@ -8,14 +9,15 @@ export interface MaterialButtonProperties extends BaseProps {
     style?: Partial<CSSStyleDeclaration>;
 }
 
-export default function ({
-    dialogAction,
-    children,
-    icon,
-    contentStyle,
-    iconColor,
-    style,
-}: MaterialButtonProperties): JSX.Element {
+export default function (props: MaterialButtonProperties): JSX.Element {
+    const {
+        dialogAction,
+        children,
+        icon,
+        contentStyle,
+        iconColor,
+        style,
+    } = props;
     const classes = ["mdc-button"];
 
     if (dialogAction) {
@@ -34,6 +36,7 @@ export default function ({
                     : dialogAction.data
             }
             style={style}
+            {...expandDataAttributes(props)}
         >
             <div class="mdc-button__ripple" />
             {icon && (

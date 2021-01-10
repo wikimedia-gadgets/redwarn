@@ -1,4 +1,5 @@
 import { BaseProps, h } from "tsx-dom";
+import expandDataAttributes from "rww/styles/material/util/expandDataAttributes";
 
 export interface MaterialIconButtonProperties extends BaseProps {
     onClick?: (event: MouseEvent) => void;
@@ -15,13 +16,8 @@ export interface MaterialIconButtonProperties extends BaseProps {
     tooltip?: string | false;
 }
 
-export default function ({
-    onClick,
-    label,
-    icon,
-    iconColor,
-    tooltip,
-}: MaterialIconButtonProperties): JSX.Element {
+export default function (props: MaterialIconButtonProperties): JSX.Element {
+    const { onClick, label, icon, iconColor, tooltip } = props;
     return (
         <button
             type="button"
@@ -34,6 +30,7 @@ export default function ({
             }
             onClick={onClick}
             style={`color:${iconColor ?? "initial"};`}
+            {...expandDataAttributes(props)}
         >
             {icon}
         </button>

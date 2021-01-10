@@ -23,7 +23,6 @@ import MediaWiki, {
     MediaWikiURL,
     Rollback,
     User,
-    UserAccount,
     Warnings,
     Watch,
 } from "./mediawiki/MediaWiki";
@@ -156,8 +155,8 @@ export default class RedWarn {
     static get MediaWikiURL(): typeof MediaWikiURL {
         return MediaWikiURL;
     }
-    static get User(): typeof UserAccount {
-        return UserAccount;
+    static get User(): typeof User {
+        return User;
     }
     static get Warnings(): typeof Warnings {
         return Warnings;

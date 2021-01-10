@@ -16,8 +16,9 @@ import RWUI from "rww/ui/RWUI";
 import i18next from "i18next";
 import moment from "moment";
 import Bullet from "./Bullet";
-import { capitalize } from "rww/util";
+import { capitalize, generateId } from "rww/util";
 import { MDCChipSet } from "@material/chips";
+import MaterialMenu, { openMenu } from "./MaterialMenu";
 
 interface OverlayContentLoading {
     type: "loading";
@@ -51,6 +52,7 @@ function MaterialWarnDialogUserCard({
         );
     }
 
+    const cardId = generateId(8);
     const warningIcon = WarningIcons[user.warningAnalysis.level];
 
     const card = (
@@ -156,9 +158,30 @@ function MaterialWarnDialogUserCard({
                         icon={"assignment_ind"}
                         tooltip={"User talk page"}
                         onClick={() => {
-                            // TODO open in dialog
-                            user.talkPage.openInNewTab();
+                            openMenu(`menu__${cardId}`);
                         }}
+                        data-menu-id={`menu__${cardId}`}
+                    />
+                    <MaterialMenu
+                        id={`menu__${cardId}`}
+                        items={[
+                            {
+                                label: "Notices for this month",
+                                action(): void {
+                                    new RWUI.Toast({
+                                        content: "under construction",
+                                    }).show();
+                                },
+                            },
+                            {
+                                label: "Entire talk page",
+                                action(): void {
+                                    new RWUI.Toast({
+                                        content: "still in construction",
+                                    }).show();
+                                },
+                            },
+                        ]}
                     />
                 </td>
             </tr>

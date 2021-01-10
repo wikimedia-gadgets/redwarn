@@ -10,7 +10,6 @@
         "@material/snackbar": "^9.0.0",
         "@material/textfield": "^8.0.0",
         "@material/tooltip": "^8.0.0",
-        "@webpack-cli/serve": "^1.2.0",
         "dialog-polyfill": "^0.5.3",
         "i18next": "^19.8.4",
         "i18next-browser-languagedetector": "^6.0.1",
@@ -49,7 +48,8 @@
         "webpack": "^5.11.1",
         "webpack-cli": "^4.3.0",
         "webpack-dev-server": "^3.11.1",
-        "wrapper-webpack-plugin": "github:redwarnwp/wrapper-webpack-plugin"
+        "wrapper-webpack-plugin": "github:redwarnwp/wrapper-webpack-plugin",
+        "@webpack-cli/serve": "^1.2.0"
     },
     "scripts": {
         "build": "webpack",

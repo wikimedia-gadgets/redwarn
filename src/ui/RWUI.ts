@@ -1,5 +1,5 @@
 import StyleManager from "rww/styles/StyleManager";
-import { ClientUser, User } from "rww/mediawiki/MediaWiki";
+import { ClientUser, UserAccount } from "rww/mediawiki/MediaWiki";
 import {
     RWUIAlertDialog,
     RWUIInputDialog,
@@ -86,7 +86,7 @@ export default class RWUI {
 }
 
 export interface ExtendedOptionsContext {
-    user?: User;
+    user?: UserAccount;
     rollbackContext?: RollbackContext;
 }
 

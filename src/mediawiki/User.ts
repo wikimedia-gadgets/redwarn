@@ -16,22 +16,10 @@ import {
 import i18next from "i18next";
 import { PageMissingError } from "rww/errors/MediaWikiErrors";
 
-/**
- * Represents a Mediawiki user.
- */
+// ipv4 and ipv6: https://stackoverflow.com/a/17871737
+const ipRegex = /^(((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])|(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]+|::(ffff(:0{1,4})?:)?((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])))$/gi;
+
 export class User {
-    /** The user id of this user. */
-    id?: number;
-    /** The edit count of this user. */
-    editCount?: number;
-    /** The date that the user registered */
-    registered?: Date;
-    /** The groups of the user. */
-    groups?: string[];
-    /** The user's gender. */
-    gender?: Gender;
-    /** The user's block information (if they are blocked) */
-    blocked?: BlockInfo | false;
     /** The user's latest edit. `null` if they have never made an edit. */
     latestEdit?: Revision | null;
 
@@ -55,7 +43,7 @@ export class User {
 
     protected constructor(
         readonly username: string,
-        properties?: Partial<typeof User>
+        properties?: Partial<User>
     ) {
         if (properties) Object.assign(this, properties);
     }
@@ -69,7 +57,10 @@ export class User {
         username: string,
         additionalProperties?: Partial<User>
     ): User {
-        return new User(username, additionalProperties);
+        return new (ipRegex.test(username) ? UserIP : UserAccount)(
+            username,
+            additionalProperties
+        );
     }
 
     /**
@@ -77,7 +68,10 @@ export class User {
      * @param username The username of the user.
      */
     static async fromUsernameToPopulated(username: string): Promise<User> {
-        const user = User.fromUsername(username);
+        const user = (ipRegex.test(username)
+            ? UserIP
+            : UserAccount
+        ).fromUsername(username);
         return await user.populate();
     }
 
@@ -86,61 +80,15 @@ export class User {
      * @param user The user to populate.
      */
     static async populate(user: User): Promise<User> {
-        const toPopulate = [];
-        if (!user.editCount) toPopulate.push("editcount");
-        if (!user.registered) toPopulate.push("registration");
-        if (!user.groups) toPopulate.push("groups");
-        if (!user.gender) toPopulate.push("gender");
-        if (!user.blocked) toPopulate.push("blockinfo");
-
-        const identifier = user.getIdentifier();
-
         const userInfoRequest = await MediaWikiAPI.get({
             action: "query",
             format: "json",
-            list: ["users", "usercontribs"],
-            usprop: toPopulate,
+            list: ["usercontribs"],
             uclimit: 1,
-            ...(typeof identifier === "string"
-                ? {
-                      ususers: identifier,
-                      ucuser: identifier,
-                  }
-                : {
-                      ususerids: identifier,
-                      ucuserids: identifier,
-                  }),
+            ucuser: user.username,
         });
 
-        const userData = userInfoRequest["query"]["users"][0];
         const userLatestEdit = userInfoRequest["query"]["usercontribs"][0];
-
-        if (userData.missing != null)
-            throw new Error("This user does not exist.");
-        if (userData.invalid != null)
-            throw new Error("The provided username is invalid.");
-
-        if (!user.id) user.id = userData["userid"];
-        if (!user.editCount) user.editCount = userData["editcount"];
-        if (!user.registered)
-            user.registered = new Date(userData["registration"]);
-        if (!user.groups)
-            user.groups = userData["groups"].filter((v: string) => v !== "*");
-        if (!user.gender) user.gender = userData["gender"];
-        if (!user.blocked && !!userData["blockid"])
-            user.blocked = {
-                id: userData["blockid"],
-                blocker: User.fromUsername(userData["blockedby"]),
-                reason: userData["blockreason"],
-                time: new Date(userData["blockedtimestamp"]),
-                expiry:
-                    userData["blockexpiry"] === "infinite"
-                        ? false
-                        : new Date(userData["blockexpiry"]),
-                partial: !!userData["blockpartial"],
-                creationBlocked: !!userData["blocknocreate"],
-            };
-        else if (!user.blocked) user.blocked = false;
 
         if (userLatestEdit) {
             user.latestEdit = Revision.fromID(userLatestEdit["revid"], {
@@ -164,15 +112,7 @@ export class User {
      * using {@link populate} in order to conserve data usage.
      */
     isPopulated(): boolean {
-        return !(
-            this.id == null ||
-            this.editCount == null ||
-            this.registered == null ||
-            this.groups == null ||
-            this.gender == null ||
-            this.blocked == null ||
-            this.latestEdit === undefined
-        );
+        return !(this.latestEdit === undefined);
     }
 
     /**
@@ -180,38 +120,6 @@ export class User {
      */
     async populate(): Promise<User> {
         return User.populate(this);
-    }
-
-    /**
-     * Grabs either the user's name (always a string) or ID (always a number).
-     * Returns the name if both exist as long as `favorID` is set to false.
-     *
-     * If this function returns `null`, the `User` was illegally created.
-     * @param favorID Whether or not to favor the ID over the username.
-     */
-    getIdentifier(favorID = false): number | string {
-        if (!!this.username && !favorID) return this.username;
-        else if (!this.username && !favorID) return this.id ?? null;
-        else if (!!this.id && favorID) return this.id;
-        else if (!this.id && favorID) return this.username ?? null;
-    }
-
-    /**
-     * Get a user's pronouns from Wikipedia.
-     * @returns The user's gender pronouns.
-     */
-    async getPronouns(): Promise<GenderPronoun> {
-        if (!this.gender) await this.populate();
-        return GenderDict.get(this.gender);
-    }
-
-    /**
-     * Get the user's edit count.
-     * @returns The user's edit count.
-     */
-    async getEditCount(): Promise<number> {
-        if (!this.editCount) await this.populate();
-        return this.editCount;
     }
 
     /**
@@ -296,7 +204,7 @@ export class User {
 
         let revisionWikitext = (
             await Page.fromTitle(
-                `User talk:${this.username}`
+                `UserBase talk:${this.username}`
             ).getLatestRevision()
         ).content;
         // TODO Handle errors
@@ -375,7 +283,7 @@ export class User {
         finalText = wikiTextLines.join("\n");
         console.log(finalText);
 
-        await Page.fromTitle(`User talk:${this.username}`).edit(
+        await Page.fromTitle(`UserBase talk:${this.username}`).edit(
             finalText,
             `${summary} ${i18next.t("common:redwarn.signature")}`
         );
@@ -392,6 +300,161 @@ export class User {
             false,
             isIp ? "Welcome! (IP)" : "Welcome!"
         );
+    }
+}
+
+/**
+ * Represents a Mediawiki user.
+ */
+export class UserAccount extends User {
+    /** The user id of this user. */
+    id?: number;
+    /** The edit count of this user. */
+    editCount?: number;
+    /** The date that the user registered */
+    registered?: Date;
+    /** The groups of the user. */
+    groups?: string[];
+    /** The user's gender. */
+    gender?: Gender;
+    /** The user's block information (if they are blocked) */
+    blocked?: BlockInfo | false;
+
+    /**
+     * Creates a new user from their username.
+     * @param username The username of the user.
+     * @param additionalProperties Additional properties to add to the user.
+     */
+    static fromUsername(
+        username: string,
+        additionalProperties?: Partial<UserAccount>
+    ): UserAccount {
+        return new UserAccount(username, additionalProperties);
+    }
+
+    /**
+     * Creates a new user from their username and immediately populates the object.
+     * @param username The username of the user.
+     */
+    static async fromUsernameToPopulated(
+        username: string
+    ): Promise<UserAccount> {
+        const user = UserAccount.fromUsername(username);
+        return await user.populate();
+    }
+
+    /**
+     * Populates all missing values of a user. This also mutates the original object.
+     * @param user The user to populate.
+     */
+    static async populate(user: UserAccount): Promise<UserAccount> {
+        const toPopulate = [];
+        if (!user.editCount) toPopulate.push("editcount");
+        if (!user.registered) toPopulate.push("registration");
+        if (!user.groups) toPopulate.push("groups");
+        if (!user.gender) toPopulate.push("gender");
+        if (!user.blocked) toPopulate.push("blockinfo");
+
+        const identifier = user.getIdentifier();
+
+        const userInfoRequest = await MediaWikiAPI.get({
+            action: "query",
+            format: "json",
+            list: ["users"],
+            usprop: toPopulate,
+            [typeof identifier === "string"
+                ? "ususers"
+                : "ususerids"]: identifier,
+        });
+
+        const userData = userInfoRequest["query"]["users"][0];
+
+        if (userData.missing != null)
+            throw new Error("This user does not exist.");
+        if (userData.invalid != null)
+            throw new Error("The provided username is invalid.");
+
+        if (!user.id) user.id = userData["userid"];
+        if (!user.editCount) user.editCount = userData["editcount"];
+        if (!user.registered)
+            user.registered = new Date(userData["registration"]);
+        if (!user.groups)
+            user.groups = userData["groups"].filter((v: string) => v !== "*");
+        if (!user.gender) user.gender = userData["gender"];
+        if (!user.blocked && !!userData["blockid"])
+            user.blocked = {
+                id: userData["blockid"],
+                blocker: User.fromUsername(userData["blockedby"]),
+                reason: userData["blockreason"],
+                time: new Date(userData["blockedtimestamp"]),
+                expiry:
+                    userData["blockexpiry"] === "infinite"
+                        ? false
+                        : new Date(userData["blockexpiry"]),
+                partial: !!userData["blockpartial"],
+                creationBlocked: !!userData["blocknocreate"],
+            };
+        else if (!user.blocked) user.blocked = false;
+
+        // Get latest edit
+        super.populate(user);
+
+        return user;
+    }
+
+    /**
+     * Checks if all of the user's properties are filled. Use this before
+     * using {@link populate} in order to conserve data usage.
+     */
+    isPopulated(): boolean {
+        return !(
+            this.id == null ||
+            this.editCount == null ||
+            this.registered == null ||
+            this.groups == null ||
+            this.gender == null ||
+            this.blocked == null ||
+            this.latestEdit === undefined
+        );
+    }
+
+    /**
+     * Populates all missing values of the revision. This also mutates the original object.
+     */
+    async populate(): Promise<UserAccount> {
+        return UserAccount.populate(this);
+    }
+
+    /**
+     * Grabs either the user's name (always a string) or ID (always a number).
+     * Returns the name if both exist as long as `favorID` is set to false.
+     *
+     * If this function returns `null`, the `UserAccount` was illegally created.
+     * @param favorID Whether or not to favor the ID over the username.
+     */
+    getIdentifier(favorID = false): number | string {
+        if (!!this.username && !favorID) return this.username;
+        else if (!this.username && !favorID) return this.id ?? null;
+        else if (!!this.id && favorID) return this.id;
+        else if (!this.id && favorID) return this.username ?? null;
+    }
+
+    /**
+     * Get a user's pronouns from Wikipedia.
+     * @returns The user's gender pronouns.
+     */
+    async getPronouns(): Promise<GenderPronoun> {
+        if (!this.gender) await this.populate();
+        return GenderDict.get(this.gender);
+    }
+
+    /**
+     * Get the user's edit count.
+     * @returns The user's edit count.
+     */
+    async getEditCount(): Promise<number> {
+        if (!this.editCount) await this.populate();
+        return this.editCount;
     }
 }
 
@@ -414,3 +477,5 @@ export interface BlockInfo {
     /** Whether or not the block was partial. */
     partial: boolean;
 }
+
+export class UserIP extends User {}

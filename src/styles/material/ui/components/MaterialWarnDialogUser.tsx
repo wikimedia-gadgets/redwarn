@@ -1,6 +1,11 @@
 import RWUIElement from "rww/ui/elements/RWUIElement";
 import { h } from "tsx-dom";
-import { User, WarningIcons, WarningLevel } from "rww/mediawiki/MediaWiki";
+import {
+    User,
+    UserAccount,
+    WarningIcons,
+    WarningLevel,
+} from "rww/mediawiki/MediaWiki";
 import MaterialTextInput, {
     MaterialTextInputComponents,
     MaterialTextInputUpgrade,
@@ -48,15 +53,26 @@ function MaterialWarnDialogUserCard({ user }: { user: User }): JSX.Element {
                     <div class={"rw-mdc-warnDialog-user--username"}>
                         {user.username}
                     </div>
-                    <div class={"rw-mdc-warnDialog-user--overview"}>
-                        <a>
-                            {`${i18next.t("mediawiki:warn.user.overview", {
-                                edits: user.editCount.toLocaleString(),
-                            })}`}
-                        </a>
-                        <Bullet />
-                        <a>{moment(user.registered).fromNow()}</a>
-                    </div>
+                    {user instanceof UserAccount ? (
+                        <div class={"rw-mdc-warnDialog-user--overview"}>
+                            <a>
+                                {`${i18next.t("mediawiki:warn.user.overview", {
+                                    edits: user.editCount.toLocaleString(),
+                                })}`}
+                            </a>
+                            <Bullet />
+                            <a>{moment(user.registered).fromNow()}</a>
+                        </div>
+                    ) : (
+                        <div class={"rw-mdc-warnDialog-user--overview"}>
+                            <a href="/wiki/w:en:IP_address" target="_blank">
+                                {`${i18next.t("mediawiki:ip")}`}
+                            </a>
+                        </div>
+                    )}
+                    {user instanceof UserAccount && (
+                        <div class={"rw-mdc-warnDialog-user--groups"}></div>
+                    )}
                 </td>
                 <td>
                     <MaterialIconButton
@@ -160,7 +176,10 @@ class MaterialWarnDialogUser extends RWUIElement {
                 );
             case "input":
                 const textInput = (
-                    <MaterialTextInput width={"80%"} label={"Target User"} />
+                    <MaterialTextInput
+                        width={"80%"}
+                        label={"Target UserAccount"}
+                    />
                 );
                 this.elementSet.targetUserInput = {
                     element: textInput,

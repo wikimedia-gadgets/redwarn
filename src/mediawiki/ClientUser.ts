@@ -1,17 +1,17 @@
-import { MediaWikiAPI, User } from "rww/mediawiki/MediaWiki";
+import { MediaWikiAPI, UserAccount } from "rww/mediawiki/MediaWiki";
 
 interface ClientUserCache {
     groups?: string[];
 }
 
 /**
- * The ClientUser represents the User object of the currently logged-in
+ * The ClientUser represents the UserAccount object of the currently logged-in
  * user. The ClientUser also introduces methods specific only to the
  * logged-in user.
  *
  * To use the ClientUser, call {@link ClientUser.i}.
  */
-export class ClientUser extends User {
+export class ClientUser extends UserAccount {
     /**
      * The currently-logged in user's ClientUser singleton. Use this for all
      * ClientUser activity.

@@ -23,11 +23,13 @@ import MediaWiki, {
     MediaWikiURL,
     Rollback,
     User,
+    UserAccount,
     Warnings,
     Watch,
 } from "./mediawiki/MediaWiki";
 import * as RedWarnConstants from "./data/RedWarnConstants";
 import * as Util from "./util";
+import Lockr from "lockr";
 
 $(document).ready(async () => {
     console.log("Starting RedWarn...");
@@ -38,6 +40,9 @@ $(document).ready(async () => {
         );
         throw "Two instances of RedWarn detected"; // die
     }
+
+    // Set up LocalStorage wrapper.
+    Lockr.prefix = "rw_";
 
     // Load in languages first.
     await Localization.init();
@@ -110,7 +115,7 @@ $(document).ready(async () => {
     //     maxCharacterCount: 12
     // }).show();
     new RWUI.WarnDialog({
-        targetUser: User.fromUsername("Sandbox for user warnings"),
+        targetUser: User.fromUsername("192.0.2.16"),
     }).show();
 });
 
@@ -151,8 +156,8 @@ export default class RedWarn {
     static get MediaWikiURL(): typeof MediaWikiURL {
         return MediaWikiURL;
     }
-    static get User(): typeof User {
-        return User;
+    static get User(): typeof UserAccount {
+        return UserAccount;
     }
     static get Warnings(): typeof Warnings {
         return Warnings;

@@ -2,8 +2,8 @@ import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { RW_VERSION_TAG } from "rww/data/RedWarnConstants";
 import RedWarnLanguage from "./RedWarnLanguage";
-import moment from "moment";
 import Dependencies from "rww/ui/Dependencies";
+import moment from "moment";
 
 declare global {
     interface Window {

@@ -1,5 +1,5 @@
 import StyleManager from "rww/styles/StyleManager";
-import { ClientUser, User } from "rww/mediawiki/MediaWiki";
+import { ClientUser, User } from "rww/mediawiki";
 import {
     RWUIAlertDialog,
     RWUIInputDialog,

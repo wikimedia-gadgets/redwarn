@@ -17,7 +17,8 @@
         "paths": {
             "rww/*": ["src/*"]
         },
-        "allowJs": true
+        "allowJs": true,
+        "types": ["./node_modules/types-mediawiki"]
     },
     "include": [
         "./src/**/*.js",

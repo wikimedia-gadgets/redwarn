@@ -24,6 +24,7 @@
         "@types/jsdom": "^16.2.4",
         "@typescript-eslint/eslint-plugin": "^4.1.1",
         "@typescript-eslint/parser": "^4.1.1",
+        "@webpack-cli/serve": "^1.2.0",
         "cheerio": "^1.0.0-rc.5",
         "cross-env": "^7.0.3",
         "css-loader": "^4.3.0",
@@ -48,8 +49,7 @@
         "webpack": "^5.11.1",
         "webpack-cli": "^4.3.0",
         "webpack-dev-server": "^3.11.1",
-        "wrapper-webpack-plugin": "github:redwarnwp/wrapper-webpack-plugin",
-        "@webpack-cli/serve": "^1.2.0"
+        "wrapper-webpack-plugin": "github:redwarnwp/wrapper-webpack-plugin"
     },
     "scripts": {
         "build": "webpack",

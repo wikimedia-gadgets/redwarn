@@ -25,7 +25,7 @@ import MediaWiki, {
     User,
     Warnings,
     Watch,
-} from "./mediawiki/MediaWiki";
+} from "./mediawiki";
 import * as RedWarnConstants from "./data/RedWarnConstants";
 import * as Util from "./util";
 import Config from "./config";

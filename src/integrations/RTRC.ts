@@ -1,4 +1,4 @@
-import { Page, Revision, Rollback, User } from "rww/mediawiki/MediaWiki";
+import { Page, Revision, Rollback, User } from "rww/mediawiki";
 import { RollbackContext } from "rww/definitions/RollbackContext";
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 

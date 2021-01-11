@@ -9,7 +9,7 @@ import {
     MediaWikiURL,
     Page,
     Revision,
-} from "rww/mediawiki/MediaWiki";
+} from "rww/mediawiki";
 import { Warnings } from "./Warnings";
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 import { RollbackContext } from "rww/definitions/RollbackContext";

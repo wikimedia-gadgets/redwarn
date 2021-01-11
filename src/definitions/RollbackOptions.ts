@@ -1,7 +1,7 @@
 import { Warnings } from "rww/mediawiki/Warnings";
 import RWUI from "rww/ui/RWUI";
 import { RollbackContext } from "./RollbackContext";
-import { Rollback } from "rww/mediawiki/MediaWiki";
+import { Rollback } from "rww/mediawiki";
 
 interface ActionRollback {
     actionType: "rollback";

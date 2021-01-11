@@ -1,4 +1,4 @@
-import { Revision, Rollback } from "rww/mediawiki/MediaWiki";
+import { Revision, Rollback } from "rww/mediawiki";
 import { MDCTooltip } from "@material/tooltip";
 import { h } from "tsx-dom";
 import { RollbackContext } from "rww/definitions/RollbackContext";

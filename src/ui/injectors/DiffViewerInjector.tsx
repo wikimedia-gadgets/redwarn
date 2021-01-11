@@ -1,4 +1,4 @@
-import { Page, Revision, Rollback } from "rww/mediawiki/MediaWiki";
+import { Page, Revision, Rollback } from "rww/mediawiki";
 import {
     RollbackOption,
     RollbackOptions,

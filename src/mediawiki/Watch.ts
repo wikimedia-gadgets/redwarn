@@ -2,7 +2,7 @@ import i18next from "i18next";
 import RedWarnStore from "rww/data/RedWarnStore";
 import RWUI from "rww/ui/RWUI";
 import redirect from "rww/util/redirect";
-import { MediaWikiAPI } from "rww/mediawiki/MediaWiki";
+import { MediaWikiAPI } from "rww/mediawiki";
 
 /**
  * Responsible for watching page changes.

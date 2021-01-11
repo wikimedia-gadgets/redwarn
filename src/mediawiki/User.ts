@@ -2,7 +2,7 @@ import { RW_SIG, RW_WELCOME, RW_WELCOME_IP } from "rww/data/RedWarnConstants";
 import RWUI from "rww/ui/RWUI";
 import getMonthHeader from "rww/util/getMonthHeader";
 import regexEscape from "rww/util/regexEscape";
-import { MediaWikiAPI, Page } from "rww/mediawiki/MediaWiki";
+import { MediaWikiAPI, Page } from "rww/mediawiki";
 import { Gender, GenderDict, GenderPronoun } from "./Gender";
 import { getHighestLevel, WarningAnalysis } from "./WarningLevel";
 import i18next from "i18next";

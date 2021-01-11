@@ -212,7 +212,7 @@ rw.quickTemplate = { // Quick template UI and loader
                     `;
                 });
             }
-        })(selectedTemplate.content.match(/{{RWTEXT\|[^}}]*\|[^{{]*}}/g)); // regex here for above function
+        })(selectedTemplate.content.match(/{{RWTEXT\|[^}}]*\|[^{{]?*}}/g)); // regex here for above function
         
         // Finally, show final submit dialog
         dialogEngine.create(mdlContainers.generateContainer(`[[[[include quickTemplateSubmit.html]]]]`, 500, 550)).showModal();

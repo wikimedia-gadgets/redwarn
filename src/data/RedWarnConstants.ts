@@ -1,4 +1,5 @@
 import { version } from "../../package.json";
+export { default as RW_BUILDINFO } from "!webpack-plugin-buildinfo?gitHash&time!";
 
 export const RW_VERSION = version;
 export const RW_VERSION_TAG = "17dev";

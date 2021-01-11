@@ -50,6 +50,7 @@
         "webpack": "^5.11.1",
         "webpack-cli": "^4.3.0",
         "webpack-dev-server": "^3.11.1",
+        "webpack-plugin-buildinfo": "^0.2.1",
         "wrapper-webpack-plugin": "github:redwarnwp/wrapper-webpack-plugin"
     },
     "scripts": {

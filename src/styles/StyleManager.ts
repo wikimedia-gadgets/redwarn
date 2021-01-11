@@ -1,4 +1,3 @@
-import Config from "rww/config";
 import semanticDifference from "rww/util/semanticDifference";
 import { DefaultRedWarnStyles } from "./RedWarnStyles";
 import Style from "./Style";
@@ -27,9 +26,7 @@ export default class StyleManager {
         }
 
         this.activeStyle =
-            this.styles.find((v) => v.name === Config.style.value) ??
-            this.styles.find((v) => v.name === this.defaultStyle) ??
-            null;
+            this.styles.find((v) => v.name === this.defaultStyle) ?? null;
 
         if (this.activeStyle == null) {
             mw.notify(

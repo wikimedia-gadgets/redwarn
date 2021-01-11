@@ -66,6 +66,7 @@ $(document).ready(async () => {
         RedWarnHooks.executeHooks("init"),
         Dependencies.resolve(),
         MediaWikiAPI.init(),
+        Config.refresh(),
     ]);
 
     RTRC.init();

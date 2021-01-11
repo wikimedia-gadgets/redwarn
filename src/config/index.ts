@@ -74,6 +74,9 @@ export default class Config {
                 }
             }
         }
+        StyleManager.activeStyle = StyleManager.styles.find(
+            (v) => v.name === this.style.value
+        ); // set here otherwise circular ref
     }
 
     static allSettings(): Map<string, Setting<unknown>> {

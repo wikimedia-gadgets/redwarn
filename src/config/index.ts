@@ -4,7 +4,7 @@ import {
     RW_VERSION,
 } from "rww/data/RedWarnConstants";
 import StyleManager from "rww/styles/StyleManager";
-import Page from "rww/wikipedia/Page";
+import { Page } from "rww/mediawiki";
 import { Setting } from "./Setting";
 
 export enum rollbackMethod {

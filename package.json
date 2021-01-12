@@ -69,7 +69,8 @@
     "keywords": [
         "wikipedia",
         "mediawiki",
-        "vandalism"
+        "vandalism",
+        "redwarn"
     ],
     "author": "RedWarn Development Team",
     "license": "Apache-2.0",

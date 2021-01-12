@@ -3,7 +3,7 @@ image: node:12
 build_npm:
     stage: build
     script:
-        - npm ci --dev
+        - NODE_ENV=development npm install
     cache:
         key: "$CI_COMMIT_REF_SLUG"
         paths:

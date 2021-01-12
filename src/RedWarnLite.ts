@@ -40,6 +40,9 @@ $(document).ready(async () => {
         throw "Two instances of RedWarn detected"; // die
     }
 
+    window.RedWarn = RedWarn;
+    window.rw = RedWarn;
+
     // Load in languages first.
     await Localization.init();
 
@@ -82,9 +85,6 @@ $(document).ready(async () => {
     await RWUI.inject();
 
     await RedWarnHooks.executeHooks("postUIInject");
-
-    window.RedWarn = RedWarn;
-    window.rw = RedWarn;
 
     // Initialize components here.
     // As much as possible, each component should be its own class to make everything

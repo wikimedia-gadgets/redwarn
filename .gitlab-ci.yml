@@ -15,6 +15,7 @@ build_npm:
             - dev
             - dev-rwTS
         changes:
+            - .gitlab-ci.yml
             - package.json
             - package-lock.json
 

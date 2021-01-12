@@ -3,8 +3,6 @@ image: node:12
 build_npm:
     stage: build
     script:
-        - git config --global url."https://github.com/".insteadOf "git@github.com:"
-        - git config --global url."https://".insteadOf git://
         - npm ci --dev
     cache:
         key: "$CI_COMMIT_REF_SLUG"

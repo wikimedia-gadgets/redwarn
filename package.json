@@ -45,13 +45,13 @@
         "ts-jest": "^26.4.4",
         "ts-loader": "^8.0.12",
         "tslib": "^2.0.3",
-        "types-mediawiki": "github:wikimedia-gadgets/types-mediawiki",
+        "types-mediawiki": "git+https://github.com/wikimedia-gadgets/types-mediawiki.git",
         "typescript": "^4.0.2",
         "webpack": "^5.11.1",
         "webpack-cli": "^4.3.0",
         "webpack-dev-server": "^3.11.1",
         "webpack-plugin-buildinfo": "^0.2.1",
-        "wrapper-webpack-plugin": "github:redwarnwp/wrapper-webpack-plugin"
+        "wrapper-webpack-plugin": "git+https://github.com/redwarnwp/wrapper-webpack-plugin.git"
     },
     "scripts": {
         "build": "webpack",

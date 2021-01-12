@@ -1,8 +1,10 @@
-import { version } from "../../package.json";
-export { default as RW_BUILDINFO } from "!webpack-plugin-buildinfo?gitHash&time!";
+import buildinfo from "!webpack-plugin-buildinfo?gitHash&gitHashShort&time&platform&arch!";
 
-export const RW_VERSION = version;
-export const RW_VERSION_TAG = "17dev";
+export const RW_BUILDINFO = buildinfo;
+
+// ! following needs to be updated manually, otherwise the whole package.json will be included in compile
+export const RW_VERSION = "0.2.0";
+export const RW_VERSION_TAG = `0.2.0-dev+${RW_BUILDINFO.gitHashShort}`;
 export const RW_VERSION_SUMMARY = "nothing yet";
 
 // Since MediaWiki will convert some of these templates, we have to store these

@@ -3,7 +3,7 @@ image: node:12
 build_npm:
     stage: build
     script:
-        - npm install
+        - npm ci --dev
     cache:
         key: "$CI_COMMIT_REF_SLUG"
         paths:
@@ -14,7 +14,7 @@ build_npm:
             - master
             - dev
             - dev-rwTS
-        changes: 
+        changes:
             - package.json
             - package-lock.json
 
@@ -45,7 +45,7 @@ deploy:
         name: "redwarn-$CI_COMMIT_REF_NAME"
         paths:
             - build/
-    only: 
+    only:
         - master
         - dev
         - dev-rwTS

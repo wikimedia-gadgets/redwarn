@@ -18,7 +18,7 @@
             "rww/*": ["src/*"]
         },
         "allowJs": true,
-        "types": ["./node_modules/types-mediawiki", "node"]
+        "types": ["./node_modules/types-mediawiki", "node", "jest"]
     },
     "include": [
         "./src/**/*.js",

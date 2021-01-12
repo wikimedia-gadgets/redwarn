@@ -79,7 +79,7 @@
     "homepage": "https://gitlab.com/redwarn/redwarn-web#readme",
     "husky": {
         "hooks": {
-            "pre-commit": "lint-staged"
+            "pre-commit": "lint-staged && npm run test"
         }
     },
     "lint-staged": {

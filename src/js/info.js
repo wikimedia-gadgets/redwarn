@@ -517,35 +517,72 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
             wikiTxtLines.forEach(ln => finalTxt = finalTxt + ln + "\n"); // Remap to lines
             console.log(finalTxt);
 
-            // Push edit using CSRF token
-            $.post(rw.wikiAPI, {
-                "action": "edit",
-                "format": "json",
-                "token" : mw.user.tokens.get("csrfToken"),
-                "title" : "User_talk:"+ user,
-                "summary" : summary + " [[w:en:WP:RW|(RW "+ rw.version +")]]", // summary sign here
-                "text": finalTxt,
-                "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
-            }).done(dt => {
-                // We done. Check for errors, then callback appropriately
-                if (!dt.edit) {
-                    // Error occured or other issue
-                    console.error(dt);
-                    rw.ui.loadDialog.close();
-                    rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your message has not been sent.");
-                    // Reshow dialog
-                    dialogEngine.dialog.showModal();
-                } else {
-                    // Success! 
-                    if (callback != null) {callback(); return;}; // callback and stop if set, else..
+            const attemptEdit = () => {
+                // Push edit using CSRF token
+                $.post(rw.wikiAPI, {
+                    "action": "edit",
+                    "format": "json",
+                    "token" : mw.user.tokens.get("csrfToken"),
+                    "title" : "User_talk:"+ user,
+                    "summary" : summary + " [[w:en:WP:RW|(RW "+ rw.version +")]]", // summary sign here
+                    "text": finalTxt,
+                    "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
+                }).done(dt => {
+                    // We done. Check for errors, then callback appropriately
+                    if (!dt.edit) {
+                        if (dt.error) {
+                            // Check if this is an abusefilter error
+                            if (dt.error.code === "abusefilter-warning") {
+                                var abuseFilter = dt.error.abusefilter;
+                                if (abuseFilter.actions.includes("disallow")) {
+                                    alert(`Your edit was disallowed by abuse filter #${abuseFilter.id} ("${abuseFilter.description}"). No changes have been made to the page.`);
+                                } else if (abuseFilter.actions.includes("warn")) {
+                                    // Since I don't know how to make dialogs, I'll just copy
+                                    // the text from the warning page here. If someone can make
+                                    // a dialog with a preview of the warning, that would be great.
+                                    var abWarning = (abuseFilter.info || "No information provided.").replace(/⧼(.+?)⧽/g, `(see page "MediaWiki:$1")`);
 
-                    // Redirect to complete page
-                    let reloadNeeded = window.location.href.includes(rw.wikiBase+"/wiki/User_talk:"+ user); // if we are already on the talk page we need to refresh as this would just change the hash
-                    redirect(rw.wikiBase+"/wiki/User_talk:"+ user + "#noticeApplied-" + dt.edit.newrevid + "-" + dt.edit.oldrevid); // go to talk page
-                    if (reloadNeeded) {location.reload();}
-                    // We done
-                }
-            });
+                                    if (abuseFilter.id == 602) {
+                                        // https://en.wikipedia.org/wiki/MediaWiki:Abusefilter-warning-DS
+                                        var abWarning = "You are trying to alert a user to the existence of discretionary sanctions.\n\nSpecial rules (https://en.wikipedia.org/wiki/Wikipedia:Arbitration_Committee/Discretionary_sanctions#Awareness_and_alerts) govern alerts. You must not given an editor an alert if they have already received one for the same area of conflict within the last twelve months. Please now check that this editor has not already been alerted to this area of conflict in the last twelve months.";
+                                    }
+
+                                    var abProceed = confirm(`Your edit was temporarily disallowed by an abuse filter in order to show you a warning:\n\n=====\n\n${abWarning}\n\n=====\n\nIf you wish to proceed, please confirm your decision.`);
+
+                                    if (abProceed) {
+                                        attemptEdit();
+                                    }
+                                    rw.ui.loadDialog.close();
+                                    return;
+                                }
+
+                                rw.ui.loadDialog.close();
+                                return; // Stop here.
+                            }
+
+                            // Otherwise, continue standard error message.
+                        }
+
+                        // Error occured or other issue
+                        console.error(dt);
+                        rw.ui.loadDialog.close();
+                        rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your message has not been sent.");
+                        // Reshow dialog
+                        dialogEngine.dialog.showModal();
+                    } else {
+                        // Success! 
+                        if (callback != null) {callback(); return;}; // callback and stop if set, else..
+
+                        // Redirect to complete page
+                        let reloadNeeded = window.location.href.includes(rw.wikiBase+"/wiki/User_talk:"+ user); // if we are already on the talk page we need to refresh as this would just change the hash
+                        redirect(rw.wikiBase+"/wiki/User_talk:"+ user + "#noticeApplied-" + dt.edit.newrevid + "-" + dt.edit.oldrevid); // go to talk page
+                        if (reloadNeeded) {location.reload();}
+                        // We done
+                    }
+                });
+            };
+            
+            attemptEdit();
         }); 
     }, // end addTextToUserPage
 

@@ -11,20 +11,20 @@ rw.info = { // API
      * @extends rw.info
      */
     // Rollback token
-    "rollbackToken" : "",
+    "rollbackToken": "",
 
     /**
      * Sets rw.info.rollbackToken with the users rollback token if they have they are in the "rollbacker" user group.
      * @method getRollbackToken
      * @extends rw.info
      */
-    "getRollbackToken" : () => {
+    "getRollbackToken": () => {
         // Ran on load to allow for ?action=rollback request
-        rw.info.featureRestrictPermissionLevel("rollbacker", ()=>{
-            $.getJSON(rw.wikiAPI + "?action=query&meta=tokens&type=rollback&format=json", r=>{
+        rw.info.featureRestrictPermissionLevel("rollbacker", () => {
+            $.getJSON(rw.wikiAPI + "?action=query&meta=tokens&type=rollback&format=json", r => {
                 rw.info.rollbackToken = r.query.tokens.rollbacktoken; // Set from response
             });
-        },()=>{});
+        }, () => { });
     },
 
     /**
@@ -35,8 +35,8 @@ rw.info = { // API
      * @method targetUsername
      * @extends rw.info
      */
-    "targetUsername": un=>{
-        if (un) {return un;} // return username if defined
+    "targetUsername": un => {
+        if (un) { return un; } // return username if defined
 
         if (mw.config.get("wgRelevantUserName") == null) {
             // Try getting revision user and returning that
@@ -49,23 +49,24 @@ rw.info = { // API
             } catch (error) {
                 // On error
                 // No target found, only show dialog if on userpage
-                if (mw.config.get("wgCanonicalNamespace").includes("User")) setTimeout(()=>{ // wait 500 ms to make sure we don't get overriden by a new opening dialog
+                if (mw.config.get("wgCanonicalNamespace").includes("User")) setTimeout(() => { // wait 500 ms to make sure we don't get overriden by a new opening dialog
                     // Close and show a note to the user
-                    dialogEngine.closeDialog(()=>rw.ui.confirmDialog(`
+                    dialogEngine.closeDialog(() => rw.ui.confirmDialog(`
                     It looks like this user doesn't actually exist.
                     If you're trying to use a sandbox, try <a href="https://en.wikipedia.org/wiki/User_talk:Sandbox_for_user_warnings" target="_blank">WP:UWSB</a> instead.
                     Else, you should request the speedy deletion of this user page or user talk page under criterion <a href="https://en.wikipedia.org/wiki/Wikipedia:Criteria_for_speedy_deletion#U2._Nonexistent_user" target="_blank">U2</a> by adding:
                     <code>${(true ? "\u007B\u007B" : "wacky formatting to not delete RW page")}Db-u2\u007D\u007D</code>
                     to the top of this page. If you're still having issues, please let a member of the RedWarn team know.
                     `,
-                    "OKAY", ()=>dialogEngine.closeDialog(),
-                    "", null ,65));
+                        "OKAY", () => dialogEngine.closeDialog(),
+                        "", null, 65));
                 }, 500);
 
                 return undefined; // to make sure other things handle it properly
             }
         }
-        return mw.config.get("wgRelevantUserName");},
+        return mw.config.get("wgRelevantUserName");
+    },
 
     /**
      * Gets the logged in user's username
@@ -74,7 +75,7 @@ rw.info = { // API
      * @method getUsername
      * @extends rw.info
      */
-    "getUsername":  ()=>{return mw.config.get("wgUserName");},
+    "getUsername": () => { return mw.config.get("wgUserName"); },
 
 
     /**
@@ -85,7 +86,7 @@ rw.info = { // API
      * @method isUserAnon
      * @extends rw.info
      */
-    "isUserAnon" : un=> {
+    "isUserAnon": un => {
         // Detect if user is an IP address
         let regEx = un.match(/([0-9A-Fa-f]{1,4}:){7}[0-9A-Fa-f]{1,4}|(\d{1,3}\.){3}\d{1,3}/g); // this regex matches all ipv4 and ipv6 addresses. thanks: http://regexlib.com/UserPatterns.aspx?authorId=3e359e7e-cff5-4149-ba94-7baeae099d9c
         return (regEx != null); // If matches is not null then yes
@@ -100,19 +101,19 @@ rw.info = { // API
      * @extends rw.info
      */
     "getConfig": (callback, resetToDefault) => { // IF RESETTODEFAULT IS TRUE IT WILL DO IT
-        
+
         let defaultConfig = { // Default config on reset or anything like that
-            "lastVersion" : rw.version
+            "lastVersion": rw.version
         };
 
-        if (resetToDefault) {rw.config = defaultConfig; rw.info.writeConfig(); return;} // If reset to default, do it
+        if (resetToDefault) { rw.config = defaultConfig; rw.info.writeConfig(); return; } // If reset to default, do it
 
-        if (rw.config) {callback();} // if config loaded, no need to reload
+        if (rw.config) { callback(); } // if config loaded, no need to reload
 
 
-        // gets user config from their page. 
+        // gets user config from their page.
         let user = rw.info.getUsername();
-        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User:"+user+"/redwarnConfig.js&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User:" + user + "/redwarnConfig.js&rvslots=*&rvprop=content&formatversion=2&format=json", latestR => {
             // Grab text from latest revision of talk page
             // Check if exists
             let revisionWikitext = "";
@@ -122,7 +123,7 @@ rw.info = { // API
                 // Config doesn't exist  we need to make it
                 console.log("creating config file");
                 rw.config = defaultConfig;
-                rw.info.writeConfig(()=>{if (callback != null) callback();}); // write new config file and callback if possible, else, add welcome screen here
+                rw.info.writeConfig(() => { if (callback != null) callback(); }); // write new config file and callback if possible, else, add welcome screen here
                 return;
             }
 
@@ -143,7 +144,7 @@ rw.info = { // API
                 if (rw.config.rwRollbackIcons != null) {
                     // More info in preferences.html and rollback.html
                     let newRwIcons = []; // object containing the new object
-                    rw.config.rwRollbackIcons.forEach(icon=>{ // for each icon
+                    rw.config.rwRollbackIcons.forEach(icon => { // for each icon
                         // Add to ours at the new location
                         newRwIcons[icon.shift] = rw.rollback.icons[icon.index];
                         // Now modify for each modifier in modify object
@@ -163,7 +164,7 @@ rw.info = { // API
                 }
 
                 if (rw.config.rwRollbackShorten == "enable") { // if rollback shortened
-                    rw.rollback.icons.forEach((el, i)=>{
+                    rw.rollback.icons.forEach((el, i) => {
                         el.name = el.name.replace("Quick rollback", "QRB"); // replace
                         el.name = el.name.replace("Rollback", "RB"); // replace
                         el.name = el.name.replace("rollback", "RB"); // replace
@@ -176,7 +177,7 @@ rw.info = { // API
                 if (rw.config.rwPageIcons != null) {
                     // More info in preferences.html and rollback.html
                     let newRwIcons = []; // object containing the new object
-                    rw.config.rwPageIcons.forEach(icon=>{ // for each icon
+                    rw.config.rwPageIcons.forEach(icon => { // for each icon
                         // Add to ours at the new location
                         newRwIcons[icon.shift] = rw.topIcons.icons[icon.index];
                         // Now modify for each modifier in modify object
@@ -201,19 +202,19 @@ rw.info = { // API
                 rw.config = defaultConfig;
                 console.error(err);
                 // Reset config file to defaults
-                rw.info.writeConfig(true, ()=>rw.ui.confirmDialog(`Sorry, but an issue has caused your RedWarn preferences to be reset to default. Would you like to report a bug?`, 
-                "Report Bug", ()=>{
-                    rw.ui.reportBug(`<!-- DO NOT EDIT BELOW THIS LINE! THANK YOU -->
+                rw.info.writeConfig(true, () => rw.ui.confirmDialog(`Sorry, but an issue has caused your RedWarn preferences to be reset to default. Would you like to report a bug?`,
+                    "Report Bug", () => {
+                        rw.ui.reportBug(`<!-- DO NOT EDIT BELOW THIS LINE! THANK YOU -->
 redwarnConfig load - Error info: <code><nowiki>
 ${err.stack}</nowiki></code>
 [[User:${user}/redwarnConfig.js|Open user redwarnConfig.js]]`);
-                },
-                
-                "DISMISS", ()=>{
-                    dialogEngine.closeDialog();
-                }, 20));   
+                    },
+
+                    "DISMISS", () => {
+                        dialogEngine.closeDialog();
+                    }, 20));
             }
-            
+
 
             callback(); // we done
         });
@@ -227,14 +228,14 @@ ${err.stack}</nowiki></code>
      * @method writeConfig
      * @extends rw.info
      */
-    "writeConfig": (noRedirect, callback)=> { // CALLBACK ONLY IF NOREDIRECT IS TRUE.
+    "writeConfig": (noRedirect, callback) => { // CALLBACK ONLY IF NOREDIRECT IS TRUE.
         let rwConfigTemplate = rw.config.templatePacks; // for restore
         // Handle templates (saved as b64 string)
         if (rw.config.templatePacks != null) rw.config.templatePacks = btoa(JSON.stringify(rw.config.templatePacks));
         if (!noRedirect) rw.ui.loadDialog.show("Saving preferences...");
         // Write config to the users page and refresh
         let finalTxt = `
-/*<nowiki>                                                    
+/*<nowiki>
 This is your RedWarn configuration file. It is recommended that you don't edit this yourself and use RedWarn preferences instead.
 It is writen in JSON formatting and is excecuted every time RedWarn loads.
 
@@ -242,28 +243,28 @@ If somebody has asked you to add code to this page, DO NOT do so as it may compr
 
 !!! Do not edit below this line unless you understand the risks! If rw.config isn't defined, this file will be reset. !!!
 */
-rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config text
+window.rw = window.rw || {}, window.rw.config = `+ JSON.stringify(rw.config) + "; //</nowiki>"; // generate config text
         $.post(rw.wikiAPI, {  // LOCALISATION ISSUE!!
-                "action": "edit",
-                "format": "json",
-                "token" : mw.user.tokens.get("csrfToken"),
-                "title" : "User:"+ rw.info.getUsername() + "/redwarnConfig.js",
-                "summary" : "Updating user configuration [[w:en:WP:RW|(RW "+ rw.version +")]]", // summary sign here
-                "text": finalTxt,
-                "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
-            }).done(dt => {
-                // We done. Check for errors, then callback appropriately
-                if (!dt.edit) {
-                    // Error occured or other issue
-                    console.error(dt);
-                    rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your changes have not been saved.");
-                } else {
-                    // Success!
-                    if (noRedirect) {rw.config.templatePacks = rwConfigTemplate; callback(); return;}; // DO NOT continue if no redirect is requested
-                    window.location.hash = "#configChange";
-                    window.location.reload(); // we done
-                }
-            });
+            "action": "edit",
+            "format": "json",
+            "token": mw.user.tokens.get("csrfToken"),
+            "title": "User:" + rw.info.getUsername() + "/redwarnConfig.js",
+            "summary": "Updating user configuration [[w:en:WP:RW|(RW " + rw.version + ")]]", // summary sign here
+            "text": finalTxt,
+            "tags": ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
+        }).done(dt => {
+            // We done. Check for errors, then callback appropriately
+            if (!dt.edit) {
+                // Error occured or other issue
+                console.error(dt);
+                rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your changes have not been saved.");
+            } else {
+                // Success!
+                if (noRedirect) { rw.config.templatePacks = rwConfigTemplate; callback(); return; }; // DO NOT continue if no redirect is requested
+                window.location.hash = "#configChange";
+                window.location.reload(); // we done
+            }
+        });
     },
 
     /**
@@ -275,13 +276,13 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
      * @method featureRestrictPermissionLevel
      * @extends rw.info
      */
-    "featureRestrictPermissionLevel": (l, callback, callbackIfNot)=> {
+    "featureRestrictPermissionLevel": (l, callback, callbackIfNot) => {
         // Restrict feature to users in this group
-        mw.user.getGroups(g=>{
+        mw.user.getGroups(g => {
             let hasPerm = g.includes(l);
             if (!hasPerm) hasPerm = g.includes("sysop"); // admins override all feature restrictions if we don't have them
 
-            if ((l == "confirmed") && !hasPerm) {hasPerm = g.includes("autoconfirmed");} // Due to 2 types of confirmed user, confirmed and autoconfirmed, we have to check both
+            if ((l == "confirmed") && !hasPerm) { hasPerm = g.includes("autoconfirmed"); } // Due to 2 types of confirmed user, confirmed and autoconfirmed, we have to check both
             if (hasPerm) {
                 // Has the permission needed
                 if (callback) {
@@ -307,30 +308,30 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
      * @method getRelatedPage
      * @extends rw.info
      */
-    "getRelatedPage" : (pg)=> {
-        if (pg) {return pg;} // return page if defined
+    "getRelatedPage": (pg) => {
+        if (pg) { return pg; } // return page if defined
         try {
             let x = mw.util.getParamValue('vanarticle');
-            if (x != null) {return x;} else {return "";}
+            if (x != null) { return x; } else { return ""; }
         } catch (er) {
             // If none
             return "error";
-        }  
+        }
     },
 
     /**
      * Uses MediaWiki's parser API to convert given WikiText to HTML
      *
-     * @param {string} wikiTxt 
+     * @param {string} wikiTxt
      * @param {function} callback callback(parsedHTML)
      * @method parseWikitext
      * @extends rw.info
      */
-    "parseWikitext" : (wikiTxt, callback) => { // Uses Wikipedia's API to turn Wikitext to string. NEED TO USE POST IF USERPAGE IS LARGE EXT..
+    "parseWikitext": (wikiTxt, callback) => { // Uses Wikipedia's API to turn Wikitext to string. NEED TO USE POST IF USERPAGE IS LARGE EXT..
         $.post(rw.wikiAPI, {
             "action": "parse",
             "format": "json",
-            "contentmodel" : "wikitext",
+            "contentmodel": "wikitext",
             "prop": "text",
             "pst": true,
             "assert": "user",
@@ -349,9 +350,9 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
      * @method lastWarningLevel
      * @extends rw.info
      */
-    "lastWarningLevel" : (user, callback)=> { // callback(wLevel. thisMonthsNotices, userPg) 0 none 1 notice 2 caution 3 warning 4 final warning
+    "lastWarningLevel": (user, callback) => { // callback(wLevel. thisMonthsNotices, userPg) 0 none 1 notice 2 caution 3 warning 4 final warning
         // Get the last warning level of a user this month
-        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:"+user+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:" + user + "&rvslots=*&rvprop=content&formatversion=2&format=json", latestR => {
             // Grab text from latest revision of talk page
             // Check if exists
             let revisionWikitext = "";
@@ -365,11 +366,11 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
             let wikiTxtLines = revisionWikitext.split("\n");
             // let's continue
             // Returns date in == Month Year == format and matches
-            let currentDateHeading = ((d)=>{return "== " + ['January','February','March','April','May','June','July','August','September','October','November','December'][d.getMonth()] + " " + (1900 + d.getYear()) + " =="})(new Date);
-            
+            let currentDateHeading = ((d) => { return "== " + ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][d.getMonth()] + " " + (1900 + d.getYear()) + " ==" })(new Date);
+
             // rev13, add alt without space
-            let currentAltDateHeading = ((d)=>{return "==" + ['January','February','March','April','May','June','July','August','September','October','November','December'][d.getMonth()] + " " + (1900 + d.getYear()) + "=="})(new Date);
-            
+            let currentAltDateHeading = ((d) => { return "==" + ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][d.getMonth()] + " " + (1900 + d.getYear()) + "==" })(new Date);
+
             let pageIncludesCurrentDate = wikiTxtLines.includes(currentDateHeading);
             let pageIncludesCurrentAltDate = wikiTxtLines.includes(currentAltDateHeading);
 
@@ -379,7 +380,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 return;
             } else if ((!pageIncludesCurrentDate) && (pageIncludesCurrentAltDate)) currentDateHeading = currentAltDateHeading; // If ==Date== is there but == Date == isn't, use ==Date== instead.
 
-            let highestWarningLevel = 0; // Set highest to nothing so if there is a date title w nothing in then that will be reported 
+            let highestWarningLevel = 0; // Set highest to nothing so if there is a date title w nothing in then that will be reported
             let thisMonthsNotices = ""; // for dialog
             // For each line
             for (let i = wikiTxtLines.indexOf(currentDateHeading) + 1; i < wikiTxtLines.length; i++) {
@@ -402,7 +403,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                     highestWarningLevel = 3; // No need for if check as highest level exits
                 }
 
-                if (wikiTxtLines[i].match(/(File:|Image:)Information orange.svg/gi)) { // Level 2 warning 
+                if (wikiTxtLines[i].match(/(File:|Image:)Information orange.svg/gi)) { // Level 2 warning
                     if (highestWarningLevel < 3) {
                         // We can set
                         highestWarningLevel = 2;
@@ -435,7 +436,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
      * @method addWikiTextToUserPage
      * @extends rw.info
      */
-    "addWikiTextToUserPage" : (user, text, underDate, summary, blacklist, blacklistToast, callback) => {
+    "addWikiTextToUserPage": (user, text, underDate, summary, blacklist, blacklistToast, callback) => {
         if ((user == null) || (user.toLowerCase() == "undefined") || (user.toLowerCase() == "null")) {
             // Stop it from being sent to User:undefined or User:null
             // TODO: Add callback because likely bug
@@ -444,7 +445,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
         }
         if (callback == null) rw.ui.loadDialog.show("Saving message..."); // show load if no callback
         // Add text to a page. If underdate true, add it under a date marker
-        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:"+user+"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:" + user + "&rvslots=*&rvprop=content&formatversion=2&format=json", latestR => {
             // Grab text from latest revision of talk page
             // Check if exists
             let revisionWikitext = "";
@@ -466,17 +467,17 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
 
             // let's continue
             // Returns date in == Month Year == format and matches
-            let currentDateHeading = ((d)=>{return "== " + ['January','February','March','April','May','June','July','August','September','October','November','December'][d.getMonth()] + " " + (1900 + d.getYear()) + " =="})(new Date);
+            let currentDateHeading = ((d) => { return "== " + ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][d.getMonth()] + " " + (1900 + d.getYear()) + " ==" })(new Date);
             let pageIncludesCurrentDate = wikiTxtLines.includes(currentDateHeading);
             // rev13, add alt without space (i.e ==Month Year==)
-            let currentAltDateHeading = ((d)=>{return "==" + ['January','February','March','April','May','June','July','August','September','October','November','December'][d.getMonth()] + " " + (1900 + d.getYear()) + "=="})(new Date);
+            let currentAltDateHeading = ((d) => { return "==" + ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'][d.getMonth()] + " " + (1900 + d.getYear()) + "==" })(new Date);
             let pageIncludesCurrentAltDate = wikiTxtLines.includes(currentAltDateHeading);
 
             if ((!pageIncludesCurrentDate) && (pageIncludesCurrentAltDate)) { // If ==Date== is there but == Date == isn't, use ==Date== instead.
                 currentDateHeading = currentAltDateHeading;
                 pageIncludesCurrentDate = true;
-            } 
-            
+            }
+
             // Let's continue :)
             if (underDate) {
                 if (pageIncludesCurrentDate) {
@@ -485,10 +486,10 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                     // Locate where the current date section ends so we can append ours to the bottom
                     let locationOfLastLine = wikiTxtLines.indexOf(currentDateHeading) + 1; // in case of date heading w nothing under it
                     for (let i = wikiTxtLines.indexOf(currentDateHeading) + 1; i < wikiTxtLines.length; i++) {
-                        if (wikiTxtLines[i].startsWith("==")) { 
+                        if (wikiTxtLines[i].startsWith("==")) {
                             // New section
                             locationOfLastLine = i - 1; // the line above is therefore the last
-                            console.log("exiting loop: " +wikiTxtLines[locationOfLastLine]);
+                            console.log("exiting loop: " + wikiTxtLines[locationOfLastLine]);
                             break; // exit the loop
                         } else if (i == wikiTxtLines.length - 1) {
                             // End of page, let's break and set location of last line.
@@ -522,11 +523,11 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 $.post(rw.wikiAPI, {
                     "action": "edit",
                     "format": "json",
-                    "token" : mw.user.tokens.get("csrfToken"),
-                    "title" : "User_talk:"+ user,
-                    "summary" : summary + " [[w:en:WP:RW|(RW "+ rw.version +")]]", // summary sign here
+                    "token": mw.user.tokens.get("csrfToken"),
+                    "title": "User_talk:" + user,
+                    "summary": summary + " [[w:en:WP:RW|(RW " + rw.version + ")]]", // summary sign here
                     "text": finalTxt,
-                    "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
+                    "tags": ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
                 }).done(dt => {
                     // We done. Check for errors, then callback appropriately
                     if (!dt.edit) {
@@ -570,23 +571,23 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                         // Reshow dialog
                         dialogEngine.dialog.showModal();
                     } else {
-                        // Success! 
-                        if (callback != null) {callback(); return;}; // callback and stop if set, else..
+                        // Success!
+                        if (callback != null) { callback(); return; }; // callback and stop if set, else..
 
                         // Redirect to complete page
-                        let reloadNeeded = window.location.href.includes(rw.wikiBase+"/wiki/User_talk:"+ user); // if we are already on the talk page we need to refresh as this would just change the hash
-                        redirect(rw.wikiBase+"/wiki/User_talk:"+ user + "#noticeApplied-" + dt.edit.newrevid + "-" + dt.edit.oldrevid); // go to talk page
-                        if (reloadNeeded) {location.reload();}
+                        let reloadNeeded = window.location.href.includes(rw.wikiBase + "/wiki/User_talk:" + user); // if we are already on the talk page we need to refresh as this would just change the hash
+                        redirect(rw.wikiBase + "/wiki/User_talk:" + user + "#noticeApplied-" + dt.edit.newrevid + "-" + dt.edit.oldrevid); // go to talk page
+                        if (reloadNeeded) { location.reload(); }
                         // We done
                     }
                 });
             };
-            
+
             attemptEdit();
-        }); 
+        });
     }, // end addTextToUserPage
 
-    
+
     /**
      * Quick welcomes the given user. Depreceated in rev12.
      *
@@ -594,17 +595,17 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
      * @method quickWelcome
      * @extends rw.info
      * @deprecated Use rw.quickTemplate instead.
-     * 
+     *
      */
-    "quickWelcome" : un=>{
+    "quickWelcome": un => {
         // Quickly welcome the current user
         // Check if registered or unregistered user
         if (rw.info.isUserAnon(rw.info.targetUsername(un))) {
             // IP Editor - send IP welcome
-            rw.info.addWikiTextToUserPage(rw.info.targetUsername(un), "\n"+ rw.welcomeIP() +" " + rw.sign() +"\n", false, "Welcome! (IP)");
+            rw.info.addWikiTextToUserPage(rw.info.targetUsername(un), "\n" + rw.welcomeIP() + " " + rw.sign() + "\n", false, "Welcome! (IP)");
         } else {
             // Registered user
-            rw.info.addWikiTextToUserPage(rw.info.targetUsername(un), "\n"+ rw.welcome() +" " + rw.sign() +"\n", false, "Welcome!");
+            rw.info.addWikiTextToUserPage(rw.info.targetUsername(un), "\n" + rw.welcome() + " " + rw.sign() + "\n", false, "Welcome!");
         }
     },
 
@@ -619,9 +620,9 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
      * @method isLatestRevision
      * @extends rw.info
      */
-    "isLatestRevision" : (name, revID, callback, noRedirectCallback) => { // callback(username) only if successful!! in other cases, will REDIRECT to latest revison compare page
+    "isLatestRevision": (name, revID, callback, noRedirectCallback) => { // callback(username) only if successful!! in other cases, will REDIRECT to latest revison compare page
         // Check if revsion is the latest revision
-        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+ encodeURIComponent(name) +"&rvslots=*&rvprop=ids%7Cuser&formatversion=2&format=json", r=>{
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=" + encodeURIComponent(name) + "&rvslots=*&rvprop=ids%7Cuser&formatversion=2&format=json", r => {
             // We got the response
             let latestRId = r.query.pages[0].revisions[0].revid;
             let parentRId = r.query.pages[0].revisions[0].parentid;
@@ -632,12 +633,12 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
             } else {
                 // Nope :(
                 // Check for a noredirect callback, if so, call and return
-                if (noRedirectCallback != null) {noRedirectCallback(); return;}
-                
+                if (noRedirectCallback != null) { noRedirectCallback(); return; }
+
                 // Load the preview page of the latest one
-                try {if (dialogEngine.dialog.open) {return;}} catch (error) {} // DO NOT REDIRECT IF DIALOG IS OPEN.
+                try { if (dialogEngine.dialog.open) { return; } } catch (error) { } // DO NOT REDIRECT IF DIALOG IS OPEN.
                 // Redirect and open in new tab if requested
-                redirect(rw.wikiIndex + "?title="+ encodeURIComponent(name) +"&diff="+ latestRId +"&oldid="+ parentRId +"&diffmode=source#redirectLatestRevision", (rw.config.rwLatestRevisionOption == "newtab"));
+                redirect(rw.wikiIndex + "?title=" + encodeURIComponent(name) + "&diff=" + latestRId + "&oldid=" + parentRId + "&diffmode=source#redirectLatestRevision", (rw.config.rwLatestRevisionOption == "newtab"));
             }
         });
     },
@@ -651,9 +652,9 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
      * @method latestRevisionNotByUser
      * @extends rw.info
      */
-    "latestRevisionNotByUser" : (name, username, callback) => { // CALLBACK revision, summaryText, rId
+    "latestRevisionNotByUser": (name, username, callback) => { // CALLBACK revision, summaryText, rId
         // Name is page name, username is bad username
-        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+ encodeURIComponent(name) +"&rvslots=*&rvprop=ids%7Cuser%7Ccontent&rvexcludeuser="+ username +"&formatversion=2&format=json", r=>{
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=" + encodeURIComponent(name) + "&rvslots=*&rvprop=ids%7Cuser%7Ccontent&rvexcludeuser=" + username + "&formatversion=2&format=json", r => {
             // We got the response
             let _r;
             try {
@@ -661,12 +662,12 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 if (_r == null) { throw "can't be null"; } // if empty error
             } catch (error) {
                 // Probably no other edits. Redirect to history page and show the notice
-                redirect(rw.wikiIndex + "?title="+ encodeURIComponent(name) +"&action=history#rollbackFailNoRev");
+                redirect(rw.wikiIndex + "?title=" + encodeURIComponent(name) + "&action=history#rollbackFailNoRev");
                 return; // exit
             }
-            
+
             let latestContent = _r.slots.main.content;
-            let summary = "Reverting edit(s) by [[Special:Contributions/"+ username +"|"+ username +"]] ([[User_talk:"+ username +"|talk]]) to rev. "+ _r.revid +" by " +_r.user;
+            let summary = "Reverting edit(s) by [[Special:Contributions/" + username + "|" + username + "]] ([[User_talk:" + username + "|talk]]) to rev. " + _r.revid + " by " + _r.user;
             callback(latestContent, summary, _r.revid, _r.parentid);
         });
     },
@@ -679,14 +680,14 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
      * @method getUserPronouns
      * @extends rw.info
      */
-    "getUserPronouns" : (user, callback)=> {
+    "getUserPronouns": (user, callback) => {
         // Trying mediawiki api here rather than a jquery get
         new mw.Api().get({
             action: 'query',
             list: 'users',
             usprop: 'gender',
             ususers: user
-        }).then(r=>{
+        }).then(r => {
             let gender = r.query.users[0].gender;
             callback((gender == "male") ? "he/him" : ((gender == "female") ? "she/her" : "they/them")); // callback with our pronouns
         });
@@ -698,14 +699,14 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
      * @param {string} user Username to check
      * @param {function} callback callback(editCount)
      */
-    "getUserEditCount" : (user, callback)=> {
+    "getUserEditCount": (user, callback) => {
         // Trying mediawiki api here rather than a jquery get
         new mw.Api().get({
             action: 'query',
             list: 'users',
             usprop: 'editcount',
             ususers: user
-        }).then(r=>{
+        }).then(r => {
             callback(r.query.users[0].editcount); // edit count
         });
     },
@@ -718,29 +719,29 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
      * @method sendEmail
      * @extends rw.info
      */
-    "sendEmail" : (user, content)=> {
+    "sendEmail": (user, content) => {
         rw.ui.loadDialog.show("Sending email...");
 
         var params = {
             action: 'emailuser',
             target: user,
-            subject: 'Email from RedWarn User '+ rw.info.getUsername(), // i.e. email from Ed6767
+            subject: 'Email from RedWarn User ' + rw.info.getUsername(), // i.e. email from Ed6767
             text: content,
             ccme: rw.config.rwEmailCCMe != "disable", // by defauly copy back to me unless specifically disabled
             format: 'json'
         },
-        api = new mw.Api();
-    
-        api.postWithToken( 'csrf', params ).done( ( data ) => {
+            api = new mw.Api();
+
+        api.postWithToken('csrf', params).done((data) => {
             console.log(data);
             if (data.errors == null || data.errors.length < 1) {
                 // No errors, success!
                 rw.ui.loadDialog.close();
                 rw.ui.confirmDialog(`Email sent. A copy of your email has been sent to you.`,
-                    "OKAY", ()=>{
+                    "OKAY", () => {
                         dialogEngine.closeDialog();
                     },
-                    "", ()=>{}, 0);
+                    "", () => { }, 0);
             } else {
                 // Error may have occured - give them back the email bc we don't want to screw the user over
                 rw.ui.loadDialog.close();
@@ -748,12 +749,12 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 Here is the email you were trying to send:
                 <pre>${content}</pre></div>
                 `,
-                    "OKAY", ()=>{
+                    "OKAY", () => {
                         dialogEngine.closeDialog();
                     },
-                    "", ()=>{}, 50);
+                    "", () => { }, 50);
             }
-        } );
+        });
     },
 
     // CLASSES
@@ -762,7 +763,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
      * RedWarn's "notify on change" feature, which watches for changes on a page, then notifies the user.
      * @class rw.info.changeWatch
      */
-    "changeWatch" : {// Watches for changes on a page, always latest version and notifies
+    "changeWatch": {// Watches for changes on a page, always latest version and notifies
         /**
          * Defines whether or not the feature is activated.
          *
@@ -770,10 +771,10 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
          * @type {boolean}
          * @extends rw.info.changeWatch
          */
-        "active" : false,
+        "active": false,
 
-        "timecheck" : "",
-    
+        "timecheck": "",
+
         /**
          * Defines the latest revsion ID of this page if feature is enabled
          *
@@ -789,24 +790,24 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
          * @method toggle
          * @extends rw.info.changeWatch
          */
-        "toggle" : ()=> {
+        "toggle": () => {
             if (!rw.info.changeWatch.active) {
                 // We're not active, make UI changes
                 // Request notification perms
                 if (Notification.permission !== 'granted') Notification.requestPermission();
 
                 $(".rwSpyIcon").css("color", "green");
-                rw.topIcons.icons[rw.topIcons.icons.findIndex(i=>i.title == "Alert on Change")].colorModifier = "green";
+                rw.topIcons.icons[rw.topIcons.icons.findIndex(i => i.title == "Alert on Change")].colorModifier = "green";
 
                 rw.visuals.toast.show("Alerts Enabled - please keep this tab open.");
                 rw.info.changeWatch.active = true;
 
                 // Get latest rev id
-                $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&rvslots=*&rvprop=ids&formatversion=2&format=json", r=>{
+                $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=" + encodeURIComponent(mw.config.get("wgRelevantPageName")) + "&rvslots=*&rvprop=ids&formatversion=2&format=json", r => {
                     // We got the response, set our ID
                     rw.info.changeWatch.lastRevID = r.query.pages[0].revisions[0].revid;
-                    rw.info.changeWatch.timecheck = setInterval(()=>{ // Check for new revision every 5 seconds
-                        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&rvslots=*&rvprop=ids&formatversion=2&format=json", r2=>{
+                    rw.info.changeWatch.timecheck = setInterval(() => { // Check for new revision every 5 seconds
+                        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=" + encodeURIComponent(mw.config.get("wgRelevantPageName")) + "&rvslots=*&rvprop=ids&formatversion=2&format=json", r2 => {
                             // Got response, compare
                             if (rw.info.changeWatch.lastRevID != r2.query.pages[0].revisions[0].revid) {
                                 // New Revision! Redirect.
@@ -816,7 +817,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
 
                                 if (windowFocused) {
                                     // Redirect and don't do anything else
-                                    redirect(rw.wikiIndex + "?title="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&diff="+ latestRId +"&oldid="+ parentRId +"&diffmode=source#watchLatestRedirect");
+                                    redirect(rw.wikiIndex + "?title=" + encodeURIComponent(mw.config.get("wgRelevantPageName")) + "&diff=" + latestRId + "&oldid=" + parentRId + "&diffmode=source#watchLatestRedirect");
                                 } else {
                                     // Push notification
                                     document.title = "**New Edit!** " + document.title; // Add alert to title
@@ -827,17 +828,17 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                                             icon: 'https://upload.wikimedia.org/wikipedia/commons/6/63/Wikipedia-logo.png',
                                             body: 'Click here to view',
                                         });
-                                        notification.onclick = function() {
+                                        notification.onclick = function () {
                                             window.focus(); // When focused, we'll redirect anyways
                                             this.close(); // focus our tab and close notif
                                         };
 
-                                        window.onfocus = function(){
+                                        window.onfocus = function () {
                                             // Redirect on focus
-                                            redirect(rw.wikiIndex + "?title="+ encodeURIComponent(mw.config.get("wgRelevantPageName")) +"&diff="+ latestRId +"&oldid="+ parentRId +"&diffmode=source#watchLatestRedirect");
+                                            redirect(rw.wikiIndex + "?title=" + encodeURIComponent(mw.config.get("wgRelevantPageName")) + "&diff=" + latestRId + "&oldid=" + parentRId + "&diffmode=source#watchLatestRedirect");
                                         };
                                     }
-                                } 
+                                }
                             }
                         });
                     }, 5000);
@@ -846,7 +847,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                 clearInterval(rw.info.changeWatch.timecheck); // clear updates
 
                 $(".rwSpyIcon").css("color", ""); // clear colour from icon
-                rw.topIcons.icons[rw.topIcons.icons.findIndex(i=>i.title == "Alert on Change")].colorModifier = null;
+                rw.topIcons.icons[rw.topIcons.icons.findIndex(i => i.title == "Alert on Change")].colorModifier = null;
 
                 rw.visuals.toast.show("Alerts Disabled.");
                 rw.info.changeWatch.active = false;

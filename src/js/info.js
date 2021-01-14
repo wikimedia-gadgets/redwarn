@@ -335,7 +335,8 @@ window.rw = window.rw || {}, window.rw.config = `+ JSON.stringify(rw.config) + "
             "prop": "text",
             "pst": true,
             "assert": "user",
-            "text": wikiTxt
+            "text": wikiTxt,
+            "title": mw.config.get("wgRelevantPageName")
         }).done(r => {
             let processedResult = r.parse.text['*'].replace(/\/\//g, "https://").replace(/href=\"\/wiki/g, `href="${rw.wikiBase}/wiki`); // regex replace w direct urls
             callback(processedResult); // make callback w HTML

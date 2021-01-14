@@ -21,20 +21,28 @@
 #rwPGIconContainer {
     z-index: 1;
     overflow: unset;
+
+    float: right;
 }
 
 /* Indicators-situated page icons */
+#mw_header #rwPGIconContainer, /* Modern */
 #content #rwPGIconContainer {
     margin: 0 0 0 12px;
     float: right;
     font-size: 0.875em;
     line-height: 1.6;
     position: relative;
-    padding-top: 0.4em;
     overflow: hidden;
     height: 2em;
 }
 
+/* For some reason, Vector shifts the icons up a bit. */
+.skin-vector-legacy #content #rwPGIconContainer {
+    padding-top: 0.4em;
+}
+
+#mw_header #rwPGIconContainer.rw--upgraded, /* Modern */
 #content #rwPGIconContainer.rw--upgraded {
     animation: pgIconsFadeIn 0.2s ease-in-out, pgIconsIndicatorsFadeIn 0.3s ease-in-out;
 }

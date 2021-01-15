@@ -42,6 +42,10 @@
     padding-top: 0.4em;
 }
 
+#rwCurrentRevRollbackBtns > div {
+    overflow: hidden;
+}
+
 #mw_header #rwPGIconContainer.rw--upgraded, /* Modern */
 #content #rwPGIconContainer.rw--upgraded {
     animation: pgIconsFadeIn 0.2s ease-in-out, pgIconsIndicatorsFadeIn 0.3s ease-in-out;

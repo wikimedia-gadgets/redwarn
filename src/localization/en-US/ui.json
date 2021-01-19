@@ -32,5 +32,8 @@
             "revert": "Keep Using Rollback-Like"
         },
         "content": "You have rollback permissions!\nWould you like to use the faster rollback API in future or continue using a rollback-like setting?\nYou can change this in your preferences at any time."
+    },
+    "tamperProtection": {
+        "warningContent": "ATTENTION!\n<a href=\"/wiki/File:Emblem-important.svg\" class=\"image\"><img alt=\"Emblem-important.svg\" src=\"//upload.wikimedia.org/wikipedia/en/thumb/4/4c/Emblem-important.svg/32px-Emblem-important.svg.png\" decoding=\"async\" srcset=\"//upload.wikimedia.org/wikipedia/en/thumb/4/4c/Emblem-important.svg/48px-Emblem-important.svg.png 1.5x, //upload.wikimedia.org/wikipedia/en/thumb/4/4c/Emblem-important.svg/64px-Emblem-important.svg.png 2x\" data-file-width=\"48\" data-file-height=\"48\" width=\"32\" height=\"32\"></a> <b>You are currently using RedWarn in a way that is strongly discouraged under guidelines set at <a href=\"/wiki/Wikipedia:REDWARN/A\" class=\"mw-redirect\" title=\"Wikipedia:REDWARN/A\">WP:REDWARN/A</a>.</b>"
     }
 }

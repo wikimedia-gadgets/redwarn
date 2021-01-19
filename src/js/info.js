@@ -62,7 +62,7 @@ rw.info = { // API
                         "", null, 65));
                 }, 500);
 
-                return undefined; // to make sure other things handle it properly
+                return void 0; // to make sure other things handle it properly
             }
         }
         return mw.config.get("wgRelevantUserName");

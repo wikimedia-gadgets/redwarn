@@ -478,7 +478,6 @@ window.rw = window.rw || {}, window.rw.config = `+ JSON.stringify(rw.config) + "
                 currentDateHeading = currentAltDateHeading;
                 pageIncludesCurrentDate = true;
             }
-
             // Let's continue :)
             if (underDate) {
                 if (pageIncludesCurrentDate) {
@@ -502,22 +501,24 @@ window.rw = window.rw || {}, window.rw.config = `+ JSON.stringify(rw.config) + "
                     if (locationOfLastLine == wikiTxtLines.length - 1) {
                         // To prevent to end notices squishing against eachother
                         // Same as without, but we just include the date string at bottom of page
-                        wikiTxtLines.push(["\n" + text]);
+                        wikiTxtLines.push("", text);
                     } else {
-                        wikiTxtLines.splice(locationOfLastLine, 0, ["\n" + text]); // Add notice to array at correct position. Note the "" at the start is for a newline to seperate from prev content
+                        // Place right before the start of the next section.
+                        wikiTxtLines.splice(locationOfLastLine + 1, 0, ...(
+                            wikiTxtLines[locationOfLastLine].trim() == "" ? [text] : ["", text]
+                        )); // Add notice to array at correct position. Note the "" is for a newline to seperate from prev content
                     }
                 } else { // Page doesn't have current date
                     // Same as without, but we just include the date string at bottom of page
-                    wikiTxtLines.push(["\n" + currentDateHeading + "\n" + text]);
+                    wikiTxtLines.push("", currentDateHeading, text);
                 }
             } else {
                 // No need to add to date. Just shove at the bottom of the page
-                wikiTxtLines.push([text]);
+                wikiTxtLines.push("", text);
             }
 
             // Process final string
-            wikiTxtLines.forEach(ln => finalTxt = finalTxt + ln + "\n"); // Remap to lines
-            console.log(finalTxt);
+            finalTxt = wikiTxtLines.join("\n"); // Remap to lines
 
             const attemptEdit = () => {
                 // Push edit using CSRF token

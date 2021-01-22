@@ -51,6 +51,9 @@
     animation: pgIconsFadeIn 0.2s ease-in-out, pgIconsIndicatorsFadeIn 0.3s ease-in-out;
 }
 
+/* Weird behaviour: [[Special:Diff/1000551569]] */
+#rwCurrentRevRollbackBtns > div, #rOld1, #rOld1 span, #rOld2, #rOld2 span { overflow: hidden; }
+
 .mdl-tooltip {
     -webkit-transform: scale(0);
     transform: scale(0);

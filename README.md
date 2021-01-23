@@ -10,7 +10,6 @@ RedWarn is primarily maintained and developed by the RedWarn contributors.
 
 - **[@ed_E](https://gitlab.com/ed_e)** ([\[\[User:Ed6767\]\]](https://en.wikipedia.org/wiki/User:Ed6767)) - lead developer, designer, and chief maintainer
 - **[@pr0mpted](https://gitlab.com/pr0mpted)** - ([\[\[User:Prompt0259\]\]](https://en.wikipedia.org/wiki/User:Prompt0259)) - additional development and design
-- **[@ChlodAlejandro](https://gitlab.com/ChlodAlejandro)** - ([\[\[User:Chlod\]\]](https://en.wikipedia.org/wiki/User:Chlod)) - additional development and design
 - **[@leijurv](https://gitlab.com/leijurv)** - ([\[\[User:Leijurv\]\]](https://en.wikipedia.org/wiki/User:Leijurv)) - additional development and design
 - **[@sportshead](https://gitlab.com/sportshead)** - ([\[\[User:Sportzpikachu\]\]](https://en.wikipedia.org/wiki/User:Sportzpikachu)) - additional development and design
 - **[@Asartea](https://gitlab.com/Asartea)** - ([\[\[User:Asartea\]\]](https://en.wikipedia.org/wiki/User:Asartea)) - documentation and copyediting

@@ -67,9 +67,9 @@ rw.quickTemplate = { // Quick template UI and loader
         let finalSelectStr = "<hr />"; // final select string
         selectedPack.templates.forEach((template,i)=>{
             finalSelectStr += `
-            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="template-`+ i +`">
+            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" style="width:100%;" for="template-`+ i +`">
                 <input type="radio" id="template-`+ i +`" class="mdl-radio__button" name="options" value="`+ i +`">
-                <span class="mdl-radio__label">`+ template.title +`</span>
+                <span class="rw-qt-pack-label mdl-radio__label">`+ template.title +`</span>
             </label><br>
             <i>`+ template.about +`</i>
             <hr />
@@ -215,7 +215,7 @@ rw.quickTemplate = { // Quick template UI and loader
         })(selectedTemplate.content.match(/{{RWTEXT\|[^}}]*\|[^{{]*?}}/g)); // regex here for above function
         
         // Finally, show final submit dialog
-        dialogEngine.create(mdlContainers.generateContainer(`[[[[include quickTemplateSubmit.html]]]]`, 500, 550)).showModal();
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include quickTemplateSubmit.html]]]]`, 500, 580)).showModal();
     },
 
     "newPack" : ()=> {

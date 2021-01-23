@@ -1,0 +1,42 @@
+/*
+RedWarn Dialog CSS
+
+This CSS file will be appended inside of all dialogs.
+*/
+
+/* QT Packs */
+.rw-qt-pack-label { /* Selection panel */
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    height: 100%;
+    white-space: nowrap;
+    width: 100%;
+}
+
+@keyframes rw-qt-submit-title-expand {
+    from { max-height: 1.1em }
+    to { max-height: unset }   
+}
+
+.rw-qt-submit-title {
+    max-height: 1.1em;
+    height: 100%;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.rw-qt-submit-title:hover {
+    max-height: unset;
+    animation: rw-qt-submit-title-expand 0.5s ease;
+}
+
+.rw-qt-submit-about {
+    display: inline-block;
+    overflow: auto;
+    max-height: 2.8em;
+    line-height: 1.4em;
+}

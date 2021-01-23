@@ -73,6 +73,8 @@ var mdlContainers = {
         }
         </style>
         `;
+        // global rw dialog css
+        content += "<style>" + `[[[[include dialog.css]]]]` + "</style>"
         
         // Themes
         let theme = "";

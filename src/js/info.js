@@ -727,7 +727,7 @@ window.rw = window.rw || {}, window.rw.config = `+ JSON.stringify(rw.config) + "
         var params = {
             action: 'emailuser',
             target: user,
-            subject: 'Email from RedWarn User ' + rw.info.getUsername(), // i.e. email from Ed6767
+            subject: 'Email from User ' + rw.info.getUsername() + '(RW)', // i.e. email from User Ed6767 (RW)
             text: content,
             ccme: rw.config.rwEmailCCMe != "disable", // by defauly copy back to me unless specifically disabled
             format: 'json'

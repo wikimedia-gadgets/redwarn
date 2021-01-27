@@ -206,7 +206,7 @@ rw.preferences = {
                 // Email send a copy
                 "rwEmailCCMe" : {
                     "optionTitle" : "Send me a copy of the emails I send with RedWarn",
-                    "supportingText": "Change whether or not you wish to send a copy of the emails you send with RedWarn (such as to Wikimedia Trust and Safety and Oversight) to your email adres.",
+                    "supportingText": "Change whether or not you wish to send a copy of the emails you send with RedWarn (such as to Wikimedia Trust and Safety and Oversight) to your email address.",
 
                     // Config options
                     "options" : { 

@@ -123,7 +123,7 @@ rw.info = { // API
                 // Config doesn't exist  we need to make it
                 console.log("creating config file");
                 rw.config = defaultConfig;
-                rw.info.writeConfig(() => { if (callback != null) callback(); }); // write new config file and callback if possible, else, add welcome screen here
+                rw.info.writeConfig(true, () => { if (callback != null) callback(); }); // write new config file and callback if possible, else, add welcome screen here
                 return;
             }
 

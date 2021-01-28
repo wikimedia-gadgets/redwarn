@@ -54,7 +54,7 @@
         "wrapper-webpack-plugin": "git+https://github.com/redwarnwp/wrapper-webpack-plugin.git"
     },
     "scripts": {
-        "build": "webpack",
+        "build": "npm run build-prod",
         "build-prod": "cross-env NODE_ENV=production webpack",
         "build-dev": "cross-env NODE_ENV=development webpack",
         "clean": "rimraf build",

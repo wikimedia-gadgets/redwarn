@@ -20,3 +20,4 @@ export const RW_NOWIKI_END = atob("PC9ub3dpa2k+");
 
 export const RW_LINK = "[[w:en:WP:RW|RedWarn]]";
 export const RW_WIKIS_TAGGABLE = ["enwiki"];
+export const RW_WIKIS_SPEEDUP = ["enwiki"];

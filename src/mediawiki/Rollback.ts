@@ -1,5 +1,9 @@
 import i18next from "i18next";
-import { RW_VERSION_TAG, RW_WIKIS_TAGGABLE } from "rww/data/RedWarnConstants";
+import {
+    RW_VERSION_TAG,
+    RW_WIKIS_SPEEDUP,
+    RW_WIKIS_TAGGABLE,
+} from "rww/data/RedWarnConstants";
 import RedWarnStore from "rww/data/RedWarnStore";
 import RWUI from "rww/ui/RWUI";
 import redirect from "rww/util/redirect";
@@ -393,6 +397,6 @@ export class Rollback {
     }
 
     static async acceptInjector(i: () => any): Promise<any> {
-        return await i();
+        return RW_WIKIS_SPEEDUP.includes(RedWarnStore.wikiID) && (await i());
     }
 }

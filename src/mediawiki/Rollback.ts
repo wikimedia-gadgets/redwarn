@@ -391,4 +391,8 @@ export class Rollback {
             return await this.pseudoRollback(context, reason, defaultWarnIndex);
         }
     }
+
+    static async acceptInjector(i: () => any): Promise<any> {
+        return await i();
+    }
 }

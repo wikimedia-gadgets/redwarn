@@ -19,8 +19,10 @@ import StyleManager from "./styles/StyleManager";
 import Dependencies from "./ui/Dependencies";
 import RWUI from "./ui/RWUI";
 import MediaWiki, {
+    ClientUser,
     MediaWikiAPI,
     MediaWikiURL,
+    RevertSpeedup,
     Rollback,
     User,
     Warnings,
@@ -29,6 +31,7 @@ import MediaWiki, {
 import * as RedWarnConstants from "./data/RedWarnConstants";
 import * as Util from "./util";
 import Config from "./config";
+import TamperProtection from "./tamper/TamperProtection";
 
 $(document).ready(async () => {
     console.log("Starting RedWarn...");
@@ -72,7 +75,10 @@ $(document).ready(async () => {
         Config.refresh(),
     ]);
 
+    // non-blocking initializers: don't call with `await`
     RTRC.init();
+    TamperProtection.init();
+    RevertSpeedup.init();
 
     /**
      * Send notice that RedWarn is done loading.
@@ -170,6 +176,21 @@ export default class RedWarn {
      */
     static get Watch(): typeof Watch {
         return Watch;
+    }
+    static get MediaWiki(): typeof MediaWiki {
+        return MediaWiki;
+    }
+    static get ClientUser(): typeof ClientUser {
+        return ClientUser;
+    }
+    static get TamperProtection(): typeof TamperProtection {
+        return TamperProtection;
+    }
+    static get c(): typeof ClientUser {
+        return ClientUser;
+    }
+    static get t(): typeof TamperProtection {
+        return TamperProtection;
     }
 }
 

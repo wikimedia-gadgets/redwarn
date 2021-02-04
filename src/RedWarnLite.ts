@@ -78,7 +78,7 @@ $(document).ready(async () => {
     // non-blocking initializers: don't call with `await`
     RTRC.init();
     TamperProtection.init();
-    RevertSpeedup.init();
+    RevertSpeedup.init(); // !!! MAKE SURE IS LAST !!!
 
     /**
      * Send notice that RedWarn is done loading.

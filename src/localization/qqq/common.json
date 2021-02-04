@@ -2,6 +2,14 @@
     "redwarn": {
         "name": "Name of RedWarn, translated.",
         "signature": "This is a link to RedWarn's page on enwiki (WP:RW)",
-        "userAgent": "Unless you know what you are doing, this usually shouldn't be changed, just copy the en-US one."
+        "userAgent": "Unless you know what you are doing, this usually shouldn't be changed, just copy the en-US one.",
+        "init": {
+            "error": "Indicates that an error has occurred during initialization",
+            "mwChecks": {
+                "*": "A catchall for failed MediaWiki checks",
+                "version": "Used to inform the user that the MW version is not supported.",
+                "user": "Used to inform the user that they are not logged in."
+            }
+        }
     }
 }

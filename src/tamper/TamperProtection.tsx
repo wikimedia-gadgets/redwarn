@@ -4,16 +4,16 @@ import Config from "rww/config";
 import { ClientUser } from "rww/mediawiki";
 import RWUI from "rww/ui/RWUI";
 
-/**!
+/**
  * Tamper protection module.
  * This should be obfuscated in compilation.
- * note: removing this module will break startup, so bad faith users will have to cmt out init func
+ * 
+ * Note: Removing this module will break startup, so bad faith users 
+ * will have to comment out the initialization call.
  */
 export default class TamperProtection {
     static enable = 1;
-    // use a getter here to confuse people
     static get x(): boolean {
-        // complex mafs
         return this.enable + 4 * 2 === 3 ** 2 + 1;
     }
 

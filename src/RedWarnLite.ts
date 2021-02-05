@@ -186,12 +186,6 @@ export default class RedWarn {
     static get TamperProtection(): typeof TamperProtection {
         return TamperProtection;
     }
-    static get c(): typeof ClientUser {
-        return ClientUser;
-    }
-    static get t(): typeof TamperProtection {
-        return TamperProtection;
-    }
 }
 
 declare global {

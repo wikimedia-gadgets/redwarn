@@ -4,8 +4,24 @@ const path = require("path");
 const {
     ProgressPlugin
 } = require("webpack");
-const WrapperPlugin = require('wrapper-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
+const plugins = [new ProgressPlugin({
+    activeModules: true,
+    entries: true,
+    modules: true,
+    dependencies: true
+})];
+const optimization = { minimize: false }
+if (process.env.NODE_ENV === "production") {
+    const WrapperPlugin = require('wrapper-webpack-plugin');
+    plugins.push(new WrapperPlugin({
+        header: fs.readFileSync(path.resolve(__dirname, "meta", "header.js"), "utf8"),
+        footer: fs.readFileSync(path.resolve(__dirname, "meta", "footer.js"), "utf8"),
+    }));
+    optimization.minimize = true;
+    optimization.minimizer = [new TerserPlugin({ extractComments: false })];
+}
 module.exports = {
     mode: process.env.NODE_ENV === "production" ? "production" : "development",
     devtool: 'source-map',
@@ -26,18 +42,7 @@ module.exports = {
         hot: false,
         inline: false
     },
-    plugins: [
-        new ProgressPlugin({
-            activeModules: true,
-            entries: true,
-            modules: true,
-            dependencies: true
-        }),
-        new WrapperPlugin({
-            header: fs.readFileSync(path.resolve(__dirname, "meta", "header.js"), "utf8"),
-            footer: fs.readFileSync(path.resolve(__dirname, "meta", "footer.js"), "utf8")
-        })
-    ],
+    plugins,
     module: {
         rules: [
             {
@@ -66,5 +71,6 @@ module.exports = {
                 use: ["style-loader", "css-loader"]
             }
         ]
-    }
+    },
+    optimization
 };

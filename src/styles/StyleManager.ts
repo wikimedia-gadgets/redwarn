@@ -25,11 +25,8 @@ export default class StyleManager {
             this.cleanStyles();
         }
 
-        // TODO Get style from configuration and use that as the style
         this.activeStyle =
-            this.styles.find((v) => v.name === this.defaultStyle) ?? // switch to config read
-            this.styles.find((v) => v.name === this.defaultStyle) ??
-            null;
+            this.styles.find((v) => v.name === this.defaultStyle) ?? null;
 
         if (this.activeStyle == null) {
             mw.notify(

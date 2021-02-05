@@ -12,7 +12,7 @@ import {
     Revision,
     WarningAnalysis,
     WarningLevel,
-} from "rww/mediawiki/MediaWiki";
+} from "rww/mediawiki";
 import i18next from "i18next";
 import { PageMissingError } from "rww/errors/MediaWikiErrors";
 import Group, { GroupsFromNames } from "rww/definitions/Group";

@@ -1,4 +1,4 @@
-/*
+/*!
  * RedWarn - Recent Edits Patrol and Warning Tool
  * The user-friendly Wikipedia counter-vandalism tool.
  *
@@ -40,7 +40,8 @@
  *                     https://gitlab.com/redwarn/redwarn-web/
  *
  * ------------------------------------------------------------------------------
+ * Past this point, everything needs to be wrapped in a nowiki tag, or else we
+ * risk "transcluding" templates.
+ *
+ * <nowiki>
  */
-// Past this point, everything needs to be wrapped in a nowiki tag, or else we
-// risk "transcluding" templates.
-// <nowiki>

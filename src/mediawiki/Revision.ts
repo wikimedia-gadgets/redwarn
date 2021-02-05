@@ -1,9 +1,4 @@
-import {
-    MediaWikiAPI,
-    MediaWikiURL,
-    Page,
-    User,
-} from "rww/mediawiki/MediaWiki";
+import { MediaWikiAPI, MediaWikiURL, Page, User } from "rww/mediawiki";
 import redirect from "rww/util/redirect";
 
 /**

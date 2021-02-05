@@ -1,4 +1,4 @@
-import { MediaWikiAPI, UserAccount } from "rww/mediawiki/MediaWiki";
+import { MediaWikiAPI, UserAccount } from "rww/mediawiki";
 
 interface ClientUserCache {
     groups?: string[];

@@ -19,16 +19,20 @@ import StyleManager from "./styles/StyleManager";
 import Dependencies from "./ui/Dependencies";
 import RWUI from "./ui/RWUI";
 import MediaWiki, {
+    ClientUser,
     MediaWikiAPI,
     MediaWikiURL,
+    RevertSpeedup,
     Rollback,
     User,
     Warnings,
     Watch,
-} from "./mediawiki/MediaWiki";
+} from "./mediawiki";
 import * as RedWarnConstants from "./data/RedWarnConstants";
 import * as Util from "./util";
 import Lockr from "lockr";
+import Config from "./config";
+import TamperProtection from "./tamper/TamperProtection";
 
 $(document).ready(async () => {
     console.log("Starting RedWarn...");
@@ -46,6 +50,9 @@ $(document).ready(async () => {
         );
         throw "Two instances of RedWarn detected"; // die
     }
+
+    window.RedWarn = RedWarn;
+    window.rw = RedWarn;
 
     // Set up LocalStorage wrapper.
     Lockr.prefix = "rw_";
@@ -76,9 +83,15 @@ $(document).ready(async () => {
         RedWarnHooks.executeHooks("init"),
         Dependencies.resolve(),
         MediaWikiAPI.init(),
+        Config.refresh(),
     ]);
 
+    // Non-blocking initializers.
     RTRC.init();
+    TamperProtection.init();
+
+    // Call RevertSpeedup last.
+    RevertSpeedup.init();
 
     /**
      * Send notice that RedWarn is done loading.
@@ -91,9 +104,6 @@ $(document).ready(async () => {
     await RWUI.inject();
 
     await RedWarnHooks.executeHooks("postUIInject");
-
-    window.RedWarn = RedWarn;
-    window.rw = RedWarn;
 
     // Initialize components here.
     // As much as possible, each component should be its own class to make everything
@@ -171,12 +181,30 @@ export default class RedWarn {
     static get Dependencies(): typeof Dependencies {
         return Dependencies;
     }
+    static get Config(): typeof Config {
+        return Config;
+    }
+    static config: {
+        new: {
+            [key: string]: unknown;
+        };
+        [key: string]: unknown;
+    };
 
     /**
      * @deprecated not yet implemented
      */
     static get Watch(): typeof Watch {
         return Watch;
+    }
+    static get MediaWiki(): typeof MediaWiki {
+        return MediaWiki;
+    }
+    static get ClientUser(): typeof ClientUser {
+        return ClientUser;
+    }
+    static get TamperProtection(): typeof TamperProtection {
+        return TamperProtection;
     }
 }
 

@@ -14,7 +14,6 @@
         "@material/textfield": "^8.0.0",
         "@material/tooltip": "^8.0.0",
         "@types/lockr": "^0.8.6",
-        "@webpack-cli/serve": "^1.2.0",
         "dialog-polyfill": "^0.5.3",
         "i18next": "^19.8.4",
         "i18next-browser-languagedetector": "^6.0.1",
@@ -29,8 +28,10 @@
         "@types/jest": "^26.0.14",
         "@types/jquery": "^3.5.1",
         "@types/jsdom": "^16.2.4",
+        "@types/node": "^14.11.1",
         "@typescript-eslint/eslint-plugin": "^4.1.1",
         "@typescript-eslint/parser": "^4.1.1",
+        "@webpack-cli/serve": "^1.2.0",
         "cheerio": "^1.0.0-rc.5",
         "cross-env": "^7.0.3",
         "css-loader": "^4.3.0",
@@ -52,15 +53,16 @@
         "ts-jest": "^26.4.4",
         "ts-loader": "^8.0.12",
         "tslib": "^2.0.3",
-        "types-mediawiki": "github:wikimedia-gadgets/types-mediawiki",
+        "types-mediawiki": "git+https://github.com/wikimedia-gadgets/types-mediawiki.git",
         "typescript": "^4.0.2",
         "webpack": "^5.11.1",
         "webpack-cli": "^4.3.0",
         "webpack-dev-server": "^3.11.1",
-        "wrapper-webpack-plugin": "github:redwarnwp/wrapper-webpack-plugin"
+        "webpack-plugin-buildinfo": "^0.2.1",
+        "wrapper-webpack-plugin": "git+https://github.com/redwarnwp/wrapper-webpack-plugin.git"
     },
     "scripts": {
-        "build": "webpack",
+        "build": "npm run build-prod",
         "build-prod": "cross-env NODE_ENV=production webpack",
         "build-dev": "cross-env NODE_ENV=development webpack",
         "clean": "rimraf build",
@@ -75,7 +77,8 @@
     "keywords": [
         "wikipedia",
         "mediawiki",
-        "vandalism"
+        "vandalism",
+        "redwarn"
     ],
     "author": "RedWarn Development Team",
     "license": "Apache-2.0",
@@ -85,7 +88,7 @@
     "homepage": "https://gitlab.com/redwarn/redwarn-web#readme",
     "husky": {
         "hooks": {
-            "pre-commit": "lint-staged"
+            "pre-commit": "lint-staged && npm run test"
         }
     },
     "lint-staged": {

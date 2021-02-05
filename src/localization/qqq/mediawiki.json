@@ -1,7 +1,7 @@
 {
     "summaries": {
-        "revert": "Edit summary of reverts",
-        "rollback": "Rollback edit(s) by [[Special:Contributions/{{username}}|{{username}}]] ([[User_talk:{{username}}|talk]]): {{reason}} $t(common:redwarn.signature)",
-        "restore": "Restoring revision {{revID}} by {{revUser}}: {{reason}} $t(common:redwarn.signature)"
+        "revert": "Edit summary of reverts, use the {{username}}, {{reason}}, and $t(common:redwarn.signature) params as appropriate.",
+        "rollback": "Same as above, but for rollback.",
+        "restore": "Edit summary for restoring revisions. Use the {{revID}}, {{revUser}}, {{reason}}, and $t(common:redwarn.signature) params as appropriate."
     }
 }

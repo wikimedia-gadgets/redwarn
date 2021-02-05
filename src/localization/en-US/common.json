@@ -9,7 +9,7 @@
             "mwChecks": {
                 "*": "A MediaWiki installation assertion check failed.",
                 "version": "This version of MediaWiki is unsupported. A version of at least 1.30.0 is required.",
-                "user": "The current user is not a logged-in user or is an IP address."
+                "user": "The current user is not a logged-in user or is an anonymous user."
             }
         }
     },

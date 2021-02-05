@@ -1,7 +1,7 @@
 import i18next from "i18next";
-import { ClientUser } from "rww/mediawiki/MediaWiki";
 import Lockr from "lockr";
 import Group from "rww/definitions/Group";
+import { ClientUser } from "rww/mediawiki";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 
@@ -49,7 +49,7 @@ export class MediaWikiAPI {
     static async init(): Promise<void> {
         // Create the API interface.
         this.api = new mw.Api({
-            parameters: { formatversion: 2 },
+            parameters: { formatversion: (2 as unknown) as string }, // temporary, until types-mediawiki#2 gets merged
             ajax: {
                 headers: {
                     "Api-User-Agent": i18next.t("common:redwarn.userAgent"),

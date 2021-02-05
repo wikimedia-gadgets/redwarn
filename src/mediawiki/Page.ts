@@ -1,4 +1,4 @@
-import { MediaWikiAPI, Revision, User } from "rww/mediawiki/MediaWiki";
+import { MediaWikiAPI, Revision, User } from "rww/mediawiki";
 import { RW_WIKIS_TAGGABLE } from "rww/data/RedWarnConstants";
 import RedWarnStore from "rww/data/RedWarnStore";
 import i18next from "i18next";

@@ -73,3 +73,4 @@ export * from "./WarningLevel";
 export * from "./Warnings";
 export * from "./Watch";
 export * from "./API";
+export * from "./RevertSpeedup";

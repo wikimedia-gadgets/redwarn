@@ -32,5 +32,9 @@
             "revert": "Keep Using Rollback-Like"
         },
         "content": "You have rollback permissions!\nWould you like to use the faster rollback API in future or continue using a rollback-like setting?\nYou can change this in your preferences at any time."
+    },
+    "tamperProtection": {
+        "header": "ATTENTION!",
+        "warningContent": "You are currently using RedWarn in a way that is strongly discouraged under guidelines set at <a href=\"/wiki/Wikipedia:REDWARN/A\" class=\"mw-redirect\" title=\"Wikipedia:REDWARN/A\">WP:REDWARN/A</a>."
     }
 }

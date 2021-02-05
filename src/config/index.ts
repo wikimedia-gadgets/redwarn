@@ -35,6 +35,7 @@ export default class Config {
     );
     /** Style of UI */
     public static style = new Setting(StyleManager.defaultStyle, "style");
+    public static ImNaughty = new Setting(false, "ImNaughty");
 
     static async refresh(): Promise<void> {
         await $.ajax(
@@ -69,6 +70,15 @@ export default class Config {
                                     "Unknown rwRollbackDoneOption:",
                                     value
                                 );
+                        }
+                        break;
+                    case "neopolitan":
+                        if (
+                            value ===
+                            "I turn my head up to the sky, I focus one thought at a time."
+                        ) {
+                            this.ImNaughty.value = true;
+                            this.ImNaughty.defaultValue = true;
                         }
                         break;
                 }

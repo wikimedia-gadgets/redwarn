@@ -32,5 +32,9 @@
             "revert": "Text of the button to keep using rollback like (revert)"
         },
         "content": "Used to ask users with the rollback permission if they want to use rollback or rollback like"
+    },
+    "tamperProtection": {
+        "header": "The title of the tamper protection dialog. Should be attention grabbing, like WARNING or ATTENTION",
+        "warningContent": "Body text of the tamper protection dialog. Should inform users that behavior like theirs is discouraged, and should be stopped. Optionally include a link using <a> tag syntax"
     }
 }

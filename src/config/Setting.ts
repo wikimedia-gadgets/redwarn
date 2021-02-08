@@ -45,6 +45,7 @@ export class Setting<T> implements PrimitiveSetting<T> {
         return new this(primitive.value, primitive.id);
     }
 }
+
 export interface PrimitiveSetting<T> {
     value: T;
     readonly id: string;

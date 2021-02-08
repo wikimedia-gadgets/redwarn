@@ -31,7 +31,7 @@ import MediaWiki, {
 import * as RedWarnConstants from "./data/RedWarnConstants";
 import * as Util from "./util";
 import Lockr from "lockr";
-import Config from "./config";
+import { Configuration } from "./config";
 import TamperProtection from "./tamper/TamperProtection";
 
 $(document).ready(async () => {
@@ -83,7 +83,7 @@ $(document).ready(async () => {
         RedWarnHooks.executeHooks("init"),
         Dependencies.resolve(),
         MediaWikiAPI.init(),
-        Config.refresh(),
+        Configuration.refresh(),
     ]);
 
     // Non-blocking initializers.
@@ -183,8 +183,8 @@ export default class RedWarn {
     static get Dependencies(): typeof Dependencies {
         return Dependencies;
     }
-    static get Config(): typeof Config {
-        return Config;
+    static get Config(): typeof Configuration {
+        return Configuration;
     }
     static config: {
         new: {

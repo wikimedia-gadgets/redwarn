@@ -11,7 +11,9 @@ import { BaseProps, h } from "tsx-dom";
 import { Warnings } from "rww/mediawiki/Warnings";
 import { RWUISelectionDialogItem } from "../elements/RWUIDialog";
 import { RollbackContext } from "rww/definitions/RollbackContext";
-import Config from "rww/config";
+import { Configuration } from "rww/config";
+
+// TODO File cleanup. THIS FILE IS NOT STYLE COMPLIANT!
 
 function getRollbackOptionClickHandler(
     context: RollbackContext,
@@ -334,10 +336,10 @@ export default class DiffViewerInjector {
             );
         });
 
-        if (Config.rollbackDoneOption.value !== "none") {
-            $(`#rwRBDoneOption_${Config.rollbackDoneOption.value}`).trigger(
-                "click"
-            );
+        if (Configuration.rollbackDoneOption.value !== "none") {
+            $(
+                `#rwRBDoneOption_${Configuration.rollbackDoneOption.value}`
+            ).trigger("click");
         }
 
         // Hides other options and shows the rollback done options and also checks for defaults, also adds click handlers

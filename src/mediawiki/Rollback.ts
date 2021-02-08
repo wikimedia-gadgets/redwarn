@@ -17,7 +17,7 @@ import {
 } from "rww/mediawiki";
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 import { RollbackContext } from "rww/definitions/RollbackContext";
-import Config, { rollbackMethod } from "rww/config";
+import { Configuration, RollbackMethod } from "rww/config";
 
 // interface RollbackContext {
 //     reason: string;
@@ -330,15 +330,15 @@ export class Rollback {
 
         if (ClientUser.i.inGroup("rollbacker")) {
             switch (
-                Config.rollbackMethod.value as rollbackMethod // need to cast since inferred type is weird in switch/case
+                Configuration.rollbackMethod.value as RollbackMethod // need to cast since inferred type is weird in switch/case
             ) {
-                case rollbackMethod.Rollback:
+                case RollbackMethod.Rollback:
                     return await this.standardRollback(
                         context,
                         reason,
                         defaultWarnIndex
                     );
-                case rollbackMethod.Revert:
+                case RollbackMethod.Revert:
                     return await this.pseudoRollback(
                         context,
                         reason,
@@ -346,18 +346,18 @@ export class Rollback {
                     );
                 default:
                     console.error(
-                        `rollbackMethod is invalid (${Config.rollbackMethod.value}), resetting`
+                        `RollbackMethod is invalid (${Configuration.rollbackMethod.value}), resetting`
                     );
                 // fall through
-                case rollbackMethod.Unset:
+                case RollbackMethod.Unset:
                     const dialog = new RWUI.Dialog({
                         actions: [
                             {
                                 data: "rollback",
                                 action: async () => {
-                                    Config.rollbackMethod.value =
-                                        rollbackMethod.Rollback;
-                                    await Config.save();
+                                    Configuration.rollbackMethod.value =
+                                        RollbackMethod.Rollback;
+                                    await Configuration.save();
                                     return await this.standardRollback(
                                         context,
                                         reason,
@@ -371,9 +371,9 @@ export class Rollback {
                             {
                                 data: "revert",
                                 action: async () => {
-                                    Config.rollbackMethod.value =
-                                        rollbackMethod.Revert;
-                                    await Config.save();
+                                    Configuration.rollbackMethod.value =
+                                        RollbackMethod.Revert;
+                                    await Configuration.save();
                                     return await this.pseudoRollback(
                                         context,
                                         reason,

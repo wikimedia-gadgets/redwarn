@@ -1,6 +1,6 @@
 import { h } from "tsx-dom";
 import i18next from "i18next";
-import Config from "rww/config";
+import { Configuration } from "rww/config";
 import { ClientUser } from "rww/mediawiki";
 import RWUI from "rww/ui/RWUI";
 
@@ -29,9 +29,8 @@ export default class TamperProtection {
                 "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
             ) ||
             this.x ||
-            Config.ImNaughty.value
+            Configuration.ImNaughty.value
         ) {
-            // wee woo
             return TamperProtection.exec();
         }
     }
@@ -45,7 +44,7 @@ export default class TamperProtection {
             title: i18next.t("ui:tamperProtection.header"),
         });
         await d.show();
-        Config.ImNaughty.value = true;
-        Config.save();
+        Configuration.ImNaughty.value = true;
+        Configuration.save();
     }
 }

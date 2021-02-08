@@ -1,6 +1,6 @@
 import {
-    RW_NOWIKI,
-    RW_NOWIKI_END,
+    RW_NOWIKI_CLOSE,
+    RW_NOWIKI_OPEN,
     RW_VERSION,
 } from "rww/data/RedWarnConstants";
 import StyleManager from "rww/styles/StyleManager";
@@ -38,10 +38,11 @@ export default class Config {
     public static ImNaughty = new Setting(false, "ImNaughty");
 
     static async refresh(): Promise<void> {
+        // This is effectively mw.loader.getScript, but without caching
         await $.ajax(
             "/w/index.php?title=Special:MyPage/redwarnConfig.js&action=raw&ctype=text/javascript",
             { dataType: "script" }
-        ); // This is effectively mw.loader.getScript, but without caching
+        );
         if (window.rw.config?.new != null) {
             this.allSettings().forEach((s) => s.refresh());
         } else if (window.rw.config != null) {
@@ -103,24 +104,24 @@ export default class Config {
         this.allSettings().forEach((v, k) => {
             window.rw.config.new[k] = v;
         });
-        const text = `
-/*${RW_NOWIKI}
-This is your RedWarn configuration file. It is recommended that you don't edit this yourself and use RedWarn preferences instead.
-It is written in JSON formatting and is executed every time RedWarn loads.
 
-If somebody has asked you to add code to this page, DO NOT do so as it may compromise your account and will be reverted as soon as any configuration value changes.
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const template = require("./redwarnConfig.template.txt");
 
-!!! Do not edit below this line unless you understand the risks! If rw.config isn't defined, this file will be reset. !!!
-*/
-rw.config = ${JSON.stringify(window.rw.config)};
-//${RW_NOWIKI_END}`;
         await Page.fromTitle("Special:MyPage/redwarnConfig.js").edit(
-            text,
+            Config.fromTemplate(template),
             "Updating user configuration"
         );
         if (reloadOnDone) {
             window.location.reload();
         }
         return;
+    }
+
+    static fromTemplate(template: string): string {
+        return template
+            .replace(/--nowikiOpen/g, RW_NOWIKI_OPEN)
+            .replace(/--nowikiClose/g, RW_NOWIKI_CLOSE)
+            .replace(/--configuration/g, JSON.stringify(window.rw.config));
     }
 }

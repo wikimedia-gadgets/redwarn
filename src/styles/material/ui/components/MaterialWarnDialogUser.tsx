@@ -6,7 +6,7 @@ import {
     UserAccount,
     WarningIcons,
     WarningLevel,
-} from "rww/mediawiki/MediaWiki";
+} from "rww/mediawiki";
 import MaterialTextInput, {
     MaterialTextInputComponents,
     MaterialTextInputUpgrade,
@@ -37,6 +37,101 @@ type OverlayContent = OverlayContentInput | OverlayContentLoading;
 interface MaterialWarnDialogUserProps {
     warnDialog: MaterialWarnDialog;
     user?: User;
+}
+
+function MaterialWarnDialogUserCardAccountGroups({
+    parent,
+}: {
+    parent: MaterialWarnDialogUser;
+}): JSX.Element {
+    if (!(parent.user instanceof UserAccount)) return;
+
+    const user: UserAccount = parent.user;
+
+    return (
+        <div class={"rw-mdc-warnDialog-user--groups mdc-chip-set"}>
+            {user.groups.map<JSX.Element>(
+                (group): JSX.Element => {
+                    return (
+                        <a
+                            target={group.page && "_blank"}
+                            href={group.page && `/wiki/${group.page}`}
+                        >
+                            <div class="mdc-chip" role="row">
+                                <div class="mdc-chip__ripple" />
+                                <span role="gridcell">
+                                    <span
+                                        role="button"
+                                        tabIndex={0}
+                                        class="mdc-chip__primary-action"
+                                    >
+                                        <span class="mdc-chip__text">
+                                            {capitalize(group.displayName)}
+                                        </span>
+                                    </span>
+                                </span>
+                            </div>
+                        </a>
+                    );
+                }
+            )}
+        </div>
+    );
+}
+
+function MaterialWarnDialogUserCardAccountInfo({
+    parent,
+}: {
+    parent: MaterialWarnDialogUser;
+}): JSX.Element {
+    if (!(parent.user instanceof UserAccount))
+        return (
+            <div class={"rw-mdc-warnDialog-user--overview"}>
+                {/* TODO Eventually replace with per-wiki page */}
+                <a href={"/wiki/w:en:IP_address"} target="_blank">
+                    {`${i18next.t("mediawiki:ip")}`}
+                </a>
+            </div>
+        );
+
+    const user: UserAccount = parent.user;
+
+    return (
+        <div class={"rw-mdc-warnDialog-user--overview"}>
+            <a
+                onClick={() => {
+                    showPlainMediaWikiIFrameDialog(
+                        Page.fromTitle(
+                            `Special:Contributions/${user.username}`
+                        ),
+                        {
+                            disableRedWarn: true,
+                            safeMode: true,
+                        }
+                    );
+                }}
+                data-rw-mdc-tooltip={i18next.t(
+                    "ui:warn.user.show.contributions"
+                )}
+            >
+                {`${i18next.t("ui:warn.user.edits", {
+                    edits: user.editCount.toLocaleString(),
+                })}`}
+            </a>
+            <Bullet />
+            <a
+                onClick={() => {
+                    showPlainMediaWikiIFrameDialog(user.userPage, {
+                        disableRedWarn: true,
+                        safeMode: true,
+                    });
+                }}
+                data-rw-mdc-tooltip={i18next.t("ui:warn.user.show.userpage")}
+            >{`${i18next.t("ui:warn.user.age", {
+                localeAge: moment(user.registered).fromNow(),
+            })}`}</a>
+        </div>
+    );
 }
 
 /**
@@ -72,95 +167,11 @@ function MaterialWarnDialogUserCard({
                                 {user.username}
                             </a>
                         </div>
-                        {user instanceof UserAccount ? (
-                            <div class={"rw-mdc-warnDialog-user--overview"}>
-                                <a
-                                    onClick={() => {
-                                        showPlainMediaWikiIFrameDialog(
-                                            Page.fromTitle(
-                                                `Special:Contributions/${user.username}`
-                                            ),
-                                            {
-                                                disableRedWarn: true,
-                                                safeMode: true,
-                                            }
-                                        );
-                                    }}
-                                    data-rw-mdc-tooltip={i18next.t(
-                                        "ui:warn.user.show.contributions"
-                                    )}
-                                >
-                                    {`${i18next.t("ui:warn.user.edits", {
-                                        edits: user.editCount.toLocaleString(),
-                                    })}`}
-                                </a>
-                                <Bullet />
-                                <a
-                                    onClick={() => {
-                                        showPlainMediaWikiIFrameDialog(
-                                            user.userPage,
-                                            {
-                                                disableRedWarn: true,
-                                                safeMode: true,
-                                            }
-                                        );
-                                    }}
-                                    data-rw-mdc-tooltip={i18next.t(
-                                        "ui:warn.user.show.userpage"
-                                    )}
-                                >{`${i18next.t("ui:warn.user.age", {
-                                    localeAge: moment(
-                                        user.registered
-                                    ).fromNow(),
-                                })}`}</a>
-                            </div>
-                        ) : (
-                            <div class={"rw-mdc-warnDialog-user--overview"}>
-                                {/* TODO Eventually replace with per-wiki page */}
-                                <a href="/wiki/w:en:IP_address" target="_blank">
-                                    {`${i18next.t("mediawiki:ip")}`}
-                                </a>
-                            </div>
-                        )}
+                        <MaterialWarnDialogUserCardAccountInfo
+                            parent={parent}
+                        />
                     </div>
-                    {user instanceof UserAccount && (
-                        <div
-                            class={
-                                "rw-mdc-warnDialog-user--groups mdc-chip-set"
-                            }
-                        >
-                            {user.groups.map<JSX.Element>(
-                                (group): JSX.Element => {
-                                    return (
-                                        <a
-                                            target={group.page && "_blank"}
-                                            href={
-                                                group.page &&
-                                                `/wiki/${group.page}`
-                                            }
-                                        >
-                                            <div class="mdc-chip" role="row">
-                                                <div class="mdc-chip__ripple" />
-                                                <span role="gridcell">
-                                                    <span
-                                                        role="button"
-                                                        tabIndex={0}
-                                                        class="mdc-chip__primary-action"
-                                                    >
-                                                        <span class="mdc-chip__text">
-                                                            {capitalize(
-                                                                group.displayName
-                                                            )}
-                                                        </span>
-                                                    </span>
-                                                </span>
-                                            </div>
-                                        </a>
-                                    );
-                                }
-                            )}
-                        </div>
-                    )}
+                    <MaterialWarnDialogUserCardAccountGroups parent={parent} />
                 </td>
                 <td>
                     <MaterialIconButton

@@ -87,11 +87,13 @@ $(document).ready(async () => {
     ]);
 
     // Non-blocking initializers.
-    RTRC.init();
-    TamperProtection.init();
+    (() => {
+        RTRC.init();
+        TamperProtection.init();
 
-    // Call RevertSpeedup last.
-    RevertSpeedup.init();
+        // Call RevertSpeedup last.
+        RevertSpeedup.init();
+    })();
 
     /**
      * Send notice that RedWarn is done loading.

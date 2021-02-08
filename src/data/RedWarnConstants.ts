@@ -15,8 +15,8 @@ export const RW_WELCOME_IP = atob("e3tzdWJzdDp3ZWxjb21lLWFub259fQ==");
 export const RW_SHARED_IP_ADVICE = atob(
     "XG46e3tzdWJzdDpTaGFyZWQgSVAgYWR2aWNlfX0="
 );
-export const RW_NOWIKI = atob("PG5vd2lraT4=");
-export const RW_NOWIKI_END = atob("PC9ub3dpa2k+");
+export const RW_NOWIKI_OPEN = atob("PG5vd2lraT4=");
+export const RW_NOWIKI_CLOSE = atob("PC9ub3dpa2k+");
 
 export const RW_LINK = "[[w:en:WP:RW|RedWarn]]";
 export const RW_WIKIS_TAGGABLE = ["enwiki"];

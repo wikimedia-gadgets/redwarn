@@ -1,4 +1,4 @@
-import { Page } from "rww/mediawiki/MediaWiki";
+import { Page } from "rww/mediawiki";
 import RWUI from "rww/ui/RWUI";
 import { RWUIIFrameDialogProps } from "rww/ui/elements/RWUIDialog";
 import { url } from "rww/util";

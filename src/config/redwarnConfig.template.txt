@@ -1,0 +1,21 @@
+/**
+ * This is your RedWarn configuration file. It is recommended that you
+ * don't edit this yourself and use RedWarn preferences instead.
+ *
+ * It is written in JSON formatting and is executed every time RedWarn loads.
+ *
+ * If somebody has asked you to add code to this page, DO NOT do so as it may
+ * compromise your account and will be reverted as soon as any configuration
+ * value changes.
+ *
+ * The RedWarn team will never ask you to put damaging code into your configuration
+ * file.
+ *
+ * !!!!!!!!!
+ * Do not edit below this line unless you understand the risks! If rw.config isn't
+ * defined, this file will be reset and all configuration changes will be lost.
+ * !!!!!!!!!
+*/
+// --nowikiOpen
+rw.config = --configuration;
+// --nowikiClose

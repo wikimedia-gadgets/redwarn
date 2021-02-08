@@ -2,12 +2,11 @@
  * This file was modified from Baritone, to make it usable in TypeScript and the web environment.
  * It has been changed from the original, to fit the needs of RedWarn.
  * The original Java source is available at <https://github.com/cabaletta/baritone/blob/72cf9392/src/api/java/baritone/api/Settings.java/>.
- *
- * Baritone is licensed under the LGPL version 3 or above. Below is the original copyright header from Baritone.
  */
 export class Setting<T> implements PrimitiveSetting<T> {
     value: T;
     defaultValue: T;
+
     constructor(defaultValue: T, private readonly _id: string) {
         this.value = <T>window.rw?.config?.new[_id] ?? defaultValue;
         this.defaultValue = defaultValue;

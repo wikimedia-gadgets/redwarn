@@ -1,5 +1,5 @@
 import regexClone from "rww/util/regexClone";
-import { Page } from "rww/mediawiki/MediaWiki";
+import { Page } from "rww/mediawiki";
 
 /**
  * The Warning Level is derived from the English Wikipedia's four-level tier

@@ -150,8 +150,14 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
         const iframeInit = () => {
             const iframeDoc =
                 iframe.contentDocument || iframe.contentWindow?.document;
-            if (!!iframeDoc) {
+            if (
+                !!iframeDoc &&
+                iframeDoc.location.toString() === this.props.src
+            ) {
                 const headInit = () => {
+                    const iframeDoc =
+                        iframe.contentDocument ||
+                        iframe.contentWindow?.document;
                     if (!!iframeDoc.head) {
                         for (const dependency of actualDependencies) {
                             const depElement = Dependencies.buildDependency(
@@ -160,11 +166,11 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
                             console.log(depElement);
                             let oldElement;
                             if (
-                                (oldElement = iframe.contentDocument.getElementById(
+                                (oldElement = iframeDoc.getElementById(
                                     depElement.id
                                 )) == null
                             )
-                                iframe.contentDocument.head.append(depElement);
+                                iframeDoc.head.append(depElement);
                             else {
                                 oldElement.parentElement.replaceChild(
                                     depElement,
@@ -172,25 +178,27 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
                                 );
                             }
                             console.log(depElement.parentElement);
+                            depElement.parentElement.classList.add("asf");
                         }
                         return;
                     }
                     setTimeout(() => {
-                        iframeInit();
-                    }, 10);
+                        headInit();
+                    }, 2);
                 };
                 const bodyInit = () => {
+                    const iframeDoc =
+                        iframe.contentDocument ||
+                        iframe.contentWindow?.document;
                     if (!!iframeDoc.body) {
                         if (this.props.disableRedWarn) {
-                            iframe.contentDocument.body.classList.add(
-                                "rw-disable"
-                            );
+                            iframeDoc.body.classList.add("rw-disable");
                         }
                         return;
                     }
                     setTimeout(() => {
-                        iframeInit();
-                    }, 10);
+                        bodyInit();
+                    }, 2);
                 };
                 headInit();
                 bodyInit();
@@ -200,11 +208,11 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
 
             setTimeout(() => {
                 iframeInit();
-            }, 25);
+            }, 2);
         };
-        iframe.addEventListener("load", () => {
+        setTimeout(() => {
             iframeInit();
-        });
+        }, 25);
 
         return this.element;
     }

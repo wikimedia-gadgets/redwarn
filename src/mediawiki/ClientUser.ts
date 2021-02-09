@@ -19,12 +19,22 @@ export class ClientUser extends UserAccount {
     public static readonly i = new ClientUser();
 
     /**
+     * The user's RedWarn configuration file.
+     */
+    public readonly redwarnConfigPage;
+
+    /**
      * This class cannot be constructed outside of this class.
      * @private
      */
     private constructor() {
         // Username is always the logged-in user.
         super(mw.user.getName());
+
+        if (ClientUser.i != null)
+            throw "Attempt made to reconstruct existing ClientUser.";
+
+        this.redwarnConfigPage = this.getUserSubpage("redwarnConfig.js");
     }
 
     public async init(): Promise<void> {

@@ -186,12 +186,7 @@ export default class RedWarn {
     static get Config(): typeof Configuration {
         return Configuration;
     }
-    static config: {
-        new: {
-            [key: string]: unknown;
-        };
-        [key: string]: unknown;
-    };
+    static config: Record<string, any>;
 
     /**
      * @deprecated not yet implemented

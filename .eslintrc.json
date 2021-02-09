@@ -26,13 +26,13 @@
     },
     "rules": {
         "@typescript-eslint/no-explicit-any": "off",
-        "semi": ["error", "always"],
         "@typescript-eslint/no-unused-vars": [
             "warn",
             {
                 "varsIgnorePattern": "h"
             }
         ],
+        "semi": ["error", "always"],
         "camelcase": ["warn"],
         "prefer-const": [
             "error",

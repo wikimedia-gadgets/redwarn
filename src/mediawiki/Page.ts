@@ -203,4 +203,13 @@ export class Page {
     openInNewTab(): void {
         open(this.url);
     }
+
+    /**
+     * Gets a subpage of the given page.
+     * @param subpage The subpage to get. Don't include the page's original title.
+     * @returns The subpage requested.
+     */
+    getSubpage(subpage: string): Page {
+        return Page.fromTitle(`${this.title}/${subpage}`);
+    }
 }

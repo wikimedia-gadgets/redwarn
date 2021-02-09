@@ -8,7 +8,7 @@ export class Setting<T> implements PrimitiveSetting<T> {
     defaultValue: T;
 
     constructor(defaultValue: T, private readonly _id: string) {
-        this.value = <T>window.rw?.config?.new[_id] ?? defaultValue;
+        this.value = <T>window.rw?.config?.[_id] ?? defaultValue;
         this.defaultValue = defaultValue;
     }
 
@@ -17,8 +17,8 @@ export class Setting<T> implements PrimitiveSetting<T> {
     }
 
     refresh(): boolean {
-        if (window.rw?.config?.new[this.id] != null) {
-            this.value = <T>window.rw.config.new[this.id];
+        if (window.rw?.config?.[this.id] != null) {
+            this.value = <T>window.rw.config[this.id];
             return true;
         }
         return false;

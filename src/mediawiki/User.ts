@@ -17,7 +17,7 @@ import i18next from "i18next";
 import { PageMissingError } from "rww/errors/MediaWikiErrors";
 import Group, { GroupsFromNames } from "rww/definitions/Group";
 
-// ipv4 and ipv6: https://stackoverflow.com/a/17871737
+// IPv4 and IPv6: https://stackoverflow.com/a/17871737
 const ipRegex = /^(((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])|(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]+|::(ffff(:0{1,4})?:)?((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])))$/gi;
 
 export class User {
@@ -31,6 +31,7 @@ export class User {
             (this._userPage = Page.fromTitle(`User:${this.username}`))
         );
     }
+    private _userSubpages: { [key: string]: Page };
     private _talkPage: Page;
     get talkPage(): Page {
         return (
@@ -38,6 +39,7 @@ export class User {
             (this._talkPage = Page.fromTitle(`User talk:${this.username}`))
         );
     }
+    private _userTalkSubpages: { [key: string]: Page };
 
     /** An analysis of the user's warning state. */
     warningAnalysis: WarningAnalysis;
@@ -300,6 +302,32 @@ export class User {
             `\n${isIp ? RW_WELCOME_IP : RW_WELCOME} ${RW_SIG}\n`,
             false,
             isIp ? "Welcome! (IP)" : "Welcome!"
+        );
+    }
+
+    /**
+     * Get a user's subpage
+     * @param subpage The subpage of the user. This should not have the starting `User:Username/`
+     * @returns The requested subpage
+     */
+    getUserSubpage(subpage: string): Page {
+        return (
+            this._userSubpages[subpage] ??
+            (this._userSubpages[subpage] = this.userPage.getSubpage(subpage))
+        );
+    }
+
+    /**
+     * Get a user's talk subpage
+     * @param subpage The subpage of the user's talk. This should not have the starting `User talk:Username/`
+     * @returns The requested subpage
+     */
+    getUserTalkSubpage(subpage: string): Page {
+        return (
+            this._userTalkSubpages[subpage] ??
+            (this._userTalkSubpages[subpage] = this.talkPage.getSubpage(
+                subpage
+            ))
         );
     }
 }

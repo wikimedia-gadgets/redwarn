@@ -4,13 +4,22 @@ import {
     RW_VERSION,
 } from "rww/data/RedWarnConstants";
 import StyleManager from "rww/styles/StyleManager";
-import { Page } from "rww/mediawiki";
+import { ClientUser } from "rww/mediawiki";
 import { Setting } from "./Setting";
 import { RollbackMethod } from "./ConfigurationEnums";
+import { updateConfiguration } from "rww/config";
 
 export class Configuration {
+    /** The latest configuration version */
+    public static readonly CONFIG_VERSION = 1;
+
     /** Last version of RedWarn that was used */
     public static latestVersion = new Setting(RW_VERSION, "latestVersion");
+    /** The configuration version, responsible for keeping track of variable renames. */
+    public static configVersion = new Setting(
+        Configuration.CONFIG_VERSION,
+        "configVersion"
+    );
     /** Rollback done option that is automatically executed on rollback complete */
     public static rollbackDoneOption = new Setting(
         "warnUser",
@@ -33,53 +42,26 @@ export class Configuration {
     public static ImNaughty = new Setting(false, "ImNaughty");
 
     static async refresh(): Promise<void> {
-        // This is effectively mw.loader.getScript, but without caching
-        await $.ajax(
-            "/w/index.php?title=Special:MyPage/redwarnConfig.js&action=raw&ctype=text/javascript",
-            { dataType: "script" }
+        // TODO try/catch, since this will fail if the configuration is bad.
+        const redwarnConfig = JSON.parse(
+            (await ClientUser.i.redwarnConfigPage.getLatestRevision()).content
+                // Strip everything except the actual JSON part.
+                .replace(/(?:.|\s)+?rw\.config\s*=\s*({.+});(?:.|\s)+/g, "$1")
         );
-        if (window.rw.config?.new != null) {
-            this.allSettings().forEach((s) => s.refresh());
-        } else if (window.rw.config != null) {
-            // old config exists, convert
-            for (const [key, value] of Object.entries(window.rw.config)) {
-                switch (key) {
-                    case "rwRollbackDoneOption":
-                        switch (value) {
-                            case "RWRBDONEmrevPg":
-                                this.rollbackDoneOption.value = "latestRev";
-                                break;
-                            case "RWRBDONEnewUsrMsg":
-                                this.rollbackDoneOption.value = "newMsg";
-                                break;
-                            case "RWRBDONEwelcomeUsr":
-                                this.rollbackDoneOption.value = "quickTemplate";
-                                break;
-                            case "RWRBDONEwarnUsr":
-                                this.rollbackDoneOption.value = "warnUser";
-                                break;
-                            case "RWRBDONEreportUsr":
-                                this.rollbackDoneOption.value = "reportUser";
-                                break;
-                            default:
-                                console.error(
-                                    "Unknown rwRollbackDoneOption:",
-                                    value
-                                );
-                        }
-                        break;
-                    case "neopolitan":
-                        if (
-                            value ===
-                            "I turn my head up to the sky, I focus one thought at a time."
-                        ) {
-                            this.ImNaughty.value = true;
-                            this.ImNaughty.defaultValue = true;
-                        }
-                        break;
-                }
-            }
-        }
+
+        if (
+            redwarnConfig["configVersion"] ??
+            0 < Configuration.CONFIG_VERSION
+        ) {
+            window.rw.config = updateConfiguration(redwarnConfig);
+            // TODO Immediately save.
+        } else window.rw.config = redwarnConfig;
+
+        // At this point, we can definitely assume that `rw.config` is a configuration
+        // that is of the latest version.
+
+        this.allSettings().forEach((s) => s.refresh());
+
         StyleManager.activeStyle = StyleManager.styles.find(
             (v) => v.name === this.style.value
         ); // set here otherwise circular ref
@@ -97,13 +79,13 @@ export class Configuration {
 
     static async save(reloadOnDone = false): Promise<void> {
         this.allSettings().forEach((v, k) => {
-            window.rw.config.new[k] = v;
+            window.rw.config[k] = v;
         });
 
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const template = require("./redwarnConfig.template.txt");
 
-        await Page.fromTitle("Special:MyPage/redwarnConfig.js").edit(
+        await ClientUser.i.redwarnConfigPage.edit(
             Configuration.fromTemplate(template),
             "Updating user configuration"
         );

@@ -1,23 +1,22 @@
 import {
+    RW_CONFIG_VERSION,
     RW_NOWIKI_CLOSE,
     RW_NOWIKI_OPEN,
     RW_VERSION,
 } from "rww/data/RedWarnConstants";
+import { DefaultRedWarnStyle } from "rww/styles/StyleConstants";
 import StyleManager from "rww/styles/StyleManager";
 import { ClientUser } from "rww/mediawiki";
 import { Setting } from "./Setting";
 import { RollbackMethod } from "./ConfigurationEnums";
-import { updateConfiguration } from "rww/config";
+import { updateConfiguration } from "./ConfigurationUpdate";
 
 export class Configuration {
-    /** The latest configuration version */
-    public static readonly CONFIG_VERSION = 1;
-
     /** Last version of RedWarn that was used */
     public static latestVersion = new Setting(RW_VERSION, "latestVersion");
     /** The configuration version, responsible for keeping track of variable renames. */
     public static configVersion = new Setting(
-        Configuration.CONFIG_VERSION,
+        RW_CONFIG_VERSION,
         "configVersion"
     );
     /** Rollback done option that is automatically executed on rollback complete */
@@ -38,7 +37,7 @@ export class Configuration {
         "rollbackMethod"
     );
     /** Style of UI */
-    public static style = new Setting(StyleManager.defaultStyle, "style");
+    public static style = new Setting(DefaultRedWarnStyle, "style");
     public static ImNaughty = new Setting(false, "ImNaughty");
 
     static async refresh(): Promise<void> {
@@ -49,10 +48,7 @@ export class Configuration {
                 .replace(/(?:.|\s)+?rw\.config\s*=\s*({.+});(?:.|\s)+/g, "$1")
         );
 
-        if (
-            redwarnConfig["configVersion"] ??
-            0 < Configuration.CONFIG_VERSION
-        ) {
+        if (redwarnConfig["configVersion"] ?? 0 < RW_CONFIG_VERSION) {
             window.rw.config = updateConfiguration(redwarnConfig);
             // TODO Immediately save.
         } else window.rw.config = redwarnConfig;

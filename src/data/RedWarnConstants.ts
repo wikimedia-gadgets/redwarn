@@ -7,6 +7,8 @@ export const RW_VERSION = "0.2.0";
 export const RW_VERSION_TAG = `0.2.0-dev+${RW_BUILDINFO.gitHashShort}`;
 export const RW_VERSION_SUMMARY = "nothing yet";
 
+export const RW_CONFIG_VERSION = 1;
+
 // Since MediaWiki will convert some of these templates, we have to store these
 // as Base64 encoded strings.
 export const RW_SIG = atob("fn5+fg==");

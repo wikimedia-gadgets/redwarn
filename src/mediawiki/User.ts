@@ -31,7 +31,7 @@ export class User {
             (this._userPage = Page.fromTitle(`User:${this.username}`))
         );
     }
-    private _userSubpages: { [key: string]: Page };
+    private _userSubpages: { [key: string]: Page } = {};
     private _talkPage: Page;
     get talkPage(): Page {
         return (
@@ -39,7 +39,7 @@ export class User {
             (this._talkPage = Page.fromTitle(`User talk:${this.username}`))
         );
     }
-    private _userTalkSubpages: { [key: string]: Page };
+    private _userTalkSubpages: { [key: string]: Page } = {};
 
     /** An analysis of the user's warning state. */
     warningAnalysis: WarningAnalysis;

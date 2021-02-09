@@ -33,6 +33,7 @@ import * as Util from "./util";
 import Lockr from "lockr";
 import { Configuration } from "./config";
 import TamperProtection from "./tamper/TamperProtection";
+import UIInjectors from "rww/ui/injectors/UIInjectors";
 
 $(document).ready(async () => {
     console.log("Starting RedWarn...");
@@ -103,7 +104,7 @@ $(document).ready(async () => {
     // Inject all UI elements
     await RedWarnHooks.executeHooks("preUIInject");
 
-    await RWUI.inject();
+    await UIInjectors.inject();
 
     await RedWarnHooks.executeHooks("postUIInject");
 

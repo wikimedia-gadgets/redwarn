@@ -1,4 +1,4 @@
-import { Configuration } from "rww/config";
+import { RW_CONFIG_VERSION } from "rww/data/RedWarnConstants";
 
 type ConfigurationUpdater = (
     oldConfig: Record<string, unknown>
@@ -11,7 +11,7 @@ type ConfigurationUpdater = (
  * set to upgrade a configuration file from version `2` to `3`. This
  * entire array should be in sequence, and should always have an updater
  * from configuration version 0 (pre-TypeScript RedWarn) up to the latest
- * configuration version ({@link Configuration.CONFIG_VERSION}) minus one.
+ * configuration version ({@link RW_CONFIG_VERSION}) minus one.
  */
 const configurationUpdaters: { [key: number]: ConfigurationUpdater } = {
     /*
@@ -81,7 +81,7 @@ export function updateConfiguration(
         JSON.stringify(oldConfig)
     );
 
-    while (modifiedConfig.configVersion < Configuration.CONFIG_VERSION) {
+    while (modifiedConfig.configVersion < RW_CONFIG_VERSION) {
         if (configurationUpdaters[modifiedConfig.configVersion ?? 0] == null)
             throw `No updater for configuration version: ${modifiedConfig.configVersion}`;
 

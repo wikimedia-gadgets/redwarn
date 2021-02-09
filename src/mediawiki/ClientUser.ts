@@ -1,4 +1,4 @@
-import { MediaWikiAPI, UserAccount } from "rww/mediawiki";
+import { MediaWikiAPI, Page, UserAccount } from "rww/mediawiki";
 
 interface ClientUserCache {
     groups?: string[];
@@ -21,7 +21,13 @@ export class ClientUser extends UserAccount {
     /**
      * The user's RedWarn configuration file.
      */
-    public readonly redwarnConfigPage;
+    public get redwarnConfigPage() {
+        return (
+            this._redwarnConfigPage ??
+            (this._redwarnConfigPage = this.getUserSubpage("redwarnConfig.js"))
+        );
+    }
+    public _redwarnConfigPage: Page;
 
     /**
      * This class cannot be constructed outside of this class.
@@ -33,8 +39,6 @@ export class ClientUser extends UserAccount {
 
         if (ClientUser.i != null)
             throw "Attempt made to reconstruct existing ClientUser.";
-
-        this.redwarnConfigPage = this.getUserSubpage("redwarnConfig.js");
     }
 
     public async init(): Promise<void> {

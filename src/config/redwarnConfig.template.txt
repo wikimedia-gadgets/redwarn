@@ -17,5 +17,5 @@
  * !!!!!!!!!
 */
 // --nowikiOpen
-rw.config = --configuration;
+window.rw = window.rw || {}, window.rw.config = --configuration;
 // --nowikiClose

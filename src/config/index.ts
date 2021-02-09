@@ -1,3 +1,3 @@
-export * from "./Configuration";
-export * from "./ConfigurationEnums";
 export * from "./ConfigurationUpdate";
+export * from "./ConfigurationEnums";
+export * from "./Configuration";

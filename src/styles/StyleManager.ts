@@ -1,9 +1,12 @@
 import semanticDifference from "rww/util/semanticDifference";
 import { DefaultRedWarnStyles } from "./RedWarnStyles";
 import Style from "./Style";
+import { DefaultRedWarnStyle } from "rww/styles/StyleConstants";
 
 export default class StyleManager {
-    public static readonly defaultStyle = "material";
+    public static get defaultStyle() {
+        return DefaultRedWarnStyle;
+    }
 
     public static ready = false;
 

@@ -134,7 +134,7 @@ $(document).ready(async () => {
     //     maxCharacterCount: 12
     // }).show();
     new RWUI.WarnDialog({
-        targetUser: User.fromUsername("Chlod"),
+        targetUser: User.fromUsername("Sandbox for user warnings"),
     }).show();
 });
 

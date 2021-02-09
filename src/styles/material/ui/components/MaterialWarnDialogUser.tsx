@@ -17,7 +17,7 @@ import RWUI from "rww/ui/RWUI";
 import i18next from "i18next";
 import moment from "moment";
 import Bullet from "./Bullet";
-import { capitalize, generateId } from "rww/util";
+import { capitalize, generateId, getMonthHeader } from "rww/util";
 import { MDCChipSet } from "@material/chips";
 import MaterialMenu, { openMenu } from "./MaterialMenu";
 import showPlainMediaWikiIFrameDialog from "rww/styles/material/util/showPlainMediaWikiIFrameDialog";
@@ -209,17 +209,29 @@ function MaterialWarnDialogUserCard({
                             {
                                 label: "Notices for this month",
                                 action(): void {
-                                    new RWUI.Toast({
-                                        content: "under construction",
-                                    }).show();
+                                    showPlainMediaWikiIFrameDialog(
+                                        user.talkPage,
+                                        {
+                                            disableRedWarn: true,
+                                            fragment: mw.util.wikiUrlencode(
+                                                getMonthHeader()
+                                            ),
+                                            customStyle: `#${mw.util.wikiUrlencode(
+                                                getMonthHeader()
+                                            )} { background-color: #fd0; }`,
+                                        }
+                                    );
                                 },
                             },
                             {
                                 label: "Entire talk page",
                                 action(): void {
-                                    new RWUI.Toast({
-                                        content: "still in construction",
-                                    }).show();
+                                    showPlainMediaWikiIFrameDialog(
+                                        user.talkPage,
+                                        {
+                                            disableRedWarn: true,
+                                        }
+                                    );
                                 },
                             },
                         ]}
@@ -250,19 +262,35 @@ class MaterialWarnDialogUser extends RWUIElement {
         };
     } = {};
 
+    private _active: boolean;
     get active(): boolean {
-        return this.elementSet.root.classList.contains(
-            "rw-mdc-warnDialog-user--active"
-        );
+        if (!!this.elementSet.root) {
+            if (this._active)
+                this.elementSet.root.classList.add(
+                    "rw-mdc-warnDialog-user--active"
+                );
+            else
+                this.elementSet.root.classList.remove(
+                    "rw-mdc-warnDialog--active"
+                );
+        }
+        return this._active;
     }
     set active(value: boolean) {
-        if (value)
-            this.elementSet.root.classList.add(
-                "rw-mdc-warnDialog-user--active"
-            );
-        else this.elementSet.root.classList.remove("rw-mdc-warnDialog--active");
+        if (!!this.elementSet.root) {
+            if (this._active)
+                this.elementSet.root.classList.add(
+                    "rw-mdc-warnDialog-user--active"
+                );
+            else
+                this.elementSet.root.classList.remove(
+                    "rw-mdc-warnDialog--active"
+                );
+        }
+        this._active = value;
     }
 
+    lastUser: User;
     user: User;
     private updating: boolean;
 
@@ -313,8 +341,9 @@ class MaterialWarnDialogUser extends RWUIElement {
             case "input":
                 const textInput = (
                     <MaterialTextInput
-                        width={"80%"}
+                        width={"400px"}
                         label={i18next.t("ui:warn.user.input")}
+                        defaultText={this.lastUser.username}
                         autofocus
                     />
                 );
@@ -323,31 +352,49 @@ class MaterialWarnDialogUser extends RWUIElement {
                     components: MaterialTextInputUpgrade(textInput),
                 };
 
+                const updateName = () => {
+                    // MediaWiki trims the start and end of article names. Might as well.
+                    const content = this.elementSet.targetUserInput.components.textField.value.trim();
+                    if (content.length > 0)
+                        (overlayInfo as OverlayContentInput).onFinish(content);
+                };
+
                 textInput
                     .querySelector("input")
                     .addEventListener("blur", () => {
-                        // MediaWiki trims the start and end of article names. Might as well.
-                        const content = this.elementSet.targetUserInput.components.textField.value.trim();
-                        if (content.length > 0)
-                            (overlayInfo as OverlayContentInput).onFinish(
-                                content
-                            );
+                        updateName();
                     });
                 textInput
                     .querySelector("input")
                     .addEventListener("keyup", (event) => {
                         if (event.key === "Enter") {
-                            // MediaWiki trims the start and end of article names. Might as well.
-                            const content = this.elementSet.targetUserInput.components.textField.value.trim();
-                            if (content.length > 0)
-                                (overlayInfo as OverlayContentInput).onFinish(
-                                    content
-                                );
+                            updateName();
                         }
                     });
                 return (
                     <div class={"rw-mdc-warnDialog-user--input"}>
                         {textInput}
+                        <MaterialIconButton
+                            icon={"send"}
+                            tooltip={"Target this user"}
+                            onClick={() => {
+                                updateName();
+                            }}
+                        />
+                        {
+                            // Don't show the reset button if the target was initially unset.
+                            this.lastUser && (
+                                <MaterialIconButton
+                                    icon={"close"}
+                                    tooltip={"Cancel"}
+                                    onClick={() => {
+                                        (overlayInfo as OverlayContentInput).onFinish(
+                                            this.lastUser.username
+                                        );
+                                    }}
+                                />
+                            )
+                        }
                     </div>
                 );
         }
@@ -381,6 +428,7 @@ class MaterialWarnDialogUser extends RWUIElement {
      * Removes the target user and resets the input field.
      */
     async clearUser(): Promise<void> {
+        this.lastUser = this.user;
         this.user = undefined;
         this.active = false;
         this.refresh();
@@ -397,49 +445,61 @@ class MaterialWarnDialogUser extends RWUIElement {
             );
 
         this.updating = true;
-        this.user = user;
 
-        if (!user.isPopulated()) {
+        if (!!this.lastUser && user.username === this.lastUser.username)
+            // Let's not waste resources in getting the same user's data.
+            this.user = this.lastUser;
+        else this.user = user;
+
+        if (!this.user.isPopulated()) {
             // Set to inactive in order to hoist loading screen.
             this.active = false;
             this.refresh();
 
-            await user.populate();
+            await this.user.populate();
         }
-        if (!user.warningAnalysis) {
+        if (!this.user.warningAnalysis) {
             // Set to inactive in order to hoist loading screen.
             this.active = false;
             this.refresh();
 
-            await user.getWarningAnalysis();
+            await this.user.getWarningAnalysis();
         }
 
         this.updating = false;
         // All done. Show!
         this.active = true;
-        this.refresh();
+        console.log("updated");
+
+        // Small delay in order to let previous refreshes pass through.
+        setTimeout(() => {
+            this.refresh();
+        }, 100);
     }
 
     /**
-     * Refreshes the content of the root element
+     * Refreshes the content of the root element.
      */
     refresh(): void {
+        const warnDialogId = `rwMdcWarnDialogUser__${this.props.warnDialog.id}`;
         // Oh, how I miss setState()...
         const root = (
-            <div class={"rw-mdc-warnDialog-user mdc-card mdc-card--outlined"}>
+            <div
+                id={warnDialogId}
+                class={"rw-mdc-warnDialog-user mdc-card mdc-card--outlined"}
+            >
                 {this.renderMain()}
                 {this.renderOverlay()}
             </div>
         );
-
-        if (this.elementSet.root) {
-            this.elementSet.root.parentElement.replaceChild(
-                root,
-                this.elementSet.root
+        console.log("refreshing");
+        const existingRoot = document.getElementById(warnDialogId);
+        if (existingRoot != null) {
+            existingRoot.parentElement.replaceChild(
+                (this.elementSet.root = root),
+                existingRoot
             );
-        }
-
-        this.elementSet.root = root;
+        } else this.elementSet.root = root;
 
         this.active =
             !!this.user &&
@@ -451,6 +511,8 @@ class MaterialWarnDialogUser extends RWUIElement {
                 this.elementSet.targetUserInput.components.textField.focus();
             }
         }
+
+        console.log("refreshed");
     }
 
     /**
@@ -458,6 +520,11 @@ class MaterialWarnDialogUser extends RWUIElement {
      */
     render(): JSX.Element {
         this.refresh();
+
+        if (!this.elementSet.root) {
+            throw "Refresh did not build warn dialog!";
+        }
+
         if (
             (!this.user ||
                 !this.user.isPopulated() ||
@@ -466,9 +533,9 @@ class MaterialWarnDialogUser extends RWUIElement {
             !this.active
         )
             // Execute asynchronously to prevent repeat calls.
-            setTimeout(() => {
+            (async () => {
                 this.updateUser(this.props.user);
-            });
+            })();
         return this.elementSet.root;
     }
 }

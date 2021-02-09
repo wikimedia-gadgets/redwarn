@@ -19,3 +19,23 @@
 .bullet {
     margin: 0 0.5em;
 }
+
+/* Self-implemented icon button hover animation */
+.mdc-icon-button {
+    position: relative;
+}
+
+.mdc-icon-button .mdc-icon-button__ripple {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    will-change: background-color;
+    transition: background-color 0.1s ease-in-out;
+}
+
+.mdc-icon-button .mdc-icon-button__ripple:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+}

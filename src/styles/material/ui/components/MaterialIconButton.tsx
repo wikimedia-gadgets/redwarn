@@ -1,5 +1,6 @@
 import { BaseProps, h } from "tsx-dom";
 import expandDataAttributes from "rww/styles/material/util/expandDataAttributes";
+import { MDCRipple } from "@material/ripple";
 
 export interface MaterialIconButtonProperties extends BaseProps {
     onClick?: (event: MouseEvent) => void;
@@ -18,7 +19,7 @@ export interface MaterialIconButtonProperties extends BaseProps {
 
 export default function (props: MaterialIconButtonProperties): JSX.Element {
     const { onClick, label, icon, iconColor, tooltip } = props;
-    return (
+    const iconButton = (
         <button
             type="button"
             class="mdc-icon-button material-icons"
@@ -32,7 +33,13 @@ export default function (props: MaterialIconButtonProperties): JSX.Element {
             style={`color:${iconColor ?? "initial"};`}
             {...expandDataAttributes(props)}
         >
+            <span class="mdc-icon-button__ripple" />
             {icon}
         </button>
     );
+
+    const iconButtonRipple = new MDCRipple(iconButton);
+    iconButtonRipple.unbounded = true;
+
+    return iconButton;
 }

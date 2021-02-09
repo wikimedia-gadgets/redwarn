@@ -21,7 +21,7 @@ export class ClientUser extends UserAccount {
     /**
      * The user's RedWarn configuration file.
      */
-    public get redwarnConfigPage() {
+    public get redwarnConfigPage(): Page {
         return (
             this._redwarnConfigPage ??
             (this._redwarnConfigPage = this.getUserSubpage("redwarnConfig.js"))
@@ -42,16 +42,22 @@ export class ClientUser extends UserAccount {
     }
 
     public async init(): Promise<void> {
-        await this.getGroups();
-        this.emailEnabled =
-            (
-                await MediaWikiAPI.get({
-                    action: "query",
-                    meta: "userinfo",
-                    uiprop: "email",
-                    format: "json",
-                })
-            ).query.userinfo.emailauthenticated != null;
+        // Run all requests "parallel".
+        await Promise.all([
+            this.getGroups(),
+            new Promise(async (resolve) => {
+                this.emailEnabled =
+                    (
+                        await MediaWikiAPI.get({
+                            action: "query",
+                            meta: "userinfo",
+                            uiprop: "email",
+                            format: "json",
+                        })
+                    ).query.userinfo.emailauthenticated != null;
+                resolve();
+            }),
+        ]);
     }
 
     /**

@@ -18,7 +18,7 @@ export default function (
     const frameOptions: RWUIIFrameDialogProps = Object.assign(
         {
             src: additionalProps.safeMode
-                ? `${url(page.url, { safemode: 1 })}`
+                ? url(page.url, { safemode: 1 })
                 : page.url,
             width: "calc(100vw - 176px)",
             height: "90vh",

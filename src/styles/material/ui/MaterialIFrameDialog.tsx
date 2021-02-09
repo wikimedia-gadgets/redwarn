@@ -17,6 +17,7 @@ import i18next from "i18next";
 import Dependencies from "rww/ui/Dependencies";
 
 import "../css/iframeDialog.css";
+import { url } from "rww/util";
 
 export default class MaterialIFrameDialog extends RWUIIFrameDialog {
     /**
@@ -29,13 +30,10 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
         const dialog = upgradeMaterialDialog(this);
 
         return new Promise((resolve) => {
-            dialog.listen(
-                "MDCDialog:closed",
-                async (event: Event & { detail: { action: string } }) => {
-                    styleStorage.dialogTracker.delete(this.id);
-                    resolve(null);
-                }
-            );
+            dialog.listen("MDCDialog:closed", async () => {
+                styleStorage.dialogTracker.delete(this.id);
+                resolve(null);
+            });
         });
     }
 
@@ -90,7 +88,15 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
                     </MaterialDialogTitle>
                 )}
                 <MaterialDialogContent>
-                    <iframe src={this.props.src} />
+                    <iframe
+                        src={
+                            !!this.props.fragment
+                                ? url(this.props.src, undefined, {
+                                      fragment: this.props.fragment,
+                                  })
+                                : this.props.src
+                        }
+                    />
                 </MaterialDialogContent>
                 <MaterialDialogActions>
                     {!!this.props.actions && this.props.actions.length > 0 ? (
@@ -108,14 +114,13 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
 
         if (this.props.customStyle) {
             if (Array.isArray(this.props.customStyle)) {
-                for (const style in this.props.customStyle)
-                    actualDependencies.push({
-                        type: "style",
-                        id: `rw-iframe-dialog-customStyle-${style}`,
-                        src: `data:text/css;base64,${btoa(
-                            this.props.customStyle[style]
-                        )}`,
-                    });
+                actualDependencies.push({
+                    type: "style",
+                    id: `rw-iframe-dialog-customStyle`,
+                    src: `data:text/css;base64,${btoa(
+                        this.props.customStyle.reduce((p, n) => `${p}\n\n${n}`)
+                    )}`,
+                });
             } else {
                 actualDependencies.push({
                     type: "style",
@@ -127,19 +132,20 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
 
         if (this.props.customScripts) {
             if (Array.isArray(this.props.customScripts)) {
-                for (const script in this.props.customScripts)
-                    actualDependencies.push({
-                        type: "script",
-                        id: `rw-iframe-dialog-customScript-${script}`,
-                        src: `data:text/css;base64,${btoa(
-                            this.props.customScripts[script]
-                        )}`,
-                    });
+                actualDependencies.push({
+                    type: "script",
+                    id: `rw-iframe-dialog-customScript`,
+                    src: `data:text/javascript;base64,${btoa(
+                        this.props.customScripts.reduce(
+                            (p, n) => `${p}\n\n${n}`
+                        )
+                    )}`,
+                });
             } else {
                 actualDependencies.push({
-                    type: "style",
-                    id: "rw-iframe-dialog-customStyle",
-                    src: `data:text/css;base64,${btoa(
+                    type: "script",
+                    id: "rw-iframe-dialog-customScript",
+                    src: `data:text/javascript;base64,${btoa(
                         this.props.customScripts
                     )}`,
                 });
@@ -148,11 +154,13 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
 
         const iframe: HTMLIFrameElement = this.element.querySelector("iframe");
         const iframeInit = () => {
+            if (!document.body.contains(this.element)) return;
+
             const iframeDoc =
                 iframe.contentDocument || iframe.contentWindow?.document;
             if (
                 !!iframeDoc &&
-                iframeDoc.location.toString() === this.props.src
+                iframeDoc.location.toString() !== "about:blank"
             ) {
                 const headInit = () => {
                     const iframeDoc =
@@ -163,7 +171,6 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
                             const depElement = Dependencies.buildDependency(
                                 dependency
                             );
-                            console.log(depElement);
                             let oldElement;
                             if (
                                 (oldElement = iframeDoc.getElementById(
@@ -177,8 +184,6 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
                                     oldElement
                                 );
                             }
-                            console.log(depElement.parentElement);
-                            depElement.parentElement.classList.add("asf");
                         }
                         return;
                     }

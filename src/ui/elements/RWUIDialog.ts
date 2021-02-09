@@ -228,6 +228,7 @@ export interface RWUIIFrameDialogProps extends RWUIDialogProperties {
      */
     height?: string;
     src: string;
+    fragment?: string;
     dependencies?: Dependency[];
     customStyle?: string | string[];
     customScripts?: string | string[];

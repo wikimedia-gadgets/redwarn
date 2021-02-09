@@ -6,7 +6,7 @@ function dec2hex(dec: number) {
 }
 
 // generateId :: Integer -> String
-export default function generateId(length = 40): string {
+export default function generateId(length = 8): string {
     const arr = new Uint8Array(length / 2);
     window.crypto.getRandomValues(arr);
     return Array.from(arr, dec2hex).join("");

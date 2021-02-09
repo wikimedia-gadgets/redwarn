@@ -119,3 +119,15 @@
 .rw-mdc-warnDialog-user--overview a:hover {
     text-decoration: underline;
 }
+
+.rw-mdc-warnDialog-reason {
+    margin: 8px 0;
+}
+
+.rw-mdc-warnDialog-reason .mdc-select {
+    width: 100%;
+}
+
+.rw-mdc-warnDialog-reason .mdc-select__menu {
+    max-height: 40vh;
+}

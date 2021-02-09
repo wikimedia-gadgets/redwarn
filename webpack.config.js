@@ -49,7 +49,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.txt$/,
+                test: /\.(txt|svg)$/,
                 use: ["text-loader"]
             },
             {

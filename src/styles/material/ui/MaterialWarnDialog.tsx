@@ -15,8 +15,12 @@ import MaterialDialog, {
 } from "./MaterialDialog";
 import MaterialWarnDialogUser from "./components/MaterialWarnDialogUser";
 import i18next from "i18next";
+import MaterialWarnDialogReason from "rww/styles/material/ui/components/MaterialWarnDialogReason";
+import type { User } from "rww/mediawiki";
 
 export default class MaterialWarnDialog extends RWUIWarnDialog {
+    user: User;
+
     show(): Promise<any> {
         const styleStorage = getMaterialStorage();
         registerMaterialDialog(this);
@@ -81,9 +85,10 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                 >
                     <hr style={{ margin: "0" }} />
                     <MaterialWarnDialogUser
-                        user={this.props.targetUser}
                         warnDialog={this}
+                        originalUser={this.props.targetUser}
                     />
+                    <MaterialWarnDialogReason warnDialog={this} />
                 </MaterialDialogContent>
                 <MaterialDialogActions>
                     <MaterialButton dialogAction="confirm">
@@ -98,4 +103,8 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         ) as HTMLDialogElement;
         return this.element;
     }
+}
+
+export interface MaterialWarnDialogChildProps {
+    warnDialog: MaterialWarnDialog;
 }

@@ -45,9 +45,9 @@ export function MaterialDialogContent({
     style,
 }: BaseProps & { style?: Partial<CSSStyleDeclaration> }): JSX.Element {
     return (
-        <h2 class="mdc-dialog__content" style={style}>
+        <div class="mdc-dialog__content" style={style}>
             {children}
-        </h2>
+        </div>
     );
 }
 
@@ -56,8 +56,8 @@ export function MaterialDialogActions({
     style,
 }: BaseProps & { style?: Partial<CSSStyleDeclaration> }): JSX.Element {
     return (
-        <h2 class="mdc-dialog__actions" style={style}>
+        <div class="mdc-dialog__actions" style={style}>
             {children}
-        </h2>
+        </div>
     );
 }

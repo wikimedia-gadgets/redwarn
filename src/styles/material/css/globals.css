@@ -39,3 +39,10 @@
 .mdc-icon-button .mdc-icon-button__ripple:hover {
     background-color: rgba(0, 0, 0, 0.08);
 }
+
+.mdc-list .mdc-list-header {
+    background: #ddd;
+    font-size: small;
+    line-height: 2em;
+    height: 2em;
+}

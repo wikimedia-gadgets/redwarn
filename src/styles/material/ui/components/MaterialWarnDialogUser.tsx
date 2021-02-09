@@ -1,4 +1,3 @@
-import RWUIElement from "rww/ui/elements/RWUIElement";
 import { h } from "tsx-dom";
 import {
     Page,
@@ -11,7 +10,7 @@ import MaterialTextInput, {
     MaterialTextInputComponents,
     MaterialTextInputUpgrade,
 } from "rww/styles/material/ui/components/MaterialTextInput";
-import MaterialWarnDialog from "rww/styles/material/ui/MaterialWarnDialog";
+import { MaterialWarnDialogChildProps } from "rww/styles/material/ui/MaterialWarnDialog";
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
 import RWUI from "rww/ui/RWUI";
 import i18next from "i18next";
@@ -21,6 +20,7 @@ import { capitalize, generateId, getMonthHeader } from "rww/util";
 import { MDCChipSet } from "@material/chips";
 import MaterialMenu, { openMenu } from "./MaterialMenu";
 import showPlainMediaWikiIFrameDialog from "rww/styles/material/util/showPlainMediaWikiIFrameDialog";
+import { MaterialWarnDialogChild } from "./MaterialWarnDialogChild";
 
 interface OverlayContentLoading {
     type: "loading";
@@ -33,11 +33,6 @@ interface OverlayContentInput {
 }
 
 type OverlayContent = OverlayContentInput | OverlayContentLoading;
-
-interface MaterialWarnDialogUserProps {
-    warnDialog: MaterialWarnDialog;
-    user?: User;
-}
 
 function MaterialWarnDialogUserCardAccountGroups({
     parent,
@@ -247,11 +242,13 @@ function MaterialWarnDialogUserCard({
     return card;
 }
 
-export default function (props: MaterialWarnDialogUserProps): JSX.Element {
+export default function (
+    props: MaterialWarnDialogChildProps & { originalUser?: User }
+): JSX.Element {
     return new MaterialWarnDialogUser(props).render();
 }
 
-class MaterialWarnDialogUser extends RWUIElement {
+class MaterialWarnDialogUser extends MaterialWarnDialogChild {
     private elementSet: {
         root?: JSX.Element;
         overlay?: JSX.Element;
@@ -291,12 +288,21 @@ class MaterialWarnDialogUser extends RWUIElement {
     }
 
     lastUser: User;
-    user: User;
+
+    get user(): User {
+        return this.props.warnDialog.user;
+    }
+    set user(value: User) {
+        this.props.warnDialog.user = value;
+    }
+
     private updating: boolean;
 
-    constructor(readonly props: MaterialWarnDialogUserProps) {
+    constructor(
+        readonly props: MaterialWarnDialogChildProps & { originalUser?: User }
+    ) {
         super();
-        this.user = props.user;
+        this.user = props.originalUser;
     }
 
     renderOverlayContent(overlayInfo?: OverlayContent): JSX.Element {
@@ -469,7 +475,6 @@ class MaterialWarnDialogUser extends RWUIElement {
         this.updating = false;
         // All done. Show!
         this.active = true;
-        console.log("updated");
 
         // Small delay in order to let previous refreshes pass through.
         setTimeout(() => {
@@ -481,19 +486,19 @@ class MaterialWarnDialogUser extends RWUIElement {
      * Refreshes the content of the root element.
      */
     refresh(): void {
-        const warnDialogId = `rwMdcWarnDialogUser__${this.props.warnDialog.id}`;
+        const rootId = `rwMdcWarnDialogUser__${this.props.warnDialog.id}`;
         // Oh, how I miss setState()...
         const root = (
             <div
-                id={warnDialogId}
+                id={rootId}
                 class={"rw-mdc-warnDialog-user mdc-card mdc-card--outlined"}
             >
                 {this.renderMain()}
                 {this.renderOverlay()}
             </div>
         );
-        console.log("refreshing");
-        const existingRoot = document.getElementById(warnDialogId);
+
+        const existingRoot = document.getElementById(rootId);
         if (existingRoot != null) {
             existingRoot.parentElement.replaceChild(
                 (this.elementSet.root = root),
@@ -511,8 +516,6 @@ class MaterialWarnDialogUser extends RWUIElement {
                 this.elementSet.targetUserInput.components.textField.focus();
             }
         }
-
-        console.log("refreshed");
     }
 
     /**
@@ -534,7 +537,7 @@ class MaterialWarnDialogUser extends RWUIElement {
         )
             // Execute asynchronously to prevent repeat calls.
             (async () => {
-                this.updateUser(this.props.user);
+                this.updateUser(this.props.originalUser);
             })();
         return this.elementSet.root;
     }

@@ -22,6 +22,11 @@ import MaterialRadioField, {
 import { MaterialRadioProps } from "rww/styles/material/ui/components/MaterialRadio";
 import MaterialIcon from "./MaterialIcon";
 import { WarningIcons } from "rww/styles/material/data/WarningIcons";
+import MaterialTextInput, {
+    MaterialTextInputComponents,
+    MaterialTextInputUpgrade,
+} from "rww/styles/material/ui/components/MaterialTextInput";
+import i18next from "i18next";
 
 function MaterialWarnDialogReasonDropdown({
     parent,
@@ -189,22 +194,25 @@ function MaterialWarnDialogReasonLevel({
     );
 }
 
-export default function (
-    props: MaterialWarnDialogChildProps & {
-        defaultReason?: Warning;
-        defaultLevel?: WarningLevel;
-        relatedPage?: Page;
-    }
-): JSX.Element {
-    return new MaterialWarnDialogReason(props).render();
-}
+type MaterialWarnDialogReasonProps = MaterialWarnDialogChildProps & {
+    defaultReason?: Warning;
+    defaultLevel?: WarningLevel;
+    relatedPage?: Page;
+};
 
 class MaterialWarnDialogReason extends MaterialWarnDialogChild {
     private elementSet: {
         root?: JSX.Element;
         dropdown?: JSX.Element;
         levels?: JSX.Element & { update?: (level: WarningLevel) => void };
-        page?: JSX.Element;
+        page?: {
+            element: JSX.Element;
+            components: MaterialTextInputComponents;
+        };
+        additionalText?: {
+            element: JSX.Element;
+            components: MaterialTextInputComponents;
+        };
     } = {};
 
     get user(): User {
@@ -244,6 +252,7 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
         } else {
             this.warningLevel = null;
         }
+        this.props.warnDialog.updatePreview();
         this.refresh();
     }
     private _warningLevel: null | WarningLevel;
@@ -254,22 +263,51 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
         this._warningLevel = value;
         if (this.elementSet.levels?.update)
             this.elementSet.levels.update(value);
+
+        this.props.warnDialog.updatePreview();
+    }
+    get relatedPage(): string {
+        return this.elementSet.page?.components?.textField?.value ?? null;
+    }
+    set relatedPage(value: string) {
+        if (this.elementSet.page)
+            this.elementSet.page.components.textField.value = value;
+    }
+    get additionalText(): string {
+        return (
+            this.elementSet.additionalText?.components?.textField?.value ?? null
+        );
+    }
+    set additionalText(value: string) {
+        if (this.elementSet.additionalText)
+            this.elementSet.additionalText.components.textField.value = value;
     }
 
     private readonly defaultLevel: WarningLevel;
 
-    constructor(
-        readonly props: MaterialWarnDialogChildProps & {
-            defaultReason?: Warning;
-            defaultLevel?: WarningLevel;
-        }
-    ) {
+    constructor(readonly props: MaterialWarnDialogReasonProps) {
         super();
         this.warningLevel = this.defaultLevel = props.defaultLevel;
         this.warning = props.defaultReason;
     }
 
     refresh(): void {
+        const keyListener = (textInput: JSX.Element) => {
+            return () => {
+                // Only update if no changes for 2 seconds.
+                const HOLD_TIME = 2000;
+                textInput.setAttribute("data-last-keydown", `${Date.now()}`);
+                setTimeout(() => {
+                    if (
+                        Date.now() -
+                            +textInput.getAttribute("data-last-keydown") >=
+                        HOLD_TIME
+                    )
+                        this.props.warnDialog.updatePreview();
+                }, HOLD_TIME - 5);
+            };
+        };
+
         const rootId = `rwMdcWarnDialogReason__${this.props.warnDialog.id}`;
         const root = (
             <div id={rootId} class={"rw-mdc-warnDialog-reason"}>
@@ -284,6 +322,49 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
                         update?: (level: WarningLevel) => void;
                     })
                 }
+                {this.elementSet.page?.element ??
+                    ((): JSX.Element => {
+                        const textInput = (
+                            <MaterialTextInput
+                                width={"100%"}
+                                label={i18next.t("ui:warn.reason.page")}
+                                defaultText={
+                                    this.props.relatedPage?.title ?? ""
+                                }
+                                autofocus
+                            />
+                        );
+                        this.elementSet.page = {
+                            element: textInput,
+                            components: MaterialTextInputUpgrade(textInput),
+                        };
+                        textInput.addEventListener(
+                            "keydown",
+                            keyListener(textInput)
+                        );
+                        return textInput;
+                    })()}
+                {this.elementSet.additionalText?.element ??
+                    ((): JSX.Element => {
+                        const textInput = (
+                            <MaterialTextInput
+                                width={"100%"}
+                                label={i18next.t(
+                                    "ui:warn.reason.additionalText"
+                                )}
+                                autofocus
+                            />
+                        );
+                        this.elementSet.additionalText = {
+                            element: textInput,
+                            components: MaterialTextInputUpgrade(textInput),
+                        };
+                        textInput.addEventListener(
+                            "keydown",
+                            keyListener(textInput)
+                        );
+                        return textInput;
+                    })()}
             </div>
         );
 
@@ -300,4 +381,14 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
         this.refresh();
         return this.elementSet.root;
     }
+}
+
+export { MaterialWarnDialogReason as MaterialWarnDialogReasonController };
+export default function generator(
+    props: MaterialWarnDialogReasonProps
+): JSX.Element & { MWDReason: MaterialWarnDialogReason } {
+    const mwdReason = new MaterialWarnDialogReason(props);
+    return Object.assign(mwdReason.render(), {
+        MWDReason: mwdReason,
+    });
 }

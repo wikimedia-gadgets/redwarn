@@ -9,14 +9,12 @@ export const RW_VERSION_SUMMARY = "nothing yet";
 
 export const RW_CONFIG_VERSION = 1;
 
-// Since MediaWiki will convert some of these templates, we have to store these
-// as Base64 encoded strings.
-export const RW_SIG = atob("fn5+fg==");
-export const RW_WELCOME = atob("e3tzdWJzdDpXZWxjb21lfX0=");
-export const RW_WELCOME_IP = atob("e3tzdWJzdDp3ZWxjb21lLWFub259fQ==");
-export const RW_SHARED_IP_ADVICE = atob(
-    "XG46e3tzdWJzdDpTaGFyZWQgSVAgYWR2aWNlfX0="
-);
+export const RW_SIGNATURE = "~~~~";
+export const RW_WELCOME = "{{subst:Welcome}}";
+export const RW_WELCOME_ANON = "{{subst:welcome-anon}}";
+export const RW_SHARED_IP_ADVICE = "{{subst:Shared IP advice}}";
+
+/* Do not decode! The source code must NEVER have closing or opening nowiki tags! */
 export const RW_NOWIKI_OPEN = atob("PG5vd2lraT4=");
 export const RW_NOWIKI_CLOSE = atob("PC9ub3dpa2k+");
 

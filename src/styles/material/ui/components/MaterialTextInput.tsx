@@ -49,8 +49,9 @@ export default function (props: MaterialTextInputProps): JSX.Element {
         >
             <label
                 class={`rw-mdc-full-width mdc-text-field ${
-                    (props.outlined && " mdc-text-field--outlined") ??
-                    " mdc-text-field--outlined"
+                    props.outlined
+                        ? " mdc-text-field--outlined"
+                        : " mdc-text-field--filled"
                 }${
                     (props.leadingIcon &&
                         " mdc-text-field--with-leading-icon") ??
@@ -61,18 +62,23 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                     ""
                 }`}
             >
-                <span class="mdc-notched-outline">
-                    <span class="mdc-notched-outline__leading" />
-                    <span class="mdc-notched-outline__notch">
-                        <span
-                            class="mdc-floating-label"
-                            htmlFor={`${id}_input`}
-                        >
-                            {props.label}
+                {props.outlined ? (
+                    <span class="mdc-notched-outline">
+                        <span class="mdc-notched-outline__leading" />
+                        <span class="mdc-notched-outline__notch">
+                            <span
+                                class="mdc-floating-label"
+                                htmlFor={`${id}_input`}
+                            >
+                                {props.label}
+                            </span>
                         </span>
+                        <span class="mdc-notched-outline__trailing" />
                     </span>
-                    <span class="mdc-notched-outline__trailing" />
-                </span>
+                ) : (
+                    <span class="mdc-floating-label">{props.label}</span>
+                )}
+                {!props.outlined && <span class="mdc-text-field__ripple" />}
                 {props.prefix && (
                     <span class="mdc-text-field__affix mdc-text-field__affix--prefix">
                         {props.prefix}
@@ -127,6 +133,7 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                         {props.suffix}
                     </span>
                 )}
+                {!props.outlined && <span class="mdc-line-ripple" />}
             </label>
             <div class="mdc-text-field-helper-line">
                 {props.helperText ? (

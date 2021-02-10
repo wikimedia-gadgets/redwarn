@@ -67,6 +67,11 @@
             }
         },
 
+        "reason": {
+            "page": "Related page",
+            "additionalText": "Additional text"
+        },
+
         "ok": "Warn"
     },
 

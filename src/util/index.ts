@@ -9,3 +9,4 @@ export { default as url } from "./url";
 export { default as articlePath } from "./articlePath";
 export { default as isIPAddress } from "./isIPAddress";
 export { default as normalize } from "./normalize";
+export { default as warningSuffix } from "./warningSuffix";

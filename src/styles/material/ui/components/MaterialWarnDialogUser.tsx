@@ -244,12 +244,6 @@ function MaterialWarnDialogUserCard({
     return card;
 }
 
-export default function (
-    props: MaterialWarnDialogChildProps & { originalUser?: User }
-): JSX.Element {
-    return new MaterialWarnDialogUser(props).render();
-}
-
 class MaterialWarnDialogUser extends MaterialWarnDialogChild {
     private elementSet: {
         root?: JSX.Element;
@@ -296,6 +290,7 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
     }
     set user(value: User) {
         this.props.warnDialog.user = value;
+        this.props.warnDialog.updatePreview();
     }
 
     private updating: boolean;
@@ -577,4 +572,14 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
 
         return this.elementSet.root;
     }
+}
+
+export { MaterialWarnDialogUser as MaterialWarnDialogUserController };
+export default function generator(
+    props: MaterialWarnDialogChildProps & { originalUser?: User }
+): JSX.Element & { MWDUser: MaterialWarnDialogUser } {
+    const mwdUser = new MaterialWarnDialogUser(props);
+    return Object.assign(mwdUser.render(), {
+        MWDUser: mwdUser,
+    });
 }

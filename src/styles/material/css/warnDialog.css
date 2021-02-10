@@ -120,8 +120,8 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    line-height: 1em;
-    height: 1em;
+    line-height: 1.2em;
+    height: 1.2em;
 }
 
 .rw-mdc-warnDialog-user--loading .rw-mdc-warnDialog-user--username {
@@ -215,4 +215,25 @@
     margin-top: 16px;
     width: 30%;
     border-right: 1px solid gray;
+}
+
+.rw-mdc-warnDialog-helperText {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 16px;
+}
+
+.rw-mdc-warnDialog-xray {
+    border-radius: 8px;
+}
+
+.rw-mdc-warnDialog-xray .rw-mdc-warnDialog-xray--content {
+    min-height: 100px;
+    font-family: sans-serif;
+    font-size: 0.95rem;
+    font-weight: normal;
+    letter-spacing: normal;
+    line-height: 1.5em;
+    color: black;
 }

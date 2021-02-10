@@ -1,4 +1,8 @@
-import { RW_SIG, RW_WELCOME, RW_WELCOME_IP } from "rww/data/RedWarnConstants";
+import {
+    RW_SIGNATURE,
+    RW_WELCOME,
+    RW_WELCOME_ANON,
+} from "rww/data/RedWarnConstants";
 import RWUI from "rww/ui/RWUI";
 import getMonthHeader from "rww/util/getMonthHeader";
 import regexEscape from "rww/util/regexEscape";
@@ -295,9 +299,9 @@ export class User {
      * Welcomes the user.
      */
     async quickWelcome(): Promise<void> {
-        const isIp = mw.util.isIPAddress(this.username);
+        const isIp = isIPAddress(this.username);
         await this.addToUserTalk(
-            `\n${isIp ? RW_WELCOME_IP : RW_WELCOME} ${RW_SIG}\n`,
+            `\n${isIp ? RW_WELCOME_ANON : RW_WELCOME} ${RW_SIGNATURE}\n`,
             false,
             isIp ? "Welcome! (IP)" : "Welcome!"
         );

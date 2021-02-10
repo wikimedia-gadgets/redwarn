@@ -4,7 +4,7 @@ import { RWUIIFrameDialogProps } from "rww/ui/elements/RWUIDialog";
 import { url } from "rww/util";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const plainCSS: string = require("../css-plain/plainMediaWiki.css.txt");
+const plainCSS: string = require("../plain/plainMediaWiki.css.txt");
 
 interface PlainMediaWikiIFrameDialogShowOptions {
     safeMode?: boolean;

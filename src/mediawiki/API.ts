@@ -29,6 +29,26 @@ export class MediaWikiAPI {
         }
     }
 
+    static async post(
+        parameters: Record<string, any>,
+        ajaxOptions?: AjaxSettings
+    ): Promise<JQueryXHR> {
+        try {
+            const finalParameters = Object.assign({}, parameters);
+            for (const key of Object.keys(finalParameters)) {
+                if (Array.isArray(finalParameters[key]))
+                    finalParameters[key] = finalParameters[key].join("|");
+            }
+
+            return await this.api.post(finalParameters, ajaxOptions);
+        } catch (error) {
+            console.error(
+                `Error occured while running MediaWiki API get call: ${error.message}`
+            );
+            throw error;
+        }
+    }
+
     static async postWithEditToken(
         parameters: Record<string, any>,
         ajaxOptions?: AjaxSettings

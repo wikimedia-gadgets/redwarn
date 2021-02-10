@@ -99,9 +99,6 @@ function MaterialWarnDialogReasonLevel({
     let selectorElement: JSX.Element;
     let updater: (level: WarningLevel) => void;
 
-    console.log(parent.warning);
-    console.log(parent.warningLevel);
-
     if (parent.warning != null) {
         switch (parent.warning.type) {
             case WarningType.Tiered: {
@@ -147,15 +144,11 @@ function MaterialWarnDialogReasonLevel({
                     <MaterialRadioField<WarningLevel>
                         radios={radios}
                         onChange={(level) => {
-                            console.log("level change");
-                            console.log(level);
                             parent.warningLevel = level;
                         }}
                     />
                 ) as MaterialRadioFieldElement<WarningLevel>;
                 updater = (level) => {
-                    console.log("updating level");
-                    console.log(level);
                     for (const radio of radioField.MDCRadios) {
                         if (radio.radioValue === level) {
                             radio.MDCRadio.checked = true;
@@ -175,9 +168,6 @@ function MaterialWarnDialogReasonLevel({
     }
     // TODO i18n
     else selectorElement = <span>No warning selected.</span>;
-
-    console.log("reason rendered");
-    console.log(selectorElement);
 
     return Object.assign(
         <div class="rw-mdc-warnDialog-reason--levels">

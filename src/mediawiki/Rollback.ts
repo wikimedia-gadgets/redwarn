@@ -385,9 +385,9 @@ export class Rollback {
                                 ),
                             },
                         ],
-                        content: i18next.t(
+                        content: `${i18next.t(
                             "ui:rollbackAvailableDialog.content"
-                        ),
+                        )}`,
                     });
                     return await dialog.show();
             }

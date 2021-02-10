@@ -8,8 +8,8 @@ interface Group {
 
 export default Group;
 
-export function GroupsFromNames(groupNames: string[]): Group[] {
-    const groups = [];
+export function GroupsFromNames(groupNames: string[]): GroupArray {
+    const groups = new GroupArray();
     for (const name of groupNames) {
         if (name === "*") continue;
 
@@ -22,4 +22,10 @@ export function GroupsFromNames(groupNames: string[]): Group[] {
         }
     }
     return groups;
+}
+
+export class GroupArray extends Array {
+    includesGroup(name: string): boolean {
+        return this.filter((group) => group.name === name).length > 0;
+    }
 }

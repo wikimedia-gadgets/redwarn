@@ -20,13 +20,13 @@ import i18next from "i18next";
 import MaterialWarnDialogReason, {
     MaterialWarnDialogReasonController,
 } from "rww/styles/material/ui/components/MaterialWarnDialogReason";
-import type { User } from "rww/mediawiki";
-import { MediaWikiAPI } from "rww/mediawiki";
-import { warningSuffix } from "rww/util";
+import { ClientUser, MediaWikiAPI, User } from "rww/mediawiki";
+import { normalize, warningSuffix } from "rww/util";
 import { RW_SIGNATURE } from "rww/data/RedWarnConstants";
 
 export default class MaterialWarnDialog extends RWUIWarnDialog {
     user: User;
+
     private _helperText: JSX.Element;
     get helperText(): string {
         return this._helperText?.innerText ?? null;
@@ -50,14 +50,18 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
     private mwdXray: JSX.Element;
 
     get warningText(): string {
-        if (!this.mwdReason?.MWDReason) return null;
+        if (
+            !this.mwdReason?.MWDReason?.warning?.template ||
+            !this.mwdReason?.MWDReason?.warningLevel
+        )
+            return null;
 
         // Don't worry about transclusion: The entire script output is nowiki'd.
         return `{{subst:${
             this.mwdReason.MWDReason.warning.template
         }${warningSuffix(this.mwdReason.MWDReason.warningLevel)}${
             this.mwdReason.MWDReason.relatedPage &&
-            `|${this.mwdReason.MWDReason.relatedPage}`
+            `|${normalize(this.mwdReason.MWDReason.relatedPage)}`
         }${
             this.mwdReason.MWDReason.additionalText &&
             `${this.mwdReason.MWDReason.relatedPage ? "|" : "||"}''${
@@ -93,24 +97,28 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
             return; // Give up. We're late.
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        // const previewHTML = require("../plain/mediawikiPreview.html.txt")
-        //     .replace(/--wikiUrl/g, RedWarnStore.wikiBase)
-        //     .replace(/--content/g, parseRequest?.["parse"]?.["text"] ?? "<b>Parsing failed.</b>");
-        const previewHTML =
+        this.mwdXray.querySelector(
+            ".rw-mdc-warnDialog-xray--content"
+        ).innerHTML =
             parseRequest?.["parse"]?.["text"]?.["*"] ??
             parseRequest?.["parse"]?.["text"] ??
             "<b>Parsing failed.</b>";
-
-        this.mwdXray.querySelector(
-            ".rw-mdc-warnDialog-xray--content"
-        ).innerHTML = previewHTML;
 
         this.mwdXray.querySelectorAll("a").forEach((anchor) => {
             anchor.target = "_blank";
         });
 
         this.mwdXray.setAttribute("data-last-update", `${requestTime}`);
+    }
+
+    validate(): true | string {
+        if (this.mwdReason?.MWDReason?.warning == null)
+            return "No warning template selected.";
+        if (this.mwdReason?.MWDReason?.warningLevel == null)
+            return "No warning level selected.";
+        if (this.user == null) return "No user selected.";
+        if (this.user?.username === ClientUser.i.username)
+            return "Self-warnings are not allowed.";
     }
 
     show(): Promise<any> {

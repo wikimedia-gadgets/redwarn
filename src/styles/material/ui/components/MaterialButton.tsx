@@ -7,6 +7,7 @@ export interface MaterialButtonProperties extends BaseProps {
     iconColor?: string;
     contentStyle?: Partial<CSSStyleDeclaration>;
     style?: Partial<CSSStyleDeclaration>;
+    onClick?: (event: MouseEvent) => void;
 }
 
 export default function (props: MaterialButtonProperties): JSX.Element {

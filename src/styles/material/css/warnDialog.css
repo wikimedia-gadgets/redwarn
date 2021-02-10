@@ -217,6 +217,12 @@
     border-right: 1px solid gray;
 }
 
+.rw-mdc-warnDialog-reason
+    .mdc-text-field--filled.mdc-ripple-upgraded--background-focused
+    .mdc-text-field__ripple::before {
+    opacity: 0;
+}
+
 .rw-mdc-warnDialog-helperText {
     position: absolute;
     top: 0;
@@ -226,14 +232,24 @@
 
 .rw-mdc-warnDialog-xray {
     border-radius: 8px;
+    border: 1px solid #aaa;
 }
 
 .rw-mdc-warnDialog-xray .rw-mdc-warnDialog-xray--content {
-    min-height: 100px;
+    min-height: 60px;
     font-family: sans-serif;
     font-size: 0.95rem;
     font-weight: normal;
     letter-spacing: normal;
     line-height: 1.5em;
     color: black;
+}
+
+.rw-mdc-warnDialog-xray .rw-mdc-warnDialog-xray--content p {
+    margin: 0;
+}
+
+/* Revert confirmation dialog */
+.rw-mdc-riskyRevert {
+    color: #f33;
 }

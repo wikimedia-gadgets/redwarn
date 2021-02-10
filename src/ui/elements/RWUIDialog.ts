@@ -115,7 +115,7 @@ export interface RWUIAlertDialogProps extends RWUIDialogProperties {
     /**
      * The content of the dialog.
      */
-    content?: ComponentChild[];
+    content?: ComponentChild;
 }
 
 export class RWUIAlertDialog extends RWUIDialog {

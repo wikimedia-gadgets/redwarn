@@ -22,6 +22,7 @@ import MaterialMenu, { openMenu } from "./MaterialMenu";
 import showPlainMediaWikiIFrameDialog from "rww/styles/material/util/showPlainMediaWikiIFrameDialog";
 import { MaterialWarnDialogChild } from "./MaterialWarnDialogChild";
 import { WarningIcons } from "rww/styles/material/data/WarningIcons";
+import MaterialAlertDialog from "rww/styles/material/ui/MaterialAlertDialog";
 
 interface OverlayContentLoading {
     type: "loading";
@@ -46,6 +47,7 @@ function MaterialWarnDialogUserCardAccountGroups({
 
     return (
         <div class={"rw-mdc-warnDialog-user--groups"}>
+            <b>Groups:</b>{" "}
             {user.groups
                 .map<JSX.Element>(
                     (group): JSX.Element => {
@@ -312,9 +314,7 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                 : {
                       type: "input",
                       onFinish: (newName) => {
-                          this.updateUser(
-                              User.fromUsername(normalize(newName))
-                          );
+                          this.updateUser(User.fromUsername(newName));
                       },
                   };
         }
@@ -348,7 +348,7 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                     <MaterialTextInput
                         width={"400px"}
                         label={i18next.t("ui:warn.user.input")}
-                        defaultText={this.lastUser.username}
+                        defaultText={this.lastUser?.username ?? ""}
                         autofocus
                     />
                 );
@@ -361,18 +361,19 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                     // MediaWiki trims the start and end of article names. Might as well.
                     const content = this.elementSet.targetUserInput.components.textField.value.trim();
                     if (content.length > 0)
-                        (overlayInfo as OverlayContentInput).onFinish(content);
+                        (overlayInfo as OverlayContentInput).onFinish(
+                            normalize(content)
+                        );
                 };
 
-                textInput
-                    .querySelector("input")
-                    .addEventListener("blur", () => {
-                        updateName();
-                    });
+                textInput.querySelector("input");
                 textInput
                     .querySelector("input")
                     .addEventListener("keyup", (event) => {
                         if (event.key === "Enter") {
+                            updateName();
+                        } else if (event.key === "Escape") {
+                            this.elementSet.targetUserInput.components.textField.value = this.lastUser.username;
                             updateName();
                         }
                     });
@@ -432,8 +433,8 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
     /**
      * Removes the target user and resets the input field.
      */
-    async clearUser(): Promise<void> {
-        this.lastUser = this.user;
+    async clearUser(lastUser?: User): Promise<void> {
+        this.lastUser = lastUser ?? this.user;
         this.user = undefined;
         this.active = false;
         this.refresh();
@@ -444,6 +445,8 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
      * @param user
      */
     async updateUser(user: User): Promise<void> {
+        if (user == null) return;
+
         if (this.updating)
             console.warn(
                 "Attempted to update user twice. Subsequent attempt blocked."
@@ -456,19 +459,54 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
             this.user = this.lastUser;
         else this.user = user;
 
-        if (!this.user.isPopulated()) {
-            // Set to inactive in order to hoist loading screen.
-            this.active = false;
-            this.refresh();
+        if (this.user != null) {
+            if (!this.user.isPopulated()) {
+                // Set to inactive in order to hoist loading screen.
+                this.active = false;
+                this.refresh();
 
-            await this.user.populate();
-        }
-        if (!this.user.warningAnalysis) {
-            // Set to inactive in order to hoist loading screen.
-            this.active = false;
-            this.refresh();
+                await this.user.populate();
+            }
 
-            await this.user.getWarningAnalysis();
+            // Whether or not we populated already.
+            if (
+                this.user instanceof UserAccount &&
+                this.user.groups.includesGroup("sysop")
+            ) {
+                if (
+                    (await new MaterialAlertDialog({
+                        // TODO i18n
+                        title: "Risky revert",
+                        content: (
+                            <div class={"rw-mdc-riskyRevert"}>
+                                <b>
+                                    You are about to warn an administrator. Are
+                                    you sure about this?
+                                </b>
+                            </div>
+                        ),
+                        actions: [
+                            {
+                                data: "cancel",
+                            },
+                            {
+                                data: "proceed",
+                            },
+                        ],
+                    }).show()) !== "proceed"
+                ) {
+                    await this.clearUser(this.lastUser);
+                    return;
+                }
+            }
+
+            if (!this.user.warningAnalysis) {
+                // Set to inactive in order to hoist loading screen.
+                this.active = false;
+                this.refresh();
+
+                await this.user.getWarningAnalysis();
+            }
         }
 
         this.updating = false;

@@ -38,9 +38,10 @@ export default class MaterialAlertDialog extends RWUIAlertDialog {
                         (action) => action.data === event.detail.action
                     );
                     if (actionSelected != null) {
-                        this._result =
-                            (await actionSelected.action(event)) ??
-                            event.detail.action;
+                        this._result = actionSelected.action
+                            ? (await actionSelected.action(event)) ??
+                              event.detail.action
+                            : event.detail.action;
                     } else {
                         this._result = event.detail.action;
                     }
@@ -102,7 +103,7 @@ export default class MaterialAlertDialog extends RWUIAlertDialog {
                 )}
                 {this.props.content && (
                     <MaterialDialogContent>
-                        {...this.props.content}
+                        {this.props.content}
                     </MaterialDialogContent>
                 )}
                 <MaterialDialogActions>

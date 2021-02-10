@@ -19,7 +19,7 @@ import {
 } from "rww/mediawiki";
 import i18next from "i18next";
 import { PageMissingError } from "rww/errors/MediaWikiErrors";
-import Group, { GroupsFromNames } from "rww/definitions/Group";
+import { GroupArray, GroupsFromNames } from "rww/definitions/Group";
 import { isIPAddress } from "rww/util";
 
 export class User {
@@ -345,7 +345,7 @@ export class UserAccount extends User {
     /** The date that the user registered */
     registered?: Date;
     /** The groups of the user. */
-    groups?: Group[];
+    groups?: GroupArray;
     /** The user's gender. */
     gender?: Gender;
     /** The user's block information (if they are blocked) */

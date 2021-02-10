@@ -62,7 +62,6 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
             </MaterialButton>,
             <hr style={{ margin: "0" }} />,
         ]);
-        console.log(buttons);
         this.element = (
             <MaterialDialog
                 surfaceProperties={{

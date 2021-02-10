@@ -28,7 +28,6 @@ export function openMenu(id: MaterialMenuID): void {
     menu.open = true;
 
     document.querySelectorAll("[data-menu-id]").forEach((element) => {
-        console.log(menu.root);
         if (element.getAttribute("data-menu-id") === menu.root.id) {
             const viewportOffset = element.getBoundingClientRect();
             menu.setAbsolutePosition(

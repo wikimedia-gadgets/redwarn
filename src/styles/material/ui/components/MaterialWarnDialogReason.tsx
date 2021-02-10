@@ -4,7 +4,10 @@ import {
     Warning,
     WarningCategory,
     WarningCategoryNames,
+    WarningLevel,
+    WarningLevelComments,
     Warnings,
+    WarningType,
 } from "rww/mediawiki";
 import { h } from "tsx-dom";
 import MaterialSelect, {
@@ -12,7 +15,12 @@ import MaterialSelect, {
 } from "rww/styles/material/ui/components/MaterialSelect";
 import { MaterialWarnDialogChild } from "rww/styles/material/ui/components/MaterialWarnDialogChild";
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
-import MaterialRadioField from "rww/styles/material/ui/components/MaterialRadioField";
+import MaterialRadioField, {
+    MaterialRadioFieldElement,
+} from "rww/styles/material/ui/components/MaterialRadioField";
+import { MaterialRadioProps } from "rww/styles/material/ui/components/MaterialRadio";
+import MaterialIcon from "./MaterialIcon";
+import { WarningIcons } from "rww/styles/material/data/WarningIcons";
 
 function MaterialWarnDialogReasonDropdown({
     parent,
@@ -81,14 +89,109 @@ function MaterialWarnDialogReasonLevel({
     parent,
 }: {
     parent: MaterialWarnDialogReason;
-}): JSX.Element {
-    return <MaterialRadioField radios={[]} />;
+}): JSX.Element & { update?: (level: WarningLevel) => void } {
+    let selectorElement: JSX.Element;
+    let updater: (level: WarningLevel) => void;
+
+    console.log(parent.warning);
+    console.log(parent.warningLevel);
+
+    if (parent.warning != null) {
+        switch (parent.warning.type) {
+            case WarningType.Tiered: {
+                const radios: MaterialRadioProps<WarningLevel>[] = [];
+                for (
+                    let level = WarningLevel.Notice;
+                    level <= WarningLevel.Immediate;
+                    level++
+                ) {
+                    if (parent.warning.levels.includes(level)) {
+                        const comments = WarningLevelComments[level];
+                        radios.push({
+                            value: level,
+                            checked: parent.warningLevel == level,
+                            // TODO i18n
+                            tooltip: `Level ${level} (${
+                                comments.summary ?? WarningLevel[level]
+                            }): ${comments.description}`,
+                            children: (
+                                <MaterialIcon icon={WarningIcons[level].icon} />
+                            ),
+                        });
+                    } else {
+                        const comments = WarningLevelComments[level];
+                        radios.push({
+                            value: level,
+                            // TODO i18n
+                            tooltip: `This template does not have a level ${level} (${
+                                comments.summary ?? WarningLevel[level]
+                            }) template.`,
+                            disabled: true,
+                            children: (
+                                <MaterialIcon
+                                    icon={WarningIcons[level].icon}
+                                    iconColor={"gray"}
+                                />
+                            ),
+                        });
+                    }
+                }
+
+                const radioField = (
+                    <MaterialRadioField<WarningLevel>
+                        radios={radios}
+                        onChange={(level) => {
+                            console.log("level change");
+                            console.log(level);
+                            parent.warningLevel = level;
+                        }}
+                    />
+                ) as MaterialRadioFieldElement<WarningLevel>;
+                updater = (level) => {
+                    console.log("updating level");
+                    console.log(level);
+                    for (const radio of radioField.MDCRadios) {
+                        if (radio.radioValue === level) {
+                            radio.MDCRadio.checked = true;
+                        }
+                    }
+                };
+                selectorElement = radioField;
+                break;
+            }
+            case WarningType.SingleIssue:
+                selectorElement = <b>Reminder</b>;
+                break;
+            case WarningType.PolicyViolation:
+                selectorElement = <b>Policy Violation Warning</b>;
+                break;
+        }
+    }
+    // TODO i18n
+    else selectorElement = <span>No warning selected.</span>;
+
+    console.log("reason rendered");
+    console.log(selectorElement);
+
+    return Object.assign(
+        <div class="rw-mdc-warnDialog-reason--levels">
+            <table>
+                <tr>
+                    <td>Warning level</td>
+                    <td>{selectorElement}</td>
+                </tr>
+            </table>
+        </div>,
+        {
+            update: updater,
+        }
+    );
 }
 
 export default function (
     props: MaterialWarnDialogChildProps & {
         defaultReason?: Warning;
-        defaultLevel?: 1 | 2 | 3 | 4 | 5;
+        defaultLevel?: WarningLevel;
     }
 ): JSX.Element {
     return new MaterialWarnDialogReason(props).render();
@@ -97,6 +200,8 @@ export default function (
 class MaterialWarnDialogReason extends MaterialWarnDialogChild {
     private elementSet: {
         root?: JSX.Element;
+        dropdown?: JSX.Element;
+        levels?: JSX.Element & { update?: (level: WarningLevel) => void };
     } = {};
 
     get user(): User {
@@ -110,55 +215,71 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
     set warning(value: Warning) {
         this._warning = value;
 
-        // Reassign the warning level to the highest possible value, capped at the current level.
-        if (
-            this.warningLevel != null &&
-            !value.levels.includes(this.warningLevel)
-        ) {
-            for (
-                let highestPossibleLevel = this.warningLevel;
-                highestPossibleLevel <= 0;
-                highestPossibleLevel--
+        if (value != null && value.type === WarningType.Tiered) {
+            // Reassign the warning level to the highest possible value, capped at the current level.
+            if (
+                this.warningLevel != null &&
+                !value.levels.includes(this.warningLevel)
             ) {
-                if (value.levels.includes(highestPossibleLevel)) {
-                    this.warningLevel = highestPossibleLevel;
-                    break;
+                for (
+                    let highestPossibleLevel = this.warningLevel;
+                    highestPossibleLevel <= 0;
+                    highestPossibleLevel--
+                ) {
+                    if (value.levels.includes(highestPossibleLevel)) {
+                        this.warningLevel = highestPossibleLevel;
+                        return;
+                    }
                 }
-                // No warning level found. Something must be wrong.
+                // No warning level found. The only available level must be higher up.
                 // Defer to lowest level provided by warning.
                 this.warningLevel = value.levels[0];
+            } else {
+                this.warningLevel = this.defaultLevel ?? value.levels[0];
             }
+        } else {
+            this.warningLevel = null;
         }
-        // warningLevel automatically refreshes for us. So we'll do it on our
-        // own if the warning level doesn't get changed.
-        else this.refresh();
-    }
-    private _warningLevel: null | 0 | 1 | 2 | 3 | 4 | 5;
-    get warningLevel(): null | 0 | 1 | 2 | 3 | 4 | 5 {
-        return this._warningLevel;
-    }
-    set warningLevel(value: null | 0 | 1 | 2 | 3 | 4 | 5) {
-        this._warningLevel = value;
         this.refresh();
     }
+    private _warningLevel: null | WarningLevel;
+    get warningLevel(): null | WarningLevel {
+        return this._warningLevel;
+    }
+    set warningLevel(value: null | WarningLevel) {
+        this._warningLevel = value;
+        if (this.elementSet.levels?.update)
+            this.elementSet.levels.update(value);
+    }
+
+    private readonly defaultLevel: WarningLevel;
 
     constructor(
         readonly props: MaterialWarnDialogChildProps & {
             defaultReason?: Warning;
-            defaultLevel?: 1 | 2 | 3 | 4 | 5;
+            defaultLevel?: WarningLevel;
         }
     ) {
         super();
-        this.warningLevel = props.defaultLevel;
+        this.warningLevel = this.defaultLevel = props.defaultLevel;
         this.warning = props.defaultReason;
     }
 
     refresh(): void {
         const rootId = `rwMdcWarnDialogReason__${this.props.warnDialog.id}`;
         const root = (
-            <div class={"rw-mdc-warnDialog-reason"}>
-                <MaterialWarnDialogReasonDropdown parent={this} />
-                <MaterialWarnDialogReasonLevel parent={this} />
+            <div id={rootId} class={"rw-mdc-warnDialog-reason"}>
+                {this.elementSet.dropdown ??
+                    (this.elementSet.dropdown = (
+                        <MaterialWarnDialogReasonDropdown parent={this} />
+                    ))}
+                {
+                    (this.elementSet.levels = (
+                        <MaterialWarnDialogReasonLevel parent={this} />
+                    ) as JSX.Element & {
+                        update?: (level: WarningLevel) => void;
+                    })
+                }
             </div>
         );
 

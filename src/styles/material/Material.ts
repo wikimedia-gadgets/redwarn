@@ -6,7 +6,7 @@ import MaterialPreInitializationHooks from "./hooks/MaterialPreInitializationHoo
 import {
     getMaterialStorage,
     MaterialStyleStorage,
-} from "./storage/MaterialStyleStorage";
+} from "./data/MaterialStyleStorage";
 import MaterialAlertDialog from "./ui/MaterialAlertDialog";
 import MaterialInputDialog from "./ui/MaterialInputDialog";
 import MaterialSelectionDialog from "./ui/MaterialSelectionDialog";

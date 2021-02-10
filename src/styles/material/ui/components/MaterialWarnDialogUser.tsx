@@ -1,11 +1,5 @@
 import { h } from "tsx-dom";
-import {
-    Page,
-    User,
-    UserAccount,
-    WarningIcons,
-    WarningLevel,
-} from "rww/mediawiki";
+import { Page, User, UserAccount, WarningLevel } from "rww/mediawiki";
 import MaterialTextInput, {
     MaterialTextInputComponents,
     MaterialTextInputUpgrade,
@@ -21,6 +15,7 @@ import { MDCChipSet } from "@material/chips";
 import MaterialMenu, { openMenu } from "./MaterialMenu";
 import showPlainMediaWikiIFrameDialog from "rww/styles/material/util/showPlainMediaWikiIFrameDialog";
 import { MaterialWarnDialogChild } from "./MaterialWarnDialogChild";
+import { WarningIcons } from "rww/styles/material/data/WarningIcons";
 
 interface OverlayContentLoading {
     type: "loading";

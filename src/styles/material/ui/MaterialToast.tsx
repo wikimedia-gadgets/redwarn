@@ -1,6 +1,6 @@
 import { RWUIToast } from "rww/ui/elements/RWUIToast";
 import { h } from "tsx-dom";
-import { getMaterialStorage } from "rww/styles/material/storage/MaterialStyleStorage";
+import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
 import { MDCSnackbar } from "@material/snackbar";
 
 /**

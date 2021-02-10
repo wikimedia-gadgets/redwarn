@@ -7,7 +7,8 @@ import MaterialRadio from "rww/styles/material/ui/components/MaterialRadio";
 import { generateId } from "rww/util";
 
 export interface MaterialRadioFieldProps<T> {
-    radios: MaterialRadioProps<T>[];
+    radios: Omit<MaterialRadioProps<T>, "name">[];
+    name?: string;
     class?: string | string[];
     onChange?: (value: T, radio: MaterialRadioElement<T>) => void;
 }
@@ -19,15 +20,19 @@ export type MaterialRadioFieldElement<T> = JSX.Element & {
 export default function <T>(
     props: MaterialRadioFieldProps<T>
 ): MaterialRadioFieldElement<T> {
+    const radioFieldId = `rwMdcRadioField__${generateId()}`;
     const radios: MaterialRadioElement<T>[] = props.radios.map((radio) => {
         return (
-            <MaterialRadio<T> value={radio.value}>
+            <MaterialRadio<T>
+                {...Object.assign(radio, {
+                    name: props.name ?? radioFieldId,
+                })}
+            >
                 {radio.children}
             </MaterialRadio>
         ) as MaterialRadioElement<T>;
     });
 
-    const radioFieldId = `rwMdcRadioField__${generateId()}`;
     const element = (
         <div
             id={radioFieldId}

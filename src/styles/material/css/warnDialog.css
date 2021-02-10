@@ -142,3 +142,39 @@
 .rw-mdc-warnDialog-reason .rw-mdc-warnDialog-reason--search {
     margin-left: 8px;
 }
+
+.rw-mdc-warnDialog-reason
+    .rw-mdc-warnDialog-reason--levels
+    .mdc-form-field
+    > span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rw-mdc-warnDialog-reason
+    .rw-mdc-warnDialog-reason--levels
+    .mdc-form-field
+    > span
+    > label {
+    display: inline-flex;
+}
+
+.rw-mdc-warnDialog-reason .rw-mdc-warnDialog-reason--levels table,
+.rw-mdc-warnDialog-reason .rw-mdc-warnDialog-reason--levels tr {
+    width: 100%;
+}
+
+.rw-mdc-warnDialog-reason .rw-mdc-warnDialog-reason--levels table {
+    height: 46px;
+    border-spacing: 8px;
+}
+
+.rw-mdc-warnDialog-reason
+    .rw-mdc-warnDialog-reason--levels
+    table
+    td:first-child {
+    margin-top: 16px;
+    width: 30%;
+    border-right: 1px solid gray;
+}

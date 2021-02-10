@@ -137,8 +137,6 @@ export default function <T>(
     const select = new MDCSelect(element);
 
     select.listen("MDCSelect:change", () => {
-        console.log(select.value);
-        console.log(valueSet[select.value]);
         if (props.onChange)
             props.onChange(select.selectedIndex, valueSet[select.value]);
     });

@@ -1,6 +1,6 @@
 import RedWarnStore from "rww/data/RedWarnStore";
 
-import { MaterialStyleStorage } from "rww/styles/material/storage/MaterialStyleStorage";
+import { MaterialStyleStorage } from "rww/styles/material/data/MaterialStyleStorage";
 import { MDCTooltip } from "@material/tooltip";
 import { h } from "tsx-dom";
 import { generateId } from "rww/util";

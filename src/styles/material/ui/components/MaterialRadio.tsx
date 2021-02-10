@@ -7,6 +7,7 @@ export interface MaterialRadioProps<T> extends BaseProps {
     name?: string;
     checked?: boolean;
     disabled?: boolean;
+    tooltip?: string;
 }
 
 export type MaterialRadioElement<T> = JSX.Element & {
@@ -24,6 +25,7 @@ export default function <T>(
                 class={`mdc-radio ${
                     props.checked ? "mdc-radio--disabled" : ""
                 }`}
+                data-rw-mdc-tooltip={props.tooltip}
             >
                 <input
                     class="mdc-radio__native-control"

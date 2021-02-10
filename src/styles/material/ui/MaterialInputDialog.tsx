@@ -10,7 +10,7 @@ import {
     registerMaterialDialog,
     upgradeMaterialDialog,
 } from "rww/styles/material/Material";
-import { getMaterialStorage } from "rww/styles/material/storage/MaterialStyleStorage";
+import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,

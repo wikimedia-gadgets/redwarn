@@ -17,7 +17,7 @@ export enum WarningLevel {
     /** A final warning for repeated bad faith edits. */
     Final,
     /** A single-issue final warning for gross violations of policy. */
-    PolicyViolation,
+    Immediate,
 }
 
 /**
@@ -32,6 +32,32 @@ export interface WarningAnalysis {
     page?: Page;
 }
 
+export const WarningLevelComments: {
+    [key in WarningLevel]: { summary?: string; description: string };
+} = {
+    [WarningLevel.None]: {
+        // Unused. Here for type checks.
+        description: "Friendly reminder",
+    },
+    [WarningLevel.Notice]: {
+        description: "Assumes good faith",
+    },
+    [WarningLevel.Caution]: {
+        description: "No assumption of faith",
+    },
+    [WarningLevel.Warning]: {
+        description: "Assumes bad faith \u2013 cease and desist",
+    },
+    [WarningLevel.Final]: {
+        summary: "Final Warning",
+        description: "Bad faith, last warning.",
+    },
+    [WarningLevel.Immediate]: {
+        summary: "Only Warning",
+        description: "Only warning \u2013 used for severe policy violations",
+    },
+};
+
 /**
  * Warning signatures are used to trace the existence of a warning on a user's
  * talk page. If a given signature was found on the talk page, the warning
@@ -43,37 +69,7 @@ export const WarningSignatures: { [key in WarningLevel]?: RegExp } = {
     [WarningLevel.Caution]: /<!--\s*Template:uw-.+?2\s*-->/gi,
     [WarningLevel.Warning]: /<!--\s*Template:uw-.+?3\s*-->/gi,
     [WarningLevel.Final]: /<!--\s*Template:uw-.+?4\s*-->/gi,
-    [WarningLevel.PolicyViolation]: /<!--\s*Template:uw-.+?4im\s*-->/gi,
-};
-
-// TODO isolate MDC icons from redwarn icons (icon map?)
-export const WarningIcons: {
-    [key in WarningLevel]: { icon: string; iconColor: string };
-} = {
-    [WarningLevel.None]: {
-        icon: "check_circle",
-        iconColor: "green",
-    },
-    [WarningLevel.Notice]: {
-        icon: "info",
-        iconColor: "blue",
-    },
-    [WarningLevel.Caution]: {
-        icon: "announcement",
-        iconColor: "orange",
-    },
-    [WarningLevel.Warning]: {
-        icon: "warning",
-        iconColor: "red",
-    },
-    [WarningLevel.Final]: {
-        icon: "report", // This one has hard edges
-        iconColor: "darkred",
-    },
-    [WarningLevel.PolicyViolation]: {
-        icon: "new_releases", // This one has star-like edges
-        iconColor: "darkred",
-    },
+    [WarningLevel.Immediate]: /<!--\s*Template:uw-.+?4im\s*-->/gi,
 };
 
 /**

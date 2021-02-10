@@ -25,7 +25,8 @@
     position: relative;
 }
 
-.mdc-icon-button .mdc-icon-button__ripple {
+.mdc-icon-button .mdc-icon-button__ripple,
+.mdc-icon-button.mdc-ripple-upgraded::before {
     position: absolute;
     top: 0;
     left: 0;
@@ -36,7 +37,7 @@
     transition: background-color 0.1s ease-in-out;
 }
 
-.mdc-icon-button .mdc-icon-button__ripple:hover {
+.mdc-icon-button:not(:disabled) .mdc-icon-button__ripple:hover {
     background-color: rgba(0, 0, 0, 0.08);
 }
 

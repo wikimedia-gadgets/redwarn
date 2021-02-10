@@ -177,14 +177,18 @@ function MaterialWarnDialogUserCard({
                                 user.warningAnalysis.level
                             ].toLowerCase()}`,
                         })}`}
-                        {...(user.warningAnalysis.level > 3 && {
-                            onClick: () => {
-                                // TODO AIV thing
-                                new RWUI.Toast({
-                                    content: "Under construction.",
-                                }).show();
-                            },
-                        })}
+                        {...(user.warningAnalysis.level > 3
+                            ? {
+                                  onClick: () => {
+                                      // TODO AIV thing
+                                      new RWUI.Toast({
+                                          content: "Under construction.",
+                                      }).show();
+                                  },
+                              }
+                            : {
+                                  disabled: true,
+                              })}
                     />
                 </td>
             </tr>
@@ -539,6 +543,38 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
             (async () => {
                 this.updateUser(this.props.originalUser);
             })();
+
+        // Watch out for an invalid state (i.e. active but main content not rendered)
+        const warnDialogUserMonitor = setInterval(() => {
+            if (this.elementSet.root.parentElement == null) {
+                // We've been popped of the DOM. Stop looping.
+                clearInterval(warnDialogUserMonitor);
+                return;
+            }
+
+            if (
+                // Is active
+                this.elementSet.root.classList.contains(
+                    "rw-mdc-warnDialog-user--active"
+                ) &&
+                // No children in main element
+                this.elementSet.main.children.length == 0
+            ) {
+                console.warn(
+                    "Invalid MaterialWarnDialogUser state detected! Please investigate in the future.",
+                    {
+                        elementSet: this.elementSet,
+                        state: this._active,
+                        statePostUpdate: this._active,
+                        updating: this.updating,
+                        user: this.user,
+                        lastUser: this.lastUser,
+                    }
+                );
+                this.refresh();
+            }
+        }, 1000);
+
         return this.elementSet.root;
     }
 }

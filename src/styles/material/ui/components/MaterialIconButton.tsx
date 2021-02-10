@@ -15,14 +15,25 @@ export interface MaterialIconButtonProperties extends BaseProps {
      * is set to `false`, a tooltip will not be shown.
      */
     tooltip?: string | false;
+    class?: string | string[];
+    id?: string;
+    disabled?: boolean;
 }
 
 export default function (props: MaterialIconButtonProperties): JSX.Element {
     const { onClick, label, icon, iconColor, tooltip } = props;
     const iconButton = (
         <button
+            id={props.id}
             type="button"
-            class="mdc-icon-button material-icons"
+            class={`mdc-icon-button material-icons ${
+                props.class
+                    ? Array.isArray(props.class)
+                        ? props.class.join(" ")
+                        : props.class
+                    : ""
+            }`}
+            disabled={props.disabled}
             aria-label={label}
             data-rw-mdc-tooltip={
                 (typeof tooltip === "string" ||

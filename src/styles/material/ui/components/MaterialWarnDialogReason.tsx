@@ -11,6 +11,8 @@ import MaterialSelect, {
     MaterialSelectItem,
 } from "rww/styles/material/ui/components/MaterialSelect";
 import { MaterialWarnDialogChild } from "rww/styles/material/ui/components/MaterialWarnDialogChild";
+import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
+import MaterialRadioField from "rww/styles/material/ui/components/MaterialRadioField";
 
 function MaterialWarnDialogReasonDropdown({
     parent,
@@ -52,12 +54,41 @@ function MaterialWarnDialogReasonDropdown({
         }
     }
 
-    return <MaterialSelect items={finalSelectItems} />;
+    return (
+        <span class="rw-mdc-warnDialog-reason--dropdown">
+            <MaterialSelect<Warning>
+                label={"Warning"}
+                items={finalSelectItems}
+                required={true}
+                onChange={(index, value) => {
+                    parent.warning = value;
+                }}
+            />
+            <MaterialIconButton
+                class={"rw-mdc-warnDialog-reason--search"}
+                icon={"search"}
+                label={"Search for a warning"}
+                onClick={() => {
+                    // TODO Open warning search dialog and set that as warning
+                    // Access the select items with MDCSelect
+                }}
+            />
+        </span>
+    );
+}
+
+function MaterialWarnDialogReasonLevel({
+    parent,
+}: {
+    parent: MaterialWarnDialogReason;
+}): JSX.Element {
+    return <MaterialRadioField radios={[]} />;
 }
 
 export default function (
     props: MaterialWarnDialogChildProps & {
         defaultReason?: Warning;
+        defaultLevel?: 1 | 2 | 3 | 4 | 5;
     }
 ): JSX.Element {
     return new MaterialWarnDialogReason(props).render();
@@ -72,16 +103,54 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
         return this.props.warnDialog.user;
     }
 
+    private _warning: Warning;
+    get warning(): Warning {
+        return this._warning;
+    }
+    set warning(value: Warning) {
+        this._warning = value;
+
+        // Reassign the warning level to the highest possible value, capped at the current level.
+        if (
+            this.warningLevel != null &&
+            !value.levels.includes(this.warningLevel)
+        ) {
+            for (
+                let highestPossibleLevel = this.warningLevel;
+                highestPossibleLevel <= 0;
+                highestPossibleLevel--
+            ) {
+                if (value.levels.includes(highestPossibleLevel)) {
+                    this.warningLevel = highestPossibleLevel;
+                    break;
+                }
+                // No warning level found. Something must be wrong.
+                // Defer to lowest level provided by warning.
+                this.warningLevel = value.levels[0];
+            }
+        }
+        // warningLevel automatically refreshes for us. So we'll do it on our
+        // own if the warning level doesn't get changed.
+        else this.refresh();
+    }
+    private _warningLevel: null | 0 | 1 | 2 | 3 | 4 | 5;
+    get warningLevel(): null | 0 | 1 | 2 | 3 | 4 | 5 {
+        return this._warningLevel;
+    }
+    set warningLevel(value: null | 0 | 1 | 2 | 3 | 4 | 5) {
+        this._warningLevel = value;
+        this.refresh();
+    }
+
     constructor(
         readonly props: MaterialWarnDialogChildProps & {
             defaultReason?: Warning;
+            defaultLevel?: 1 | 2 | 3 | 4 | 5;
         }
     ) {
         super();
-    }
-
-    changeWarning(warning: Warning, level?: number) {
-        // TODO
+        this.warningLevel = props.defaultLevel;
+        this.warning = props.defaultReason;
     }
 
     refresh(): void {
@@ -89,6 +158,7 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
         const root = (
             <div class={"rw-mdc-warnDialog-reason"}>
                 <MaterialWarnDialogReasonDropdown parent={this} />
+                <MaterialWarnDialogReasonLevel parent={this} />
             </div>
         );
 

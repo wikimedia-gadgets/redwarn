@@ -1,8 +1,6 @@
 import { h } from "tsx-dom";
 import { MDCSelect } from "@material/select/component";
-
-/* Specificity is key */
-type MaterialSelectID = string;
+import { generateId } from "rww/util";
 
 export interface MaterialSelectDivider {
     type: "divider";
@@ -17,6 +15,7 @@ export interface MaterialSelectAction<T> {
     type: "action";
     label: string;
     value: T;
+    selected?: boolean;
 }
 
 export type MaterialSelectItem<T> =
@@ -25,44 +24,56 @@ export type MaterialSelectItem<T> =
     | MaterialSelectDivider;
 
 export interface MaterialSelectProps<T> {
+    label: string;
     items: MaterialSelectItem<T>[];
     onChange?: (index: number, value: T) => void;
     required?: boolean;
 }
 
-export default function <T>(prop: MaterialSelectProps<T>): JSX.Element {
-    let currentValueIndex = 0;
+export type MaterialSelectElement<T> = JSX.Element & {
+    MDCSelect: MDCSelect;
+    valueSet: { [key: string]: T };
+};
+
+export default function <T>(
+    props: MaterialSelectProps<T>
+): MaterialSelectElement<T> {
     const valueSet: { [key: string]: T } = {};
 
-    const icon = <span class="mdc-select__dropdown-icon" />;
+    const icon = <i class="mdc-select__dropdown-icon" />;
     icon.innerHTML = require("../../svg/dropdown-graphic.svg");
+
+    const selectId = `rwMdcSelect__${generateId()}`;
 
     const element = (
         <div
             class={`mdc-select mdc-select--outlined${
-                prop.required ? " mdc-select--required" : ""
+                props.required ? " mdc-select--required" : ""
             }`}
         >
             <div
                 class="mdc-select__anchor"
-                aria-labelledby="outlined-select-label"
-                aria-required={prop.required ?? "false"}
+                role="button"
+                aria-haspopup="listbox"
+                aria-expanded="false"
+                aria-labelledby={`${selectId}label ${selectId}text`}
+                aria-required={props.required ?? "false"}
             >
-                <span class="mdc-notched-outline">
-                    <span class="mdc-notched-outline__leading" />
-                    <span class="mdc-notched-outline__notch">
-                        <span
-                            id="outlined-select-label"
-                            class="mdc-floating-label"
+                <div class="mdc-notched-outline">
+                    <div class="mdc-notched-outline__leading" />
+                    <div class="mdc-notched-outline__notch">
+                        <label
+                            id={`${selectId}label`}
+                            class="mdc-floating-label mdc-floating-label--float-above"
                         >
-                            Warning
-                        </span>
-                    </span>
-                    <span class="mdc-notched-outline__trailing" />
-                </span>
+                            {props.label}
+                        </label>
+                    </div>
+                    <div class="mdc-notched-outline__trailing" />
+                </div>
                 <span class="mdc-select__selected-text-container">
-                    <span
-                        id="demo-selected-text"
+                    <div
+                        id={`${selectId}text`}
                         class="mdc-select__selected-text"
                     />
                 </span>
@@ -72,13 +83,13 @@ export default function <T>(prop: MaterialSelectProps<T>): JSX.Element {
             <div class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth">
                 <ul
                     class="mdc-list"
-                    role="menu"
+                    role="listbox"
                     aria-hidden="true"
                     aria-orientation="vertical"
+                    aria-label={props.label}
                     tabIndex={-1}
                 >
-                    {prop.items.map((item, index) => {
-                        currentValueIndex++;
+                    {props.items.map((item) => {
                         switch (item.type) {
                             case "divider":
                                 return (
@@ -97,9 +108,19 @@ export default function <T>(prop: MaterialSelectProps<T>): JSX.Element {
                                     </li>
                                 );
                             case "action":
-                                valueSet[currentValueIndex] = item.value;
+                                const itemId = generateId();
+                                valueSet[itemId] = item.value;
                                 return (
-                                    <li class="mdc-list-item" role="menuitem">
+                                    <li
+                                        class={`mdc-list-item ${
+                                            item.selected
+                                                ? " mdc-list-item--selected"
+                                                : ""
+                                        }`}
+                                        aria-selected={item.selected ?? "false"}
+                                        role="option"
+                                        data-value={itemId}
+                                    >
                                         <span class="mdc-list-item__ripple" />
                                         <span class="mdc-list-item__text">
                                             {item.label}
@@ -116,11 +137,14 @@ export default function <T>(prop: MaterialSelectProps<T>): JSX.Element {
     const select = new MDCSelect(element);
 
     select.listen("MDCSelect:change", () => {
-        console.log(select.selectedIndex);
-        console.log(valueSet[select.selectedIndex]);
-        if (prop.onChange)
-            prop.onChange(select.selectedIndex, valueSet[select.selectedIndex]);
+        console.log(select.value);
+        console.log(valueSet[select.value]);
+        if (props.onChange)
+            props.onChange(select.selectedIndex, valueSet[select.value]);
     });
 
-    return element;
+    return Object.assign(element, {
+        MDCSelect: select,
+        valueSet: valueSet,
+    });
 }

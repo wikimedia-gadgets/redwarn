@@ -6,3 +6,6 @@ export { default as regexClone } from "./regexClone";
 export { default as regexEscape } from "./regexEscape";
 export { default as semanticDifference } from "./semanticDifference";
 export { default as url } from "./url";
+export { default as articlePath } from "./articlePath";
+export { default as isIPAddress } from "./isIPAddress";
+export { default as normalize } from "./normalize";

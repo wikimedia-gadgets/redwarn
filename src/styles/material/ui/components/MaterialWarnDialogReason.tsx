@@ -1,5 +1,6 @@
 import { MaterialWarnDialogChildProps } from "rww/styles/material/ui/MaterialWarnDialog";
 import {
+    Page,
     User,
     Warning,
     WarningCategory,
@@ -192,6 +193,7 @@ export default function (
     props: MaterialWarnDialogChildProps & {
         defaultReason?: Warning;
         defaultLevel?: WarningLevel;
+        relatedPage?: Page;
     }
 ): JSX.Element {
     return new MaterialWarnDialogReason(props).render();
@@ -202,6 +204,7 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
         root?: JSX.Element;
         dropdown?: JSX.Element;
         levels?: JSX.Element & { update?: (level: WarningLevel) => void };
+        page?: JSX.Element;
     } = {};
 
     get user(): User {
@@ -223,18 +226,19 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
             ) {
                 for (
                     let highestPossibleLevel = this.warningLevel;
-                    highestPossibleLevel <= 0;
+                    highestPossibleLevel >= 0;
                     highestPossibleLevel--
                 ) {
                     if (value.levels.includes(highestPossibleLevel)) {
                         this.warningLevel = highestPossibleLevel;
+                        this.refresh();
                         return;
                     }
                 }
                 // No warning level found. The only available level must be higher up.
                 // Defer to lowest level provided by warning.
                 this.warningLevel = value.levels[0];
-            } else {
+            } else if (!value.levels.includes(this.warningLevel)) {
                 this.warningLevel = this.defaultLevel ?? value.levels[0];
             }
         } else {

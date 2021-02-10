@@ -9,6 +9,7 @@
 
 .rw-mdc-warnDialog-user {
     min-height: 100px;
+    width: 100%;
 }
 
 .rw-mdc-warnDialog-user--overlay {
@@ -94,11 +95,39 @@
 }
 
 .rw-mdc-warnDialog-user--main {
+    box-sizing: border-box;
+    width: 100%;
     padding: 8px;
+}
+
+.rw-mdc-warnDialog-user--main table {
+    display: block;
+}
+
+.rw-mdc-warnDialog-user--main table,
+.rw-mdc-warnDialog-user--main tr,
+.rw-mdc-warnDialog-user--main td {
+    width: 100%;
+}
+
+.rw-mdc-warnDialog-user--main table tr:first-child td:first-child {
+    max-width: 0;
 }
 
 .rw-mdc-warnDialog-user--username {
     font-size: xx-large;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1em;
+    height: 1em;
+}
+
+.rw-mdc-warnDialog-user--loading .rw-mdc-warnDialog-user--username {
+    text-align: center;
+    box-sizing: border-box;
+    padding: 0 16px;
 }
 
 .rw-mdc-warnDialog-user--overview {
@@ -118,6 +147,15 @@
 
 .rw-mdc-warnDialog-user--overview a:hover {
     text-decoration: underline;
+}
+
+.rw-mdc-warnDialog-user--groups {
+    padding: 0 16px;
+    font-size: small;
+}
+
+.rw-mdc-warnDialog-user--groups a {
+    color: gray;
 }
 
 .rw-mdc-warnDialog-reason {

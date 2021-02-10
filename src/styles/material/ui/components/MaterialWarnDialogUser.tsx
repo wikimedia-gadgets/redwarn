@@ -10,7 +10,13 @@ import RWUI from "rww/ui/RWUI";
 import i18next from "i18next";
 import moment from "moment";
 import Bullet from "./Bullet";
-import { capitalize, generateId, getMonthHeader } from "rww/util";
+import {
+    articlePath,
+    capitalize,
+    generateId,
+    getMonthHeader,
+    normalize,
+} from "rww/util";
 import { MDCChipSet } from "@material/chips";
 import MaterialMenu, { openMenu } from "./MaterialMenu";
 import showPlainMediaWikiIFrameDialog from "rww/styles/material/util/showPlainMediaWikiIFrameDialog";
@@ -39,32 +45,27 @@ function MaterialWarnDialogUserCardAccountGroups({
     const user: UserAccount = parent.user;
 
     return (
-        <div class={"rw-mdc-warnDialog-user--groups mdc-chip-set"}>
-            {user.groups.map<JSX.Element>(
-                (group): JSX.Element => {
-                    return (
-                        <a
-                            target={group.page && "_blank"}
-                            href={group.page && `/wiki/${group.page}`}
-                        >
-                            <div class="mdc-chip" role="row">
-                                <div class="mdc-chip__ripple" />
-                                <span role="gridcell">
-                                    <span
-                                        role="button"
-                                        tabIndex={0}
-                                        class="mdc-chip__primary-action"
-                                    >
-                                        <span class="mdc-chip__text">
-                                            {capitalize(group.displayName)}
-                                        </span>
-                                    </span>
-                                </span>
-                            </div>
-                        </a>
-                    );
-                }
-            )}
+        <div class={"rw-mdc-warnDialog-user--groups"}>
+            {user.groups
+                .map<JSX.Element>(
+                    (group): JSX.Element => {
+                        return (
+                            <a
+                                target={group.page && "_blank"}
+                                href={
+                                    group.page && `${articlePath(group.page)}`
+                                }
+                            >
+                                {capitalize(group.displayName)}
+                            </a>
+                        );
+                    }
+                )
+                .reduce((p, n, index, array) => {
+                    return index === array.length - 1
+                        ? p.concat(n)
+                        : p.concat(n, ", ");
+                }, [])}
         </div>
     );
 }
@@ -152,7 +153,9 @@ function MaterialWarnDialogUserCard({
                                 onClick={() => {
                                     parent.clearUser();
                                 }}
-                                data-rw-mdc-tooltip={"Change the target user."}
+                                data-rw-mdc-tooltip={i18next.t(
+                                    "ui:warn.user.change"
+                                )}
                             >
                                 {user.username}
                             </a>
@@ -314,7 +317,9 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                 : {
                       type: "input",
                       onFinish: (newName) => {
-                          this.updateUser(User.fromUsername(newName));
+                          this.updateUser(
+                              User.fromUsername(normalize(newName))
+                          );
                       },
                   };
         }

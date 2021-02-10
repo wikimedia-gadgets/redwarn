@@ -20,12 +20,11 @@ export default function <T>(
 ): MaterialRadioElement<T> {
     const id = `rwMdcRadio__${generateId()}`;
     const element = (
-        <span>
+        <span data-rw-mdc-tooltip={props.tooltip}>
             <div
                 class={`mdc-radio ${
-                    props.checked ? "mdc-radio--disabled" : ""
-                }`}
-                data-rw-mdc-tooltip={props.tooltip}
+                    props.checked ? "mdc-radio--checked" : ""
+                } ${props.disabled ? "mdc-radio--disabled" : ""}`}
             >
                 <input
                     class="mdc-radio__native-control"

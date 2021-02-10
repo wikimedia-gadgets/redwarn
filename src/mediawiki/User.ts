@@ -16,9 +16,7 @@ import {
 import i18next from "i18next";
 import { PageMissingError } from "rww/errors/MediaWikiErrors";
 import Group, { GroupsFromNames } from "rww/definitions/Group";
-
-// IPv4 and IPv6: https://stackoverflow.com/a/17871737
-const ipRegex = /^(((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])|(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]+|::(ffff(:0{1,4})?:)?((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1?[0-9])?[0-9])\.){3}(25[0-5]|(2[0-4]|1?[0-9])?[0-9])))$/gi;
+import { isIPAddress } from "rww/util";
 
 export class User {
     /** The user's latest edit. `null` if they have never made an edit. */
@@ -60,7 +58,7 @@ export class User {
         username: string,
         additionalProperties?: Partial<User>
     ): User {
-        return new (ipRegex.test(username) ? UserIP : UserAccount)(
+        return new (isIPAddress(username) ? UserIP : UserAccount)(
             username,
             additionalProperties
         );
@@ -71,7 +69,7 @@ export class User {
      * @param username The username of the user.
      */
     static async fromUsernameToPopulated(username: string): Promise<User> {
-        const user = (ipRegex.test(username)
+        const user = (isIPAddress(username)
             ? UserIP
             : UserAccount
         ).fromUsername(username);

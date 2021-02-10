@@ -16,11 +16,13 @@ export default class RedWarnStore {
      */
     public static messageHandler: MessageHandler;
 
-    // wiki/w/
+    // //en.wikipedia.org
     public static wikiBase: string;
-    // wiki/w/index.php
+    // /wiki/$1
+    public static wikiArticlePath: string;
+    // //en.wikipedia.org/w/index.php
     public static wikiIndex: string;
-    // wiki/w/api.php
+    // //en.wikipedia.org/w/api.php
     public static wikiAPI: string;
     // "enwiki"
     public static wikiID: string;
@@ -34,6 +36,7 @@ export default class RedWarnStore {
 
     public static initializeStore(): void {
         this.messageHandler = new MessageHandler();
+        this.wikiArticlePath = mw.config.get("wgArticlePath");
         this.wikiBase = mw.config.get("wgServer");
         this.wikiIndex = mw.config.get("wgServer") + mw.config.get("wgScript");
         this.wikiAPI = `${

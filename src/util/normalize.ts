@@ -1,3 +1,3 @@
 export default function (title: string): string {
-    return new mw.Title(title).toString();
+    return new mw.Title(title).getPrefixedText();
 }

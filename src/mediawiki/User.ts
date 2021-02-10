@@ -209,7 +209,7 @@ export class User {
 
         let revisionWikitext = (
             await Page.fromTitle(
-                `UserBase talk:${this.username}`
+                `User talk:${this.username}`
             ).getLatestRevision()
         ).content;
         // TODO Handle errors
@@ -288,9 +288,9 @@ export class User {
         finalText = wikiTextLines.join("\n");
         console.log(finalText);
 
-        await Page.fromTitle(`UserBase talk:${this.username}`).edit(
+        await Page.fromTitle(`User talk:${this.username}`).edit(
             finalText,
-            `${summary} ${i18next.t("common:redwarn.signature")}`
+            summary
         );
         // TODO Handle errors
     }

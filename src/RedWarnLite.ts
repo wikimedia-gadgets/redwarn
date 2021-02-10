@@ -22,6 +22,7 @@ import MediaWiki, {
     ClientUser,
     MediaWikiAPI,
     MediaWikiURL,
+    Page,
     RevertSpeedup,
     Rollback,
     User,
@@ -133,9 +134,36 @@ $(document).ready(async () => {
     //     label: "hoi",
     //     maxCharacterCount: 12
     // }).show();
-    new RWUI.WarnDialog({
-        targetUser: User.fromUsername("Sandbox for user warnings"),
-    }).show();
+    document.body.appendChild(
+        (() => {
+            const d = document.createElement("button");
+
+            d.style.position = "fixed";
+            d.style.top = "15px";
+            d.style.left = "15px";
+            d.innerText = "Warn a user";
+            d.addEventListener("click", async () => {
+                const namespace = mw.config.get("wgFormattedNamespaces")[
+                    mw.config.get("wgNamespaceNumber")
+                ];
+                const page =
+                    (namespace.length > 0 ? namespace + ":" : "") +
+                    mw.config.get("wgTitle");
+                const targetUser = User.fromUsername(
+                    "Sandbox for user warnings"
+                );
+
+                const warning = await new RWUI.WarnDialog({
+                    targetUser: targetUser,
+                    relatedPage: Page.fromTitle(page),
+                }).show();
+                // TODO send whole warning data as result, not just wikitext
+                targetUser.addToUserTalk(warning, true, `Warning`);
+            });
+
+            return d;
+        })()
+    );
 });
 
 export default class RedWarn {

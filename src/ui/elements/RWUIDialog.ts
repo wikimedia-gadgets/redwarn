@@ -3,8 +3,9 @@ import generateId from "rww/util/generateId";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 import { RollbackContext } from "rww/definitions/RollbackContext";
 import { User } from "rww/mediawiki/User";
-import { Warnings } from "rww/mediawiki/Warnings";
+import { Warning } from "rww/mediawiki/Warnings";
 import { Dependency } from "rww/ui/Dependencies";
+import { Page } from "rww/mediawiki";
 
 export enum RWUIDialogActionType {
     /**
@@ -204,7 +205,9 @@ export class RWUISelectionDialog extends RWUIDialog {
 export interface RWUIWarnDialogProps extends RWUIDialogProperties {
     rollbackContext?: RollbackContext;
     targetUser?: User;
-    defaultWarnReason?: keyof Warnings;
+    defaultWarnReason?: Warning;
+    defaultWarnLevel?: number;
+    relatedPage?: Page;
 }
 
 export class RWUIWarnDialog extends RWUIDialog {

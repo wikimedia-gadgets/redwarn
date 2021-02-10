@@ -127,7 +127,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                 async (event: Event & { detail: { action: string } }) => {
                     if (event.detail.action === "cancel") this._result = null;
                     else {
-                        // TODO get warn results
+                        this._result = this.warningText;
                     }
 
                     const res = styleStorage.dialogTracker.get(this.id).result;
@@ -187,7 +187,12 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         })}
                     {this.mwdReason ??
                         (this.mwdReason = (
-                            <MaterialWarnDialogReason warnDialog={this} />
+                            <MaterialWarnDialogReason
+                                warnDialog={this}
+                                defaultReason={this.props.defaultWarnReason}
+                                defaultLevel={this.props.defaultWarnLevel}
+                                relatedPage={this.props.relatedPage}
+                            />
                         ) as JSX.Element & {
                             MWDReason: MaterialWarnDialogReasonController;
                         })}

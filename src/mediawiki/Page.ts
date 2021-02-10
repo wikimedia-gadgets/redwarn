@@ -179,7 +179,7 @@ export class Page {
             format: "json",
             [typeof pageIdentifier === "number"
                 ? "pageid"
-                : "titles"]: pageIdentifier,
+                : "title"]: pageIdentifier,
             summary: `${comment ?? ""} ${i18next.t(
                 "common:redwarn.signature"
             )}`,

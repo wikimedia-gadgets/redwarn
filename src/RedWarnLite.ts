@@ -22,7 +22,6 @@ import MediaWiki, {
     ClientUser,
     MediaWikiAPI,
     MediaWikiURL,
-    Page,
     RevertSpeedup,
     Rollback,
     User,
@@ -55,6 +54,10 @@ $(document).ready(async () => {
 
     window.RedWarn = RedWarn;
     window.rw = RedWarn;
+
+    // Initialize components here.
+    // As much as possible, each component should be its own class to make everything
+    // organized.
 
     // Set up LocalStorage wrapper.
     Lockr.prefix = "rw_";
@@ -108,62 +111,6 @@ $(document).ready(async () => {
     await UIInjectors.inject();
 
     await RedWarnHooks.executeHooks("postUIInject");
-
-    // Initialize components here.
-    // As much as possible, each component should be its own class to make everything
-    // organized.
-
-    // Testing code for the dialog and style system.
-
-    // const a = new RWUI.Dialog({
-    //     title: "Test Dialog",
-    //     actions: [
-    //         {
-    //             data: "A",
-    //             action: () => {alert("A");}
-    //         },
-    //         {
-    //             data: "B",
-    //             action: () => {alert("A");}
-    //         }
-    //     ]
-    // });
-
-    // console.log(await (a as RWUIDialog).show());
-    // new RWUI.InputDialog({
-    //     label: "hoi",
-    //     maxCharacterCount: 12
-    // }).show();
-    document.body.appendChild(
-        (() => {
-            const d = document.createElement("button");
-
-            d.style.position = "fixed";
-            d.style.top = "15px";
-            d.style.left = "15px";
-            d.innerText = "Warn a user";
-            d.addEventListener("click", async () => {
-                const namespace = mw.config.get("wgFormattedNamespaces")[
-                    mw.config.get("wgNamespaceNumber")
-                ];
-                const page =
-                    (namespace.length > 0 ? namespace + ":" : "") +
-                    mw.config.get("wgTitle");
-                const targetUser = User.fromUsername(
-                    "Sandbox for user warnings"
-                );
-
-                const warning = await new RWUI.WarnDialog({
-                    targetUser: targetUser,
-                    relatedPage: Page.fromTitle(page),
-                }).show();
-                // TODO send whole warning data as result, not just wikitext
-                targetUser.addToUserTalk(warning, true, `Warning`);
-            });
-
-            return d;
-        })()
-    );
 });
 
 export default class RedWarn {

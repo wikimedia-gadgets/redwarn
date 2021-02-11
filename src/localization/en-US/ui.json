@@ -72,11 +72,18 @@
 
         "ok": "Warn"
     },
-
     "close": "Close",
     "configErrorDialog": {
         "title": "Error while loading configuration",
         "content": "Your RedWarn config was invalid and was reset to the default.",
         "actions": [{ "data": "$t(ui:okCancel.ok)" }]
+    },
+    "contribs": {
+        "previewLink": "prev",
+        "previewTooltip": "Preview Rollback",
+        "vandalLink": "rvv",
+        "vandalTooltip": "Quick Rollback Vandalism",
+        "rollbackLink": "rb",
+        "rollbackTooltip": "Rollback"
     }
 }

@@ -2,8 +2,6 @@ import i18next from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { RW_VERSION_TAG } from "rww/data/RedWarnConstants";
 import RedWarnLanguage from "./RedWarnLanguage";
-import Dependencies from "rww/ui/Dependencies";
-import moment from "moment";
 
 declare global {
     interface Window {
@@ -71,20 +69,5 @@ export default class Localization {
                 RW_VERSION_TAG
             );
         }
-
-        i18next.on("languageChanged", async () => {
-            if (i18next.language !== "en" && i18next.language !== "en-US") {
-                await Dependencies.loadDependency({
-                    type: "script",
-                    id: "moment-locale",
-                    src: `https://redwarn-lite.wmcloud.org/static/scripts/moment-locales/${i18next.language}.js`,
-                });
-
-                // Update moment.js locale
-                moment.locale(i18next.language.toLowerCase());
-            } else {
-                moment.locale("en");
-            }
-        });
     }
 }

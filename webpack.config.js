@@ -5,14 +5,13 @@ const {
     ProgressPlugin
 } = require("webpack");
 const TerserPlugin = require('terser-webpack-plugin');
-const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 const plugins = [new ProgressPlugin({
     activeModules: true,
     entries: true,
     modules: true,
     dependencies: true
-}), new MomentLocalesPlugin()];
+})];
 const optimization = { minimize: false }
 if (process.env.NODE_ENV === "production") {
     const WrapperPlugin = require('wrapper-webpack-plugin');

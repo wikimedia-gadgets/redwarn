@@ -8,11 +8,11 @@ import { MaterialWarnDialogChildProps } from "rww/styles/material/ui/MaterialWar
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
 import RWUI from "rww/ui/RWUI";
 import i18next from "i18next";
-import moment from "moment";
 import Bullet from "./Bullet";
 import {
     articlePath,
     capitalize,
+    formatAge,
     generateId,
     getMonthHeader,
     normalize,
@@ -121,7 +121,7 @@ function MaterialWarnDialogUserCardAccountInfo({
                 }}
                 data-rw-mdc-tooltip={i18next.t("ui:warn.user.show.userpage")}
             >{`${i18next.t("ui:warn.user.age", {
-                localeAge: moment(user.registered).fromNow(),
+                localeAge: formatAge(user.registered),
             })}`}</a>
         </div>
     );

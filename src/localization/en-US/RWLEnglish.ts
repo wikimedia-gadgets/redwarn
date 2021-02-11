@@ -25,5 +25,6 @@ window.RedWarnLanguages.push({
         common: require("./common.json"),
         mediawiki: require("./mediawiki.json"),
         ui: require("./ui.json"),
+        misc: require("./misc.json"),
     },
 });

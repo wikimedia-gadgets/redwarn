@@ -54,14 +54,6 @@ const configurationUpdaters: { [key: number]: ConfigurationUpdater } = {
                             );
                     }
                     break;
-                case "neopolitan":
-                    if (
-                        value ===
-                        "I turn my head up to the sky, I focus one thought at a time."
-                    ) {
-                        config.ImNaughty = true;
-                    }
-                    break;
             }
         }
 

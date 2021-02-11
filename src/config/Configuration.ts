@@ -38,7 +38,7 @@ export class Configuration {
     );
     /** Style of UI */
     public static style = new Setting(DefaultRedWarnStyle, "style");
-    public static ImNaughty = new Setting(false, "ImNaughty");
+    public static neopolitan = new Setting("", "neopolitan");
 
     static async refresh(): Promise<void> {
         // TODO try/catch, since this will fail if the configuration is bad.

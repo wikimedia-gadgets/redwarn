@@ -4,6 +4,5 @@
         "rollback": "Rollback edit(s) by [[Special:Contributions/{{username}}|{{username}}]] ([[User_talk:{{username}}|talk]]): {{reason}} $t(common:redwarn.signature)",
         "restore": "Restoring revision {{revID}} by {{revUser}}: {{reason}} $t(common:redwarn.signature)"
     },
-
     "ip": "Anonymous IP editor"
 }

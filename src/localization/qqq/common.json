@@ -11,5 +11,6 @@
                 "user": "Used to inform the user that they are not logged in."
             }
         }
-    }
+    },
+    "bullet": "Dot separator"
 }

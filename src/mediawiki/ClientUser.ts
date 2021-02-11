@@ -45,7 +45,7 @@ export class ClientUser extends UserAccount {
         // Run all requests "parallel".
         await Promise.all([
             this.getGroups(),
-            new Promise(async (resolve) => {
+            new Promise<void>(async (resolve) => {
                 this.emailEnabled =
                     (
                         await MediaWikiAPI.get({

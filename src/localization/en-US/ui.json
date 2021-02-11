@@ -38,9 +38,7 @@
         "warningContent": "You are currently using RedWarn in a way that is strongly discouraged under guidelines set at <a href=\"/wiki/Wikipedia:REDWARN/A\" class=\"mw-redirect\" title=\"Wikipedia:REDWARN/A\">WP:REDWARN/A</a>."
     },
     "warn": {
-
         "user": {
-
             "change": "Change the target user",
 
             "load_wait": "Please be patient while the user information is being loaded.",
@@ -75,5 +73,10 @@
         "ok": "Warn"
     },
 
-    "close": "Close"
+    "close": "Close",
+    "configErrorDialog": {
+        "title": "Error while loading configuration",
+        "content": "Your RedWarn config was invalid and was reset to the default.",
+        "actions": [{ "data": "$t(ui:okCancel.ok)" }]
+    }
 }

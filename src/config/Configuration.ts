@@ -10,6 +10,8 @@ import { ClientUser } from "rww/mediawiki";
 import { Setting } from "./Setting";
 import { RollbackMethod } from "./ConfigurationEnums";
 import { updateConfiguration } from "./ConfigurationUpdate";
+import RWUI from "rww/ui/RWUI";
+import i18next from "i18next";
 
 export class Configuration {
     /** Last version of RedWarn that was used */
@@ -41,17 +43,35 @@ export class Configuration {
     public static neopolitan = new Setting("", "neopolitan");
 
     static async refresh(): Promise<void> {
-        // TODO try/catch, since this will fail if the configuration is bad.
-        const redwarnConfig = JSON.parse(
-            (await ClientUser.i.redwarnConfigPage.getLatestRevision()).content
-                // Strip everything except the actual JSON part.
-                .replace(/(?:.|\s)+?rw\.config\s*=\s*({.+});(?:.|\s)+/g, "$1")
-        );
+        let redwarnConfig: Record<string, any>,
+            saveNow = false;
+        try {
+            redwarnConfig = JSON.parse(
+                (
+                    await ClientUser.i.redwarnConfigPage.getLatestRevision()
+                ).content
+                    // Strip everything except the actual JSON part.
+                    .replace(
+                        /(?:.|\s)+?rw\.config\s*=\s*({.+});(?:.|\s)+/g,
+                        "$1"
+                    )
+            );
+        } catch (e) {
+            const dialog = new RWUI.Dialog(i18next.t("ui:configErrorDialog"));
+            dialog.show();
+            redwarnConfig = {};
+            this.allSettings().forEach((v, k) => {
+                redwarnConfig[k] = v.value;
+            });
+            saveNow = true;
+        }
 
         if (redwarnConfig["configVersion"] ?? 0 < RW_CONFIG_VERSION) {
             window.rw.config = updateConfiguration(redwarnConfig);
-            // TODO Immediately save.
-        } else window.rw.config = redwarnConfig;
+            saveNow = true;
+        } else {
+            window.rw.config = redwarnConfig;
+        }
 
         // At this point, we can definitely assume that `rw.config` is a configuration
         // that is of the latest version.
@@ -61,6 +81,10 @@ export class Configuration {
         StyleManager.activeStyle = StyleManager.styles.find(
             (v) => v.name === this.style.value
         ); // set here otherwise circular ref
+
+        if (saveNow) {
+            this.save();
+        }
     }
 
     static allSettings(): Map<string, Setting<unknown>> {

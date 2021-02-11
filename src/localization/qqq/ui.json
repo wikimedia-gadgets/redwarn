@@ -36,5 +36,30 @@
     "tamperProtection": {
         "header": "The title of the tamper protection dialog. Should be attention grabbing, like WARNING or ATTENTION",
         "warningContent": "Body text of the tamper protection dialog. Should inform users that behavior like theirs is discouraged, and should be stopped. Optionally include a link using <a> tag syntax"
+    },
+    "warn": {
+        "reason": {
+            "page": "Text of the field prompting users for the related page",
+            "additionalText": "Text of the field prompting users for additional text"
+        },
+        "ok": "Text of the warn button"
+    },
+    "close": "Default close button text",
+    "configErrorDialog": {
+        "title": "Title for the dialog used to inform the user that the loading of their configuration file failed.",
+        "content": "Body text for the dialog used to inform the user that the loading of their configuration file failed. Should inform the user that it has been reset to the default.",
+        "actions": [
+            {
+                "data": "This should be kept the same as the English one, since it uses the default OK text."
+            }
+        ]
+    },
+    "contribs": {
+        "previewLink": "Used for the preview rollback link on contributions page. Should be short/abbreviated.",
+        "previewTooltip": "Full name of the preview rollback link, used for the tooltip",
+        "vandalLink": "Used for the rollback vandalism link on contributions page. Should be short/abbreviated.",
+        "vandalTooltip": "Full name of the rollback vandalism link, used for the tooltip",
+        "rollbackLink": "Used for the rollback link on contributions page. Should be short/abbreviated.",
+        "rollbackTooltip": "Full name of the rollback link, used for the tooltip"
     }
 }

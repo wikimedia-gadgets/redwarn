@@ -1,4 +1,6 @@
 import { RW_CONFIG_VERSION } from "rww/data/RedWarnConstants";
+import { RollbackMethod } from "rww/config/ConfigurationEnums";
+import { RollbackDoneOption } from "rww/definitions/RollbackDoneOptions";
 
 type ConfigurationUpdater = (
     oldConfig: Record<string, unknown>
@@ -28,18 +30,21 @@ const configurationUpdaters: { [key: number]: ConfigurationUpdater } = {
      * @param config The old configuration.
      */
     0: (config) => {
-        for (const [key, value] of Object.entries(window.rw.config)) {
+        for (const [key, value] of Object.entries(config)) {
             switch (key) {
                 case "rwRollbackDoneOption":
                     switch (value) {
                         case "RWRBDONEmrevPg":
-                            config.rollbackDoneOption = "latestRev";
+                            config.rollbackDoneOption =
+                                RollbackDoneOption.LatestRevision;
                             break;
                         case "RWRBDONEnewUsrMsg":
-                            config.rollbackDoneOption = "newMsg";
+                            config.rollbackDoneOption =
+                                RollbackDoneOption.NewMessage;
                             break;
                         case "RWRBDONEwelcomeUsr":
-                            config.rollbackDoneOption = "quickTemplate";
+                            config.rollbackDoneOption =
+                                RollbackDoneOption.QuickTemplate;
                             break;
                         case "RWRBDONEwarnUsr":
                             config.rollbackDoneOption = "warnUser";
@@ -53,6 +58,26 @@ const configurationUpdaters: { [key: number]: ConfigurationUpdater } = {
                                 value
                             );
                     }
+                    delete config.rwRollbackDoneOption;
+                    break;
+                case "rollbackMethod":
+                    switch (config.rollbackMethod) {
+                        case "rollbackLike":
+                            config.rollbackMethod = RollbackMethod.Revert;
+                            break;
+                        case "rollback":
+                            config.rollbackMethod = RollbackMethod.Rollback;
+                            break;
+                        default:
+                            config.rollbackMethod = RollbackMethod.Unset;
+                            break;
+                    }
+                    break;
+                case "lastVersion":
+                    // We used to rely on a number-based version system. Convert this to the semantic
+                    // versioning style used now.
+                    config.latestVersion = "0.1." + config.latestVersion;
+                    delete config.lastVersion;
                     break;
             }
         }

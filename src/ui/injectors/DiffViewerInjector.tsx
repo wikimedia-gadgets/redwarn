@@ -6,7 +6,10 @@ import {
 import { MDCRipple } from "@material/ripple";
 import { MDCTooltip } from "@material/tooltip";
 import { MDCLinearProgress } from "@material/linear-progress";
-import { RollbackDoneOptions } from "rww/definitions/RollbackDoneOptions";
+import {
+    RollbackDoneOption,
+    RollbackDoneOptions,
+} from "rww/definitions/RollbackDoneOptions";
 import { BaseProps, h } from "tsx-dom";
 import { Warnings } from "rww/mediawiki/Warnings";
 import { RWUISelectionDialogItem } from "../elements/RWUIDialog";
@@ -43,6 +46,7 @@ export default class DiffViewerInjector {
      */
     static async init(): Promise<void> {
         if (Rollback.isDiffPage()) {
+            console.log("Diff page detected!");
             await DiffViewerInjector.loadOptions(await this.getContext());
         }
     }
@@ -192,13 +196,15 @@ export default class DiffViewerInjector {
                 </span>
             );
 
-            RollbackDoneOptions.forEach((option) => {
+            Object.entries(RollbackDoneOptions).forEach(([id, option]) => {
                 const button = (
                     <button
                         class="mdc-icon-button material-icons"
                         aria-label={option.name}
-                        data-tooltip-id={`rwRBDoneIcon_${option.id}T`}
-                        id={`rwRBDoneOption_${option.id}`}
+                        data-tooltip-id={`rwRBDoneIcon_${
+                            RollbackDoneOption[+id]
+                        }T`}
+                        id={`rwRBDoneOption_${RollbackDoneOption[+id]}`}
                     >
                         {option.icon}
                     </button>
@@ -207,7 +213,7 @@ export default class DiffViewerInjector {
 
                 const tooltip = (
                     <div
-                        id={`rwRBDoneOption_${option.id}T`}
+                        id={`rwRBDoneOption_${RollbackDoneOption[+id]}T`}
                         class="mdc-tooltip"
                         role="tooltip"
                         aria-hidden="true"
@@ -329,8 +335,8 @@ export default class DiffViewerInjector {
 
         // Add click handlers
 
-        RollbackDoneOptions.forEach((option) => {
-            $(`#rwRBDoneOption_${option.id}`).on(
+        Object.entries(RollbackDoneOptions).forEach(([id, option]) => {
+            $(`#rwRBDoneOption_${RollbackDoneOption[+id]}`).on(
                 "click",
                 clickHandlerFactory(option.action)
             );

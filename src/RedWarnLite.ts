@@ -16,7 +16,7 @@ import RedWarnHooks from "./event/RedWarnHooks";
 import RTRC from "./integrations/RTRC";
 import Localization from "./localization/Localization";
 import StyleManager from "./styles/StyleManager";
-import Dependencies from "./ui/Dependencies";
+import Dependencies from "./data/Dependencies";
 import RWUI from "./ui/RWUI";
 import MediaWiki, {
     ClientUser,
@@ -29,14 +29,16 @@ import MediaWiki, {
     Watch,
 } from "./mediawiki";
 import * as RedWarnConstants from "./data/RedWarnConstants";
+import { RW_VERSION } from "./data/RedWarnConstants";
 import * as Util from "./util";
 import Lockr from "lockr";
 import { Configuration } from "./config";
 import TamperProtection from "./tamper/TamperProtection";
 import UIInjectors from "rww/ui/injectors/UIInjectors";
+import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
 
 $(document).ready(async () => {
-    console.log("Starting RedWarn...");
+    console.log(`Starting RedWarn ${RW_VERSION}...`);
 
     if (document.body.classList.contains("rw-disable")) {
         // We've been prevented from running on this page.
@@ -68,28 +70,34 @@ $(document).ready(async () => {
     // Verify our MediaWiki installation.
     if (!MediaWiki.mwCheck()) return;
 
+    // Create the MediaWiki API connector.
+    await MediaWikiAPI.init();
+
     console.log("Initializing store...");
     // Initialize RedWarn store.
     RedWarnStore.initializeStore();
 
     console.log("Loading style definitions...");
     // Load style definitions first.
-    StyleManager.initialize();
+    await StyleManager.initialize();
+
+    // Load the configuration
+    await Configuration.refresh();
+
+    // Only do hook calls after styles has been set to configuration preference!
 
     /**
-     * Extensions can push their own dependencies here.
+     * Extensions and styles can push their own dependencies here.
      */
-    await Promise.all([RedWarnHooks.executeHooks("preInit")]);
+    await Promise.all([
+        RedWarnHooks.executeHooks("preInit"),
+        await Dependencies.resolve([RedWarnStore.dependencies]),
+    ]);
 
     /**
      * Initialize everything
      */
-    await Promise.all([
-        RedWarnHooks.executeHooks("init"),
-        Dependencies.resolve(),
-        MediaWikiAPI.init(),
-        Configuration.refresh(),
-    ]);
+    await Promise.all([RedWarnHooks.executeHooks("init")]);
 
     // Non-blocking initializers.
     (() => {
@@ -113,7 +121,16 @@ $(document).ready(async () => {
     await RedWarnHooks.executeHooks("postUIInject");
 });
 
+/**
+ * The RedWarn class is provided as a way for other scripts to access
+ * RedWarn-specific functionality.
+ */
 export default class RedWarn {
+    static readonly version = RW_VERSION;
+
+    static get RedWarnConstants(): typeof RedWarnConstants {
+        return RedWarnConstants;
+    }
     static get RedWarnStore(): typeof RedWarnStore {
         return RedWarnStore;
     }
@@ -138,9 +155,6 @@ export default class RedWarn {
     static get RWUI(): typeof RWUI {
         return RWUI;
     }
-    static get RedWarnConstants(): typeof RedWarnConstants {
-        return RedWarnConstants;
-    }
     static get RTRC(): typeof RTRC {
         return RTRC;
     }
@@ -162,7 +176,12 @@ export default class RedWarn {
     static get Config(): typeof Configuration {
         return Configuration;
     }
-    static config: Record<string, any>;
+    static get config(): Record<string, any> {
+        return Configuration.map();
+    }
+    static Database(): RedWarnLocalDB {
+        return RedWarnLocalDB.i;
+    }
 
     /**
      * @deprecated not yet implemented

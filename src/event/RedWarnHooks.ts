@@ -66,5 +66,12 @@ export default class RedWarnHooks {
                 await result;
             }
         }
+
+        document.dispatchEvent(
+            new Event(`redwarn:${hookType}`, { payload: payload } as Record<
+                string,
+                any
+            >)
+        );
     }
 }

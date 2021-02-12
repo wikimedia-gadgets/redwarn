@@ -23,7 +23,7 @@ const MaterialStyle: Style = {
     meta: {
         "en-US": {
             displayName: "Material",
-            author: ["The RedWarn Contributors", "Google, Inc."],
+            author: ["The RedWarn Development Team", "Google, Inc."],
             // \u2014 is an emdash
             description:
                 "RedWarn's classic look-and-feel \u2014 an implementation of Google's Material Design.",
@@ -40,24 +40,36 @@ const MaterialStyle: Style = {
             id: "material-icons",
             // Original: "https://fonts.googleapis.com/icon?family=Material+Icons"
             src: "https://redwarn.toolforge.org/cdn/css/materialicons.css",
+            cache: {
+                duration: 1209600000, // 14 days
+            },
         },
         {
             type: "style",
             id: "mdc-styles",
             src:
                 "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@8.0.0.min.css",
+            cache: {
+                duration: 1209600000, // 14 days
+            },
         },
         {
             type: "style",
             id: "mdc-tooltip-styles",
             src:
                 "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@8.0.0.tooltip.min.css",
+            cache: {
+                duration: 1209600000, // 14 days
+            },
         },
         {
             type: "style",
             id: "roboto",
             src:
                 "https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese",
+            cache: {
+                duration: 1209600000, // 14 days
+            },
         },
     ],
 

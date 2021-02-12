@@ -14,7 +14,7 @@ import MaterialDialog, {
     MaterialDialogTitle,
 } from "./MaterialDialog";
 import i18next from "i18next";
-import Dependencies from "rww/ui/Dependencies";
+import Dependencies from "rww/data/Dependencies";
 
 import "../css/iframeDialog.css";
 import { url } from "rww/util";
@@ -162,13 +162,13 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
                 !!iframeDoc &&
                 iframeDoc.location.toString() !== "about:blank"
             ) {
-                const headInit = () => {
+                const headInit = async () => {
                     const iframeDoc =
                         iframe.contentDocument ||
                         iframe.contentWindow?.document;
                     if (!!iframeDoc.head) {
                         for (const dependency of actualDependencies) {
-                            const depElement = Dependencies.buildDependency(
+                            const depElement = await Dependencies.buildDependency(
                                 dependency
                             );
                             let oldElement;

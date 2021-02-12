@@ -12,8 +12,8 @@
  * file.
  *
  * !!!!!!!!!
- * Do not edit below this line unless you understand the risks! If rw.config isn't
- * defined, this file will be reset and all configuration changes will be lost.
+ * Do not edit below this line unless you understand the risks! If the file is
+ * invalid, this configuration will be reset and all settings will be lost.
  * !!!!!!!!!
 */
 // --nowikiOpen

@@ -4,7 +4,7 @@ import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 import { RollbackContext } from "rww/definitions/RollbackContext";
 import { User } from "rww/mediawiki/User";
 import { Warning } from "rww/mediawiki/Warnings";
-import { Dependency } from "rww/ui/Dependencies";
+import { Dependency } from "rww/data/Dependencies";
 import { Page } from "rww/mediawiki";
 
 export enum RWUIDialogActionType {

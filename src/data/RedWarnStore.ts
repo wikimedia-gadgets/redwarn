@@ -1,7 +1,7 @@
 // noinspection JSDeprecatedSymbols
 import MessageHandler from "rww/event/MessageHandler";
 import { StyleStorage } from "rww/styles/Style";
-import { Dependency } from "rww/ui/Dependencies";
+import { Dependency } from "rww/data/Dependencies";
 
 // noinspection JSDeprecatedSymbols
 export default class RedWarnStore {

@@ -5,13 +5,14 @@ import {
     RW_VERSION,
 } from "rww/data/RedWarnConstants";
 import { DefaultRedWarnStyle } from "rww/styles/StyleConstants";
-import StyleManager from "rww/styles/StyleManager";
 import { ClientUser } from "rww/mediawiki";
 import { Setting } from "./Setting";
 import { RollbackMethod } from "./ConfigurationEnums";
 import { updateConfiguration } from "./ConfigurationUpdate";
 import RWUI from "rww/ui/RWUI";
 import i18next from "i18next";
+import StyleManager from "rww/styles/StyleManager";
+import { RedWarnStyleMissingError } from "rww/errors/RedWarnStyleError";
 
 export class Configuration {
     /** Last version of RedWarn that was used */
@@ -40,47 +41,59 @@ export class Configuration {
     );
     /** Style of UI */
     public static style = new Setting(DefaultRedWarnStyle, "style");
-    public static neopolitan = new Setting("", "neopolitan");
+    public static neopolitan = new Setting(null, "neopolitan");
 
     static async refresh(): Promise<void> {
+        console.log("Refreshing configuration...");
         let redwarnConfig: Record<string, any>,
             saveNow = false;
+
         try {
             redwarnConfig = JSON.parse(
-                (
-                    await ClientUser.i.redwarnConfigPage.getLatestRevision()
-                ).content
-                    // Strip everything except the actual JSON part.
-                    .replace(
-                        /(?:.|\s)+?rw\.config\s*=\s*({.+});(?:.|\s)+/g,
-                        "$1"
-                    )
+                // Strip everything except the actual JSON part.
+                /rw\.config\s*=\s*({(?:.|\s)*});(?:\n|\s*\/\/<\/nowiki>)(?:.|\s)*/g.exec(
+                    (await ClientUser.i.redwarnConfigPage.getLatestRevision())
+                        .content
+                )[1]
             );
         } catch (e) {
+            console.error(e);
+            // Fallback style
+            StyleManager.setStyle(StyleManager.defaultStyle);
+            // Show error message
             const dialog = new RWUI.Dialog(i18next.t("ui:configErrorDialog"));
             dialog.show();
+            // Reset configuration
             redwarnConfig = {};
-            this.allSettings().forEach((v, k) => {
-                redwarnConfig[k] = v.value;
-            });
             saveNow = true;
         }
 
-        if (redwarnConfig["configVersion"] ?? 0 < RW_CONFIG_VERSION) {
-            window.rw.config = updateConfiguration(redwarnConfig);
+        if ((redwarnConfig[this.configVersion.id] ?? 0) < RW_CONFIG_VERSION) {
+            redwarnConfig = updateConfiguration(redwarnConfig);
             saveNow = true;
-        } else {
-            window.rw.config = redwarnConfig;
         }
 
-        // At this point, we can definitely assume that `rw.config` is a configuration
+        // At this point, we can definitely assume that `redwarnConfig` is a configuration
         // that is of the latest version.
 
-        this.allSettings().forEach((s) => s.refresh());
+        this.allSettings().forEach((setting) => {
+            if (redwarnConfig[setting.id])
+                setting.value = redwarnConfig[setting.id];
+        });
 
-        StyleManager.activeStyle = StyleManager.styles.find(
-            (v) => v.name === this.style.value
-        ); // set here otherwise circular ref
+        try {
+            StyleManager.setStyle(
+                redwarnConfig[this.style.id] ?? this.style.defaultValue
+            );
+        } catch (e) {
+            if (e instanceof RedWarnStyleMissingError) {
+                StyleManager.setStyle(StyleManager.defaultStyle);
+                const dialog = new RWUI.Dialog(
+                    i18next.t("ui:styleError.missing")
+                );
+                dialog.show();
+            }
+        }
 
         if (saveNow) {
             this.save();
@@ -98,15 +111,11 @@ export class Configuration {
     }
 
     static async save(reloadOnDone = false): Promise<void> {
-        this.allSettings().forEach((v, k) => {
-            window.rw.config[k] = v;
-        });
-
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const template = require("./redwarnConfig.template.txt");
 
         await ClientUser.i.redwarnConfigPage.edit(
-            Configuration.fromTemplate(template),
+            Configuration.fromTemplate(template, this.map()),
             "Updating user configuration"
         );
         if (reloadOnDone) {
@@ -115,10 +124,30 @@ export class Configuration {
         return;
     }
 
-    static fromTemplate(template: string): string {
+    static map(): Record<string, any> {
+        const excludeFromDefaultSkip = [
+            this.configVersion.id,
+            this.latestVersion.id,
+        ];
+        return Array.from(this.allSettings().entries()).reduce(
+            (main, [id, setting]) => ({
+                ...main,
+                ...(excludeFromDefaultSkip.includes(setting.id) ||
+                setting.value !== setting.defaultValue
+                    ? { [id]: setting.value }
+                    : {}),
+            }),
+            {}
+        );
+    }
+
+    static fromTemplate(
+        template: string,
+        configurationValues: Record<string, any>
+    ): string {
         return template
             .replace(/--nowikiOpen/g, RW_NOWIKI_OPEN)
             .replace(/--nowikiClose/g, RW_NOWIKI_CLOSE)
-            .replace(/--configuration/g, JSON.stringify(window.rw.config));
+            .replace(/--configuration/g, JSON.stringify(configurationValues));
     }
 }

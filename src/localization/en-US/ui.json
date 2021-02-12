@@ -74,9 +74,16 @@
     },
     "close": "Close",
     "configErrorDialog": {
-        "title": "Error while loading configuration",
+        "title": "Configuration Error",
         "content": "Your RedWarn config was invalid and was reset to the default.",
         "actions": [{ "data": "$t(ui:okCancel.ok)" }]
+    },
+    "styleError": {
+        "missing": {
+            "title": "Style Missing",
+            "content": "The style in your configuration cannot be found. It has been set to the default style for now.",
+            "actions": [{ "data": "$t(ui:okCancel.ok)" }]
+        }
     },
     "contribs": {
         "previewLink": "prev",

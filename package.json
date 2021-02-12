@@ -17,6 +17,7 @@
         "@material/textfield": "^8.0.0",
         "@material/tooltip": "^8.0.0",
         "@types/lockr": "^0.8.6",
+        "dexie": "^3.0.3",
         "dialog-polyfill": "^0.5.3",
         "i18next": "^19.8.4",
         "i18next-browser-languagedetector": "^6.0.1",

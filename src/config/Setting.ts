@@ -5,23 +5,14 @@
  */
 export class Setting<T> implements PrimitiveSetting<T> {
     value: T;
-    defaultValue: T;
+    readonly defaultValue: T;
 
     constructor(defaultValue: T, private readonly _id: string) {
-        this.value = <T>window.rw?.config?.[_id] ?? defaultValue;
-        this.defaultValue = defaultValue;
+        this.defaultValue = this.value = defaultValue;
     }
 
     reset(): void {
         this.value = this.defaultValue;
-    }
-
-    refresh(): boolean {
-        if (window.rw?.config?.[this.id] != null) {
-            this.value = <T>window.rw.config[this.id];
-            return true;
-        }
-        return false;
     }
 
     get id(): string {

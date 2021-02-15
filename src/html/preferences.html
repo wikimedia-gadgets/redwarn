@@ -140,35 +140,7 @@ var onSettingsLoad = {};
                 
                 <br/><br/>
 
-                <!-- Add generated preference elements -->
-                ${rw.preferences.generateHTML()}
-
-                <br/><br/>
-                <div class="mdl-card mdl-shadow--2dp" style="width:100%"> <!-- ABOUT CARD -->
-                    <div class="mdl-card__title" style="color: #fff;
-                    height: 176px;
-                    background: url('https://upload.wikimedia.org/wikipedia/commons/b/b6/Reflected_sunset.jpg') center / cover;">
-                        <h2 class="mdl-card__title-text">${rw.logoHTML} ${rw.version}</h2>
-                    </div>
-                    <div class="mdl-card__supporting-text"> <!-- ABOUT CONTENT -->
-                        <!-- ABOUT TAB -->
-                        <h5>The user-<span id="hahaFunnyJoke">friendly</span> counter-vandalism tool.</h5>
-                        <!-- Impliment very original and not outdated haha jokes -->
-                        <script>$("#hahaFunnyJoke").on("click", ()=> {if (confirm("You are about to open an external link to YouTube.com - continue?")) Object.assign(document.createElement('a'), { target: '_blank', href: "https://www.youtube.com/watch?v=kg1BljLu9YY"}).click();});</script>
-                        <h6>Build info</h6>
-                        <pre>${rw.buildInfo}</pre>
-                        <h6>Image attribution</h6>
-                        <a href="https://commons.wikimedia.org/wiki/File:Golden_Gate_Bridge_at_sunset_1.jpg" target="_blank">File:Golden Gate Bridge at sunset 1.jpg</a><br/>
-                        <a href="https://commons.wikimedia.org/wiki/File:Reflected_sunset.jpg" target="_blank">File:Reflected_sunset.jpg</a><br/>
-                        <a href="https://commons.wikimedia.org/wiki/File:Wilkin_River_close_to_its_confluence_with_Makarora_River,_New_Zealand.jpg" target="_blank">File:Wilkin River close to its confluence with Makarora River, New Zealand.jpg</a><br/>
-                    </div>
-                    <div class="mdl-card__actions mdl-card--border">
-                        <a class="mdl-button mdl-js-button mdl-js-ripple-effect" style="color:red" onclick="window.parent.postMessage('resetConfig');">
-                            RESET REDWARN
-                        </a>
-                    </div>
-                </div>
-                <br/><br/>
+                
             </div>
         </div>
         </section>
@@ -180,7 +152,7 @@ var onSettingsLoad = {};
                     <div class="mdl-card__title" style="color: #fff;
                     height: 176px;
                     background: url('https://upload.wikimedia.org/wikipedia/commons/d/d3/Golden_Gate_Bridge_at_sunset_1.jpg') center / cover;">
-                        <h2 class="mdl-card__title-text">Customise</h2>
+                        <h2 class="mdl-card__title-text">Buttons</h2>
                     </div>
                     <div class="mdl-card__supporting-text">
                         
@@ -345,7 +317,28 @@ var onSettingsLoad = {};
                         
                         <!-- END MORE OPTIONS SECTION -->
 
-                        <hr/> <!-- warn user -->
+                        
+                        
+                        <!-- END APPEARANCE TAB-->
+                    </div>
+                    <div class="mdl-card__actions mdl-card--border">
+                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="saveConfig()">
+                            SAVE CHANGES
+                        </a>
+                    </div>
+                </div> <!-- END APPEARANCE CARD -->
+            </div>
+        </section>
+        <section class="mdl-layout__tab-panel" id="scroll-tab-3"> <!-- warnings -->
+            <div class="page-content" style="padding-top:10px;padding-right:25%;">
+                <div class="mdl-card mdl-shadow--2dp" style="width:100%">
+                    <div class="mdl-card__title" style="color: #fff;
+                    height: 176px;
+                    background: url('https://upload.wikimedia.org/wikipedia/commons/d/d3/Golden_Gate_Bridge_at_sunset_1.jpg') center / cover;">
+                        <h2 class="mdl-card__title-text">Warnings</h2>
+                    </div>
+                    <div class="mdl-card__supporting-text">
+                        <!-- warn user -->
                         <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Warn User</h2>
                         <!-- Left side (actual warnings and search box )-->
                         <div style="width:50%;float:left;height:100%; padding-right: 5px; overflow-x:hidden;overflow-y:auto;">
@@ -442,17 +435,47 @@ var onSettingsLoad = {};
                 </div> <!-- END APPEARANCE CARD -->
             </div>
         </section>
-        <section class="mdl-layout__tab-panel" id="scroll-tab-3"> <!-- warnings -->
-            <div class="page-content" style="padding-top:10px;padding-right:10%;"><!-- Your content goes here --></div>
-        </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-4"> <!-- appearance -->
-            <div class="page-content" style="padding-top:10px;padding-right:10%;"><!-- Your content goes here --></div>
+            <div class="page-content" style="padding-top:10px;padding-right:25%;">
+            <!-- Add generated preference elements -->
+            ${rw.preferences.generateHTML("Appearance")}
+            
+            </div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-5"> <!-- behaviour -->
-            <div class="page-content" style="padding-top:10px;padding-right:10%;"><!-- Your content goes here --></div>
+            <div class="page-content" style="padding-top:10px;padding-right:25%;">
+            <!-- Add generated preference elements -->
+            ${rw.preferences.generateHTML("Behaviour")}
+            </div>
         </section>
         <section class="mdl-layout__tab-panel" id="scroll-tab-6"> <!-- about -->
-            <div class="page-content" style="padding-top:10px;padding-right:10%;"><!-- Your content goes here --></div>
+            <div class="page-content" style="padding-top:10px;padding-right:25%;">
+                <div class="mdl-card mdl-shadow--2dp" style="width:100%"> <!-- ABOUT CARD -->
+                    <div class="mdl-card__title" style="color: #fff;
+                    height: 176px;
+                    background: url('https://upload.wikimedia.org/wikipedia/commons/b/b6/Reflected_sunset.jpg') center / cover;">
+                        <h2 class="mdl-card__title-text">${rw.logoHTML} ${rw.version}</h2>
+                    </div>
+                    <div class="mdl-card__supporting-text"> <!-- ABOUT CONTENT -->
+                        <!-- ABOUT TAB -->
+                        <h5>The user-<span id="hahaFunnyJoke">friendly</span> counter-vandalism tool.</h5>
+                        <!-- Impliment very original and not outdated haha jokes -->
+                        <script>$("#hahaFunnyJoke").on("click", ()=> {if (confirm("You are about to open an external link to YouTube.com - continue?")) Object.assign(document.createElement('a'), { target: '_blank', href: "https://www.youtube.com/watch?v=kg1BljLu9YY"}).click();});</script>
+                        <h6>Build info</h6>
+                        <pre>${rw.buildInfo}</pre>
+                        <h6>Image attribution</h6>
+                        <a href="https://commons.wikimedia.org/wiki/File:Golden_Gate_Bridge_at_sunset_1.jpg" target="_blank">File:Golden Gate Bridge at sunset 1.jpg</a><br/>
+                        <a href="https://commons.wikimedia.org/wiki/File:Reflected_sunset.jpg" target="_blank">File:Reflected_sunset.jpg</a><br/>
+                        <a href="https://commons.wikimedia.org/wiki/File:Wilkin_River_close_to_its_confluence_with_Makarora_River,_New_Zealand.jpg" target="_blank">File:Wilkin River close to its confluence with Makarora River, New Zealand.jpg</a><br/>
+                        Other photos: (c) 2021 Ed6767
+                    </div>
+                    <div class="mdl-card__actions mdl-card--border">
+                        <a class="mdl-button mdl-js-button mdl-js-ripple-effect" style="color:red" onclick="window.parent.postMessage('resetConfig');">
+                            RESET REDWARN
+                        </a>
+                    </div>
+                </div>
+            </div>
         </section>
         
             

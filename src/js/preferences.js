@@ -243,10 +243,11 @@ rw.preferences = {
         }
     ], // about card included by default
 
-    "generateHTML" : ()=>{
-        // Generate HTML for UI to use
+    "generateHTML" : cardTitle=>{
+        // Generate HTML for UI to use given cardTitle matches
         let finalHTML = ``;
         rw.preferences.options.forEach(card=>{
+            if (card.cardTitle != cardTitle) return; // skip if not our card
             // Add the full card html
             finalHTML += `
             <div class="mdl-card mdl-shadow--2dp" style="width:100%"> <!-- CARD -->

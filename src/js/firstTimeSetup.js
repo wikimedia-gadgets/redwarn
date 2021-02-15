@@ -41,6 +41,6 @@ rw.firstTimeSetup = {
         dialogEngine.freezeScrolling();
 
         // Open preferences page with no padding, full screen
-        dialogEngine.create(mdlContainers.generateContainer(`[[[[include firstTimeSetup.html]]]]`, window.innerWidth, window.innerHeight, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include firstTimeSetup.html]]]]`, window.outerWidth, window.outerHeight, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
     }
 };

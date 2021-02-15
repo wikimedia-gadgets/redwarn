@@ -15,7 +15,7 @@ var dialogEngine = {
         </div>
         `);
         // Add events
-        addMessageHandler("closeDialog", ()=>{dialogEngine.closeDialog();}); // closing
+        addMessageHandler("closeDialog", ()=>dialogEngine.closeDialog()); // closing
     },
 
     /**

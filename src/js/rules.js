@@ -331,8 +331,7 @@ rw.rules = {
             1,
             2,
             3,
-            4,
-            5
+            4
         ]
     },
     chat: {
@@ -522,8 +521,9 @@ rw.rules = {
         "category": "Reminders",
         "template": "uw-editsummary",
         "warningLevels": [
-            0
-        ]
+            1, 2
+        ],
+        "note": "Level 2 of this template is used for more experienced editors that should already know that they need to use edit summaries."
     },
     elinbody: {
         "name": "Adding external links to the body of an article",

@@ -21,23 +21,38 @@
 #rwPGIconContainer {
     z-index: 1;
     overflow: unset;
+
+    float: right;
 }
 
 /* Indicators-situated page icons */
+#mw_header #rwPGIconContainer, /* Modern */
 #content #rwPGIconContainer {
     margin: 0 0 0 12px;
     float: right;
     font-size: 0.875em;
     line-height: 1.6;
     position: relative;
-    padding-top: 0.4em;
     overflow: hidden;
     height: 2em;
 }
 
+/* For some reason, Vector shifts the icons up a bit. */
+.skin-vector-legacy #content #rwPGIconContainer {
+    padding-top: 0.4em;
+}
+
+#rwCurrentRevRollbackBtns > div {
+    overflow: hidden;
+}
+
+#mw_header #rwPGIconContainer.rw--upgraded, /* Modern */
 #content #rwPGIconContainer.rw--upgraded {
     animation: pgIconsFadeIn 0.2s ease-in-out, pgIconsIndicatorsFadeIn 0.3s ease-in-out;
 }
+
+/* Weird behaviour: [[Special:Diff/1000551569]] */
+#rwCurrentRevRollbackBtns > div, #rOld1, #rOld1 span, #rOld2, #rOld2 span { overflow: hidden; }
 
 .mdl-tooltip {
     -webkit-transform: scale(0);
@@ -1003,7 +1018,7 @@ fieldset[disabled] .mdl-checkbox .mdl-checkbox__label,
     border-radius: 50%;
     cursor: pointer;
     overflow: hidden;
-    -webkit-mask-image: -webkit-radial-gradient(circle, #fff, #000)
+    mask-image: radial-gradient(circle, #fff, #000)
 }
 
 .mdl-checkbox__ripple-container .mdl-ripple {

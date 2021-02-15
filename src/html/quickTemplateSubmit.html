@@ -8,9 +8,9 @@
         display: none;
     }
 </style>
-<h2 style="font-weight: 200;font-size:45px;line-height: 48px;">`+selectedPack.name+`</h2>
-<h5>`+selectedTemplate.title+`</h5>
-<i>`+ selectedTemplate.about +`</i>
+<h2 style="font-weight: 200;font-size:45px;line-height: 48px;">${selectedPack.name}</h2>
+<h5 class="rw-qt-submit-title">${selectedTemplate.title}</h5>
+<i class="rw-qt-submit-about">`${selectedTemplate.about}</i>
 <div style="height: 340px;overflow:auto;">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
         <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="`+ rw.info.targetUsername(un) +`" readonly>

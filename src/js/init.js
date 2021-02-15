@@ -378,7 +378,7 @@ RedWarn 16.1 brings further UX improvements and feature additions.
             if (rw.config.ptrRmCol) rmCol = rw.config.ptrRmCol;
             // basically multiact js but with stuff replaced
             mwBody.style.overflowY = "hidden";
-            let content = mdlContainers.generateContainer(`[[[[include recentChanges.html]]]]`, window.outerWidth, window.outerHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
+            let content = mdlContainers.generateContainer(`[[[[include recentChanges.html]]]]`, window.innerWidth, window.innerWidth); // Generate container using mdlContainer.generatecontainer aka blob in iframe
 
             // Init if needed
             if ($("#PTdialogContainer").length < 1) {
@@ -409,8 +409,8 @@ RedWarn 16.1 brings further UX improvements and feature additions.
 
             // Resize on window change
             $(window).resize(()=>{
-                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("height",  window.outerHeight);
-                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("width",  window.outerWidth);
+                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("height",  window.innerWidth);
+                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("width",  window.innerWidth);
             });
 
             // Add message handler for dialog close

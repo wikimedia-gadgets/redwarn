@@ -176,6 +176,8 @@ var mdlContainers = {
                 $(dialogEngine.dialog.getElementsByTagName("iframe")[0]).attr("height",  window.innerWidth);
                 $(dialogEngine.dialog.getElementsByTagName("iframe")[0]).attr("width",  window.innerWidth);
             });
+        } else {
+            $(window).resize(()=>{}); // do nothing
         }
 
         let url = URL.createObjectURL(new Blob([mdlContainers.generateHtml(innerContent)], { type: 'text/html' })); // blob url

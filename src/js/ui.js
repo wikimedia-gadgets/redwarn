@@ -981,9 +981,16 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
 
     },
 
-    // For things that send details to the RedWarn team
-    "acceptLegalPolicyDialog" : ()=>{
+    // For things that send details to the RedWarn team - NOT USED OR SET UP ATM, for later use.
+    "acceptLegalPolicyDialog" : callback=>{
+        const legalPol = `[[[[include legalPolicy.html]]]]`;
 
+        rw.ui.confirmDialog(`
+        <b>This feature may share personal information with the RedWarn team. Please accept our legal and privacy policies to continue.</b>
+        <div style="height:360px; overflow:auto;">
+        ${legalPol}
+        </div>
+        `, "ACCEPT", ()=>{}, "DECLINE", ()=>dialogEngine.closeDialog(), 400);
     },
 
     // CLASSES from here

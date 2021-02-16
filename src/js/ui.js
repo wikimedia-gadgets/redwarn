@@ -981,6 +981,11 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
 
     },
 
+    // For things that send details to the RedWarn team
+    "acceptLegalPolicyDialog" : ()=>{
+
+    },
+
     // CLASSES from here
 
     /**

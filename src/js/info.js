@@ -195,6 +195,16 @@ rw.info = { // API
                     rw.topIcons.icons = newRwIcons;
                 }
 
+                // Load custom rules and rule order
+
+                // Todo, add custom rule loading here
+
+                if (rw.config.ruleOrder == null) rw.config.ruleOrder = Object.keys(rw.rules) // No order set, so just generate a default rule order
+
+                // Todo, process favourites and other modifiers
+
+                // Done!
+
             } catch (err) {
                 // Corrupt config file
                 console.log(rw.config);

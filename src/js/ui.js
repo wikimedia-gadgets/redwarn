@@ -20,9 +20,10 @@ rw.ui = {
         // Assemble rule listbox
         let finalListBox = "<span>";
         let currentHeading = "";
-        //rw.rules.forEach((rule, i) => {
-        for (let i in rw.rules) {
-            if (!rw.rules.hasOwnProperty(i)) continue;
+        
+        rw.config.ruleOrder.forEach(i => {
+            // We loop for our order, then i being - re category ordering, preferences can change these to match using a modifer in config
+            if (!rw.rules.hasOwnProperty(i)) return; // if invalid or otherwise removed, skip
             let rule = rw.rules[i];
             // Check if category is different to current heading first
             if (rule.category != currentHeading) {
@@ -84,7 +85,7 @@ rw.ui = {
                 </script>
                 `;
             }
-        };
+        });
         finalListBox += `</span>`; // close final catagory
 
         // Setup preview handling

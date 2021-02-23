@@ -276,14 +276,22 @@ RedWarn 16.1 brings further UX improvements and feature additions.
 
             // Thanks to User:Awesome Aasim for the suggestion and some sample code.
             try {
-                let pageIconHTML = "<div id='rwPGIconContainer'>"; // obj it is appended to
-                // Possible icons locations: default (page icons area) or sidebar
+                // Possible icons locations: default (page icons area) or sidebar - possible link location, dropdown and toplinks
                 let iconsLocation = rw.config.pgIconsLocation ? rw.config.pgIconsLocation : "default"; // If set in config, use config
 
-                // Add to pageIconHTML from topIcons config
-                pageIconHTML += rw.topIcons.generateHTML();
+                let pageIconHTML = "Sorry, an error occured loading page icons. Please report this to the RedWarn team ASAP."; // just in case something goes wrong
 
-                pageIconHTML += "</div>"; // close contianer
+                if (iconsLocation == "default" || iconsLocation == "sidebar") {
+                    // We only need to generate IF we need the icons
+
+                    pageIconHTML = "<div id='rwPGIconContainer'>"; // obj it is appended to
+                
+                    // Add to pageIconHTML from topIcons config
+                    pageIconHTML += rw.topIcons.generateHTML();
+
+                    pageIconHTML += "</div>"; // close contianer
+                }
+                
                 if (iconsLocation == "default") {
                     try {
                         $(".mw-indicators").before(pageIconHTML); // Append our icons to the page icons with spacing
@@ -331,13 +339,43 @@ RedWarn 16.1 brings further UX improvements and feature additions.
                         // We done
                     })(` <!-- hand in pageIconHTML and some extra gubbins to become _t -->
                         <h3 id="redwarn-label" lang="en" dir="ltr">RedWarn tools</h3><div class="mw-portlet-body body pBody" id="redwarn-tools">
-                        ` + pageIconHTML + `
+                        ${pageIconHTML}
                         </div>
                     `);
+                } // RW16.1
+                else if (iconsLocation == "dropdown") {
+                    // Twinkle style dropdown, no tooltips, normally in "MORE" menu
+                    rw.topIcons.generateHTML(true).forEach(link => {
+                        mw.util.addPortletLink(
+                            'p-cactions',
+                            'javascript:false;',
+                            "RW:" + link.txt,
+                            link.id,
+                            null, null, // ones we don't need
+                            '#pt-preferences' // put before preferences
+                            );
+                    });
+                    
+                }
+                else if (iconsLocation == "toplinks") {
+                    // Top where sign in logout etc is
+
+                    // Get HTML with array mode on then for each call MW to add
+                    rw.topIcons.generateHTML(true).forEach(link => {
+                        mw.util.addPortletLink(
+                            'p-personal',
+                            'javascript:false;',
+                            link.txt,
+                            link.id,
+                            null, null, // ones we don't need
+                            '#pt-preferences' // put before preferences
+                            );
+                    });
                 }
             } catch (error) {
                 // Likely invalid theme, not all themes can use default
-                mw.notify("RedWarn isn't compatible with this theme.");
+                console.error(error);
+                mw.notify("RedWarn isn't compatible with this theme, or another error occured when loading control buttons.");
                 return; // Exit
             }
 

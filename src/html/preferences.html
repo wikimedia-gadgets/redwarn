@@ -347,7 +347,10 @@ var onSettingsLoad = {};
                             ${(()=>{ // Tags for HTML formatting only <script>
                                 let currentHeading = "";
                                 let finalHTML = ``;
-
+                                // TODO:
+                                // update per rule order
+                                // create new categories
+                                // click and drag
                                 for (let i in rw.rules) {
                                     if (!rw.rules.hasOwnProperty(i)) continue;
                                     let rule = rw.rules[i];

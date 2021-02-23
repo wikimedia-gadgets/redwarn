@@ -1,6 +1,7 @@
 // Used to handle the new preferences screen in RW16
 rw.preferences = {
     "options" : [ // Holds all the preferences in JSON format in order, some options, such as reoganising icons, are templates and can be referred to
+        // THESE ARE RENDERED AS TABS AS OF 16.1, add a new tab, then load your card with a parameter matching the cartTitle
 
         // CARDS HERE
         {
@@ -45,13 +46,15 @@ rw.preferences = {
                 // Page icon locations 
                 "pgIconsLocation" : { // config value as title
                     // UI text
-                    "optionTitle" : "Location of RedWarn icons",
-                    "supportingText": "Change the location of where the RedWarn page icons appear. Depending on your Skin, your preferences may or may not be honored.",
+                    "optionTitle" : "Location of RedWarn controls",
+                    "supportingText": "Change the location of where the RedWarn page controls appear. Depending on your Skin, your preferences may or may not be honored.",
 
                     // Config options
                     "options" : { 
-                        "After Page Icons*" : "default",
-                        "Page Sidebar/Navigation": "sidebar"
+                        "After Page Icons (iconified)*" : "default",
+                        "Page Sidebar/Navigation (iconified)": "sidebar",
+                        "In the \"more\" dropdown menu (like Twinkle, plain links)": "dropdown",
+                        "At the top of the page (plain links)": "toplinks"
                     }
                 }, // end
 

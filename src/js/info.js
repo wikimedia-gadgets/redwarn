@@ -105,7 +105,7 @@ rw.info = { // API
             "lastVersion" : rw.version
         };
 
-        if (resetToDefault) {rw.config = defaultConfig; rw.info.writeConfig(); return;} // If reset to default, do it
+        if (resetToDefault) {rw.config = defaultConfig; rw.rulesFunc.resync(); rw.info.writeConfig(); return;} // If reset to default, do it
 
         if (rw.config) {callback();} // if config loaded, no need to reload
 
@@ -195,11 +195,8 @@ rw.info = { // API
                     rw.topIcons.icons = newRwIcons;
                 }
 
-                // Load custom rules and rule order
-
-                // Todo, add custom rule loading here
-
-                if (rw.config.ruleOrder == null) rw.config.ruleOrder = Object.keys(rw.rules) // No order set, so just generate a default rule order
+                // Load rules, will handle all for us including creation, loading, etc.
+                rw.rulesFunc.load();
 
                 // Todo, process favourites and other modifiers
 
@@ -238,7 +235,10 @@ ${err.stack}</nowiki></code>
      * @extends rw.info
      */
     "writeConfig": (noRedirect, callback)=> { // CALLBACK ONLY IF NOREDIRECT IS TRUE.
-        let rwConfigTemplate = rw.config.templatePacks; // for restore
+        // Save rule database first
+        rw.rulesFunc.save(()=>{
+            // Then
+            let rwConfigTemplate = rw.config.templatePacks; // for restore
         // Handle templates (saved as b64 string)
         if (rw.config.templatePacks != null) rw.config.templatePacks = btoa(JSON.stringify(rw.config.templatePacks));
         if (!noRedirect) rw.ui.loadDialog.show("Saving preferences...");
@@ -274,6 +274,7 @@ rw.config = `+ JSON.stringify(rw.config) +"; //</nowiki>"; // generate config te
                     window.location.reload(); // we done
                 }
             });
+        }); 
     },
 
     /**

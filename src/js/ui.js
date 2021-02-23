@@ -20,10 +20,9 @@ rw.ui = {
         // Assemble rule listbox
         let finalListBox = "<span>";
         let currentHeading = "";
-        
-        rw.config.ruleOrder.forEach(i => {
-            // We loop for our order, then i being - re category ordering, preferences can change these to match using a modifer in config
-            if (!rw.rules.hasOwnProperty(i)) return; // if invalid or otherwise removed, skip
+
+        for (let i in rw.rules) {
+            if (!rw.rules.hasOwnProperty(i)) continue;
             let rule = rw.rules[i];
             // Check if category is different to current heading first
             if (rule.category != currentHeading) {
@@ -85,7 +84,7 @@ rw.ui = {
                 </script>
                 `;
             }
-        });
+        };
         finalListBox += `</span>`; // close final catagory
 
         // Setup preview handling
@@ -634,6 +633,17 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
         addMessageHandler("resetConfig", rs => {
             // Reset config recieved, set config back to default
             rw.info.getConfig(() => { }, true); // TRUE HERE MEANS RESET TO DEAULT
+        });
+
+        addMessageHandler("resyncWarnings", rs => {
+            // Resync warning database
+            dialogEngine.closeDialog(()=>{
+                rw.ui.loadDialog.show("Syncing warning database...");
+                rw.rulesFunc.resync(()=>{
+                    rw.ui.loadDialog.close();
+                    rw.ui.openPreferences();
+                });
+            });
         });
 
         // Add install quick template handler

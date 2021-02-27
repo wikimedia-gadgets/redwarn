@@ -26,7 +26,7 @@ rw.rulesFunc = {
     "load" : callback=>{
         $.getJSON("https://en.wikipedia.org/w/index.php?title=User:"+rw.info.getUsername()+"/redwarnRules.json&action=raw&ctype=text/json", rules=>{
             rw.rules = rules; // that's it lol
-            callback();
+            if (callback != null) callback();
         }).fail(()=>{
             // Assume it doesn't exist
             rw.rulesFunc.resync(callback);
@@ -51,7 +51,7 @@ rw.rulesFunc = {
                     rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your changes to your rules have not been saved.");
                 } else {
                     // Success!
-                    callback();
+                    if (callback != null) callback();
                 }
             });
     }

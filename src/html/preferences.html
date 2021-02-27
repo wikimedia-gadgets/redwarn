@@ -664,8 +664,18 @@ var onSettingsLoad = {};
     let rules = `+JSON.stringify(rw.rules)+`;
 
     function updateRules() {
-        // Update rule varible according to the HTML
+        let finalObj = {};
 
+        // Update rule varible according to the HTML
+        const ruleCategories = $("#warnUserRuleList").find(".rwNoticeCatagory"); // list all categories
+        ruleCategories.each((i, category)=>{
+            const currentCat = $(category).find("div.rwNoticeCatagoryHead").text(); // cat name
+            const catTemplates = $(category).find("[id*='ruleDiv']");
+            catTemplates.each((i, template)=>{
+                const templateID = template.attr('id').replace("ruleDiv", ""); // get id removing ruleDiv starter
+                
+            });
+        });
         // Finally, generate the rules and send to UI (for categories etc.)
         generateRules();
     }

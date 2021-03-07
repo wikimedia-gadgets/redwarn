@@ -22,7 +22,7 @@ var rw = {
      * @type {string}
      * @extends rw
      */
-    "version" : "16.1dev", // don't forget to change each version!
+    "version" : "16.1", // don't forget to change each version!
 
     /**
      * Defines a brief summary of this version of RedWarn. This is shown in both update notices, and a card in preferences.
@@ -33,8 +33,7 @@ var rw = {
      * @extends rw
      */
     "versionSummary": `
-<!-- RedWarn 16.1 -->
-RedWarn 16.1 brings further UX improvements and feature additions.
+    RedWarn 16.1 brings updates to the warning system, and additional features and bug fixes.
     `,
 
     /**
@@ -623,12 +622,12 @@ function initRW() {
                 rw.info.writeConfig(true, ()=> { // update the config file
                     // Show an update dialog
                     rw.ui.confirmDialog(`
-                    <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Welcome to ${rw.logoHTML} ${rw.version}!</h2>
+                    <h2 style="font-weight: 200;font-size:38px;line-height: 48px;">Welcome to ${rw.logoHTML} ${rw.version}!</h2>
                     ${rw.versionSummary}
                     `,
                     "READ MORE", ()=>{
                         dialogEngine.closeDialog();
-                        redirect("https://en.wikipedia.org/wiki/Wikipedia:RedWarn/bugsquasher#RedWarn_"+ rw.version + "_summary", true);
+                        redirect("https://en.wikipedia.org/wiki/Wikipedia:RedWarn/bugsquasher#RedWarn_"+ rw.version, true);
                     },
                     "LATER", ()=>{
                         dialogEngine.closeDialog();//this thing turns it off

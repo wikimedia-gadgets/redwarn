@@ -10,6 +10,7 @@ var onSettingsLoad = {};
 <script src="https://redwarn.toolforge.org/cdn/js/jquery-sortable.js"></script>
 
 <!-- CONTEXT MENUS -->
+<style>.rw-preferences > header {height: 112px;} .rw-preferences > main, .rw-preferences > main > form, .rw-preferences > main > form > section { height: 100%;}</style>
 <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/jqueryContextMenu.css">
 <script src="https://redwarn.toolforge.org/cdn/js/jquery-contextmenu.js"></script>
 <script src="https://redwarn.toolforge.org/cdn/js/jquery-ui-position.js"></script>
@@ -18,7 +19,7 @@ var onSettingsLoad = {};
 
 
 <!-- PAGE CONTENT --> 
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+<div class="rw-preferences mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
       <!-- Title -->
@@ -56,7 +57,7 @@ var onSettingsLoad = {};
     <form id="config">
         <section class="mdl-layout__tab-panel is-active" id="scroll-tab-1"> <!-- TUTORIALS TAB -->
             <!-- DASHBOARD -->
-        <div class="page-content" style="padding-top:10px;">
+        <div class="page-content" style="padding:16px 0;">
             <div style="width:25%;float:right;"> <!-- RIGHT SIDE -->
 
                 <!-- About card -->

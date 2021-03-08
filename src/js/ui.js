@@ -671,7 +671,7 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
         dialogEngine.freezeScrolling();
 
         // Open preferences page with no padding, full screen
-        dialogEngine.create(mdlContainers.generateContainer(`[[[[include preferences.html]]]]`, window.innerWidth, window.innerWidth, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
+        dialogEngine.create(mdlContainers.generateContainer(`[[[[include preferences.html]]]]`, window.innerWidth, window.innerHeight, true), true).showModal(); // TRUE HERE MEANS NO PADDING.
     },
 
     /**

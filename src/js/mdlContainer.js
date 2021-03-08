@@ -175,11 +175,12 @@ var mdlContainers = {
         let style = "max-height: 100%;";
         if (fill) {
             // If fill mode on, fit to window
-            $(window).on("resize", () => {
-                $(dialogEngine.dialog.getElementsByTagName("iframe")[0]).attr("height", window.innerHeight);
-                $(dialogEngine.dialog.getElementsByTagName("iframe")[0]).attr("width", window.innerWidth);
+            $(window).resize(()=>{
+                $(dialogEngine.dialog.getElementsByTagName("iframe")[0]).attr("height",  window.innerWidth);
+                $(dialogEngine.dialog.getElementsByTagName("iframe")[0]).attr("width",  window.innerWidth);
             });
-            style += " padding: 0; margin: 0;";
+        } else {
+            $(window).resize(()=>{}); // do nothing
         }
 
         let url = URL.createObjectURL(new Blob([mdlContainers.generateHtml(innerContent)], { type: 'text/html' })); // blob url

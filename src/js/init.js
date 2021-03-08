@@ -1,4 +1,4 @@
-// (c) Ed.E and contributors 2020
+// (c) Ed.E and contributors 2020/2021
 
 if (rw != null) {
     // Double init, rm the old version and hope for the best
@@ -22,7 +22,7 @@ var rw = {
      * @type {string}
      * @extends rw
      */
-    "version" : "16", // don't forget to change each version!
+    "version" : "16.1", // don't forget to change each version!
 
     /**
      * Defines a brief summary of this version of RedWarn. This is shown in both update notices, and a card in preferences.
@@ -33,8 +33,7 @@ var rw = {
      * @extends rw
      */
     "versionSummary": `
-<!-- RedWarn 16 -->
-RedWarn 16 is finally here, bringing UX improvements, emergency and oversight reports, more customisation, bug fixes, and more!
+    RedWarn 16.1 brings updates to the warning system, and additional features and bug fixes.
     `,
 
     /**
@@ -206,7 +205,7 @@ RedWarn 16 is finally here, bringing UX improvements, emergency and oversight re
          */
         "init" : async (callback) => {
             // Welcome message
-            console.log("RedWarn "+ rw.version + " - (c) 2020 RedWarn Contributors");
+            console.log("RedWarn "+ rw.version + " - (c) 2021 RedWarn Contributors");
             
             // Load in required resources (resources that have to be loaded prior to element renders)
             
@@ -222,6 +221,7 @@ RedWarn 16 is finally here, bringing UX improvements, emergency and oversight re
                 <script src="https://redwarn.toolforge.org/cdn/js/dialogPolyfill.js"></script> <!-- firefox being dumb -->
                 <script src="https://redwarn.toolforge.org/cdn/js/mdl.js" id="MDLSCRIPT"></script>
                 <script src="https://redwarn.toolforge.org/cdn/js/mdlLogic.js"></script> <!-- rw specific MDL logic fixes -->
+                <script src="https://redwarn.toolforge.org/cdn/js/diff.js"></script> <!-- diff.js -->
                 <!-- Roboto Font -->
                 <link href="https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese" rel="stylesheet">
 
@@ -275,14 +275,22 @@ RedWarn 16 is finally here, bringing UX improvements, emergency and oversight re
 
             // Thanks to User:Awesome Aasim for the suggestion and some sample code.
             try {
-                let pageIconHTML = "<div id='rwPGIconContainer'>"; // obj it is appended to
-                // Possible icons locations: default (page icons area) or sidebar
+                // Possible icons locations: default (page icons area) or sidebar - possible link location, dropdown and toplinks
                 let iconsLocation = rw.config.pgIconsLocation ? rw.config.pgIconsLocation : "default"; // If set in config, use config
 
-                // Add to pageIconHTML from topIcons config
-                pageIconHTML += rw.topIcons.generateHTML();
+                let pageIconHTML = "Sorry, an error occured loading page icons. Please report this to the RedWarn team ASAP."; // just in case something goes wrong
 
-                pageIconHTML += "</div>"; // close contianer
+                if (iconsLocation == "default" || iconsLocation == "sidebar") {
+                    // We only need to generate IF we need the icons
+
+                    pageIconHTML = "<div id='rwPGIconContainer'>"; // obj it is appended to
+                
+                    // Add to pageIconHTML from topIcons config
+                    pageIconHTML += rw.topIcons.generateHTML();
+
+                    pageIconHTML += "</div>"; // close contianer
+                }
+                
                 if (iconsLocation == "default") {
                     try {
                         $(".mw-indicators").before(pageIconHTML); // Append our icons to the page icons with spacing
@@ -330,13 +338,43 @@ RedWarn 16 is finally here, bringing UX improvements, emergency and oversight re
                         // We done
                     })(` <!-- hand in pageIconHTML and some extra gubbins to become _t -->
                         <h3 id="redwarn-label" lang="en" dir="ltr">RedWarn tools</h3><div class="mw-portlet-body body pBody" id="redwarn-tools">
-                        ` + pageIconHTML + `
+                        ${pageIconHTML}
                         </div>
                     `);
+                } // RW16.1
+                else if (iconsLocation == "dropdown") {
+                    // Twinkle style dropdown, no tooltips, normally in "MORE" menu
+                    rw.topIcons.generateHTML(true).forEach(link => {
+                        mw.util.addPortletLink(
+                            'p-cactions',
+                            '#',
+                            "RW:" + link.txt,
+                            link.id,
+                            null, null, // ones we don't need
+                            '#pt-preferences' // put before preferences
+                            );
+                    });
+                    
+                }
+                else if (iconsLocation == "toplinks") {
+                    // Top where sign in logout etc is
+
+                    // Get HTML with array mode on then for each call MW to add
+                    rw.topIcons.generateHTML(true).forEach(link => {
+                        mw.util.addPortletLink(
+                            'p-personal',
+                            '#',
+                            link.txt,
+                            link.id,
+                            null, null, // ones we don't need
+                            '#pt-preferences' // put before preferences
+                            );
+                    });
                 }
             } catch (error) {
                 // Likely invalid theme, not all themes can use default
-                mw.notify("RedWarn isn't compatible with this theme.");
+                console.error(error);
+                mw.notify("RedWarn isn't compatible with this theme, or another error occured when loading control buttons.");
                 return; // Exit
             }
 
@@ -377,7 +415,7 @@ RedWarn 16 is finally here, bringing UX improvements, emergency and oversight re
             if (rw.config.ptrRmCol) rmCol = rw.config.ptrRmCol;
             // basically multiact js but with stuff replaced
             mwBody.style.overflowY = "hidden";
-            let content = mdlContainers.generateContainer(`[[[[include recentChanges.html]]]]`, window.innerWidth, window.innerHeight); // Generate container using mdlContainer.generatecontainer aka blob in iframe
+            let content = mdlContainers.generateContainer(`[[[[include recentChanges.html]]]]`, window.innerWidth, window.innerWidth); // Generate container using mdlContainer.generatecontainer aka blob in iframe
 
             // Init if needed
             if ($("#PTdialogContainer").length < 1) {
@@ -408,7 +446,7 @@ RedWarn 16 is finally here, bringing UX improvements, emergency and oversight re
 
             // Resize on window change
             $(window).resize(()=>{
-                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("height",  window.innerHeight);
+                $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("height",  window.innerWidth);
                 $(rw.recentChanges.dialog.getElementsByTagName("iframe")[0]).attr("width",  window.innerWidth);
             });
 
@@ -584,12 +622,12 @@ function initRW() {
                 rw.info.writeConfig(true, ()=> { // update the config file
                     // Show an update dialog
                     rw.ui.confirmDialog(`
-                    <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Welcome to ${rw.logoHTML} ${rw.version}!</h2>
+                    <h2 style="font-weight: 200;font-size:38px;line-height: 48px;">Welcome to ${rw.logoHTML} ${rw.version}!</h2>
                     ${rw.versionSummary}
                     `,
                     "READ MORE", ()=>{
                         dialogEngine.closeDialog();
-                        redirect("https://en.wikipedia.org/wiki/Wikipedia:RedWarn/bugsquasher#RedWarn_"+ rw.version + "_summary", true);
+                        redirect("https://en.wikipedia.org/wiki/Wikipedia:RedWarn/bugsquasher#RedWarn_"+ rw.version, true);
                     },
                     "LATER", ()=>{
                         dialogEngine.closeDialog();//this thing turns it off

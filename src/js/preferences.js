@@ -1,6 +1,7 @@
 // Used to handle the new preferences screen in RW16
 rw.preferences = {
     "options" : [ // Holds all the preferences in JSON format in order, some options, such as reoganising icons, are templates and can be referred to
+        // THESE ARE RENDERED AS TABS AS OF 16.1, add a new tab, then load your card with a parameter matching the cartTitle
 
         // CARDS HERE
         {
@@ -45,13 +46,15 @@ rw.preferences = {
                 // Page icon locations 
                 "pgIconsLocation" : { // config value as title
                     // UI text
-                    "optionTitle" : "Location of RedWarn icons",
-                    "supportingText": "Change the location of where the RedWarn page icons appear. Depending on your Skin, your preferences may or may not be honored.",
+                    "optionTitle" : "Location of RedWarn controls",
+                    "supportingText": "Change the location of where the RedWarn page controls appear. Depending on your Skin, your preferences may or may not be honored.",
 
                     // Config options
                     "options" : { 
-                        "After Page Icons*" : "default",
-                        "Page Sidebar/Navigation": "sidebar"
+                        "After Page Icons (iconified)*" : "default",
+                        "Page Sidebar/Navigation (iconified)": "sidebar",
+                        "In the \"more\" dropdown menu (like Twinkle, plain links)": "dropdown",
+                        "At the top of the page (plain links)": "toplinks"
                     }
                 }, // end
 
@@ -100,6 +103,18 @@ rw.preferences = {
                     "options" : { 
                         "Enable*" : "enable",
                         "Disable": "disable"
+                    }
+                },
+
+                // Warn user advanced by default
+                "rwWarnUserAdvanced" : {
+                    "optionTitle" : "Automatically open Warn User in advanced mode",
+                    "supportingText": "Open RedWarn's warn user dialog in advanced mode by default. Please note you will have to wait for longer for the advanced mode to initalise.",
+
+                    // Config options
+                    "options" : { 
+                        "Enable" : "enable",
+                        "Disable*": "disable"
                     }
                 },
 
@@ -231,10 +246,11 @@ rw.preferences = {
         }
     ], // about card included by default
 
-    "generateHTML" : ()=>{
-        // Generate HTML for UI to use
+    "generateHTML" : cardTitle=>{
+        // Generate HTML for UI to use given cardTitle matches
         let finalHTML = ``;
         rw.preferences.options.forEach(card=>{
+            if (card.cardTitle != cardTitle) return; // skip if not our card
             // Add the full card html
             finalHTML += `
             <div class="mdl-card mdl-shadow--2dp" style="width:100%"> <!-- CARD -->

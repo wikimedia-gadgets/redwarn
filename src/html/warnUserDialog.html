@@ -15,10 +15,21 @@
         display: none;
     }
 </style>
-<div id="noticeFmContainer">
+
+${advancedMode ? `
+<!-- Advanced mode only section -->
+<div style="width: 285px; float:left; height:100%; overflow-x:hidden;overflow-y: auto;">
+<h6>Warning History</h6>
+${finalWarningHistoryHTML}
+</div>
+
+    ` : ``}
+
+
+
+<!-- Ordinary dialog content -->
+<div id="noticeFmContainer" style="width:500px;float:right;"> <!-- fix to 500px -->
     <h2 style="font-weight: 200;">Warn User</h2>
-
-
 
     <!-- FORM -->
     <form id="newNoticeForm">
@@ -55,7 +66,7 @@
         <i class="mdl-icon-toggle__label material-icons">keyboard_arrow_down</i>
         <label for="template" class="mdl-textfield__label">${(rw.config.rwNoticeListByTemplateName != "enable") ? `Reason` : `Template`}</label> <!-- show reason or template based on config-->
         <ul for="template" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" style="overflow-y: scroll;height: 300px">
-            `+ finalListBox +`
+            ${finalListBox}
         </ul>
     </div>
 
@@ -244,6 +255,14 @@
         <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="window.parent.postMessage('closeDialog', '*');">
             CANCEL
         </button>
+
+        <!-- advanced button only shows if we're not hiding user info and not forcing advanced in pref -->
+        ${(!hideUserInfo && rw.config.rwWarnUserAdvanced !== "enable") ? `
+        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" onclick="window.parent.postMessage('advancedToggle', '*');">
+            ${advancedMode ? `BASIC` : `ADVANCED`}
+        </button>
+        ` : ``}
+        
         <button id="submitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="submitEdit();">
             `+ (customCallback ? customCallback : `Warn User`) + ` <!-- use custom button if requested -->
         </button>
@@ -283,6 +302,8 @@
 </div>
 
 <script>
+    // THIS MESS NEEDS SORTING - todo
+
     function showThisMonthsUsrMsgs() {
         $("#noticeFmContainer").hide();
         $("#usrPgPrev").hide();
@@ -571,15 +592,29 @@
        
     }, 100);
 
-    // If autoselect enabled and autoselect index set, apply to that index
-    `+ ((autoLevelSelectEnable) && (autoSelectReasonIndex != null) ? `
+    // Autoselect code
+    function autoSelect(ruleKey, level) {
         // Activate click event for this index after 250ms
         setTimeout(()=>{
             $("#reasonsBox > input:visible").click();
             setTimeout(()=>{
-                $("li.mdl-menu__item[data-val='${autoSelectReasonIndex}']").click();
-                refreshLevels("${autoSelectReasonIndex}"); // update levels (will be set back to int)
+                $("li.mdl-menu__item[data-val='"+ ruleKey +"']").click();
+                refreshLevels(ruleKey); // update levels (will be set back to int)
+
+                if (level != null) { // if we're autoselecting a level
+                    setTimeout(()=>{
+                        // we can only select between 1-5 (5 being 4im)
+                        if (level > 0 && level < 6) $("#level"+ [
+                            "1", "2", "3", "4", "4im"
+                        ][level-1]).click();
+                    }, 250);
+                }
             },250);
         },250);
+    }
+
+    // If autoselect enabled and autoselect index set, apply to that index
+    `+ ((autoLevelSelectEnable) && (autoSelectReasonIndex != null) ? `
+        autoSelect('${autoSelectReasonIndex}'); // excecute autoselect
     ` : "") +`
 </script>

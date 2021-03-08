@@ -106,7 +106,7 @@ rw.info = { // API
             "lastVersion": rw.version
         };
 
-        if (resetToDefault) { rw.config = defaultConfig; rw.info.writeConfig(); return; } // If reset to default, do it
+        if (resetToDefault) { rw.config = defaultConfig; rw.rulesFunc.resync(); rw.info.writeConfig(); return; } // If reset to default, do it
 
         if (rw.config) { callback(); } // if config loaded, no need to reload
 
@@ -196,6 +196,13 @@ rw.info = { // API
                     rw.topIcons.icons = newRwIcons;
                 }
 
+                // Load rules, will handle all for us including creation, loading, etc.
+                rw.rulesFunc.load();
+
+                // Todo, process favourites and other modifiers
+
+                // Done!
+
             } catch (err) {
                 // Corrupt config file
                 console.log(rw.config);
@@ -229,7 +236,10 @@ ${err.stack}</nowiki></code>
      * @extends rw.info
      */
     "writeConfig": (noRedirect, callback) => { // CALLBACK ONLY IF NOREDIRECT IS TRUE.
-        let rwConfigTemplate = rw.config.templatePacks; // for restore
+        // Save rule database first
+        rw.rulesFunc.save(()=>{
+            // Then
+                let rwConfigTemplate = rw.config.templatePacks; // for restore
         // Handle templates (saved as b64 string)
         if (rw.config.templatePacks != null) rw.config.templatePacks = btoa(JSON.stringify(rw.config.templatePacks));
         if (!noRedirect) rw.ui.loadDialog.show("Saving preferences...");
@@ -424,6 +434,92 @@ window.rw = window.rw || {}, window.rw.config = `+ JSON.stringify(rw.config) + "
         });
     },// End lastWarningLevel
 
+     /**
+     * Scans the past 50 revisions for warnings from this month for a user - WARNING: this is pretty CPU intensive - make sure you show a load dialog!
+     *
+     * @param {string} username
+     * @param {function} callback
+     * @method warningInfo
+     * @extends rw.info
+     */
+    "warningInfo": (username, callback)=>{
+        // Get past 51 page revisions, we calculate a diff for 50 only
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:"+username+"&rvslots=*&rvprop=content|user|timestamp|size&formatversion=2&rvlimit=51&format=json", r=>{
+            if (r.query.pages[0].missing) { // If page is missing, i.e it doesn't exist
+                callback([]); // nothing, no warnings recorded
+                return; // exit
+            }
+
+
+            let warningArray = []; // included in callback
+            // Now for each revision
+            r.query.pages[0].revisions.forEach((edit, i)=>{
+                if (i==49 || i > r.query.pages[0].revisions.length - 2) return; // we can't process the 51st edit, so exit
+                const editSize = edit.size - r.query.pages[0].revisions[i+1].size; // size difference betweem this and the prev edit
+                if (editSize > 7500 || editSize < 0) return; // skip edits over 7.5KB, we can safely assume these aren't warnings are we don't wanna crash the browser, we also ignore removals
+                const editedBy = edit.user;
+                const editTimestamp = edit.timestamp;
+                const editContent = edit.slots.main.content;
+
+                // Find what was added in that edit by comparing last revision (index up)
+                let editChange = Diff.diffChars(r.query.pages[0].revisions[i+1].slots.main.content, editContent);
+
+                // Merge all addition changes into one string
+                const addedWikiText = (()=>{let result = ""; editChange.forEach(change=>{if (change.added===true) result+=change.value;}); return result;})();
+
+                // Now locate warnings within those changes
+
+                // Run regex on it
+                const regexResult = /<!--\s*Template:uw-(.*?)\s*-->/gi.exec(addedWikiText);
+                if (regexResult == null) return; // no match, move on to next rev
+
+                // Note down the template
+                const warningTemplate = regexResult.pop(); // last in array = last warning name, we always favour the last one because warnings may have been restored
+
+                console.log("Located warning template uw-"+ warningTemplate);
+
+                let warningLevel = 6; // assume 6 = unknown here
+                let matchedRule = {"name": "Unknown - this warning doesn't seem to be in RedWarn's database", "template": "uw-"+ warningTemplate, "key": ""};
+
+                // Now locate within our rules
+                for (const ruleKey in rw.rules) {
+                    if (rw.rules.hasOwnProperty.call(rw.rules, ruleKey)) {
+                        const rule = rw.rules[ruleKey];
+                        if (("uw-"+ warningTemplate).includes(rule.template)) {
+                            // Find warning level and map
+                            warningLevel = ({
+                                // handle nothing as a 0 reminder
+                                undefined: 0,
+                                "": 0,
+
+                                "1": 1,
+                                "2": 2,
+                                "3": 3,
+                                "4": 4,
+                                "4im": 5
+                            })[("uw-"+ warningTemplate).replace(rule.template, "")]; // select by rming template from the regexMatch
+
+                            rule.key = ruleKey; // set key for dialog
+                            matchedRule = rule;
+                            break; // we're done in this loop as we've found it
+                        }
+                    }
+                }
+
+                // We've finished looking through all the rules, so add it to the array
+                warningArray.push({
+                    "from": editedBy,
+                    "rule": matchedRule,
+                    "level": warningLevel,
+                    "timestamp": editTimestamp
+                });
+            });
+
+            // All done
+            callback(warningArray);
+        });
+    },
+
     /**
      * Adds given WikiText to a users talk page.
      *
@@ -588,7 +684,6 @@ window.rw = window.rw || {}, window.rw.config = `+ JSON.stringify(rw.config) + "
             attemptEdit();
         });
     }, // end addTextToUserPage
-
 
     /**
      * Quick welcomes the given user. Depreceated in rev12.

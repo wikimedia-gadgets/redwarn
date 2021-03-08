@@ -16,6 +16,12 @@
     }
 }
 
+.mdl-dialog.rw-fullscreen-dialog {
+    margin: 0;
+    max-width: 100vw;
+    max-height: 100vh;
+}
+
 /* MW INDICATORS to stop tooltip clashes */
 .mw-indicators,
 #rwPGIconContainer {
@@ -1018,7 +1024,7 @@ fieldset[disabled] .mdl-checkbox .mdl-checkbox__label,
     border-radius: 50%;
     cursor: pointer;
     overflow: hidden;
-    -webkit-mask-image: -webkit-radial-gradient(circle, #fff, #000)
+    mask-image: radial-gradient(circle, #fff, #000)
 }
 
 .mdl-checkbox__ripple-container .mdl-ripple {

@@ -1,5 +1,5 @@
 /**
- * Handles rendering top icons/menu
+ * Handles rendering top icons/menu. See also init.js, specifically rw.init.pageIcons()
  * @class rw.topIcons
  */
 rw.topIcons = {
@@ -103,7 +103,7 @@ rw.topIcons = {
     }
   ],
 
-  "generateHTML" : ()=>{
+  "generateHTML" : arrayMode=>{ // ARRAY MODE RETURNS AN ORDERED ARRAY OF [{txt: shortTitle + class, id: "rw-topiconi"}]
     if (mw.config.get("wgNamespaceNumber") < 0) return ``; // if on special page, skip
 
     // Check if more options is disabled, if so, open a dialog to prompt if user wishes to keep this option
@@ -125,6 +125,7 @@ rw.topIcons = {
 
     // Generate HTML from icons and user config
     let finalHTML = ``;
+    let finalArr = [];
     const pageIsUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");
     const pageIsEditable = mw.config.get("wgIsProbablyEditable");
     // Now generate the HTML
@@ -133,17 +134,35 @@ rw.topIcons = {
         const iconID = "rwTopIcon"+ i;
         // if icon enabled and (icon shows on user page and page is userpage and is editable, or icon shows on uneditable pages and page isn't editable)
         // FOR NORMAL ICONS ONLY, other twinkle style menu handled elsewhere
-        if ((icon.enabled && ((icon.showsOnlyOnUserPages && pageIsUserPage) || (pageIsEditable && !icon.showsOnlyOnUserPages) || (!pageIsEditable && icon.showsOnUneditablePages)))) finalHTML += `
-        <div id="${iconID}" class="icon material-icons"><span style="cursor: pointer;${icon.colorModifier == null ? `` : `color:`+ icon.colorModifier}" class="${icon.className}">
-        ${icon.icon}
-        </span></div>
-        <div class="mdl-tooltip mdl-tooltip--large" for="${iconID}">
-            ${icon.title}
-        </div>
-        `;
+        if ( // to think: maybe split in to logic function so we don't have fragmentation?
+            (
+                icon.enabled && ( // if icon.enabled AND...
+                    (icon.showsOnlyOnUserPages && pageIsUserPage) || // icon shows only on userpages AND page is user page, OR...
+                    (pageIsEditable && !icon.showsOnlyOnUserPages) || // page is editable, AND the icon does not show only on user pages, OR...
+                    (!pageIsEditable && icon.showsOnUneditablePages) // page is NOT editable, AND the icon shows on uneditable pages
+                )
+            )
+        ) { // then...
+            if (arrayMode !== true) { // if array mode not explictly set, we generate HTML
+                finalHTML += `
+                <div id="${iconID}" class="icon material-icons"><span style="cursor: pointer;${icon.colorModifier == null ? `` : `color:`+ icon.colorModifier}" class="${icon.className}">
+                ${icon.icon}
+                </span></div>
+                <div class="mdl-tooltip mdl-tooltip--large" for="${iconID}">
+                    ${icon.title}
+                </div>
+                `;
+            } else {
+                // Arraymode, add to the array
+                finalArr.push({
+                    "txt": icon.shortTitle,
+                    "id": iconID
+                });
+            }
+        }
     });
 
-    return finalHTML;
+    return (arrayMode === true ? finalArr : finalHTML); // return final array or final html appropriately
   },
 
   "addHandlers" : ()=>{ // add handlers once icons have been rendered

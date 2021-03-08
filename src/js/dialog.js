@@ -15,7 +15,7 @@ var dialogEngine = {
         </div>
         `);
         // Add events
-        addMessageHandler("closeDialog", () => { dialogEngine.closeDialog(); }); // closing
+        addMessageHandler("closeDialog", ()=>dialogEngine.closeDialog()); // closing
     },
 
     /**
@@ -30,7 +30,7 @@ var dialogEngine = {
 
         // Create element with rounded corners if requested
         $("#dialogEngineContainer").html(`
-        <dialog class="mdl-dialog" id="dialogEngineDialog" ${(noPad ? "" : `style="border-radius: 7px;"`)}>
+        <dialog id="dialogEngineDialog" class="mdl-dialog ${(noPad ? `rw-fullscreen-dialog" ` : `" style="border-radius: 7px;"`)}>
             ${content}
         </dialog>
         `);

@@ -10,6 +10,7 @@ var onSettingsLoad = {};
 <script src="https://redwarn.toolforge.org/cdn/js/jquery-sortable.js"></script>
 
 <!-- CONTEXT MENUS -->
+<style>.rw-preferences > header {height: 112px;} .rw-preferences > main, .rw-preferences > main > form, .rw-preferences > main > form > section { height: 100%;}</style>
 <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/jqueryContextMenu.css">
 <script src="https://redwarn.toolforge.org/cdn/js/jquery-contextmenu.js"></script>
 <script src="https://redwarn.toolforge.org/cdn/js/jquery-ui-position.js"></script>
@@ -18,7 +19,7 @@ var onSettingsLoad = {};
 
 
 <!-- PAGE CONTENT --> 
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+<div class="rw-preferences mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <header class="mdl-layout__header">
     <div class="mdl-layout__header-row">
       <!-- Title -->
@@ -41,11 +42,22 @@ var onSettingsLoad = {};
             Don't apply changes and Close
         </div>
     </div>
+
+    <!-- Tabs -->
+    <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+        <a href="#scroll-tab-1" class="mdl-layout__tab is-active">Tutorials</a>
+        <a href="#scroll-tab-2" class="mdl-layout__tab">Buttons</a>
+        <a href="#scroll-tab-3" class="mdl-layout__tab">Warnings</a>
+        <a href="#scroll-tab-4" class="mdl-layout__tab">Appearance</a>
+        <a href="#scroll-tab-5" class="mdl-layout__tab">Behaviour</a>
+        <a href="#scroll-tab-6" class="mdl-layout__tab">About</a>
+      </div>
   </header>
   <main class="mdl-layout__content" style="padding-left: 5%;">
     <form id="config">
-        <!-- DASHBOARD -->
-        <div class="page-content" style="padding-top:10px;">
+        <section class="mdl-layout__tab-panel is-active" id="scroll-tab-1"> <!-- TUTORIALS TAB -->
+            <!-- DASHBOARD -->
+        <div class="page-content" style="padding:16px 0;">
             <div style="width:25%;float:right;"> <!-- RIGHT SIDE -->
 
                 <!-- About card -->
@@ -57,7 +69,7 @@ var onSettingsLoad = {};
                         ${rw.versionSummary}
                     </div>
                     <div class="mdl-card__actions mdl-card--border">
-                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://en.wikipedia.org/wiki/Wikipedia:RedWarn/bugsquasher#RedWarn_${rw.version}_summary" target="_blank">
+                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://en.wikipedia.org/wiki/Wikipedia:RedWarn/bugsquasher#RedWarn_${rw.version}" target="_blank">
                             READ MORE
                         </a>
                     </div>
@@ -100,7 +112,6 @@ var onSettingsLoad = {};
                     </div>
                 </div>
             </div>
-
             <div style="width:70%;float: left;"> <!-- Left side main preferences -->
 
                 ${rw.debugMenu != null ? `
@@ -117,11 +128,32 @@ var onSettingsLoad = {};
     
                     ` : ``}
                 
+                    <div class="mdl-card mdl-shadow--2dp" style="width: 100%;">
+                        <div class="mdl-card__title mdl-card--expand" style="color:white;background-color: rgb(162, 0, 255);">
+                            <h2 class="mdl-card__title-text">Tutorials</h2>
+                        </div>
+                        <div class="mdl-card__supporting-text">
+                            Check back here for tutorials, updates and announcements on how to use RedWarn most effectively!
+                        </div>
+                    </div>
+                    <br/><br/>
+                
+                
+                <br/><br/>
+
+                
+            </div>
+        </div>
+        </section>
+
+
+        <section class="mdl-layout__tab-panel" id="scroll-tab-2"> <!-- buttons -->
+            <div class="page-content" style="padding-top:10px;padding-right:25%;">
                 <div class="mdl-card mdl-shadow--2dp" style="width:100%">
                     <div class="mdl-card__title" style="color: #fff;
                     height: 176px;
-                    background: url('https://upload.wikimedia.org/wikipedia/commons/d/d3/Golden_Gate_Bridge_at_sunset_1.jpg') center / cover;">
-                        <h2 class="mdl-card__title-text">Customise</h2>
+                    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Approach_to_underpass%2C_Dunkirk%2C_Nottingham.jpg/1280px-Approach_to_underpass%2C_Dunkirk%2C_Nottingham.jpg') center / cover;">
+                        <h2 class="mdl-card__title-text">Buttons</h2>
                     </div>
                     <div class="mdl-card__supporting-text">
                         
@@ -283,8 +315,9 @@ var onSettingsLoad = {};
                         </div>
                         
 
+                        
+                        <!-- END MORE OPTIONS SECTION -->
 
-                        <!-- END MAIN APPEARANCE SECTION -->
                         
                         
                         <!-- END APPEARANCE TAB-->
@@ -295,12 +328,46 @@ var onSettingsLoad = {};
                         </a>
                     </div>
                 </div> <!-- END APPEARANCE CARD -->
-                <br/><br/>
-
-                <!-- Add generated preference elements -->
-                ${rw.preferences.generateHTML()}
-
-                <br/><br/>
+            </div>
+        </section>
+        <section class="mdl-layout__tab-panel" id="scroll-tab-3"> <!-- warnings -->
+            <div class="page-content" style="padding-top:10px;padding-right:25%;">
+                <div class="mdl-card mdl-shadow--2dp" style="width:100%">
+                    <div class="mdl-card__title" style="color: #fff;
+                    height: 176px;
+                    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Weir_at_Darley_Abbey.jpg/1280px-Weir_at_Darley_Abbey.jpg') center / cover;">
+                        <h2 class="mdl-card__title-text">Warnings</h2>
+                    </div>
+                    <div class="mdl-card__supporting-text">
+                        <!-- warn user -->
+                        <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">Warn User</h2>
+                        <i>More in depth editing UI coming soon.</i>
+                    </div>
+                    <div class="mdl-card__actions mdl-card--border">
+                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="saveConfig()">
+                            SAVE CHANGES
+                        </a>
+                        <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" style="color:red" onclick="window.parent.postMessage('resyncWarnings');">
+                            CLEAR CHANGES AND SYNC WITH PUBLIC DATABASE
+                        </a>
+                    </div>
+                </div> <!-- END APPEARANCE CARD -->
+            </div>
+        </section>
+        <section class="mdl-layout__tab-panel" id="scroll-tab-4"> <!-- appearance -->
+            <div class="page-content" style="padding-top:10px;padding-right:25%;">
+            <!-- Add generated preference elements -->
+            ${rw.preferences.generateHTML("Appearance")}
+            </div>
+        </section>
+        <section class="mdl-layout__tab-panel" id="scroll-tab-5"> <!-- behaviour -->
+            <div class="page-content" style="padding-top:10px;padding-right:25%;">
+            <!-- Add generated preference elements -->
+            ${rw.preferences.generateHTML("Behaviour")}
+            </div>
+        </section>
+        <section class="mdl-layout__tab-panel" id="scroll-tab-6"> <!-- about -->
+            <div class="page-content" style="padding-top:10px;padding-right:25%;">
                 <div class="mdl-card mdl-shadow--2dp" style="width:100%"> <!-- ABOUT CARD -->
                     <div class="mdl-card__title" style="color: #fff;
                     height: 176px;
@@ -311,13 +378,14 @@ var onSettingsLoad = {};
                         <!-- ABOUT TAB -->
                         <h5>The user-<span id="hahaFunnyJoke">friendly</span> counter-vandalism tool.</h5>
                         <!-- Impliment very original and not outdated haha jokes -->
-                        <script>$("#hahaFunnyJoke").on("click", ()=> {if (confirm("You are about to open an external link to YouTube.com - continue?")) Object.assign(document.createElement('a'), { target: '_blank', href: "https://www.youtube.com/watch?v=YbYJKGWrG7U"}).click();});</script>
+                        <script>$("#hahaFunnyJoke").on("click", ()=> {if (confirm("You are about to open an external link to YouTube.com - continue?")) Object.assign(document.createElement('a'), { target: '_blank', href: "https://www.youtube.com/watch?v=kg1BljLu9YY"}).click();});</script>
                         <h6>Build info</h6>
                         <pre>${rw.buildInfo}</pre>
                         <h6>Image attribution</h6>
-                        <a href="https://commons.wikimedia.org/wiki/File:Golden_Gate_Bridge_at_sunset_1.jpg" target="_blank">File:Golden Gate Bridge at sunset 1.jpg</a><br/>
                         <a href="https://commons.wikimedia.org/wiki/File:Reflected_sunset.jpg" target="_blank">File:Reflected_sunset.jpg</a><br/>
                         <a href="https://commons.wikimedia.org/wiki/File:Wilkin_River_close_to_its_confluence_with_Makarora_River,_New_Zealand.jpg" target="_blank">File:Wilkin River close to its confluence with Makarora River, New Zealand.jpg</a><br/>
+                        Other photos: (c) 2021 Ed6767<br/>
+                        <a href="https://docs.google.com/document/d/e/2PACX-1vRk5gI9yE_LZtfms30v2jr8TmvjS9wkhZc6GOSIAr8DiWcovE59PkEVqHSnfJ6l51k6XTwJl-hbPwSn/pub" target="_blank">Privacy policy and licenses (externally at docs.google.com)</a>
                     </div>
                     <div class="mdl-card__actions mdl-card--border">
                         <a class="mdl-button mdl-js-button mdl-js-ripple-effect" style="color:red" onclick="window.parent.postMessage('resetConfig');">
@@ -325,9 +393,9 @@ var onSettingsLoad = {};
                         </a>
                     </div>
                 </div>
-                <br/><br/>
             </div>
-        </div>
+        </section>
+        
             
         </div>
     </form>
@@ -346,12 +414,9 @@ var onSettingsLoad = {};
 <script src="https://redwarn.toolforge.org/cdn/js/select2.js"></script>
 <script>
     // CORE THINGS
-
-
-
-    var config = `+ JSON.stringify(rw.config) +`;
+    let config = `+ JSON.stringify(rw.config) +`;
     function saveConfig() {
-        var data = $('form').serializeArray().reduce((obj, item) => {
+        let data = $('form').serializeArray().reduce((obj, item) => {
                 obj[item.name] = item.value;
                 return obj;
                 }, {}); // form data

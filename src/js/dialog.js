@@ -55,7 +55,8 @@ var dialogEngine = {
      */
     "closeDialog": callback => {
         // Close the dialog (animated)
-        $(dialogEngine.dialog)
+        if (dialogEngine.dialog) {
+            $(dialogEngine.dialog)
             .addClass("closeAnimate")
             .on("webkitAnimationEnd", () => {
                 // Animation finished
@@ -69,6 +70,11 @@ var dialogEngine = {
                 }
 
             });
+        } else {
+            // no dialog. just go.
+            if (callback != null) callback();
+        }
+        
 
         // Make sure to reenable scrolling
         dialogEngine.enableScrolling();

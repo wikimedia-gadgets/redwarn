@@ -237,14 +237,14 @@ ${err.stack}</nowiki></code>
      */
     "writeConfig": (noRedirect, callback) => { // CALLBACK ONLY IF NOREDIRECT IS TRUE.
         // Save rule database first
-        rw.rulesFunc.save(()=>{
+        rw.rulesFunc.save(()=> {
             // Then
-                let rwConfigTemplate = rw.config.templatePacks; // for restore
-        // Handle templates (saved as b64 string)
-        if (rw.config.templatePacks != null) rw.config.templatePacks = btoa(JSON.stringify(rw.config.templatePacks));
-        if (!noRedirect) rw.ui.loadDialog.show("Saving preferences...");
-        // Write config to the users page and refresh
-        let finalTxt = `
+            let rwConfigTemplate = rw.config.templatePacks; // for restore
+            // Handle templates (saved as b64 string)
+            if (rw.config.templatePacks != null) rw.config.templatePacks = btoa(JSON.stringify(rw.config.templatePacks));
+            if (!noRedirect) rw.ui.loadDialog.show("Saving preferences...");
+            // Write config to the users page and refresh
+            let finalTxt = `
 /*<nowiki>
 This is your RedWarn configuration file. It is recommended that you don't edit this yourself and use RedWarn preferences instead.
 It is writen in JSON formatting and is excecuted every time RedWarn loads.
@@ -253,27 +253,33 @@ If somebody has asked you to add code to this page, DO NOT do so as it may compr
 
 !!! Do not edit below this line unless you understand the risks! If rw.config isn't defined, this file will be reset. !!!
 */
-window.rw = window.rw || {}, window.rw.config = `+ JSON.stringify(rw.config) + "; //</nowiki>"; // generate config text
-        $.post(rw.wikiAPI, {  // LOCALISATION ISSUE!!
-            "action": "edit",
-            "format": "json",
-            "token": mw.user.tokens.get("csrfToken"),
-            "title": "User:" + rw.info.getUsername() + "/redwarnConfig.js",
-            "summary": "Updating user configuration [[w:en:WP:RW|(RW " + rw.version + ")]]", // summary sign here
-            "text": finalTxt,
-            "tags": ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
-        }).done(dt => {
-            // We done. Check for errors, then callback appropriately
-            if (!dt.edit) {
-                // Error occured or other issue
-                console.error(dt);
-                rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your changes have not been saved.");
-            } else {
-                // Success!
-                if (noRedirect) { rw.config.templatePacks = rwConfigTemplate; callback(); return; }; // DO NOT continue if no redirect is requested
-                window.location.hash = "#configChange";
-                window.location.reload(); // we done
-            }
+window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + "; //</nowiki>"; // generate config text
+            $.post(rw.wikiAPI, {  // LOCALISATION ISSUE!!
+                "action": "edit",
+                "format": "json",
+                "token": mw.user.tokens.get("csrfToken"),
+                "title": "User:" + rw.info.getUsername() + "/redwarnConfig.js",
+                "summary": "Updating user configuration [[w:en:WP:RW|(RW " + rw.version + ")]]", // summary sign here
+                "text": finalTxt,
+                "tags": ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
+            }).done(dt => {
+                // We done. Check for errors, then callback appropriately
+                if (!dt.edit) {
+                    // Error occured or other issue
+                    console.error(dt);
+                    rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your changes have not been saved.");
+                } else {
+                    // Success!
+                    if (noRedirect) {
+                        rw.config.templatePacks = rwConfigTemplate;
+                        callback();
+                        return;
+                    }
+                    ; // DO NOT continue if no redirect is requested
+                    window.location.hash = "#configChange";
+                    window.location.reload(); // we done
+                }
+            });
         });
     },
 

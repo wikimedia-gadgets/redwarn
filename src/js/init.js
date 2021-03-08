@@ -347,7 +347,7 @@ var rw = {
                     rw.topIcons.generateHTML(true).forEach(link => {
                         mw.util.addPortletLink(
                             'p-cactions',
-                            'javascript:false;',
+                            '#',
                             "RW:" + link.txt,
                             link.id,
                             null, null, // ones we don't need
@@ -363,7 +363,7 @@ var rw = {
                     rw.topIcons.generateHTML(true).forEach(link => {
                         mw.util.addPortletLink(
                             'p-personal',
-                            'javascript:false;',
+                            '#',
                             link.txt,
                             link.id,
                             null, null, // ones we don't need

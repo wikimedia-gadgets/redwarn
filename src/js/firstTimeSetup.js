@@ -4,12 +4,12 @@
  */
 rw.firstTimeSetup = {
     /**
-     * Launches the first time setup wizzard
+     * Launches the first time setup wizard
      * @method launch
      * @extends rw.firstTimeSetup
      */
-    "launch" : ()=>{
-        addMessageHandler("config`*", rs=>{ // On config change
+    "launch": () => {
+        addMessageHandler("config`*", rs => { // On config change
             // New config recieved
             let config = JSON.parse(atob(rs.split("`")[1])); // b64 encoded json string
             //Write to our config
@@ -23,19 +23,19 @@ rw.firstTimeSetup = {
             // Push change
             rw.ui.loadDialog.show("Saving...");
             rw.info.writeConfig(false);
-        }); 
+        });
 
-        addMessageHandler("resetConfig", rs=>{
-            // Reset config recieved, set config back to default
-            rw.info.getConfig(()=>{}, true); // TRUE HERE MEANS RESET TO DEAULT
+        addMessageHandler("resetConfig", rs => {
+            // Reset config received, set config back to default
+            rw.info.getConfig(() => { }, true); // TRUE HERE MEANS RESET TO DEFAULT
         });
 
         // Add load new theme handler
-        addMessageHandler("newThemeDialog", ()=>rw.ui.loadDialog.show("Changing theme..."));
-        addMessageHandler("loadDialogClose", ()=>rw.ui.loadDialog.close());
+        addMessageHandler("newThemeDialog", () => rw.ui.loadDialog.show("Changing theme..."));
+        addMessageHandler("loadDialogClose", () => rw.ui.loadDialog.close());
 
         // Add reload handler
-        addMessageHandler("reload", ()=>window.location.reload());
+        addMessageHandler("reload", () => window.location.reload());
 
         // Lock scrolling
         dialogEngine.freezeScrolling();

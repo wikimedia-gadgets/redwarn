@@ -16,7 +16,7 @@ This CSS file will be appended inside of all dialogs.
 
 @keyframes rw-qt-submit-title-expand {
     from { max-height: 1.1em }
-    to { max-height: unset }   
+    to { max-height: unset }
 }
 
 .rw-qt-submit-title {

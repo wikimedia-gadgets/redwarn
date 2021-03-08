@@ -12,7 +12,7 @@ var mdlContainers = {
      * @return {string} HTML content
      * @extends mdlContainers
      */
-    "generateHtml" : innerContent => {
+    "generateHtml": innerContent => {
 
         let content = `
         <script src="https://redwarn.toolforge.org/cdn/js/jQuery.js"></script>
@@ -45,7 +45,7 @@ var mdlContainers = {
 
         @keyframes rotationIn {
             from {
-                    transform: rotate(0deg);            
+                    transform: rotate(0deg);
             }
             to {
                     transform: rotate(180deg);
@@ -54,7 +54,7 @@ var mdlContainers = {
 
         @keyframes rotationOut {
             from {
-                    transform: rotate(180deg);            
+                    transform: rotate(180deg);
             }
             to {
                     transform: rotate(0deg);
@@ -73,15 +73,17 @@ var mdlContainers = {
         }
         </style>
         `;
-        
+        // global rw dialog css
+        content += "<style>" + `[[[[include dialog.css]]]]` + "</style>"
+
         // Themes
         let theme = "";
-        if (rw.config.colTheme){
+        if (rw.config.colTheme) {
             theme = rw.config.colTheme;
         } else {
             theme = "blue-indigo"; // default theme
         }
-        
+
         content += `
         <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/material.${theme}.min.css" />
         <!-- Material dropdown - MIT License, Copyright (c) 2016 CreativeIT https://github.com/CreativeIT/getmdl-select/blob/master/LICENSE.txt -->
@@ -108,7 +110,7 @@ var mdlContainers = {
                     <a href="#" onclick="window.parent.postMessage('closeDialog');">Close dialog</a>
                 </div>
             <br/><br/> <!-- show content if not tampered with -->
-            ` : innerContent} 
+            ` : innerContent}
         </body>
 
         <script>
@@ -149,11 +151,11 @@ var mdlContainers = {
         });
 
         // jQuery scroll
-        jQuery.fn.scrollTo = function(elem, speed) { 
+        jQuery.fn.scrollTo = function(elem, speed) {
             $(this).animate({
-                scrollTop:  $(this).scrollTop() - $(this).offset().top + $(elem).offset().top 
-            }, speed == undefined ? 1000 : speed); 
-            return this; 
+                scrollTop:  $(this).scrollTop() - $(this).offset().top + $(elem).offset().top
+            }, speed == undefined ? 1000 : speed);
+            return this;
         };
         </script>
         `;
@@ -169,7 +171,8 @@ var mdlContainers = {
      * @returns {string} iFrame HTML
      * @extends mdlContainers
      */
-    "generateContainer" : function(innerContent, width, height, fill) { // fill sizes mdl containers in dialogEngine to ALWAYS be screen size
+    "generateContainer": function (innerContent, width, height, fill) { // fill sizes mdl containers in dialogEngine to ALWAYS be screen size
+        let style = "max-height: 100%;";
         if (fill) {
             // If fill mode on, fit to window
             $(window).resize(()=>{
@@ -181,6 +184,6 @@ var mdlContainers = {
         }
 
         let url = URL.createObjectURL(new Blob([mdlContainers.generateHtml(innerContent)], { type: 'text/html' })); // blob url
-        return `<iframe width="${width}" height="${height}" src="${url}" frameborder="0" scrolling="no" style="max-height: 100%;"></iframe>`;
+        return `<iframe width="${width}" height="${height}" src="${url}" frameborder="0" scrolling="no" style="${style}"></iframe>`;
     }
 };

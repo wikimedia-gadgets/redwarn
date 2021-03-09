@@ -38,7 +38,7 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
     }
 
     /**
-     * Renders the MaterialAlertDialog's actions (as buttons).
+     * Renders the MaterialIFrameDialog's actions (as buttons).
      * @return A collection of {@link HTMLButtonElement}s, all of which are MDL buttons.
      */
     private renderActions(): ComponentChild[] {

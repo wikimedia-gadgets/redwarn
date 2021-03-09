@@ -8,6 +8,7 @@ export interface MaterialButtonProperties extends BaseProps {
     contentStyle?: Partial<CSSStyleDeclaration>;
     style?: Partial<CSSStyleDeclaration>;
     onClick?: (event: MouseEvent) => void;
+    disabled?: boolean;
 }
 
 export default function (props: MaterialButtonProperties): JSX.Element {
@@ -18,6 +19,7 @@ export default function (props: MaterialButtonProperties): JSX.Element {
         contentStyle,
         iconColor,
         style,
+        disabled,
     } = props;
     const classes = ["mdc-button"];
 
@@ -37,6 +39,7 @@ export default function (props: MaterialButtonProperties): JSX.Element {
                     : dialogAction.data
             }
             style={style}
+            disabled={disabled}
             {...expandDataAttributes(props)}
         >
             <div class="mdc-button__ripple" />

@@ -253,3 +253,14 @@
 .rw-mdc-riskyRevert {
     color: #f33;
 }
+
+/* Warning search dialog */
+
+.mdc-dialog .rw-mdc-warnSearchDialog.mdc-dialog__surface {
+    max-width: unset;
+}
+
+.mdc-dialog .rw-mdc-warnSearchDialog .mdc-dialog__content {
+    padding: 0;
+    overflow: hidden;
+}

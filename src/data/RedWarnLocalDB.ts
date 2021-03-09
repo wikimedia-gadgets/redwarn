@@ -1,17 +1,39 @@
-import Dexie from "dexie";
+import RedWarnIDB, { RedWarnIDBUpgradeHandler } from "rww/data/idb/RedWarnIDB";
+import { RW_DATABASE_VERSION } from "rww/data/RedWarnConstants";
+import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
+import { CachedDependency } from "rww/data/database/RWDBTableDefinitions";
 
-export interface CachedDependency {
-    id?: string;
-    lastCache: number;
-    etag: string;
-    data: string;
-}
+/**
+ * A set of functions responsible for setting up the RedWarn IndexedDB
+ * database. This object is indexed by its old version, with `0` being
+ * the initial creation of all database objects. This means the handler
+ * with an index of `1` is responsible for upgrading the database from
+ * version `1` to `2`, `2` upgrades to `3`, and so on.
+ */
+const databaseUpdaters: { [key: number]: RedWarnIDBUpgradeHandler } = {
+    0: (openRequest) => {
+        const database = openRequest.result;
+
+        // Creates the dependency cache
+        RedWarnIDB.createObjectStore(database, "dependencyCache", "id", [
+            "lastCache",
+            "etag",
+            "data",
+        ]);
+    },
+};
 
 export default class RedWarnLocalDB {
     public static i = new RedWarnLocalDB();
-    private dexie: Dexie;
 
-    dependencyCache: Dexie.Table<CachedDependency, string>;
+    dependencyCache: RedWarnIDBObjectStore<CachedDependency>;
+
+    private _open: boolean;
+    private idb: RedWarnIDB;
+
+    public get open(): boolean {
+        return this._open;
+    }
 
     constructor() {
         if (RedWarnLocalDB.i != null)
@@ -19,15 +41,27 @@ export default class RedWarnLocalDB {
                 "RedWarnLocalDB already exists! (as `RedWarnLocalDB.i`)"
             );
 
-        this.dexie = new Dexie("redwarnLiteDB");
-        this.dexie.version(1).stores({
-            dependencyCache: "++id,lastCache,etag,data",
-        });
-
-        this.dependencyCache = this.dexie.table("dependencyCache");
+        this.idb = new RedWarnIDB(
+            "redwarnLiteDB",
+            RW_DATABASE_VERSION,
+            databaseUpdaters
+        );
     }
 
-    async open(): Promise<Dexie> {
-        return this.dexie.open();
+    async connect(): Promise<IDBDatabase> {
+        const connect = await this.idb.connect();
+
+        // Handle _open
+        this._open = true;
+        connect.addEventListener("close", () => {
+            this._open = false;
+        });
+
+        // Apply all database definitions
+        this.dependencyCache = this.idb.store<CachedDependency>(
+            "dependencyCache"
+        );
+
+        return connect;
     }
 }

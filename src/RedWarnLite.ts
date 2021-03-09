@@ -38,13 +38,13 @@ import UIInjectors from "rww/ui/injectors/UIInjectors";
 import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
 
 $(document).ready(async () => {
-    console.log(`Starting RedWarn ${RW_VERSION}...`);
-
     if (document.body.classList.contains("rw-disable")) {
         // We've been prevented from running on this page.
         console.log("Page is blocking RedWarn loading. Shutting down...");
         return;
     }
+
+    console.log(`Starting RedWarn ${RW_VERSION}...`);
 
     if (window.rw != null) {
         mw.notify(
@@ -76,6 +76,10 @@ $(document).ready(async () => {
     console.log("Initializing store...");
     // Initialize RedWarn store.
     RedWarnStore.initializeStore();
+
+    console.log("Initializing local database connection...");
+    // Initialize RedWarn Local Database.
+    await RedWarnLocalDB.i.connect();
 
     console.log("Loading style definitions...");
     // Load style definitions first.

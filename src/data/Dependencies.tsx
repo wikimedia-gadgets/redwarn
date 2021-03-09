@@ -171,7 +171,9 @@ export default class Dependencies {
                         data: (await data.text()).toString(),
                     };
 
-                    await cacheTable.put(cachedDep, cachedDep.id);
+                    console.log(cachedDep);
+
+                    await cacheTable.put(cachedDep);
                 } catch (e) {
                     // Something wrong happened during reload. If a cache exists, use it. Otherwise,
                     // we'll just use the src as the URI and hope that the browser resolves the situation.

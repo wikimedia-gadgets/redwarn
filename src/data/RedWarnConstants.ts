@@ -8,6 +8,7 @@ export const RW_VERSION_TAG = `0.2.0-dev+${RW_BUILDINFO.gitHashShort}`;
 export const RW_VERSION_SUMMARY = "nothing yet";
 
 export const RW_CONFIG_VERSION = 1;
+export const RW_DATABASE_VERSION = 1;
 
 export const RW_SIGNATURE = "~~~~";
 export const RW_WELCOME = "{{subst:Welcome}}";

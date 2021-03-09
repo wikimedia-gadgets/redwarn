@@ -6,7 +6,6 @@
     "dependencies": {
         "@material/chips": "^9.0.0",
         "@material/dialog": "^8.0.0",
-        "@material/fab": "^9.0.0",
         "@material/form-field": "^10.0.0",
         "@material/linear-progress": "^8.0.0",
         "@material/menu": "^9.0.0",

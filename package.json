@@ -37,6 +37,7 @@
         "cheerio": "^1.0.0-rc.5",
         "cross-env": "^7.0.3",
         "css-loader": "^4.3.0",
+        "css-minimizer-webpack-plugin": "^1.2.0",
         "eslint": "^7.9.0",
         "eslint-config-prettier": "^6.15.0",
         "eslint-plugin-import": "^2.22.1",

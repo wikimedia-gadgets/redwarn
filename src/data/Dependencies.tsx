@@ -2,6 +2,11 @@ import { h } from "tsx-dom";
 import { generateId, toBase64URL } from "rww/util";
 import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
 
+/*
+ * This file uses TSX only to quickly build <link> and <script>
+ * tags. TSX not be used for any other purpose in this file.
+ */
+
 export interface DependencyCacheOptions {
     duration: number;
     /**

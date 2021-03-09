@@ -37,7 +37,7 @@ export default class RedWarnLocalDB {
         return this._open;
     }
 
-    constructor() {
+    private constructor() {
         if (RedWarnLocalDB.i != null)
             throw new Error(
                 "RedWarnLocalDB already exists! (as `RedWarnLocalDB.i`)"

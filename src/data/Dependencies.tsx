@@ -126,10 +126,10 @@ export default class Dependencies {
      * @returns A normal URL if uncached, a data URI if cached.
      */
     static async getDependencyURI(dependency: Dependency): Promise<string> {
-        const cacheTable = RedWarnLocalDB.i.dependencyCache;
+        const cacheStore = RedWarnLocalDB.i.dependencyCache;
 
         if (dependency.cache) {
-            let cachedDep = await cacheTable.get(dependency.id);
+            let cachedDep = await cacheStore.get(dependency.id);
 
             let willRecache = false;
 
@@ -173,7 +173,7 @@ export default class Dependencies {
 
                     console.log(cachedDep);
 
-                    await cacheTable.put(cachedDep);
+                    await cacheStore.put(cachedDep);
                 } catch (e) {
                     // Something wrong happened during reload. If a cache exists, use it. Otherwise,
                     // we'll just use the src as the URI and hope that the browser resolves the situation.

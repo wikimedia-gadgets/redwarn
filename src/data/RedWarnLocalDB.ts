@@ -1,7 +1,7 @@
 import RedWarnIDB, { RedWarnIDBUpgradeHandler } from "rww/data/idb/RedWarnIDB";
 import { RW_DATABASE_VERSION } from "rww/data/RedWarnConstants";
 import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
-import { CachedDependency } from "rww/data/database/RWDBTableDefinitions";
+import { CachedDependency } from "rww/data/database/RWDBObjectStoreDefinitions";
 
 /**
  * A set of functions responsible for setting up the RedWarn IndexedDB
@@ -26,7 +26,9 @@ const databaseUpdaters: { [key: number]: RedWarnIDBUpgradeHandler } = {
 export default class RedWarnLocalDB {
     public static i = new RedWarnLocalDB();
 
+    // Object stores go below.
     dependencyCache: RedWarnIDBObjectStore<CachedDependency>;
+    // Object stores go above.
 
     private _open: boolean;
     private idb: RedWarnIDB;

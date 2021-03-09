@@ -1,7 +1,11 @@
 import RedWarnIDB, { RedWarnIDBUpgradeHandler } from "rww/data/idb/RedWarnIDB";
 import { RW_DATABASE_VERSION } from "rww/data/RedWarnConstants";
 import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
-import { CachedDependency } from "rww/data/database/RWDBObjectStoreDefinitions";
+import {
+    CachedDependency,
+    CacheTracker,
+} from "rww/data/database/RWDBObjectStoreDefinitions";
+import Group from "rww/definitions/Group";
 
 /**
  * A set of functions responsible for setting up the RedWarn IndexedDB
@@ -15,10 +19,17 @@ const databaseUpdaters: { [key: number]: RedWarnIDBUpgradeHandler } = {
         const database = openRequest.result;
 
         // Creates the dependency cache
+        RedWarnIDB.createObjectStore(database, "cacheTracker", "id", [
+            "timestamp",
+        ]);
         RedWarnIDB.createObjectStore(database, "dependencyCache", "id", [
             "lastCache",
             "etag",
             "data",
+        ]);
+        RedWarnIDB.createObjectStore(database, "groupCache", "name", [
+            "page",
+            "displayName",
         ]);
     },
 };
@@ -27,7 +38,9 @@ export default class RedWarnLocalDB {
     public static i = new RedWarnLocalDB();
 
     // Object stores go below.
+    cacheTracker: RedWarnIDBObjectStore<CacheTracker>;
     dependencyCache: RedWarnIDBObjectStore<CachedDependency>;
+    groupCache: RedWarnIDBObjectStore<Group>;
     // Object stores go above.
 
     private _open: boolean;
@@ -60,9 +73,11 @@ export default class RedWarnLocalDB {
         });
 
         // Apply all database definitions
+        this.cacheTracker = this.idb.store<CacheTracker>("cacheTracker");
         this.dependencyCache = this.idb.store<CachedDependency>(
             "dependencyCache"
         );
+        this.groupCache = this.idb.store<Group>("groupCache");
 
         return connect;
     }

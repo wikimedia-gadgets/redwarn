@@ -1,7 +1,7 @@
 import i18next from "i18next";
-import Lockr from "lockr";
 import Group from "rww/definitions/Group";
 import { ClientUser } from "rww/mediawiki";
+import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 
@@ -138,25 +138,46 @@ export class MediaWikiAPI {
                     );
             }
 
-            Lockr.set("mw-groups", {
-                timestamp: Date.now(),
-                groups: Object.fromEntries(groups.entries()),
-            });
+            try {
+                await RedWarnLocalDB.i.groupCache.runTransaction(
+                    "readwrite",
+                    (transaction) => {
+                        console.log("Saving groups to internal cache...");
+                        const store = transaction.objectStore("groupCache");
+                        for (const group of groups.values()) store.put(group);
+                    }
+                );
+                RedWarnLocalDB.i.cacheTracker.put({
+                    id: "groupCache",
+                    timestamp: Date.now(),
+                });
+            } catch (e) {
+                console.error(e, "Failed to save to group cache. Skipping...");
+            }
 
             return groups;
         };
 
         if (!this.groups) {
-            const groups = Lockr.get<{
-                timestamp: number;
-                groups: { [key: string]: Group };
-            }>("mw-groups", null);
+            const groupCacheTimestamp = await RedWarnLocalDB.i.cacheTracker.get(
+                "groupCache"
+            );
+            const groups = (await RedWarnLocalDB.i.groupCache.getAll()).reduce(
+                (p, n) => {
+                    p[n.name] = n;
+                    return p;
+                },
+                <{ [key: string]: Group }>{}
+            );
 
-            if (!groups || groups.timestamp < Date.now() - 604800000) {
+            if (
+                groupCacheTimestamp == null ||
+                groupCacheTimestamp.timestamp < Date.now() - 604800000
+            ) {
                 return (this.groups = await loadGroups());
             } else {
                 return (this.groups = new Map<string, Group>(
-                    Object.entries(groups.groups)
+                    Object.entries(groups)
                 ));
             }
         } else {

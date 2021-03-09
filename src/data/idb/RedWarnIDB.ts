@@ -87,35 +87,42 @@ export default class RedWarnIDB {
         return database.transaction(store, mode);
     }
 
-    // Uncomment if needed. This is used in cases where it would be beneficial
-    // to just use a single transaction for everything (e.g. when pulling data
-    // from multiple object stores without making changes.)
-    //
-    // async runTransaction<T>(
-    //     store : string | string[],
-    //     callback : (transaction : IDBTransaction) => void | Promise<void>
-    // ) : Promise<T> {
-    //     return new Promise(async (resolve, reject) => {
-    //         const transaction = await this.transaction(store, "readonly");
-    //         await callback(transaction);
-    //
-    //         transaction.addEventListener("complete", () => {
-    //             resolve();
-    //         });
-    //         transaction.addEventListener("abort", (event) => {
-    //             reject(new RedWarnIDBError(
-    //                 "Transaction aborted",
-    //                 this.database, transaction
-    //             ));
-    //         });
-    //         transaction.addEventListener("error", (event) => {
-    //             reject(new RedWarnIDBError(
-    //                 "Transaction erred",
-    //                 this.database, transaction
-    //             ));
-    //         });
-    //     });
-    // }
+    /**
+     * This is used for operations which involve lots of writing. This avoids
+     * having to create more transactions that needed.
+     */
+    async runTransaction<T>(
+        store: string | string[],
+        mode: IDBTransactionMode,
+        callback: (transaction: IDBTransaction) => void | Promise<void>
+    ): Promise<T> {
+        return new Promise(async (resolve, reject) => {
+            const transaction = await this.transaction(store, mode);
+            await callback(transaction);
+
+            transaction.addEventListener("complete", () => {
+                resolve();
+            });
+            transaction.addEventListener("abort", () => {
+                reject(
+                    new RedWarnIDBError(
+                        "Transaction aborted",
+                        this.database,
+                        transaction
+                    )
+                );
+            });
+            transaction.addEventListener("error", () => {
+                reject(
+                    new RedWarnIDBError(
+                        "Transaction erred",
+                        this.database,
+                        transaction
+                    )
+                );
+            });
+        });
+    }
 
     async runRequest<T>(
         store: string,

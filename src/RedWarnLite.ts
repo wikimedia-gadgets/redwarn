@@ -31,7 +31,6 @@ import MediaWiki, {
 import * as RedWarnConstants from "./data/RedWarnConstants";
 import { RW_VERSION } from "./data/RedWarnConstants";
 import * as Util from "./util";
-import Lockr from "lockr";
 import { Configuration } from "./config";
 import TamperProtection from "./tamper/TamperProtection";
 import UIInjectors from "rww/ui/injectors/UIInjectors";
@@ -61,14 +60,15 @@ $(document).ready(async () => {
     // As much as possible, each component should be its own class to make everything
     // organized.
 
-    // Set up LocalStorage wrapper.
-    Lockr.prefix = "rw_";
-
     // Load in languages first.
     await Localization.init();
 
     // Verify our MediaWiki installation.
     if (!MediaWiki.mwCheck()) return;
+
+    console.log("Initializing local database connection...");
+    // Initialize RedWarn Local Database.
+    await RedWarnLocalDB.i.connect();
 
     // Create the MediaWiki API connector.
     await MediaWikiAPI.init();
@@ -76,10 +76,6 @@ $(document).ready(async () => {
     console.log("Initializing store...");
     // Initialize RedWarn store.
     RedWarnStore.initializeStore();
-
-    console.log("Initializing local database connection...");
-    // Initialize RedWarn Local Database.
-    await RedWarnLocalDB.i.connect();
 
     console.log("Loading style definitions...");
     // Load style definitions first.

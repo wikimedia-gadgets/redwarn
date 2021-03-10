@@ -48,6 +48,13 @@
     height: 2em;
 }
 
+.rw-mdc-subtitle {
+    color: gray;
+    letter-spacing: 0.1em;
+    font-size: small;
+    line-height: 1.25em;
+}
+
 .rw-mdc-cardTitle {
     color: black;
     letter-spacing: normal;
@@ -60,4 +67,11 @@
     letter-spacing: normal;
     font-size: small;
     line-height: 1.25em;
+}
+
+.rw-mdc-dialog-helperText {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 16px;
 }

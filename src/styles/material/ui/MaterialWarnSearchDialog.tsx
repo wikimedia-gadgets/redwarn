@@ -30,6 +30,7 @@ import MaterialTextInput, {
 import RedWarnStore from "rww/data/RedWarnStore";
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
 import { regexEscape } from "rww/util";
+import { MDCDialog } from "@material/dialog";
 
 interface MaterialWarnSearchDialogProperties extends RWUIDialogProperties {
     selectedWarning?: Warning;
@@ -166,6 +167,19 @@ function MaterialWarnSearchDialogWarnings(props: {
             );
 
             warningCard.addEventListener("click", (event) => {
+                if (
+                    warningCard.hasAttribute("data-lastclick") &&
+                    Date.now() - +warningCard.getAttribute("data-lastclick") <
+                        300
+                ) {
+                    props.dialog.performSelect(
+                        Object.assign(event, { warningId: id })
+                    );
+                    props.dialog.dialog.close("submit");
+                    return;
+                }
+
+                warningCard.setAttribute("data-lastclick", `${Date.now()}`);
                 props.dialog.performSelect(
                     Object.assign(event, { warningId: id })
                 );
@@ -223,6 +237,7 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
         this.props.width = props.width ?? "80vw";
     }
 
+    dialog: MDCDialog;
     selectedWarning: Warning;
     private actions: JSX.Element; // For updating.
 
@@ -256,11 +271,19 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
             if (!(handler(event) ?? true)) break;
         }
         this.selectedWarning = Warnings[event.warningId];
-        this.actions.parentElement.replaceChild(
-            <MaterialDialogActions>
-                {this.renderActions()}
-            </MaterialDialogActions>,
-            this.actions
+
+        const oldActions = this.actions;
+
+        oldActions.parentElement.replaceChild(
+            (this.actions = (
+                <MaterialDialogActions>
+                    <div class={"rw-mdc-dialog-helperText rw-mdc-subtitle"}>
+                        Tip: Double-click a warning to immediately select it.
+                    </div>
+                    {this.renderActions()}
+                </MaterialDialogActions>
+            )),
+            oldActions
         );
     }
     // Event-related functions above.
@@ -269,13 +292,13 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
      * Show a dialog on screen. You can await this if you want to block until the dialog closes.
      * @returns The result - the value returned by the selected button in {@link RWUIDialogProperties.actions}.
      */
-    show(): Promise<any> {
+    show(): Promise<Warning> {
         const styleStorage = getMaterialStorage();
         registerMaterialDialog(this);
-        const dialog = upgradeMaterialDialog(this);
+        this.dialog = upgradeMaterialDialog(this);
 
         return new Promise((resolve) => {
-            dialog.listen("MDCDialog:closed", async () => {
+            this.dialog.listen("MDCDialog:closed", async () => {
                 styleStorage.dialogTracker.delete(this.id);
                 resolve(this.selectedWarning);
             });
@@ -329,6 +352,14 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
                 {
                     (this.actions = (
                         <MaterialDialogActions>
+                            <div
+                                class={
+                                    "rw-mdc-dialog-helperText rw-mdc-subtitle"
+                                }
+                            >
+                                Tip: Double-click a warning to immediately
+                                select it.
+                            </div>
                             {this.renderActions()}
                         </MaterialDialogActions>
                     ))

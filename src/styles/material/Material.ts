@@ -88,9 +88,7 @@ const MaterialStyle: Style = {
         preInit: [MaterialPreInitializationHooks],
         postInit: [
             () => {
-                // new MaterialWarnSearchDialog({
-                //
-                // }).show();
+                // new MaterialWarnDialog({}).show();
             },
         ],
     },

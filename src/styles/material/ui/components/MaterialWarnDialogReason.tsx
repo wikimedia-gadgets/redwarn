@@ -12,6 +12,7 @@ import {
 } from "rww/mediawiki";
 import { h } from "tsx-dom";
 import MaterialSelect, {
+    MaterialSelectElement,
     MaterialSelectItem,
 } from "rww/styles/material/ui/components/MaterialSelect";
 import { MaterialWarnDialogChild } from "rww/styles/material/ui/components/MaterialWarnDialogChild";
@@ -27,6 +28,7 @@ import MaterialTextInput, {
     MaterialTextInputUpgrade,
 } from "rww/styles/material/ui/components/MaterialTextInput";
 import i18next from "i18next";
+import MaterialWarnSearchDialog from "rww/styles/material/ui/MaterialWarnSearchDialog";
 
 function MaterialWarnDialogReasonDropdown({
     parent,
@@ -68,7 +70,7 @@ function MaterialWarnDialogReasonDropdown({
         }
     }
 
-    return (
+    const element = (
         <span class="rw-mdc-warnDialog-reason--dropdown">
             <MaterialSelect<Warning>
                 label={"Warning"}
@@ -82,13 +84,21 @@ function MaterialWarnDialogReasonDropdown({
                 class={"rw-mdc-warnDialog-reason--search"}
                 icon={"search"}
                 label={"Search for a warning"}
-                onClick={() => {
-                    // TODO Open warning search dialog and set that as warning
-                    // Access the select items with MDCSelect
+                onClick={async () => {
+                    const newWarning = await new MaterialWarnSearchDialog({
+                        selectedWarning: parent.warning,
+                    }).show();
+                    // parent.warning = newWarning;
+                    const select: MaterialSelectElement<Warning> = element.querySelector(
+                        ".mdc-select"
+                    );
+                    select.setItem(newWarning);
                 }}
             />
         </span>
     );
+
+    return element;
 }
 
 function MaterialWarnDialogReasonLevel({

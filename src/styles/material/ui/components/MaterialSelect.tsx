@@ -33,6 +33,7 @@ export interface MaterialSelectProps<T> {
 export type MaterialSelectElement<T> = JSX.Element & {
     MDCSelect: MDCSelect;
     valueSet: { [key: string]: T };
+    setItem: (item: T) => void;
 };
 
 export default function <T>(
@@ -136,6 +137,7 @@ export default function <T>(
 
     const select = new MDCSelect(element);
 
+    console.log(valueSet);
     select.listen("MDCSelect:change", () => {
         if (props.onChange)
             props.onChange(select.selectedIndex, valueSet[select.value]);
@@ -144,5 +146,14 @@ export default function <T>(
     return Object.assign(element, {
         MDCSelect: select,
         valueSet: valueSet,
+        setItem: (item: T) => {
+            const targetValue = Object.entries(valueSet).find(
+                ([, _item]) => _item === item
+            );
+            if (targetValue)
+                (element.querySelector(
+                    `li[data-value="${targetValue[0]}"]`
+                ) as HTMLElement).click();
+        },
     });
 }

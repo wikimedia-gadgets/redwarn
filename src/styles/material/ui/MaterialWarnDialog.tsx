@@ -20,7 +20,7 @@ import i18next from "i18next";
 import MaterialWarnDialogReason, {
     MaterialWarnDialogReasonController,
 } from "rww/styles/material/ui/components/MaterialWarnDialogReason";
-import { ClientUser, MediaWikiAPI, User } from "rww/mediawiki";
+import { ClientUser, MediaWikiAPI, User, WarningType } from "rww/mediawiki";
 import { normalize, warningSuffix } from "rww/util";
 import { RW_SIGNATURE } from "rww/data/RedWarnConstants";
 
@@ -28,6 +28,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
     user: User;
 
     private _helperText: JSX.Element;
+    private dialogConfirmButton: JSX.Element;
     get helperText(): string {
         return this._helperText?.innerText ?? null;
     }
@@ -52,7 +53,8 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
     get warningText(): string {
         if (
             !this.mwdReason?.MWDReason?.warning?.template ||
-            !this.mwdReason?.MWDReason?.warningLevel
+            (!this.mwdReason?.MWDReason?.warningLevel &&
+                this.mwdReason?.MWDReason?.warning?.type === WarningType.Tiered)
         )
             return null;
 
@@ -84,7 +86,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         const parseRequest = await MediaWikiAPI.post({
             action: "parse",
             format: "json",
-            title: this.user.talkPage.title,
+            title: this.user?.talkPage?.title ?? "Example",
             text: warningText,
             contentmodel: "wikitext",
             prop: "text",
@@ -109,6 +111,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         });
 
         this.mwdXray.setAttribute("data-last-update", `${requestTime}`);
+        this.uiValidate();
     }
 
     validate(): true | string {
@@ -119,6 +122,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         if (this.user == null) return "No user selected.";
         if (this.user?.username === ClientUser.i.username)
             return "Self-warnings are not allowed.";
+        return true;
     }
 
     show(): Promise<any> {
@@ -144,6 +148,17 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                 }
             );
         });
+    }
+
+    /**
+     * Contrary to {@link MaterialWarnDialog.validate}, this will update
+     * the UI parts as well.
+     */
+    uiValidate(): void {
+        const issues = this.validate();
+        this.helperText = issues === true ? "" : issues;
+        this.helperTextColor = "#f44336"; // Material Red 500
+        this.dialogConfirmButton.toggleAttribute("disabled", issues !== true);
     }
 
     render(): HTMLDialogElement {
@@ -217,19 +232,24 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                 <MaterialDialogActions>
                     {this._helperText ??
                         (this._helperText = (
-                            <div class={"rw-mdc-warnDialog-helperText"} />
+                            <div class={"rw-mdc-dialog-helperText"} />
                         ))}
 
                     <MaterialButton dialogAction="cancel">
                         {i18next.t<string>("ui:okCancel.cancel")}
                     </MaterialButton>
 
-                    <MaterialButton dialogAction="confirm">
-                        {i18next.t<string>("ui:warn.ok")}
-                    </MaterialButton>
+                    {
+                        (this.dialogConfirmButton = (
+                            <MaterialButton dialogAction="confirm" disabled>
+                                {i18next.t<string>("ui:warn.ok")}
+                            </MaterialButton>
+                        ))
+                    }
                 </MaterialDialogActions>
             </MaterialDialog>
         ) as HTMLDialogElement;
+        this.uiValidate();
         return this.element;
     }
 }

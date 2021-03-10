@@ -76,17 +76,6 @@ function MaterialWarnSearchDialogWarnings(props: {
         const categoryWarningCards: JSX.Element[] = [];
 
         for (const [id, warning] of Object.entries(warnings)) {
-            const title = ((): string => {
-                switch (warning.type) {
-                    case WarningType.Tiered:
-                        return `Tiered Warning`;
-                    case WarningType.SingleIssue:
-                        return "Single-issue Warning";
-                    case WarningType.PolicyViolation:
-                        return "Policy Violation Warning";
-                }
-            })();
-
             const warningCard = (
                 <div
                     class="rw-mdc-warnSearchDialog-warning mdc-card mdc-card--outlined"
@@ -115,7 +104,7 @@ function MaterialWarnSearchDialogWarnings(props: {
                                                 return "new_releases";
                                         }
                                     })()}
-                                    tooltip={title}
+                                    ripple={false}
                                 />
                             </td>
                         </tr>

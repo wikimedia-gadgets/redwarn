@@ -18,10 +18,11 @@ export interface MaterialIconButtonProperties extends BaseProps {
     class?: string | string[];
     id?: string;
     disabled?: boolean;
+    ripple?: boolean;
 }
 
 export default function (props: MaterialIconButtonProperties): JSX.Element {
-    const { onClick, label, icon, iconColor, tooltip } = props;
+    const { onClick, label, icon, iconColor, tooltip, ripple } = props;
     const iconButton = (
         <button
             id={props.id}
@@ -44,13 +45,15 @@ export default function (props: MaterialIconButtonProperties): JSX.Element {
             style={`color:${iconColor ?? "initial"};`}
             {...expandDataAttributes(props)}
         >
-            <span class="mdc-icon-button__ripple" />
+            {(ripple ?? true) && <span class="mdc-icon-button__ripple" />}
             {icon}
         </button>
     );
 
-    const iconButtonRipple = new MDCRipple(iconButton);
-    iconButtonRipple.unbounded = true;
+    if (ripple ?? true) {
+        const iconButtonRipple = new MDCRipple(iconButton);
+        iconButtonRipple.unbounded = true;
+    }
 
     return iconButton;
 }

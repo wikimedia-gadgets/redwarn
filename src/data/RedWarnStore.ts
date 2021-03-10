@@ -46,6 +46,13 @@ export default class RedWarnStore {
 
         window.RedWarnStore = this;
     }
+
+    static articlePath(target: string): string {
+        return RedWarnStore.wikiArticlePath.replace(
+            /\$1/g,
+            mw.util.wikiUrlencode(target)
+        );
+    }
 }
 
 // We're exposing the RedWarn storage for the ones who want to tinker with

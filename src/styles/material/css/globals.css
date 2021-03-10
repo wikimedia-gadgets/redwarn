@@ -47,3 +47,17 @@
     line-height: 2em;
     height: 2em;
 }
+
+.rw-mdc-cardTitle {
+    color: black;
+    letter-spacing: normal;
+    font-size: large;
+    font-weight: 500;
+}
+
+.rw-mdc-cardSubtitle {
+    color: black;
+    letter-spacing: normal;
+    font-size: small;
+    line-height: 1.25em;
+}

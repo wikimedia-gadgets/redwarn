@@ -70,7 +70,7 @@ export default class RedWarnIDB {
 
     async connect(): Promise<IDBDatabase> {
         // Just resolve already if the database has already been connected to.
-        if (!this.request.result)
+        if (this.request.readyState !== "done")
             await new Promise((resolve, reject) => {
                 this.request.addEventListener("success", resolve);
                 this.request.addEventListener("error", reject);

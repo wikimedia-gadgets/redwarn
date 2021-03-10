@@ -264,3 +264,56 @@
     padding: 0;
     overflow: hidden;
 }
+
+.mdc-dialog .rw-mdc-warnSearchDialog .rw-mdc-warnSearchDialog--searchBar {
+    box-sizing: border-box;
+    height: 56px;
+    padding: 0 16px;
+}
+.mdc-dialog .rw-mdc-warnSearchDialog .rw-mdc-warnSearchDialog--warnings {
+    max-height: calc(100% - 72px); /* 56px + 16px */
+    margin: 16px;
+
+    overflow-y: auto;
+
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.mdc-dialog
+    .rw-mdc-warnSearchDialog
+    .rw-mdc-warnSearchDialog--warnings
+    .rw-warningCategory {
+    flex: initial;
+    width: 100%;
+    border-bottom: 1px solid #bbb;
+    margin: 8px 8px 4px 8px;
+
+    color: black;
+    font-weight: bold;
+}
+
+.mdc-dialog .rw-mdc-warnSearchDialog .rw-mdc-warnSearchDialog-warning {
+    padding: 8px;
+    width: calc(50% - 16px);
+    margin: 4px 8px;
+    flex: initial;
+
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.mdc-dialog .rw-mdc-warnSearchDialog .rw-mdc-warnSearchDialog-warning table {
+    border-collapse: collapse;
+}
+
+.mdc-dialog .rw-mdc-warnSearchDialog .rw-warnSearch-hidden {
+    display: none;
+}
+
+.mdc-dialog
+    .rw-mdc-warnSearchDialog
+    .rw-mdc-warnSearchDialog-warning.rw-warning-selected {
+    background-color: rgba(0, 0, 0, 0.15);
+    cursor: unset;
+}

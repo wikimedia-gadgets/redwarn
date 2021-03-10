@@ -165,7 +165,8 @@ export default class Dependencies {
                 }
             }
 
-            if (willRecache)
+            if (willRecache) {
+                console.log(`Recaching dependency: ${dependency.src}`);
                 try {
                     const data = await fetch(dependency.src);
 
@@ -175,8 +176,6 @@ export default class Dependencies {
                         etag: data.headers.get("ETag") ?? "",
                         data: (await data.text()).toString(),
                     };
-
-                    console.log(cachedDep);
 
                     await cacheStore.put(cachedDep);
                 } catch (e) {
@@ -189,6 +188,7 @@ export default class Dependencies {
                         return dependency.src;
                     }
                 }
+            }
 
             // At this point, cachedDep contains either the new data or the old one if
             // retrieval failed. There is, however, a "possibly null or undefined" linter

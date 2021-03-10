@@ -688,4 +688,16 @@ export const Warnings: Record<string, Warning> = {
             "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins.",
     },
 };
+
+export const WarningsByCategory: Record<
+    WarningCategory,
+    typeof Warnings
+> = Object.entries(Warnings).reduce((categories, [id, warning]) => {
+    if (!categories[warning.category]) categories[warning.category] = {};
+
+    categories[warning.category][id] = warning;
+    return categories;
+}, <Record<WarningCategory, typeof Warnings>>{});
+
 export type Warnings = Readonly<typeof Warnings>;
+export type WarningsByCategory = Readonly<typeof WarningsByCategory>;

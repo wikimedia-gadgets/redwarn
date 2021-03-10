@@ -8,6 +8,7 @@ import { MDCTextFieldHelperText } from "@material/textfield/helper-text";
 
 interface MaterialTextInputProps extends BaseProps {
     id?: string;
+    class?: string;
     label: string;
     defaultText?: string;
     leadingIcon?: RWIconButton;
@@ -21,7 +22,7 @@ interface MaterialTextInputProps extends BaseProps {
     autofocus?: boolean;
 }
 
-// Private storage variable. No need to put it into {@link MaterialStyleStorage}
+// Private storage variable. No need to put it into {@link MaterialStyleStorage}.
 const MaterialTextInputTrack = new Map<
     string,
     {
@@ -46,6 +47,7 @@ export default function (props: MaterialTextInputProps): JSX.Element {
             style={{
                 width: props.width ?? "100%",
             }}
+            class={props.class}
         >
             <label
                 class={`rw-mdc-full-width mdc-text-field ${

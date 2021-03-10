@@ -4,14 +4,9 @@ import { MaterialStyleStorage } from "rww/styles/material/data/MaterialStyleStor
 import { MDCTooltip } from "@material/tooltip";
 import { h } from "tsx-dom";
 import { generateId } from "rww/util";
-import MaterialWarnSearchDialog from "rww/styles/material/ui/MaterialWarnSearchDialog";
 
 export default function (): void {
     RedWarnStore.styleStorage = new MaterialStyleStorage();
-
-    (global as Record<string, any>)["rw"][
-        "MaterialWarnSearchDialog"
-    ] = MaterialWarnSearchDialog;
 
     // MDC Tooltip upgrade
     document.addEventListener("animationstart", (event) => {

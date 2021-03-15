@@ -3,7 +3,7 @@ import "../css/warnDialog.css";
 import { h } from "tsx-dom";
 import {
     RWUIWarnDialog,
-    RWUIWarnDialogReturn,
+    RWUIWarnDialogResult,
 } from "rww/ui/elements/RWUIDialog";
 import {
     registerMaterialDialog,
@@ -128,7 +128,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         return true;
     }
 
-    show(): Promise<RWUIWarnDialogReturn> {
+    show(): Promise<RWUIWarnDialogResult> {
         const styleStorage = getMaterialStorage();
         registerMaterialDialog(this);
         const dialog = upgradeMaterialDialog(
@@ -142,7 +142,15 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                 async (event: Event & { detail: { action: string } }) => {
                     if (event.detail.action === "cancel") this._result = null;
                     else {
-                        this._result = this.warningText;
+                        this._result = {
+                            warningText: this.warningText,
+                            targetUser: this.user,
+                            additionalText: this.mwdReason.MWDReason
+                                .additionalText,
+                            relatedPage: this.mwdReason.MWDReason.relatedPage,
+                            warnLevel: this.mwdReason.MWDReason.warningLevel,
+                            warning: this.mwdReason.MWDReason.warning,
+                        };
                     }
 
                     styleStorage.dialogTracker.delete(this.id);

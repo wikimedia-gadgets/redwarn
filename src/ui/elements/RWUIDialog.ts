@@ -5,7 +5,7 @@ import { RollbackContext } from "rww/definitions/RollbackContext";
 import { User } from "rww/mediawiki/User";
 import { Warning } from "rww/mediawiki/Warnings";
 import { Dependency } from "rww/data/Dependencies";
-import { Page } from "rww/mediawiki";
+import { Page, WarningLevel } from "rww/mediawiki";
 
 export enum RWUIDialogActionType {
     /**
@@ -85,7 +85,7 @@ export abstract class RWUIDialog extends RWUIElement {
     /**
      * The result of the dialog.
      */
-    get result(): any {
+    get result() {
         return this._result;
     }
 
@@ -118,7 +118,7 @@ export interface RWUIAlertDialogProps extends RWUIDialogProperties {
 }
 
 export class RWUIAlertDialog extends RWUIDialog {
-    show(): Promise<any> {
+    show(): Promise<string> {
         throw new Error("Attempted to call abstract method");
     }
     render(): HTMLDialogElement {
@@ -130,6 +130,8 @@ export class RWUIAlertDialog extends RWUIDialog {
     constructor(readonly props: RWUIAlertDialogProps) {
         super(props);
     }
+
+    protected _result: string;
 }
 
 export interface RWIconButton {
@@ -158,7 +160,7 @@ export interface RWUIInputDialogProps extends RWUIDialogProperties {
 }
 
 export class RWUIInputDialog extends RWUIDialog {
-    show(): Promise<any> {
+    show(): Promise<string> {
         throw new Error("Attempted to call abstract method");
     }
     render(): HTMLDialogElement {
@@ -170,6 +172,8 @@ export class RWUIInputDialog extends RWUIDialog {
     constructor(readonly props: RWUIInputDialogProps) {
         super(props);
     }
+
+    protected _result: string;
 }
 
 export interface RWUISelectionDialogItem {
@@ -187,7 +191,7 @@ export interface RWUISelectionDialogProps extends RWUIDialogProperties {
 }
 
 export class RWUISelectionDialog extends RWUIDialog {
-    show(): Promise<any> {
+    show(): Promise<string> {
         throw new Error("Attempted to call abstract method");
     }
     render(): HTMLDialogElement {
@@ -199,6 +203,8 @@ export class RWUISelectionDialog extends RWUIDialog {
     constructor(readonly props: RWUISelectionDialogProps) {
         super(props);
     }
+
+    protected _result: string;
 }
 
 export interface RWUIWarnDialogProps extends RWUIDialogProperties {
@@ -209,17 +215,17 @@ export interface RWUIWarnDialogProps extends RWUIDialogProperties {
     relatedPage?: Page;
 }
 
-export interface RWUIWarnDialogReturn {
+export interface RWUIWarnDialogResult {
     warningText: string;
     targetUser: User;
-    warnReason?: Warning;
-    warnLevel?: number;
-    relatedPage?: Page;
+    warning?: Warning;
+    warnLevel?: WarningLevel;
+    relatedPage?: string;
     additionalText?: string;
 }
 
 export class RWUIWarnDialog extends RWUIDialog {
-    show(): Promise<RWUIWarnDialogReturn> {
+    show(): Promise<RWUIWarnDialogResult> {
         throw new Error("Attempted to call abstract method");
     }
     render(): HTMLDialogElement {
@@ -231,6 +237,8 @@ export class RWUIWarnDialog extends RWUIDialog {
     constructor(readonly props: RWUIWarnDialogProps) {
         super(props);
     }
+
+    protected _result: RWUIWarnDialogResult;
 }
 
 export interface RWUIIFrameDialogProps extends RWUIDialogProperties {

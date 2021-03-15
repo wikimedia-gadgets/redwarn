@@ -21,6 +21,8 @@ import i18next from "i18next";
 import { PageMissingError } from "rww/errors/MediaWikiErrors";
 import { GroupArray, GroupsFromNames } from "rww/definitions/Group";
 import { isIPAddress } from "rww/util";
+import { RWUIWarnDialogResult } from "rww/ui/elements/RWUIDialog";
+import { WarningType } from "./Warnings";
 
 export class User {
     /** The user's latest edit. `null` if they have never made an edit. */
@@ -330,6 +332,22 @@ export class User {
             (this._userTalkSubpages[subpage] = this.talkPage.getSubpage(
                 subpage
             ))
+        );
+    }
+
+    static async warn(warnDialogResult: RWUIWarnDialogResult): Promise<void> {
+        const level = {
+            [WarningType.Tiered]: warnDialogResult.warnLevel,
+            [WarningType.PolicyViolation]: 5,
+            [WarningType.SingleIssue]: 0,
+        }[warnDialogResult.warning.type];
+        await warnDialogResult.targetUser.addToUserTalk(
+            warnDialogResult.warningText,
+            true,
+            i18next.t("mediawiki:summaries.warn", {
+                count: level,
+                reason: warnDialogResult.warning.name,
+            })
         );
     }
 }

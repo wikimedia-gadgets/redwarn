@@ -15,6 +15,7 @@ import MaterialToast from "./ui/MaterialToast";
 
 import "./css/globals.css";
 import MaterialIFrameDialog from "rww/styles/material/ui/MaterialIFrameDialog";
+import { User } from "rww/mediawiki";
 
 const MaterialStyle: Style = {
     name: "material",
@@ -87,9 +88,8 @@ const MaterialStyle: Style = {
     hooks: {
         preInit: [MaterialPreInitializationHooks],
         postInit: [
-            () => {
-                new MaterialWarnDialog({}).show();
-            },
+            () =>
+                new MaterialWarnDialog({}).show().then((res) => User.warn(res)),
         ],
     },
 };

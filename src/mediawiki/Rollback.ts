@@ -344,12 +344,13 @@ export class Rollback {
                         reason,
                         defaultWarnIndex
                     );
+
+                // fall through
+                case RollbackMethod.Unset:
                 default:
                     console.error(
                         `RollbackMethod is invalid (${Configuration.rollbackMethod.value}), resetting`
                     );
-                // fall through
-                case RollbackMethod.Unset:
                     const dialog = new RWUI.Dialog({
                         actions: [
                             {
@@ -389,7 +390,7 @@ export class Rollback {
                             "ui:rollbackAvailableDialog.content"
                         )}`,
                     });
-                    return await dialog.show();
+                    return void (await dialog.show());
             }
         } else {
             return await this.pseudoRollback(context, reason, defaultWarnIndex);

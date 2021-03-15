@@ -1,7 +1,10 @@
 import "../css/warnDialog.css";
 
 import { h } from "tsx-dom";
-import { RWUIWarnDialog } from "rww/ui/elements/RWUIDialog";
+import {
+    RWUIWarnDialog,
+    RWUIWarnDialogReturn,
+} from "rww/ui/elements/RWUIDialog";
 import {
     registerMaterialDialog,
     upgradeMaterialDialog,
@@ -125,7 +128,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         return true;
     }
 
-    show(): Promise<any> {
+    show(): Promise<RWUIWarnDialogReturn> {
         const styleStorage = getMaterialStorage();
         registerMaterialDialog(this);
         const dialog = upgradeMaterialDialog(
@@ -142,9 +145,8 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         this._result = this.warningText;
                     }
 
-                    const res = styleStorage.dialogTracker.get(this.id).result;
                     styleStorage.dialogTracker.delete(this.id);
-                    resolve(res);
+                    resolve(this._result);
                 }
             );
         });

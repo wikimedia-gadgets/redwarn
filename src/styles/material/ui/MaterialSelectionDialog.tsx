@@ -35,9 +35,8 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
                         this._result = event.detail.action;
                     }
 
-                    const res = styleStorage.dialogTracker.get(this.id).result;
                     styleStorage.dialogTracker.delete(this.id);
-                    resolve(res);
+                    resolve(this._result);
                 }
             );
         });

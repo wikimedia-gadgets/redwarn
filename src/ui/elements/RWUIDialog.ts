@@ -209,8 +209,17 @@ export interface RWUIWarnDialogProps extends RWUIDialogProperties {
     relatedPage?: Page;
 }
 
+export interface RWUIWarnDialogReturn {
+    warningText: string;
+    targetUser: User;
+    warnReason?: Warning;
+    warnLevel?: number;
+    relatedPage?: Page;
+    additionalText?: string;
+}
+
 export class RWUIWarnDialog extends RWUIDialog {
-    show(): Promise<any> {
+    show(): Promise<RWUIWarnDialogReturn> {
         throw new Error("Attempted to call abstract method");
     }
     render(): HTMLDialogElement {

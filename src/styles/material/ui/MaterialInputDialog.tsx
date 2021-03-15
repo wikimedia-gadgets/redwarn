@@ -62,9 +62,8 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                         this._result = null;
                     }
 
-                    const res = styleStorage.dialogTracker.get(this.id).result;
                     styleStorage.dialogTracker.delete(this.id);
-                    resolve(res);
+                    resolve(this._result);
                 }
             );
         });

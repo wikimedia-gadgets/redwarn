@@ -63,6 +63,9 @@ $(document).ready(async () => {
     // Load in languages first.
     await Localization.init();
 
+    // Load in MediaWiki dependencies
+    await MediaWiki.loadDependencies();
+
     // Verify our MediaWiki installation.
     if (!MediaWiki.mwCheck()) return;
 

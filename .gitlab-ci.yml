@@ -1,9 +1,18 @@
-image: node:12
+image: node:14
 
-build_npm:
-    stage: build
+stages:
+    - dependencies
+    - test
+    - build
+    - deploy
+
+# Dowload all npm dependencies, and be sure to enable
+# development mode to get all types for proper building.
+deps_npm:
+    stage: dependencies
     script:
         - NODE_ENV=development npm install
+    # Cache `node_modules` for later jobs and pipelines.
     cache:
         key: "$CI_COMMIT_REF_SLUG"
         paths:
@@ -12,17 +21,20 @@ build_npm:
     only:
         refs:
             - master
-            - dev
-            - dev-rwTS
+            - /^dev(-.+)?$/
+        # Only rebuild `node_modules` in case any package
+        # file gets changed.
         changes:
             - .gitlab-ci.yml
             - package.json
             - package-lock.json
 
+# Perform tests with Jest
 test_jest:
     stage: test
     script:
         - npm run test
+    # Redownload `node_modules` from earlier
     cache:
         key: "$CI_COMMIT_REF_SLUG"
         paths:
@@ -30,23 +42,39 @@ test_jest:
         policy: pull
     only:
         - master
-        - dev
-        - dev-rwTS
+        - /^dev(-.+)?$/
 
-deploy:
-    stage: deploy
+# Build the actual RedWarn script.
+build_redwarn:
+    stage: build
     script:
         - npm run build-prod
+    # Redownload `node_modules` from earlier
     cache:
         key: "$CI_COMMIT_REF_SLUG"
         paths:
             - node_modules/
         policy: pull
+    # Declare creation of build artifacts (which include `redwarn.js`)
     artifacts:
         name: "redwarn-$CI_COMMIT_REF_NAME"
         paths:
             - build/
     only:
         - master
-        - dev
-        - dev-rwTS
+        - /^dev(-.+)?$/
+
+# Deploy the RedWarn script to Wikipedia.
+# Note: This should NOT be `User:Redwarn/.js`, as this file is reserved
+# exclusively for human updates. This should update a specific "beta"
+# or "nightly" version of the RedWarn script instead.
+deploy_wp:
+    dependencies: 
+        - "build_redwarn"
+    stage: deploy
+    script:
+        - echo Automatic deployment has not been implemented.
+    # Obviously, we should only update RedWarn on Wikipedia
+    # if and only if the master branch is changed.
+    only:
+        - master

@@ -114,7 +114,7 @@ export class Rollback {
 
         if (!newId && !!oldId) {
             return oldId;
-        } else if (!!newId && !oldId) {
+        } else if ((!!newId && !oldId) || oldId === false) {
             return newId;
         } else if (newId != null && oldId != null) {
             return (newId > oldId && newer) || (newId < oldId && !newer)

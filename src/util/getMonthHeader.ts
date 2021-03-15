@@ -4,6 +4,6 @@
  */
 export default function (date = new Date()): string {
     return `${
-        (mw.language.months as any)["genitive"][date.getMonth()]
+        (mw.language as any).months["genitive"][date.getMonth()]
     } ${date.getFullYear()}`;
 }

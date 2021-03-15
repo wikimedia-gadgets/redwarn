@@ -52,7 +52,7 @@
         "ts-jest": "^26.4.4",
         "ts-loader": "^8.0.12",
         "tslib": "^2.0.3",
-        "types-mediawiki": "git+https://github.com/wikimedia-gadgets/types-mediawiki.git",
+        "types-mediawiki": "github:wikimedia-gadgets/types-mediawiki",
         "typescript": "^4.0.2",
         "webpack": "^5.11.1",
         "webpack-cli": "^4.3.0",

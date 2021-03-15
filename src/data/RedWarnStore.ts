@@ -45,7 +45,7 @@ export default class RedWarnStore {
             (mw.config.get("wgServer") as string) +
             (mw.config.get("wgScriptPath") as string)
         }/api.php`;
-        this.wikiID = mw.config.get("wgWikiID");
+        this.wikiID = mw.config.get("wgWikiID") as string;
 
         window.RedWarnStore = this;
     }

@@ -36,11 +36,14 @@ export default class RedWarnStore {
 
     public static initializeStore(): void {
         this.messageHandler = new MessageHandler();
-        this.wikiArticlePath = mw.config.get("wgArticlePath");
-        this.wikiBase = mw.config.get("wgServer");
-        this.wikiIndex = mw.config.get("wgServer") + mw.config.get("wgScript");
+        this.wikiArticlePath = mw.config.get("wgArticlePath") as string;
+        this.wikiBase = mw.config.get("wgServer") as string;
+        this.wikiIndex =
+            (mw.config.get("wgServer") as string) +
+            (mw.config.get("wgScript") as string);
         this.wikiAPI = `${
-            mw.config.get("wgServer") + mw.config.get("wgScriptPath")
+            (mw.config.get("wgServer") as string) +
+            (mw.config.get("wgScriptPath") as string)
         }/api.php`;
         this.wikiID = mw.config.get("wgWikiID");
 

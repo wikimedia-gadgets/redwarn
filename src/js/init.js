@@ -291,9 +291,6 @@ var rw = {
          * @extends rw.visuals
          */
         "pageIcons": () => {
-            // If debug mode, enable debug menu
-            if (rw.debugMenu != null) rw.debugMenu.init(); // will be undefined if not
-
             // Thanks to User:Awesome Aasim for the suggestion and some sample code.
             try {
                 // Possible icons locations: default (page icons area) or sidebar - possible link location, dropdown and toplinks
@@ -624,6 +621,9 @@ function initRW() {
 
         // Load config and check if updated
         rw.info.getConfig(() => {
+            // If debug mode, enable debug menu
+            if (rw.debugMenu != null) rw.debugMenu.init(); // will be undefined if not
+
             rw.info.getRollbackToken(); // get rollback token
             rw.visuals.pageIcons(); // page icons once config loaded
             rw.ui.registerContextMenu(); // register context menus once config loaded

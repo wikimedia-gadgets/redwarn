@@ -88,7 +88,7 @@ rw.debugMenu = {
             idbConnectionRequest.onsuccess = res;
             idbConnectionRequest.onerror = rej;
         }).catch((error) => {
-            console.error(`${lang.load_err} ${lang.load_err_report}`, error);
+            console.error(error);
             mw.notify(load_err);
             return;
         }).then(() => {

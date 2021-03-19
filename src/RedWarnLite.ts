@@ -35,15 +35,16 @@ import { Configuration } from "./config";
 import TamperProtection from "./tamper/TamperProtection";
 import UIInjectors from "rww/ui/injectors/UIInjectors";
 import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
+import Log from "rww/data/RedWarnLog";
 
 $(document).ready(async () => {
     if (document.body.classList.contains("rw-disable")) {
         // We've been prevented from running on this page.
-        console.log("Page is blocking RedWarn loading. Shutting down...");
+        Log.info("Page is blocking RedWarn loading. Shutting down...");
         return;
     }
 
-    console.log(`Starting RedWarn ${RW_VERSION}...`);
+    Log.info(`Starting RedWarn ${RW_VERSION}...`);
 
     if (window.rw != null) {
         mw.notify(
@@ -69,18 +70,18 @@ $(document).ready(async () => {
     // Verify our MediaWiki installation.
     if (!MediaWiki.mwCheck()) return;
 
-    console.log("Initializing local database connection...");
+    Log.debug("Initializing local database connection...");
     // Initialize RedWarn Local Database.
     await RedWarnLocalDB.i.connect();
 
     // Create the MediaWiki API connector.
     await MediaWikiAPI.init();
 
-    console.log("Initializing store...");
+    Log.debug("Initializing store...");
     // Initialize RedWarn store.
     RedWarnStore.initializeStore();
 
-    console.log("Loading style definitions...");
+    Log.debug("Loading style definitions...");
     // Load style definitions first.
     await StyleManager.initialize();
 
@@ -142,6 +143,9 @@ export default class RedWarn {
     }
     static get Localization(): typeof Localization {
         return Localization;
+    }
+    static get Log(): typeof Log {
+        return Log;
     }
     static get i18next(): typeof i18next {
         return i18next;

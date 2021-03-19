@@ -1,6 +1,7 @@
 import { RW_CONFIG_VERSION } from "rww/data/RedWarnConstants";
 import { RollbackMethod } from "rww/config/ConfigurationEnums";
 import { RollbackDoneOption } from "rww/definitions/RollbackDoneOptions";
+import Log from "rww/data/RedWarnLog";
 
 type ConfigurationUpdater = (
     oldConfig: Record<string, unknown>
@@ -53,10 +54,7 @@ const configurationUpdaters: { [key: number]: ConfigurationUpdater } = {
                             config.rollbackDoneOption = "reportUser";
                             break;
                         default:
-                            console.error(
-                                "Unknown rwRollbackDoneOption:",
-                                value
-                            );
+                            Log.error("Unknown rwRollbackDoneOption:", value);
                     }
                     delete config.rwRollbackDoneOption;
                     break;

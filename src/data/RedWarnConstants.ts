@@ -1,5 +1,7 @@
 import buildinfo from "!webpack-plugin-buildinfo?gitHash&gitHashShort&time&platform&arch!";
 
+// THIS FILE SHOULD NOT MAKE ANY OTHER IMPORTS THAN FROM BUILDINFO!
+
 export const RW_BUILDINFO = buildinfo;
 
 // ! following needs to be updated manually, otherwise the whole package.json will be included in compile
@@ -8,7 +10,10 @@ export const RW_VERSION_TAG = `0.2.0-dev+${RW_BUILDINFO.gitHashShort}`;
 export const RW_VERSION_SUMMARY = "nothing yet";
 
 export const RW_CONFIG_VERSION = 1;
+export const RW_DATABASE_NAME = "";
 export const RW_DATABASE_VERSION = 1;
+
+export const RW_LOG_SIGNATURE = `RedWarn ${RW_VERSION_TAG}`;
 
 export const RW_SIGNATURE = "~~~~";
 export const RW_WELCOME = "{{subst:Welcome}}";

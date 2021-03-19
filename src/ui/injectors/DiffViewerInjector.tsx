@@ -15,6 +15,7 @@ import { Warnings } from "rww/mediawiki/Warnings";
 import { RWUISelectionDialogItem } from "../elements/RWUIDialog";
 import { RollbackContext } from "rww/definitions/RollbackContext";
 import { Configuration } from "rww/config";
+import Log from "rww/data/RedWarnLog";
 
 // TODO File cleanup. THIS FILE IS NOT STYLE COMPLIANT!
 
@@ -46,7 +47,7 @@ export default class DiffViewerInjector {
      */
     static async init(): Promise<void> {
         if (Rollback.isDiffPage()) {
-            console.log("Diff page detected!");
+            Log.debug("Diff page detected!");
             await DiffViewerInjector.loadOptions(await this.getContext());
         }
     }

@@ -1,6 +1,7 @@
 import { h } from "tsx-dom";
 import { generateId, toBase64URL } from "rww/util";
 import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
+import Log from "rww/data/RedWarnLog";
 
 /*
  * This file uses TSX only to quickly build <link> and <script>
@@ -109,7 +110,7 @@ export default class Dependencies {
             HTMLElement & { promise: Promise<boolean> }
         >[] = [];
         for (const dependency of depsList) {
-            console.log(
+            Log.debug(
                 `Loading ${dependency.type} dependency: ${dependency.src}`
             );
 
@@ -166,7 +167,7 @@ export default class Dependencies {
             }
 
             if (willRecache) {
-                console.log(`Recaching dependency: ${dependency.src}`);
+                Log.debug(`Recaching dependency: ${dependency.src}`);
                 try {
                     const data = await fetch(dependency.src);
 
@@ -182,8 +183,9 @@ export default class Dependencies {
                     // Something wrong happened during reload. If a cache exists, use it. Otherwise,
                     // we'll just use the src as the URI and hope that the browser resolves the situation.
                     if (cachedDep == null) {
-                        console.warn(
-                            "Failed to load caching dependency. Falling back to browser..."
+                        Log.warn(
+                            "Failed to load caching dependency. Falling back to browser...",
+                            e
                         );
                         return dependency.src;
                     }

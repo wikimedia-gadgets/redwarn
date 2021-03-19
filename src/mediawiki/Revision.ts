@@ -1,5 +1,6 @@
 import { MediaWikiAPI, MediaWikiURL, Page, User } from "rww/mediawiki";
 import redirect from "rww/util/redirect";
+import Log from "rww/data/RedWarnLog";
 
 /**
  * A revision is an object provided by the MediaWiki API which represents
@@ -195,8 +196,9 @@ export class Revision {
     async getLatestRevision(): Promise<Revision> {
         if (!!this.page) {
             // Big oh noes. We'll have to send an additional request just to get the page name.
-            console.warn("Page of revision was not set. This is inefficient!");
-            console.warn(new Error().stack);
+            Log.warn("Page of revision was not set. This is inefficient!", {
+                stack: new Error().stack,
+            });
             const revisionInfoRequest = await MediaWikiAPI.get({
                 action: "query",
                 format: "json",
@@ -299,7 +301,6 @@ export class Revision {
 
             if (lowestHeadingLevel > level) {
                 Object.entries(foundSections).forEach(([k, v]) => {
-                    console.log([k, v]);
                     const extractedContents = extractSections(v, level + 1);
                     if (Object.keys(extractedContents).length > 1) {
                         foundSections[k] = extractedContents;

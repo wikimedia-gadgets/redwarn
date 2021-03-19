@@ -2,6 +2,7 @@ import i18next from "i18next";
 import Group from "rww/definitions/Group";
 import { ClientUser } from "rww/mediawiki";
 import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
+import Log from "rww/data/RedWarnLog";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 
@@ -22,8 +23,9 @@ export class MediaWikiAPI {
 
             return await this.api.get(finalParameters, ajaxOptions);
         } catch (error) {
-            console.error(
-                `Error occured while running MediaWiki API get call: ${error.message}`
+            Log.error(
+                `Error occured while running MediaWiki API get call.`,
+                error
             );
             throw error;
         }
@@ -42,8 +44,9 @@ export class MediaWikiAPI {
 
             return await this.api.post(finalParameters, ajaxOptions);
         } catch (error) {
-            console.error(
-                `Error occured while running MediaWiki API get call: ${error.message}`
+            Log.error(
+                `Error occured while running MediaWiki API get call.`,
+                error
             );
             throw error;
         }
@@ -56,8 +59,9 @@ export class MediaWikiAPI {
         try {
             return await this.api.postWithEditToken(parameters, ajaxOptions);
         } catch (error) {
-            console.error(
-                `Error occured while running MediaWiki API postWithEditToken call: ${error.message}`
+            Log.error(
+                `Error occured while running MediaWiki API postWithEditToken call.`,
+                error
             );
             throw error;
         }
@@ -142,7 +146,7 @@ export class MediaWikiAPI {
                 await RedWarnLocalDB.i.groupCache.runTransaction(
                     "readwrite",
                     (transaction) => {
-                        console.log("Saving groups to internal cache...");
+                        Log.trace("Saving groups to internal cache...");
                         const store = transaction.objectStore("groupCache");
                         for (const group of groups.values()) store.put(group);
                     }
@@ -152,7 +156,7 @@ export class MediaWikiAPI {
                     timestamp: Date.now(),
                 });
             } catch (e) {
-                console.error(e, "Failed to save to group cache. Skipping...");
+                Log.error("Failed to save to group cache. Skipping...", e);
             }
 
             return groups;

@@ -18,6 +18,7 @@ import {
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 import { RollbackContext } from "rww/definitions/RollbackContext";
 import { Configuration, RollbackMethod } from "rww/config";
+import Log from "rww/data/RedWarnLog";
 
 // interface RollbackContext {
 //     reason: string;
@@ -89,7 +90,7 @@ export class Rollback {
         });
 
         if (!result.edit) {
-            console.error(result);
+            Log.error(result);
             RWUI.Toast.quickShow({
                 content: i18next.t("ui:toasts.pleaseWait"),
             });
@@ -249,7 +250,7 @@ export class Rollback {
         });
         if (!res.edit) {
             // Error occurred or other issue
-            console.error(res);
+            Log.error(res);
             // Show rollback options again (todo)
             $("#rwCurrentRevRollbackBtns").show();
             $("#rwRollbackInProgress").hide();
@@ -295,7 +296,7 @@ export class Rollback {
             );
         } catch (e) {
             // Error occurred or other issue
-            console.error(e);
+            Log.error(e);
             // Show rollback options again
             $("#rwCurrentRevRollbackBtns").show();
             $("#rwRollbackInProgress").hide();
@@ -348,7 +349,7 @@ export class Rollback {
                 // fall through
                 case RollbackMethod.Unset:
                 default:
-                    console.error(
+                    Log.error(
                         `RollbackMethod is invalid (${Configuration.rollbackMethod.value}), resetting`
                     );
                     const dialog = new RWUI.Dialog({

@@ -1,5 +1,6 @@
 import RedWarnIDBError from "rww/data/idb/RedWarnIDBError";
 import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
+import Log from "rww/data/RedWarnLog";
 
 // The `idb` directory is for the IndexedDB wrapper. You might be
 // looking for `database` instead, which contains RedWarn-specialized
@@ -38,7 +39,7 @@ export default class RedWarnIDB {
     ) {
         this.request = indexedDB.open(_databaseName, _version);
         this.request.addEventListener("upgradeneeded", async (event) => {
-            console.log(
+            Log.debug(
                 `Upgrade needed. Going from version ${event.oldVersion} to ${event.newVersion}`
             );
             for (

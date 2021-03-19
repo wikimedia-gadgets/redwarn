@@ -13,6 +13,7 @@ import RWUI from "rww/ui/RWUI";
 import i18next from "i18next";
 import StyleManager from "rww/styles/StyleManager";
 import { RedWarnStyleMissingError } from "rww/errors/RedWarnStyleError";
+import Log from "rww/data/RedWarnLog";
 
 export class Configuration {
     /** Last version of RedWarn that was used */
@@ -44,7 +45,7 @@ export class Configuration {
     public static neopolitan = new Setting(null, "neopolitan");
 
     static async refresh(): Promise<void> {
-        console.log("Refreshing configuration...");
+        Log.debug("Refreshing configuration...");
         let redwarnConfig: Record<string, any>,
             saveNow = false;
 
@@ -57,7 +58,7 @@ export class Configuration {
                 )[1]
             );
         } catch (e) {
-            console.error(e);
+            Log.error("Configuration loading error.", e);
             // Fallback style
             StyleManager.setStyle(StyleManager.defaultStyle);
             // Show error message

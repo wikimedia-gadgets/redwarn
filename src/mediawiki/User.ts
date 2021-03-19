@@ -288,7 +288,6 @@ export class User {
 
         // Process final string
         finalText = wikiTextLines.join("\n");
-        console.log(finalText);
 
         await Page.fromTitle(`User talk:${this.username}`).edit(
             finalText,

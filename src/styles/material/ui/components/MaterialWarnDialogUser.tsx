@@ -23,6 +23,7 @@ import showPlainMediaWikiIFrameDialog from "rww/styles/material/util/showPlainMe
 import { MaterialWarnDialogChild } from "./MaterialWarnDialogChild";
 import { WarningIcons } from "rww/styles/material/data/WarningIcons";
 import MaterialAlertDialog from "rww/styles/material/ui/MaterialAlertDialog";
+import Log from "rww/data/RedWarnLog";
 
 interface OverlayContentLoading {
     type: "loading";
@@ -448,7 +449,7 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
         if (user == null) return;
 
         if (this.updating)
-            console.warn(
+            Log.trace(
                 "Attempted to update user twice. Subsequent attempt blocked."
             );
 
@@ -593,7 +594,7 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                 // No children in main element
                 this.elementSet.main.children.length == 0
             ) {
-                console.warn(
+                Log.warn(
                     "Invalid MaterialWarnDialogUser state detected! Please investigate in the future.",
                     {
                         elementSet: this.elementSet,

@@ -212,8 +212,8 @@ rw.info = { // API
                 rw.info.writeConfig(true, () => rw.ui.confirmDialog(`Sorry, but an issue has caused your RedWarn preferences to be reset to default. Would you like to report a bug?`,
                     "Report Bug", () => {
                         rw.ui.reportBug(`<!-- DO NOT EDIT BELOW THIS LINE! THANK YOU -->
-redwarnConfig load - Error info: <code><nowiki>
-${err.stack}</nowiki></code>
+redwarnConfig load - Error info: <code><now${""}iki>
+${err.stack}</no${""}wiki></code>
 [[User:${user}/redwarnConfig.js|Open user redwarnConfig.js]]`);
                     },
 
@@ -237,7 +237,7 @@ ${err.stack}</nowiki></code>
      */
     "writeConfig": (noRedirect, callback) => { // CALLBACK ONLY IF NOREDIRECT IS TRUE.
         // Save rule database first
-        rw.rulesFunc.save(()=> {
+        rw.rulesFunc.save(() => {
             // Then
             let rwConfigTemplate = rw.config.templatePacks; // for restore
             // Handle templates (saved as b64 string)
@@ -245,7 +245,7 @@ ${err.stack}</nowiki></code>
             if (!noRedirect) rw.ui.loadDialog.show("Saving preferences...");
             // Write config to the users page and refresh
             let finalTxt = `
-/*<nowiki>
+/*<no${""}wiki>
 This is your RedWarn configuration file. It is recommended that you don't edit this yourself and use RedWarn preferences instead.
 It is writen in JSON formatting and is excecuted every time RedWarn loads.
 
@@ -253,7 +253,7 @@ If somebody has asked you to add code to this page, DO NOT do so as it may compr
 
 !!! Do not edit below this line unless you understand the risks! If rw.config isn't defined, this file will be reset. !!!
 */
-window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + "; //</nowiki>"; // generate config text
+window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + "; //</no${""}wiki>"; // generate config text
             $.post(rw.wikiAPI, {  // LOCALISATION ISSUE!!
                 "action": "edit",
                 "format": "json",
@@ -440,17 +440,17 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
         });
     },// End lastWarningLevel
 
-     /**
-     * Scans the past 50 revisions for warnings from this month for a user - WARNING: this is pretty CPU intensive - make sure you show a load dialog!
-     *
-     * @param {string} username
-     * @param {function} callback
-     * @method warningInfo
-     * @extends rw.info
-     */
-    "warningInfo": (username, callback)=>{
+    /**
+    * Scans the past 50 revisions for warnings from this month for a user - WARNING: this is pretty CPU intensive - make sure you show a load dialog!
+    *
+    * @param {string} username
+    * @param {function} callback
+    * @method warningInfo
+    * @extends rw.info
+    */
+    "warningInfo": (username, callback) => {
         // Get past 51 page revisions, we calculate a diff for 50 only
-        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:"+username+"&rvslots=*&rvprop=content|user|timestamp|size&formatversion=2&rvlimit=51&format=json", r=>{
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:" + username + "&rvslots=*&rvprop=content|user|timestamp|size&formatversion=2&rvlimit=51&format=json", r => {
             if (r.query.pages[0].missing) { // If page is missing, i.e it doesn't exist
                 callback([]); // nothing, no warnings recorded
                 return; // exit
@@ -459,19 +459,19 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
 
             let warningArray = []; // included in callback
             // Now for each revision
-            r.query.pages[0].revisions.forEach((edit, i)=>{
-                if (i==49 || i > r.query.pages[0].revisions.length - 2) return; // we can't process the 51st edit, so exit
-                const editSize = edit.size - r.query.pages[0].revisions[i+1].size; // size difference betweem this and the prev edit
+            r.query.pages[0].revisions.forEach((edit, i) => {
+                if (i == 49 || i > r.query.pages[0].revisions.length - 2) return; // we can't process the 51st edit, so exit
+                const editSize = edit.size - r.query.pages[0].revisions[i + 1].size; // size difference betweem this and the prev edit
                 if (editSize > 7500 || editSize < 0) return; // skip edits over 7.5KB, we can safely assume these aren't warnings are we don't wanna crash the browser, we also ignore removals
                 const editedBy = edit.user;
                 const editTimestamp = edit.timestamp;
                 const editContent = edit.slots.main.content;
 
                 // Find what was added in that edit by comparing last revision (index up)
-                let editChange = Diff.diffChars(r.query.pages[0].revisions[i+1].slots.main.content, editContent);
+                let editChange = Diff.diffChars(r.query.pages[0].revisions[i + 1].slots.main.content, editContent);
 
                 // Merge all addition changes into one string
-                const addedWikiText = (()=>{let result = ""; editChange.forEach(change=>{if (change.added===true) result+=change.value;}); return result;})();
+                const addedWikiText = (() => { let result = ""; editChange.forEach(change => { if (change.added === true) result += change.value; }); return result; })();
 
                 // Now locate warnings within those changes
 
@@ -482,16 +482,16 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                 // Note down the template
                 const warningTemplate = regexResult.pop(); // last in array = last warning name, we always favour the last one because warnings may have been restored
 
-                console.log("Located warning template uw-"+ warningTemplate);
+                console.log("Located warning template uw-" + warningTemplate);
 
                 let warningLevel = 6; // assume 6 = unknown here
-                let matchedRule = {"name": "Unknown - this warning doesn't seem to be in RedWarn's database", "template": "uw-"+ warningTemplate, "key": ""};
+                let matchedRule = { "name": "Unknown - this warning doesn't seem to be in RedWarn's database", "template": "uw-" + warningTemplate, "key": "" };
 
                 // Now locate within our rules
                 for (const ruleKey in rw.rules) {
                     if (rw.rules.hasOwnProperty.call(rw.rules, ruleKey)) {
                         const rule = rw.rules[ruleKey];
-                        if (("uw-"+ warningTemplate).includes(rule.template)) {
+                        if (("uw-" + warningTemplate).includes(rule.template)) {
                             // Find warning level and map
                             warningLevel = ({
                                 // handle nothing as a 0 reminder
@@ -503,7 +503,7 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                                 "3": 3,
                                 "4": 4,
                                 "4im": 5
-                            })[("uw-"+ warningTemplate).replace(rule.template, "")]; // select by rming template from the regexMatch
+                            })[("uw-" + warningTemplate).replace(rule.template, "")]; // select by rming template from the regexMatch
 
                             rule.key = ruleKey; // set key for dialog
                             matchedRule = rule;

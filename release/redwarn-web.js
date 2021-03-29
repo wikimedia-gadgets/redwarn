@@ -123,7 +123,7 @@ var rw = {
     `,
 
     /**
-     * This varible is defined by the magic word "Build Time: 12/03/2021 16:55:36UTC
+     * This varible is defined by the magic word "Build Time: 25/03/2021 09:51:34UTC
 Excecuted script: /home/zng/redwarn-web/build.php
 User: zng@DESKTOP-SOGE7SE on Linux", which the build script will replace with information
      * regarding the time, file location and computer info such as username, computer name and OS of this build.
@@ -133,7 +133,7 @@ User: zng@DESKTOP-SOGE7SE on Linux", which the build script will replace with in
      * @extends rw
      */
     // ADDED BY BUILD SCRIPT
-    "buildInfo": `Build Time: 12/03/2021 16:55:36UTC
+    "buildInfo": `Build Time: 25/03/2021 09:51:34UTC
 Excecuted script: /home/zng/redwarn-web/build.php
 User: zng@DESKTOP-SOGE7SE on Linux`,
 
@@ -381,9 +381,6 @@ User: zng@DESKTOP-SOGE7SE on Linux`,
          * @extends rw.visuals
          */
         "pageIcons": () => {
-            // If debug mode, enable debug menu
-            if (rw.debugMenu != null) rw.debugMenu.init(); // will be undefined if not
-
             // Thanks to User:Awesome Aasim for the suggestion and some sample code.
             try {
                 // Possible icons locations: default (page icons area) or sidebar - possible link location, dropdown and toplinks
@@ -714,6 +711,9 @@ function initRW() {
 
         // Load config and check if updated
         rw.info.getConfig(() => {
+            // If debug mode, enable debug menu
+            if (rw.debugMenu != null) rw.debugMenu.init(); // will be undefined if not
+
             rw.info.getRollbackToken(); // get rollback token
             rw.visuals.pageIcons(); // page icons once config loaded
             rw.ui.registerContextMenu(); // register context menus once config loaded
@@ -1396,57 +1396,62 @@ rw.rules = {};
 
 // Functions for rw.rules
 rw.rulesFunc = {
-    "resync" : callback=>{
-        $.getJSON("https://en.wikipedia.org/w/index.php?title=Wikipedia:RedWarn/Default_Warnings&action=raw&ctype=text/json", rules=>{
-            // Sanatise (XSS SECURITY AND COVID-19!!)
+    "resync": callback => {
+        $.getJSON("https://en.wikipedia.org/w/index.php?title=Wikipedia:RedWarn/Default_Warnings&action=raw&ctype=text/json", rules => {
+            // Sanitize (XSS SECURITY AND COVID-19!!)
             for (const i in rules) {
-                rules[i].name = rules[i].name.replace(/[^\w\s!?-]/g,'');
-                rules[i].category = rules[i].category.replace(/[^\w\s!?-]/g,'');
-                rules[i].template = rules[i].template.replace(/[^\w\s!?-]/g,'');
+                rules[i].name = rules[i].name.replace(/[^\w\s!?-]/g, '');
+                rules[i].category = rules[i].category.replace(/[^\w\s!?-]/g, '');
+                rules[i].template = rules[i].template.replace(/[^\w\s!?-]/g, '');
             }
             rw.rules = rules;
-            // Now save 
+            // Now save
             rw.rulesFunc.save(callback);
-        }).fail(()=>{
+        }).fail(() => {
             // Download failed, maybe page is messed up? Either way don't callback
             rw.ui.loadDialog.close();
             rw.ui.confirmDialog("Sorry, we couldn't load the rule database due to an error.",
-                    "OKAY", () => dialogEngine.closeDialog(),
-                    "", () => { }, 0);
+                "OKAY", () => dialogEngine.closeDialog(),
+                "", () => { }, 0);
         });
     },
 
-    "load" : callback=>{
-        $.getJSON("https://en.wikipedia.org/w/index.php?title=User:"+rw.info.getUsername()+"/redwarnRules.json&action=raw&ctype=text/json", rules=>{
+    "load": callback => {
+        $.getJSON("https://en.wikipedia.org/w/index.php?title=User:" + rw.info.getUsername() + "/redwarnRules.json&action=raw&ctype=text/json", rules => {
+            if ($.isEmptyObject(rules)) {
+                // wee woo empty, resync
+                rw.rulesFunc.resync(callback);
+                return;
+            }
             rw.rules = rules; // that's it lol
             if (callback != null) callback();
-        }).fail(()=>{
+        }).fail(() => {
             // Assume it doesn't exist
             rw.rulesFunc.resync(callback);
         });
     },
 
-    "save" : callback=>{
+    "save": callback => {
         // Stringify and save
         $.post(rw.wikiAPI, {  // LOCALISATION ISSUE!!
-                "action": "edit",
-                "format": "json",
-                "token" : mw.user.tokens.get("csrfToken"),
-                "title" : "User:"+ rw.info.getUsername() + "/redwarnRules.json",
-                "summary" : "Updating user Rule Database [[w:en:WP:RW|(RW "+ rw.version +")]]", // summary sign here
-                "text": JSON.stringify(rw.rules),
-                "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
-            }).done(dt => {
-                // We done. Check for errors, then callback appropriately
-                if (!dt.edit) {
-                    // Error occured or other issue
-                    console.error(dt);
-                    rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your changes to your rules have not been saved.");
-                } else {
-                    // Success!
-                    if (callback != null) callback();
-                }
-            });
+            "action": "edit",
+            "format": "json",
+            "token": mw.user.tokens.get("csrfToken"),
+            "title": "User:" + rw.info.getUsername() + "/redwarnRules.json",
+            "summary": "Updating user Rule Database [[w:en:WP:RW|(RW " + rw.version + ")]]", // summary sign here
+            "text": JSON.stringify(rw.rules),
+            "tags": ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
+        }).done(dt => {
+            // We done. Check for errors, then callback appropriately
+            if (!dt.edit) {
+                // Error occured or other issue
+                console.error(dt);
+                rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your changes to your rules have not been saved.");
+            } else {
+                // Success!
+                if (callback != null) callback();
+            }
+        });
     }
 };
 // rw-source: toast.js
@@ -1717,8 +1722,8 @@ rw.info = { // API
                 rw.info.writeConfig(true, () => rw.ui.confirmDialog(`Sorry, but an issue has caused your RedWarn preferences to be reset to default. Would you like to report a bug?`,
                     "Report Bug", () => {
                         rw.ui.reportBug(`<!-- DO NOT EDIT BELOW THIS LINE! THANK YOU -->
-redwarnConfig load - Error info: <code><nowiki>
-${err.stack}</nowiki></code>
+redwarnConfig load - Error info: <code><now${""}iki>
+${err.stack}</no${""}wiki></code>
 [[User:${user}/redwarnConfig.js|Open user redwarnConfig.js]]`);
                     },
 
@@ -1742,7 +1747,7 @@ ${err.stack}</nowiki></code>
      */
     "writeConfig": (noRedirect, callback) => { // CALLBACK ONLY IF NOREDIRECT IS TRUE.
         // Save rule database first
-        rw.rulesFunc.save(()=> {
+        rw.rulesFunc.save(() => {
             // Then
             let rwConfigTemplate = rw.config.templatePacks; // for restore
             // Handle templates (saved as b64 string)
@@ -1750,7 +1755,7 @@ ${err.stack}</nowiki></code>
             if (!noRedirect) rw.ui.loadDialog.show("Saving preferences...");
             // Write config to the users page and refresh
             let finalTxt = `
-/*<nowiki>
+/*<no${""}wiki>
 This is your RedWarn configuration file. It is recommended that you don't edit this yourself and use RedWarn preferences instead.
 It is writen in JSON formatting and is excecuted every time RedWarn loads.
 
@@ -1758,7 +1763,7 @@ If somebody has asked you to add code to this page, DO NOT do so as it may compr
 
 !!! Do not edit below this line unless you understand the risks! If rw.config isn't defined, this file will be reset. !!!
 */
-window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + "; //</nowiki>"; // generate config text
+window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + "; //</no${""}wiki>"; // generate config text
             $.post(rw.wikiAPI, {  // LOCALISATION ISSUE!!
                 "action": "edit",
                 "format": "json",
@@ -1945,17 +1950,17 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
         });
     },// End lastWarningLevel
 
-     /**
-     * Scans the past 50 revisions for warnings from this month for a user - WARNING: this is pretty CPU intensive - make sure you show a load dialog!
-     *
-     * @param {string} username
-     * @param {function} callback
-     * @method warningInfo
-     * @extends rw.info
-     */
-    "warningInfo": (username, callback)=>{
+    /**
+    * Scans the past 50 revisions for warnings from this month for a user - WARNING: this is pretty CPU intensive - make sure you show a load dialog!
+    *
+    * @param {string} username
+    * @param {function} callback
+    * @method warningInfo
+    * @extends rw.info
+    */
+    "warningInfo": (username, callback) => {
         // Get past 51 page revisions, we calculate a diff for 50 only
-        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:"+username+"&rvslots=*&rvprop=content|user|timestamp|size&formatversion=2&rvlimit=51&format=json", r=>{
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:" + username + "&rvslots=*&rvprop=content|user|timestamp|size&formatversion=2&rvlimit=51&format=json", r => {
             if (r.query.pages[0].missing) { // If page is missing, i.e it doesn't exist
                 callback([]); // nothing, no warnings recorded
                 return; // exit
@@ -1964,19 +1969,19 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
 
             let warningArray = []; // included in callback
             // Now for each revision
-            r.query.pages[0].revisions.forEach((edit, i)=>{
-                if (i==49 || i > r.query.pages[0].revisions.length - 2) return; // we can't process the 51st edit, so exit
-                const editSize = edit.size - r.query.pages[0].revisions[i+1].size; // size difference betweem this and the prev edit
+            r.query.pages[0].revisions.forEach((edit, i) => {
+                if (i == 49 || i > r.query.pages[0].revisions.length - 2) return; // we can't process the 51st edit, so exit
+                const editSize = edit.size - r.query.pages[0].revisions[i + 1].size; // size difference betweem this and the prev edit
                 if (editSize > 7500 || editSize < 0) return; // skip edits over 7.5KB, we can safely assume these aren't warnings are we don't wanna crash the browser, we also ignore removals
                 const editedBy = edit.user;
                 const editTimestamp = edit.timestamp;
                 const editContent = edit.slots.main.content;
 
                 // Find what was added in that edit by comparing last revision (index up)
-                let editChange = Diff.diffChars(r.query.pages[0].revisions[i+1].slots.main.content, editContent);
+                let editChange = Diff.diffChars(r.query.pages[0].revisions[i + 1].slots.main.content, editContent);
 
                 // Merge all addition changes into one string
-                const addedWikiText = (()=>{let result = ""; editChange.forEach(change=>{if (change.added===true) result+=change.value;}); return result;})();
+                const addedWikiText = (() => { let result = ""; editChange.forEach(change => { if (change.added === true) result += change.value; }); return result; })();
 
                 // Now locate warnings within those changes
 
@@ -1987,16 +1992,16 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                 // Note down the template
                 const warningTemplate = regexResult.pop(); // last in array = last warning name, we always favour the last one because warnings may have been restored
 
-                console.log("Located warning template uw-"+ warningTemplate);
+                console.log("Located warning template uw-" + warningTemplate);
 
                 let warningLevel = 6; // assume 6 = unknown here
-                let matchedRule = {"name": "Unknown - this warning doesn't seem to be in RedWarn's database", "template": "uw-"+ warningTemplate, "key": ""};
+                let matchedRule = { "name": "Unknown - this warning doesn't seem to be in RedWarn's database", "template": "uw-" + warningTemplate, "key": "" };
 
                 // Now locate within our rules
                 for (const ruleKey in rw.rules) {
                     if (rw.rules.hasOwnProperty.call(rw.rules, ruleKey)) {
                         const rule = rw.rules[ruleKey];
-                        if (("uw-"+ warningTemplate).includes(rule.template)) {
+                        if (("uw-" + warningTemplate).includes(rule.template)) {
                             // Find warning level and map
                             warningLevel = ({
                                 // handle nothing as a 0 reminder
@@ -2008,7 +2013,7 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                                 "3": 3,
                                 "4": 4,
                                 "4im": 5
-                            })[("uw-"+ warningTemplate).replace(rule.template, "")]; // select by rming template from the regexMatch
+                            })[("uw-" + warningTemplate).replace(rule.template, "")]; // select by rming template from the regexMatch
 
                             rule.key = ruleKey; // set key for dialog
                             matchedRule = rule;
@@ -5208,35 +5213,35 @@ rw.multiAct = { // Multi action screen
 // rw-source: quickTemplate.js
 rw.quickTemplate = { // Quick template UI and loader
 
-    "packStore" : [],
+    "packStore": [],
 
-    "packs" : ()=>{ // Get packs from config and default and merge to packstore
+    "packs": () => { // Get packs from config and default and merge to packstore
         if (rw.quickTemplate.packStore.length > 0) return rw.quickTemplate.packStore; // return if already set
 
         if (rw.config.templatePacks == null) { // if templates not set
             rw.config.templatePacks = []; // set to empty
-            rw.info.writeConfig(true, ()=>{}); // update config page
+            rw.info.writeConfig(true, () => { }); // update config page
         }
         rw.quickTemplate.packStore = rw.quickTemplate.packStore.concat(rw.config.templatePacks);
         return rw.quickTemplate.packStore; // return
     },
 
-    "packCodeToPageName" : packCode=>{ // Convert a pack code to it's real page name
+    "packCodeToPageName": packCode => { // Convert a pack code to it's real page name
         return "User:" + packCode.split("/")[0] + "/RedWarn_QuickTemplate_packInstall_" + packCode.split("/")[1] + ".js";
     },
 
 
-    "openSelectPack" : un=>{
+    "openSelectPack": un => {
         // Assemble buttons for each pack
         let finalBtnStr = "";
         rw.quickTemplate.packs().forEach((pack, i) => {
             if (pack.name == null) return; // skip "undefined by undefined"
             finalBtnStr += `
-            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="width:85%" onclick="window.parent.postMessage('selectPack\``+i+`', '*');">
-                `+ pack.name +` by `+ pack.createdBy +`
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="width:85%" onclick="window.parent.postMessage('selectPack\``+ i + `', '*');">
+                `+ pack.name + ` by ` + pack.createdBy + `
             </button>
             <!-- EDIT BUTTON -->
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect" style="width:5%" onclick="window.parent.postMessage('editPack\``+i+`', '*');">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect" style="width:5%" onclick="window.parent.postMessage('editPack\``+ i + `', '*');">
                 <i class="material-icons">create</i>
             </button>
             <br/><br/>
@@ -5244,15 +5249,15 @@ rw.quickTemplate = { // Quick template UI and loader
         });
 
         // Add toast handler
-        addMessageHandler("pushToast`*", m=>rw.visuals.toast.show(m.split('`')[1],false,false,4000));
+        addMessageHandler("pushToast`*", m => rw.visuals.toast.show(m.split('`')[1], false, false, 4000));
         // Add new pack handler
-        addMessageHandler("qTnewPack", ()=>rw.quickTemplate.newPack());
+        addMessageHandler("qTnewPack", () => rw.quickTemplate.newPack());
 
         // Show pack selection dialog
         dialogEngine.create(mdlContainers.generateContainer(eval(rw_includes["quickTemplateSelectPack.html"]), 500, 530)).showModal();
 
         // Pack Selected Handler
-        addMessageHandler("selectPack`*", cI=>{
+        addMessageHandler("selectPack`*", cI => {
             dialogEngine.closeDialog();
 
             let i = parseInt(cI.split("`")[1]); // get index from call
@@ -5260,7 +5265,7 @@ rw.quickTemplate = { // Quick template UI and loader
         });
 
         // Pack edit handler
-        addMessageHandler("editPack`*", cI=>{
+        addMessageHandler("editPack`*", cI => {
             dialogEngine.closeDialog();
 
             let i = parseInt(cI.split("`")[1]); // get index from call
@@ -5268,31 +5273,31 @@ rw.quickTemplate = { // Quick template UI and loader
         });
     },
 
-    "selectTemplate" : (un, i, editMode) => {
+    "selectTemplate": (un, i, editMode) => {
         if (editMode) un = "(edit mode)";
         let selectedPack = rw.quickTemplate.packs()[i];
 
         let finalSelectStr = "<hr />"; // final select string
-        selectedPack.templates.forEach((template,i)=>{
+        selectedPack.templates.forEach((template, i) => {
             finalSelectStr += `
-            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" style="width:100%;" for="template-`+ i +`">
-                <input type="radio" id="template-`+ i +`" class="mdl-radio__button" name="options" value="`+ i +`">
-                <span class="rw-qt-pack-label mdl-radio__label">`+ template.title +`</span>
+            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" style="width:100%;" for="template-`+ i + `">
+                <input type="radio" id="template-`+ i + `" class="mdl-radio__button" name="options" value="` + i + `">
+                <span class="rw-qt-pack-label mdl-radio__label">`+ template.title + `</span>
             </label><br>
-            <i>`+ template.about +`</i>
+            <i>`+ template.about + `</i>
             <hr />
             `;
         });
 
         // Add edit mode handlers
         if (editMode) {
-            addMessageHandler("qTdeletePack", ()=>{
+            addMessageHandler("qTdeletePack", () => {
                 // Confirm
                 rw.ui.confirmDialog(`
                 Are you sure you want to delete this pack?<br />
                 <b>Note:</b> This will only delete the pack from your account. If it is published, this won't unpublish it.
                 `,
-                    "YES, DELETE.", ()=>{
+                    "YES, DELETE.", () => {
                         dialogEngine.closeDialog(); // close prompt
                         rw.ui.loadDialog.show("Deleting...");
                         // Now remove at index
@@ -5300,7 +5305,7 @@ rw.quickTemplate = { // Quick template UI and loader
                         // Now refresh and save config
                         rw.info.writeConfig(); // save config, will also refresh
                     },
-                    "CANCEL", ()=>{
+                    "CANCEL", () => {
                         // On cancel just recall
                         dialogEngine.closeDialog();
                         rw.quickTemplate.selectTemplate(un, i, editMode); // reshow, then done!
@@ -5310,13 +5315,13 @@ rw.quickTemplate = { // Quick template UI and loader
 
             // Handle edit and new
 
-            addMessageHandler("qTNew`*", cI=>{ //create new template
+            addMessageHandler("qTNew`*", cI => { //create new template
                 dialogEngine.closeDialog();
 
                 // Set up vars
                 let nTitle = cI.split("`")[1];
                 let nAbout = cI.split("`")[2];
-                
+
                 // Add to our template array
                 rw.config.templatePacks[i].templates.push({
                     "title": nTitle,
@@ -5325,42 +5330,42 @@ rw.quickTemplate = { // Quick template UI and loader
                 });
                 // Clear and reload config
                 rw.ui.loadDialog.show("Creating...");
-                rw.info.writeConfig(true, ()=>{ // save config
+                rw.info.writeConfig(true, () => { // save config
                     rw.ui.loadDialog.close();
                     rw.quickTemplate.packStore = []; // clear out packs
-                    
+
                     // Refresh selected pack
                     selectedPack = rw.quickTemplate.packs()[i];
                     // Open editor
                     rw.quickTemplate.editTemplate(i, selectedPack.templates.length - 1); // w pack index and template index
-                }); 
+                });
             });
 
-            addMessageHandler("qTEdit`*", cI=>{
+            addMessageHandler("qTEdit`*", cI => {
                 // Open editor
                 rw.quickTemplate.editTemplate(i, cI.split("`")[1]); // w pack index and template index
             });
 
             // Publish
-            addMessageHandler("qTPublish", ()=>{
+            addMessageHandler("qTPublish", () => {
                 if (selectedPack.packCode == null) { // Pack isn't published
                     rw.ui.confirmDialog("This pack isn't published. If you'd like to let other editors use your pack, click 'Publish Now'",
-                    "PUBLISH NOW", ()=>{
-                        // Publish new template
-                        dialogEngine.closeDialog(); // close dialog
-                        rw.quickTemplate.publish(selectedPack, true, i); // true here denotes is new
-                    },
-                    "CANCEL", ()=>dialogEngine.closeDialog(), 18);
+                        "PUBLISH NOW", () => {
+                            // Publish new template
+                            dialogEngine.closeDialog(); // close dialog
+                            rw.quickTemplate.publish(selectedPack, true, i); // true here denotes is new
+                        },
+                        "CANCEL", () => dialogEngine.closeDialog(), 18);
 
                 } else {
                     // Pack is published
                     rw.ui.confirmDialog("This pack is published. If you'd like to update your pack for other editors, click 'Update Now'",
-                    "UPDATE NOW", ()=>{
-                        // Publish new template
-                        dialogEngine.closeDialog(); // close dialog
-                        rw.quickTemplate.publish(selectedPack); // just normal update
-                    },
-                    "CANCEL", ()=>dialogEngine.closeDialog(), 18);
+                        "UPDATE NOW", () => {
+                            // Publish new template
+                            dialogEngine.closeDialog(); // close dialog
+                            rw.quickTemplate.publish(selectedPack); // just normal update
+                        },
+                        "CANCEL", () => dialogEngine.closeDialog(), 18);
                 }
             });
         }
@@ -5371,13 +5376,13 @@ rw.quickTemplate = { // Quick template UI and loader
         dialogEngine.create(mdlContainers.generateContainer(eval(rw_includes["quickTemplateSelectTemplate.html"]), 500, 530)).showModal();
 
         // Continue Handler (not called in edit mode)
-        addMessageHandler("qTNext`*", cI2=>{
+        addMessageHandler("qTNext`*", cI2 => {
             let i2 = parseInt(cI2.split("`")[1]); // i from above frame
             rw.quickTemplate.applyTemplate(selectedPack, i2, un); // open apply template screen
         });
     },
 
-    "applyTemplate" : (selectedPack, i2, unI) => {
+    "applyTemplate": (selectedPack, i2, unI) => {
         let selectedTemplate = selectedPack.templates[i2];
         let contentStr = selectedTemplate.content;
         let un = rw.info.targetUsername(unI);
@@ -5386,18 +5391,19 @@ rw.quickTemplate = { // Quick template UI and loader
 
 
         // Add dialog handlers for preview
-        addMessageHandler("generatePreview`*", m=>{
-            rw.info.parseWikitext(m.split("`")[1], parsed=>{ // Split to Wikitext and send over to the API to be handled
+        addMessageHandler("generatePreview`*", m => {
+            rw.info.parseWikitext(m.split("`")[1], parsed => { // Split to Wikitext and send over to the API to be handled
                 dialogEngine.dialog.getElementsByTagName("iframe")[0].contentWindow.postMessage({
                     "action": "parseWikiTxt",
-                    "result": parsed}, '*'); // push to container for handling in dialog and add https:// to stop image breaking
+                    "result": parsed
+                }, '*'); // push to container for handling in dialog and add https:// to stop image breaking
             });
         });
 
         // Add handlers for submit
-        addMessageHandler("qtDone`*", eD=> {
+        addMessageHandler("qtDone`*", eD => {
             let wikiTxtToAdd = atob(eD.split("`")[1]); // params
-            
+
             // MAKE EDIT
             rw.info.addWikiTextToUserPage(rw.info.targetUsername(un), wikiTxtToAdd, addUnderDate, "[[w:en:Wikipedia:RedWarn/QTPACKS|" + selectedPack.name + " - " + selectedTemplate.title + "]]");
         });
@@ -5405,9 +5411,9 @@ rw.quickTemplate = { // Quick template UI and loader
         // Now generate text input code - SYNTAX {{RWTEXT|Label|ID}}
         let finalAdditionalInputs = ``;
         // NORMAL TEXT INPUT
-        (m=>{
+        (m => {
             if (m != null) { // to stop errors
-                m.forEach(match=>{ // for each match to regex
+                m.forEach(match => { // for each match to regex
                     let v = match.split("|"); // split at pipe for varibles
                     let label = v[1]; // strip label
                     let id = v[2].split("}")[0]; // strip ID
@@ -5421,46 +5427,46 @@ rw.quickTemplate = { // Quick template UI and loader
                 });
             }
         })(selectedTemplate.content.match(/{{RWTEXT\|[^}}]*\|[^{{]*?}}/g)); // regex here for above function
-        
+
         // Finally, show final submit dialog
         dialogEngine.create(mdlContainers.generateContainer(eval(rw_includes["quickTemplateSubmit.html"]), 500, 580)).showModal();
     },
 
-    "newPack" : ()=> {
+    "newPack": () => {
         // Creates a new pack and saves to config
         // Add toast handler
-        addMessageHandler("pushToast`*", m=>rw.visuals.toast.show(m.split('`')[1],false,false,4000));
+        addMessageHandler("pushToast`*", m => rw.visuals.toast.show(m.split('`')[1], false, false, 4000));
 
-        addMessageHandler("qTcreateNew`*", cI=>{
+        addMessageHandler("qTcreateNew`*", cI => {
             // Handle calls the create new pack
             let packName = cI.split("`")[1];
             rw.config.templatePacks.push(
                 {
-                    "name" : packName,
+                    "name": packName,
                     "createdBy": rw.info.getUsername(),
-                    "templates" : []
+                    "templates": []
                 }
             ); // add to config
             rw.ui.loadDialog.show("Creating...");
-            rw.info.writeConfig(true, ()=>{ // save config
+            rw.info.writeConfig(true, () => { // save config
                 rw.ui.loadDialog.close();
                 rw.quickTemplate.packStore = []; // clear out packs
 
                 // Refresh packs and open selection screen in edit mode
-                rw.quickTemplate.selectTemplate("",rw.quickTemplate.packs().length - 1, true); // true here distingishes edit mode
+                rw.quickTemplate.selectTemplate("", rw.quickTemplate.packs().length - 1, true); // true here distingishes edit mode
             });
-            
+
         });
 
         // Finally, show the dialog
         dialogEngine.create(mdlContainers.generateContainer(eval(rw_includes["quickTemplateNewPack.html"]), 500, 200)).showModal();
     },
 
-    "editTemplate" : (selectedPackI, selectedTemplateI)=>{
+    "editTemplate": (selectedPackI, selectedTemplateI) => {
         // Used to edit template
         let selectedPack = rw.quickTemplate.packs()[selectedPackI];
         let selectedTemplate = selectedPack.templates[selectedTemplateI];
-        let saveHandler = (b64data, callback)=>{ // Save Data handler
+        let saveHandler = (b64data, callback) => { // Save Data handler
             // Set vars
             let title = atob(b64data.split("`")[1]);
             let about = atob(b64data.split("`")[2]);
@@ -5472,33 +5478,33 @@ rw.quickTemplate = { // Quick template UI and loader
             };
             // Clear and reload config
             rw.ui.loadDialog.show("Saving...");
-            rw.info.writeConfig(true, ()=>{ // save config
+            rw.info.writeConfig(true, () => { // save config
                 rw.ui.loadDialog.close();
                 rw.quickTemplate.packStore = []; // clear out packs
-                
+
                 // Refresh selected pack
                 selectedPack = rw.quickTemplate.packs()[selectedPackI];
-                
+
                 // Refresh selected template
                 selectedTemplate = selectedPack.templates[selectedTemplateI];
 
                 if (callback != null) callback(); // send callback if set
-            }); 
+            });
         };
 
         // Save changes handler
-        addMessageHandler("qTSave`*", cI=>{
+        addMessageHandler("qTSave`*", cI => {
             saveHandler(cI);
         });
 
         // Close Editor Handler
-        addMessageHandler("qTClose`*", cI=>{
-            saveHandler(cI, ()=>dialogEngine.closeDialog());
+        addMessageHandler("qTClose`*", cI => {
+            saveHandler(cI, () => dialogEngine.closeDialog());
         });
 
         // Test Handler
-        addMessageHandler("qTTest`*", cI=>{
-            saveHandler(cI, ()=> {
+        addMessageHandler("qTTest`*", cI => {
+            saveHandler(cI, () => {
                 // Open normal apply window with sandbox target
                 rw.quickTemplate.applyTemplate(selectedPack, selectedTemplateI, "Sandbox for user warnings");
             });
@@ -5508,10 +5514,10 @@ rw.quickTemplate = { // Quick template UI and loader
         dialogEngine.create(mdlContainers.generateContainer(eval(rw_includes["quickTemplateEditTemplate.html"]), 500, 550)).showModal();
     },
 
-    "publish" : (selectedPack, isNew, selectedPackI)=> { // makes a listing on the WP:REDWARN/QTPACKS page if isnew is set to true
+    "publish": (selectedPack, isNew, selectedPackI) => { // makes a listing on the WP:REDWARN/QTPACKS page if isnew is set to true
         // Publish new pack
         rw.ui.loadDialog.show("Publishing...");
- 
+
         let packCode = selectedPack.packCode; // get packcode from selected pack
         if (packCode == null) packCode = rw.info.getUsername() + "/" + rw.makeID(10); // Generate a new pack code if not already published
 
@@ -5519,7 +5525,7 @@ rw.quickTemplate = { // Quick template UI and loader
 
         // Now, generate script that installs this pack
         let packInstallScript = `
-/* <nowiki>
+/* <no${""}wiki>
 +------------------------------------+
 |  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  |
 |  Generated automatically.          |
@@ -5536,14 +5542,14 @@ rw.config.templatePacks.push(packSource); // Push into config
 rw.info.writeConfig(true, ()=>{ // save config
     rw.ui.loadDialog.close();
     rw.quickTemplate.packStore = []; // clear out packs
-    
+
     // Show success dialog
     rw.ui.confirmDialog(
     "Pack installed!",
     "RELOAD PAGE", ()=>window.location.reload(),
     "", ()=>{}, 0);
-}); 
-// </nowiki>
+});
+// </no${""}wiki>
         `;
 
         // Script generated, let's continue
@@ -5551,11 +5557,11 @@ rw.info.writeConfig(true, ()=>{ // save config
         $.post(rw.wikiAPI, {
             "action": "edit",
             "format": "json",
-            "token" : mw.user.tokens.get("csrfToken"),
-            "title" : packPage,
-            "summary" : "Publish Autogenerated QTPack Install [[w:en:Wikipedia:RedWarn|(RedWarn "+ rw.version +")]]", // summary sign here
+            "token": mw.user.tokens.get("csrfToken"),
+            "title": packPage,
+            "summary": "Publish Autogenerated QTPack Install [[w:en:Wikipedia:RedWarn|(RedWarn " + rw.version + ")]]", // summary sign here
             "text": packInstallScript,
-            "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
+            "tags": ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
         }).done(dt => {
             // We done. Check for errors, then callback appropriately
             if (!dt.edit) {
@@ -5564,32 +5570,32 @@ rw.info.writeConfig(true, ()=>{ // save config
                 rw.ui.loadDialog.close();
                 rw.visuals.toast.show("Sorry, there was an error. See the console for more info. Your pack has not been published.");
             } else {
-                // Success! 
+                // Success!
                 if (!isNew) { // if not a new pack, show update done screen and exit
                     rw.loadDialog.close();
-                    rw.ui.confirmDialog("Pack updated successfully!", "DONE", ()=>dialogEngine.closeDialog() , "", ()=>{}, 0);
+                    rw.ui.confirmDialog("Pack updated successfully!", "DONE", () => dialogEngine.closeDialog(), "", () => { }, 0);
                     return;
-                } 
-                
+                }
+
                 // CONINUES ONLY IF NEW
                 // Now make change to config in our preferences re new change
                 rw.config.templatePacks[selectedPackI].packCode = packCode; // add packcode to template config
-                rw.info.writeConfig(true, ()=>{ // save config
+                rw.info.writeConfig(true, () => { // save config
                     rw.quickTemplate.packStore = []; // clear out packs
                     // Now add to QTPacks page
                     $.post(rw.wikiAPI, {
                         "action": "edit",
                         "format": "json",
-                        "token" : mw.user.tokens.get("csrfToken"),
-                        "title" : "Wikipedia:RedWarn/Documentation/Quick_Template/templates",
-                        "summary" : "Publish new pack [[w:en:Wikipedia:RedWarn|(RedWarn "+ rw.version +")]]", // summary sign here
+                        "token": mw.user.tokens.get("csrfToken"),
+                        "title": "Wikipedia:RedWarn/Documentation/Quick_Template/templates",
+                        "summary": "Publish new pack [[w:en:Wikipedia:RedWarn|(RedWarn " + rw.version + ")]]", // summary sign here
                         "appendtext": // Add our section wikitxt here
-                        `
+                            `
 === ${selectedPack.name} - by ${selectedPack.createdBy} ===
 ''No additional info provided - pack owner, please edit this section and add additional info here or your pack may be removed.''
 ==== Pack Code ====
-<code>${packCode}</code>` ,
-"tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
+<code>${packCode}</code>`,
+                        "tags": ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
                     }).done(dt2 => {
                         if (!dt.edit) {
                             // Error occured or other issue
@@ -5601,7 +5607,7 @@ rw.info.writeConfig(true, ()=>{ // save config
                             redirect("https://en.wikipedia.org/wiki/WP:REDWARN/QTPACKS"); // No rw.wikiBase due to lack of page there
                         }
                     });
-                }); 
+                });
             }
         });
     }

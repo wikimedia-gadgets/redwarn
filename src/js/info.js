@@ -253,7 +253,7 @@ If somebody has asked you to add code to this page, DO NOT do so as it may compr
 
 !!! Do not edit below this line unless you understand the risks! If rw.config isn't defined, this file will be reset. !!!
 */
-window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + "; //</no${""}wiki>"; // generate config text
+window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + "; //</no" + "wiki>"; // generate config text
             $.post(rw.wikiAPI, {  // LOCALISATION ISSUE!!
                 "action": "edit",
                 "format": "json",

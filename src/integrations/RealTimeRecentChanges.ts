@@ -2,7 +2,7 @@ import { Page, Revision, Rollback, User } from "rww/mediawiki";
 import { RollbackContext } from "rww/definitions/RollbackContext";
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 
-export default class RTRC {
+export default class RealTimeRecentChanges {
     private static onRTRC: boolean;
     static init(): void {
         this.onRTRC =

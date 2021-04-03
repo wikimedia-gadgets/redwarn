@@ -15,7 +15,7 @@ import { RWUIToast } from "./elements/RWUIToast";
 /**
  * Redirect class for easy access. UI elements of RedWarn are also created here.
  */
-export default class RWUI {
+export default class RedWarnUI {
     /** Alias of {@link StyleManager.activeStyle.classMap.rwAlertDialog} */
     static get Dialog(): typeof RWUIAlertDialog {
         return StyleManager.activeStyle.classMap.rwAlertDialog;

@@ -5,7 +5,7 @@ import {
     RW_WIKIS_TAGGABLE,
 } from "rww/data/RedWarnConstants";
 import RedWarnStore from "rww/data/RedWarnStore";
-import RWUI from "rww/ui/RWUI";
+import RedWarnUI from "rww/ui/RedWarnUI";
 import redirect from "rww/util/redirect";
 import {
     ClientUser,
@@ -53,7 +53,7 @@ export class Rollback {
      * @param targetRevision The target revision.
      */
     static async promptRestoreReason(targetRevision: Revision): Promise<void> {
-        const dialog = new RWUI.InputDialog(i18next.t("ui:restore"));
+        const dialog = new RedWarnUI.InputDialog(i18next.t("ui:restore"));
         const reason = await dialog.show();
         if (reason !== null) {
             Rollback.restore(targetRevision, reason);
@@ -91,7 +91,7 @@ export class Rollback {
 
         if (!result.edit) {
             Log.error(result);
-            RWUI.Toast.quickShow({
+            RedWarnUI.Toast.quickShow({
                 content: i18next.t("ui:toasts.pleaseWait"),
             });
             return false;
@@ -160,7 +160,7 @@ export class Rollback {
                     )
                 );
             else
-                RWUI.Toast.quickShow({
+                RedWarnUI.Toast.quickShow({
                     content: i18next.t("ui:toasts.newerRev"),
                 });
         } else return latestRevision;
@@ -207,7 +207,7 @@ export class Rollback {
         defaultReason: string
     ): Promise<void> {
         await Rollback.redirectIfNotLatest(context.targetRevision);
-        const dialog = new RWUI.InputDialog({
+        const dialog = new RedWarnUI.InputDialog({
             width: "40vw",
             ...i18next.t("ui:rollback"),
             defaultText: defaultReason,
@@ -255,7 +255,7 @@ export class Rollback {
             $("#rwCurrentRevRollbackBtns").show();
             $("#rwRollbackInProgress").hide();
 
-            RWUI.Toast.quickShow({
+            RedWarnUI.Toast.quickShow({
                 content: i18next.t("ui:toasts.rollbackError"),
             });
         } else {
@@ -300,7 +300,7 @@ export class Rollback {
             // Show rollback options again
             $("#rwCurrentRevRollbackBtns").show();
             $("#rwRollbackInProgress").hide();
-            RWUI.Toast.quickShow({
+            RedWarnUI.Toast.quickShow({
                 content: i18next.t("ui:toasts.rollbackError"),
             });
         }
@@ -352,7 +352,7 @@ export class Rollback {
                     Log.error(
                         `RollbackMethod is invalid (${Configuration.rollbackMethod.value}), resetting`
                     );
-                    const dialog = new RWUI.Dialog({
+                    const dialog = new RedWarnUI.Dialog({
                         actions: [
                             {
                                 data: "rollback",

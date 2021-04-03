@@ -1,5 +1,5 @@
 import { Warnings } from "rww/mediawiki/Warnings";
-import RWUI from "rww/ui/RWUI";
+import RedWarnUI from "rww/ui/RedWarnUI";
 import { RollbackContext } from "./RollbackContext";
 import { Rollback } from "rww/mediawiki";
 
@@ -110,7 +110,7 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "more_vert",
         actionType: "function",
         action: (rollbackContext: RollbackContext) => () =>
-            RWUI.openExtendedOptionsDialog({ rollbackContext }), // Callback
+            RedWarnUI.openExtendedOptionsDialog({ rollbackContext }), // Callback
     },
 
     // END DEFAULT ENABLED ICONS

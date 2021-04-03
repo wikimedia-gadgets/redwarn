@@ -6,7 +6,7 @@ import MaterialTextInput, {
 } from "rww/styles/material/ui/components/MaterialTextInput";
 import { MaterialWarnDialogChildProps } from "rww/styles/material/ui/MaterialWarnDialog";
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
-import RWUI from "rww/ui/RWUI";
+import RedWarnUI from "rww/ui/RedWarnUI";
 import i18next from "i18next";
 import Bullet from "./Bullet";
 import {
@@ -182,7 +182,7 @@ function MaterialWarnDialogUserCard({
                             ? {
                                   onClick: () => {
                                       // TODO AIV thing
-                                      new RWUI.Toast({
+                                      new RedWarnUI.Toast({
                                           content: "Under construction.",
                                       }).show();
                                   },
@@ -332,7 +332,7 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                             onClick={() => {
                                 if (!this.updating) this.updateUser(this.user);
                                 else
-                                    new RWUI.Toast({
+                                    new RedWarnUI.Toast({
                                         content: i18next.t(
                                             "ui:warn.user.load_wait"
                                         ),

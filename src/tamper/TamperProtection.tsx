@@ -2,7 +2,7 @@ import { h } from "tsx-dom";
 import i18next from "i18next";
 import { Configuration } from "rww/config";
 import { ClientUser } from "rww/mediawiki";
-import RWUI from "rww/ui/RWUI";
+import RedWarnUI from "rww/ui/RedWarnUI";
 
 /**
  * Tamper protection module.
@@ -38,7 +38,7 @@ export default class TamperProtection {
     static async exec(): Promise<void> {
         const content = [<span />];
         content[0].innerHTML = i18next.t("ui:tamperProtection.warningContent");
-        const d = new RWUI.Dialog({
+        const d = new RedWarnUI.Dialog({
             actions: [],
             content,
             title: i18next.t("ui:tamperProtection.header"),

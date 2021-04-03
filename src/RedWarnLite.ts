@@ -13,11 +13,11 @@
 import i18next from "i18next";
 import RedWarnStore from "./data/RedWarnStore";
 import RedWarnHooks from "./event/RedWarnHooks";
-import RTRC from "./integrations/RTRC";
+import RealTimeRecentChanges from "./integrations/RealTimeRecentChanges";
 import Localization from "./localization/Localization";
 import StyleManager from "./styles/StyleManager";
 import Dependencies from "./data/Dependencies";
-import RWUI from "./ui/RWUI";
+import RedWarnUI from "./ui/RedWarnUI";
 import MediaWiki, {
     ClientUser,
     MediaWikiAPI,
@@ -105,7 +105,7 @@ $(document).ready(async () => {
 
     // Non-blocking initializers.
     (() => {
-        RTRC.init();
+        RealTimeRecentChanges.init();
         TamperProtection.init();
 
         // Call RevertSpeedup last.
@@ -159,11 +159,11 @@ export default class RedWarn {
     static get StyleManager(): typeof StyleManager {
         return StyleManager;
     }
-    static get RWUI(): typeof RWUI {
-        return RWUI;
+    static get RWUI(): typeof RedWarnUI {
+        return RedWarnUI;
     }
-    static get RTRC(): typeof RTRC {
-        return RTRC;
+    static get RTRC(): typeof RealTimeRecentChanges {
+        return RealTimeRecentChanges;
     }
     static get Util(): typeof Util {
         return Util;

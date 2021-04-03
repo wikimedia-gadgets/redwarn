@@ -1,5 +1,5 @@
 import { Page } from "rww/mediawiki";
-import RWUI from "rww/ui/RWUI";
+import RedWarnUI from "rww/ui/RedWarnUI";
 import { RWUIIFrameDialogProps } from "rww/ui/elements/RWUIDialog";
 import { url } from "rww/util";
 
@@ -31,5 +31,5 @@ export default function (
         else frameOptions.customStyle = [frameOptions.customStyle, plainCSS];
     } else frameOptions.customStyle = plainCSS;
 
-    return new RWUI.IFrameDialog(frameOptions).show();
+    return new RedWarnUI.IFrameDialog(frameOptions).show();
 }

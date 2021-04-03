@@ -9,7 +9,7 @@ import { ClientUser } from "rww/mediawiki";
 import { Setting } from "./Setting";
 import { RollbackMethod } from "./ConfigurationEnums";
 import { updateConfiguration } from "./ConfigurationUpdate";
-import RWUI from "rww/ui/RWUI";
+import RedWarnUI from "rww/ui/RedWarnUI";
 import i18next from "i18next";
 import StyleManager from "rww/styles/StyleManager";
 import { RedWarnStyleMissingError } from "rww/errors/RedWarnStyleError";
@@ -62,7 +62,9 @@ export class Configuration {
             // Fallback style
             StyleManager.setStyle(StyleManager.defaultStyle);
             // Show error message
-            const dialog = new RWUI.Dialog(i18next.t("ui:configErrorDialog"));
+            const dialog = new RedWarnUI.Dialog(
+                i18next.t("ui:configErrorDialog")
+            );
             dialog.show();
             // Reset configuration
             redwarnConfig = {};
@@ -89,7 +91,7 @@ export class Configuration {
         } catch (e) {
             if (e instanceof RedWarnStyleMissingError) {
                 StyleManager.setStyle(StyleManager.defaultStyle);
-                const dialog = new RWUI.Dialog(
+                const dialog = new RedWarnUI.Dialog(
                     i18next.t("ui:styleError.missing")
                 );
                 dialog.show();

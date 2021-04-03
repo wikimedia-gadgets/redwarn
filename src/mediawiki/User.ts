@@ -3,7 +3,7 @@ import {
     RW_WELCOME,
     RW_WELCOME_ANON,
 } from "rww/data/RedWarnConstants";
-import RWUI from "rww/ui/RWUI";
+import RedWarnUI from "rww/ui/RedWarnUI";
 import getMonthHeader from "rww/util/getMonthHeader";
 import regexEscape from "rww/util/regexEscape";
 import {
@@ -203,7 +203,7 @@ export class User {
             `${this.username}`.toLowerCase() == "null" ||
             `${this.username}`.toLowerCase() == "undefined"
         ) {
-            RWUI.Toast.quickShow({
+            RedWarnUI.Toast.quickShow({
                 content: i18next.t("ui:toasts.userUndefined"),
             });
             return;
@@ -227,7 +227,7 @@ export class User {
         if (blacklist) {
             if (revisionWikitext.includes(blacklist.target)) {
                 // Don't continue and show toast
-                RWUI.Toast.quickShow({
+                RedWarnUI.Toast.quickShow({
                     content: blacklist.message,
                 });
                 return;

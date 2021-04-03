@@ -72,6 +72,7 @@ deploy_wp:
     dependencies: 
         - "build_redwarn"
     stage: deploy
+    when: manual
     script:
         - echo Automatic deployment has not been implemented.
     # Obviously, we should only update RedWarn on Wikipedia

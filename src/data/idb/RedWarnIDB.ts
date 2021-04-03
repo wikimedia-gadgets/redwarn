@@ -92,11 +92,11 @@ export default class RedWarnIDB {
      * This is used for operations which involve lots of writing. This avoids
      * having to create more transactions that needed.
      */
-    async runTransaction<T>(
+    async runTransaction(
         store: string | string[],
         mode: IDBTransactionMode,
         callback: (transaction: IDBTransaction) => void | Promise<void>
-    ): Promise<T> {
+    ): Promise<void> {
         return new Promise(async (resolve, reject) => {
             const transaction = await this.transaction(store, mode);
             await callback(transaction);

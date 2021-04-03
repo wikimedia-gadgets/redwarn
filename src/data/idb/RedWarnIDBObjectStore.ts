@@ -11,10 +11,10 @@ type IDBStoreKeyType =
 export default class RedWarnIDBObjectStore<T> {
     constructor(private database: RedWarnIDB, private storeName: string) {}
 
-    async runTransaction<T>(
+    async runTransaction(
         mode: IDBTransactionMode,
         callback: (transaction: IDBTransaction) => void | Promise<void>
-    ): Promise<T> {
+    ): Promise<void> {
         return this.database.runTransaction(this.storeName, mode, callback);
     }
 

@@ -710,7 +710,7 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
                 // Let's continue
                 // We don't need to do anything special. Just shove our report at the bottom of the page, although, may be advisiable to change this if ARV format changes
                 let textToAdd = "*" + (targetIsIP ? "{{IPvandal|" : "{{vandal|") + target + "}} " + reportContent; // DANGER! WIKITEXT (here is fine. be careful w changes.) - if target IP give correct template, else normal
-                let finalTxt = revisionWikitext + "\n\n" + textToAdd; // compile final string
+                let finalTxt = revisionWikitext + "\n" + textToAdd + "\n"; // compile final string
                 // Now we just submit
                 $.post(rw.wikiAPI, {
                     "action": "edit",
@@ -883,7 +883,7 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
                 // Let's continue
                 // We don't need to do anything special. Just shove our report at the bottom of the page, although, may be advisiable to change this if ARV format changes
                 let textToAdd = "*" + "{{user-uaa|1=" + target + "}} &ndash; " + reportContent; // DANGER! WIKITEXT (here is fine. be careful w changes.) - if target IP give correct template, else normal
-                let finalTxt = revisionWikitext + "\n\n" + textToAdd; // compile final string
+                let finalTxt = revisionWikitext + "\n" + textToAdd + "\n"; // compile final string
                 // Now we just submit
                 $.post(rw.wikiAPI, {
                     "action": "edit",

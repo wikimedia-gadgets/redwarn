@@ -89,7 +89,7 @@ var rw = {
      * @method sharedIPadvice
      * @extends rw
      */
-    "sharedIPadvice": () => { return atob("XG46e3tzdWJzdDpTaGFyZWQgSVAgYWR2aWNlfX0="); }, // if this is a shared...
+    "sharedIPadvice": () => { return atob("XG57e3N1YnN0OlNoYXJlZCBJUCBhZHZpY2V9fQ=="); }, // if this is a shared...
 
     // Wiki automated config
 

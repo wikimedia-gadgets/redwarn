@@ -9,7 +9,7 @@
     </div>
 </form>
 <span style="float:right;">
-    <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="closed=true;clearInterval(autoAcceptTimerCount);window.parent.postMessage('closeDialog', '*');">
+    <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="closed=true;clearInterval(autoAcceptTimerTick);window.parent.postMessage('closeDialog', '*');">
         CANCEL
     </button>
     <button id="submitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="pushReview();">
@@ -54,7 +54,7 @@
 
         // Cancel on key press or click
         (_=>{$(document).keydown(_);$(document).click(_);})(()=>{
-            clearInterval(autoAcceptTimerCount);
+            clearInterval(autoAcceptTimerTick);
             $("#submitBtn").text("SUBMIT REVIEW");
             autoAcceptStop = true;
         });

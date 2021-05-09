@@ -147,10 +147,19 @@ function MaterialWarnDialogReasonLevel({
                         const comments = WarningLevelComments[level];
                         radios.push({
                             value: level,
-                            // TODO i18n
-                            tooltip: `This template does not have a level ${level} (${
-                                comments.summary ?? WarningLevel[level]
-                            }) template.`,
+                            /*
+                            Sample text: This template does not have a level x blah template.
+                            */
+                            tooltip: i18next.t(
+                                "ui:warn:reason:levelSelectionLevelNotPresent",
+                                {
+                                    level,
+                                    // Lowercase so it makes grammatical sense
+                                    levelReadable: (
+                                        comments.summary ?? WarningLevel[level]
+                                    ).toLocaleLowerCase(),
+                                }
+                            ),
                             disabled: true,
                             children: (
                                 <MaterialIcon

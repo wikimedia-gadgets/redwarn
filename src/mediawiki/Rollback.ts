@@ -92,7 +92,7 @@ export class Rollback {
         if (!result.edit) {
             Log.error(result);
             RedWarnUI.Toast.quickShow({
-                content: i18next.t("ui:toasts.pleaseWait"), // i.e. ""
+                content: i18next.t("ui:toasts.pleaseWait"), // i.e. "Please wait..."
             });
             return false;
         }

@@ -14,7 +14,7 @@
         }
     },
     "okCancel": {
-        "ok": "OK",
+        "ok": "Okay",
         "cancel": "Cancel"
     },
     "toasts": {
@@ -67,21 +67,23 @@
 
         "reason": {
             "page": "Related page",
-            "additionalText": "Additional text"
+            "additionalText": "Additional text",
+            "levelSelectionLevelNotPresent": "There is no level {{level}} {{levelReadable}} template available.",
+            "levelSelectionLevel": "Level {{level}} {{levelReadable}}: {{levelDescription}}"
         },
 
-        "ok": "Warn"
+        "ok": "Warn User"
     },
     "close": "Close",
     "configErrorDialog": {
         "title": "Configuration Error",
-        "content": "Your RedWarn config was invalid and was reset to the default.",
+        "content": "Your RedWarn configuration could not be loaded correctly and has been reset. If this issue persists, please contact the RedWarn team.",
         "actions": [{ "data": "$t(ui:okCancel.ok)" }]
     },
     "styleError": {
         "missing": {
             "title": "Style Missing",
-            "content": "The style in your configuration cannot be found. It has been set to the default style for now.",
+            "content": "The style set in your RedWarn configuration cannot be found. It has been set to the default style for now.",
             "actions": [{ "data": "$t(ui:okCancel.ok)" }]
         }
     },

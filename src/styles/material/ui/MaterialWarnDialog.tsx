@@ -1,32 +1,60 @@
-import "../css/warnDialog.css";
+/**
+ * Warn User dialog
+ * See also:
+ * css/warnDialog.css
+ * MaterialWarnDialogReason.tsx
+ * ./src/ui/elements/RWUIDialog
+ */
 
+import "../css/warnDialog.css"; // Specific themes for this dialog
+
+// TSX
 import { h } from "tsx-dom";
+
+// Standard dialog components
 import {
     RWUIWarnDialog,
     RWUIWarnDialogResult,
 } from "rww/ui/elements/RWUIDialog";
+
+// To actually create this dialog
 import {
     registerMaterialDialog,
     upgradeMaterialDialog,
 } from "rww/styles/material/Material";
+
+// Material UI stuff
 import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
+
 import MaterialButton from "./components/MaterialButton";
+
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
     MaterialDialogTitle,
 } from "./MaterialDialog";
+
 import MaterialWarnDialogUser, {
     MaterialWarnDialogUserController,
 } from "./components/MaterialWarnDialogUser";
+
+// Localisation
 import i18next from "i18next";
+
+// Warning reasons list
 import MaterialWarnDialogReason, {
     MaterialWarnDialogReasonController,
 } from "rww/styles/material/ui/components/MaterialWarnDialogReason";
-import { ClientUser, MediaWikiAPI, User, WarningType } from "rww/mediawiki";
-import { normalize, warningSuffix } from "rww/util";
-import { RW_SIGNATURE } from "rww/data/RedWarnConstants";
 
+// MediaWiki hooks
+import { ClientUser, MediaWikiAPI, User, WarningType } from "rww/mediawiki";
+
+// RWW Utilities
+import { normalize, warningSuffix } from "rww/util";
+
+import { RW_SIGNATURE } from "rww/data/RedWarnConstants"; // typically "~~~~"
+
+// Actual code
 export default class MaterialWarnDialog extends RWUIWarnDialog {
     user: User;
 
@@ -77,6 +105,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
 
     private lastUpdateCall: number;
     async updatePreview(): Promise<void> {
+        // Makes a request to update the preview section
         if (Date.now() - this.lastUpdateCall < 1000) return;
 
         this.lastUpdateCall = Date.now();
@@ -99,6 +128,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         });
 
         if (+this.mwdXray.getAttribute("data-last-update") > requestTime) {
+            // if it takes too long skip
             return; // Give up. We're late.
         }
 
@@ -107,7 +137,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         ).innerHTML =
             parseRequest?.["parse"]?.["text"]?.["*"] ??
             parseRequest?.["parse"]?.["text"] ??
-            "<b>Parsing failed.</b>";
+            "<b>Sorry, we couldn't decode this WikiText. Check it for syntax errors and try again.</b>"; // if the top two options fail, show this error message - needs localisation!
 
         this.mwdXray.querySelectorAll("a").forEach((anchor) => {
             anchor.target = "_blank";
@@ -118,6 +148,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
     }
 
     validate(): true | string {
+        // Validates the content of a warning dialog - needs localisation!
         if (this.mwdReason?.MWDReason?.warning == null)
             return "No warning template selected.";
         if (this.mwdReason?.MWDReason?.warningLevel == null)
@@ -129,6 +160,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
     }
 
     show(): Promise<RWUIWarnDialogResult> {
+        // open the dialog
         const styleStorage = getMaterialStorage();
         registerMaterialDialog(this);
         const dialog = upgradeMaterialDialog(
@@ -172,6 +204,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
     }
 
     render(): HTMLDialogElement {
+        // ACTUAL UI APPEARENCE CODE STARS HERE - needs localisation
         this.element = (
             <MaterialDialog
                 surfaceProperties={{

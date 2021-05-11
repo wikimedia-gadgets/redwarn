@@ -31,6 +31,7 @@ import RedWarnStore from "rww/data/RedWarnStore";
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
 import { regexEscape } from "rww/util";
 import { MDCDialog } from "@material/dialog";
+import i18next from "i18next";
 
 interface MaterialWarnSearchDialogProperties extends RWUIDialogProperties {
     selectedWarning?: Warning;
@@ -263,11 +264,17 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
 
         const oldActions = this.actions;
 
+        // Tip for the dialog
         oldActions.parentElement.replaceChild(
             (this.actions = (
                 <MaterialDialogActions>
                     <div class={"rw-mdc-dialog-helperText rw-mdc-subtitle"}>
-                        Tip: Double-click a warning to immediately select it.
+                        {
+                            /* Tip string, sample text: Tip: Double click... */
+                            i18next
+                                .t("ui:warn:templateSearchDialog:tip")
+                                .toString()
+                        }
                     </div>
                     {this.renderActions()}
                 </MaterialDialogActions>
@@ -346,8 +353,12 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
                                     "rw-mdc-dialog-helperText rw-mdc-subtitle"
                                 }
                             >
-                                Tip: Double-click a warning to immediately
-                                select it.
+                                {
+                                    /* Tip string, sample text: Tip: Double click... */
+                                    i18next
+                                        .t("ui:warn:templateSearchDialog:tip")
+                                        .toString()
+                                }
                             </div>
                             {this.renderActions()}
                         </MaterialDialogActions>

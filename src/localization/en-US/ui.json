@@ -69,7 +69,11 @@
             "page": "Related page",
             "additionalText": "Additional text",
             "levelSelectionLevelNotPresent": "There is no level {{level}} {{levelReadable}} template available.",
-            "levelSelectionLevel": "Level {{level}} {{levelReadable}}: {{levelDescription}}"
+            "levelSelectionLevel": "Levelt {{level}} {{levelReadable}}: {{levelDescription}}"
+        },
+
+        "templateSearchDialog" : {
+            "tip" : "Tip: Double-click a warning to immediately select it. You can also start typing from the reasons selector."
         },
 
         "ok": "Warn User"

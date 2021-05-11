@@ -124,27 +124,39 @@ function MaterialWarnDialogReasonLevel({
     if (parent.warning != null) {
         switch (parent.warning.type) {
             case WarningType.Tiered: {
+                // The vast majority of templates that aren't single use are handled here
                 const radios: MaterialRadioProps<WarningLevel>[] = [];
                 for (
                     let level = WarningLevel.Notice;
                     level <= WarningLevel.Immediate;
                     level++
                 ) {
+                    const comments = WarningLevelComments[level]; // used in both cases so we can take out of ifelse
                     if (parent.warning.levels.includes(level)) {
-                        const comments = WarningLevelComments[level];
+                        // When a template is present for this level
                         radios.push({
                             value: level,
                             checked: parent.warningLevel == level,
-                            // TODO i18n
-                            tooltip: `Level ${level} (${
-                                comments.summary ?? WarningLevel[level]
-                            }): ${comments.description}`,
+                            /*
+                            Sample text: Level 1 notice: for blah...
+                            */
+                            tooltip: i18next.t(
+                                "ui:warn:reason:levelSelectionLevel",
+                                {
+                                    level,
+                                    // Lowercase so it makes grammatical sense
+                                    levelReadable: (
+                                        comments.summary ?? WarningLevel[level]
+                                    ).toLocaleLowerCase(),
+                                    levelDescription: comments.description,
+                                }
+                            ),
                             children: (
                                 <MaterialIcon icon={WarningIcons[level].icon} />
                             ),
                         });
                     } else {
-                        const comments = WarningLevelComments[level];
+                        // Else, when no template is present for this level
                         radios.push({
                             value: level,
                             /*

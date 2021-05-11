@@ -69,11 +69,15 @@
             "page": "Related page",
             "additionalText": "Additional text",
             "levelSelectionLevelNotPresent": "There is no level {{level}} {{levelReadable}} template available.",
-            "levelSelectionLevel": "Levelt {{level}} {{levelReadable}}: {{levelDescription}}"
+            "levelSelectionLevel": "Level {{level}} {{levelReadable}}: {{levelDescription}}",
+            "searchDialogOpenerTooltip": "Search for a warning",
+            "warningSelectionDropdownTitle": "Warning"
         },
 
         "templateSearchDialog" : {
-            "tip" : "Tip: Double-click a warning to immediately select it. You can also start typing from the reasons selector."
+            "dialogTitle": "Warnings",
+            "searchBoxLabel" : "Search for a warning...",
+            "tip" : "Tip: Double-click a warning or press ENTER to immediately select it."
         },
 
         "ok": "Warn User"

@@ -34,16 +34,23 @@ import { MDCDialog } from "@material/dialog";
 import i18next from "i18next";
 
 interface MaterialWarnSearchDialogProperties extends RWUIDialogProperties {
-    selectedWarning?: Warning;
+    selectedWarning?: Warning; // autoselect the current selection
+    startingText?: string; // what to prefill the warning text with
 }
 
 function MaterialWarnSearchDialogSearchBar(props: {
     callback: (event: KeyboardEvent & { value: string }) => void | boolean;
+    defaultText?: string;
 }): JSX.Element {
     const input = (
         <MaterialTextInput
             class={"rw-mdc-warnSearchDialog--searchInput"}
-            label={"Search for a warning..."}
+            label={
+                i18next.t(
+                    "ui:warn:templateSearchDialog:searchBoxLabel"
+                ) /* ST: "Search for a warning..." */
+            }
+            defaultText={props.defaultText ? props.defaultText : ""}
         />
     );
     const mdcTextInput = MaterialTextInputUpgrade(input);
@@ -53,6 +60,18 @@ function MaterialWarnSearchDialogSearchBar(props: {
         );
     });
 
+    // If there is default text, on focus, focus to the end then remove this listener so it only happens once
+    if (props.defaultText != null) {
+        // Define the func
+        const focusToEnd = (e: Event) => {
+            const txtBox = e.target as HTMLInputElement;
+            txtBox.selectionStart = txtBox.selectionEnd = txtBox.value.length;
+            mdcTextInput.textField.unlisten("focusin", focusToEnd); // remove this event so it only happens once
+        };
+
+        // Add handler
+        mdcTextInput.textField.listen("focusin", focusToEnd); // to change!!
+    }
     return <div class={"rw-mdc-warnSearchDialog--searchBar"}>{input}</div>;
 }
 
@@ -335,13 +354,21 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
                 id={this.id}
             >
                 <MaterialDialogTitle>
-                    {this.props.title ?? "Warnings"}
+                    {this.props.title ??
+                        i18next
+                            .t("ui:warn:templateSearchDialog:dialogTitle")
+                            .toString()}
                 </MaterialDialogTitle>
                 <MaterialDialogContent>
                     <MaterialWarnSearchDialogSearchBar
                         callback={(event) => {
                             this.performChange(event);
                         }}
+                        defaultText={
+                            /* BUG TO FIX! */ (this
+                                .props as MaterialWarnSearchDialogProperties)
+                                .startingText
+                        }
                     />
                     <MaterialWarnSearchDialogWarnings dialog={this} />
                 </MaterialDialogContent>

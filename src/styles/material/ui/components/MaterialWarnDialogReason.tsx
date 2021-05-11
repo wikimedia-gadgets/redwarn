@@ -85,17 +85,35 @@ function MaterialWarnDialogReasonDropdown({
     const element = (
         <span class="rw-mdc-warnDialog-reason--dropdown">
             <MaterialSelect<Warning>
-                label={"Warning"}
+                label={
+                    /* ST: "Warning" */ i18next
+                        .t("ui:warn:reason:warningSelectionDropdownTitle")
+                        .toString()
+                }
                 items={finalSelectItems}
                 required={true}
                 onChange={(index, value) => {
                     parent.warning = value;
                 }}
+                onKeyDown={async (key) => {
+                    const newWarning = await new MaterialWarnSearchDialog({
+                        startingText: key, // Define that we do want to prefill the text box with this key
+                    }).show();
+                    // parent.warning = newWarning;
+                    const select: MaterialSelectElement<Warning> = element.querySelector(
+                        ".mdc-select"
+                    );
+                    select.setItem(newWarning);
+                }}
             />
             <MaterialIconButton
                 class={"rw-mdc-warnDialog-reason--search"}
                 icon={"search"}
-                label={"Search for a warning"}
+                label={
+                    /* ST: "Search for a warning" */ i18next
+                        .t("ui:warn:reason:searchDialogOpenerTooltip")
+                        .toString()
+                }
                 onClick={async () => {
                     const newWarning = await new MaterialWarnSearchDialog({
                         selectedWarning: parent.warning,

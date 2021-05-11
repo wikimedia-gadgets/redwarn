@@ -25,9 +25,11 @@ export type MaterialSelectItem<T> =
     | MaterialSelectDivider;
 
 export interface MaterialSelectProps<T> {
+    // Options for this component
     label: string;
     items: MaterialSelectItem<T>[];
     onChange?: (index: number, value: T) => void;
+    onKeyDown?: (key: string) => void;
     required?: boolean;
 }
 
@@ -142,6 +144,10 @@ export default function <T>(
     select.listen("MDCSelect:change", () => {
         if (props.onChange)
             props.onChange(select.selectedIndex, valueSet[select.value]);
+    });
+
+    select.listen("keydown", (e) => {
+        if (props.onKeyDown) props.onKeyDown(e.key);
     });
 
     return Object.assign(element, {

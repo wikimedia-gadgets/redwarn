@@ -269,13 +269,15 @@
     padding: 0 16px;
 }
 .mdc-dialog .rw-mdc-warnSearchDialog .rw-mdc-warnSearchDialog--warnings {
-    max-height: calc(100% - 72px); /* 56px + 16px */
+    /* Fixed to remove chin */
+    max-height: calc(100% - 72px);
     margin: 16px;
-
     overflow-y: auto;
-
     display: flex;
     flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .mdc-dialog
@@ -315,4 +317,13 @@
     .rw-mdc-warnSearchDialog-warning.rw-warning-selected {
     background-color: rgba(0, 0, 0, 0.15);
     cursor: unset;
+}
+
+/* Press ENTER to select screen */
+.rw-mdc-warnDialog-searchDialogPressToSelect {
+    color: gray;
+    font-size: small;
+    letter-spacing: 0.1em;
+    line-height: 2.25em;
+    display: none; /* by default */
 }

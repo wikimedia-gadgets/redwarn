@@ -82,6 +82,7 @@ function MaterialWarnDialogReasonDropdown({
         }
     }
 
+    let hasBeenSomeTimeAfterLastKeyDown = true; // Used to prevent multiple dialogs from being opened by faster typers
     const element = (
         <span class="rw-mdc-warnDialog-reason--dropdown">
             <MaterialSelect<Warning>
@@ -96,6 +97,14 @@ function MaterialWarnDialogReasonDropdown({
                     parent.warning = value;
                 }}
                 onKeyDown={async (key) => {
+                    // To prevent multiple dialog openings
+                    if (!hasBeenSomeTimeAfterLastKeyDown) return; // exit if we're still waiting
+                    hasBeenSomeTimeAfterLastKeyDown = false; // disable all other calls
+                    setTimeout(() => {
+                        hasBeenSomeTimeAfterLastKeyDown = true;
+                    }, 500); // reset after 500ms
+
+                    // Open dialog
                     const newWarning = await new MaterialWarnSearchDialog({
                         startingText: key, // Define that we do want to prefill the text box with this key
                     }).show();

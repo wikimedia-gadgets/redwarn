@@ -70,7 +70,7 @@ function MaterialWarnSearchDialogSearchBar(props: {
         };
 
         // Add handler
-        mdcTextInput.textField.listen("focusin", focusToEnd); // to change!!
+        mdcTextInput.textField.listen("focusin", focusToEnd);
     }
     return <div class={"rw-mdc-warnSearchDialog--searchBar"}>{input}</div>;
 }
@@ -86,6 +86,7 @@ function MaterialWarnSearchDialogWarnings(props: {
                 {
                     WarningCategoryNames[
                         // Ungodly type assertion skip.
+                        // Chlod - what in gods name have you done here :'(
                         (category as unknown) as WarningCategory
                     ]
                 }
@@ -96,6 +97,7 @@ function MaterialWarnSearchDialogWarnings(props: {
         const categoryWarningCards: JSX.Element[] = [];
 
         for (const [id, warning] of Object.entries(warnings)) {
+            // Warning card list generation
             const warningCard = (
                 <div
                     class="rw-mdc-warnSearchDialog-warning mdc-card mdc-card--outlined"
@@ -115,6 +117,7 @@ function MaterialWarnSearchDialogWarnings(props: {
                                         "mdc-card__action--icon",
                                     ]}
                                     icon={((): string => {
+                                        // Where icons are handled for listings
                                         switch (warning.type) {
                                             case WarningType.Tiered:
                                                 return "signal_cellular_alt";
@@ -144,6 +147,7 @@ function MaterialWarnSearchDialogWarnings(props: {
                                         )}
                                         target="_blank"
                                     >
+                                        {/* Opening and closing curlies */}
                                         &#123;&#123;{warning.template}
                                         &#125;&#125;
                                     </a>
@@ -168,6 +172,22 @@ function MaterialWarnSearchDialogWarnings(props: {
                                     {warning.type ===
                                         WarningType.PolicyViolation &&
                                         `Policy violation warning`}
+
+                                    {/* Shown only when I am the top result (search handles hiding/showing this) */}
+                                    <div
+                                        class={
+                                            "rw-mdc-warnDialog-searchDialogPressToSelect"
+                                        }
+                                    >
+                                        {
+                                            // ST: Press ENTER to use this template
+                                            i18next
+                                                .t(
+                                                    "ui:warn:templateSearchDialog:pressXtoSelect"
+                                                )
+                                                .toString()
+                                        }
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -177,9 +197,12 @@ function MaterialWarnSearchDialogWarnings(props: {
 
             warningCard.addEventListener("click", (event) => {
                 if (
-                    warningCard.hasAttribute("data-lastclick") &&
-                    Date.now() - +warningCard.getAttribute("data-lastclick") <
-                        300
+                    // If a double click (2 clicks within 300ms), or shift pressed (usually for synthetic event with a double intent)
+                    (warningCard.hasAttribute("data-lastclick") &&
+                        Date.now() -
+                            +warningCard.getAttribute("data-lastclick") <
+                            300) ||
+                    event.shiftKey
                 ) {
                     props.dialog.performSelect(
                         Object.assign(event, { warningId: id })
@@ -199,7 +222,10 @@ function MaterialWarnSearchDialogWarnings(props: {
                     v.warningId === id
                 );
             });
+
             props.dialog.addChangeListener((event) => {
+                // on textbox change, this is called on a per card basis!
+                // Actual search algorithm here - this doesn't do everything, just checks whether or not the card should hide itself
                 if (event.value.length === 0) {
                     warningCard.classList.toggle("rw-warnSearch-hidden", false);
                     return;
@@ -208,16 +234,18 @@ function MaterialWarnSearchDialogWarnings(props: {
                 const searchRegex = new RegExp(regexEscape(event.value), "gi");
 
                 warningCard.classList.toggle(
-                    "rw-warnSearch-hidden",
-                    !searchRegex.test(warning.name) &&
-                        (warning.keywords == null
+                    "rw-warnSearch-hidden", // toggle this class given
+                    // the regex matches
+                    !searchRegex.test(warning.name) && // and
+                        (warning.keywords == null // there are no warning keywords
                             ? true
                             : !warning.keywords.reduce(
+                                  // or there are no matching keywords
                                   (result, keyword) =>
                                       result || searchRegex.test(keyword),
                                   false
-                              )) &&
-                        !searchRegex.test(warning.template)
+                              )) && // AND
+                        !searchRegex.test(warning.template) // does not match warning template
                 );
             });
             categoryWarningCards.push(warningCard);
@@ -234,7 +262,7 @@ function MaterialWarnSearchDialogWarnings(props: {
 
         warningElements.push(...categoryWarningCards);
     }
-
+    // All done
     return (
         <div class={"rw-mdc-warnSearchDialog--warnings"}>{warningElements}</div>
     );
@@ -363,6 +391,42 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
                     <MaterialWarnSearchDialogSearchBar
                         callback={(event) => {
                             this.performChange(event);
+
+                            // To show PRESS ENTER and "results not found" text
+                            // There is defo a better way to do this but this is what works
+                            // Now run a query on this dialog and find all items that aren't hidden
+                            const searchResults = this.element.querySelectorAll(
+                                `.rw-mdc-warnSearchDialog--warnings > .rw-mdc-warnSearchDialog-warning.mdc-card:not(.rw-warnSearch-hidden)`
+                            );
+
+                            if (searchResults.length == 0) return; // No results, no need to continue
+
+                            // If ENTER pressed, it's time to select it
+                            if (event.key == "Enter") {
+                                searchResults[0].dispatchEvent(
+                                    new MouseEvent("click", {
+                                        shiftKey: true, // so it is handled like a double click, i.e. it is immediately selected
+                                    })
+                                );
+                                return; // we're done
+                            }
+
+                            // For each result card, clear style attribute for text
+                            searchResults.forEach((el: Element, i: number) => {
+                                // Make PRESS ENTER text visible for first result only, all others hidden
+                                const pressToSelectTxt = el.querySelector(
+                                    ".rw-mdc-warnDialog-searchDialogPressToSelect"
+                                );
+                                if (i == 0) {
+                                    // Top result is what will be selected, so we show this text
+                                    pressToSelectTxt.setAttribute(
+                                        "style",
+                                        "display:inherit;"
+                                    );
+                                } else {
+                                    pressToSelectTxt.removeAttribute("style"); // Remove all styling so it defaults to hidden
+                                }
+                            });
                         }}
                         defaultText={
                             /* BUG TO FIX! */ (this

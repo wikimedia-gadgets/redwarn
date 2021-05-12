@@ -1,4 +1,4 @@
-image: node:14.15.1-buster
+image: node:14.16.1
 
 stages:
     - dependencies
@@ -11,6 +11,9 @@ stages:
 deps_npm:
     stage: dependencies
     script:
+        - "git config --global url.\"https://github.com/\".insteadOf git@github.com:"
+        - "git config --global url.\"https://\".insteadOf ssh://"
+        - cat package.json
         - NODE_ENV=development npm install
     # Cache `node_modules` for later jobs and pipelines.
     cache:

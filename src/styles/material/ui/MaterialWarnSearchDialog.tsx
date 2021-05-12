@@ -71,6 +71,24 @@ function MaterialWarnSearchDialogSearchBar(props: {
 
         // Add handler
         mdcTextInput.textField.listen("focusin", focusToEnd);
+
+        // Add blur handler which wipes all "press enter to select" labels
+        mdcTextInput.textField.listen("blur", () => {
+            const searchResults = this.element.querySelectorAll(
+                `.rw-mdc-warnSearchDialog--warnings > .rw-mdc-warnSearchDialog-warning.mdc-card:not(.rw-warnSearch-hidden)`
+            );
+
+            // For each result card, clear style attribute for text
+            if (searchResults.length != 0)
+                searchResults.forEach(
+                    (el: Element) =>
+                        el
+                            .querySelector(
+                                ".rw-mdc-warnDialog-searchDialogPressToSelect"
+                            )
+                            .removeAttribute("style") // Remove all styling so it defaults to hidden
+                );
+        });
     }
     return <div class={"rw-mdc-warnSearchDialog--searchBar"}>{input}</div>;
 }

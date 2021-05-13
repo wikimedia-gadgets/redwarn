@@ -16,5 +16,9 @@
         "MM": "%d months",
         "y": "a year",
         "yy": "%d years"
+    },
+
+    "parser" : {
+        "wikiTxtParseError" : "Sorry, we couldn't decode this WikiText. Check it for syntax errors and try again."
     }
 }

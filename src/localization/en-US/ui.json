@@ -81,6 +81,13 @@
             "tip" : "Tip: Double-click a warning to quickly select it, or press ENTER to select the top result."
         },
 
+        "validation" : {
+            "noWarnTemplate" : "No warning template selected.",
+            "noWarnLevel" : "No warning level selected.",
+            "noTargetUser": "No user selected.",
+            "noSelfWarn": "You can't warn yourself."
+        },
+
         "ok": "Warn User"
     },
     "close": "Close",

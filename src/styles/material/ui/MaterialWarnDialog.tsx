@@ -137,7 +137,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         ).innerHTML =
             parseRequest?.["parse"]?.["text"]?.["*"] ??
             parseRequest?.["parse"]?.["text"] ??
-            "<b>Sorry, we couldn't decode this WikiText. Check it for syntax errors and try again.</b>"; // if the top two options fail, show this error message - needs localisation!
+            `<b>${i18next.t("misc:parser:wikiTxtParseError")}</b>`; // if the top two options fail, show this error message - needs localisation!
 
         this.mwdXray.querySelectorAll("a").forEach((anchor) => {
             anchor.target = "_blank";
@@ -148,14 +148,15 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
     }
 
     validate(): true | string {
-        // Validates the content of a warning dialog - needs localisation!
+        // Validates the content of a warning dialog
         if (this.mwdReason?.MWDReason?.warning == null)
-            return "No warning template selected.";
+            return i18next.t("ui:warn:validation:noWarnTemplate").toString();
         if (this.mwdReason?.MWDReason?.warningLevel == null)
-            return "No warning level selected.";
-        if (this.user == null) return "No user selected.";
+            return i18next.t("ui:warn:validation:noWarnLevel").toString();
+        if (this.user == null)
+            return i18next.t("ui:warn:validation:noTargetUser").toString();
         if (this.user?.username === ClientUser.i.username)
-            return "Self-warnings are not allowed.";
+            return i18next.t("ui:warn:validation:noSelfWarn").toString();
         return true;
     }
 

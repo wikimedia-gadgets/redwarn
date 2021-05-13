@@ -41,6 +41,7 @@ interface MaterialWarnSearchDialogProperties extends RWUIDialogProperties {
 function MaterialWarnSearchDialogSearchBar(props: {
     callback: (event: KeyboardEvent & { value: string }) => void | boolean;
     defaultText?: string;
+    focusOut?: () => void; // focusOut event
 }): JSX.Element {
     const input = (
         <MaterialTextInput
@@ -54,11 +55,17 @@ function MaterialWarnSearchDialogSearchBar(props: {
         />
     );
     const mdcTextInput = MaterialTextInputUpgrade(input);
-    mdcTextInput.textField.listen("keyup", (event) => {
+
+    const updateEvent = (event: any) => {
+        // Type skip but that's okay in this care
         props.callback(
             Object.assign(event, { value: mdcTextInput.textField.value })
         );
-    });
+    };
+
+    mdcTextInput.textField.listen("keyup", updateEvent);
+    // Two reasons for this one: 1. so it shows the press Enter when focus is re-established, and 2. so it updates when opened
+    mdcTextInput.textField.listen("focusin", updateEvent);
 
     // If there is default text, on focus, focus to the end then remove this listener so it only happens once
     if (props.defaultText != null) {
@@ -71,25 +78,12 @@ function MaterialWarnSearchDialogSearchBar(props: {
 
         // Add handler
         mdcTextInput.textField.listen("focusin", focusToEnd);
-
-        // Add blur handler which wipes all "press enter to select" labels
-        mdcTextInput.textField.listen("blur", () => {
-            const searchResults = this.element.querySelectorAll(
-                `.rw-mdc-warnSearchDialog--warnings > .rw-mdc-warnSearchDialog-warning.mdc-card:not(.rw-warnSearch-hidden)`
-            );
-
-            // For each result card, clear style attribute for text
-            if (searchResults.length != 0)
-                searchResults.forEach(
-                    (el: Element) =>
-                        el
-                            .querySelector(
-                                ".rw-mdc-warnDialog-searchDialogPressToSelect"
-                            )
-                            .removeAttribute("style") // Remove all styling so it defaults to hidden
-                );
-        });
     }
+
+    // Add focusOut handler if requested
+    if (props.focusOut)
+        mdcTextInput.textField.listen("focusout", props.focusOut);
+
     return <div class={"rw-mdc-warnSearchDialog--searchBar"}>{input}</div>;
 }
 
@@ -445,6 +439,23 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
                                     pressToSelectTxt.removeAttribute("style"); // Remove all styling so it defaults to hidden
                                 }
                             });
+                        }}
+                        focusOut={() => {
+                            // On focusout, clear all press enter to select labels
+                            const searchResults = this.element.querySelectorAll(
+                                `.rw-mdc-warnSearchDialog--warnings > .rw-mdc-warnSearchDialog-warning.mdc-card:not(.rw-warnSearch-hidden)`
+                            );
+
+                            // For each result card, clear style attribute for text
+                            if (searchResults.length != 0)
+                                searchResults.forEach(
+                                    (el: Element) =>
+                                        el
+                                            .querySelector(
+                                                ".rw-mdc-warnDialog-searchDialogPressToSelect"
+                                            )
+                                            .removeAttribute("style") // Remove all styling so it defaults to hidden
+                                );
                         }}
                         defaultText={
                             /* BUG TO FIX! */ (this

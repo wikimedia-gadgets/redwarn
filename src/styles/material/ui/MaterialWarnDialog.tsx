@@ -53,6 +53,8 @@ import { ClientUser, MediaWikiAPI, User, WarningType } from "rww/mediawiki";
 import { normalize, warningSuffix } from "rww/util";
 
 import { RW_SIGNATURE } from "rww/data/RedWarnConstants"; // typically "~~~~"
+import MaterialIconButton from "./components/MaterialIconButton";
+import RedWarnUI from "rww/ui/RedWarnUI";
 
 // Actual code
 export default class MaterialWarnDialog extends RWUIWarnDialog {
@@ -128,7 +130,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         });
 
         if (+this.mwdXray.getAttribute("data-last-update") > requestTime) {
-            // if it takes too long skip
+            // if it takes longer than the last update (i.e. outdated info)
             return; // Give up. We're late.
         }
 
@@ -149,15 +151,57 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
 
     validate(): true | string {
         // Validates the content of a warning dialog
-        if (this.mwdReason?.MWDReason?.warning == null)
-            return i18next.t("ui:warn:validation:noWarnTemplate").toString();
-        if (this.mwdReason?.MWDReason?.warningLevel == null)
-            return i18next.t("ui:warn:validation:noWarnLevel").toString();
-        if (this.user == null)
-            return i18next.t("ui:warn:validation:noTargetUser").toString();
-        if (this.user?.username === ClientUser.i.username)
-            return i18next.t("ui:warn:validation:noSelfWarn").toString();
-        return true;
+
+        // Reponse: Condition - in order to prevent user confusion!
+        // response should be i18n link
+        const validationTests: { condition: boolean; response: string }[] = [
+            {
+                // Prevents warning yourself
+                condition: this.user?.username === ClientUser.i.username,
+                response: "ui:warn:validation:noSelfWarn",
+            },
+
+            {
+                // Prevents warning nobody
+                condition: this.user == null,
+                response: "ui:warn:validation:noTargetUser",
+            },
+
+            // TODO: prevents users without EC warning more than 1 user
+            // TODO: prevents ALL USERS warning > 15 users
+
+            {
+                // Prevents no warning template
+                condition: this.mwdReason?.MWDReason?.warning == null,
+                response: "ui:warn:validation:noWarnTemplate",
+            },
+
+            {
+                // Prevents no warning level
+                condition: this.mwdReason?.MWDReason?.warningLevel == null,
+                response: "ui:warn:validation:noWarnLevel",
+            },
+        ];
+
+        // Now filter all of these and give response for first one. Could be expanded to show more info in future
+        const testResults = validationTests.filter((test) => {
+            return test.condition;
+        });
+
+        // If no conditions matched, return true - else, if just one, first error, otherwise, list all
+        return testResults.length == 0
+            ? true
+            : testResults.length == 1
+            ? i18next.t(testResults[0].response).toString()
+            : ((): string => {
+                  let finalStr = "";
+                  testResults.forEach((r) => {
+                      // include new line and bullet point
+                      finalStr +=
+                          "\n\u2022 " + i18next.t(r.response).toString();
+                  });
+                  return finalStr;
+              })();
     }
 
     show(): Promise<RWUIWarnDialogResult> {
@@ -274,6 +318,27 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         ))}
                 </MaterialDialogContent>
                 <MaterialDialogActions>
+                    <MaterialIconButton
+                        icon={"error"}
+                        tooltip={i18next
+                            .t("ui:warn:validation:validationFailedIconTooltip")
+                            .toString()}
+                        iconColor="red"
+                        onClick={() => {
+                            // Show dialog with details on why validation failed
+                            const dialog = new RedWarnUI.Dialog({
+                                title: i18next.t(
+                                    "ui:warn:validation:validationFailedInfoDialogTitle"
+                                ),
+                                content: "",
+                                rawText: this.validate().toString(),
+                                actions: [
+                                    { data: i18next.t("ui:okCancel:ok") },
+                                ],
+                            });
+                            dialog.show();
+                        }}
+                    />
                     {this._helperText ??
                         (this._helperText = (
                             <div class={"rw-mdc-dialog-helperText"} />

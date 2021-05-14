@@ -103,6 +103,8 @@ export default class MaterialAlertDialog extends RWUIAlertDialog {
                 {this.props.content && (
                     <MaterialDialogContent>
                         {this.props.content}
+                        {/* For raw text, if content is set */}
+                        {this.props.rawText && <pre>{this.props.rawText}</pre>}
                     </MaterialDialogContent>
                 )}
                 <MaterialDialogActions>

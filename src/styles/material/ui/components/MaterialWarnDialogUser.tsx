@@ -183,7 +183,7 @@ function MaterialWarnDialogUserCard({
                                   onClick: () => {
                                       // TODO AIV thing
                                       new RedWarnUI.Toast({
-                                          content: "Under construction.",
+                                          content: i18next.t("ui:unfinished"),
                                       }).show();
                                   },
                               }

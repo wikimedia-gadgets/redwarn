@@ -1,4 +1,6 @@
 {
+    "unfinished" : "Hmm, looks like we haven't implimented this feature yet. Check back later!",
+
     "restore": {
         "label": "Restore Reason",
         "helperText": "Enter a reason for this restore",
@@ -82,10 +84,12 @@
         },
 
         "validation" : {
-            "noWarnTemplate" : "No warning template selected.",
-            "noWarnLevel" : "No warning level selected.",
-            "noTargetUser": "No user selected.",
-            "noSelfWarn": "You can't warn yourself."
+            "validationFailedIconTooltip" : "There are issues which are preventing you from submitting this warning. Click here for more information.",
+            "validationFailedInfoDialogTitle": "Fix these issues before warning:",
+            "noWarnTemplate" : "You don't have a warning template selected. Select one from the dropdown or search tool.",
+            "noWarnLevel" : "You haven't selected a warning level. Please select an appropriate level.",
+            "noTargetUser": "You have not inputed any target users.",
+            "noSelfWarn": "Local restrictions mean that you cannot warn yourself. If you want to test, please use a sandbox user."
         },
 
         "ok": "Warn User"

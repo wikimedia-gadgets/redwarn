@@ -24,7 +24,7 @@ rw.rulesFunc = {
     },
 
     "load": callback => {
-        $.getJSON("https://en.wikipedia.org/w/index.php?title=User:" + rw.info.getUsername() + "/redwarnRules.json&action=raw&ctype=text/json", rules => {
+        $.getJSON("https://en.wikipedia.org/w/index.php?title=User:" + encodeURIComponent(rw.info.getUsername()) + "/redwarnRules.json&action=raw&ctype=text/json", rules => {
             if ($.isEmptyObject(rules)) {
                 // wee woo empty, resync
                 rw.rulesFunc.resync(callback);
@@ -44,7 +44,7 @@ rw.rulesFunc = {
             "action": "edit",
             "format": "json",
             "token": mw.user.tokens.get("csrfToken"),
-            "title": "User:" + rw.info.getUsername() + "/redwarnRules.json",
+            "title": "User:" + encodeURIComponent(rw.info.getUsername()) + "/redwarnRules.json",
             "summary": "Updating user Rule Database [[w:en:WP:RW|(RW " + rw.version + ")]]", // summary sign here
             "text": JSON.stringify(rw.rules),
             "tags": ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia

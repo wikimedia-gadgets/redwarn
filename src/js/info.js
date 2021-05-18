@@ -113,7 +113,7 @@ rw.info = { // API
 
         // gets user config from their page.
         let user = rw.info.getUsername();
-        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User:" + user + "/redwarnConfig.js&rvslots=*&rvprop=content&formatversion=2&format=json", latestR => {
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User:" + encodeURIComponent(user) + "/redwarnConfig.js&rvslots=*&rvprop=content&formatversion=2&format=json", latestR => {
             // Grab text from latest revision of talk page
             // Check if exists
             let revisionWikitext = "";
@@ -258,7 +258,7 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                 "action": "edit",
                 "format": "json",
                 "token": mw.user.tokens.get("csrfToken"),
-                "title": "User:" + rw.info.getUsername() + "/redwarnConfig.js",
+                "title": "User:" + encodeURIComponent(rw.info.getUsername()) + "/redwarnConfig.js",
                 "summary": "Updating user configuration [[w:en:WP:RW|(RW " + rw.version + ")]]", // summary sign here
                 "text": finalTxt,
                 "tags": ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
@@ -369,7 +369,7 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
      */
     "lastWarningLevel": (user, callback) => { // callback(wLevel. thisMonthsNotices, userPg) 0 none 1 notice 2 caution 3 warning 4 final warning
         // Get the last warning level of a user this month
-        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:" + user + "&rvslots=*&rvprop=content&formatversion=2&format=json", latestR => {
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:" + encodeURIComponent(user) + "&rvslots=*&rvprop=content&formatversion=2&format=json", latestR => {
             // Grab text from latest revision of talk page
             // Check if exists
             let revisionWikitext = "";
@@ -450,7 +450,7 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
     */
     "warningInfo": (username, callback) => {
         // Get past 51 page revisions, we calculate a diff for 50 only
-        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:" + username + "&rvslots=*&rvprop=content|user|timestamp|size&formatversion=2&rvlimit=51&format=json", r => {
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:" + encodeURIComponent(username) + "&rvslots=*&rvprop=content|user|timestamp|size&formatversion=2&rvlimit=51&format=json", r => {
             if (r.query.pages[0].missing) { // If page is missing, i.e it doesn't exist
                 callback([]); // nothing, no warnings recorded
                 return; // exit
@@ -548,7 +548,7 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
         }
         if (callback == null) rw.ui.loadDialog.show("Saving message..."); // show load if no callback
         // Add text to a page. If underdate true, add it under a date marker
-        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:" + user + "&rvslots=*&rvprop=content&formatversion=2&format=json", latestR => {
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=User_talk:" + encodeURIComponent(user) + "&rvslots=*&rvprop=content&formatversion=2&format=json", latestR => {
             // Grab text from latest revision of talk page
             // Check if exists
             let revisionWikitext = "";
@@ -628,7 +628,7 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                     "action": "edit",
                     "format": "json",
                     "token": mw.user.tokens.get("csrfToken"),
-                    "title": "User_talk:" + user,
+                    "title": "User_talk:" + encodeURIComponent(user),
                     "summary": summary + " [[w:en:WP:RW|(RW " + rw.version + ")]]", // summary sign here
                     "text": finalTxt,
                     "tags": ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
@@ -679,8 +679,8 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                         if (callback != null) { callback(); return; }; // callback and stop if set, else..
 
                         // Redirect to complete page
-                        let reloadNeeded = window.location.href.includes(rw.wikiBase + "/wiki/User_talk:" + user); // if we are already on the talk page we need to refresh as this would just change the hash
-                        redirect(rw.wikiBase + "/wiki/User_talk:" + user + "#noticeApplied-" + dt.edit.newrevid + "-" + dt.edit.oldrevid); // go to talk page
+                        let reloadNeeded = window.location.href.includes(rw.wikiBase + "/wiki/User_talk:" + encodeURIComponent(user)); // if we are already on the talk page we need to refresh as this would just change the hash
+                        redirect(rw.wikiBase + "/wiki/User_talk:" + encodeURIComponent(user) + "#noticeApplied-" + dt.edit.newrevid + "-" + dt.edit.oldrevid); // go to talk page
                         if (reloadNeeded) { location.reload(); }
                         // We done
                     }
@@ -757,7 +757,7 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
      */
     "latestRevisionNotByUser": (name, username, callback) => { // CALLBACK revision, summaryText, rId
         // Name is page name, username is bad username
-        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=" + encodeURIComponent(name) + "&rvslots=*&rvprop=ids%7Cuser%7Ccontent&rvexcludeuser=" + username + "&formatversion=2&format=json", r => {
+        $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles=" + encodeURIComponent(name) + "&rvslots=*&rvprop=ids%7Cuser%7Ccontent&rvexcludeuser=" + encodeURIComponent(username) + "&formatversion=2&format=json", r => {
             // We got the response
             let _r;
             try {

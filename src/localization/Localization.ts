@@ -27,7 +27,7 @@ export default class Localization {
     }
 
     /**
-     * Cleans the `RedWarnLanguages` global variable in the event of
+     * Cleans the `RedWarnLanguages` global variable in the events of
      * a language pack double-load.
      * @private
      */

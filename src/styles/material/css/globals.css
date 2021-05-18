@@ -50,7 +50,7 @@
 
 .rw-mdc-subtitle {
     color: gray;
-    letter-spacing: 0.1em;
+    letter-spacing: 0;
     font-size: small;
     line-height: 1.25em;
 }

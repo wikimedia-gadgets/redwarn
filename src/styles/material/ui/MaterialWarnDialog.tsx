@@ -7,7 +7,6 @@
  */
 
 import "../css/warnDialog.css"; // Specific themes for this dialog
-
 // TSX
 import { h } from "tsx-dom";
 
@@ -321,17 +320,17 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                     <MaterialIconButton
                         icon={"error"}
                         tooltip={i18next
-                            .t("ui:warn:validation:validationFailedIconTooltip")
+                            .t("ui:warn.validation.validationFailedIconTooltip")
                             .toString()}
                         iconColor="red"
                         onClick={() => {
                             // Show dialog with details on why validation failed
                             const dialog = new RedWarnUI.Dialog({
                                 title: i18next.t(
-                                    "ui:warn:validation:validationFailedInfoDialogTitle"
+                                    "ui:warn.validation.validationFailedInfoDialogTitle"
                                 ),
-                                content: "",
-                                rawText: this.validate().toString(),
+                                // TODO formatting
+                                content: this.validate().toString(),
                                 actions: [
                                     { data: i18next.t("ui:okCancel:ok") },
                                 ],

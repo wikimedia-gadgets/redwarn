@@ -113,10 +113,8 @@ export interface RWUIAlertDialogProps extends RWUIDialogProperties {
     actions: RWUIDialogAction[];
     /**
      * The content of the dialog.
-     * You can also use rawText, but content must be set - this will be appended to the end. Example use could be an error log.
      */
     content?: ComponentChild;
-    rawText?: string;
 }
 
 export class RWUIAlertDialog extends RWUIDialog {

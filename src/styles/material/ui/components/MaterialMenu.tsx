@@ -39,7 +39,7 @@ export function openMenu(id: MaterialMenuID): void {
 }
 
 export default function (props: MaterialMenuProps): JSX.Element {
-    // The span allows the animation event to fire.
+    // The span allows the animation events to fire.
     const menu = (
         <span data-append-event={true}>
             <div id={props.id} class="mdc-menu mdc-menu-surface">

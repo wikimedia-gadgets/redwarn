@@ -34,57 +34,77 @@ import { MDCDialog } from "@material/dialog";
 import i18next from "i18next";
 
 interface MaterialWarnSearchDialogProperties extends RWUIDialogProperties {
-    selectedWarning?: Warning; // autoselect the current selection
-    startingText?: string; // what to prefill the warning text with
+    /**
+     * Automatically-selected warning for pre-selected warning search dialogs.
+     */
+    selectedWarning?: Warning;
+    /**
+     * The text to prefill the search dialog with.
+     */
+    startingText?: string;
 }
 
 function MaterialWarnSearchDialogSearchBar(props: {
-    callback: (event: KeyboardEvent & { value: string }) => void | boolean;
+    events: {
+        onChange: (event: Event & { value: string }) => void | boolean;
+        onSubmit?: (value: string) => void | boolean;
+    };
     defaultText?: string;
-    focusOut?: () => void; // focusOut event
 }): JSX.Element {
     const input = (
         <MaterialTextInput
             class={"rw-mdc-warnSearchDialog--searchInput"}
-            label={
-                i18next.t(
-                    "ui:warn:templateSearchDialog:searchBoxLabel"
-                ) /* ST: "Search for a warning..." */
-            }
-            defaultText={props.defaultText ? props.defaultText : ""}
+            label={i18next.t("ui:warn.templateSearchDialog.searchBoxLabel")}
+            defaultText={props.defaultText ?? ""}
         />
     );
     const mdcTextInput = MaterialTextInputUpgrade(input);
 
-    const updateEvent = (event: any) => {
-        // Type skip but that's okay in this care
-        props.callback(
+    // Trigger the `onChange` event when a key is pressed.
+    mdcTextInput.textField.listen("keyup", (event: KeyboardEvent) => {
+        props.events.onChange(
             Object.assign(event, { value: mdcTextInput.textField.value })
         );
-    };
 
-    mdcTextInput.textField.listen("keyup", updateEvent);
-    // Two reasons for this one: 1. so it shows the press Enter when focus is re-established, and 2. so it updates when opened
-    mdcTextInput.textField.listen("focusin", updateEvent);
+        if (event.key === "Enter")
+            props.events.onSubmit(
+                document
+                    .querySelector(".rw-mdc-warnSearchDialog-warning--top")
+                    .getAttribute("data-rw-warning")
+            );
+    });
 
-    // If there is default text, on focus, focus to the end then remove this listener so it only happens once
+    // Move the cursor to the end of the box if the box contains starting text.
     if (props.defaultText != null) {
-        // Define the func
         const focusToEnd = (e: Event) => {
             const txtBox = e.target as HTMLInputElement;
             txtBox.selectionStart = txtBox.selectionEnd = txtBox.value.length;
-            mdcTextInput.textField.unlisten("focusin", focusToEnd); // remove this event so it only happens once
+            // Unlisten after firing once
+            mdcTextInput.textField.unlisten("focusin", focusToEnd);
         };
 
-        // Add handler
         mdcTextInput.textField.listen("focusin", focusToEnd);
     }
 
-    // Add focusOut handler if requested
-    if (props.focusOut)
-        mdcTextInput.textField.listen("focusout", props.focusOut);
+    const searchBar = (
+        <div class={"rw-mdc-warnSearchDialog--searchBar"}>{input}</div>
+    );
 
-    return <div class={"rw-mdc-warnSearchDialog--searchBar"}>{input}</div>;
+    // Toggleable class for instant selection tip.
+    mdcTextInput.textField.listen("focusout", () => {
+        searchBar.classList.toggle(
+            "rw-mdc-warnSearchDialog--searchBar--focused",
+            false
+        );
+    });
+    mdcTextInput.textField.listen("focusin", () => {
+        searchBar.classList.toggle(
+            "rw-mdc-warnSearchDialog--searchBar--focused",
+            true
+        );
+    });
+
+    return searchBar;
 }
 
 function MaterialWarnSearchDialogWarnings(props: {
@@ -97,8 +117,10 @@ function MaterialWarnSearchDialogWarnings(props: {
             <div class="rw-warningCategory" data-rw-warningCategory={category}>
                 {
                     WarningCategoryNames[
-                        // Ungodly type assertion skip.
-                        // Chlod - what in gods name have you done here :'(
+                        // `category` is a string in this context, which is incompatible
+                        // with `WarningCategoryNames`' index type (`WarningCategory`).
+                        // Since `category` will always be a `WarningCategory` anyways,
+                        // we can just assert the type.
                         (category as unknown) as WarningCategory
                     ]
                 }
@@ -109,7 +131,7 @@ function MaterialWarnSearchDialogWarnings(props: {
         const categoryWarningCards: JSX.Element[] = [];
 
         for (const [id, warning] of Object.entries(warnings)) {
-            // Warning card list generation
+            // Generate cards for every warning
             const warningCard = (
                 <div
                     class="rw-mdc-warnSearchDialog-warning mdc-card mdc-card--outlined"
@@ -184,22 +206,6 @@ function MaterialWarnSearchDialogWarnings(props: {
                                     {warning.type ===
                                         WarningType.PolicyViolation &&
                                         `Policy violation warning`}
-
-                                    {/* Shown only when I am the top result (search handles hiding/showing this) */}
-                                    <div
-                                        class={
-                                            "rw-mdc-warnDialog-searchDialogPressToSelect"
-                                        }
-                                    >
-                                        {
-                                            // ST: Press ENTER to use this template
-                                            i18next
-                                                .t(
-                                                    "ui:warn:templateSearchDialog:pressXtoSelect"
-                                                )
-                                                .toString()
-                                        }
-                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -209,7 +215,7 @@ function MaterialWarnSearchDialogWarnings(props: {
 
             warningCard.addEventListener("click", (event) => {
                 if (
-                    // If a double click (2 clicks within 300ms), or shift pressed (usually for synthetic event with a double intent)
+                    // If a double click (2 clicks within 300ms), or shift pressed (usually for synthetic events with a double intent)
                     (warningCard.hasAttribute("data-lastclick") &&
                         Date.now() -
                             +warningCard.getAttribute("data-lastclick") <
@@ -274,7 +280,51 @@ function MaterialWarnSearchDialogWarnings(props: {
 
         warningElements.push(...categoryWarningCards);
     }
-    // All done
+
+    // To be called at the end of every single card update.
+    props.dialog.addChangeListener(() => {
+        // Remove the currently-tracked element.
+        document
+            .querySelectorAll(".rw-mdc-warnSearchDialog-warning--top")
+            .forEach((element) => {
+                // Remove the tracking class.
+                element.classList.remove(
+                    "rw-mdc-warnSearchDialog-warning--top"
+                );
+
+                // Remove the label.
+                const instantSelectLabel = document.querySelector(
+                    ".rw-mdc-warnDialog-searchDialog-instantSelect"
+                );
+                instantSelectLabel.parentElement.removeChild(
+                    instantSelectLabel
+                );
+            });
+
+        // Sequentially search through the cards to find the first non-hidden one.
+        for (const card of warningElements) {
+            if (
+                !card.classList.contains("rw-warnSearch-hidden") &&
+                card.classList.contains("rw-mdc-warnSearchDialog-warning")
+            ) {
+                // Add the special tracking class.
+                card.classList.add("rw-mdc-warnSearchDialog-warning--top");
+
+                // Add the label.
+                card.querySelector("table").insertAdjacentElement(
+                    "afterend",
+                    <div class={"rw-mdc-warnDialog-searchDialog-instantSelect"}>
+                        {i18next
+                            .t("ui:warn.templateSearchDialog.instantSelect")
+                            .toString()}
+                    </div>
+                );
+                console.log("card");
+                break;
+            }
+        }
+    });
+
     return (
         <div class={"rw-mdc-warnSearchDialog--warnings"}>{warningElements}</div>
     );
@@ -292,15 +342,13 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
 
     // Event-related functions below.
     events = {
-        change: [] as ((
-            event: KeyboardEvent & { value: string }
-        ) => void | boolean)[],
+        change: [] as ((event: Event & { value: string }) => void | boolean)[],
         select: [] as ((
             event: MouseEvent & { warningId: string }
         ) => void | boolean)[],
     };
     addChangeListener(
-        listener: (event: KeyboardEvent & { value: string }) => void
+        listener: (event: Event & { value: string }) => void
     ): void {
         this.events.change.push(listener);
     }
@@ -310,7 +358,7 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
         this.events.select.push(listener);
     }
 
-    performChange(event: KeyboardEvent & { value: string }) {
+    performChange(event: Event & { value: string }) {
         for (const handler of this.events["change"]) {
             if (!(handler(event) ?? true)) break;
         }
@@ -328,12 +376,9 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
             (this.actions = (
                 <MaterialDialogActions>
                     <div class={"rw-mdc-dialog-helperText rw-mdc-subtitle"}>
-                        {
-                            /* Tip string, sample text: Tip: Double click... */
-                            i18next
-                                .t("ui:warn:templateSearchDialog:tip")
-                                .toString()
-                        }
+                        {i18next
+                            .t("ui:warn.templateSearchDialog.tip")
+                            .toString()}
                     </div>
                     {this.renderActions()}
                 </MaterialDialogActions>
@@ -342,6 +387,8 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
         );
     }
     // Event-related functions above.
+
+    props: MaterialWarnSearchDialogProperties;
 
     /**
      * Show a dialog on screen. You can await this if you want to block until the dialog closes.
@@ -383,7 +430,7 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
      * @returns A {@link HTMLDialogElement}.
      */
     render(): HTMLDialogElement {
-        return (this.element = (
+        this.element = (
             <MaterialDialog
                 surfaceProperties={{
                     "class": "mdc-dialog__surface rw-mdc-warnSearchDialog",
@@ -396,72 +443,21 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
                 <MaterialDialogTitle>
                     {this.props.title ??
                         i18next
-                            .t("ui:warn:templateSearchDialog:dialogTitle")
+                            .t("ui:warn.templateSearchDialog.dialogTitle")
                             .toString()}
                 </MaterialDialogTitle>
                 <MaterialDialogContent>
                     <MaterialWarnSearchDialogSearchBar
-                        callback={(event) => {
-                            this.performChange(event);
-
-                            // To show PRESS ENTER and "results not found" text
-                            // There is defo a better way to do this but this is what works
-                            // Now run a query on this dialog and find all items that aren't hidden
-                            const searchResults = this.element.querySelectorAll(
-                                `.rw-mdc-warnSearchDialog--warnings > .rw-mdc-warnSearchDialog-warning.mdc-card:not(.rw-warnSearch-hidden)`
-                            );
-
-                            if (searchResults.length == 0) return; // No results, no need to continue
-
-                            // If ENTER pressed, it's time to select it
-                            if (event.key == "Enter") {
-                                searchResults[0].dispatchEvent(
-                                    new MouseEvent("click", {
-                                        shiftKey: true, // so it is handled like a double click, i.e. it is immediately selected
-                                    })
-                                );
-                                return; // we're done
-                            }
-
-                            // For each result card, clear style attribute for text
-                            searchResults.forEach((el: Element, i: number) => {
-                                // Make PRESS ENTER text visible for first result only, all others hidden
-                                const pressToSelectTxt = el.querySelector(
-                                    ".rw-mdc-warnDialog-searchDialogPressToSelect"
-                                );
-                                if (i == 0) {
-                                    // Top result is what will be selected, so we show this text
-                                    pressToSelectTxt.setAttribute(
-                                        "style",
-                                        "display:inherit;"
-                                    );
-                                } else {
-                                    pressToSelectTxt.removeAttribute("style"); // Remove all styling so it defaults to hidden
-                                }
-                            });
+                        events={{
+                            onChange: (event) => {
+                                this.performChange(event);
+                            },
+                            onSubmit: (warningId) => {
+                                this.selectedWarning = Warnings[warningId];
+                                this.dialog.close("submit");
+                            },
                         }}
-                        focusOut={() => {
-                            // On focusout, clear all press enter to select labels
-                            const searchResults = this.element.querySelectorAll(
-                                `.rw-mdc-warnSearchDialog--warnings > .rw-mdc-warnSearchDialog-warning.mdc-card:not(.rw-warnSearch-hidden)`
-                            );
-
-                            // For each result card, clear style attribute for text
-                            if (searchResults.length != 0)
-                                searchResults.forEach(
-                                    (el: Element) =>
-                                        el
-                                            .querySelector(
-                                                ".rw-mdc-warnDialog-searchDialogPressToSelect"
-                                            )
-                                            .removeAttribute("style") // Remove all styling so it defaults to hidden
-                                );
-                        }}
-                        defaultText={
-                            /* BUG TO FIX! */ (this
-                                .props as MaterialWarnSearchDialogProperties)
-                                .startingText
-                        }
+                        defaultText={this.props.startingText}
                     />
                     <MaterialWarnSearchDialogWarnings dialog={this} />
                 </MaterialDialogContent>
@@ -473,18 +469,24 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
                                     "rw-mdc-dialog-helperText rw-mdc-subtitle"
                                 }
                             >
-                                {
-                                    /* Tip string, sample text: Tip: Double click... */
-                                    i18next
-                                        .t("ui:warn:templateSearchDialog:tip")
-                                        .toString()
-                                }
+                                {i18next
+                                    .t("ui:warn.templateSearchDialog.tip")
+                                    .toString()}
                             </div>
                             {this.renderActions()}
                         </MaterialDialogActions>
                     ))
                 }
             </MaterialDialog>
-        ) as HTMLDialogElement);
+        ) as HTMLDialogElement;
+
+        // Immediately trigger necessary changes.
+        this.performChange(
+            Object.assign(new Event("dummy"), {
+                value: this.props.startingText,
+            })
+        );
+
+        return this.element;
     }
 }

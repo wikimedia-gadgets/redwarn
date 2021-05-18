@@ -471,13 +471,13 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
 
                     // Do the action for each action now.
                     ({
-                        "usrPg": un => redirect(rw.wikiBase + "/wiki/User:" + un, true),  // Open user page in new tab
+                        "usrPg": un => redirect(rw.wikiBase + "/wiki/User:" + encodeURIComponent(un), true),  // Open user page in new tab
 
-                        "tlkPg": un => redirect(rw.wikiBase + "/wiki/User_talk:" + un, true),  // Open talk page in new tab
+                        "tlkPg": un => redirect(rw.wikiBase + "/wiki/User_talk:" + encodeURIComponent(un), true),  // Open talk page in new tab
 
-                        "contribs": un => redirect(rw.wikiBase + "/wiki/Special:Contributions/" + un, true),  // Redirect to contribs page in new tab
+                        "contribs": un => redirect(rw.wikiBase + "/wiki/Special:Contributions/" + encodeURIComponent(un), true),  // Redirect to contribs page in new tab
 
-                        "accInfo": un => redirect(rw.wikiBase + "/wiki/Special:CentralAuth?target=" + un, true),  // Redirect to Special:CentralAuth page in new tab
+                        "accInfo": un => redirect(rw.wikiBase + "/wiki/Special:CentralAuth?target=" + encodeURIComponent(un), true),  // Redirect to Special:CentralAuth page in new tab
 
                         "sendMsg": un => rw.ui.newMsg(un), // show new msg dialog
 
@@ -513,11 +513,11 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
                             });
                         },
 
-                        "filterLog": un => redirect("https://en.wikipedia.org/w/index.php?title=Special:AbuseLog&wpSearchUser=" + un, true),  // Redirect to filter log page in new tab
+                        "filterLog": un => redirect("https://en.wikipedia.org/w/index.php?title=Special:AbuseLog&wpSearchUser=" + encodeURIComponent(un), true),  // Redirect to filter log page in new tab
 
-                        "blockLog": un => redirect("https://en.wikipedia.org/w/index.php?title=Special:Log/block&page=User:" + un, true),  // Redirect to block log page in new tab
+                        "blockLog": un => redirect("https://en.wikipedia.org/w/index.php?title=Special:Log/block&page=User:" + encodeURIComponent(un), true),  // Redirect to block log page in new tab
 
-                        "allLog": un => redirect("https://en.wikipedia.org/wiki/Special:Log/" + un, true)  // Redirect to filter log page in new tab
+                        "allLog": un => redirect("https://en.wikipedia.org/wiki/Special:Log/" + encodeURIComponent(un), true)  // Redirect to filter log page in new tab
 
                     })[act](targetUsername.trim());
 

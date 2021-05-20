@@ -352,6 +352,30 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         }, 100);
     },
 
+    "loadRevisionPermalinkPage": () => {
+        // add a purple restore button to the top of the page, and redirect to the cur comparison
+        // probably could have been done nicer, but this seems to work fine
+
+        $("#contentSub").prepend(`
+        <div style="text-align: center">
+            <div id="rOld1" class="icon material-icons">
+                <span
+                    style="cursor: pointer; font-size:28px; padding-right:5px; color:purple;"
+                    onclick="location.search += '&diff=cur'"
+                > history </span>
+            </div>
+        </div>
+        <div class="mdl-tooltip mdl-tooltip--large" for="rOld1"> Restore this version </div>
+        `);
+
+        setTimeout(() => {
+            // Register all tooltips after 50ms (just some processing time)
+            for (let item of document.getElementsByClassName("mdl-tooltip")) {
+                rw.visuals.register(item);
+            }
+        }, 100);
+    },
+
     "getDisabledHTMLandHandlers": () => {
         // Open a new dialog with all the disabled icons so user can select one. Click handlers are already registered, so we just call rw.rollback.clickHandlers.[elID]();
         // Load Rollback current rev icons (rev14)

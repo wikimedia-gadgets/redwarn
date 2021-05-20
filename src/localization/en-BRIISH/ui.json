@@ -1,0 +1,119 @@
+{
+    "unfinished" : "oi we 'avent even made this yet cuz the devs are dozey buggers",
+
+    "restore": {
+        "label": "RESTORE!?",
+        "helperText": "give me one fookin reason for this restore right now",
+        "actions": {
+            "ok": "pls don't hurt me"
+        }
+    },
+    "rollback": {
+        "label": "ROLLBACK? in MY house?",
+        "helperText": "give me one fookin reason for this rollback right now",
+        "actions": {
+            "ok": "pls don't hurt me"
+        }
+    },
+    "okCancel": {
+        "ok": "Alright boss",
+        "cancel": "Nah fook off"
+    },
+    "toasts": {
+        "pleaseWait": "wait a bit u tosser...",
+        "restoreError": "oh fook an error, now look what u done to me restore!",
+        "rollbackError": "oh fook an error, now look what u done to me rollback!",
+        "newerRev": "A newer revision was detected. Your rollback has not been applied.",
+        "userUndefined": "u really think u could try me with a user that doesn't exist?? HUH!?",
+        "watching": "fine i'll tell u when the page is changed u fat lazy old cow",
+        "stoppedWatching": "fine whatever u say less work for me - disabled."
+    },
+    "rollbackAvailableDialog": {
+        "actions": {
+            "rollback": "Use Rollback",
+            "revert": "Keep Using Rollback-Like"
+        },
+        "content": "You have rollback permissions!\nWould you like to use the faster rollback API in future or continue using a rollback-like setting?\nYou can change this in your preferences at any time."
+    },
+    "tamperProtection": {
+        "header": "ATTENTION!",
+        "warningContent": "You are currently using RedWarn in a way that is strongly discouraged under guidelines set at <a href=\"/wiki/Wikipedia:REDWARN/A\" class=\"mw-redirect\" title=\"Wikipedia:REDWARN/A\">WP:REDWARN/A</a>."
+    },
+    "warn": {
+        "user": {
+            "change": "change the target user now??? u didn't already fookin decide??",
+
+            "load_wait": "Please be patient while the user information is being loaded.",
+            "loading": "getting this fookin user information, me backs a bit fooked so give me a mo",
+            "input": "user to fookin do",
+
+            "highestLevel": "Highest warning level",
+
+            "levelInfo": "The user's highest warning level",
+            "levelInfo_none": "not received any warnings this month guv",
+            "levelInfo_notice": "this cow has received a fookin level 1 notice this month, lucky man.",
+            "levelInfo_caution": "this mf received a level 2 notice this month. who does 'e think 'e is???",
+            "levelInfo_warning": "oh my word this poor sod has received a level 3 warning this month",
+            "levelInfo_final": "WHO DOES THIS MAN THINK HE IS??? still acting up over 'e received a level 4 final warning this month? $t(ui:warn.user.report)",
+            "levelInfo_policyviolation": "WHO DOES THIS MAN THINK HE IS??? still acting up over 'e received a level 4 ONLY warning this month? $t(ui:warn.user.report)",
+
+            "report": "look i don't want to, but click here to get the rozzers round.",
+            "edits": "{{edits}} edits",
+            "age": "came to brum {{localeAge}}",
+
+            "show": {
+                "userpage": "lemme see what this guy 'as said.",
+                "contributions": "show me is contribution records."
+            }
+        },
+
+        "reason": {
+            "page": "what page this about guv",
+            "additionalText": "any more to shout at this cow?",
+            "levelSelectionLevelNotPresent": "no fookin {{level}} {{levelReadable}} template available. don't ask me again or i'm tellin me missus.",
+            "levelSelectionLevel": "Level {{level}} {{levelReadable}}: {{levelDescription}}",
+            "searchDialogOpenerTooltip": "get me off me arse to search for one",
+            "warningSelectionDropdownTitle": "what this cow done this time guv"
+        },
+
+        "templateSearchDialog" : {
+            "dialogTitle": "gazza hobbling round the library menu",
+            "searchBoxLabel" : "what am i lookin for mate",
+            "instantSelect" : "get off ur arse and press ENTER to use this template",
+            "tip" : "Tip: Double-click a warning to quickly select it, or press ENTER to select the top result."
+        },
+
+        "validation" : {
+            "validationOkayIconTooltip" : "ok guv we ready. click $t(ui:warn.ok) to submit this warning.",
+            "validationFailedIconTooltip" : "fill in the fookin form u cow",
+            "validationFailedInfoDialogTitle": "u need to fix this:",
+            "noWarnTemplate" : "You don't have a warning template selected. Select one from the dropdown or search tool.",
+            "noWarnLevel" : "You haven't selected a warning level. Please select an appropriate level.",
+            "noTargetUser": "You have not selected any users to send this warning to. Start typing in the search box, then select a user.",
+            "noSelfWarn": "Local restrictions mean that you cannot warn yourself. If you want to test, please use a sandbox user."
+        },
+
+        "ok": "FOOKIN DO 'IM LADS"
+    },
+    "close": "nah fook it",
+    "configErrorDialog": {
+        "title": "Configuration Error",
+        "content": "Your RedWarn configuration could not be loaded correctly and has been reset. If this issue persists, please contact the RedWarn team.",
+        "actions": [{ "data": "$t(ui:okCancel.ok)" }]
+    },
+    "styleError": {
+        "missing": {
+            "title": "Style Missing",
+            "content": "The style set in your RedWarn configuration cannot be found. It has been set to the default style for now.",
+            "actions": [{ "data": "$t(ui:okCancel.ok)" }]
+        }
+    },
+    "contribs": {
+        "previewLink": "prev",
+        "previewTooltip": "Preview Rollback",
+        "vandalLink": "rvv",
+        "vandalTooltip": "Quick Rollback Vandalism",
+        "rollbackLink": "rb",
+        "rollbackTooltip": "Rollback"
+    }
+}

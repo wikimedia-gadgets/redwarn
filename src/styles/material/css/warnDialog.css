@@ -247,6 +247,15 @@
     margin: 0;
 }
 
+/* Status indicators hide */
+.rw-mdc-warnDialog-validationFailed.hidden {
+    display: none;
+}
+
+.rw-mdc-warnDialog-validationOkay.hidden {
+    display: none;
+}
+
 /* Revert confirmation dialog */
 .rw-mdc-riskyRevert {
     color: #f33;

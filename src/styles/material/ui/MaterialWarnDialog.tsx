@@ -225,8 +225,30 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
      */
     uiValidate(): void {
         const issues = this.validate();
-        this.dialogConfirmButton.toggleAttribute("disabled", issues !== true);
-        // TODO - add icon changes!
+
+        // If no issues
+        if (issues === true) {
+            this.dialogConfirmButton.toggleAttribute("disabled", false); // enable button
+            // Hide validation failed
+            this.element
+                .querySelector(".rw-mdc-warnDialog-validationFailed")
+                .classList.add("hidden");
+            // Remove style making the okay icon visible again
+            this.element
+                .querySelector(".rw-mdc-warnDialog-validationOkay")
+                .classList.remove("hidden");
+        } else {
+            // There's issues
+            this.dialogConfirmButton.toggleAttribute("disabled", true); // disable button
+            // Show validation failed
+            this.element
+                .querySelector(".rw-mdc-warnDialog-validationFailed")
+                .classList.remove("hidden");
+            // Hide okay icon
+            this.element
+                .querySelector(".rw-mdc-warnDialog-validationOkay")
+                .classList.add("hidden");
+        }
     }
 
     render(): HTMLDialogElement {
@@ -299,7 +321,9 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         ))}
                 </MaterialDialogContent>
                 <MaterialDialogActions>
+                    {/* VALIDATION FAILED ICON */}
                     <MaterialIconButton
+                        class={"rw-mdc-warnDialog-validationFailed hidden"}
                         icon={"error"}
                         tooltip={i18next
                             .t("ui:warn.validation.validationFailedIconTooltip")
@@ -332,10 +356,22 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         }}
                     />
 
+                    {/* VALIDATION SUCCESS ICON */}
+                    <MaterialIconButton
+                        class={"rw-mdc-warnDialog-validationOkay hidden"}
+                        icon={"check_circle"}
+                        tooltip={i18next
+                            .t("ui:warn.validation.validationOkayIconTooltip")
+                            .toString()}
+                        iconColor="green"
+                    />
+
+                    {/* Cancel and exit button */}
                     <MaterialButton dialogAction="cancel">
                         {i18next.t<string>("ui:okCancel.cancel")}
                     </MaterialButton>
 
+                    {/* Warn user button */}
                     {
                         (this.dialogConfirmButton = (
                             <MaterialButton dialogAction="confirm" disabled>

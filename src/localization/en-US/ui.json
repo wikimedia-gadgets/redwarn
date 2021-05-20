@@ -79,8 +79,8 @@
         "templateSearchDialog" : {
             "dialogTitle": "Warnings",
             "searchBoxLabel" : "Search for a warning...",
-            "instantSelect" : "Press \"Enter\" to use this template",
-            "tip" : "Tip: Double-click a warning to quickly select it, or press \"Enter\" to select the top result."
+            "instantSelect" : "Press ENTER to use this template",
+            "tip" : "Tip: Double-click a warning to quickly select it, or press ENTER to select the top result."
         },
 
         "validation" : {

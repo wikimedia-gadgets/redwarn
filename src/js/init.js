@@ -714,6 +714,13 @@ function initRW() {
             if ($("table.diff").length > 0) { // DETECT DIFF HERE - if diff table is present
                 // Diff page
                 rw.rollback.loadIcons(); // load rollback icons
+            } else if (
+                document.getElementsByClassName("mw-revision")[0]
+                && location.search.includes("oldid=")
+                && !location.search.includes("diff=")
+            ) {
+                // page revision permalink
+                rw.rollback.loadRevisionPermalinkPage();
             } else if (mw.config.get("wgRelevantPageName").includes("Special:RecentChanges")) {
                 // Recent changes page
                 // Add redwarn open btn

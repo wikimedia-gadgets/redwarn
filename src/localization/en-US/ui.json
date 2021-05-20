@@ -88,7 +88,7 @@
             "validationFailedInfoDialogTitle": "Fix these issues before warning:",
             "noWarnTemplate" : "You don't have a warning template selected. Select one from the dropdown or search tool.",
             "noWarnLevel" : "You haven't selected a warning level. Please select an appropriate level.",
-            "noTargetUser": "You have not selecetd a target user.",
+            "noTargetUser": "You have not selected any users to send this warning to. Start typing in the search box, then select a user.",
             "noSelfWarn": "Local restrictions mean that you cannot warn yourself. If you want to test, please use a sandbox user."
         },
 

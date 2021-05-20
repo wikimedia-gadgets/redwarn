@@ -59,20 +59,7 @@ import RedWarnUI from "rww/ui/RedWarnUI";
 export default class MaterialWarnDialog extends RWUIWarnDialog {
     user: User;
 
-    private _helperText: JSX.Element;
     private dialogConfirmButton: JSX.Element;
-    get helperText(): string {
-        return this._helperText?.innerText ?? null;
-    }
-    set helperText(value: string) {
-        if (this._helperText) this._helperText.innerText = value;
-    }
-    get helperTextColor(): string {
-        return this._helperText?.style?.color ?? "black";
-    }
-    set helperTextColor(value: string) {
-        if (this._helperText) this._helperText.style.color = value;
-    }
 
     private mwdUser: JSX.Element & {
         MWDUser: MaterialWarnDialogUserController;
@@ -148,8 +135,9 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         this.uiValidate();
     }
 
-    validate(): true | string {
+    validate(): true | string[] {
         // Validates the content of a warning dialog
+        // Returns array of strings with issues or true if we're all good
 
         // Reponse: Condition - in order to prevent user confusion!
         // response should be i18n link
@@ -157,13 +145,13 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
             {
                 // Prevents warning yourself
                 condition: this.user?.username === ClientUser.i.username,
-                response: "ui:warn:validation:noSelfWarn",
+                response: "ui:warn.validation.noSelfWarn",
             },
 
             {
                 // Prevents warning nobody
                 condition: this.user == null,
-                response: "ui:warn:validation:noTargetUser",
+                response: "ui:warn.validation.noTargetUser",
             },
 
             // TODO: prevents users without EC warning more than 1 user
@@ -172,35 +160,30 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
             {
                 // Prevents no warning template
                 condition: this.mwdReason?.MWDReason?.warning == null,
-                response: "ui:warn:validation:noWarnTemplate",
+                response: "ui:warn.validation.noWarnTemplate",
             },
 
             {
                 // Prevents no warning level
                 condition: this.mwdReason?.MWDReason?.warningLevel == null,
-                response: "ui:warn:validation:noWarnLevel",
+                response: "ui:warn.validation.noWarnLevel",
             },
         ];
 
-        // Now filter all of these and give response for first one. Could be expanded to show more info in future
-        const testResults = validationTests.filter((test) => {
-            return test.condition;
-        });
+        // Now filter all of these and turn the responses into an array of strings
+        const testResults: string[] = (() => {
+            // Because we're actually reassigning with .push
+            // eslint-disable-next-line prefer-const
+            let resultsArr: string[] = [];
+            validationTests.forEach((test) => {
+                if (test.condition)
+                    resultsArr.push(i18next.t(test.response).toString());
+            });
+            return resultsArr;
+        })();
 
-        // If no conditions matched, return true - else, if just one, first error, otherwise, list all
-        return testResults.length == 0
-            ? true
-            : testResults.length == 1
-            ? i18next.t(testResults[0].response).toString()
-            : ((): string => {
-                  let finalStr = "";
-                  testResults.forEach((r) => {
-                      // include new line and bullet point
-                      finalStr +=
-                          "\n\u2022 " + i18next.t(r.response).toString();
-                  });
-                  return finalStr;
-              })();
+        // If no conditions matched, return true - else, everything in the array.
+        return testResults.length == 0 ? true : testResults;
     }
 
     show(): Promise<RWUIWarnDialogResult> {
@@ -242,9 +225,8 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
      */
     uiValidate(): void {
         const issues = this.validate();
-        this.helperText = issues === true ? "" : issues;
-        this.helperTextColor = "#f44336"; // Material Red 500
         this.dialogConfirmButton.toggleAttribute("disabled", issues !== true);
+        // TODO - add icon changes!
     }
 
     render(): HTMLDialogElement {
@@ -324,24 +306,31 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                             .toString()}
                         iconColor="red"
                         onClick={() => {
+                            // Get validation info
+                            const validationTemp = this.validate();
+                            if (validationTemp === true) return; // no actual issues so just leave
+                            const validation: string[] = validationTemp; // now we can appoint without type issues
+
                             // Show dialog with details on why validation failed
                             const dialog = new RedWarnUI.Dialog({
                                 title: i18next.t(
                                     "ui:warn.validation.validationFailedInfoDialogTitle"
                                 ),
-                                // TODO formatting
-                                content: this.validate().toString(),
+                                // Map content to the errors wrapped in lis
+                                content: (
+                                    <ul>
+                                        {validation.map((reason) => (
+                                            <li>{reason}</li>
+                                        ))}
+                                    </ul>
+                                ),
                                 actions: [
-                                    { data: i18next.t("ui:okCancel:ok") },
+                                    { data: i18next.t("ui:okCancel.ok") },
                                 ],
                             });
                             dialog.show();
                         }}
                     />
-                    {this._helperText ??
-                        (this._helperText = (
-                            <div class={"rw-mdc-dialog-helperText"} />
-                        ))}
 
                     <MaterialButton dialogAction="cancel">
                         {i18next.t<string>("ui:okCancel.cancel")}

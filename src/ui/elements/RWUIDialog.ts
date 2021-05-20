@@ -115,6 +115,10 @@ export interface RWUIAlertDialogProps extends RWUIDialogProperties {
      * The content of the dialog.
      */
     content?: ComponentChild;
+    /**
+     * Optional raw content, for errors etc. Will be wrapped in a <pre>
+     */
+    preformattedContent?: string;
 }
 
 export class RWUIAlertDialog extends RWUIDialog {

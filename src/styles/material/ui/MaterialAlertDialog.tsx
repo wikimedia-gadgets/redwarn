@@ -105,6 +105,9 @@ export default class MaterialAlertDialog extends RWUIAlertDialog {
                         {this.props.content}
                     </MaterialDialogContent>
                 )}
+                {this.props.preformattedContent && (
+                    <pre>{this.props.preformattedContent}</pre>
+                )}
                 <MaterialDialogActions>
                     {this.renderActions()}
                 </MaterialDialogActions>

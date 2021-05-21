@@ -269,8 +269,28 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                 context: valid[0].id,
             });
             this.helperTextColor = "var(--mdc-theme-error)";
+
+            this.dialogConfirmButton.toggleAttribute("disabled", false); // enable button
+            // Hide validation failed
+            this.element
+                .querySelector(".rw-mdc-warnDialog-validationFailed")
+                .classList.add("hidden");
+            // Remove style making the okay icon visible again
+            this.element
+                .querySelector(".rw-mdc-warnDialog-validationOkay")
+                .classList.remove("hidden");
         } else {
             this.helperText = "";
+
+            this.dialogConfirmButton.toggleAttribute("disabled", true); // disable button
+            // Show validation failed
+            this.element
+                .querySelector(".rw-mdc-warnDialog-validationFailed")
+                .classList.remove("hidden");
+            // Hide okay icon
+            this.element
+                .querySelector(".rw-mdc-warnDialog-validationOkay")
+                .classList.add("hidden");
         }
     }
 

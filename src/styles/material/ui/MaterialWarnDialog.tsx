@@ -445,11 +445,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                     </MaterialButton>
                     {
                         (this.dialogConfirmButton = (
-                            <MaterialButton
-                                dialogAction="confirm"
-                                raised
-                                disabled
-                            >
+                            <MaterialButton dialogAction="confirm" disabled>
                                 {i18next.t<string>("ui:warn.ok")}
                             </MaterialButton>
                         ))

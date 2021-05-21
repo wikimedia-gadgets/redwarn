@@ -42,7 +42,9 @@ export default function (props: MaterialIconButtonProperties): JSX.Element {
                 (tooltip ?? label)
             }
             onClick={onClick}
-            style={`color:${iconColor ?? "initial"};`}
+            style={[
+                ...(props.iconColor ? [`color:${props.iconColor}`] : []),
+            ].join(";")}
             {...expandDataAttributes(props)}
         >
             {(ripple ?? true) && <span class="mdc-icon-button__ripple" />}

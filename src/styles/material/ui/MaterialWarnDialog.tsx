@@ -260,8 +260,8 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
     uiValidate(): void {
         const valid = this.validate();
 
-        if (this.mwdErrors)
-            this.mwdErrors.style.display = valid === true ? "none" : "";
+        // TODO: Disable this when Ed changes his mind.
+        this.mwdErrors.style.display = valid === true ? "none" : "";
         this.dialogConfirmButton.toggleAttribute("disabled", valid !== true);
 
         if (valid !== true) {
@@ -270,27 +270,12 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
             });
             this.helperTextColor = "var(--mdc-theme-error)";
 
-            this.dialogConfirmButton.toggleAttribute("disabled", false); // enable button
-            // Hide validation failed
-            this.element
-                .querySelector(".rw-mdc-warnDialog-validationFailed")
-                .classList.add("hidden");
-            // Remove style making the okay icon visible again
-            this.element
-                .querySelector(".rw-mdc-warnDialog-validationOkay")
-                .classList.remove("hidden");
+            this.mwdErrors.toggleAttribute("data-valid", false);
+            this.mwdErrors.innerText = "error";
         } else {
             this.helperText = "";
-
-            this.dialogConfirmButton.toggleAttribute("disabled", true); // disable button
-            // Show validation failed
-            this.element
-                .querySelector(".rw-mdc-warnDialog-validationFailed")
-                .classList.remove("hidden");
-            // Hide okay icon
-            this.element
-                .querySelector(".rw-mdc-warnDialog-validationOkay")
-                .classList.add("hidden");
+            this.mwdErrors.toggleAttribute("data-valid", true);
+            this.mwdErrors.innerText = "check_circle";
         }
     }
 
@@ -417,13 +402,13 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                     {this.mwdErrors ??
                         (this.mwdErrors = (
                             <MaterialIconButton
+                                class={"rw-mdc-warnDialog-validation"}
                                 icon={"error"}
                                 tooltip={i18next
                                     .t(
                                         "ui:warn.validation.validationFailedIconTooltip"
                                     )
                                     .toString()}
-                                iconColor="var(--mdc-theme-error)"
                                 onClick={() => {
                                     // Show failed validation tests
                                     const dialog = new RedWarnUI.Dialog({
@@ -438,7 +423,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                                         actions: [
                                             {
                                                 data: i18next.t(
-                                                    "ui:okCancel:ok"
+                                                    "ui:okCancel.ok"
                                                 ),
                                             },
                                         ],

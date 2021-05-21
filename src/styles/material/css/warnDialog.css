@@ -269,12 +269,12 @@
 }
 
 /* Status indicators hide */
-.rw-mdc-warnDialog-validationFailed.hidden {
-    display: none;
+.rw-mdc-warnDialog-validation[data-valid] {
+    color: green;
 }
 
-.rw-mdc-warnDialog-validationOkay.hidden {
-    display: none;
+.rw-mdc-warnDialog-validation:not([data-valid]) {
+    color: var(--mdc-theme-error);
 }
 
 /* Revert confirmation dialog */

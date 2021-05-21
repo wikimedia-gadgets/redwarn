@@ -4,9 +4,14 @@ import buildinfo from "!webpack-plugin-buildinfo?gitHash&gitHashShort&time&platf
 
 export const RW_BUILDINFO = buildinfo;
 
-// ! following needs to be updated manually, otherwise the whole package.json will be included in compile
+// These need to be updated manually.
 export const RW_VERSION = "0.2.0";
-export const RW_VERSION_TAG = `0.2.0-dev+${RW_BUILDINFO.gitHashShort}`;
+export const RW_VERSION_PUBLIC = "17";
+export const RW_VERSION_TAG = `${RW_VERSION_PUBLIC}${
+    process.env.NODE_ENV === "development"
+        ? `dev+${RW_BUILDINFO.gitHashShort}`
+        : ""
+}`;
 export const RW_VERSION_SUMMARY = "nothing yet";
 
 export const RW_CONFIG_VERSION = 1;
@@ -16,8 +21,8 @@ export const RW_DATABASE_VERSION = 1;
 export const RW_LOG_SIGNATURE = `RedWarn ${RW_VERSION_TAG}`;
 
 export const RW_SIGNATURE = "~~~~";
-export const RW_WELCOME = "{{subst:Welcome}}";
-export const RW_WELCOME_ANON = "{{subst:welcome-anon}}";
+
+// TODO: Wiki-specific configurations
 export const RW_SHARED_IP_ADVICE = "{{subst:Shared IP advice}}";
 
 /* Do not decode! The source code must NEVER have closing or opening nowiki tags! */

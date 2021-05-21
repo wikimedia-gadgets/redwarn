@@ -119,7 +119,9 @@ export class Configuration {
 
         await ClientUser.i.redwarnConfigPage.edit(
             Configuration.fromTemplate(template, this.map()),
-            "Updating user configuration"
+            {
+                comment: "Updating user configuration",
+            }
         );
         if (reloadOnDone) {
             window.location.reload();

@@ -3,6 +3,8 @@ import RedWarnUI from "rww/ui/RedWarnUI";
 import { RollbackContext } from "./RollbackContext";
 import { Rollback } from "rww/mediawiki";
 
+// TODO: Overhaul.
+
 interface ActionRollback {
     actionType: "rollback";
     promptReason: boolean;
@@ -99,7 +101,8 @@ export const RollbackOptions: RollbackOption[] = [
         icon: "library_add",
         actionType: "function",
         action: (rollbackContext: RollbackContext) => async () => {
-            await rollbackContext.targetRevision.user.quickWelcome();
+            // TODO: Fix this mess.
+            // await rollbackContext.targetRevision.user.quickWelcome();
         }, // Callback
     },
 

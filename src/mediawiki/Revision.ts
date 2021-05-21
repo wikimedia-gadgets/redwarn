@@ -1,12 +1,19 @@
-import { MediaWikiAPI, MediaWikiURL, Page, User } from "rww/mediawiki";
+import {
+    MediaWikiAPI,
+    MediaWikiURL,
+    Page,
+    PageEditOptions,
+    User,
+} from "rww/mediawiki";
 import redirect from "rww/util/redirect";
 import Log from "rww/data/RedWarnLog";
+import Section, { SectionContainer } from "rww/mediawiki/Section";
 
 /**
  * A revision is an object provided by the MediaWiki API which represents
  * a change in a page's content.
  */
-export class Revision {
+export class Revision implements SectionContainer {
     /** The ID of the revision. */
     revisionID: number;
 
@@ -30,6 +37,9 @@ export class Revision {
 
     /** The content of the page as of the given revision. */
     content?: string;
+
+    /** The sections of this revision. */
+    sections: Section[];
 
     private constructor(object?: Partial<Revision>) {
         if (!!object) {
@@ -62,6 +72,19 @@ export class Revision {
         return await Revision.populate(
             new Revision({ revisionID: revisionID })
         );
+    }
+
+    /**
+     * Create a nearly-bare `Revision` object from a revision ID and wikitext.
+     * @param revisionID The revision ID to use.
+     * @param wikitext The wikitext of this revision.
+     * @returns A partially populated Revision object.
+     */
+    static fromIDAndText(revisionID: number, wikitext: string): Revision {
+        return new Revision({
+            revisionID: revisionID,
+            content: wikitext,
+        });
     }
 
     /**
@@ -168,6 +191,13 @@ export class Revision {
     }
 
     /**
+     * Get the revision sections.
+     */
+    async getSections(): Promise<Section[]> {
+        return Section.getSections(this);
+    }
+
+    /**
      * Checks if all of the revision's properties are filled. Use this before
      * using {@link populate} in order to conserve data usage.
      */
@@ -234,85 +264,33 @@ export class Revision {
         redirect(MediaWikiURL.getDiffUrl(this.revisionID));
     }
 
-    // Anyone with a better idea, please change this. PLEASE.
-    findSections(lowestHeadingLevel: 1): StrObj<string>;
-    findSections(lowestHeadingLevel: 2): StrObj<StrObj<string>>;
-    findSections(lowestHeadingLevel: 3): StrObj<StrObj<StrObj<string>>>;
-    findSections(lowestHeadingLevel: 4): StrObj<StrObj<StrObj<StrObj<string>>>>;
-    findSections(
-        lowestHeadingLevel: 5
-    ): StrObj<StrObj<StrObj<StrObj<StrObj<string>>>>>;
-    findSections(
-        lowestHeadingLevel: 6
-    ): StrObj<StrObj<StrObj<StrObj<StrObj<StrObj<string>>>>>>;
-
     /**
-     * Splits wikitext down to the section level defined. If text exists before the
-     * first subsection of a section, the "*" key is used.
+     * Appends wikitext to the page at a given revision.
      *
-     * @returns Page content split into sections.
+     * @param text The content to add.
+     * @param options Page editing options.
      */
-    findSections(lowestHeadingLevel = 2): Record<string, any> {
-        if (!this.content) {
-            throw new Error(
-                "Page content does not exist. Populate this revision first."
-            );
+    async appendContent(
+        text: string,
+        options?: Omit<PageEditOptions, "mode" | "baseRevision">
+    ): Promise<void> {
+        if (!!this.page) {
+            // Big oh noes. We'll have to send an additional request just to get the page name.
+            Log.warn("Page of revision was not set. This is inefficient!", {
+                stack: new Error().stack,
+            });
+            await this.populate();
         }
 
-        if (lowestHeadingLevel < 1) lowestHeadingLevel = 1;
-        if (lowestHeadingLevel === 1) return { "*": this.content };
-        if (lowestHeadingLevel > 6) lowestHeadingLevel = 6;
-
-        const extractSections = (
-            wikitext: string,
-            level = 2
-        ): Record<string, any> => {
-            const searchingRegex = new RegExp(
-                `^(={${level}})\\s*(${level < 6 ? "[^=]" : "."}+?)\\s*\\1\$\n`,
-                "gim"
-            );
-            const foundSections: Record<string, string | any> = {};
-
-            let lastIndex = 0;
-            let previousSectionMatch = null;
-            let sectionMatch = null;
-            while ((sectionMatch = searchingRegex.exec(wikitext)) != null) {
-                if (!!previousSectionMatch) {
-                    foundSections[previousSectionMatch[2]] = wikitext.substring(
-                        lastIndex, // Right after the section heading.
-                        searchingRegex.lastIndex - sectionMatch[0].length // Right before the next section
-                    );
-                } else {
-                    foundSections["*"] = wikitext.substring(
-                        0, // Right after the section heading.
-                        searchingRegex.lastIndex - sectionMatch[0].length // Right before the next section
-                    );
-                }
-                previousSectionMatch = sectionMatch;
-                lastIndex = searchingRegex.lastIndex;
-            }
-
-            // There's still one more by this point.
-            if (!!previousSectionMatch) {
-                foundSections[previousSectionMatch[2]] = wikitext.substring(
-                    lastIndex // Right after the section heading.
-                );
-            }
-
-            if (lowestHeadingLevel > level) {
-                Object.entries(foundSections).forEach(([k, v]) => {
-                    const extractedContents = extractSections(v, level + 1);
-                    if (Object.keys(extractedContents).length > 1) {
-                        foundSections[k] = extractedContents;
-                    }
-                });
-            }
-
-            return foundSections;
-        };
-
-        return { "*": extractSections(this.content) };
+        this.page.appendContent(
+            text,
+            Object.assign(
+                {
+                    mode: "append",
+                    baseRevision: this,
+                },
+                options
+            )
+        );
     }
 }
-
-type StrObj<T> = Record<string, string | T>;

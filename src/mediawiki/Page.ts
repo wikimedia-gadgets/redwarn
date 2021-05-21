@@ -2,16 +2,41 @@ import { MediaWikiAPI, Revision, User } from "rww/mediawiki";
 import { RW_WIKIS_TAGGABLE } from "rww/data/RedWarnConstants";
 import RedWarnStore from "rww/data/RedWarnStore";
 import i18next from "i18next";
-import { PageInvalidError, PageMissingError } from "rww/errors/MediaWikiErrors";
+import {
+    PageInvalidError,
+    PageMissingError,
+    SectionIndexMissingError,
+} from "rww/errors/MediaWikiErrors";
 import { url as buildURL } from "rww/util";
 import redirect from "rww/util/redirect";
+import Section, { SectionContainer } from "rww/mediawiki/Section";
+
+export interface PageEditOptions {
+    /**
+     * The summary of the edit (without the RedWarn signature).
+     */
+    comment?: string;
+    /**
+     * The index of the section to edit, or "new" for a new section.
+     */
+    section?: string | number | Section;
+    /**
+     * Whether or not this text will be appended, be prepended, or replace the existing text.
+     */
+    mode?: "replace" | "append" | "prepend";
+    /**
+     * The basis revision of this page edit. This will help prevent possible edit conflicts.
+     * Omit this parameter to edit a page regardless of content.
+     */
+    baseRevision?: Revision;
+}
 
 /**
  * A page is an object in a MediaWiki installation. All revisions stem from one page, and all
  * pages stem from one namespace. Since a `Page` object cannot be manually constructed, it must
  * be created using a page ID or using its title.
  */
-export class Page {
+export class Page implements SectionContainer {
     /** The ID of the page. */
     pageID?: number;
 
@@ -23,6 +48,9 @@ export class Page {
 
     /** The latest revision cached by RedWarn. */
     latestCachedRevision?: Revision;
+
+    /** The sections of this revision. */
+    sections: Section[];
 
     /**
      * Returns the URL of the page.
@@ -106,7 +134,7 @@ export class Page {
             revisionInfoRequest["query"]["pages"]
         )[0];
 
-        // Give the page a small boost as well.
+        // Fill in blank values from the page if available.
         if (!page.title) page.title = pageData["title"];
         if (!page.namespace) page.namespace = pageData["ns"];
 
@@ -148,6 +176,13 @@ export class Page {
     }
 
     /**
+     * Get the sections of this page's latest revision.
+     */
+    async getSections(): Promise<Section[]> {
+        return Section.getSections(this);
+    }
+
+    /**
      * Checks if the page's latest revision has been cached.
      */
     hasLatestRevision(): boolean {
@@ -161,32 +196,6 @@ export class Page {
     async getLatestRevisionNotByUser(username: string): Promise<Revision> {
         return this.getLatestRevision({
             excludeUser: User.fromUsername(username),
-        });
-    }
-
-    /**
-     * Edit the page.
-     *
-     * @throws {Error}
-     * @param content {string} The new page content.
-     * @param comment {string} The edit summary.
-     */
-    async edit(content: string, comment?: string): Promise<void> {
-        const pageIdentifier = this.getIdentifier();
-
-        await MediaWikiAPI.postWithEditToken({
-            action: "edit",
-            format: "json",
-            [typeof pageIdentifier === "number"
-                ? "pageid"
-                : "title"]: pageIdentifier,
-            summary: `${comment ?? ""} ${i18next.t(
-                "common:redwarn.signature"
-            )}`,
-            text: content,
-            tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
-                ? "RedWarn"
-                : null,
         });
     }
 
@@ -211,5 +220,153 @@ export class Page {
      */
     getSubpage(subpage: string): Page {
         return Page.fromTitle(`${this.title}/${subpage}`);
+    }
+
+    /**
+     * Edit the page.
+     *
+     * @throws {Error}
+     * @param content The new page content.
+     * @param options Page editing options.
+     */
+    async edit(content: string, options: PageEditOptions): Promise<void> {
+        const pageIdentifier = this.getIdentifier();
+
+        // Handle the section
+        /**
+         * The {@link Section} to append text to.
+         */
+        let existingSection: Section = null;
+        if (options.section) {
+            // For `Section` objects.
+            if (
+                options.section instanceof Section &&
+                options.section.revision === this.latestCachedRevision
+            )
+                // Use the existing section on this talk page.
+                existingSection = options.section;
+            else if (options.section instanceof Section)
+                // Replace section option with section title for automatic correction.
+                options.section = options.section.title;
+
+            const revision = this.sections[0].revision;
+            const revisionSections = this.sections;
+
+            // Search for an existing section.
+            if (existingSection == null) {
+                if (!revision && typeof options.section === "number") {
+                    // Immediate failure since a non-existent page has no sections.
+                    throw new PageMissingError(this);
+                } else if (typeof options.section === "number") {
+                    existingSection = revisionSections.filter(
+                        (s) => s.index === options.section
+                    )[0];
+
+                    // Section not found. Hard fail since there's no fallback title.
+                    if (existingSection == null)
+                        throw new SectionIndexMissingError(
+                            options.section,
+                            revision
+                        );
+                } else {
+                    existingSection = revisionSections.filter(
+                        (s) => s.title === options.section
+                    )[0];
+
+                    // Section not found. It will be appended to the end of the user talk page.
+                    // Remove leading whitespace to avoid extra spaces.
+                    if (existingSection == null) content = content.trimLeft();
+                }
+            }
+        }
+
+        // Handle the mode
+        let textArgument: Record<string, any>;
+        switch (options.mode) {
+            case "append":
+                textArgument = { appendtext: content };
+                break;
+            case "prepend":
+                textArgument = { prependtext: content };
+                break;
+            default:
+                textArgument = { text: content };
+                break;
+        }
+
+        await MediaWikiAPI.postWithEditToken({
+            action: "edit",
+            format: "json",
+
+            // Page ID or title
+            [typeof pageIdentifier === "number"
+                ? "pageid"
+                : "title"]: pageIdentifier,
+
+            // Edit summary
+            summary: `${options.comment ?? ""} ${i18next.t(
+                "common:redwarn.signature"
+            )}`,
+
+            // Tags
+            tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
+                ? "RedWarn"
+                : null,
+
+            // Base revision ID
+            ...(options.baseRevision
+                ? {
+                      baserevid: options.baseRevision.revisionID,
+                  }
+                : {}),
+
+            // Section
+            ...(options.section
+                ? existingSection
+                    ? {
+                          section: existingSection.index,
+                      }
+                    : {
+                          section: "new",
+                          sectiontitle: options.section,
+                      }
+                : {}),
+
+            ...textArgument,
+        });
+    }
+
+    /**
+     * Appends wikitext to the page.
+     *
+     * @param text The content to add.
+     * @param options Page editing options.
+     */
+    async appendContent(
+        text: string,
+        options?: Omit<PageEditOptions, "mode">
+    ): Promise<void> {
+        // Force using append mode.
+        await this.edit(
+            text,
+            Object.assign({ mode: <const>"append" }, options)
+        );
+    }
+
+    /**
+     * Prepends wikitext to the page.
+     *
+     * @param text The content to add.
+     * @param options Page editing options.
+     */
+    async prependContent(
+        text: string,
+        options?: Omit<PageEditOptions, "mode">
+    ): Promise<void> {
+        // Force using prepend mode.
+        await this.edit(
+            text,
+            Object.assign({ mode: <const>"prepend" }, options)
+        );
     }
 }

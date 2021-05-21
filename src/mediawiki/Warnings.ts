@@ -1,7 +1,17 @@
 import { WarningLevel } from "./WarningLevel";
+import { User } from "rww/mediawiki/User";
 
 // TODO Move this to wiki-specific definition files.
 // TODO i18n
+
+export interface WarningOptions {
+    warningText: string;
+    targetUser: User;
+    warning?: Warning;
+    warnLevel?: WarningLevel;
+    relatedPage?: string;
+    additionalText?: string;
+}
 
 export enum WarningCategory {
     Common,
@@ -37,6 +47,9 @@ interface WarningBase {
     template: string;
     note?: string;
     keywords?: string[];
+
+    relatedPage?: "required" | "disabled" | "optional";
+    additionalText?: "required" | "disabled" | "optional";
 }
 
 export interface TieredWarning extends WarningBase {
@@ -670,6 +683,8 @@ export const Warnings: Record<string, Warning> = {
         type: WarningType.PolicyViolation,
         note:
             "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins.",
+        keywords: ["uaa"],
+        relatedPage: "required",
     },
     "coiusername": {
         name: "Username is against policy, and conflict of interest",

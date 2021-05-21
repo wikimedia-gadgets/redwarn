@@ -3,9 +3,9 @@ import generateId from "rww/util/generateId";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 import { RollbackContext } from "rww/definitions/RollbackContext";
 import { User } from "rww/mediawiki/User";
-import { Warning } from "rww/mediawiki/Warnings";
+import { Warning, WarningOptions } from "rww/mediawiki/Warnings";
 import { Dependency } from "rww/data/Dependencies";
-import { Page, WarningLevel } from "rww/mediawiki";
+import { Page } from "rww/mediawiki";
 
 export enum RWUIDialogActionType {
     /**
@@ -215,17 +215,8 @@ export interface RWUIWarnDialogProps extends RWUIDialogProperties {
     relatedPage?: Page;
 }
 
-export interface RWUIWarnDialogResult {
-    warningText: string;
-    targetUser: User;
-    warning?: Warning;
-    warnLevel?: WarningLevel;
-    relatedPage?: string;
-    additionalText?: string;
-}
-
 export class RWUIWarnDialog extends RWUIDialog {
-    show(): Promise<RWUIWarnDialogResult> {
+    show(): Promise<WarningOptions> {
         throw new Error("Attempted to call abstract method");
     }
     render(): HTMLDialogElement {
@@ -238,7 +229,7 @@ export class RWUIWarnDialog extends RWUIDialog {
         super(props);
     }
 
-    protected _result: RWUIWarnDialogResult;
+    protected _result: WarningOptions;
 }
 
 export interface RWUIIFrameDialogProps extends RWUIDialogProperties {

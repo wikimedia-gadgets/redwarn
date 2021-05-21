@@ -352,10 +352,12 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
     }
 
     refresh(): void {
-        const keyListener = (textInput: JSX.Element) => {
+        const keyListener = (textInput: JSX.Element, instant = false) => {
             return () => {
-                // Only update if no changes for 2 seconds.
-                const HOLD_TIME = 2000;
+                if (instant) return this.props.warnDialog.updatePreview();
+
+                // Time in milliseconds to wait input for.
+                const HOLD_TIME = 500;
                 textInput.setAttribute("data-last-keydown", `${Date.now()}`);
                 setTimeout(() => {
                     if (
@@ -363,8 +365,9 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
                             +textInput.getAttribute("data-last-keydown") >=
                         HOLD_TIME
                     )
+                        // MaterialWarnDialog will rate-limit updates.
                         this.props.warnDialog.updatePreview();
-                }, HOLD_TIME - 5);
+                }, HOLD_TIME * 1.1);
             };
         };
 
@@ -392,13 +395,22 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
                                     this.props.relatedPage?.title ?? ""
                                 }
                                 autofocus
+                                {...(this.warning != null
+                                    ? { [this.warning.relatedPage]: true }
+                                    : {})}
                             />
                         );
+                        const components = MaterialTextInputUpgrade(textInput);
                         this.elementSet.page = {
                             element: textInput,
-                            components: MaterialTextInputUpgrade(textInput),
+                            components: components,
                         };
-                        textInput.addEventListener(
+                        components.textField.listen(
+                            "focusout",
+                            keyListener(textInput),
+                            true
+                        );
+                        components.textField.listen(
                             "keydown",
                             keyListener(textInput)
                         );
@@ -413,13 +425,22 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
                                     "ui:warn.reason.additionalText"
                                 )}
                                 autofocus
+                                {...(this.warning != null
+                                    ? { [this.warning.additionalText]: true }
+                                    : {})}
                             />
                         );
+                        const components = MaterialTextInputUpgrade(textInput);
                         this.elementSet.additionalText = {
                             element: textInput,
-                            components: MaterialTextInputUpgrade(textInput),
+                            components: components,
                         };
-                        textInput.addEventListener(
+                        components.textField.listen(
+                            "focusout",
+                            keyListener(textInput),
+                            true
+                        );
+                        components.textField.listen(
                             "keydown",
                             keyListener(textInput)
                         );

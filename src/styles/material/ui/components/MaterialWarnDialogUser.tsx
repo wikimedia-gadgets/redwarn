@@ -137,6 +137,7 @@ function MaterialWarnDialogUserCard({
     parent: MaterialWarnDialogUser;
 }): JSX.Element {
     const user = parent.user;
+
     if (!user.isPopulated() || !user.warningAnalysis) {
         throw new Error(
             "MaterialWarnDialogUserCard called without the User being fully-populated."
@@ -187,9 +188,7 @@ function MaterialWarnDialogUserCard({
                                       }).show();
                                   },
                               }
-                            : {
-                                  disabled: true,
-                              })}
+                            : {})}
                     />
                 </td>
             </tr>
@@ -393,7 +392,9 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                             this.lastUser && (
                                 <MaterialIconButton
                                     icon={"close"}
-                                    tooltip={"Cancel"}
+                                    tooltip={i18next
+                                        .t("ui:okCancel.cancel")
+                                        .toString()}
                                     onClick={() => {
                                         (overlayInfo as OverlayContentInput).onFinish(
                                             this.lastUser.username

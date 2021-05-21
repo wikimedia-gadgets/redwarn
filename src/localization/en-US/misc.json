@@ -19,6 +19,6 @@
     },
 
     "parser" : {
-        "wikiTxtParseError" : "Sorry, we couldn't decode this WikiText. Check it for syntax errors and try again."
+        "wikiTxtParseError" : "Sorry, but we can't show a preview for this. Check the wikitext for errors and try again."
     }
 }

@@ -2,7 +2,7 @@
     "redwarn": {
         "name": "RedWarn",
         "signature": "([[w:en:WP:RW|RW $t(common:redwarn.version)]])",
-        "userAgent": "RedWarn/$t(common:redwarn.version) ([[m:w:wt:RW]]; https://w.wiki/s6j/;)",
+        "userAgent": "RedWarn/$t(common:redwarn.version) ([[w:en:WP:RW|]]; https://w.wiki/s6j/;)",
 
         "init": {
             "error": "An error occurred while loading RedWarn.",

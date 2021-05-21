@@ -20,6 +20,7 @@ interface MaterialTextInputProps extends BaseProps {
     width?: string;
     outlined?: boolean;
     autofocus?: boolean;
+    required?: boolean;
 }
 
 // Private storage variable. No need to put it into {@link MaterialStyleStorage}.
@@ -114,6 +115,9 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                         maxLength: props.maxCharacterCount,
                     })}
                     {...(props.autofocus && {
+                        autofocus: true,
+                    })}
+                    {...(props.required && {
                         autofocus: true,
                     })}
                 />

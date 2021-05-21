@@ -1,11 +1,5 @@
-import {
-    RW_SIGNATURE,
-    RW_WELCOME,
-    RW_WELCOME_ANON,
-} from "rww/data/RedWarnConstants";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import getMonthHeader from "rww/util/getMonthHeader";
-import regexEscape from "rww/util/regexEscape";
 import {
     Gender,
     GenderDict,
@@ -13,17 +7,23 @@ import {
     getHighestWarningLevel,
     MediaWikiAPI,
     Page,
+    PageEditOptions,
     Revision,
     WarningAnalysis,
     WarningLevel,
+    WarningOptions,
 } from "rww/mediawiki";
 import i18next from "i18next";
 import { PageMissingError } from "rww/errors/MediaWikiErrors";
 import { GroupArray, GroupsFromNames } from "rww/definitions/Group";
 import { isIPAddress } from "rww/util";
-import { RWUIWarnDialogResult } from "rww/ui/elements/RWUIDialog";
 import { WarningType } from "./Warnings";
+import Section from "rww/mediawiki/Section";
 
+/**
+ * The User represents a MediaWiki editor, be it a registered user or an IP address.
+ * In the MediaWiki database, this is commonly called an "actor".
+ */
 export class User {
     /** The user's latest edit. `null` if they have never made an edit. */
     latestEdit?: Revision | null;
@@ -138,34 +138,33 @@ export class User {
         if (!this.warningAnalysis || forceRecheck) {
             const talkPage = this.talkPage;
             try {
-                const talkPageLatestRevision = await talkPage.getLatestRevision();
-                const talkPageWikitext = talkPageLatestRevision?.content;
-                if (!talkPageWikitext) {
+                const talkPageSections = await talkPage.getSections();
+                const talkPageWikitext = talkPage.latestCachedRevision.content;
+                if (!talkPageWikitext || talkPageWikitext.length === 0) {
+                    console.log("a");
                     this.warningAnalysis = {
                         level: WarningLevel.None,
                         notices: null,
                         page: talkPage,
                     };
                 } else {
-                    const monthHeader = getMonthHeader();
-                    const talkPageSections = talkPageLatestRevision.findSections(
-                        2
-                    );
-                    if (
-                        typeof talkPageSections["*"] === "string" ||
-                        !talkPageSections["*"][monthHeader]
-                    )
+                    const currentMonthSection = talkPageSections.filter(
+                        (s) => s.title === getMonthHeader()
+                    )[0];
+                    console.log("b");
+                    if (!currentMonthSection)
                         this.warningAnalysis = {
                             level: WarningLevel.None,
                             notices: null,
                             page: talkPage,
                         };
                     else {
-                        const monthNotices = talkPageSections["*"][monthHeader];
+                        console.log("c");
+                        const content = currentMonthSection.getContent();
 
                         this.warningAnalysis = {
-                            level: getHighestWarningLevel(monthNotices),
-                            notices: monthNotices,
+                            level: getHighestWarningLevel(content),
+                            notices: content,
                             page: talkPage,
                         };
                     }
@@ -180,26 +179,28 @@ export class User {
                 } else throw e;
             }
         }
+        console.log(this.warningAnalysis);
         return this.warningAnalysis;
     }
 
     /**
      * Appends text to the user's talk page.
      * @param text The text to add.
-     * @param underDate The date header to look for.
-     * @param summary The edit comment to use.
-     * @param blacklist If the page already contains this text, insertion is skipped.
+     * @param options Additional insertion options.
+     * @param options.summary The summary of the edit.
+     * @param options.section The section to append the text to.
+     * @param options.blacklist Prevent appending if this wikitext was found on the page.
      */
-    async addToUserTalk(
+    async appendToUserTalk(
         text: string,
-        underDate: boolean,
-        summary: string,
-        blacklist?: {
-            target: string;
-            message: string;
+        options: PageEditOptions & {
+            summary?: string;
+            section?: string | number | Section;
+            blacklist?: { target: string; message: string };
         }
     ): Promise<void> {
         if (
+            this.username == null ||
             `${this.username}`.toLowerCase() == "null" ||
             `${this.username}`.toLowerCase() == "undefined"
         ) {
@@ -209,103 +210,29 @@ export class User {
             return;
         }
 
-        let revisionWikitext = (
-            await Page.fromTitle(
-                `User talk:${this.username}`
-            ).getLatestRevision()
-        ).content;
-        // TODO Handle errors
-
-        if (!revisionWikitext) {
-            revisionWikitext = "";
+        let revision = null;
+        try {
+            // Get the sections to avoid getting useless revision information.
+            await this.talkPage.getSections();
+            revision = this.talkPage.latestCachedRevision;
+        } catch (e) {
+            if (e instanceof PageMissingError) {
+                // Page does not exist. We're making a new page.
+            }
         }
 
-        const wikiTextLines = revisionWikitext.split("\n");
-        let finalText = "";
-
-        // Check blacklist (if defined)
-        if (blacklist) {
-            if (revisionWikitext.includes(blacklist.target)) {
+        // Check if this talk page should be messaged.
+        if (revision && options.blacklist) {
+            if (revision.content.includes(options.blacklist.target)) {
                 // Don't continue and show toast
                 RedWarnUI.Toast.quickShow({
-                    content: blacklist.message,
+                    content: options.blacklist.message,
                 });
                 return;
             }
         }
 
-        // Check if the date header already exists.
-        // If the date header was not found, we would still want to insert the date
-        // header. This will make sure that a date header exists all the time.
-        const dateHeader =
-            new RegExp(
-                `==\\s?${regexEscape(getMonthHeader())}\\s?==`,
-                "gi"
-            ).exec(revisionWikitext)?.[0] ?? `== ${getMonthHeader()} ==`;
-
-        if (underDate) {
-            if (dateHeader) {
-                // Locate and add text in section
-
-                // Locate where the current date section ends so we can append ours to the bottom
-                let locationOfLastLine = wikiTextLines.indexOf(dateHeader) + 1;
-
-                for (
-                    let i = wikiTextLines.indexOf(dateHeader) + 1;
-                    i < wikiTextLines.length;
-                    i++
-                ) {
-                    if (wikiTextLines[i].startsWith("==")) {
-                        // A new section has started (encountered a level 2 heading).
-                        // The previous line would be the last line of that sectino.
-                        locationOfLastLine = i - 1;
-                        break;
-                    } else if (i == wikiTextLines.length - 1) {
-                        // End of the page.
-                        locationOfLastLine = i;
-                        break;
-                    }
-                }
-
-                if (locationOfLastLine == wikiTextLines.length - 1) {
-                    // The last line is at the bottom of the page.
-                    // To prevent to end notices squishing against eachother
-                    // Same as without, but we just include the date string at bottom of page
-                    wikiTextLines.push(`\n${text}`);
-                } else {
-                    // Add notice to array at correct position.
-                    wikiTextLines.splice(locationOfLastLine, 0, `\n${text}`);
-                }
-            } else {
-                // Page doesn't have current date
-                // This will insert the date header along with the user talk page.
-                wikiTextLines.push(`\n${dateHeader}\n${text}`);
-            }
-        } else {
-            // No need to add to date. Just insert at the bottom of the page.
-            wikiTextLines.push(text);
-        }
-
-        // Process final string
-        finalText = wikiTextLines.join("\n");
-
-        await Page.fromTitle(`User talk:${this.username}`).edit(
-            finalText,
-            summary
-        );
-        // TODO Handle errors
-    }
-
-    /**
-     * Welcomes the user.
-     */
-    async quickWelcome(): Promise<void> {
-        const isIp = isIPAddress(this.username);
-        await this.addToUserTalk(
-            `\n${isIp ? RW_WELCOME_ANON : RW_WELCOME} ${RW_SIGNATURE}\n`,
-            false,
-            isIp ? "Welcome! (IP)" : "Welcome!"
-        );
+        this.talkPage.appendContent(text, options);
     }
 
     /**
@@ -334,25 +261,31 @@ export class User {
         );
     }
 
-    static async warn(warnDialogResult: RWUIWarnDialogResult): Promise<void> {
+    /**
+     * Warn a user.
+     * @param options Warning options
+     */
+    static async warn(options: WarningOptions): Promise<void> {
         const level = {
-            [WarningType.Tiered]: warnDialogResult.warnLevel,
+            [WarningType.Tiered]: options.warnLevel,
             [WarningType.PolicyViolation]: 5,
             [WarningType.SingleIssue]: 0,
-        }[warnDialogResult.warning.type];
-        await warnDialogResult.targetUser.addToUserTalk(
-            warnDialogResult.warningText,
-            true,
-            i18next.t("mediawiki:summaries.warn", {
-                count: level,
-                reason: warnDialogResult.warning.name,
-            })
+        }[options.warning.type];
+        await options.targetUser.appendToUserTalk(
+            `\r\n\r\n${options.warningText}`,
+            {
+                comment: i18next.t("mediawiki:summaries.warn", {
+                    context: level,
+                    reason: options.warning.name,
+                }),
+                section: getMonthHeader(),
+            }
         );
     }
 }
 
 /**
- * Represents a Mediawiki user.
+ * Represents a MediaWiki user.
  */
 export class UserAccount extends User {
     /** The user id of this user. */

@@ -84,12 +84,25 @@
         },
 
         "validation" : {
-            "validationFailedIconTooltip" : "There are issues which are preventing you from submitting this warning. Click here for more information.",
-            "validationFailedInfoDialogTitle": "Fix these issues before warning:",
-            "noWarnTemplate" : "You don't have a warning template selected. Select one from the dropdown or search tool.",
-            "noWarnLevel" : "You haven't selected a warning level. Please select an appropriate level.",
-            "noTargetUser": "You have not selecetd a target user.",
-            "noSelfWarn": "Local restrictions mean that you cannot warn yourself. If you want to test, please use a sandbox user."
+            "validationFailedIconTooltip" : "There are issues which are preventing you from sending this warning. Click here for more information.",
+
+            "validationDialogTitle": "Issue found",
+            "validationDialogTitle_plural": "Issues found",
+            "validationDialogIntro": "The following issues are preventing you from sending a warning:",
+
+            "fail": "An unknown issue ocurred.",
+            "fail_template" : "You don't have a warning template selected.",
+            "fail_level": "You haven't selected a warning level.",
+            "fail_user": "You haven't selected a target user.",
+            "fail_self": "You are not allowed to warn yourself.",
+
+            "failDetailed": "$t(ui:warn.validation.fail) If this problem persists, inform the developers.",
+            "failDetailed_template": "$t(ui:warn.validation.fail_template) Select one from the dropdown or search tool.",
+            "failDetailed_level": "$t(ui:warn.validation.fail_level) Please select an appropriate level.",
+            "failDetailed_user": "$t(ui:warn.validation.fail_user) Please enter a username in the target user box.",
+            "failDetailed_self": "$t(ui:warn.validation.fail_self) If you want to test, please use a sandbox user.",
+
+            "pass": "No issues were found."
         },
 
         "ok": "Warn User"

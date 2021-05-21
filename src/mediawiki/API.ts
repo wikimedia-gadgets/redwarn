@@ -73,7 +73,7 @@ export class MediaWikiAPI {
     static async init(): Promise<void> {
         // Create the API interface.
         this.api = new mw.Api({
-            parameters: { formatversion: (2 as unknown) as string }, // temporary, until types-mediawiki#2 gets merged
+            parameters: { formatversion: 2 },
             ajax: {
                 headers: {
                     "Api-User-Agent": i18next.t("common:redwarn.userAgent"),

@@ -1,32 +1,15 @@
-/**
- * Warn User dialog
- * See also:
- * css/warnDialog.css
- * MaterialWarnDialogReason.tsx
- * ./src/ui/elements/RWUIDialog
- */
-
-import "../css/warnDialog.css"; // Specific themes for this dialog
-// TSX
 import { h } from "tsx-dom";
+import i18next from "i18next";
 
-// Standard dialog components
-import {
-    RWUIWarnDialog,
-    RWUIWarnDialogResult,
-} from "rww/ui/elements/RWUIDialog";
+import { RWUIWarnDialog } from "rww/ui/elements/RWUIDialog";
 
-// To actually create this dialog
 import {
     registerMaterialDialog,
     upgradeMaterialDialog,
 } from "rww/styles/material/Material";
 
-// Material UI stuff
 import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
-
 import MaterialButton from "./components/MaterialButton";
-
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
@@ -36,53 +19,119 @@ import MaterialDialog, {
 import MaterialWarnDialogUser, {
     MaterialWarnDialogUserController,
 } from "./components/MaterialWarnDialogUser";
-
-// Localisation
-import i18next from "i18next";
-
-// Warning reasons list
 import MaterialWarnDialogReason, {
     MaterialWarnDialogReasonController,
 } from "rww/styles/material/ui/components/MaterialWarnDialogReason";
+import {
+    ClientUser,
+    MediaWikiAPI,
+    User,
+    WarningOptions,
+    WarningType,
+} from "rww/mediawiki";
+import { isIPAddress, normalize, warningSuffix } from "rww/util";
 
-// MediaWiki hooks
-import { ClientUser, MediaWikiAPI, User, WarningType } from "rww/mediawiki";
-
-// RWW Utilities
-import { normalize, warningSuffix } from "rww/util";
-
-import { RW_SIGNATURE } from "rww/data/RedWarnConstants"; // typically "~~~~"
+import { RW_SIGNATURE } from "rww/data/RedWarnConstants";
 import MaterialIconButton from "./components/MaterialIconButton";
 import RedWarnUI from "rww/ui/RedWarnUI";
 
-// Actual code
+import "../css/warnDialog.css";
+
+/**
+ * A specific test performed to validate the values of a {@link MaterialWarnDialog}.
+ */
+interface MaterialWarnDialogValidationTest {
+    /** The name of this condition. */
+    id: string;
+    /**
+     * Whether or not this specific validation test passes.
+     *
+     * If the test fails, the condition should be false.
+     */
+    condition: boolean;
+}
+
+/**
+ * Displays the content of a MaterialWarnDialog error popup.
+ * @param props Properties of the error dialog.
+ * @constructor
+ */
+function MaterialWarnDialogErrors(props: {
+    tests: true | MaterialWarnDialogValidationTest[];
+}): JSX.Element {
+    if (props.tests === true)
+        return <div>{i18next.t("ui:warn.validation.pass").toString()}</div>;
+
+    // Get the failing tests with their test IDs.
+    const failingIds = props.tests.map((v) => v.id);
+
+    return (
+        <div>
+            {i18next
+                .t("ui:warn.validation.validationDialogIntro", {
+                    count: failingIds.length,
+                })
+                .toString()}
+            <ul>
+                {failingIds.reduce((items: JSX.Element[], id: string) => {
+                    items.push(
+                        <li>
+                            {i18next
+                                .t("ui:warn.validation.failDetailed", {
+                                    context: id,
+                                })
+                                .toString()}
+                        </li>
+                    );
+                    return items;
+                }, [])}
+            </ul>
+        </div>
+    );
+}
+
 export default class MaterialWarnDialog extends RWUIWarnDialog {
+    /** The target user of the warning. */
     user: User;
 
+    /** Additional text at the bottom of the dialog. */
     private _helperText: JSX.Element;
-    private dialogConfirmButton: JSX.Element;
+    /** Get the additional text at the bottom of the dialog. */
     get helperText(): string {
         return this._helperText?.innerText ?? null;
     }
+    /** Set the additional text at the bottom of the dialog. */
     set helperText(value: string) {
         if (this._helperText) this._helperText.innerText = value;
     }
+    /** Get the color of the additional text at the bottom of the dialog. */
     get helperTextColor(): string {
         return this._helperText?.style?.color ?? "black";
     }
+    /** Set the color of the additional text at the bottom of the dialog. */
     set helperTextColor(value: string) {
         if (this._helperText) this._helperText.style.color = value;
     }
 
+    /** Additional text at the bottom of the dialog. */
+    private dialogConfirmButton: JSX.Element;
+    /** The MaterialWarnDialogUser component for this dialog. */
     private mwdUser: JSX.Element & {
         MWDUser: MaterialWarnDialogUserController;
     };
+    /** The MaterialWarnDialogReason component for this dialog. */
     private mwdReason: JSX.Element & {
         MWDReason: MaterialWarnDialogReasonController;
     };
+    /** The MaterialWarnDialog preview panel for this dialog. */
     private mwdXray: JSX.Element;
+    /** The MaterialWarnDialog errors button for this dialog. */
+    private mwdErrors: JSX.Element;
 
-    get warningText(): string {
+    /**
+     * Get the warning as wikitext.
+     */
+    get warningWikitext(): string {
         if (
             !this.mwdReason?.MWDReason?.warning?.template ||
             (!this.mwdReason?.MWDReason?.warningLevel &&
@@ -94,27 +143,39 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         return `{{subst:${
             this.mwdReason.MWDReason.warning.template
         }${warningSuffix(this.mwdReason.MWDReason.warningLevel)}${
-            this.mwdReason.MWDReason.relatedPage &&
-            `|${normalize(this.mwdReason.MWDReason.relatedPage)}`
+            this.mwdReason.MWDReason.relatedPage
+                ? `|${normalize(this.mwdReason.MWDReason.relatedPage)}`
+                : ""
         }${
-            this.mwdReason.MWDReason.additionalText &&
-            `${this.mwdReason.MWDReason.relatedPage ? "|" : "||"}''${
-                this.mwdReason.MWDReason.additionalText
-            }''`
-        }}} ${RW_SIGNATURE}`;
+            this.mwdReason.MWDReason.additionalText
+                ? `${this.mwdReason.MWDReason.relatedPage ? "|" : "||"}''${
+                      this.mwdReason.MWDReason.additionalText
+                  }''`
+                : ""
+        }}} ${RW_SIGNATURE}${
+            isIPAddress(this.mwdUser.MWDUser.user.username)
+                ? "{{subst:Shared IP advice}}"
+                : ""
+        }`;
     }
 
+    /** The timestamp at which the preview was last updated.  */
     private lastUpdateCall: number;
+    /** Updates the preview (x-ray) panel of the dialog. */
     async updatePreview(): Promise<void> {
         // Makes a request to update the preview section
         if (Date.now() - this.lastUpdateCall < 1000) return;
 
         this.lastUpdateCall = Date.now();
-        const warningText = this.warningText;
+        const warningText = this.warningWikitext;
         if (warningText == null)
             // Not yet ready.
             return;
 
+        // Show loading overlay.
+        this.mwdXray.classList.toggle("rw-mdc-warnDialog-xray--loading", true);
+
+        // Make the request
         const requestTime = Date.now();
         const parseRequest = await MediaWikiAPI.post({
             action: "parse",
@@ -128,17 +189,19 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
             disablelimitreport: true,
         });
 
-        if (+this.mwdXray.getAttribute("data-last-update") > requestTime) {
-            // if it takes longer than the last update (i.e. outdated info)
-            return; // Give up. We're late.
-        }
+        if (+this.mwdXray.getAttribute("data-last-update") > requestTime)
+            // Give up if the request took too long.
+            return;
 
+        // Disable the loading overlay.
+        this.mwdXray.classList.toggle("rw-mdc-warnDialog-xray--loading", false);
         this.mwdXray.querySelector(
             ".rw-mdc-warnDialog-xray--content"
         ).innerHTML =
             parseRequest?.["parse"]?.["text"]?.["*"] ??
             parseRequest?.["parse"]?.["text"] ??
-            `<b>${i18next.t("misc:parser:wikiTxtParseError")}</b>`; // if the top two options fail, show this error message - needs localisation!
+            // Fallback
+            `<b>${i18next.t("misc:parser.wikiTxtParseError")}</b>`;
 
         this.mwdXray.querySelectorAll("a").forEach((anchor) => {
             anchor.target = "_blank";
@@ -148,69 +211,87 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         this.uiValidate();
     }
 
-    validate(): true | string {
+    /**
+     * Checks the values of the dialog against mutliple tests to determine whether
+     * it can be sent or not.
+     *
+     * @returns `true` if valid, an array of {@link MaterialWarnDialogValidationTest}s otherwise.
+     */
+    validate(): true | MaterialWarnDialogValidationTest[] {
         // Validates the content of a warning dialog
-
-        // Reponse: Condition - in order to prevent user confusion!
-        // response should be i18n link
-        const validationTests: { condition: boolean; response: string }[] = [
+        const validationTests: MaterialWarnDialogValidationTest[] = [
             {
-                // Prevents warning yourself
-                condition: this.user?.username === ClientUser.i.username,
-                response: "ui:warn:validation:noSelfWarn",
+                // Prevent self-warning
+                id: "self",
+                condition: this.user?.username !== ClientUser.i.username,
             },
-
             {
-                // Prevents warning nobody
-                condition: this.user == null,
-                response: "ui:warn:validation:noTargetUser",
+                // Asserts user
+                id: "user",
+                condition: this.user != null,
             },
-
+            {
+                // Asserts warning template
+                id: "template",
+                condition: this.mwdReason?.MWDReason?.warning != null,
+            },
+            {
+                // Asserts warning level
+                id: "level",
+                condition: this.mwdReason?.MWDReason?.warningLevel != null,
+            },
             // TODO: prevents users without EC warning more than 1 user
             // TODO: prevents ALL USERS warning > 15 users
-
-            {
-                // Prevents no warning template
-                condition: this.mwdReason?.MWDReason?.warning == null,
-                response: "ui:warn:validation:noWarnTemplate",
-            },
-
-            {
-                // Prevents no warning level
-                condition: this.mwdReason?.MWDReason?.warningLevel == null,
-                response: "ui:warn:validation:noWarnLevel",
-            },
         ];
 
-        // Now filter all of these and give response for first one. Could be expanded to show more info in future
+        // Find all tests that failed.
         const testResults = validationTests.filter((test) => {
-            return test.condition;
+            return !test.condition;
         });
 
-        // If no conditions matched, return true - else, if just one, first error, otherwise, list all
-        return testResults.length == 0
-            ? true
-            : testResults.length == 1
-            ? i18next.t(testResults[0].response).toString()
-            : ((): string => {
-                  let finalStr = "";
-                  testResults.forEach((r) => {
-                      // include new line and bullet point
-                      finalStr +=
-                          "\n\u2022 " + i18next.t(r.response).toString();
-                  });
-                  return finalStr;
-              })();
+        // Return true if no validation tests failed.
+        return testResults.length == 0 ? true : testResults;
     }
 
-    show(): Promise<RWUIWarnDialogResult> {
-        // open the dialog
+    /**
+     * Contrary to {@link MaterialWarnDialog.validate}, this will update
+     * the UI parts as well.
+     */
+    uiValidate(): void {
+        const valid = this.validate();
+
+        if (this.mwdErrors)
+            this.mwdErrors.style.display = valid === true ? "none" : "";
+        this.dialogConfirmButton.toggleAttribute("disabled", valid !== true);
+
+        if (valid !== true) {
+            this.helperText = i18next.t("ui:warn.validation.fail", {
+                context: valid[0].id,
+            });
+            this.helperTextColor = "var(--mdc-theme-error)";
+        } else {
+            this.helperText = "";
+        }
+    }
+
+    /**
+     * Shows the dialog.
+     */
+    show(): Promise<WarningOptions> {
         const styleStorage = getMaterialStorage();
         registerMaterialDialog(this);
         const dialog = upgradeMaterialDialog(
             this,
             new Map([["autoStackButtons", false]])
         );
+
+        // Automatically grab user information if we're already on a user talk page.
+        if (this.user == null && mw.config.get("wgRelevantUserName")) {
+            this.mwdUser.MWDUser.updateUser(
+                User.fromUsername(mw.config.get("wgRelevantUserName"))
+            );
+            this.uiValidate();
+        }
 
         return new Promise((resolve) => {
             dialog.listen(
@@ -219,7 +300,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                     if (event.detail.action === "cancel") this._result = null;
                     else {
                         this._result = {
-                            warningText: this.warningText,
+                            warningText: this.warningWikitext,
                             targetUser: this.user,
                             additionalText: this.mwdReason.MWDReason
                                 .additionalText,
@@ -237,18 +318,9 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
     }
 
     /**
-     * Contrary to {@link MaterialWarnDialog.validate}, this will update
-     * the UI parts as well.
+     * Renders the dialog body. This does NOT show the dialog to the user.
      */
-    uiValidate(): void {
-        const issues = this.validate();
-        this.helperText = issues === true ? "" : issues;
-        this.helperTextColor = "#f44336"; // Material Red 500
-        this.dialogConfirmButton.toggleAttribute("disabled", issues !== true);
-    }
-
     render(): HTMLDialogElement {
-        // ACTUAL UI APPEARENCE CODE STARS HERE - needs localisation
         this.element = (
             <MaterialDialog
                 surfaceProperties={{
@@ -317,36 +389,47 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         ))}
                 </MaterialDialogContent>
                 <MaterialDialogActions>
-                    <MaterialIconButton
-                        icon={"error"}
-                        tooltip={i18next
-                            .t("ui:warn.validation.validationFailedIconTooltip")
-                            .toString()}
-                        iconColor="red"
-                        onClick={() => {
-                            // Show dialog with details on why validation failed
-                            const dialog = new RedWarnUI.Dialog({
-                                title: i18next.t(
-                                    "ui:warn.validation.validationFailedInfoDialogTitle"
-                                ),
-                                // TODO formatting
-                                content: this.validate().toString(),
-                                actions: [
-                                    { data: i18next.t("ui:okCancel:ok") },
-                                ],
-                            });
-                            dialog.show();
-                        }}
-                    />
                     {this._helperText ??
                         (this._helperText = (
                             <div class={"rw-mdc-dialog-helperText"} />
                         ))}
 
+                    {this.mwdErrors ??
+                        (this.mwdErrors = (
+                            <MaterialIconButton
+                                icon={"error"}
+                                tooltip={i18next
+                                    .t(
+                                        "ui:warn.validation.validationFailedIconTooltip"
+                                    )
+                                    .toString()}
+                                iconColor="var(--mdc-theme-error)"
+                                onClick={() => {
+                                    // Show failed validation tests
+                                    const dialog = new RedWarnUI.Dialog({
+                                        title: i18next.t(
+                                            "ui:warn.validation.validationDialogTitle"
+                                        ),
+                                        content: (
+                                            <MaterialWarnDialogErrors
+                                                tests={this.validate()}
+                                            />
+                                        ),
+                                        actions: [
+                                            {
+                                                data: i18next.t(
+                                                    "ui:okCancel:ok"
+                                                ),
+                                            },
+                                        ],
+                                    });
+                                    dialog.show();
+                                }}
+                            />
+                        ))}
                     <MaterialButton dialogAction="cancel">
                         {i18next.t<string>("ui:okCancel.cancel")}
                     </MaterialButton>
-
                     {
                         (this.dialogConfirmButton = (
                             <MaterialButton dialogAction="confirm" disabled>
@@ -362,6 +445,9 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
     }
 }
 
+/**
+ * Properties passed onto MaterialWarnDialog components.
+ */
 export interface MaterialWarnDialogChildProps {
     warnDialog: MaterialWarnDialog;
 }

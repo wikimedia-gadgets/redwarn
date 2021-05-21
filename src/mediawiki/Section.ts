@@ -159,8 +159,6 @@ export default class Section {
             ],
         });
 
-        console.log(sectionsRequest);
-
         // TODO: Replace with a centralized error handling system in MediaWikiAPI
         if (sectionsRequest["error"]) {
             switch (sectionsRequest["error"]["code"]) {
@@ -194,7 +192,6 @@ export default class Section {
             if (!context.pageID)
                 context.pageID = sectionsRequest["parse"]["pageid"];
 
-            console.log(context.latestCachedRevision);
             // This will overwrite the latest cached revision in the Page.
             // This can cause some parts of the revision to be unpopulated. This is, however,
             // the ideal solution as it prevents using stale page content.
@@ -202,7 +199,6 @@ export default class Section {
                 sectionsRequest["parse"]["revid"],
                 sectionsRequest["parse"]["wikitext"]
             );
-            console.log(context.latestCachedRevision);
         } else {
             // Fill in blank values from the page if available.
             if (!context.page.title)

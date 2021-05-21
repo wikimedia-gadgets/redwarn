@@ -319,7 +319,6 @@ function MaterialWarnSearchDialogWarnings(props: {
                             .toString()}
                     </div>
                 );
-                console.log("card");
                 break;
             }
         }

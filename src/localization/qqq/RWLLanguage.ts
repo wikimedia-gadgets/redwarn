@@ -6,7 +6,7 @@ if (window.RedWarnLanguages == null) {
 
 window.RedWarnLanguages.push({
     tag: "qqq",
-    id: "key-documentation-this-shouldnt-be-used",
+    id: "key-documentation",
     meta: {
         name: "Key Documentation - Should not be used in production",
         translators: ["The RedWarn Contributors"],
@@ -25,5 +25,6 @@ window.RedWarnLanguages.push({
         common: require("./common.json"),
         mediawiki: require("./mediawiki.json"),
         ui: require("./ui.json"),
+        misc: require("./misc.json"),
     },
 });

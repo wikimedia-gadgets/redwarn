@@ -82,33 +82,35 @@ function MaterialWarnDialogReasonDropdown({
         }
     }
 
-    let hasBeenSomeTimeAfterLastKeyDown = true; // Used to prevent multiple dialogs from being opened by faster typers
     const element = (
         <span class="rw-mdc-warnDialog-reason--dropdown">
             <MaterialSelect<Warning>
-                label={
-                    /* ST: "Warning" */ i18next
-                        .t("ui:warn:reason:warningSelectionDropdownTitle")
-                        .toString()
-                }
+                label={i18next
+                    .t("ui:warn.reason.warningSelectionDropdownTitle")
+                    .toString()}
                 items={finalSelectItems}
                 required={true}
                 onChange={(index, value) => {
                     parent.warning = value;
                 }}
                 onKeyDown={async (key) => {
-                    // To prevent multiple dialog openings
-                    if (!hasBeenSomeTimeAfterLastKeyDown) return; // exit if we're still waiting
-                    hasBeenSomeTimeAfterLastKeyDown = false; // disable all other calls
-                    setTimeout(() => {
-                        hasBeenSomeTimeAfterLastKeyDown = true;
-                    }, 500); // reset after 500ms
+                    // Only allow single-character keys.
+                    if (!/^.$/g.test(key.key)) return;
 
-                    // Open dialog
+                    // Prevent action on rapid keypress.
+                    const lastPress = (key.target as HTMLElement).getAttribute(
+                        "data-last-keydown"
+                    );
+                    if (lastPress && +lastPress + 500 > Date.now()) return;
+                    (key.target as HTMLElement).setAttribute(
+                        "data-last-keydown",
+                        `${Date.now()}`
+                    );
+
+                    // Open search dialog
                     const newWarning = await new MaterialWarnSearchDialog({
-                        startingText: key, // Define that we do want to prefill the text box with this key
+                        startingText: key.key,
                     }).show();
-                    // parent.warning = newWarning;
                     const select: MaterialSelectElement<Warning> = element.querySelector(
                         ".mdc-select"
                     );
@@ -118,16 +120,13 @@ function MaterialWarnDialogReasonDropdown({
             <MaterialIconButton
                 class={"rw-mdc-warnDialog-reason--search"}
                 icon={"search"}
-                label={
-                    /* ST: "Search for a warning" */ i18next
-                        .t("ui:warn:reason:searchDialogOpenerTooltip")
-                        .toString()
-                }
+                label={i18next
+                    .t("ui:warn:reason:searchDialogOpenerTooltip")
+                    .toString()}
                 onClick={async () => {
                     const newWarning = await new MaterialWarnSearchDialog({
                         selectedWarning: parent.warning,
                     }).show();
-                    // parent.warning = newWarning;
                     const select: MaterialSelectElement<Warning> = element.querySelector(
                         ".mdc-select"
                     );

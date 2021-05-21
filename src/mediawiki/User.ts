@@ -141,7 +141,6 @@ export class User {
                 const talkPageSections = await talkPage.getSections();
                 const talkPageWikitext = talkPage.latestCachedRevision.content;
                 if (!talkPageWikitext || talkPageWikitext.length === 0) {
-                    console.log("a");
                     this.warningAnalysis = {
                         level: WarningLevel.None,
                         notices: null,
@@ -151,7 +150,6 @@ export class User {
                     const currentMonthSection = talkPageSections.filter(
                         (s) => s.title === getMonthHeader()
                     )[0];
-                    console.log("b");
                     if (!currentMonthSection)
                         this.warningAnalysis = {
                             level: WarningLevel.None,
@@ -159,7 +157,6 @@ export class User {
                             page: talkPage,
                         };
                     else {
-                        console.log("c");
                         const content = currentMonthSection.getContent();
 
                         this.warningAnalysis = {
@@ -179,7 +176,6 @@ export class User {
                 } else throw e;
             }
         }
-        console.log(this.warningAnalysis);
         return this.warningAnalysis;
     }
 

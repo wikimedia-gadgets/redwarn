@@ -302,8 +302,8 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
             dialog.listen(
                 "MDCDialog:closed",
                 async (event: Event & { detail: { action: string } }) => {
-                    if (event.detail.action === "cancel") this._result = null;
-                    else {
+                    console.log(event.detail.action);
+                    if (event.detail.action === "confirm") {
                         this._result = {
                             warningText: this.warningWikitext,
                             targetUser: this.user,
@@ -313,7 +313,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                             warnLevel: this.mwdReason.MWDReason.warningLevel,
                             warning: this.mwdReason.MWDReason.warning,
                         };
-                    }
+                    } else this._result = null;
 
                     styleStorage.dialogTracker.delete(this.id);
                     resolve(this._result);

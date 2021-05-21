@@ -29,7 +29,7 @@ export interface MaterialSelectProps<T> {
     label: string;
     items: MaterialSelectItem<T>[];
     onChange?: (index: number, value: T) => void;
-    onKeyDown?: (key: string) => void;
+    onKeyDown?: (event: KeyboardEvent) => void;
     required?: boolean;
 }
 
@@ -141,14 +141,15 @@ export default function <T>(
     const select = new MDCSelect(element);
 
     Log.trace(valueSet);
-    select.listen("MDCSelect:change", () => {
-        if (props.onChange)
+    if (props.onChange)
+        select.listen("MDCSelect:change", () => {
             props.onChange(select.selectedIndex, valueSet[select.value]);
-    });
+        });
 
-    select.listen("keydown", (e) => {
-        if (props.onKeyDown) props.onKeyDown(e.key);
-    });
+    if (props.onKeyDown)
+        select.listen("keydown", (e) => {
+            props.onKeyDown(e);
+        });
 
     return Object.assign(element, {
         MDCSelect: select,

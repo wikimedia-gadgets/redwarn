@@ -399,7 +399,11 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                 <MaterialDialogActions>
                     {this._helperText ??
                         (this._helperText = (
-                            <div class={"rw-mdc-dialog-helperText"} />
+                            <div
+                                class={
+                                    "rw-mdc-dialog-helperText rw-mdc-warnDialog-helperTextHider"
+                                }
+                            />
                         ))}
 
                     {this.mwdErrors ??
@@ -435,6 +439,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                                 }}
                             />
                         ))}
+
                     <MaterialButton dialogAction="cancel">
                         {i18next.t<string>("ui:okCancel.cancel")}
                     </MaterialButton>

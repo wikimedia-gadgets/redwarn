@@ -40,8 +40,11 @@
         "warningContent": "You are currently using RedWarn in a way that is strongly discouraged under guidelines set at <a href=\"/wiki/Wikipedia:REDWARN/A\" class=\"mw-redirect\" title=\"Wikipedia:REDWARN/A\">WP:REDWARN/A</a>."
     },
     "warn": {
+        "title": "Warn User",
+
         "user": {
             "change": "Change the target user",
+            "confirm": "Target this user",
 
             "load_wait": "Please be patient while the user information is being loaded.",
             "loading": "Loading user information...",
@@ -60,6 +63,12 @@
             "report": "Click to report to AIV.",
             "edits": "{{edits}} edits",
             "age": "Created {{localeAge}}",
+
+            "talk": {
+                "main": "User talk page",
+                "month": "Notices for this month",
+                "whole": "Entire talk page"
+            },
 
             "show": {
                 "userpage": "Show userpage",
@@ -103,6 +112,11 @@
             "failDetailed_self": "$t(ui:warn.validation.fail_self) If you want to test, please use a sandbox user.",
 
             "pass": "No issues were found."
+        },
+
+        "risky": {
+            "title": "Risky revert",
+            "content": "You are about to warn an administrator. Are you sure about this?"
         },
 
         "ok": "Warn User"

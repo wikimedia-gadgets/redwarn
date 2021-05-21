@@ -196,7 +196,7 @@ function MaterialWarnDialogUserCard({
                 <td>
                     <MaterialIconButton
                         icon={"assignment_ind"}
-                        tooltip={"User talk page"}
+                        tooltip={i18next.t("ui:warn.user.talk.main").toString()}
                         onClick={() => {
                             openMenu(`menu__${cardId}`);
                         }}
@@ -206,7 +206,9 @@ function MaterialWarnDialogUserCard({
                         id={`menu__${cardId}`}
                         items={[
                             {
-                                label: "Notices for this month",
+                                label: i18next
+                                    .t("ui:warn.user.talk.month")
+                                    .toString(),
                                 action(): void {
                                     showPlainMediaWikiIFrameDialog(
                                         user.talkPage,
@@ -223,7 +225,9 @@ function MaterialWarnDialogUserCard({
                                 },
                             },
                             {
-                                label: "Entire talk page",
+                                label: i18next
+                                    .t("ui:warn.user.talk.whole")
+                                    .toString(),
                                 action(): void {
                                     showPlainMediaWikiIFrameDialog(
                                         user.talkPage,
@@ -382,7 +386,9 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                         {textInput}
                         <MaterialIconButton
                             icon={"send"}
-                            tooltip={"Target this user"}
+                            tooltip={i18next
+                                .t("ui:warn.user.confirm")
+                                .toString()}
                             onClick={() => {
                                 updateName();
                             }}
@@ -478,12 +484,13 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                 if (
                     (await new MaterialAlertDialog({
                         // TODO i18n
-                        title: "Risky revert",
+                        title: i18next.t("ui:warn.risky.title").toString(),
                         content: (
                             <div class={"rw-mdc-riskyRevert"}>
                                 <b>
-                                    You are about to warn an administrator. Are
-                                    you sure about this?
+                                    {i18next
+                                        .t("ui:warn.risky.content")
+                                        .toString()}
                                 </b>
                             </div>
                         ),

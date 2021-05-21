@@ -335,7 +335,9 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         height: "95vh",
                     },
                     "aria-modal": true,
-                    "aria-labelledby": this.props.title ?? "RedWarn dialog",
+                    "aria-labelledby":
+                        this.props.title ??
+                        i18next.t("ui:warn.title").toString(),
                 }}
                 id={this.id}
             >
@@ -352,7 +354,8 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                     tabIndex={0}
                 >
                     <span style={{ float: "left" }}>
-                        {this.props.title ?? "Warn User"}
+                        {this.props.title ??
+                            i18next.t("ui:warn.title").toString()}
                     </span>
                 </MaterialDialogTitle>
                 <MaterialDialogContent

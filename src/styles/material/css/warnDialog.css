@@ -286,6 +286,11 @@
     }
 }
 
+/* Fix button jumping when validation cleared */
+.mdc-dialog__actions {
+    height: 65px;
+}
+
 /* Revert confirmation dialog */
 .rw-mdc-riskyRevert {
     color: #f33;

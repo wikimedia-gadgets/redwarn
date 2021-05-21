@@ -5,6 +5,7 @@ export interface MaterialButtonProperties extends BaseProps {
     dialogAction?: string | { data: string; text: string };
     icon?: string;
     iconColor?: string;
+    raised?: boolean;
     contentStyle?: Partial<CSSStyleDeclaration>;
     style?: Partial<CSSStyleDeclaration>;
     onClick?: (event: MouseEvent) => void;
@@ -20,12 +21,13 @@ export default function (props: MaterialButtonProperties): JSX.Element {
         iconColor,
         style,
         disabled,
+        raised,
     } = props;
     const classes = ["mdc-button"];
 
-    if (dialogAction) {
-        classes.push("mdc-dialog__button");
-    }
+    if (dialogAction) classes.push("mdc-dialog__button");
+
+    if (raised) classes.push("mdc-button--raised");
 
     return (
         <button

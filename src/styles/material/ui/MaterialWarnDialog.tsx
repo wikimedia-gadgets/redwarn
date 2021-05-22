@@ -116,11 +116,11 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
     /** Additional text at the bottom of the dialog. */
     private dialogConfirmButton: JSX.Element;
     /** The MaterialWarnDialogUser component for this dialog. */
-    private mwdUser: JSX.Element & {
+    mwdUser: JSX.Element & {
         MWDUser: MaterialWarnDialogUserController;
     };
     /** The MaterialWarnDialogReason component for this dialog. */
-    private mwdReason: JSX.Element & {
+    mwdReason: JSX.Element & {
         MWDReason: MaterialWarnDialogReasonController;
     };
     /** The MaterialWarnDialog preview panel for this dialog. */

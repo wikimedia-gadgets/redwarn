@@ -48,6 +48,7 @@ function MaterialWarnDialogUserCardAccountGroups({
 
     return (
         <div class={"rw-mdc-warnDialog-user--groups"}>
+            {/* TODO: i18n (slightly complicated) */}
             <b>Groups:</b>{" "}
             {user.groups
                 .map<JSX.Element>(
@@ -264,27 +265,19 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
     private _active: boolean;
     get active(): boolean {
         if (!!this.elementSet.root) {
-            if (this._active)
-                this.elementSet.root.classList.add(
-                    "rw-mdc-warnDialog-user--active"
-                );
-            else
-                this.elementSet.root.classList.remove(
-                    "rw-mdc-warnDialog--active"
-                );
+            this.elementSet.root.classList.toggle(
+                "rw-mdc-warnDialog-user--active",
+                this._active
+            );
         }
         return this._active;
     }
     set active(value: boolean) {
         if (!!this.elementSet.root) {
-            if (this._active)
-                this.elementSet.root.classList.add(
-                    "rw-mdc-warnDialog-user--active"
-                );
-            else
-                this.elementSet.root.classList.remove(
-                    "rw-mdc-warnDialog--active"
-                );
+            this.elementSet.root.classList.toggle(
+                "rw-mdc-warnDialog-user--active",
+                this._active
+            );
         }
         this._active = value;
     }
@@ -516,6 +509,12 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
 
                 await this.user.getWarningAnalysis();
             }
+
+            // Update default warning level of the reason component.
+            this.props.warnDialog.mwdReason.MWDReason.defaultLevel =
+                user.warningAnalysis.level > 3
+                    ? 4
+                    : user.warningAnalysis.level + 1;
         }
 
         this.updating = false;

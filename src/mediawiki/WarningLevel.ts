@@ -33,7 +33,11 @@ export interface WarningAnalysis {
 }
 
 export const WarningLevelComments: {
-    [key in WarningLevel]: { summary?: string; description: string };
+    [key in WarningLevel]: {
+        summary?: string;
+        description: string;
+        alternative?: string;
+    };
 } = {
     [WarningLevel.None]: {
         // Unused. Here for type checks.
@@ -53,6 +57,7 @@ export const WarningLevelComments: {
         description: "Bad faith, last warning.",
     },
     [WarningLevel.Immediate]: {
+        alternative: "4im",
         summary: "Only Warning",
         description: "Only warning \u2013 used for severe policy violations",
     },

@@ -150,27 +150,21 @@ function MaterialWarnDialogReasonLevel({
     if (parent.warning != null) {
         switch (parent.warning.type) {
             case WarningType.Tiered: {
-                // The vast majority of templates that aren't single use are handled here
                 const radios: MaterialRadioProps<WarningLevel>[] = [];
                 for (
                     let level = WarningLevel.Notice;
                     level <= WarningLevel.Immediate;
                     level++
                 ) {
-                    const comments = WarningLevelComments[level]; // used in both cases so we can take out of ifelse
+                    const comments = WarningLevelComments[level];
                     if (parent.warning.levels.includes(level)) {
-                        // When a template is present for this level
                         radios.push({
                             value: level,
                             checked: parent.warningLevel == level,
-                            /*
-                            Sample text: Level 1 notice: for blah...
-                            */
                             tooltip: i18next.t(
-                                "ui:warn:reason:levelSelectionLevel",
+                                "ui:warn.reason.levelSelectionLevel",
                                 {
-                                    level,
-                                    // Lowercase so it makes grammatical sense
+                                    level: comments.alternative ?? level,
                                     levelReadable: (
                                         comments.summary ?? WarningLevel[level]
                                     ).toLocaleLowerCase(),
@@ -182,17 +176,12 @@ function MaterialWarnDialogReasonLevel({
                             ),
                         });
                     } else {
-                        // Else, when no template is present for this level
                         radios.push({
                             value: level,
-                            /*
-                            Sample text: This template does not have a level x blah template.
-                            */
                             tooltip: i18next.t(
-                                "ui:warn:reason:levelSelectionLevelNotPresent",
+                                "ui:warn.reason.levelSelectionLevelNotPresent",
                                 {
-                                    level,
-                                    // Lowercase so it makes grammatical sense
+                                    level: comments.alternative ?? level,
                                     levelReadable: (
                                         comments.summary ?? WarningLevel[level]
                                     ).toLocaleLowerCase(),
@@ -286,28 +275,21 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
         this._warning = value;
 
         if (value != null && value.type === WarningType.Tiered) {
-            // Reassign the warning level to the highest possible value, capped at the current level.
-            if (
-                this.warningLevel != null &&
-                !value.levels.includes(this.warningLevel)
+            for (
+                let highestPossibleLevel = this.defaultLevel;
+                highestPossibleLevel >= 0;
+                highestPossibleLevel--
             ) {
-                for (
-                    let highestPossibleLevel = this.warningLevel;
-                    highestPossibleLevel >= 0;
-                    highestPossibleLevel--
-                ) {
-                    if (value.levels.includes(highestPossibleLevel)) {
-                        this.warningLevel = highestPossibleLevel;
-                        this.refresh();
-                        return;
-                    }
+                if (value.levels.includes(highestPossibleLevel)) {
+                    this.warningLevel = highestPossibleLevel;
+                    this.refresh();
+                    return;
                 }
-                // No warning level found. The only available level must be higher up.
-                // Defer to lowest level provided by warning.
-                this.warningLevel = value.levels[0];
-            } else if (!value.levels.includes(this.warningLevel)) {
-                this.warningLevel = this.defaultLevel ?? value.levels[0];
             }
+
+            // No warning level found. The only available level must be higher up.
+            // Defer to lowest level provided by warning.
+            this.warningLevel = value.levels[0];
         } else {
             this.warningLevel = null;
         }
@@ -342,7 +324,7 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
             this.elementSet.additionalText.components.textField.value = value;
     }
 
-    private readonly defaultLevel: WarningLevel;
+    defaultLevel: WarningLevel;
 
     constructor(readonly props: MaterialWarnDialogReasonProps) {
         super();

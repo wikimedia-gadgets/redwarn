@@ -79,7 +79,7 @@
         "reason": {
             "page": "Related page",
             "additionalText": "Additional text",
-            "levelSelectionLevelNotPresent": "There is no level {{level}} {{levelReadable}} template available.",
+            "levelSelectionLevelNotPresent": "There is no level {{level}} ({{levelReadable}}) template available.",
             "levelSelectionLevel": "Level {{level}} {{levelReadable}}: {{levelDescription}}",
             "searchDialogOpenerTooltip": "Search for a warning",
             "warningSelectionDropdownTitle": "Warning"

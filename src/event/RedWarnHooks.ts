@@ -1,4 +1,5 @@
-import {RedWarnHook, RedWarnHookEventTypes} from "./RedWarnHookEvent";
+import { RedWarnHook, RedWarnHookEventTypes } from "./RedWarnHookEvent";
+import StyleManager from "rww/styles/StyleManager";
 
 declare global {
     // noinspection JSUnusedGlobalSymbols
@@ -48,12 +49,29 @@ export default class RedWarnHooks {
         payload: Record<string, any> = {}
     ): Promise<void> {
         this.assertHookType(hookType);
+
+        if (StyleManager.activeStyle.hooks[hookType])
+            for (const hook of StyleManager.activeStyle.hooks[
+                hookType
+            ] as RedWarnHook[]) {
+                const result = hook(payload);
+                if (result instanceof Promise) {
+                    await result;
+                }
+            }
+
         for (const hook of RedWarnHooks.hooks[hookType] as RedWarnHook[]) {
             const result = hook(payload);
             if (result instanceof Promise) {
                 await result;
             }
         }
-    }
 
+        document.dispatchEvent(
+            new Event(`redwarn:${hookType}`, { payload: payload } as Record<
+                string,
+                any
+            >)
+        );
+    }
 }

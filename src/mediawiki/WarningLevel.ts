@@ -1,4 +1,5 @@
 import regexClone from "rww/util/regexClone";
+import { Page } from "rww/mediawiki";
 
 /**
  * The Warning Level is derived from the English Wikipedia's four-level tier
@@ -16,7 +17,7 @@ export enum WarningLevel {
     /** A final warning for repeated bad faith edits. */
     Final,
     /** A single-issue final warning for gross violations of policy. */
-    PolicyViolation,
+    Immediate,
 }
 
 /**
@@ -27,9 +28,40 @@ export interface WarningAnalysis {
     level: WarningLevel;
     /** The wikitext of the user's collected warnings (for the given month). **/
     notices?: string;
-    /** The wikitext of the user's talk page. **/
-    pageContent?: string;
+    /** The page analyzed. **/
+    page?: Page;
 }
+
+export const WarningLevelComments: {
+    [key in WarningLevel]: {
+        summary?: string;
+        description: string;
+        alternative?: string;
+    };
+} = {
+    [WarningLevel.None]: {
+        // Unused. Here for type checks.
+        description: "Friendly reminder",
+    },
+    [WarningLevel.Notice]: {
+        description: "Assumes good faith",
+    },
+    [WarningLevel.Caution]: {
+        description: "No assumption of faith",
+    },
+    [WarningLevel.Warning]: {
+        description: "Assumes bad faith \u2013 cease and desist",
+    },
+    [WarningLevel.Final]: {
+        summary: "Final Warning",
+        description: "Bad faith, last warning.",
+    },
+    [WarningLevel.Immediate]: {
+        alternative: "4im",
+        summary: "Only Warning",
+        description: "Only warning \u2013 used for severe policy violations",
+    },
+};
 
 /**
  * Warning signatures are used to trace the existence of a warning on a user's
@@ -37,23 +69,22 @@ export interface WarningAnalysis {
  * level corresponding to that signature is used, with the highest level being
  * the final value.
  */
-const WarningSignatures: { [key in WarningLevel]?: RegExp } = {
-    [WarningLevel.Notice]: /(File|Image):Information.svg/gi,
-    [WarningLevel.Caution]: /(File|Image):Information orange.svg/gi,
-    [WarningLevel.Warning]: /(File|Image):(Nuvola apps important|Ambox warning pn).svg/gi,
-    [WarningLevel.Final]: /(File|Image):Stop hand nuvola.svg/gi,
+export const WarningSignatures: { [key in WarningLevel]?: RegExp } = {
+    [WarningLevel.Notice]: /<!--\s*Template:uw-.+?1\s*-->/gi,
+    [WarningLevel.Caution]: /<!--\s*Template:uw-.+?2\s*-->/gi,
+    [WarningLevel.Warning]: /<!--\s*Template:uw-.+?3\s*-->/gi,
+    [WarningLevel.Final]: /<!--\s*Template:uw-.+?4\s*-->/gi,
+    [WarningLevel.Immediate]: /<!--\s*Template:uw-.+?4im\s*-->/gi,
 };
 
 /**
  * Grabs the highest warning value from wikitext.
- * @param wikitext The wikitext to parse.
+ * @param wikitext The wikitext to check for.
  */
-export function getHighestLevel(wikitext: string): WarningAnalysis {
+export function getHighestWarningLevel(wikitext: string): WarningLevel {
     let highestWarningLevel = WarningLevel.None;
 
-    // To identify the warning level, RedWarn has to rely on the icon used by the
-    // template. The logo, however, can change per wiki. This means:
-    // TODO Add support for the warning logos of other wikis.
+    // TODO Implement per-wiki signature checking.
     for (const [level, regex] of Object.entries(WarningSignatures).sort(
         (a, b) => +b[0] - +a[0]
     )) {
@@ -64,9 +95,5 @@ export function getHighestLevel(wikitext: string): WarningAnalysis {
         }
     }
 
-    return {
-        level: highestWarningLevel,
-        notices: wikitext,
-        pageContent: wikitext,
-    };
+    return highestWarningLevel;
 }

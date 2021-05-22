@@ -24,6 +24,10 @@ Once you've finished translating the strings, you'll need to use TypeScript in o
 
 The English pack is unique since this is the only language pack preloaded with RedWarn, no matter which installation. Because of this, the English pack can be loaded from within RedWarn itself. As for other packs however, they must be loaded before RedWarn, and are referenced in the configuration file.
 
+## Notes to Translators
+
+-   Namespaces don't need to be translated since MediaWiki always accepts the English name.
+
 ## Testing
 
 Still working on this part. Check back later.

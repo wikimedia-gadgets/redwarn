@@ -14,6 +14,10 @@ module.exports = {
         "node_modules[/\\\\](?!@material)"
     ],
     testRegex: "(/tests/)(.*?)(Tests?)(\\.tsx?|\\.jsx?)$",
+    testPathIgnorePatterns: [
+        "ignore-",
+        "disabled-"
+    ],
     moduleFileExtensions: ["ts", "tsx", "js"],
     moduleNameMapper: {
         "^rww(.*)$": "<rootDir>/src$1",

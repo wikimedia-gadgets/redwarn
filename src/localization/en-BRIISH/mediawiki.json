@@ -1,0 +1,14 @@
+{
+    "summaries": {
+        "revert": "Reverting edit(s) by [[Special:Contributions/{{username}}|{{username}}]] ([[User_talk:{{username}}|talk]]) to rev. {{targetRevisionId}} by {{targetRevisionEditor}}: {{reason}} $t(common:redwarn.signature)",
+        "rollback": "Rollback edit(s) by [[Special:Contributions/{{username}}|{{username}}]] ([[User_talk:{{username}}|talk]]): {{reason}} $t(common:redwarn.signature)",
+        "restore": "Restoring revision {{revID}} by {{revUser}}: {{reason}} $t(common:redwarn.signature)",
+        "warn_0": "Notice: {{reason}}",
+        "warn_1": "Note: {{reason}}",
+        "warn_2": "Caution: {{reason}}",
+        "warn_3": "Warning: {{reason}}",
+        "warn_4": "Final Warning: {{reason}}",
+        "warn_5": "ONLY Warning: {{reason}}"
+    },
+    "ip": "Anonymous IP editor"
+}

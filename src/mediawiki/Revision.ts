@@ -1,20 +1,19 @@
-import { MediaWikiAPI, MediaWikiURL, Page, User } from "rww/mediawiki";
+import {
+    MediaWikiAPI,
+    MediaWikiURL,
+    Page,
+    PageEditOptions,
+    User,
+} from "rww/mediawiki";
 import redirect from "rww/util/redirect";
-
-// Function names of the Revision class.
-type RevisionFunctions =
-    | "populate"
-    | "isPopulated"
-    | "getLatestRevision"
-    | "isLatestRevision"
-    | "getContent"
-    | "navigate";
+import Log from "rww/data/RedWarnLog";
+import Section, { SectionContainer } from "rww/mediawiki/Section";
 
 /**
  * A revision is an object provided by the MediaWiki API which represents
  * a change in a page's content.
  */
-export class Revision {
+export class Revision implements SectionContainer {
     /** The ID of the revision. */
     revisionID: number;
 
@@ -31,7 +30,7 @@ export class Revision {
     user?: User;
 
     /** The timestamp that the revision was made. */
-    timestamp?: number;
+    time?: Date;
 
     /** The size of the revision. */
     size?: number;
@@ -39,7 +38,10 @@ export class Revision {
     /** The content of the page as of the given revision. */
     content?: string;
 
-    private constructor(object?: Omit<Revision, RevisionFunctions>) {
+    /** The sections of this revision. */
+    sections: Section[];
+
+    private constructor(object?: Partial<Revision>) {
         if (!!object) {
             Object.assign(this, object);
         }
@@ -53,7 +55,7 @@ export class Revision {
      */
     static fromID(
         revisionID: number,
-        additionalProperties?: Partial<Omit<Revision, RevisionFunctions>>
+        additionalProperties?: Partial<Revision>
     ): Revision {
         return new Revision({
             revisionID: revisionID,
@@ -73,6 +75,19 @@ export class Revision {
     }
 
     /**
+     * Create a nearly-bare `Revision` object from a revision ID and wikitext.
+     * @param revisionID The revision ID to use.
+     * @param wikitext The wikitext of this revision.
+     * @returns A partially populated Revision object.
+     */
+    static fromIDAndText(revisionID: number, wikitext: string): Revision {
+        return new Revision({
+            revisionID: revisionID,
+            content: wikitext,
+        });
+    }
+
+    /**
      * Create a `Revision` object from a revision ID and MediaWiki API call results. This assumes
      * that an API request has already been made. Depending on the `apiResult`, the created object
      * may or may not be fully populated.
@@ -87,16 +102,15 @@ export class Revision {
             apiResult["query"]["pages"]
         )[0];
         const revisionData: Record<string, any> = pageData["revisions"][0];
-
         return new Revision({
             revisionID: revisionID,
             parentID: revisionData["parentid"],
             page: Page.fromIDAndTitle(pageData["pageid"], pageData["title"]),
             comment: revisionData["comment"],
-            user: new User(revisionData["user"]),
-            timestamp: new Date(revisionData["timestamp"]).getTime(),
+            user: User.fromUsername(revisionData["user"]),
+            time: new Date(revisionData["timestamp"]),
             size: revisionData["size"],
-            content: revisionData["slots"]?.["main"]?.["*"],
+            content: revisionData["slots"]?.["main"]?.["content"],
         });
     }
 
@@ -108,7 +122,7 @@ export class Revision {
         const toPopulate = ["ids"];
         if (!revision.comment) toPopulate.push("comment");
         if (!revision.user) toPopulate.push("user");
-        if (!revision.timestamp) toPopulate.push("timestamp");
+        if (!revision.time) toPopulate.push("timestamp");
         if (!revision.size) toPopulate.push("size");
 
         if (toPopulate.length > 0) {
@@ -118,7 +132,7 @@ export class Revision {
                 format: "json",
                 prop: "revisions",
                 revids: `${revision.revisionID}`,
-                rvprop: toPopulate.join("|"),
+                rvprop: toPopulate,
                 rvslots: "main",
             });
 
@@ -140,14 +154,12 @@ export class Revision {
             if (!!revisionData["comment"])
                 revision.comment = revisionData["comment"];
             if (!!revisionData["user"])
-                revision.user = new User(revisionData["user"]);
+                revision.user = User.fromUsername(revisionData["user"]);
             if (!!revisionData["timestamp"])
-                revision.timestamp = new Date(
-                    revisionData["timestamp"]
-                ).getTime();
+                revision.time = new Date(revisionData["timestamp"]);
             if (!!revisionData["size"]) revision.size = revisionData["size"];
-            if (!!revisionData["slots"]?.["main"]?.["*"])
-                revision.content = revisionData["slots"]["main"]["*"];
+            if (!!revisionData["slots"]?.["main"]?.["content"])
+                revision.content = revisionData["slots"]["main"]["content"];
         }
 
         return revision;
@@ -173,8 +185,16 @@ export class Revision {
             revisionInfoRequest["query"]["pages"]
         )[0];
         this.content =
-            pageData["revisions"]?.[0]?.["slots"]?.["main"]?.["*"] ?? null;
+            pageData["revisions"]?.[0]?.["slots"]?.["main"]?.["content"] ??
+            null;
         return this.content;
+    }
+
+    /**
+     * Get the revision sections.
+     */
+    async getSections(): Promise<Section[]> {
+        return Section.getSections(this);
     }
 
     /**
@@ -182,9 +202,14 @@ export class Revision {
      * using {@link populate} in order to conserve data usage.
      */
     isPopulated(): boolean {
-        return Object.entries(this).reduce(
-            (p, n): boolean => p && n[1] != null && n[0] !== "content",
-            true
+        return !(
+            this.page == null ||
+            this.comment == null ||
+            this.parentID == null ||
+            this.user == null ||
+            this.time == null ||
+            this.size == null ||
+            this.content == null
         );
     }
 
@@ -201,8 +226,9 @@ export class Revision {
     async getLatestRevision(): Promise<Revision> {
         if (!!this.page) {
             // Big oh noes. We'll have to send an additional request just to get the page name.
-            console.warn("Page of revision was not set. This is inefficient!");
-            console.warn(new Error().stack);
+            Log.warn("Page of revision was not set. This is inefficient!", {
+                stack: new Error().stack,
+            });
             const revisionInfoRequest = await MediaWikiAPI.get({
                 action: "query",
                 format: "json",
@@ -236,5 +262,35 @@ export class Revision {
      */
     navigate(): void {
         redirect(MediaWikiURL.getDiffUrl(this.revisionID));
+    }
+
+    /**
+     * Appends wikitext to the page at a given revision.
+     *
+     * @param text The content to add.
+     * @param options Page editing options.
+     */
+    async appendContent(
+        text: string,
+        options?: Omit<PageEditOptions, "mode" | "baseRevision">
+    ): Promise<void> {
+        if (!!this.page) {
+            // Big oh noes. We'll have to send an additional request just to get the page name.
+            Log.warn("Page of revision was not set. This is inefficient!", {
+                stack: new Error().stack,
+            });
+            await this.populate();
+        }
+
+        this.page.appendContent(
+            text,
+            Object.assign(
+                {
+                    mode: "append",
+                    baseRevision: this,
+                },
+                options
+            )
+        );
     }
 }

@@ -26,13 +26,14 @@
     },
     "rules": {
         "@typescript-eslint/no-explicit-any": "off",
-        "semi": ["error", "always"],
+        "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-unused-vars": [
             "warn",
             {
                 "varsIgnorePattern": "h"
             }
         ],
+        "semi": ["error", "always"],
         "camelcase": ["warn"],
         "prefer-const": [
             "error",
@@ -40,13 +41,11 @@
                 "destructuring": "all"
             }
         ],
-        // Space rules to utterly piss on everyone
         "space-before-blocks": "warn",
         "key-spacing": "warn",
         "keyword-spacing": "warn",
-        "import/no-unresolved": "off" // ts does this for us anyways, and eslint can't handle webpack aliases
-        // temporary so that `eslint --fix` doesn't break stuff
-        // "linebreak-style": ["error", "windows"]
+        // TypeScript handles unresolved import issues.
+        "import/no-unresolved": "off"
     },
     "settings": {
         "import/parsers": { "@typescript-eslint/parser": [".ts", ".tsx"] }

@@ -3,5 +3,6 @@
         "revert": "Edit summary of reverts, use the {{username}}, {{reason}}, and $t(common:redwarn.signature) params as appropriate.",
         "rollback": "Same as above, but for rollback.",
         "restore": "Edit summary for restoring revisions. Use the {{revID}}, {{revUser}}, {{reason}}, and $t(common:redwarn.signature) params as appropriate."
-    }
+    },
+    "ip": "Used in warn dialog to indicate that a user is an anonymous IP editor"
 }

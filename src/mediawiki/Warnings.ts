@@ -1,618 +1,718 @@
 import { WarningLevel } from "./WarningLevel";
+import { User } from "rww/mediawiki/User";
+
+// TODO Move this to wiki-specific definition files.
+// TODO i18n
+
+export interface WarningOptions {
+    warningText: string;
+    targetUser: User;
+    warning?: Warning;
+    warnLevel?: WarningLevel;
+    relatedPage?: string;
+    additionalText?: string;
+}
 
 export enum WarningCategory {
-    COMMON = "Common warnings",
-    ARTICLE = "Article Conduct Warnings",
-    SPAM = "Promotions and spam",
-    EDITORS = "Behavior towards other editors",
-    REMOVE = "Removal of deletion tags",
-    OTHER = "Other",
-    REMIND = "Reminders",
-    POLICY = "Policy Violation Warnings",
+    Common,
+    Article,
+    Spam,
+    Editors,
+    Remove,
+    Other,
+    Remind,
+    Policy,
 }
-export interface Warning {
+
+export enum WarningType {
+    Tiered,
+    SingleIssue,
+    PolicyViolation,
+}
+
+export const WarningCategoryNames: Record<WarningCategory, string> = {
+    [WarningCategory.Common]: "Common warnings",
+    [WarningCategory.Article]: "Article conduct warnings",
+    [WarningCategory.Spam]: "Promotions and spam",
+    [WarningCategory.Editors]: "Behavior towards other editors",
+    [WarningCategory.Remove]: "Removal of deletion tags",
+    [WarningCategory.Other]: "Other",
+    [WarningCategory.Remind]: "Reminders",
+    [WarningCategory.Policy]: "Policy violation warnings",
+};
+
+interface WarningBase {
     name: string;
     category: WarningCategory;
     template: string;
-    warningLevels: WarningLevel[];
     note?: string;
+    keywords?: string[];
+
+    relatedPage?: "required" | "disabled" | "optional";
+    additionalText?: "required" | "disabled" | "optional";
 }
 
-export const Warnings = {
-    vandalism: {
+export interface TieredWarning extends WarningBase {
+    type: WarningType.Tiered;
+    levels: WarningLevel[];
+}
+
+export interface SingleIssueWarning extends WarningBase {
+    type: WarningType.SingleIssue;
+}
+
+export interface PolicyViolationWarning extends WarningBase {
+    type: WarningType.PolicyViolation;
+}
+
+export type Warning =
+    | TieredWarning
+    | SingleIssueWarning
+    | PolicyViolationWarning;
+
+export const Warnings: Record<string, Warning> = {
+    "vandalism": {
         name: "Vandalism",
-        category: WarningCategory.COMMON,
+        category: WarningCategory.Common,
         template: "uw-vandalism",
-        warningLevels: [1, 2, 3, 4, 5],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4, WarningLevel.Immediate],
     },
-    disruptive: {
+    "disruptive": {
         name: "Disruptive editing",
-        category: WarningCategory.COMMON,
+        category: WarningCategory.Common,
         template: "uw-disruptive",
-        warningLevels: [1, 2, 3, 4],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4],
     },
-    test: {
+    "test": {
         name: "Editing tests",
-        category: WarningCategory.COMMON,
+        category: WarningCategory.Common,
         template: "uw-test",
-        warningLevels: [1, 2, 3],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3],
     },
-    delete: {
+    "delete": {
         name: "Removal of content, blanking",
-        category: WarningCategory.COMMON,
+        category: WarningCategory.Common,
         template: "uw-delete",
-        warningLevels: [1, 2, 3, 4, 5],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4, WarningLevel.Immediate],
     },
-    generic: {
+    "generic": {
         name: "Generic warning (for template series missing level 4)",
-        category: WarningCategory.COMMON,
+        category: WarningCategory.Common,
         template: "uw-generic",
-        warningLevels: [4],
+        type: WarningType.Tiered,
+        levels: [4],
     },
-    biog: {
+    "biog": {
         name: "Adding unreferenced information about living persons",
-        category: WarningCategory.ARTICLE,
+        category: WarningCategory.Article,
         template: "uw-biog",
-        warningLevels: [1, 2, 3, 4, 5],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4, WarningLevel.Immediate],
     },
-    error: {
+    "error": {
         name: "Introducing deliberate factual errors",
-        category: WarningCategory.ARTICLE,
+        category: WarningCategory.Article,
         template: "uw-error",
-        warningLevels: [1, 2, 3, 4],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4],
     },
-    genre: {
+    "genre": {
         name:
             "Frequent or mass changes to genres without consensus or reference",
-        category: WarningCategory.ARTICLE,
+        category: WarningCategory.Article,
         template: "uw-genre",
-        warningLevels: [1, 2, 3, 4],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4],
     },
-    image: {
+    "image": {
         name: "Image-related vandalism",
-        category: WarningCategory.ARTICLE,
+        category: WarningCategory.Article,
         template: "uw-image",
-        warningLevels: [1, 2, 3, 4, 5],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4, WarningLevel.Immediate],
     },
-    joke: {
+    "joke": {
         name: "Using improper humor",
-        category: WarningCategory.ARTICLE,
+        category: WarningCategory.Article,
         template: "uw-joke",
-        warningLevels: [1, 2, 3, 4, 5],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4, WarningLevel.Immediate],
     },
-    nor: {
+    "nor": {
         name:
             "Adding original research, including unpublished syntheses of sources",
-        category: WarningCategory.ARTICLE,
+        category: WarningCategory.Article,
         template: "uw-nor",
-        warningLevels: [1, 2, 3, 4],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4],
     },
-    notcensored: {
+    "notcensored": {
         name: "Censorship of material",
-        category: WarningCategory.ARTICLE,
+        category: WarningCategory.Article,
         template: "uw-notcensored",
-        warningLevels: [1, 2, 3],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3],
     },
-    own: {
+    "own": {
         name: "Ownership of articles",
-        category: WarningCategory.ARTICLE,
+        category: WarningCategory.Article,
         template: "uw-own",
-        warningLevels: [1, 2, 3, 4, 5],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4, WarningLevel.Immediate],
     },
-    tdel: {
+    "tdel": {
         name: "Removal of maintenance templates",
-        category: WarningCategory.ARTICLE,
+        category: WarningCategory.Article,
         template: "uw-tdel",
-        warningLevels: [1, 2, 3, 4],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4],
     },
-    unsourced: {
+    "unsourced": {
         name: "Addition of unsourced or improperly cited material",
-        category: WarningCategory.ARTICLE,
+        category: WarningCategory.Article,
         template: "uw-unsourced",
-        warningLevels: [1, 2, 3, 4],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4],
     },
-    advert: {
+    "advert": {
         name: "Using Wikipedia for advertising or promotion",
-        category: WarningCategory.SPAM,
+        category: WarningCategory.Spam,
         template: "uw-advert",
-        warningLevels: [1, 2, 3, 4, 5],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4, WarningLevel.Immediate],
     },
-    npov: {
+    "npov": {
         name: "Not adhering to neutral point of view",
-        category: WarningCategory.SPAM,
+        category: WarningCategory.Spam,
         template: "uw-npov",
-        warningLevels: [1, 2, 3, 4],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4],
     },
-    paid: {
+    "paid": {
         name:
             "Paid editing without disclosure under the Wikimedia Terms of Use",
-        category: WarningCategory.SPAM,
+        category: WarningCategory.Spam,
         template: "uw-paid",
-        warningLevels: [1, 2, 3, 4],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4],
     },
-    spam: {
+    "spam": {
         name: "Adding spam links",
-        category: WarningCategory.SPAM,
+        category: WarningCategory.Spam,
         template: "uw-spam",
-        warningLevels: [1, 2, 3, 4, 5],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4, WarningLevel.Immediate],
     },
-    agf: {
+    "agf": {
         name: "Not assuming good faith",
-        category: WarningCategory.EDITORS,
+        category: WarningCategory.Editors,
         template: "uw-agf",
-        warningLevels: [1, 2, 3],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3],
     },
-    harass: {
+    "harass": {
         name: "Harassment of other users",
-        category: WarningCategory.EDITORS,
+        category: WarningCategory.Editors,
         template: "uw-harass",
-        warningLevels: [1, 2, 3, 4, 5],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4, WarningLevel.Immediate],
     },
-    npa: {
+    "npa": {
         name: "Personal attack directed at a specific editor",
-        category: WarningCategory.EDITORS,
+        category: WarningCategory.Editors,
         template: "uw-npa",
-        warningLevels: [1, 2, 3, 4, 5],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4, WarningLevel.Immediate],
     },
-    tempabuse: {
+    "tempabuse": {
         name: "Improper use of warning or blocking template",
-        category: WarningCategory.EDITORS,
+        category: WarningCategory.Editors,
         template: "uw-tempabuse",
-        warningLevels: [1, 2],
+        type: WarningType.Tiered,
+        levels: [1, 2],
     },
-    afd: {
+    "afd": {
         name: "Removing {{afd}} templates",
-        category: WarningCategory.REMOVE,
+        category: WarningCategory.Remove,
         template: "uw-afd",
-        warningLevels: [1, 2, 3, 4],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4],
     },
-    blpprod: {
+    "blpprod": {
         name: "Removing {{blp prod}} templates",
-        category: WarningCategory.REMOVE,
+        category: WarningCategory.Remove,
         template: "uw-blpprod",
-        warningLevels: [1, 2, 3, 4],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4],
     },
-    idt: {
+    "idt": {
         name: "Removing file deletion tags",
-        category: WarningCategory.REMOVE,
+        category: WarningCategory.Remove,
         template: "uw-idt",
-        warningLevels: [1, 2, 3, 4],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4],
     },
-    speedy: {
+    "speedy": {
         name: "Removing speedy deletion tags",
-        category: WarningCategory.REMOVE,
+        category: WarningCategory.Remove,
         template: "uw-speedy",
-        warningLevels: [1, 2, 3, 4],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4],
     },
-    attempt: {
+    "attempt": {
         name: "Triggering the edit filter",
-        category: WarningCategory.OTHER,
+        category: WarningCategory.Other,
         template: "uw-attempt",
-        warningLevels: [1, 2, 3, 4],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4],
     },
-    chat: {
+    "chat": {
         name: "Using talk page as forum",
-        category: WarningCategory.OTHER,
+        category: WarningCategory.Other,
         template: "uw-chat",
-        warningLevels: [1, 2, 3, 4],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4],
     },
-    create: {
+    "create": {
         name: "Creating inappropriate pages",
-        category: WarningCategory.OTHER,
+        category: WarningCategory.Other,
         template: "uw-create",
-        warningLevels: [1, 2, 3, 4, 5],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4, WarningLevel.Immediate],
     },
-    mos: {
+    "mos": {
         name: "Manual of style",
-        category: WarningCategory.OTHER,
+        category: WarningCategory.Other,
         template: "uw-mos",
-        warningLevels: [1, 2, 3, 4],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4],
     },
-    move: {
+    "move": {
         name: "Page moves against naming conventions or consensus",
-        category: WarningCategory.OTHER,
+        category: WarningCategory.Other,
         template: "uw-move",
-        warningLevels: [1, 2, 3, 4, 5],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4, WarningLevel.Immediate],
     },
-    tpv: {
+    "tpv": {
         name: "Refactoring others' talk page comments",
-        category: WarningCategory.OTHER,
+        category: WarningCategory.Other,
         template: "uw-tpv",
-        warningLevels: [1, 2, 3, 4, 5],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4, WarningLevel.Immediate],
     },
-    upload: {
+    "upload": {
         name: "Uploading unencyclopedic images",
-        category: WarningCategory.OTHER,
+        category: WarningCategory.Other,
         template: "uw-upload",
-        warningLevels: [1, 2, 3, 4, 5],
+        type: WarningType.Tiered,
+        levels: [1, 2, 3, 4, WarningLevel.Immediate],
     },
-    aiv: {
+    "aiv": {
         name: "Bad AIV report",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-aiv",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    autobiography: {
+    "autobiography": {
         name: "Creating autobiographies",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-autobiography",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    badcat: {
+    "badcat": {
         name: "Adding incorrect categories",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-badcat",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    badlistentry: {
+    "badlistentry": {
         name: "Adding inappropriate entries to lists",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-badlistentry",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    bite: {
+    "bite": {
         name: "Being harsh to newcomers",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-bite",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    coi: {
+    "coi": {
         name: "Conflict of interest",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-coi",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    controversial: {
+    "controversial": {
         name: "Introducing controversial material",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-controversial",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    copying: {
+    "copying": {
         name: "Copying text to another page",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-copying",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    crystal: {
+    "crystal": {
         name: "Adding speculative or unconfirmed information",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-crystal",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    cpmove: {
+    "cpmove": {
         name: "Cut and paste moves",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-c&pmove",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    dab: {
+    "dab": {
         name: "Incorrect edit to a disambiguation page",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-dab",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    date: {
+    "date": {
         name: "Unnecessarily changing date formats",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-date",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    deadlink: {
+    "deadlink": {
         name: "Removing proper sources containing dead links",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-deadlink",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    draftfirst: {
+    "draftfirst": {
         name: "User should draft in draftspace or userspace",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-draftfirst",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    editsummary: {
+    "editsummary": {
         name: "Not using edit comment",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-editsummary",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    elinbody: {
+    "elinbody": {
         name: "Adding external links to the body of an article",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-elinbody",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    english: {
+    "english": {
         name: "Not communicating in English",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-english",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    hasty: {
+    "hasty": {
         name: "Hasty addition of speedy deletion tags",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-hasty",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    italicize: {
+    "italicize": {
         name:
             "Italicize books, films, albums, magazines, TV series, etc within articles",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-italicize",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    lang: {
+    "lang": {
         name: "Unnecessarily changing between British and American English",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-lang",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    linking: {
+    "linking": {
         name: "Excessive addition of redlinks or repeated blue links",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-linking",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    minor: {
+    "minor": {
         name: "Incorrect use of minor edits check box",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-minor",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    notenglish: {
+    "notenglish": {
         name: "Creating non-English articles",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-notenglish",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    notvote: {
+    "notvote": {
         name: "We use consensus, not voting",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-notvote",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    plagiarism: {
+    "plagiarism": {
         name: "Copying from public domain sources without attribution",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-plagiarism",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    preview: {
+    "preview": {
         name: "Use preview button to avoid mistakes",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-preview",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    redlink: {
+    "redlink": {
         name: "Indiscriminate removal of redlinks",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-redlink",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    selfrevert: {
+    "selfrevert": {
         name: "Reverting self tests",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-selfrevert",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    socialnetwork: {
+    "socialnetwork": {
         name: "Wikipedia is not a social network",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-socialnetwork",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    sofixit: {
+    "sofixit": {
         name: "Be bold and fix things yourself",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-sofixit",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    spoiler: {
+    "spoiler": {
         name:
             "Adding spoiler alerts or removing spoilers from appropriate sections",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-spoiler",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    talkinarticle: {
+    "talkinarticle": {
         name: "Talk in article",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-talkinarticle",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    tilde: {
+    "tilde": {
         name: "Not signing posts",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-tilde",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    toppost: {
+    "toppost": {
         name: "Posting at the top of talk pages",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-toppost",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    userspaceDraftFinish: {
+    "userspaceDraftFinish": {
         name: "Stale userspace draft",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-userspace draft finish",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    vgscope: {
+    "vgscope": {
         name: "Adding video game walkthroughs, cheats or instructions",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-vgscope",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    warn: {
+    "warn": {
         name: "Place user warning templates when reverting vandalism",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-warn",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    wrongsummary: {
+    "wrongsummary": {
         name: "Using inaccurate or inappropriate edit summaries",
-        category: WarningCategory.REMIND,
+        category: WarningCategory.Remind,
         template: "uw-wrongsummary",
-        warningLevels: [0],
+        type: WarningType.SingleIssue,
     },
-    _3rr: {
-        name: "Potential three-revert rule violation; see also uw-ew",
-        category: WarningCategory.POLICY,
+    "3rr": {
+        name: "Potential three-revert rule violation",
+        category: WarningCategory.Policy,
         template: "uw-3rr",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    affiliate: {
+    "affiliate": {
         name: "Affiliate marketing",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-affiliate",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    agfsock: {
+    "agfsock": {
         name: "Use of multiple accounts (assuming good faith)",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-agf-sock",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    attack: {
+    "attack": {
         name: "Creating attack pages",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-attack",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    botun: {
+    "botun": {
         name: "Bot username",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-botun",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
         note:
             "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins.",
     },
-    canvass: {
+    "canvass": {
         name: "Canvassing",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-canvass",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    copyright: {
+    "copyright": {
         name: "Copyright violation",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-copyright",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    copyrightlink: {
+    "copyrightlink": {
         name: "Linking to copyrighted works violation",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-copyright-link",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    copyrightnew: {
+    "copyrightnew": {
         name: "Copyright violation (with explanation for new users)",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-copyright-new",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    copyrightremove: {
+    "copyrightremove": {
         name: "Removing {{copyvio}} template from articles",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-copyright-remove",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    efsummary: {
+    "efsummary": {
         name: "Edit comment triggering the edit filter",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-efsummary",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    ew: {
+    "ew": {
         name: "Edit warring (stronger wording)",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-ew",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    ewsoft: {
+    "ewsoft": {
         name: "Edit warring (softer wording for newcomers)",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-ewsoft",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    hijacking: {
+    "hijacking": {
         name: "Hijacking articles",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-hijacking",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    hoax: {
+    "hoax": {
         name: "Creating hoaxes",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-hoax",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    legal: {
+    "legal": {
         name: "Making legal threats",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-legal",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    login: {
+    "login": {
         name: "Editing while logged out",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-login",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    multipleIPs: {
+    "multipleIPs": {
         name: "Usage of multiple IPs",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-multipleIPs",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    pinfo: {
+    "pinfo": {
         name: "Personal info",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-pinfo",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    salt: {
+    "salt": {
         name: "Recreating salted articles under a different title",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-salt",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    socksuspect: {
+    "socksuspect": {
         name: "Sockpuppetry",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-socksuspect",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    upv: {
+    "upv": {
         name: "Userpage vandalism",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-upv",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
     },
-    username: {
+    "username": {
         name: "Username is against policy",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-username",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
         note:
             "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins.",
+        keywords: ["uaa"],
+        relatedPage: "required",
     },
-    coiusername: {
+    "coiusername": {
         name: "Username is against policy, and conflict of interest",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-coi-username",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
         note:
             "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins.",
     },
-    userpage: {
+    "userpage": {
         name: "Userpage or subpage is against policy",
-        category: WarningCategory.POLICY,
+        category: WarningCategory.Policy,
         template: "uw-userpage",
-        warningLevels: [6],
+        type: WarningType.PolicyViolation,
         note:
             "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins.",
     },
 };
+
+export const WarningsByCategory: Record<
+    WarningCategory,
+    typeof Warnings
+> = Object.entries(Warnings).reduce((categories, [id, warning]) => {
+    if (!categories[warning.category]) categories[warning.category] = {};
+
+    categories[warning.category][id] = warning;
+    return categories;
+}, <Record<WarningCategory, typeof Warnings>>{});
+
 export type Warnings = Readonly<typeof Warnings>;
+export type WarningsByCategory = Readonly<typeof WarningsByCategory>;

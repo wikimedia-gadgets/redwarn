@@ -5,7 +5,7 @@ import {
     RW_WIKIS_TAGGABLE,
 } from "rww/data/RedWarnConstants";
 import RedWarnStore from "rww/data/RedWarnStore";
-import RWUI from "rww/ui/RWUI";
+import RedWarnUI from "rww/ui/RedWarnUI";
 import redirect from "rww/util/redirect";
 import {
     ClientUser,
@@ -13,11 +13,12 @@ import {
     MediaWikiURL,
     Page,
     Revision,
+    Warnings,
 } from "rww/mediawiki";
-import { Warnings } from "./Warnings";
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 import { RollbackContext } from "rww/definitions/RollbackContext";
-import Config, { rollbackMethod } from "rww/config";
+import { Configuration, RollbackMethod } from "rww/config";
+import Log from "rww/data/RedWarnLog";
 
 // interface RollbackContext {
 //     reason: string;
@@ -52,7 +53,7 @@ export class Rollback {
      * @param targetRevision The target revision.
      */
     static async promptRestoreReason(targetRevision: Revision): Promise<void> {
-        const dialog = new RWUI.InputDialog(i18next.t("ui:restore"));
+        const dialog = new RedWarnUI.InputDialog(i18next.t("ui:restore"));
         const reason = await dialog.show();
         if (reason !== null) {
             Rollback.restore(targetRevision, reason);
@@ -89,9 +90,9 @@ export class Rollback {
         });
 
         if (!result.edit) {
-            console.error(result);
-            RWUI.Toast.quickShow({
-                content: i18next.t("ui:toasts.pleaseWait"),
+            Log.error(result);
+            RedWarnUI.Toast.quickShow({
+                content: i18next.t("ui:toasts.pleaseWait"), // i.e. "Please wait..."
             });
             return false;
         }
@@ -114,7 +115,7 @@ export class Rollback {
 
         if (!newId && !!oldId) {
             return oldId;
-        } else if (!!newId && !oldId) {
+        } else if ((!!newId && !oldId) || oldId === false) {
             return newId;
         } else if (newId != null && oldId != null) {
             return (newId > oldId && newer) || (newId < oldId && !newer)
@@ -159,7 +160,7 @@ export class Rollback {
                     )
                 );
             else
-                RWUI.Toast.quickShow({
+                RedWarnUI.Toast.quickShow({
                     content: i18next.t("ui:toasts.newerRev"),
                 });
         } else return latestRevision;
@@ -206,7 +207,7 @@ export class Rollback {
         defaultReason: string
     ): Promise<void> {
         await Rollback.redirectIfNotLatest(context.targetRevision);
-        const dialog = new RWUI.InputDialog({
+        const dialog = new RedWarnUI.InputDialog({
             width: "40vw",
             ...i18next.t("ui:rollback"),
             defaultText: defaultReason,
@@ -249,12 +250,12 @@ export class Rollback {
         });
         if (!res.edit) {
             // Error occurred or other issue
-            console.error(res);
+            Log.error(res);
             // Show rollback options again (todo)
             $("#rwCurrentRevRollbackBtns").show();
             $("#rwRollbackInProgress").hide();
 
-            RWUI.Toast.quickShow({
+            RedWarnUI.Toast.quickShow({
                 content: i18next.t("ui:toasts.rollbackError"),
             });
         } else {
@@ -295,11 +296,11 @@ export class Rollback {
             );
         } catch (e) {
             // Error occurred or other issue
-            console.error(e);
+            Log.error(e);
             // Show rollback options again
             $("#rwCurrentRevRollbackBtns").show();
             $("#rwRollbackInProgress").hide();
-            RWUI.Toast.quickShow({
+            RedWarnUI.Toast.quickShow({
                 content: i18next.t("ui:toasts.rollbackError"),
             });
         }
@@ -330,34 +331,35 @@ export class Rollback {
 
         if (ClientUser.i.inGroup("rollbacker")) {
             switch (
-                Config.rollbackMethod.value as rollbackMethod // need to cast since inferred type is weird in switch/case
+                Configuration.rollbackMethod.value as RollbackMethod // need to cast since inferred type is weird in switch/case
             ) {
-                case rollbackMethod.Rollback:
+                case RollbackMethod.Rollback:
                     return await this.standardRollback(
                         context,
                         reason,
                         defaultWarnIndex
                     );
-                case rollbackMethod.Revert:
+                case RollbackMethod.Revert:
                     return await this.pseudoRollback(
                         context,
                         reason,
                         defaultWarnIndex
                     );
-                default:
-                    console.error(
-                        `rollbackMethod is invalid (${Config.rollbackMethod.value}), resetting`
-                    );
+
                 // fall through
-                case rollbackMethod.Unset:
-                    const dialog = new RWUI.Dialog({
+                case RollbackMethod.Unset:
+                default:
+                    Log.error(
+                        `RollbackMethod is invalid (${Configuration.rollbackMethod.value}), resetting`
+                    );
+                    const dialog = new RedWarnUI.Dialog({
                         actions: [
                             {
                                 data: "rollback",
                                 action: async () => {
-                                    Config.rollbackMethod.value =
-                                        rollbackMethod.Rollback;
-                                    await Config.save();
+                                    Configuration.rollbackMethod.value =
+                                        RollbackMethod.Rollback;
+                                    await Configuration.save();
                                     return await this.standardRollback(
                                         context,
                                         reason,
@@ -371,9 +373,9 @@ export class Rollback {
                             {
                                 data: "revert",
                                 action: async () => {
-                                    Config.rollbackMethod.value =
-                                        rollbackMethod.Revert;
-                                    await Config.save();
+                                    Configuration.rollbackMethod.value =
+                                        RollbackMethod.Revert;
+                                    await Configuration.save();
                                     return await this.pseudoRollback(
                                         context,
                                         reason,
@@ -385,11 +387,11 @@ export class Rollback {
                                 ),
                             },
                         ],
-                        content: i18next.t(
+                        content: `${i18next.t(
                             "ui:rollbackAvailableDialog.content"
-                        ),
+                        )}`,
                     });
-                    return await dialog.show();
+                    return void (await dialog.show());
             }
         } else {
             return await this.pseudoRollback(context, reason, defaultWarnIndex);

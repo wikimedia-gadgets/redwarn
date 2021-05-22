@@ -1,3 +1,4 @@
+export { default as capitalize } from "./capitalize";
 export { default as generateId } from "./generateId";
 export { default as getMonthHeader } from "./getMonthHeader";
 export { default as redirect } from "./redirect";
@@ -5,3 +6,10 @@ export { default as regexClone } from "./regexClone";
 export { default as regexEscape } from "./regexEscape";
 export { default as semanticDifference } from "./semanticDifference";
 export { default as url } from "./url";
+export { default as articlePath } from "./articlePath";
+export { default as isIPAddress } from "./isIPAddress";
+export { default as normalize } from "./normalize";
+export { default as warningSuffix } from "./warningSuffix";
+export { default as formatAge } from "./formatAge";
+export { b64en, b64de } from "./b64";
+export { default as toBase64URL } from "./toBase64URL";

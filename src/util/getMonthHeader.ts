@@ -4,6 +4,6 @@
  */
 export default function (date = new Date()): string {
     return `${
-        mw.config.get("wgMonthNames")[date.getMonth() + 1]
+        (mw.language as any).months["genitive"][date.getMonth()]
     } ${date.getFullYear()}`;
 }

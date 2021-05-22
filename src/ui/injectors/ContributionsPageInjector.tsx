@@ -2,6 +2,7 @@ import { Revision, Rollback } from "rww/mediawiki";
 import { MDCTooltip } from "@material/tooltip";
 import { h } from "tsx-dom";
 import { RollbackContext } from "rww/definitions/RollbackContext";
+import i18next from "i18next";
 
 export default class DiffViewerInjector {
     /**
@@ -15,8 +16,6 @@ export default class DiffViewerInjector {
 
     static display(): void {
         $("span.mw-uctop").each((i, el) => {
-            // TODO i18n
-
             const li = $(el).closest("li");
 
             const context = new RollbackContext(
@@ -33,7 +32,7 @@ export default class DiffViewerInjector {
                     onClick={() => Rollback.preview(context)}
                     aria-describedby={`rw-currentRevPrev${i}T`}
                 >
-                    prev
+                    {i18next.t<string>("ui:contribs.previewLink")}
                 </a>
             );
             const previewTooltip = (
@@ -43,7 +42,9 @@ export default class DiffViewerInjector {
                     role="tooltip"
                     aria-hidden="true"
                 >
-                    <div class="mdc-tooltip__surface">Preview Rollback</div>
+                    <div class="mdc-tooltip__surface">
+                        {i18next.t<string>("ui:contribs.previewTooltip")}
+                    </div>
                 </div>
             );
 
@@ -60,7 +61,7 @@ export default class DiffViewerInjector {
                     }
                     aria-describedby={`rw-currentRevRvv${i}T`}
                 >
-                    rvv
+                    {i18next.t<string>("ui:contribs.vandalLink")}
                 </a>
             );
             const vandalTooltip = (
@@ -71,7 +72,7 @@ export default class DiffViewerInjector {
                     aria-hidden="true"
                 >
                     <div class="mdc-tooltip__surface">
-                        Quick Rollback Vandalism
+                        {i18next.t<string>("ui:contribs.vandalTooltip")}{" "}
                     </div>
                 </div>
             );
@@ -83,7 +84,7 @@ export default class DiffViewerInjector {
                     onClick={() => Rollback.promptRollbackReason(context, "")}
                     aria-describedby={`rw-currentRevRb${i}T`}
                 >
-                    rb
+                    {i18next.t<string>("ui:contribs.rollbackLink")}
                 </a>
             );
             const rollbackTooltip = (
@@ -93,7 +94,9 @@ export default class DiffViewerInjector {
                     role="tooltip"
                     aria-hidden="true"
                 >
-                    <div class="mdc-tooltip__surface">Rollback</div>
+                    <div class="mdc-tooltip__surface">
+                        {i18next.t<string>("ui:contribs.rollbackTooltip")}
+                    </div>
                 </div>
             );
 

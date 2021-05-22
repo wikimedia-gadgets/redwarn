@@ -1,6 +1,11 @@
 import { ComponentChild } from "tsx-dom";
 import generateId from "rww/util/generateId";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
+import { RollbackContext } from "rww/definitions/RollbackContext";
+import { User } from "rww/mediawiki/User";
+import { Warning, WarningOptions } from "rww/mediawiki/Warnings";
+import { Dependency } from "rww/data/Dependencies";
+import { Page } from "rww/mediawiki";
 
 export enum RWUIDialogActionType {
     /**
@@ -51,8 +56,6 @@ export interface RWUIDialogProperties extends RWUIElementProperties {
     title?: string;
     /**
      * The width of the dialog in whatever CSS unit specified.
-     *
-     * @default 30vw
      */
     width?: string;
     /**
@@ -82,14 +85,13 @@ export abstract class RWUIDialog extends RWUIElement {
     /**
      * The result of the dialog.
      */
-    get result(): any {
+    get result() {
         return this._result;
     }
 
     protected constructor(readonly props: RWUIDialogProperties) {
         super();
         this.id = `dialog__${props.id || generateId(16)}`;
-        this.props.width ??= "30vw";
     }
 
     /**
@@ -112,11 +114,15 @@ export interface RWUIAlertDialogProps extends RWUIDialogProperties {
     /**
      * The content of the dialog.
      */
-    content?: ComponentChild[];
+    content?: ComponentChild;
+    /**
+     * Optional raw content, for errors etc. Will be wrapped in a <pre>
+     */
+    preformattedContent?: string;
 }
 
 export class RWUIAlertDialog extends RWUIDialog {
-    show(): Promise<any> {
+    show(): Promise<string> {
         throw new Error("Attempted to call abstract method");
     }
     render(): HTMLDialogElement {
@@ -128,6 +134,8 @@ export class RWUIAlertDialog extends RWUIDialog {
     constructor(readonly props: RWUIAlertDialogProps) {
         super(props);
     }
+
+    protected _result: string;
 }
 
 export interface RWIconButton {
@@ -156,7 +164,7 @@ export interface RWUIInputDialogProps extends RWUIDialogProperties {
 }
 
 export class RWUIInputDialog extends RWUIDialog {
-    show(): Promise<any> {
+    show(): Promise<string> {
         throw new Error("Attempted to call abstract method");
     }
     render(): HTMLDialogElement {
@@ -168,6 +176,8 @@ export class RWUIInputDialog extends RWUIDialog {
     constructor(readonly props: RWUIInputDialogProps) {
         super(props);
     }
+
+    protected _result: string;
 }
 
 export interface RWUISelectionDialogItem {
@@ -185,7 +195,7 @@ export interface RWUISelectionDialogProps extends RWUIDialogProperties {
 }
 
 export class RWUISelectionDialog extends RWUIDialog {
-    show(): Promise<any> {
+    show(): Promise<string> {
         throw new Error("Attempted to call abstract method");
     }
     render(): HTMLDialogElement {
@@ -195,6 +205,70 @@ export class RWUISelectionDialog extends RWUIDialog {
     public static readonly elementName = "rwSelectionDialog";
 
     constructor(readonly props: RWUISelectionDialogProps) {
+        super(props);
+    }
+
+    protected _result: string;
+}
+
+export interface RWUIWarnDialogProps extends RWUIDialogProperties {
+    rollbackContext?: RollbackContext;
+    targetUser?: User;
+    defaultWarnReason?: Warning;
+    defaultWarnLevel?: number;
+    relatedPage?: Page;
+}
+
+export class RWUIWarnDialog extends RWUIDialog {
+    show(): Promise<WarningOptions> {
+        throw new Error("Attempted to call abstract method");
+    }
+    render(): HTMLDialogElement {
+        throw new Error("Attempted to call abstract method");
+    }
+
+    public static readonly elementName = "rwWarnDialog";
+
+    constructor(readonly props: RWUIWarnDialogProps) {
+        super(props);
+    }
+
+    protected _result: WarningOptions;
+}
+
+export interface RWUIIFrameDialogProps extends RWUIDialogProperties {
+    /**
+     * The height of the dialog in whatever CSS unit specified.
+     */
+    height?: string;
+    src: string;
+    fragment?: string;
+    dependencies?: Dependency[];
+    customStyle?: string | string[];
+    customScripts?: string | string[];
+    actions?: RWUIDialogAction[];
+
+    /**
+     * Whether or not to disable RedWarn in the IFrame. This is intended
+     * for events where a MediaWiki page of the same wiki is loaded, causing
+     * the RedWarn userscript to load as well.
+     *
+     * This should always append the `rw-disable` class onto the body.
+     */
+    disableRedWarn?: boolean;
+}
+
+export class RWUIIFrameDialog extends RWUIDialog {
+    show(): Promise<any> {
+        throw new Error("Attempted to call abstract method");
+    }
+    render(): HTMLDialogElement {
+        throw new Error("Attempted to call abstract method");
+    }
+
+    public static readonly elementName = "rwIFrameDialog";
+
+    constructor(readonly props: RWUIIFrameDialogProps) {
         super(props);
     }
 }

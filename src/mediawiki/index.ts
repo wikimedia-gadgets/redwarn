@@ -32,6 +32,13 @@ export default class MediaWiki {
     }
 
     /**
+     * Load in every MediaWiki dependency RedWarn needs.
+     */
+    static async loadDependencies() {
+        await mw.loader.using("mediawiki.language.months");
+    }
+
+    /**
      * Run all MediaWiki checks and show notifications if checks are failed.
      * @returns Whether or not checks passed.
      */

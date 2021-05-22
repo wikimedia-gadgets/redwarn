@@ -4,8 +4,8 @@ import {
     registerMaterialDialog,
     upgradeMaterialDialog,
 } from "rww/styles/material/Material";
-import { getMaterialStorage } from "rww/styles/material/storage/MaterialStyleStorage";
-import MaterialButton from "./MaterialButton";
+import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
+import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle,
@@ -35,9 +35,8 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
                         this._result = event.detail.action;
                     }
 
-                    const res = styleStorage.dialogTracker.get(this.id).result;
                     styleStorage.dialogTracker.delete(this.id);
-                    resolve(res);
+                    resolve(this._result);
                 }
             );
         });
@@ -62,7 +61,6 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
             </MaterialButton>,
             <hr style={{ margin: "0" }} />,
         ]);
-        console.log(buttons);
         this.element = (
             <MaterialDialog
                 surfaceProperties={{

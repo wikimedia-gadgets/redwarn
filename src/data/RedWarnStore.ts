@@ -1,7 +1,7 @@
 // noinspection JSDeprecatedSymbols
 import MessageHandler from "rww/event/MessageHandler";
 import { StyleStorage } from "rww/styles/Style";
-import { Dependency } from "rww/ui/Dependencies";
+import { Dependency } from "rww/data/Dependencies";
 
 // noinspection JSDeprecatedSymbols
 export default class RedWarnStore {
@@ -15,9 +15,16 @@ export default class RedWarnStore {
      * !!! DO NOT USE FOR NEW FEATURES !!!
      */
     public static messageHandler: MessageHandler;
+
+    // //en.wikipedia.org
     public static wikiBase: string;
+    // /wiki/$1
+    public static wikiArticlePath: string;
+    // //en.wikipedia.org/w/index.php
     public static wikiIndex: string;
+    // //en.wikipedia.org/w/api.php
     public static wikiAPI: string;
+    // "enwiki"
     public static wikiID: string;
 
     public static styleStorage: StyleStorage = null;
@@ -29,14 +36,25 @@ export default class RedWarnStore {
 
     public static initializeStore(): void {
         this.messageHandler = new MessageHandler();
-        this.wikiBase = mw.config.get("wgServer");
-        this.wikiIndex = mw.config.get("wgServer") + mw.config.get("wgScript");
+        this.wikiArticlePath = mw.config.get("wgArticlePath") as string;
+        this.wikiBase = mw.config.get("wgServer") as string;
+        this.wikiIndex =
+            (mw.config.get("wgServer") as string) +
+            (mw.config.get("wgScript") as string);
         this.wikiAPI = `${
-            mw.config.get("wgServer") + mw.config.get("wgScriptPath")
+            (mw.config.get("wgServer") as string) +
+            (mw.config.get("wgScriptPath") as string)
         }/api.php`;
-        this.wikiID = mw.config.get("wgWikiID");
+        this.wikiID = mw.config.get("wgWikiID") as string;
 
         window.RedWarnStore = this;
+    }
+
+    static articlePath(target: string): string {
+        return RedWarnStore.wikiArticlePath.replace(
+            /\$1/g,
+            mw.util.wikiUrlencode(target)
+        );
     }
 }
 

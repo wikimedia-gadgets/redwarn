@@ -1,4 +1,6 @@
 {
+    "unfinished" : "Hmm, looks like we haven't implimented this feature yet. Check back later!",
+
     "restore": {
         "label": "Restore Reason",
         "helperText": "Enter a reason for this restore",
@@ -14,7 +16,7 @@
         }
     },
     "okCancel": {
-        "ok": "OK",
+        "ok": "Okay",
         "cancel": "Cancel"
     },
     "toasts": {
@@ -36,5 +38,108 @@
     "tamperProtection": {
         "header": "ATTENTION!",
         "warningContent": "You are currently using RedWarn in a way that is strongly discouraged under guidelines set at <a href=\"/wiki/Wikipedia:REDWARN/A\" class=\"mw-redirect\" title=\"Wikipedia:REDWARN/A\">WP:REDWARN/A</a>."
+    },
+    "warn": {
+        "title": "Warn User",
+
+        "user": {
+            "change": "Change the target user",
+            "confirm": "Target this user",
+
+            "load_wait": "Please be patient while the user information is being loaded.",
+            "loading": "Loading user information...",
+            "input": "Target User",
+
+            "highestLevel": "Highest warning level",
+
+            "levelInfo": "The user's highest warning level",
+            "levelInfo_none": "User has not received any warnings this month",
+            "levelInfo_notice": "User has received a level 1 notice this month",
+            "levelInfo_caution": "User has received a level 2 notice this month",
+            "levelInfo_warning": "User has received a level 3 warning this month",
+            "levelInfo_final": "User has received a level 4 final warning this month. $t(ui:warn.user.report)",
+            "levelInfo_policyviolation": "User has received an immediate level 4 final warning this month. $t(ui:warn.user.report)",
+
+            "report": "Click to report to AIV.",
+            "edits": "{{edits}} edits",
+            "age": "Created {{localeAge}}",
+
+            "talk": {
+                "main": "User talk page",
+                "month": "Notices for this month",
+                "whole": "Entire talk page"
+            },
+
+            "show": {
+                "userpage": "Show userpage",
+                "contributions": "Show user contributions"
+            }
+        },
+
+        "reason": {
+            "page": "Related page",
+            "additionalText": "Additional text",
+            "levelSelectionLevelNotPresent": "There is no level {{level}} ({{levelReadable}}) template available.",
+            "levelSelectionLevel": "Level {{level}} {{levelReadable}}: {{levelDescription}}",
+            "searchDialogOpenerTooltip": "Search for a warning",
+            "warningSelectionDropdownTitle": "Warning"
+        },
+
+        "templateSearchDialog" : {
+            "dialogTitle": "Warnings",
+            "searchBoxLabel" : "Search for a warning...",
+            "instantSelect" : "Press ENTER to use this template",
+            "tip" : "Tip: Double-click a warning to quickly select it, or press ENTER to select the top result."
+        },
+
+        "validation" : {
+            "validationFailedIconTooltip" : "There are issues which are preventing you from sending this warning. Click here for more information.",
+
+            "validationDialogTitle": "Issue found",
+            "validationDialogTitle_plural": "Issues found",
+            "validationDialogIntro": "The following issues are preventing you from sending a warning:",
+
+            "fail": "An unknown issue ocurred.",
+            "fail_template" : "You don't have a warning template selected.",
+            "fail_level": "You haven't selected a warning level.",
+            "fail_user": "You haven't selected a target user.",
+            "fail_self": "You are not allowed to warn yourself.",
+
+            "failDetailed": "$t(ui:warn.validation.fail) If this problem persists, inform the developers.",
+            "failDetailed_template": "$t(ui:warn.validation.fail_template) Select one from the dropdown or search tool.",
+            "failDetailed_level": "$t(ui:warn.validation.fail_level) Please select an appropriate level.",
+            "failDetailed_user": "$t(ui:warn.validation.fail_user) Please enter a username in the target user box.",
+            "failDetailed_self": "$t(ui:warn.validation.fail_self) If you want to test, please use a sandbox user.",
+
+            "pass": "No issues were found."
+        },
+
+        "risky": {
+            "title": "Risky revert",
+            "content": "You are about to warn an administrator. Are you sure about this?"
+        },
+
+        "ok": "Warn User"
+    },
+    "close": "Close",
+    "configErrorDialog": {
+        "title": "Configuration Error",
+        "content": "Your RedWarn configuration could not be loaded correctly and has been reset. If this issue persists, please contact the RedWarn team.",
+        "actions": [{ "data": "$t(ui:okCancel.ok)" }]
+    },
+    "styleError": {
+        "missing": {
+            "title": "Style Missing",
+            "content": "The style set in your RedWarn configuration cannot be found. It has been set to the default style for now.",
+            "actions": [{ "data": "$t(ui:okCancel.ok)" }]
+        }
+    },
+    "contribs": {
+        "previewLink": "prev",
+        "previewTooltip": "Preview Rollback",
+        "vandalLink": "rvv",
+        "vandalTooltip": "Quick Rollback Vandalism",
+        "rollbackLink": "rb",
+        "rollbackTooltip": "Rollback"
     }
 }

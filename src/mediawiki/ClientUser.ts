@@ -1,22 +1,33 @@
-import { MediaWikiAPI, User } from "rww/mediawiki";
+import { MediaWikiAPI, Page, UserAccount } from "rww/mediawiki";
 
 interface ClientUserCache {
     groups?: string[];
 }
 
 /**
- * The ClientUser represents the User object of the currently logged-in
+ * The ClientUser represents the UserAccount object of the currently logged-in
  * user. The ClientUser also introduces methods specific only to the
  * logged-in user.
  *
  * To use the ClientUser, call {@link ClientUser.i}.
  */
-export class ClientUser extends User {
+export class ClientUser extends UserAccount {
     /**
      * The currently-logged in user's ClientUser singleton. Use this for all
      * ClientUser activity.
      */
     public static readonly i = new ClientUser();
+
+    /**
+     * The user's RedWarn configuration file.
+     */
+    public get redwarnConfigPage(): Page {
+        return (
+            this._redwarnConfigPage ??
+            (this._redwarnConfigPage = this.getUserSubpage("redwarnConfig.js"))
+        );
+    }
+    public _redwarnConfigPage: Page;
 
     /**
      * This class cannot be constructed outside of this class.
@@ -25,19 +36,28 @@ export class ClientUser extends User {
     private constructor() {
         // Username is always the logged-in user.
         super(mw.user.getName());
+
+        if (ClientUser.i != null)
+            throw "Attempt made to reconstruct existing ClientUser.";
     }
 
     public async init(): Promise<void> {
-        await this.getGroups();
-        this.emailEnabled =
-            (
-                await MediaWikiAPI.get({
-                    action: "query",
-                    meta: "userinfo",
-                    uiprop: "email",
-                    format: "json",
-                })
-            ).query.userinfo.emailauthenticated != null;
+        // Run all requests "parallel".
+        await Promise.all([
+            this.getGroups(),
+            new Promise<void>(async (resolve) => {
+                this.emailEnabled =
+                    (
+                        await MediaWikiAPI.get({
+                            action: "query",
+                            meta: "userinfo",
+                            uiprop: "email",
+                            format: "json",
+                        })
+                    ).query.userinfo.emailauthenticated != null;
+                resolve();
+            }),
+        ]);
     }
 
     /**

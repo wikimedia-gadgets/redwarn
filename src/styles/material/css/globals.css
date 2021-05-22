@@ -1,3 +1,76 @@
 .rw-mdc-full-width {
     width: 100%;
 }
+
+@keyframes dummy {
+    from {
+    }
+    to {
+    }
+}
+
+/* Everything that needs DOM insertion tracking should be placed here. */
+[data-append-event],
+[data-rw-mdc-tooltip],
+.mdc-icon-button {
+    animation: dummy 0s;
+}
+
+.bullet {
+    margin: 0 0.5em;
+}
+
+/* Self-implemented icon button hover animation */
+.mdc-icon-button {
+    position: relative;
+}
+
+.mdc-icon-button .mdc-icon-button__ripple,
+.mdc-icon-button.mdc-ripple-upgraded::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    will-change: background-color;
+    transition: background-color 0.1s ease-in-out;
+}
+
+.mdc-icon-button:not(:disabled) .mdc-icon-button__ripple:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+.mdc-list .mdc-list-header {
+    background: #ddd;
+    font-size: small;
+    line-height: 2em;
+    height: 2em;
+}
+
+.rw-mdc-subtitle {
+    color: gray;
+    letter-spacing: 0;
+    font-size: small;
+    line-height: 1.25em;
+}
+
+.rw-mdc-cardTitle {
+    color: black;
+    letter-spacing: normal;
+    font-size: large;
+    font-weight: 500;
+}
+
+.rw-mdc-cardSubtitle {
+    color: black;
+    letter-spacing: normal;
+    font-size: small;
+    line-height: 1.25em;
+}
+
+.rw-mdc-dialog-helperText {
+    position: absolute;
+    left: 0;
+    padding: 16px;
+}

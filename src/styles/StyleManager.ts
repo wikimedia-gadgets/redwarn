@@ -1,9 +1,14 @@
 import semanticDifference from "rww/util/semanticDifference";
 import { DefaultRedWarnStyles } from "./RedWarnStyles";
 import Style from "./Style";
+import { DefaultRedWarnStyle } from "rww/styles/StyleConstants";
+import { RedWarnStyleMissingError } from "rww/errors/RedWarnStyleError";
+import Dependencies from "rww/data/Dependencies";
 
 export default class StyleManager {
-    public static readonly defaultStyle = "material";
+    public static get defaultStyle(): string {
+        return DefaultRedWarnStyle;
+    }
 
     public static ready = false;
 
@@ -15,9 +20,13 @@ export default class StyleManager {
         window.RedWarnStyles = newStyles;
     }
 
-    static activeStyle: Style;
+    // Restrict `activeStyle` to a private setter.
+    private static _activeStyle: Style;
+    static get activeStyle(): Style {
+        return this._activeStyle;
+    }
 
-    static initialize(): void {
+    static async initialize(): Promise<void> {
         if (this.styles == null) {
             this.styles = DefaultRedWarnStyles;
         } else {
@@ -25,16 +34,26 @@ export default class StyleManager {
             this.cleanStyles();
         }
 
-        this.activeStyle =
-            this.styles.find((v) => v.name === this.defaultStyle) ?? null;
+        this._activeStyle = this.findStyle(this.defaultStyle);
 
-        if (this.activeStyle == null) {
+        if (this._activeStyle == null) {
             mw.notify(
-                "RedWarns styles loading failed. You might have loaded no styles at all."
+                "RedWarn styles loading failed. You might have loaded no styles at all."
             );
         } else {
+            await Dependencies.resolve([StyleManager.activeStyle.dependencies]);
             this.ready = true;
         }
+    }
+
+    static setStyle(id: string): Style {
+        const foundStyle = this.findStyle(id);
+        if (foundStyle == null) throw new RedWarnStyleMissingError(id);
+        return foundStyle;
+    }
+
+    static findStyle(id: string): Style | null {
+        return this.styles.find((v) => v.name === id) ?? null;
     }
 
     static cleanStyles(): void {

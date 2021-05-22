@@ -5,6 +5,7 @@ const {
     ProgressPlugin
 } = require("webpack");
 const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 const plugins = [new ProgressPlugin({
     activeModules: true,
@@ -12,7 +13,8 @@ const plugins = [new ProgressPlugin({
     modules: true,
     dependencies: true
 })];
-const optimization = { minimize: false }
+const optimization = { minimize: false };
+let devtool = "source-map";
 if (process.env.NODE_ENV === "production") {
     const WrapperPlugin = require('wrapper-webpack-plugin');
     plugins.push(new WrapperPlugin({
@@ -20,11 +22,12 @@ if (process.env.NODE_ENV === "production") {
         footer: fs.readFileSync(path.resolve(__dirname, "meta", "footer.js"), "utf8"),
     }));
     optimization.minimize = true;
-    optimization.minimizer = [new TerserPlugin({ extractComments: false })];
+    optimization.minimizer = [new TerserPlugin({ extractComments: false }), new CssMinimizerPlugin()];
+    devtool = "";
 }
 module.exports = {
     mode: process.env.NODE_ENV === "production" ? "production" : "development",
-    devtool: 'source-map',
+    ...(devtool ? { devtool } : void 0),
     entry: ["./src/RedWarnLite.ts"],
     output: {
         path: path.resolve(__dirname, "build"),
@@ -39,12 +42,19 @@ module.exports = {
     devServer: {
         compress: false,
         port: 45991,
+        /* Wikipedia will block the request due to CORS. Just refresh like a normal person. */
         hot: false,
-        inline: false
+        inline: false,
+        liveReload: false,
+        injectClient: false
     },
     plugins,
     module: {
         rules: [
+            {
+                test: /\.(txt|svg)$/,
+                use: ["text-loader"]
+            },
             {
                 test: /\.tsx?$/,
                 use: ["ts-loader"],
@@ -68,5 +78,6 @@ module.exports = {
             }
         ]
     },
-    optimization
+    optimization,
+    stats: "verbose"
 };

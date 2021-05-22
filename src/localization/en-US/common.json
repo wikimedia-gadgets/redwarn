@@ -2,15 +2,16 @@
     "redwarn": {
         "name": "RedWarn",
         "signature": "([[w:en:WP:RW|RW $t(common:redwarn.version)]])",
-        "userAgent": "RedWarn/$t(common:redwarn.version) ([[m:w:wt:RW]]; https://w.wiki/s6j/;)",
+        "userAgent": "RedWarn/$t(common:redwarn.version) ([[w:en:WP:RW|]]; https://w.wiki/s6j/;)",
 
         "init": {
-            "error": "An error occured while loading RedWarn.",
+            "error": "An error occurred while loading RedWarn.",
             "mwChecks": {
                 "*": "A MediaWiki installation assertion check failed.",
                 "version": "This version of MediaWiki is unsupported. A version of at least 1.30.0 is required.",
                 "user": "The current user is not a logged-in user or is an anonymous user."
             }
         }
-    }
+    },
+    "bullet": "•"
 }

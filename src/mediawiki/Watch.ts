@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import RedWarnStore from "rww/data/RedWarnStore";
-import RWUI from "rww/ui/RWUI";
+import RedWarnUI from "rww/ui/RedWarnUI";
 import redirect from "rww/util/redirect";
 import { MediaWikiAPI } from "rww/mediawiki";
 
@@ -24,7 +24,9 @@ export class Watch {
             }
 
             $("#rwSpyIcon").css("color", "green");
-            RWUI.Toast.quickShow({ content: i18next.t("ui:toasts.watching") });
+            RedWarnUI.Toast.quickShow({
+                content: i18next.t("ui:toasts.watching"),
+            });
 
             this.active = true;
             const r = await MediaWikiAPI.api.get({
@@ -121,7 +123,7 @@ export class Watch {
         } else {
             clearInterval(this.timecheck);
             $("#rwSpyIcon").css("color", "");
-            RWUI.Toast.quickShow({
+            RedWarnUI.Toast.quickShow({
                 content: i18next.t("ui:toasts.stoppedWatching"),
             });
             this.active = false;

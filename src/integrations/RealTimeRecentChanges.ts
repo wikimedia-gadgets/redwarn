@@ -2,7 +2,7 @@ import { Page, Revision, Rollback, User } from "rww/mediawiki";
 import { RollbackContext } from "rww/definitions/RollbackContext";
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 
-export default class RTRC {
+export default class RealTimeRecentChanges {
     private static onRTRC: boolean;
     static init(): void {
         this.onRTRC =
@@ -18,7 +18,7 @@ export default class RTRC {
                         page: Page.fromTitle(
                             diff.find("strong > a").attr("title")
                         ),
-                        user: new User(
+                        user: User.fromUsername(
                             diff.find("#mw-diff-ntitle2 > a > bdi").text()
                         ),
                     })

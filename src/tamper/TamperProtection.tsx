@@ -1,14 +1,14 @@
 import { h } from "tsx-dom";
 import i18next from "i18next";
-import Config from "rww/config";
+import { Configuration } from "rww/config";
 import { ClientUser } from "rww/mediawiki";
-import RWUI from "rww/ui/RWUI";
+import RedWarnUI from "rww/ui/RedWarnUI";
 
 /**
  * Tamper protection module.
  * This should be obfuscated in compilation.
- * 
- * Note: Removing this module will break startup, so bad faith users 
+ *
+ * Note: Removing this module will break startup, so bad faith users
  * will have to comment out the initialization call.
  */
 export default class TamperProtection {
@@ -29,23 +29,23 @@ export default class TamperProtection {
                 "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
             ) ||
             this.x ||
-            Config.ImNaughty.value
+            Configuration.neopolitan.value
         ) {
-            // wee woo
             return TamperProtection.exec();
         }
     }
 
     static async exec(): Promise<void> {
-        const content = [<span></span>];
+        const content = [<span />];
         content[0].innerHTML = i18next.t("ui:tamperProtection.warningContent");
-        const d = new RWUI.Dialog({
+        const d = new RedWarnUI.Dialog({
             actions: [],
             content,
-            title: i18next.t("ui.tamperProtection.header"),
+            title: i18next.t("ui:tamperProtection.header"),
         });
         await d.show();
-        Config.ImNaughty.value = true;
-        Config.save();
+        Configuration.neopolitan.value =
+            "I turn my head up to the sky, I focus one thought at a time.";
+        Configuration.save();
     }
 }

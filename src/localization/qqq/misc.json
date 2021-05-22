@@ -1,0 +1,20 @@
+{
+    "ageFormat": {
+        "future": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime",
+        "past": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime",
+        "s": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime",
+        "ss": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime",
+        "m": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime",
+        "mm": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime",
+        "h": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime",
+        "hh": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime",
+        "d": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime",
+        "dd": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime",
+        "w": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime",
+        "ww": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime",
+        "M": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime",
+        "MM": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime",
+        "y": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime",
+        "yy": "Copy these from https://github.com/moment/moment/tree/master/locale, under relativeTime"
+    }
+}

@@ -4,7 +4,6 @@
     "description": "Wikipedia patrol and counter-vandalism tool.",
     "main": "src/RedWarnLite.ts",
     "dependencies": {
-        "@material/chips": "^10.0.0",
         "@material/dialog": "^10.0.0",
         "@material/form-field": "^10.0.0",
         "@material/linear-progress": "^10.0.0",
@@ -17,7 +16,7 @@
         "@material/tooltip": "^10.0.0",
         "i18next": "^19.8.4",
         "i18next-browser-languagedetector": "^6.0.1",
-        "jquery": "^3.5.1",
+        "tslib": "^1.9.3",
         "tsx-dom": "^1.1.0"
     },
     "devDependencies": {
@@ -52,8 +51,7 @@
         "text-loader": "0.0.1",
         "ts-jest": "^26.4.4",
         "ts-loader": "^8.0.12",
-        "tslib": "^2.0.3",
-        "types-mediawiki": "git+https://github.com/wikimedia-gadgets/types-mediawiki#39bbcac6fa2425ec565103d75f40379b8741af78",
+        "types-mediawiki": "^1.1.0",
         "typescript": "^4.2.3",
         "webpack": "^5.11.1",
         "webpack-cli": "^4.3.0",

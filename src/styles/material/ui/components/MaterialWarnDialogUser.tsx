@@ -17,7 +17,6 @@ import {
     getMonthHeader,
     normalize,
 } from "rww/util";
-import { MDCChipSet } from "@material/chips";
 import MaterialMenu, { openMenu } from "./MaterialMenu";
 import showPlainMediaWikiIFrameDialog from "rww/styles/material/util/showPlainMediaWikiIFrameDialog";
 import { MaterialWarnDialogChild } from "./MaterialWarnDialogChild";
@@ -244,9 +243,6 @@ function MaterialWarnDialogUserCard({
             </tr>
         </table>
     );
-
-    if (card.querySelector(".mdc-chip-set"))
-        new MDCChipSet(card.querySelector(".mdc-chip-set"));
 
     return card;
 }

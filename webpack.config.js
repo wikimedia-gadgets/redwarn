@@ -79,5 +79,6 @@ module.exports = {
         ]
     },
     optimization,
-    stats: "verbose"
+    //stats: "verbose",
+    stats: { orphanModules: true }
 };

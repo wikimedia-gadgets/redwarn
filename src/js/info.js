@@ -355,6 +355,10 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
             "title": mw.config.get("wgRelevantPageName")
         }).done(r => {
             let processedResult = r.parse.text['*'].replace(/\/\//g, "https://").replace(/href=\"\/wiki/g, `href="${rw.wikiBase}/wiki`); // regex replace w direct urls
+
+            // sanitize
+            processedResult = rw.sanitizeHTML(processedResult);
+
             callback(processedResult); // make callback w HTML
         });
     },

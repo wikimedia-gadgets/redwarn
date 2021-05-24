@@ -297,7 +297,7 @@ ${finalWarningHistoryHTML}
     <div id="previewUsrPg" style="height: 95%; overflow:auto;">
         <i>Generating preview...</i>
         <div class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
-        <pre id="uloadingPre" style="white-space: pre-wrap;">`+ userPg +`</pre>
+        <pre id="uloadingPre" style="white-space: pre-wrap;">`+ rw.sanitizeHTML(userPg) +`</pre>
     </div>
 </div>
 
@@ -344,7 +344,6 @@ ${finalWarningHistoryHTML}
                 $("#previewUsrPg").html(e.data.result); // set content
                 return; // exit
             }
-
             // Normal preview
             $("#preview").html(e.data.result); // Set preview to content
         } else if (e.data.action == 'recentPage') {

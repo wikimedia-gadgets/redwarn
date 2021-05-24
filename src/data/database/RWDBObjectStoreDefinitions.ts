@@ -1,3 +1,5 @@
+import { RWErrors } from "rww/errors/RWError";
+
 export interface CacheTracker {
     id?: string;
     timestamp: number;
@@ -8,4 +10,14 @@ export interface CachedDependency {
     lastCache: number;
     etag: string;
     data: string;
+}
+
+export interface LogItem {
+    id?: string;
+    /**
+     * Unix epoch
+     */
+    timestamp: number;
+    code: RWErrors;
+    data: Record<string, any>;
 }

@@ -4,6 +4,7 @@ import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
 import {
     CachedDependency,
     CacheTracker,
+    LogItem,
 } from "rww/data/database/RWDBObjectStoreDefinitions";
 import Group from "rww/definitions/Group";
 
@@ -31,6 +32,19 @@ const databaseUpdaters: { [key: number]: RedWarnIDBUpgradeHandler } = {
             "page",
             "displayName",
         ]);
+
+        // Logging
+        RedWarnIDB.createObjectStore(database, "errorLog", "id", [
+            "timestamp",
+            "code",
+            "data",
+        ]);
+        // TODO only on debug mode
+        /* RedWarnIDB.createObjectStore(database, "combinedLog", "id", [
+            "timestamp",
+            "code",
+            "data",
+        ]); */
     },
 };
 
@@ -41,6 +55,8 @@ export default class RedWarnLocalDB {
     cacheTracker: RedWarnIDBObjectStore<CacheTracker>;
     dependencyCache: RedWarnIDBObjectStore<CachedDependency>;
     groupCache: RedWarnIDBObjectStore<Group>;
+    errorLog: RedWarnIDBObjectStore<LogItem>;
+    combinedLog?: RedWarnIDBObjectStore<LogItem>;
     // Object stores go above.
 
     private _open: boolean;
@@ -78,6 +94,10 @@ export default class RedWarnLocalDB {
             "dependencyCache"
         );
         this.groupCache = this.idb.store<Group>("groupCache");
+
+        this.errorLog = this.idb.store<LogItem>("errorLog");
+        // TODO only on debug mode
+        //this.combinedLog = this.idb.store<LogItem>("combinedLog");
 
         return connect;
     }

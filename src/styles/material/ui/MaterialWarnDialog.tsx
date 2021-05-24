@@ -31,7 +31,7 @@ import {
 } from "rww/mediawiki";
 import { isIPAddress, normalize, warningSuffix } from "rww/util";
 
-import { RW_SIGNATURE } from "rww/data/RedWarnConstants";
+import { RW_SHARED_IP_ADVICE, RW_SIGNATURE } from "rww/data/RedWarnConstants";
 import MaterialIconButton from "./components/MaterialIconButton";
 import RedWarnUI from "rww/ui/RedWarnUI";
 
@@ -154,7 +154,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                 : ""
         }}} ${RW_SIGNATURE}${
             isIPAddress(this.mwdUser.MWDUser.user.username)
-                ? "{{subst:Shared IP advice}}"
+                ? RW_SHARED_IP_ADVICE
                 : ""
         }`;
     }

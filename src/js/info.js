@@ -258,7 +258,7 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                 "action": "edit",
                 "format": "json",
                 "token": mw.user.tokens.get("csrfToken"),
-                "title": "User:" + encodeURIComponent(rw.info.getUsername()) + "/redwarnConfig.js",
+                "title": "User:" + rw.info.getUsername() + "/redwarnConfig.js",
                 "summary": "Updating user configuration [[w:en:WP:RW|(RW " + rw.version + ")]]", // summary sign here
                 "text": finalTxt,
                 "tags": ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
@@ -632,7 +632,7 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                     "action": "edit",
                     "format": "json",
                     "token": mw.user.tokens.get("csrfToken"),
-                    "title": "User_talk:" + encodeURIComponent(user),
+                    "title": "User talk:" + user,
                     "summary": summary + " [[w:en:WP:RW|(RW " + rw.version + ")]]", // summary sign here
                     "text": finalTxt,
                     "tags": ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia

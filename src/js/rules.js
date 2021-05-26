@@ -44,7 +44,7 @@ rw.rulesFunc = {
             "action": "edit",
             "format": "json",
             "token": mw.user.tokens.get("csrfToken"),
-            "title": "User:" + encodeURIComponent(rw.info.getUsername()) + "/redwarnRules.json",
+            "title": "User:" + rw.info.getUsername() + "/redwarnRules.json",
             "summary": "Updating user Rule Database [[w:en:WP:RW|(RW " + rw.version + ")]]", // summary sign here
             "text": JSON.stringify(rw.rules),
             "tags": ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia

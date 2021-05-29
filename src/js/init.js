@@ -149,7 +149,6 @@ var rw = {
         // Super-breakable HTML sanitizer
         return string
             .replace(/\<(\/?)script(.*)\>/gi, "&lt;$1script$2&gt;")
-            .replace(/\<(\/?)style(.*)\>/gi, "&lt;$1style$2&gt;")
             .replace(/\<(\/?)(.*)\son\w+=(.*)\>/gi, "&lt;$1$2neopolitan=$3&gt;");
     },
 

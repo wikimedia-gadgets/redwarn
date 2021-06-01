@@ -348,7 +348,10 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             }
 
             // Register progressbar
-            rw.visuals.register($("#rwRollbackInProgressBar")[0]);
+            var progressBar;
+            if ((progressBar = $("#rwRollbackInProgressBar")[0])) {
+                rw.visuals.register(progressBar);
+            }
         }, 100);
     },
 

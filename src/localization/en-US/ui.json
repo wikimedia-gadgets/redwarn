@@ -82,7 +82,11 @@
             "levelSelectionLevelNotPresent": "There is no level {{level}} ({{levelReadable}}) template available.",
             "levelSelectionLevel": "Level {{level}} {{levelReadable}}: {{levelDescription}}",
             "searchDialogOpenerTooltip": "Search for a warning",
-            "warningSelectionDropdownTitle": "Warning"
+            "warningSelectionDropdownTitle": "Warning",
+            "singleIssueTemplate" : "Reminder",
+            "policyViolationTemplate" : "Policy Violation Warning",
+            "warningLevel" : "Warning level",
+            "noWarningSelected" : "No warning selected."
         },
 
         "templateSearchDialog" : {

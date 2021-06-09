@@ -1,0 +1,17 @@
+{
+    "ui" : {
+        "orderNoticesByTemplateName" : {
+            "title" : "How would you like warnings to be shown?",
+            "description": "You can sort them by their title (e.g. \"Vandalism\"), or by their template name (e.g. {{uw-vandalism}})?",
+            "byTitle": "By Title",
+            "byTemplateName": "By Template Name"
+        }
+    },
+
+    "accessibility" : {
+        "raiseActionButtons" : {
+            "title" : "Raise action buttons",
+            "description" : "This option highlights action buttons (such as 'Warn User', 'Okay', 'Submit') so that they are easier to distinguish from other buttons."
+        }
+    }
+}

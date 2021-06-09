@@ -1,5 +1,6 @@
 import { Rollback } from ".";
 
+// TODO - JQUERY IS DEPRECIATED
 export class RevertSpeedup {
     static async init(): Promise<void> {
         const i = <() => any>(

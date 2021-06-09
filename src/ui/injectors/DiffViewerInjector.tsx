@@ -343,9 +343,9 @@ export default class DiffViewerInjector {
             );
         });
 
-        if (Configuration.rollbackDoneOption.value !== "none") {
+        if (Configuration.rollback.rollbackDoneOption.value !== "none") {
             $(
-                `#rwRBDoneOption_${Configuration.rollbackDoneOption.value}`
+                `#rwRBDoneOption_${Configuration.rollback.rollbackDoneOption.value}`
             ).trigger("click");
         }
 

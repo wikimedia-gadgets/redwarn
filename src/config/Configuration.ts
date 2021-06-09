@@ -2,12 +2,9 @@ import {
     RW_CONFIG_VERSION,
     RW_NOWIKI_CLOSE,
     RW_NOWIKI_OPEN,
-    RW_VERSION,
 } from "rww/data/RedWarnConstants";
-import { DefaultRedWarnStyle } from "rww/styles/StyleConstants";
 import { ClientUser } from "rww/mediawiki";
 import { Setting } from "./Setting";
-import { RollbackMethod } from "./ConfigurationEnums";
 import { updateConfiguration } from "./ConfigurationUpdate";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import i18next from "i18next";
@@ -15,34 +12,18 @@ import StyleManager from "rww/styles/StyleManager";
 import { RedWarnStyleMissingError } from "rww/errors/RedWarnStyleError";
 import Log from "rww/data/RedWarnLog";
 
+// Settings value files
+import coreSettings from "./values/core";
+import uiSettings from "./values/ui";
+import rollbackSettings from "./values/rollback";
+import accessibilitySettings from "./values/accessibility";
+
 export class Configuration {
-    /** Last version of RedWarn that was used */
-    public static latestVersion = new Setting(RW_VERSION, "latestVersion");
-    /** The configuration version, responsible for keeping track of variable renames. */
-    public static configVersion = new Setting(
-        RW_CONFIG_VERSION,
-        "configVersion"
-    );
-    /** Rollback done option that is automatically executed on rollback complete */
-    public static rollbackDoneOption = new Setting(
-        "warnUser",
-        "rollbackDoneOption"
-    );
-    /** Order warnings by template name or reason */
-    public static orderNoticesByTemplateName = new Setting(
-        false,
-        "orderNoticesByTemplateName"
-    );
-    /** Array of viewed campaigns */
-    public static campaigns = new Setting<string[]>([], "campaigns");
-    /** Method of rollback */
-    public static rollbackMethod = new Setting(
-        RollbackMethod.Unset,
-        "rollbackMethod"
-    );
-    /** Style of UI */
-    public static style = new Setting(DefaultRedWarnStyle, "style");
-    public static neopolitan = new Setting(null, "neopolitan");
+    // Add new config files both above and here, and (IMPORTANT) below in both the load (or it'll be ignored), and save()
+    public static core = coreSettings;
+    public static ui = uiSettings;
+    public static rollback = rollbackSettings;
+    public static accessibility = accessibilitySettings;
 
     static async refresh(): Promise<void> {
         Log.debug("Refreshing configuration...");
@@ -71,22 +52,28 @@ export class Configuration {
             saveNow = true;
         }
 
-        if ((redwarnConfig[this.configVersion.id] ?? 0) < RW_CONFIG_VERSION) {
+        // Compatibility - if redwarnConfig.core is not there we can assume it is an older style (todo)
+        if (
+            (redwarnConfig.core &&
+                (redwarnConfig.core[this.core.configVersion.id] ?? 0)) <
+            RW_CONFIG_VERSION
+        ) {
             redwarnConfig = updateConfiguration(redwarnConfig);
             saveNow = true;
         }
 
         // At this point, we can definitely assume that `redwarnConfig` is a configuration
-        // that is of the latest version.
+        // that is of the latest version, so we can start loading based on this config.
 
-        this.allSettings().forEach((setting) => {
-            if (redwarnConfig[setting.id])
-                setting.value = redwarnConfig[setting.id];
-        });
+        // Start loading the into the groups
+        this.loadSettings(redwarnConfig, "core", this.core);
+        this.loadSettings(redwarnConfig, "ui", this.ui);
+        this.loadSettings(redwarnConfig, "rollback", this.rollback);
+        this.loadSettings(redwarnConfig, "accessibility", this.accessibility);
 
         try {
             StyleManager.setStyle(
-                redwarnConfig[this.style.id] ?? this.style.defaultValue
+                redwarnConfig.ui[this.ui.style.id] ?? this.ui.style.defaultValue
             );
         } catch (e) {
             if (e instanceof RedWarnStyleMissingError) {
@@ -103,9 +90,12 @@ export class Configuration {
         }
     }
 
-    static allSettings(): Map<string, Setting<unknown>> {
+    // Example use: allSettings(this.ui)
+    static allSettings(
+        settingGroup: Record<string, any>
+    ): Map<string, Setting<unknown>> {
         const map = new Map();
-        for (const [key, value] of Object.entries(this)) {
+        for (const [key, value] of Object.entries(settingGroup)) {
             if (value instanceof Setting) {
                 map.set(key, value);
             }
@@ -113,14 +103,34 @@ export class Configuration {
         return map;
     }
 
+    // Example use: loadSettings("ui", this.ui)
+    static loadSettings(
+        redwarnConfig: Record<string, any>,
+        configKey: string,
+        settingGroup: Record<string, any>
+    ) {
+        if (redwarnConfig[configKey] == undefined) return; // if it's not set, skip and keep defaults
+        this.allSettings(settingGroup).forEach((setting) => {
+            // Only setting if config is there, else it's the default value
+            if (redwarnConfig[configKey][setting.id])
+                setting.value = redwarnConfig[configKey][setting.id];
+        });
+    }
+
     static async save(reloadOnDone = false): Promise<void> {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const template = require("./redwarnConfig.template.txt");
 
         await ClientUser.i.redwarnConfigPage.edit(
-            Configuration.fromTemplate(template, this.map()),
+            Configuration.fromTemplate(template, {
+                // ADD NEW SETTINGS TO BE SAVED HERE
+                core: this.map(this.core),
+                ui: this.map(this.ui),
+                rollback: this.map(this.rollback),
+                accessibility: this.map(this.accessibility),
+            }),
             {
-                comment: "Updating user configuration",
+                comment: "Updating configuration",
             }
         );
         if (reloadOnDone) {
@@ -129,12 +139,17 @@ export class Configuration {
         return;
     }
 
-    static map(): Record<string, any> {
+    // Example usage: this.map(this.ui)
+    static map(settingsGroupToMap: Record<string, any>): Record<string, any> {
+        // Any keys to exclude from default skip - make sure these are unique as they will apply irrespective of which group they are in!!
         const excludeFromDefaultSkip = [
-            this.configVersion.id,
-            this.latestVersion.id,
+            this.core.configVersion.id,
+            this.core.latestVersion.id,
         ];
-        return Array.from(this.allSettings().entries()).reduce(
+
+        return Array.from(
+            this.allSettings(settingsGroupToMap).entries()
+        ).reduce(
             (main, [id, setting]) => ({
                 ...main,
                 ...(excludeFromDefaultSkip.includes(setting.id) ||

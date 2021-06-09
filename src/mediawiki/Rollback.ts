@@ -331,7 +331,7 @@ export class Rollback {
 
         if (ClientUser.i.inGroup("rollbacker")) {
             switch (
-                Configuration.rollbackMethod.value as RollbackMethod // need to cast since inferred type is weird in switch/case
+                Configuration.rollback.rollbackMethod.value as RollbackMethod // need to cast since inferred type is weird in switch/case
             ) {
                 case RollbackMethod.Rollback:
                     return await this.standardRollback(
@@ -350,14 +350,14 @@ export class Rollback {
                 case RollbackMethod.Unset:
                 default:
                     Log.error(
-                        `RollbackMethod is invalid (${Configuration.rollbackMethod.value}), resetting`
+                        `RollbackMethod is invalid (${Configuration.rollback.rollbackMethod.value}), resetting`
                     );
                     const dialog = new RedWarnUI.Dialog({
                         actions: [
                             {
                                 data: "rollback",
                                 action: async () => {
-                                    Configuration.rollbackMethod.value =
+                                    Configuration.rollback.rollbackMethod.value =
                                         RollbackMethod.Rollback;
                                     await Configuration.save();
                                     return await this.standardRollback(
@@ -373,7 +373,7 @@ export class Rollback {
                             {
                                 data: "revert",
                                 action: async () => {
-                                    Configuration.rollbackMethod.value =
+                                    Configuration.rollback.rollbackMethod.value =
                                         RollbackMethod.Revert;
                                     await Configuration.save();
                                     return await this.pseudoRollback(

@@ -5,7 +5,7 @@
         "target": "es6",
         "outDir": "./build",
         "declaration": true,
-        "declarationDir": "./build",
+        "declarationDir": "./build/d.ts",
         "resolveJsonModule": true,
         "jsx": "react",
         "jsxFactory": "h",

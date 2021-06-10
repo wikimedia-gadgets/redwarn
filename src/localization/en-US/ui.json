@@ -1,5 +1,5 @@
 {
-    "unfinished" : "Hmm, looks like we haven't implimented this feature yet. Check back later!",
+    "unfinished" : "Hmm, looks like we haven't implemented this feature yet. Check back later!",
 
     "restore": {
         "label": "Restore Reason",
@@ -71,7 +71,7 @@
             },
 
             "show": {
-                "userpage": "Show userpage",
+                "userpage": "Show user page",
                 "contributions": "Show user contributions"
             }
         },

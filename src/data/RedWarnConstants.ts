@@ -1,4 +1,4 @@
-import buildinfo from "!webpack-plugin-buildinfo?gitHash&gitHashShort&time&platform&arch!";
+import buildinfo from "!webpack-plugin-buildinfo?gitHash&gitHashShort&time&platform&arch!./buildinfo.js";
 
 // THIS FILE SHOULD NOT MAKE ANY OTHER IMPORTS THAN FROM BUILDINFO!
 

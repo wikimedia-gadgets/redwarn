@@ -23,6 +23,27 @@
  *
  * ------------------------------------------------------------------------------
  *
+ * Notice for on-wiki versions:
+ *
+ * Compiled on-wiki versions are made available by the copyright holders on
+ * Wikimedia projects under the Creative Commons Attribution-ShareAlike 3.0
+ * Unported License.
+ *
+ * We, the copyright holders, also authorise you to upload the compiled RedWarn
+ * bundle from Apache License 2.0-licensed source code to any Wikimedia project.
+ *
+ * For all other non-Wikimedia wikis: Rebuilds using the Apache License 2.0-licensed
+ * source code must be uploaded under an Apache License 2.0-compatible license.
+ *
+ * It is the copyright holders understanding that Creative Commons Attribution-ShareAlike
+ * 3.0 Unported is not a compatible license for on-wiki release.
+ *
+ * That being said, as an open-source project, we welcome collaboration, extensions
+ * and translations! Please email ed6767wiki (at) gmail.com if you need help with
+ * licensing RedWarn for another wiki.
+ *
+ * ------------------------------------------------------------------------------
+ *
  *               ! ATTENTION TO ALL WITH SCRIPT EDITING PERMISSIONS !
  *
  *             Changing this file will affect a large amount of users.

@@ -17,11 +17,11 @@ export default class Localization {
      * along with inserting the default English pack as a fallback.
      * @private
      */
-    private static assertLanguages(): void {
+    private static async assertLanguages(): Promise<void> {
         if (window.RedWarnLanguages == null) {
             window.RedWarnLanguages = [];
         }
-        require("./en-US/RWLEnglish");
+        await import("./lang/en-US/RWLEnglish");
 
         this.cleanLanguages();
     }
@@ -45,7 +45,7 @@ export default class Localization {
      * Initialize the localization handler.
      */
     public static async init(): Promise<void> {
-        this.assertLanguages();
+        await this.assertLanguages();
         await i18next.use(LanguageDetector).init({
             fallbackLng: this.fallbackLanguage,
             debug: true,

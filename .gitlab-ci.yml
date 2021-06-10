@@ -8,7 +8,7 @@ stages:
 
 # Dowload all npm dependencies, and be sure to enable
 # development mode to get all types for proper building.
-deps_npm:
+deps_main:
     stage: dependencies
     script:
         - "git config --global url.\"https://github.com/\".insteadOf git@github.com:"
@@ -51,7 +51,7 @@ test_jest:
 build_redwarn:
     stage: build
     script:
-        - npm run build-prod
+        - npm run build:prod
     # Redownload `node_modules` from earlier
     cache:
         key: "$CI_COMMIT_REF_SLUG"
@@ -72,7 +72,7 @@ build_redwarn:
 # exclusively for human updates. This should update a specific "beta"
 # or "nightly" version of the RedWarn script instead.
 deploy_wp:
-    dependencies: 
+    dependencies:
         - "build_redwarn"
     stage: deploy
     when: manual

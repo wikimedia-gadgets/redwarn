@@ -6,13 +6,13 @@ i18n - see pref.json for your localisation, make sure you add values for each on
 */
 
 import { DefaultRedWarnStyle } from "rww/styles/StyleConstants";
-import { Setting, settingArrayToObject, uiInputType } from "../Setting";
+import { Setting, settingsToObject, UIInputType } from "../Setting";
 
-const uiSettings: Record<string, any> = settingArrayToObject([
+const UISettings: Record<string, any> = settingsToObject([
     /** Order warnings by template name or reason */
     new Setting("orderNoticesByTemplateName", false, {
         isUserFacing: true,
-        uiInputType: uiInputType.RadioButtons,
+        uiInputType: UIInputType.Radio,
 
         readableTitle: "prop:ui.orderNoticesByTemplateName.title",
         readableDescription: "prop:ui.orderNoticesByTemplateName.description",
@@ -38,4 +38,4 @@ const uiSettings: Record<string, any> = settingArrayToObject([
     new Setting("neopolitan", null),
 ]);
 
-export default uiSettings;
+export default UISettings;

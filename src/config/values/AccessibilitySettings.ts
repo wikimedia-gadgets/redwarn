@@ -6,17 +6,17 @@ i18n - see pref.json for your localisation, make sure you add values for each on
 new Setting(key, default, userfacingProps)
 */
 
-import { Setting, settingArrayToObject, uiInputType } from "../Setting";
+import { Setting, settingsToObject, UIInputType } from "../Setting";
 
-const accessibilitySettings: Record<string, any> = settingArrayToObject([
+const AccessibilitySettings: Record<string, any> = settingsToObject([
     /** Checkbox setting - values can be true or false */
     new Setting("raiseActionButtons", false, {
         isUserFacing: true,
-        uiInputType: uiInputType.CheckBox,
+        uiInputType: UIInputType.Checkbox,
         readableTitle: "prop:accessibility.raiseActionButtons.title",
         readableDescription:
             "prop:accessibility.raiseActionButtons.descriptions",
     }),
 ]);
 
-export default accessibilitySettings;
+export default AccessibilitySettings;

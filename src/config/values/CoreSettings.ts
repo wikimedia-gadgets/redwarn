@@ -8,9 +8,9 @@ new Setting(key, default, userfacingProps)
 */
 
 import { RW_CONFIG_VERSION, RW_VERSION } from "rww/data/RedWarnConstants";
-import { Setting, settingArrayToObject } from "../Setting";
+import { Setting, settingsToObject } from "../Setting";
 
-const coreSettings: Record<string, any> = settingArrayToObject([
+const CoreSettings: Record<string, any> = settingsToObject([
     /** Last version of RedWarn that was used */
     new Setting("latestVersion", RW_VERSION),
 
@@ -18,4 +18,4 @@ const coreSettings: Record<string, any> = settingArrayToObject([
     new Setting("configVersion", RW_CONFIG_VERSION),
 ]);
 
-export default coreSettings;
+export default CoreSettings;

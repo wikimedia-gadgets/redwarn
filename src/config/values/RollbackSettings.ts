@@ -6,13 +6,13 @@ i18n - see pref.json for your localisation, make sure you add values for each on
 */
 
 import { RollbackMethod } from "..";
-import { Setting, settingArrayToObject } from "../Setting";
+import { Setting, settingsToObject } from "../Setting";
 // TODO: add user facing info here
-const rollbackSettings: Record<string, any> = settingArrayToObject([
+const RollbackSettings: Record<string, any> = settingsToObject([
     /** Rollback done option that is automatically executed on rollback complete */
     new Setting("rollbackDoneOption", "warnUser"),
     /** Method of rollback */
     new Setting("rollbackMethod", RollbackMethod.Unset),
 ]);
 
-export default rollbackSettings;
+export default RollbackSettings;

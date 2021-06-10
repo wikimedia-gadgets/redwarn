@@ -4,14 +4,14 @@
  * The original Java source is available at <https://github.com/cabaletta/baritone/blob/72cf9392/src/api/java/baritone/api/Settings.java/>.
  */
 
-export enum uiInputType {
-    CheckBox, // will only return true or false
-    CheckBoxes, // Will return an array of bools
-    RadioButtons,
-    DropDown,
+export enum UIInputType {
+    Checkbox,
+    Checkboxes,
+    Radio,
+    Dropdown,
     Textbox,
     Number,
-    ColourPicker,
+    ColorPicker,
 }
 
 export interface validOptions {
@@ -24,8 +24,8 @@ export interface userFacingProps {
     isUserFacing: boolean; // Only required info - if not true the rest of this is ignored
     readableTitle?: string;
     readableDescription?: string;
-    uiInputType?: uiInputType;
-    validOptions?: validOptions[]; // Only valid for these uiInputTypes: CheckBoxes, RadioButtons, DropDown
+    uiInputType?: UIInputType;
+    validOptions?: validOptions[]; // Only valid for these UIInputTypes: Checkboxes, Radio, Dropdown
 }
 
 export class Setting<T> implements PrimitiveSetting<T> {
@@ -75,13 +75,16 @@ export interface PrimitiveSetting<T> {
     readonly id: string;
 }
 
-// This function converts settings to records, that's basically it.
-
-export function settingArrayToObject(arr: Setting<any>[]): Record<string, any> {
-    // eslint-disable-next-line prefer-const
-    let finalObj: Record<string, any> = {};
-    arr.forEach((set) => {
-        finalObj[set.id] = set;
-    });
-    return finalObj;
+/**
+ * Converts settings into an object.
+ *
+ * @param settings The settings array.
+ */
+export function settingsToObject(
+    settings: Setting<any>[]
+): Record<string, any> {
+    return settings.reduce((p, n) => {
+        p[n.id] = n;
+        return p;
+    }, <Record<string, any>>{});
 }

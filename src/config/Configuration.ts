@@ -12,18 +12,17 @@ import StyleManager from "rww/styles/StyleManager";
 import { RedWarnStyleMissingError } from "rww/errors/RedWarnStyleError";
 import Log from "rww/data/RedWarnLog";
 
-// Settings value files
-import coreSettings from "./values/core";
-import uiSettings from "./values/ui";
-import rollbackSettings from "./values/rollback";
-import accessibilitySettings from "./values/accessibility";
+import CoreSettings from "rww/config/values/CoreSettings";
+import UISettings from "rww/config/values/UISettings";
+import RollbackSettings from "rww/config/values/RollbackSettings";
+import AccessibilitySettings from "rww/config/values/AccessibilitySettings";
 
 export class Configuration {
     // Add new config files both above and here, and (IMPORTANT) below in both the load (or it'll be ignored), and save()
-    public static core = coreSettings;
-    public static ui = uiSettings;
-    public static rollback = rollbackSettings;
-    public static accessibility = accessibilitySettings;
+    public static core = CoreSettings;
+    public static ui = UISettings;
+    public static rollback = RollbackSettings;
+    public static accessibility = AccessibilitySettings;
 
     static async refresh(): Promise<void> {
         Log.debug("Refreshing configuration...");

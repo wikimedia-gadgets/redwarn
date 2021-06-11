@@ -1,9 +1,18 @@
+# Build data
 public/
-.gitlab-ci.yml
-.DS_Store
-.vscode/
-node_modules
 build/
 .eslintcache
 release/
 !release/.gitkeep
+
+# System files
+.DS_Store
+Desktop.ini
+Thumbs.db
+
+# IDE-specific
+.vscode/
+.idea/
+
+# Dependencies
+node_modules/

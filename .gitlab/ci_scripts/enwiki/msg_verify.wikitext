@@ -1,0 +1,3 @@
+The following commits will be applied to [[User:{{subst:REVISIONUSER}}/.js]], going from latest to oldest:
+
+{{{commits}}}

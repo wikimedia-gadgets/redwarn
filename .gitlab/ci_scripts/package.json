@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "axios": "^0.21.1",
+    "axios-cookiejar-support": "^1.0.1",
+    "git-commit-info": "^2.0.0",
+    "gitlog": "^4.0.4",
+    "tough-cookie": "^4.0.0"
+  }
+}

@@ -1,0 +1,3 @@
+[[User:{{subst:REVISIONUSER}}/Commit Approval/latest.json|No metadata]] exists for the current version of [[User:{{subst:REVISIONUSER}}/.js]]. The script will then be updated with the artifact as of the following commit:
+
+{{{commits}}}

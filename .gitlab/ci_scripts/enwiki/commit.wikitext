@@ -1,0 +1,6 @@
+{{/commit
+| hash      = {{{hash}}}
+| timestamp = {{{timestamp}}}
+| author    = {{{author}}}
+| message   = {{{message}}}
+}}

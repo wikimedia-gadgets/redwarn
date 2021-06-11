@@ -1,21 +1,17 @@
 /*
-This directory contains values for each module and what their preference value does and includes
-If a preference value isn't here it will be seen as invalid and removed/ignored.
-
-i18n - see pref.json for your localisation, make sure you add values for each one of your keys.
-
-new Setting(key, default, userfacingProps)
-*/
+ * RedWarn core settings.
+ */
 
 import { RW_CONFIG_VERSION, RW_VERSION } from "rww/data/RedWarnConstants";
-import { Setting, settingsToObject } from "../Setting";
+import { Setting } from "../Setting";
+import { ConfigurationSet } from "rww/config";
 
-const CoreSettings: Record<string, any> = settingsToObject([
+const CoreSettings = <ConfigurationSet>{
     /** Last version of RedWarn that was used */
-    new Setting("latestVersion", RW_VERSION),
+    latestVersion: new Setting("latestVersion", RW_VERSION, null),
 
-    /** The configuration version, responsible for keeping track of variable renames. */
-    new Setting("configVersion", RW_CONFIG_VERSION),
-]);
+    /** The configuration version, responsible for keeping track of configuration schema changes. */
+    configVersion: new Setting("configVersion", RW_CONFIG_VERSION, null),
+};
 
 export default CoreSettings;

@@ -1,6 +1,6 @@
 import { RW_CONFIG_VERSION } from "rww/data/RedWarnConstants";
-import { RollbackMethod } from "rww/config/ConfigurationEnums";
-import { RollbackDoneOption } from "rww/definitions/RollbackDoneOptions";
+import { RevertMethod } from "rww/config/ConfigurationEnums";
+import { RevertDoneOption } from "rww/definitions/RollbackDoneOptions";
 import Log from "rww/data/RedWarnLog";
 
 type ConfigurationUpdater = (
@@ -37,15 +37,15 @@ const configurationUpdaters: { [key: number]: ConfigurationUpdater } = {
                     switch (value) {
                         case "RWRBDONEmrevPg":
                             config.rollbackDoneOption =
-                                RollbackDoneOption.LatestRevision;
+                                RevertDoneOption.LatestRevision;
                             break;
                         case "RWRBDONEnewUsrMsg":
                             config.rollbackDoneOption =
-                                RollbackDoneOption.NewMessage;
+                                RevertDoneOption.NewMessage;
                             break;
                         case "RWRBDONEwelcomeUsr":
                             config.rollbackDoneOption =
-                                RollbackDoneOption.QuickTemplate;
+                                RevertDoneOption.QuickTemplate;
                             break;
                         case "RWRBDONEwarnUsr":
                             config.rollbackDoneOption = "warnUser";
@@ -61,13 +61,13 @@ const configurationUpdaters: { [key: number]: ConfigurationUpdater } = {
                 case "rollbackMethod":
                     switch (config.rollbackMethod) {
                         case "rollbackLike":
-                            config.rollbackMethod = RollbackMethod.Revert;
+                            config.rollbackMethod = RevertMethod.Undo;
                             break;
                         case "rollback":
-                            config.rollbackMethod = RollbackMethod.Rollback;
+                            config.rollbackMethod = RevertMethod.Rollback;
                             break;
                         default:
-                            config.rollbackMethod = RollbackMethod.Unset;
+                            config.rollbackMethod = RevertMethod.Unset;
                             break;
                     }
                     break;

@@ -1,12 +1,11 @@
 import { Warnings } from "rww/mediawiki/Warnings";
 import { RollbackContext } from "rww/definitions/RollbackContext";
 
-export enum RollbackDoneOption {
+export enum RevertDoneOption {
     LatestRevision,
     NewMessage,
     QuickTemplate,
     WarnUser,
-    Report,
 }
 
 // TODO This is a style-specific file. Please transfer accordingly.
@@ -22,16 +21,16 @@ export interface RollbackDoneOptionDetails {
 }
 
 export const RollbackDoneOptions: Record<
-    RollbackDoneOption,
+    RevertDoneOption,
     RollbackDoneOptionDetails
 > = {
-    [RollbackDoneOption.LatestRevision]: {
+    [RevertDoneOption.LatestRevision]: {
         name: "Go to latest revision",
         icon: "watch_later",
         action: async (context: RollbackContext): Promise<void> =>
             (await context.targetRevision.page.getLatestRevision()).navigate(),
     },
-    [RollbackDoneOption.NewMessage]: {
+    [RevertDoneOption.NewMessage]: {
         name: "New Message",
         icon: "send",
         action: (): void => {
@@ -39,7 +38,7 @@ export const RollbackDoneOptions: Record<
             /* rw.ui.newMessage(un) */
         },
     },
-    [RollbackDoneOption.QuickTemplate]: {
+    [RevertDoneOption.QuickTemplate]: {
         name: "Quick Template",
         icon: "library_add",
         action: (): void => {
@@ -47,7 +46,7 @@ export const RollbackDoneOptions: Record<
             /* rw.quickTemplate.openSelectPack(un) */
         },
     },
-    [RollbackDoneOption.WarnUser]: {
+    [RevertDoneOption.WarnUser]: {
         name: "Warn User",
         icon: "report",
         action: (): void => {
@@ -61,14 +60,6 @@ export const RollbackDoneOptions: Record<
                 null,
                 warnIndex != null ? warnIndex : null
             ) */
-        },
-    },
-    [RollbackDoneOption.Report]: {
-        name: "Report to Admin",
-        icon: "gavel",
-        action: (): void => {
-            // TODO admin report
-            /* rw.ui.adminReportSelector(un) */
         },
     },
 };

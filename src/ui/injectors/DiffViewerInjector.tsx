@@ -7,7 +7,7 @@ import { MDCRipple } from "@material/ripple";
 import { MDCTooltip } from "@material/tooltip";
 import { MDCLinearProgress } from "@material/linear-progress";
 import {
-    RollbackDoneOption,
+    RevertDoneOption,
     RollbackDoneOptions,
 } from "rww/definitions/RollbackDoneOptions";
 import { BaseProps, h } from "tsx-dom";
@@ -156,7 +156,7 @@ export default class DiffViewerInjector {
                     id="rwRollbackInProgressBar"
                     role="progressbar"
                     class="mdc-linear-progress"
-                    aria-label="RedWarn Rollback Progress Bar"
+                    aria-label="RedWarn Revert Progress Bar"
                     aria-valuemin="0"
                     aria-valuemax="1"
                     aria-valuenow="0"
@@ -190,7 +190,7 @@ export default class DiffViewerInjector {
                         >
                             check_circle
                         </span>
-                        &nbsp; &nbsp; Rollback complete
+                        &nbsp; &nbsp; Revert complete
                     </span>
                     <br />
                     <div style="height:5px" />
@@ -203,9 +203,9 @@ export default class DiffViewerInjector {
                         class="mdc-icon-button material-icons"
                         aria-label={option.name}
                         data-tooltip-id={`rwRBDoneIcon_${
-                            RollbackDoneOption[+id]
+                            RevertDoneOption[+id]
                         }T`}
-                        id={`rwRBDoneOption_${RollbackDoneOption[+id]}`}
+                        id={`rwRBDoneOption_${RevertDoneOption[+id]}`}
                     >
                         {option.icon}
                     </button>
@@ -214,7 +214,7 @@ export default class DiffViewerInjector {
 
                 const tooltip = (
                     <div
-                        id={`rwRBDoneOption_${RollbackDoneOption[+id]}T`}
+                        id={`rwRBDoneOption_${RevertDoneOption[+id]}T`}
                         class="mdc-tooltip"
                         role="tooltip"
                         aria-hidden="true"
@@ -293,7 +293,7 @@ export default class DiffViewerInjector {
         context: RollbackContext
     ): RWUISelectionDialogItem[] {
         // Open a new dialog with all the disabled options so user can select one. Click handlers are already registered, so we just call rw.rollback.clickHandlers.[elID]();
-        // Load Rollback current rev options (rev14)
+        // Load Revert current rev options (rev14)
         const icons: RWUISelectionDialogItem[] = [];
         RollbackOptions.forEach((option, i) => {
             if (option.enabled) {
@@ -337,15 +337,15 @@ export default class DiffViewerInjector {
         // Add click handlers
 
         Object.entries(RollbackDoneOptions).forEach(([id, option]) => {
-            $(`#rwRBDoneOption_${RollbackDoneOption[+id]}`).on(
+            $(`#rwRBDoneOption_${RevertDoneOption[+id]}`).on(
                 "click",
                 clickHandlerFactory(option.action)
             );
         });
 
-        if (Configuration.rollback.rollbackDoneOption.value !== "none") {
+        if (Configuration.Revert.rollbackDoneOption.value !== "none") {
             $(
-                `#rwRBDoneOption_${Configuration.rollback.rollbackDoneOption.value}`
+                `#rwRBDoneOption_${Configuration.Revert.rollbackDoneOption.value}`
             ).trigger("click");
         }
 

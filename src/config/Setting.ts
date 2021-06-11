@@ -14,34 +14,77 @@ export enum UIInputType {
     ColorPicker,
 }
 
-export interface validOptions {
-    readableName: string;
+export interface DisplayInformationOption {
+    /**
+     * The name of the option.
+     */
+    name: string;
+    /**
+     * Its value.
+     */
     value: any;
 }
 
-// User facing properties
-export interface userFacingProps {
-    isUserFacing: boolean; // Only required info - if not true the rest of this is ignored
-    readableTitle?: string;
-    readableDescription?: string;
+/**
+ * Information about how UI settings are displayed or not.
+ */
+interface DisplayInformationBase {
+    /**
+     * The human-readable title for this setting.
+     */
+    title?: string;
+    /**
+     * The description for this setting.
+     */
+    description?: string;
+    /**
+     * The display type for this specific setting.
+     */
     uiInputType?: UIInputType;
-    validOptions?: validOptions[]; // Only valid for these UIInputTypes: Checkboxes, Radio, Dropdown
 }
+
+/**
+ * Certain {@link UIInputType}s restrict the valid options provided. These
+ * are represented here in order to force integration.
+ */
+interface DisplayInformationRestricted extends DisplayInformationBase {
+    /**
+     * The display type for this specific setting.
+     */
+    uiInputType:
+        | UIInputType.Checkboxes
+        | UIInputType.Radio
+        | UIInputType.Dropdown;
+    /**
+     * Valid options for this setting.
+     */
+    validOptions: DisplayInformationOption[];
+}
+
+export type DisplayInformation =
+    | DisplayInformationBase
+    | DisplayInformationRestricted;
 
 export class Setting<T> implements PrimitiveSetting<T> {
     value: T;
     readonly defaultValue: T;
-    readonly userFacingInfo: userFacingProps;
+    readonly displayInfo: DisplayInformation | null;
 
+    /**
+     * Creates a new {@link Setting}.
+     *
+     * @param _id The name of this configuration value to be used in configuration files.
+     * @param defaultValue The default value of this setting.
+     * @param displayInfo Preferences screen display information for this setting.
+     *                    Set this to `null` if it should be hidden from user view.
+     */
     constructor(
         private readonly _id: string,
         defaultValue: T,
-        userFacingInfo?: userFacingProps
+        displayInfo?: DisplayInformation | null
     ) {
         this.defaultValue = this.value = defaultValue;
-        this.userFacingInfo = userFacingInfo
-            ? userFacingInfo
-            : { isUserFacing: false }; // if not set, assume not userfacing
+        this.displayInfo = displayInfo;
     }
 
     reset(): void {
@@ -66,25 +109,11 @@ export class Setting<T> implements PrimitiveSetting<T> {
     }
 
     static fromPrimitive<T>(primitive: PrimitiveSetting<T>): Setting<T> {
-        return new this(primitive.id, primitive.value);
+        return new this(primitive.id, primitive.value, null);
     }
 }
 
 export interface PrimitiveSetting<T> {
     value: T;
     readonly id: string;
-}
-
-/**
- * Converts settings into an object.
- *
- * @param settings The settings array.
- */
-export function settingsToObject(
-    settings: Setting<any>[]
-): Record<string, any> {
-    return settings.reduce((p, n) => {
-        p[n.id] = n;
-        return p;
-    }, <Record<string, any>>{});
 }

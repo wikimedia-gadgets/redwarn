@@ -14,15 +14,36 @@ import Log from "rww/data/RedWarnLog";
 
 import CoreSettings from "rww/config/values/CoreSettings";
 import UISettings from "rww/config/values/UISettings";
-import RollbackSettings from "rww/config/values/RollbackSettings";
+import RevertSettings from "rww/config/values/RevertSettings";
 import AccessibilitySettings from "rww/config/values/AccessibilitySettings";
 
+export type ConfigurationSet = Record<string, Setting<any>>;
+
 export class Configuration {
-    // Add new config files both above and here, and (IMPORTANT) below in both the load (or it'll be ignored), and save()
-    public static core = CoreSettings;
-    public static ui = UISettings;
-    public static rollback = RollbackSettings;
-    public static accessibility = AccessibilitySettings;
+    public static readonly Core = CoreSettings;
+    public static readonly UI = UISettings;
+    public static readonly Revert = RevertSettings;
+    public static readonly Accessibility = AccessibilitySettings;
+
+    static get configurationSets(): Record<string, ConfigurationSet> {
+        return {
+            core: Configuration.Core,
+            ui: Configuration.UI,
+            revert: Configuration.Revert,
+            accessibility: Configuration.Accessibility,
+        };
+    }
+
+    static get mappedConfigurationSets(): Record<string, ConfigurationSet> {
+        return Object.entries(Configuration.configurationSets).reduce(
+            (out, [id, set]) => {
+                out[id] = Configuration.map(set);
+
+                return out;
+            },
+            <Record<string, any>>{}
+        );
+    }
 
     static async refresh(): Promise<void> {
         Log.debug("Refreshing configuration...");
@@ -51,28 +72,31 @@ export class Configuration {
             saveNow = true;
         }
 
-        // Compatibility - if redwarnConfig.core is not there we can assume it is an older style (todo)
+        // This configuration comes from legacy RedWarn (RW 1 to RW 16.1).
+        // The configuration file should be updated first to prevent loss of previous
+        // settings and integrations.
         if (
             (redwarnConfig.core &&
-                (redwarnConfig.core[this.core.configVersion.id] ?? 0)) <
+                (redwarnConfig.core[this.Core.configVersion.id] ?? 0)) <
             RW_CONFIG_VERSION
         ) {
             redwarnConfig = updateConfiguration(redwarnConfig);
             saveNow = true;
         }
 
-        // At this point, we can definitely assume that `redwarnConfig` is a configuration
-        // that is of the latest version, so we can start loading based on this config.
+        // At this point, `redwarnConfig` is a configuration object that is of the latest
+        // version, so loading can start based on this config.
 
         // Start loading the into the groups
-        this.loadSettings(redwarnConfig, "core", this.core);
-        this.loadSettings(redwarnConfig, "ui", this.ui);
-        this.loadSettings(redwarnConfig, "rollback", this.rollback);
-        this.loadSettings(redwarnConfig, "accessibility", this.accessibility);
+        for (const [key, set] of Object.entries(
+            Configuration.configurationSets
+        )) {
+            this.loadSettings(redwarnConfig, key.toLowerCase(), set);
+        }
 
         try {
             StyleManager.setStyle(
-                redwarnConfig.ui[this.ui.style.id] ?? this.ui.style.defaultValue
+                redwarnConfig.ui[this.UI.style.id] ?? this.UI.style.defaultValue
             );
         } catch (e) {
             if (e instanceof RedWarnStyleMissingError) {
@@ -89,12 +113,17 @@ export class Configuration {
         }
     }
 
-    // Example use: allSettings(this.ui)
+    /**
+     * Extracts all {@link Setting}s of a configuration set and
+     * returns a {@link Map} of the values.
+     *
+     * @param configurationSet The configuration set to use.
+     */
     static allSettings(
-        settingGroup: Record<string, any>
+        configurationSet: Record<string, any>
     ): Map<string, Setting<unknown>> {
         const map = new Map();
-        for (const [key, value] of Object.entries(settingGroup)) {
+        for (const [key, value] of Object.entries(configurationSet)) {
             if (value instanceof Setting) {
                 map.set(key, value);
             }
@@ -102,65 +131,92 @@ export class Configuration {
         return map;
     }
 
-    // Example use: loadSettings("ui", this.ui)
+    /**
+     * Loads settings from the configuration file and sets the proper values
+     * in the given configuration set.
+     *
+     * @param rawConfiguration The raw configuration object.
+     * @param configurationKey The key of the configuration set.
+     * @param configurationSet The configuration set to modify.
+     */
     static loadSettings(
-        redwarnConfig: Record<string, any>,
-        configKey: string,
-        settingGroup: Record<string, any>
+        rawConfiguration: Record<string, any>,
+        configurationKey: string,
+        configurationSet: ConfigurationSet
     ) {
-        if (redwarnConfig[configKey] == undefined) return; // if it's not set, skip and keep defaults
-        this.allSettings(settingGroup).forEach((setting) => {
-            // Only setting if config is there, else it's the default value
-            if (redwarnConfig[configKey][setting.id])
-                setting.value = redwarnConfig[configKey][setting.id];
+        // Skip if undefined.
+        if (rawConfiguration[configurationKey] == undefined) return;
+
+        this.allSettings(configurationSet).forEach((setting) => {
+            // Only set if the value is present in the configuration file (i.e. a changed value).
+            if (rawConfiguration[configurationKey][setting.id])
+                setting.value = rawConfiguration[configurationKey][setting.id];
         });
     }
 
+    /**
+     * Save the configuration file to wiki.
+     *
+     * @param reloadOnDone
+     */
     static async save(reloadOnDone = false): Promise<void> {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const template = require("./redwarnConfig.template.txt");
 
         await ClientUser.i.redwarnConfigPage.edit(
-            Configuration.fromTemplate(template, {
-                // ADD NEW SETTINGS TO BE SAVED HERE
-                core: this.map(this.core),
-                ui: this.map(this.ui),
-                rollback: this.map(this.rollback),
-                accessibility: this.map(this.accessibility),
-            }),
+            Configuration.toJavascriptFile(
+                template,
+                this.mappedConfigurationSets
+            ),
             {
                 comment: "Updating configuration",
             }
         );
-        if (reloadOnDone) {
-            window.location.reload();
-        }
+
+        if (reloadOnDone) window.location.reload();
+
         return;
     }
 
-    // Example usage: this.map(this.ui)
-    static map(settingsGroupToMap: Record<string, any>): Record<string, any> {
-        // Any keys to exclude from default skip - make sure these are unique as they will apply irrespective of which group they are in!!
-        const excludeFromDefaultSkip = [
-            this.core.configVersion.id,
-            this.core.latestVersion.id,
+    /**
+     * Map {@link ConfigurationSet}s into plain objects. This also converts the
+     * internal ID with an external one.
+     *
+     * @param configurationSetToMap The configuration set to be mapped.
+     */
+    static map(configurationSetToMap: ConfigurationSet): Record<string, any> {
+        /**
+         * Keys that will be saved anyways, regardless of default status.
+         */
+        const forceInclude = [
+            this.Core.configVersion.id,
+            this.Core.latestVersion.id,
         ];
 
         return Array.from(
-            this.allSettings(settingsGroupToMap).entries()
-        ).reduce(
-            (main, [id, setting]) => ({
-                ...main,
-                ...(excludeFromDefaultSkip.includes(setting.id) ||
+            this.allSettings(configurationSetToMap).values()
+        ).reduce((main, setting) => {
+            if (
+                !forceInclude.includes(setting.id) &&
                 setting.value !== setting.defaultValue
-                    ? { [id]: setting.value }
-                    : {}),
-            }),
-            {}
-        );
+            )
+                return main;
+
+            return {
+                ...main,
+                [setting.id]: setting.value,
+            };
+        }, {});
     }
 
-    static fromTemplate(
+    /**
+     * Convert configuration values to a JavaScript file that can be
+     * stored onwiki.
+     *
+     * @param template The template text.
+     * @param configurationValues The configuration values.
+     */
+    static toJavascriptFile(
         template: string,
         configurationValues: Record<string, any>
     ): string {

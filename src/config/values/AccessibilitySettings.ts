@@ -1,22 +1,22 @@
 /*
-accessibility SETTINGS
+ * Accessibility-related settings.
+ */
 
-i18n - see pref.json for your localisation, make sure you add values for each one of your keys.
+import { Setting, UIInputType } from "../Setting";
+import { ConfigurationSet } from "rww/config";
+import i18next from "i18next";
 
-new Setting(key, default, userfacingProps)
-*/
-
-import { Setting, settingsToObject, UIInputType } from "../Setting";
-
-const AccessibilitySettings: Record<string, any> = settingsToObject([
-    /** Checkbox setting - values can be true or false */
-    new Setting("raiseActionButtons", false, {
-        isUserFacing: true,
+const AccessibilitySettings = <ConfigurationSet>{
+    /**
+     * Whether or not action buttons should be raised.
+     */
+    raiseActionButtons: new Setting("raiseActionButtons", false, {
         uiInputType: UIInputType.Checkbox,
-        readableTitle: "prop:accessibility.raiseActionButtons.title",
-        readableDescription:
-            "prop:accessibility.raiseActionButtons.descriptions",
+        title: i18next.t("prefs:accessibility.raiseActionButtons.title"),
+        description: i18next.t(
+            "prefs:accessibility.raiseActionButtons.description"
+        ),
     }),
-]);
+};
 
 export default AccessibilitySettings;

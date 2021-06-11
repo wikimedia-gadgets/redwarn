@@ -1,41 +1,40 @@
 /*
-This directory contains values for each module and what their preference value does and includes
-If a preference value isn't here it will be seen as invalid and removed/ignored.
-
-i18n - see pref.json for your localisation, make sure you add values for each one of your keys.
-*/
+ * UI and display settings.
+ */
 
 import { DefaultRedWarnStyle } from "rww/styles/StyleConstants";
-import { Setting, settingsToObject, UIInputType } from "../Setting";
+import { Setting, UIInputType } from "../Setting";
+import { ConfigurationSet } from "rww/config";
+import i18next from "i18next";
 
-const UISettings: Record<string, any> = settingsToObject([
-    /** Order warnings by template name or reason */
-    new Setting("orderNoticesByTemplateName", false, {
-        isUserFacing: true,
+const UISettings = <ConfigurationSet>{
+    /** Notice template order */
+    noticeOrder: new Setting("noticeOrder", false, {
         uiInputType: UIInputType.Radio,
 
-        readableTitle: "prop:ui.orderNoticesByTemplateName.title",
-        readableDescription: "prop:ui.orderNoticesByTemplateName.description",
+        title: i18next.t("prefs:ui.noticeOrder.title"),
+        description: i18next.t("prefs:ui.noticeOrder.description"),
 
         validOptions: [
             {
-                readableName: "prop:ui.orderNoticesByTemplateName.byTitle",
+                name: i18next.t("prefs:ui.noticeOrder.options.title"),
                 value: false,
             },
             {
-                readableName:
-                    "prop:ui.orderNoticesByTemplateName.byTemplateName",
+                name: i18next.t("prefs:ui.noticeOrder.options.template"),
                 value: true,
             },
         ],
     }),
 
-    /** Array of viewed campaigns */
-    new Setting<string[]>("campaigns", []),
+    /** UI style */
+    style: new Setting("style", DefaultRedWarnStyle),
 
-    /** Style of UI */
-    new Setting("style", DefaultRedWarnStyle),
-    new Setting("neopolitan", null),
-]);
+    /** Array of viewed campaigns */
+    campaigns: new Setting<string[]>("campaigns", []),
+
+    /** Neopolitan. */
+    neopolitan: new Setting("neopolitan", null),
+};
 
 export default UISettings;

@@ -33,7 +33,7 @@ export default function (props: MaterialButtonProperties): JSX.Element {
     // Raised only if specifically asked, or an action button and user has set to raise action buttons in their config
     if (
         raised ||
-        (action && Configuration.accessibility.raiseActionButtons.value)
+        (action && Configuration.Accessibility.raiseActionButtons.value)
     )
         classes.push("mdc-button--raised");
 

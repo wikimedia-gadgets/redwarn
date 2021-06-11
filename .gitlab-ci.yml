@@ -64,6 +64,8 @@ deploy_start:
     only:
         variables:
             - $CI_PROJECT_PATH == "redwarn/redwarn-web"
+        refs:
+            - master
     allow_failure: false
     script:
         - cd .gitlab/ci_scripts && node enwiki/deploy.js

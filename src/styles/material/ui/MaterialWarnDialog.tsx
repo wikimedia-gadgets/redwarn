@@ -236,14 +236,18 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                 condition: this.mwdReason?.MWDReason?.warning != null,
             },
             {
-                // Asserts warning level
+                // Asserts warning level is set (given it is a tiered warning)
                 id: "level",
-                condition: this.mwdReason?.MWDReason?.warningLevel != null,
+                condition:
+                    (this.mwdReason?.MWDReason?.warning != null &&
+                        this.mwdReason?.MWDReason?.warning.type !=
+                            WarningType.Tiered) ||
+                    this.mwdReason?.MWDReason?.warningLevel != null,
             },
             // TODO: prevents users without EC warning more than 1 user
             // TODO: prevents ALL USERS warning > 15 users
         ];
-
+        console.log(this.mwdReason?.MWDReason?.warning); // debug
         // Find all tests that failed.
         const testResults = validationTests.filter((test) => {
             return !test.condition;
@@ -445,7 +449,11 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                     </MaterialButton>
                     {
                         (this.dialogConfirmButton = (
-                            <MaterialButton dialogAction="confirm" disabled>
+                            <MaterialButton
+                                dialogAction="confirm"
+                                action
+                                disabled
+                            >
                                 {i18next.t<string>("ui:warn.ok")}
                             </MaterialButton>
                         ))

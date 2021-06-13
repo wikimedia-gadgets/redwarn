@@ -184,9 +184,10 @@ export default class RedWarn {
     static get Config(): typeof Configuration {
         return Configuration;
     }
-    static get config(): Record<string, any> {
-        return Configuration.map();
-    }
+    // Not compatible with new system!
+    // static get config(): Record<string, any> {
+    //     return Configuration.map();
+    // }
     static Database(): RedWarnLocalDB {
         return RedWarnLocalDB.i;
     }

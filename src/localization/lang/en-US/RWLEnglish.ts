@@ -5,11 +5,11 @@ if (window.RedWarnLanguages == null) {
 }
 
 window.RedWarnLanguages.push({
-    tag: "en-BRIISH",
-    id: "test-lang-propa-briish-bruv",
+    tag: "en-US",
+    id: "redwarn-default-en-US",
     meta: {
-        name: "RedWarn Bri'ish (TEST)",
-        translators: ["Ed6767", "The RedWarn Contributors"],
+        name: "RedWarn English",
+        translators: ["The RedWarn Contributors"],
         license: {
             url: "https://www.apache.org/licenses/LICENSE-2.0.txt",
             text: "Apache License 2.0",
@@ -26,5 +26,6 @@ window.RedWarnLanguages.push({
         mediawiki: require("./mediawiki.json"),
         ui: require("./ui.json"),
         misc: require("./misc.json"),
+        prop: require("./prefs.json"),
     },
 });

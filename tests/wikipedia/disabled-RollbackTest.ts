@@ -3,11 +3,11 @@
 
 // import RedWarnWebTestUtils from "../RedWarnWebTestUtils";
 // import RedWarnStore from "../../src/data/RedWarnStore";
-// import { Rollback } from "../../src/mediawiki/Rollback";
+// import { Revert } from "../../src/mediawiki/Revert";
 //
 // RedWarnWebTestUtils();
 //
-// describe("Rollback flow tests", () => {
+// describe("Revert flow tests", () => {
 //     // Mock English Wikipedia
 //     RedWarnStore.wikiIndex = "https://en.wikipedia.org/w/index.php";
 //
@@ -69,10 +69,10 @@
 //             const testCase = testCases[testName];
 //             mockMW(testCase.oldId, testCase.newId);
 //
-//             const newer = Rollback.getNewerRevisionId();
+//             const newer = Revert.getNewerRevisionId();
 //             expect(newer).toEqual(testCase.expected[1]);
 //
-//             const older = Rollback.getOlderRevisionId();
+//             const older = Revert.getOlderRevisionId();
 //             expect(older).toEqual(testCase.expected[0]);
 //         });
 //     }

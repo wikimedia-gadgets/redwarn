@@ -1,5 +1,5 @@
 {
-    "unfinished" : "Hmm, looks like we haven't implimented this feature yet. Check back later!",
+    "unfinished" : "Hmm, looks like we haven't implemented this feature yet. Check back later!",
 
     "restore": {
         "label": "Restore Reason",
@@ -71,7 +71,7 @@
             },
 
             "show": {
-                "userpage": "Show userpage",
+                "userpage": "Show user page",
                 "contributions": "Show user contributions"
             }
         },
@@ -82,7 +82,11 @@
             "levelSelectionLevelNotPresent": "There is no level {{level}} ({{levelReadable}}) template available.",
             "levelSelectionLevel": "Level {{level}} {{levelReadable}}: {{levelDescription}}",
             "searchDialogOpenerTooltip": "Search for a warning",
-            "warningSelectionDropdownTitle": "Warning"
+            "warningSelectionDropdownTitle": "Warning",
+            "singleIssueTemplate" : "Reminder",
+            "policyViolationTemplate" : "Policy Violation Warning",
+            "warningLevel" : "Warning level",
+            "noWarningSelected" : "No warning selected."
         },
 
         "templateSearchDialog" : {

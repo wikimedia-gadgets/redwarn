@@ -1,4 +1,4 @@
-import buildinfo from "!webpack-plugin-buildinfo?gitHash&gitHashShort&time&platform&arch!";
+import buildinfo from "!webpack-plugin-buildinfo?gitHash&gitHashShort&time&platform&arch!./buildinfo.js";
 
 // THIS FILE SHOULD NOT MAKE ANY OTHER IMPORTS THAN FROM BUILDINFO!
 
@@ -9,7 +9,7 @@ export const RW_VERSION = "0.2.0";
 export const RW_VERSION_PUBLIC = "17";
 export const RW_VERSION_TAG = `${RW_VERSION_PUBLIC}${
     process.env.NODE_ENV === "development"
-        ? `dev+${RW_BUILDINFO.gitHashShort}`
+        ? `dev (${RW_BUILDINFO.gitHashShort})`
         : ""
 }`;
 export const RW_VERSION_SUMMARY = "nothing yet";

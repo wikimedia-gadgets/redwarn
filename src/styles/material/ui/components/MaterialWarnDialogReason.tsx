@@ -217,21 +217,40 @@ function MaterialWarnDialogReasonLevel({
                 break;
             }
             case WarningType.SingleIssue:
-                selectorElement = <b>Reminder</b>;
+                selectorElement = (
+                    <b>
+                        {i18next
+                            .t("ui:warn.reason.singleIssueTemplate")
+                            .toString()}
+                    </b>
+                );
                 break;
             case WarningType.PolicyViolation:
-                selectorElement = <b>Policy Violation Warning</b>;
+                selectorElement = (
+                    <b>
+                        {i18next
+                            .t("ui:warn.reason.policyViolationTemplate")
+                            .toString()}
+                    </b>
+                );
                 break;
         }
     }
     // TODO i18n
-    else selectorElement = <span>No warning selected.</span>;
+    else
+        selectorElement = (
+            <span>
+                {i18next.t("ui:warn.reason.noWarningSelected").toString()}
+            </span>
+        );
 
     return Object.assign(
         <div class="rw-mdc-warnDialog-reason--levels">
             <table>
                 <tr>
-                    <td>Warning level</td>
+                    <td>
+                        {i18next.t("ui:warn.reason.warningLevel").toString()}
+                    </td>
                     <td>{selectorElement}</td>
                 </tr>
             </table>

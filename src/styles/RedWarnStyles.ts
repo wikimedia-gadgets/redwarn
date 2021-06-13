@@ -8,6 +8,7 @@ declare global {
     }
 }
 
+// Do not lazy-load the Material style!
 export const DefaultRedWarnStyles = [MaterialStyle];
 
 export default window.RedWarnStyles;

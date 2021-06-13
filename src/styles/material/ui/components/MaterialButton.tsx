@@ -1,7 +1,9 @@
 import { BaseProps, h } from "tsx-dom";
 import expandDataAttributes from "rww/styles/material/util/expandDataAttributes";
+import { Configuration } from "rww/config";
 
 export interface MaterialButtonProperties extends BaseProps {
+    action?: boolean; // whether or not this button is an action button, such as "ok", "submit", etc. used for accessibility
     dialogAction?: string | { data: string; text: string };
     icon?: string;
     iconColor?: string;
@@ -14,6 +16,7 @@ export interface MaterialButtonProperties extends BaseProps {
 
 export default function (props: MaterialButtonProperties): JSX.Element {
     const {
+        action,
         dialogAction,
         children,
         icon,
@@ -27,7 +30,12 @@ export default function (props: MaterialButtonProperties): JSX.Element {
 
     if (dialogAction) classes.push("mdc-dialog__button");
 
-    if (raised) classes.push("mdc-button--raised");
+    // Raised only if specifically asked, or an action button and user has set to raise action buttons in their config
+    if (
+        raised ||
+        (action && Configuration.Accessibility.raiseActionButtons.value)
+    )
+        classes.push("mdc-button--raised");
 
     return (
         <button

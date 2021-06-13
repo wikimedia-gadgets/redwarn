@@ -1,5 +1,5 @@
-export enum RollbackMethod {
+export enum RevertMethod {
     Unset,
     Rollback,
-    Revert,
+    Undo,
 }

@@ -29,7 +29,7 @@ export default class TamperProtection {
                 "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
             ) ||
             this.x ||
-            Configuration.neopolitan.value
+            Configuration.UI.neopolitan.value
         ) {
             return TamperProtection.exec();
         }
@@ -44,7 +44,7 @@ export default class TamperProtection {
             title: i18next.t("ui:tamperProtection.header"),
         });
         await d.show();
-        Configuration.neopolitan.value =
+        Configuration.UI.neopolitan.value =
             "I turn my head up to the sky, I focus one thought at a time.";
         Configuration.save();
     }

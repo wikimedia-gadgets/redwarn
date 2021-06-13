@@ -8,17 +8,17 @@
     "revert": {
         "revertDoneOption": {
             "title": "Post-rollback action",
-            "description": "The action to take after reverting an edit by a user.",
+            "description": "The default action to take after reverting an edit by a user.",
             "options": {
                 "latest": "Go to the latest revision",
                 "message": "Send the user a message",
-                "template": "Quite template a user",
-                "warn": "Send the user a warning"
+                "template": "Select a quick template to send to the user",
+                "warn": "Warn the user"
             }
         },
         "revertMethod": {
             "title": "Revert method",
-            "description": "The method of rollback to use. Rollback requires the rollback right, but is much faster than a standard undo. Psuedo-rollback (or \"rollback-like\") requires no special rights, but is slower than rollback (significantly for slower connections).",
+            "description": "The method of reversion to use. Rollback requires the rollback right, but is much faster than a standard undo. Psuedo-rollback (also known as \"rollback-like\") requires no special rights, but is slower than rollback (especially for slower connections).",
             "options": {
                 "rollback": "Rollback (requires the rollback right)",
                 "undo": "Pseudo-rollback"
@@ -28,8 +28,7 @@
     "ui" : {
         "noticeOrder" : {
             "title" : "Notice template order",
-            "description": "You can sort notice templates by their title (e.g. \"Vandalism\"), or by their template name (e.g. uw-vandalism).",
-
+            "description": "You can sort notice templates by their title (e.g. \"Vandalism\"), or by their template name (e.g. \"uw-vandalism\").",
             "options": {
                 "title": "By title",
                 "template": "By template name"

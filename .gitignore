@@ -19,6 +19,7 @@ node_modules/
 
 # Build results
 build/
+release/
 
 # Temporarily exclude while remaking
 .gitlab-ci.yml

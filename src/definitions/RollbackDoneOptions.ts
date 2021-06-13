@@ -1,5 +1,5 @@
 import { Warnings } from "rww/mediawiki/Warnings";
-import { RollbackContext } from "rww/definitions/RollbackContext";
+import { RevertContext } from "rww/definitions/RevertContext";
 
 export enum RevertDoneOption {
     LatestRevision,
@@ -14,7 +14,7 @@ export interface RollbackDoneOptionDetails {
     name: string;
     icon: string;
     action: (
-        context: RollbackContext,
+        context: RevertContext,
         username: string,
         warnIndex: keyof Warnings
     ) => any;
@@ -27,7 +27,7 @@ export const RollbackDoneOptions: Record<
     [RevertDoneOption.LatestRevision]: {
         name: "Go to latest revision",
         icon: "watch_later",
-        action: async (context: RollbackContext): Promise<void> =>
+        action: async (context: RevertContext): Promise<void> =>
             (await context.targetRevision.page.getLatestRevision()).navigate(),
     },
     [RevertDoneOption.NewMessage]: {

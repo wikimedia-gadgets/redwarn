@@ -1,0 +1,38 @@
+{
+    "accessibility" : {
+        "raiseActionButtons" : {
+            "title" : "Configuration option name for raising action buttons",
+            "description" : "Text describing the configuration option"
+        }
+    },
+    "revert": {
+        "revertDoneOption": {
+            "title": "Configuration option name for what to do after a rollback is completed",
+            "description": "Text describing the configuration option",
+            "options": {
+                "latest": "Option to go to the latest revision's diff",
+                "message": "Option to send the user a message",
+                "template": "Option to send a quick template to the user",
+                "warn": "Option to warn the user"
+            }
+        },
+        "revertMethod": {
+            "title": "Configuration option name for the method of reversion to use",
+            "description": "Text describing the configuration option, include the fact that mediawiki rollback requires the right but is faster",
+            "options": {
+                "rollback": "Option to use MediaWiki rollback (for rollbackers only)",
+                "undo": "Option to use rollback-like"
+            }
+        }
+    },
+    "ui" : {
+        "noticeOrder" : {
+            "title" : "Configuration option name for the order of which warning templates are displayed",
+            "description": "Text describing the configuration option",
+            "options": {
+                "title": "Option to sort by the title of the warning template",
+                "template": "Option to sort by the template's name"
+            }
+        }
+    }
+}

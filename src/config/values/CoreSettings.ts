@@ -12,6 +12,9 @@ const CoreSettings = <ConfigurationSet>{
 
     /** The configuration version, responsible for keeping track of configuration schema changes. */
     configVersion: new Setting("configVersion", RW_CONFIG_VERSION, null),
+
+    /** Neopolitan. */
+    neopolitan: new Setting("neopolitan", null),
 };
 
 export default CoreSettings;

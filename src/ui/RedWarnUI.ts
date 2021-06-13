@@ -1,16 +1,16 @@
 import StyleManager from "rww/styles/StyleManager";
-import { ClientUser, UserAccount } from "rww/mediawiki";
+import { UserAccount } from "rww/mediawiki";
 import {
     RWUIAlertDialog,
     RWUIIFrameDialog,
     RWUIInputDialog,
     RWUISelectionDialog,
-    RWUISelectionDialogItem,
     RWUIWarnDialog,
 } from "./elements/RWUIDialog";
-import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
-import { RollbackContext } from "rww/definitions/RollbackContext";
+// import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
+import { RevertContext } from "rww/definitions/RevertContext";
 import { RWUIToast } from "./elements/RWUIToast";
+import { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
 
 /**
  * Redirect class for easy access. UI elements of RedWarn are also created here.
@@ -40,48 +40,53 @@ export default class RedWarnUI {
     static get Toast(): typeof RWUIToast {
         return StyleManager.activeStyle.classMap.rwToast;
     }
+    /** Alias of {@link StyleManager.activeStyle.classMap.rwDiffIcons} */
+    static get DiffIcons(): typeof RWUIDiffIcons {
+        return StyleManager.activeStyle.classMap.rwDiffIcons;
+    }
 
     /**
      * Opens extended options that can be opened from any page (preferences, oversight and TAS reporting)
      */
-    static openExtendedOptionsDialog(
-        ctx: ExtendedOptionsContext
-    ): Promise<any> {
-        const items: RWUISelectionDialogItem[] = [];
-        const rollbackIcons =
-            (ctx.rollbackContext &&
-                DiffViewerInjector.getDisabledOptions(ctx.rollbackContext)) ??
-            [];
-        if (rollbackIcons.length > 0) {
-            items.push(...rollbackIcons);
-        }
-
-        // TODO topIcons
-
-        const targetUser = ctx.user ?? ctx.rollbackContext?.targetRevision.user;
-
-        if (targetUser) {
-            // TODO AIV
-            // TODO UAA
-        }
-
-        if (ClientUser.i.emailEnabled) {
-            // TODO oversight
-            // TODO 911
-        }
-
-        const dialog = new this.SelectionDialog({
-            items,
-            title: "More Options",
-        });
-
-        return dialog.show();
+    static openExtendedOptionsDialog(): // TODO: dev-rwTS-difficons
+    // ctx: ExtendedOptionsContext
+    Promise<any> {
+        // const items: RWUISelectionDialogItem[] = [];
+        // const rollbackIcons =
+        //     (ctx.rollbackContext &&
+        //         DiffViewerInjector.getDisabledOptions(ctx.rollbackContext)) ??
+        //     [];
+        // if (rollbackIcons.length > 0) {
+        //     items.push(...rollbackIcons);
+        // }
+        //
+        // // TODO topIcons
+        //
+        // const targetUser = ctx.user ?? ctx.rollbackContext?.targetRevision.user;
+        //
+        // if (targetUser) {
+        //     // TODO AIV
+        //     // TODO UAA
+        // }
+        //
+        // if (ClientUser.i.emailEnabled) {
+        //     // TODO oversight
+        //     // TODO 911
+        // }
+        //
+        // const dialog = new this.SelectionDialog({
+        //     items,
+        //     title: "More Options",
+        // });
+        //
+        // return dialog.show();
+        return null;
     }
 }
 
 export interface ExtendedOptionsContext {
     user?: UserAccount;
-    rollbackContext?: RollbackContext;
+    rollbackContext?: RevertContext;
 }
 
 /**
@@ -94,4 +99,5 @@ export const RWUIElements = {
     [RWUIWarnDialog.elementName]: RWUIWarnDialog,
     [RWUIIFrameDialog.elementName]: RWUIIFrameDialog,
     [RWUIToast.elementName]: RWUIToast,
+    [RWUIDiffIcons.elementName]: RWUIDiffIcons,
 };

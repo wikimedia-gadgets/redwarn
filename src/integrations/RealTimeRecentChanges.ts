@@ -1,6 +1,5 @@
-import { Page, Revision, Rollback, User } from "rww/mediawiki";
-import { RollbackContext } from "rww/definitions/RollbackContext";
-import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
+// import {Rollback} from "rww/mediawiki";
+// import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 
 export default class RealTimeRecentChanges {
     private static onRTRC: boolean;
@@ -13,17 +12,18 @@ export default class RealTimeRecentChanges {
                 mw.config.get("wgTitle").split("/", 2)[1] === "RTRC");
         if (this.onRTRC) {
             mw.hook("wikipage.diff").add(async (diff: JQuery) => {
-                const context = new RollbackContext(
-                    Revision.fromID(Rollback.getNewerRevisionId(), {
-                        page: Page.fromTitle(
-                            diff.find("strong > a").attr("title")
-                        ),
-                        user: User.fromUsername(
-                            diff.find("#mw-diff-ntitle2 > a > bdi").text()
-                        ),
-                    })
-                );
-                DiffViewerInjector.loadOptions(context, false);
+                // TODO: dev-rwTS-difficons
+                // const context = new RevertContext(
+                //     Revision.fromID(Rollback.getNewerRevisionId(), {
+                //         page: Page.fromTitle(
+                //             diff.find("strong > a").attr("title")
+                //         ),
+                //         user: User.fromUsername(
+                //             diff.find("#mw-diff-ntitle2 > a > bdi").text()
+                //         ),
+                //     })
+                // );
+                // DiffViewerInjector.loadOptions(context, false);
             });
         }
     }

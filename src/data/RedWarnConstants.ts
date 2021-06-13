@@ -12,6 +12,8 @@ export const RW_VERSION_TAG = `${RW_VERSION_PUBLIC}${
         ? `dev (${RW_BUILDINFO.gitHashShort})`
         : ""
 }`;
+
+// TODO: not have this here
 export const RW_VERSION_SUMMARY = "nothing yet";
 
 export const RW_CONFIG_VERSION = 1;
@@ -32,3 +34,5 @@ export const RW_NOWIKI_CLOSE = atob("PC9ub3dpa2k+");
 export const RW_LINK = "[[w:en:WP:RW|RedWarn]]";
 export const RW_WIKIS_TAGGABLE = ["enwiki"];
 export const RW_WIKIS_SPEEDUP = ["enwiki"];
+
+export const RW_FALLBACK_WIKI = "en.wikipedia.org";

@@ -1,0 +1,18 @@
+{
+    "rollback": {
+        "name": "Rollback"
+    },
+    "agf": {
+        "name": "Assume good faith and rollback",
+        "summary": "Reverting [[WP:AGF|good faith]] edits"
+    },
+    "preview": {
+        "name": "Preview Rollback"
+    },
+    "quick-template": {
+        "name": "Quick Template"
+    },
+    "more-options": {
+        "name": "More options"
+    }
+}

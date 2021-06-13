@@ -1,4 +1,4 @@
-import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
+// import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 
 export default class UIInjectors {
     /**
@@ -9,6 +9,6 @@ export default class UIInjectors {
      * modifying code from actual API functionality.
      */
     static async inject(): Promise<any> {
-        return Promise.all([DiffViewerInjector.init()]);
+        // return Promise.all([DiffViewerInjector.init()]);
     }
 }

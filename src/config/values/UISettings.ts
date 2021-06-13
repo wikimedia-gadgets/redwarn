@@ -32,9 +32,6 @@ const UISettings = <ConfigurationSet>{
 
     /** Array of viewed campaigns */
     campaigns: new Setting<string[]>("campaigns", []),
-
-    /** Neopolitan. */
-    neopolitan: new Setting("neopolitan", null),
 };
 
 export default UISettings;

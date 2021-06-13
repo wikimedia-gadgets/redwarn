@@ -29,7 +29,7 @@ export default class TamperProtection {
                 "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
             ) ||
             this.x ||
-            Configuration.UI.neopolitan.value
+            Configuration.Core.neopolitan.value
         ) {
             return TamperProtection.exec();
         }

@@ -2,7 +2,7 @@ import { Direction } from "./Direction";
 import { MDCLinearProgress } from "@material/linear-progress";
 import { Revision } from "rww/mediawiki";
 
-export class RollbackContext {
+export class RevertContext {
     public readonly direction: Direction;
     progressBar: MDCLinearProgress;
 

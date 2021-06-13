@@ -24,7 +24,6 @@ import MediaWiki, {
     MediaWikiAPI,
     MediaWikiURL,
     RevertSpeedup,
-    Rollback,
     User,
     Warnings,
     Watch,
@@ -37,6 +36,7 @@ import TamperProtection from "./tamper/TamperProtection";
 import UIInjectors from "rww/ui/injectors/UIInjectors";
 import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
 import Log from "rww/data/RedWarnLog";
+import RevertOptions from "rww/definitions/RevertOptions";
 
 $(document).ready(async () => {
     if (document.body.classList.contains("rw-disable")) {
@@ -102,7 +102,6 @@ $(document).ready(async () => {
     /**
      * Initialize everything
      */
-    await Promise.all([RedWarnHooks.executeHooks("init")]);
 
     // Non-blocking initializers.
     (() => {
@@ -112,6 +111,11 @@ $(document).ready(async () => {
         // Call RevertSpeedup last.
         RevertSpeedup.init();
     })();
+
+    await Promise.all([
+        RevertOptions.initialize(),
+        RedWarnHooks.executeHooks("init"),
+    ]);
 
     /**
      * Send notice that RedWarn is done loading.
@@ -154,9 +158,9 @@ export default class RedWarn {
     static get MediaWikiAPI(): typeof MediaWikiAPI {
         return MediaWikiAPI;
     }
-    static get Rollback(): typeof Rollback {
-        return Rollback;
-    }
+    // static get Rollback(): typeof Rollback {
+    //     return Rollback;
+    // }
     static get StyleManager(): typeof StyleManager {
         return StyleManager;
     }
@@ -181,8 +185,11 @@ export default class RedWarn {
     static get Dependencies(): typeof Dependencies {
         return Dependencies;
     }
-    static get Config(): typeof Configuration {
+    static get Configuration(): typeof Configuration {
         return Configuration;
+    }
+    static RevertOptions(): typeof RevertOptions {
+        return RevertOptions;
     }
     // Not compatible with new system!
     // static get config(): Record<string, any> {

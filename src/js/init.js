@@ -219,21 +219,27 @@ var rw = {
             await rw.visuals.blockingLoad("css", "https://redwarn.toolforge.org/cdn/css/materialicons.css");
             if (document.fonts) await document.fonts.load('24px "Material Icons"');
 
+            // Load script files
             // Load MDL and everything needed, then callback when all loaded
-            $('head').append(`
-                <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/jqueryContextMenu.css">
-                <script src="https://redwarn.toolforge.org/cdn/js/jquery-contextmenu.js"></script>
-                <script src="https://redwarn.toolforge.org/cdn/js/jquery-ui-position.js"></script>
-                <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/materialicons.css">
-                <script src="https://redwarn.toolforge.org/cdn/js/dialogPolyfill.js"></script> <!-- firefox being dumb -->
-                <script src="https://redwarn.toolforge.org/cdn/js/mdl.js" id="MDLSCRIPT"></script>
-                <script src="https://redwarn.toolforge.org/cdn/js/mdlLogic.js"></script> <!-- rw specific MDL logic fixes -->
-                <script src="https://redwarn.toolforge.org/cdn/js/diff.js"></script> <!-- diff.js -->
-                <!-- Roboto Font -->
-                <link href="https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese" rel="stylesheet">
+            mw.loader.getScript("https://redwarn.toolforge.org/cdn/js/jquery-contextmenu.js");
+            mw.loader.getScript("https://redwarn.toolforge.org/cdn/js/jquery-ui-position.js");
+            // Dialog polyfill for Firefox browsers
+            mw.loader.getScript("https://redwarn.toolforge.org/cdn/js/dialogPolyfill.js");
+            // Material Design Lite
+            mw.loader.getScript("https://redwarn.toolforge.org/cdn/js/mdl.js");
+            // RedWarn-specific MDL fixes
+            mw.loader.getScript("https://redwarn.toolforge.org/cdn/js/mdlLogic.js");
+            // Diff.js
+            mw.loader.getScript("https://redwarn.toolforge.org/cdn/js/diff.js");
 
-                <!-- MDL AND CONTEXT MENU STYLES -->
-                <style>
+            // Load stylesheets
+            mw.loader.load("https://redwarn.toolforge.org/cdn/css/jqueryContextMenu.css", "text/css");
+            mw.loader.load("https://redwarn.toolforge.org/cdn/css/materialicons.css", "text/css");
+            mw.loader.load("https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese", "text/css");
+            mw.loader.load("https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese", "text/css");
+            
+            // MDL and context menu styles
+            mw.loader.addStyleTag(`
                 /* Context menus */
                 .context-menu-list {
                     list-style-type: none;
@@ -242,8 +248,7 @@ var rw = {
 
                 /* MDL */
                 ${rwStyle}
-                </style>
-            `); // Append required libaries to page
+            `);
 
             // OOui
             mw.loader.load('oojs-ui-windows');

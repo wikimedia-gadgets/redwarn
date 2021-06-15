@@ -109,46 +109,70 @@ export type SerializedWarning =
     | SerializedNonTieredWarning;
 
 export class WarningManager {
+    private static _warnings: Record<string, Warning>;
+    private static _warningCategories: WarningCategory[];
+    private static _warningCategoriesMap: Record<string, WarningCategory>;
+    private static _warningsByCategories: Record<
+        string,
+        Record<string, Warning>
+    >;
+    private static _warningArrayByCategories: Record<string, Warning[]>;
+
     public static get warnings(): Record<string, Warning> {
-        return RedWarnWikiConfiguration.c.warnings.warnings;
+        return (
+            this._warnings ??
+            (this._warnings = RedWarnWikiConfiguration.c.warnings.warnings)
+        );
     }
     public static get warningCategories(): WarningCategory[] {
-        return RedWarnWikiConfiguration.c.warnings.categories;
+        return (
+            this._warningCategories ??
+            (this._warningCategories =
+                RedWarnWikiConfiguration.c.warnings.categories)
+        );
     }
     public static get warningCategoriesMap(): Record<string, WarningCategory> {
-        return RedWarnWikiConfiguration.c.warnings.categories.reduce(
-            (obj, next) => {
-                obj[next.id] = next;
-                return obj;
-            },
-            <Record<string, WarningCategory>>{}
+        return (
+            this._warningCategoriesMap ??
+            (this._warningCategoriesMap = RedWarnWikiConfiguration.c.warnings.categories.reduce(
+                (obj, next) => {
+                    obj[next.id] = next;
+                    return obj;
+                },
+                <Record<string, WarningCategory>>{}
+            ))
         );
     }
     public static get warningsByCategories(): Record<
         string,
         Record<string, Warning>
     > {
-        return Object.entries(this.warnings).reduce(
-            (categories, [id, warning]) => {
-                if (!categories[warning.category.id])
-                    categories[warning.category.id] = {};
+        return (
+            this._warningsByCategories ??
+            (this._warningsByCategories = Object.entries(this.warnings).reduce(
+                (categories, [id, warning]) => {
+                    if (!categories[warning.category.id])
+                        categories[warning.category.id] = {};
 
-                categories[warning.category.id][id] = warning;
-                return categories;
-            },
-            <Record<string, Record<string, Warning>>>{}
+                    categories[warning.category.id][id] = warning;
+                    return categories;
+                },
+                <Record<string, Record<string, Warning>>>{}
+            ))
         );
     }
     public static get warningArrayByCategories(): Record<string, Warning[]> {
-        return Object.entries(this.warnings).reduce(
-            (categories, [id, warning]) => {
+        return (
+            this._warningArrayByCategories ??
+            (this._warningArrayByCategories = Object.entries(
+                this.warnings
+            ).reduce((categories, [id, warning]) => {
                 if (!categories[warning.category.id])
                     categories[warning.category.id] = [];
 
                 categories[warning.category.id].push(warning);
                 return categories;
-            },
-            <Record<string, Warning[]>>{}
+            }, <Record<string, Warning[]>>{}))
         );
     }
 }

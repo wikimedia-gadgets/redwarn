@@ -47,7 +47,6 @@ function MaterialWarnDialogReasonDropdown({
     parent: MaterialWarnDialogReason;
 }): JSX.Element {
     const finalSelectItems: MaterialSelectItem<Warning>[] = [];
-    const warningCategories = WarningManager.warningCategoriesMap;
     for (const [category, warningSet] of Object.entries(
         WarningManager.warningArrayByCategories
     )) {
@@ -57,7 +56,7 @@ function MaterialWarnDialogReasonDropdown({
             });
         finalSelectItems.push({
             type: "header",
-            label: warningCategories[category].label,
+            label: WarningManager.warningCategoriesMap[category].label,
         });
 
         for (const warning of warningSet) {

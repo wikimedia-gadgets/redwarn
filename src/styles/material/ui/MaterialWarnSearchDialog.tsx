@@ -102,7 +102,6 @@ function MaterialWarnSearchDialogWarnings(props: {
     dialog: MaterialWarnSearchDialog;
 }): JSX.Element {
     const warningElements: JSX.Element[] = [];
-    const warningCategories = WarningManager.warningCategoriesMap;
 
     for (const [category, warnings] of Object.entries(
         WarningManager.warningsByCategories
@@ -110,9 +109,11 @@ function MaterialWarnSearchDialogWarnings(props: {
         const categoryHeader = (
             <div
                 class="rw-warningCategory"
-                data-rw-warningCategory={warningCategories[category].id}
+                data-rw-warningCategory={
+                    WarningManager.warningCategoriesMap[category].id
+                }
             >
-                {warningCategories[category].label}
+                {WarningManager.warningCategoriesMap[category].label}
             </div>
         );
         warningElements.push(categoryHeader);

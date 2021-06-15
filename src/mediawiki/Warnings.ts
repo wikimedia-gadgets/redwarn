@@ -120,21 +120,22 @@ export class WarningManager {
 
     public static get warnings(): Record<string, Warning> {
         return (
-            this._warnings ??
-            (this._warnings = RedWarnWikiConfiguration.c.warnings.warnings)
+            WarningManager._warnings ??
+            (WarningManager._warnings =
+                RedWarnWikiConfiguration.c.warnings.warnings)
         );
     }
     public static get warningCategories(): WarningCategory[] {
         return (
-            this._warningCategories ??
-            (this._warningCategories =
+            WarningManager._warningCategories ??
+            (WarningManager._warningCategories =
                 RedWarnWikiConfiguration.c.warnings.categories)
         );
     }
     public static get warningCategoriesMap(): Record<string, WarningCategory> {
         return (
-            this._warningCategoriesMap ??
-            (this._warningCategoriesMap = RedWarnWikiConfiguration.c.warnings.categories.reduce(
+            WarningManager._warningCategoriesMap ??
+            (WarningManager._warningCategoriesMap = RedWarnWikiConfiguration.c.warnings.categories.reduce(
                 (obj, next) => {
                     obj[next.id] = next;
                     return obj;
@@ -148,25 +149,24 @@ export class WarningManager {
         Record<string, Warning>
     > {
         return (
-            this._warningsByCategories ??
-            (this._warningsByCategories = Object.entries(this.warnings).reduce(
-                (categories, [id, warning]) => {
-                    if (!categories[warning.category.id])
-                        categories[warning.category.id] = {};
+            WarningManager._warningsByCategories ??
+            (WarningManager._warningsByCategories = Object.entries(
+                WarningManager.warnings
+            ).reduce((categories, [id, warning]) => {
+                if (!categories[warning.category.id])
+                    categories[warning.category.id] = {};
 
-                    categories[warning.category.id][id] = warning;
-                    return categories;
-                },
-                <Record<string, Record<string, Warning>>>{}
-            ))
+                categories[warning.category.id][id] = warning;
+                return categories;
+            }, <Record<string, Record<string, Warning>>>{}))
         );
     }
     public static get warningArrayByCategories(): Record<string, Warning[]> {
         return (
-            this._warningArrayByCategories ??
-            (this._warningArrayByCategories = Object.entries(
-                this.warnings
-            ).reduce((categories, [id, warning]) => {
+            WarningManager._warningArrayByCategories ??
+            (WarningManager._warningArrayByCategories = Object.values(
+                WarningManager.warnings
+            ).reduce((categories, warning) => {
                 if (!categories[warning.category.id])
                     categories[warning.category.id] = [];
 
@@ -174,5 +174,9 @@ export class WarningManager {
                 return categories;
             }, <Record<string, Warning[]>>{}))
         );
+    }
+
+    public static refresh() {
+        WarningManager._warnings = WarningManager._warningCategories = WarningManager._warningCategoriesMap = WarningManager._warningsByCategories = WarningManager._warningArrayByCategories = null;
     }
 }

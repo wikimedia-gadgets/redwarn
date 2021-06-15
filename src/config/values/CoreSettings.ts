@@ -4,9 +4,8 @@
 
 import { RW_CONFIG_VERSION, RW_VERSION } from "rww/data/RedWarnConstants";
 import { Setting } from "../Setting";
-import { ConfigurationSet } from "rww/config";
 
-const CoreSettings = <ConfigurationSet>{
+const CoreSettings = {
     /** Last version of RedWarn that was used */
     latestVersion: new Setting("latestVersion", RW_VERSION, null),
 

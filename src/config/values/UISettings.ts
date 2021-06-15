@@ -4,10 +4,9 @@
 
 import { DefaultRedWarnStyle } from "rww/styles/StyleConstants";
 import { Setting, UIInputType } from "../Setting";
-import { ConfigurationSet } from "rww/config";
 import i18next from "i18next";
 
-const UISettings = <ConfigurationSet>{
+const UISettings = {
     /** Notice template order */
     noticeOrder: new Setting("noticeOrder", false, {
         uiInputType: UIInputType.Radio,

@@ -30,10 +30,10 @@
     },
     "rollbackAvailableDialog": {
         "actions": {
-            "rollback": "Use Rollback",
-            "revert": "Keep Using Rollback-Like"
+            "rollback": "Use rollback",
+            "revert": "Keep using rollback-like"
         },
-        "content": "You have rollback permissions!\nWould you like to use the faster rollback API in future or continue using a rollback-like setting?\nYou can change this in your preferences at any time."
+        "content": "You have rollback permissions! Would you like to use the faster rollback API in future or continue using a rollback-like setting? You can change this in your preferences at any time."
     },
     "tamperProtection": {
         "header": "ATTENTION!",

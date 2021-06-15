@@ -9,6 +9,7 @@ import {
     SerializedWarningType,
     WarningLevel,
     WarningLevelSignature,
+    WarningManager,
 } from "rww/mediawiki";
 import type { SerializableRevertOption } from "rww/definitions/RevertOptions";
 import { RW_WIKI_CONFIGURATION_VERSION } from "rww/data/RedWarnConstants";
@@ -34,11 +35,11 @@ interface WikiConfiguration {
     configVersion: number;
     wiki: string;
     meta: {
-        tag: string;
+        tag?: string;
         link: string;
     };
     warnings: {
-        ipAdvice: string | null;
+        ipAdvice?: string | null;
         signatures: Record<Exclude<WarningLevel, 0>, WarningLevelSignature[]>;
         categories: WarningCategory[];
         warnings: Record<string, Warning>;
@@ -56,7 +57,7 @@ interface WikiConfiguration {
 export default class RedWarnWikiConfiguration {
     private static _loadedConfiguration: WikiConfiguration;
     public static get c(): WikiConfiguration {
-        return this._loadedConfiguration;
+        return RedWarnWikiConfiguration._loadedConfiguration;
     }
 
     /**
@@ -65,6 +66,9 @@ export default class RedWarnWikiConfiguration {
      * English Wikipedia (https://w.wiki/3V4o).
      */
     static async loadWikiConfiguration(): Promise<void> {
+        /**
+         * A basic JSON object holding keys for what is supposed to be a {@link RawWikiConfiguration}.
+         */
         let rawConfig: Record<string, any> = null;
         try {
             rawConfig = JSON.parse(
@@ -80,6 +84,7 @@ export default class RedWarnWikiConfiguration {
                     ((): string => {
                         const url = new URL("//en.wikipedia.org/w/index.php");
 
+                        // Do not use the short URL (`/wiki/Wikipedia:RedWarn/configuration.json`)
                         url.searchParams.set(
                             "title",
                             "Wikipedia:RedWarn/configuration.json"
@@ -96,9 +101,15 @@ export default class RedWarnWikiConfiguration {
             }
         }
 
+        /**
+         * A fully-upgraded {@link RawWikiConfiguration} which can then be deserialized into
+         * a proper {@link WikiConfiguration}.
+         */
         let config: RawWikiConfiguration;
         if (rawConfig.configVersion < RW_WIKI_CONFIGURATION_VERSION)
-            config = this.upgradeWikiConfiguration(rawConfig);
+            config = RedWarnWikiConfiguration.upgradeWikiConfiguration(
+                rawConfig
+            );
         else config = rawConfig as RawWikiConfiguration;
 
         if (config.wiki != mw.config.get("wgDBname")) {
@@ -111,10 +122,15 @@ export default class RedWarnWikiConfiguration {
                 )} instead. Templates may be missing or broken.`
             );
         } else if (rawConfig.configVersion < RW_WIKI_CONFIGURATION_VERSION) {
-            // TODO: Suggest saving the upgraded config file to the user (if same wiki).
+            // TODO: Suggest saving the upgraded config file to the user (if it's the same wiki).
         }
 
-        this._loadedConfiguration = this.deserializeWikiConfiguration(config);
+        RedWarnWikiConfiguration._loadedConfiguration = RedWarnWikiConfiguration.deserializeWikiConfiguration(
+            config
+        );
+
+        // Refresh whatever needs refreshing.
+        WarningManager.refresh();
     }
 
     /**

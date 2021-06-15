@@ -30,7 +30,7 @@
 //     } else {
 //         if (!option.promptReason) {
 //             clickHandler = () =>
-//                 Revert.rollback(context, option.summary, option.ruleIndex);
+//                 Revert.revert(context, option.summary, option.ruleIndex);
 //         } else {
 //             clickHandler = () =>
 //                 Revert.promptRollbackReason(context, option.summary);
@@ -56,28 +56,28 @@
 //      * Get the context surrounding the current diff view.
 //      */
 //     static async getContext(): Promise<RevertContext> {
-//         const targetRevision: Revision = Revision.fromID(
+//         const newRevision: Revision = Revision.fromID(
 //             Revert.getNewerRevisionId(),
 //             {
 //                 page: Page.fromTitle(mw.config.get("wgRelevantPageName")),
 //             }
 //         );
-//         const sourceRevision: Revision = Revision.fromID(
+//         const oldRevision: Revision = Revision.fromID(
 //             Revert.getOlderRevisionId(),
 //             {
 //                 page: Page.fromTitle(mw.config.get("wgRelevantPageName")),
 //             }
 //         );
 //
-//         await targetRevision.populate();
+//         await newRevision.populate();
 //
-//         return new RevertContext(targetRevision, sourceRevision);
+//         return new RevertContext(newRevision, oldRevision);
 //     }
 //
 //     /**
-//      * Load the rollback options. These are the buttons seen at the top of each side of the
+//      * Load the revert options. These are the buttons seen at the top of each side of the
 //      * diff view.
-//      * @param context The context surrounding the current rollback.
+//      * @param context The context surrounding the current revert.
 //      * @param checkIfEditable Check if the page is editable before injecting.
 //      */
 //     static loadOptions(
@@ -292,7 +292,7 @@
 //     static getDisabledOptions(
 //         context: RevertContext
 //     ): RWUISelectionDialogItem[] {
-//         // Open a new dialog with all the disabled options so user can select one. Click handlers are already registered, so we just call rw.rollback.clickHandlers.[elID]();
+//         // Open a new dialog with all the disabled options so user can select one. Click handlers are already registered, so we just call rw.revert.clickHandlers.[elID]();
 //         // Load Revert current rev options (rev14)
 //         const icons: RWUISelectionDialogItem[] = [];
 //         // RollbackOptions.forEach((option, i) => {
@@ -303,7 +303,7 @@
 //         //         return;
 //         //     } // does nothing here, so not needed
 //         //
-//         //     const elID = `rollback${i}`; // get the ID for the new options
+//         //     const elID = `revert${i}`; // get the ID for the new options
 //         //
 //         //     // Establish element with all the info
 //         //     icons.push({
@@ -349,7 +349,7 @@
 //             ).trigger("click");
 //         }
 //
-//         // Hides other options and shows the rollback done options and also checks for defaults, also adds click handlers
+//         // Hides other options and shows the revert done options and also checks for defaults, also adds click handlers
 //         $("#rwRollbackInProgress").fadeOut(() => {
 //             // fade out - looks smoother
 //             $("#rwRevertDoneOptions").fadeIn(); //show our options

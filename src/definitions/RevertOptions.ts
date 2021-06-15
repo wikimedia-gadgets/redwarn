@@ -49,28 +49,37 @@ interface RevertActionBase {
      */
     enabled: boolean;
     /**
-     * The name of this rollback option.
+     * The name of this revert option.
      */
     name: string;
 }
 
-export type RevertOption = RevertActionBase & RevertAction;
+export type RevertOption = (RevertActionBase & RevertAction) & {
+    /**
+     * System options are those built into RedWarn.
+     * The wiki-specific configuration should not have this as true.
+     */
+    system?: true;
+};
 export type SerializableRevertOption = RevertActionBase &
     SerializableRevertAction;
 
 export const RequiredRevertOptions: RevertOption[] = [
     {
+        system: true,
         enabled: true,
         name: i18next.t("revert:rollback.name"),
         actionType: "promptedRevert",
     },
     {
+        system: true,
         enabled: true,
         name: i18next.t("revert:agf.name"),
         actionType: "promptedRevert",
         defaultSummary: i18next.t("revert:agf.summary"),
     },
     {
+        system: true,
         enabled: true,
         actionType: "custom",
         name: i18next.t("revert:preview.name"),
@@ -80,6 +89,7 @@ export const RequiredRevertOptions: RevertOption[] = [
         },
     },
     {
+        system: true,
         enabled: true,
         actionType: "custom",
         name: i18next.t("revert:quick-template.name"),
@@ -88,6 +98,7 @@ export const RequiredRevertOptions: RevertOption[] = [
         },
     },
     {
+        system: true,
         enabled: true,
         actionType: "custom",
         name: i18next.t("revert:more-options.name"),
@@ -104,6 +115,6 @@ export default class RevertOptions {
         return RedWarnWikiConfiguration.c.revertOptions;
     }
     public static get all(): RevertOption[] {
-        return [...this.required, ...this.loaded];
+        return [...RevertOptions.required, ...RevertOptions.loaded];
     }
 }

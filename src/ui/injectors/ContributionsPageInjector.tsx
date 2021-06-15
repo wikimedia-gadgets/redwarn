@@ -54,7 +54,7 @@
 //                     style="color:red;cursor:pointer;"
 //                     id={`rw-currentRevRvv${i}`}
 //                     onClick={() =>
-//                         Revert.rollback(
+//                         Revert.revert(
 //                             context,
 //                             "[[WP:VANDAL|Possible vandalism]]",
 //                             "vandalism"

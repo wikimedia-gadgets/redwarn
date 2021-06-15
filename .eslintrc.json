@@ -25,27 +25,38 @@
         }
     },
     "rules": {
+        // Allow explicit `any`s.
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
+        // Ignore unused TSX parameters, since `h` will never be used normally.
         "@typescript-eslint/no-unused-vars": [
             "warn",
             {
                 "varsIgnorePattern": "h"
             }
         ],
+        // Always require semicolons.
         "semi": ["error", "always"],
+        // Prefer camelCase for variable names. Use quotes to bypass this.
         "camelcase": ["warn"],
+        // Prefer constants instead of `var` or `let` when not reassigned.
         "prefer-const": [
             "error",
             {
                 "destructuring": "all"
             }
         ],
-        "space-before-blocks": "warn",
+        // Enforce spacing between keys and values in objects.
         "key-spacing": "warn",
+        // Enforce spacing between keywords.
         "keyword-spacing": "warn",
         // TypeScript handles unresolved import issues.
-        "import/no-unresolved": "off"
+        "import/no-unresolved": "off",
+        // Prevent `this` in static usages. Use the class name instead for clarity.
+        "no-restricted-syntax": ["error", {
+            "selector": "MethodDefinition[static = true] ThisExpression",
+            "message": "`this` is being used in a static context."
+        }]
     },
     "settings": {
         "import/parsers": { "@typescript-eslint/parser": [".ts", ".tsx"] }

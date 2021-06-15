@@ -27,7 +27,7 @@ export const RevertDoneOptions: Record<
         name: "Go to latest revision",
         icon: "watch_later",
         action: async (context: RevertContext): Promise<void> =>
-            (await context.targetRevision.page.getLatestRevision()).navigate(),
+            (await context.newRevision.page.getLatestRevision()).navigate(),
     },
     [RevertDoneOption.NewMessage]: {
         name: "New Message",

@@ -1,4 +1,3 @@
-// note: enum must be before RWErrorBase or else TS gets mad
 /**
  * Enum that contains all the errors. New errors must be registered here.
  *

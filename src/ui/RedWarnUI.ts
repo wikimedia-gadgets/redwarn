@@ -62,7 +62,7 @@ export default class RedWarnUI {
         //
         // // TODO topIcons
         //
-        // const targetUser = ctx.user ?? ctx.rollbackContext?.targetRevision.user;
+        // const targetUser = ctx.user ?? ctx.rollbackContext?.newRevision.user;
         //
         // if (targetUser) {
         //     // TODO AIV

@@ -3,6 +3,10 @@ import Group from "rww/definitions/Group";
 import { ClientUser } from "rww/mediawiki";
 import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
 import Log from "rww/data/RedWarnLog";
+import {
+    GenericMediaWikiError,
+    SpecializedMediaWikiErrors,
+} from "rww/errors/MediaWikiErrors";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 
@@ -21,7 +25,7 @@ export class MediaWikiAPI {
                     finalParameters[key] = finalParameters[key].join("|");
             }
 
-            return await this.api.get(finalParameters, ajaxOptions);
+            return await MediaWikiAPI.api.get(finalParameters, ajaxOptions);
         } catch (error) {
             Log.error(
                 `Error occured while running MediaWiki API get call.`,
@@ -42,7 +46,7 @@ export class MediaWikiAPI {
                     finalParameters[key] = finalParameters[key].join("|");
             }
 
-            return await this.api.post(finalParameters, ajaxOptions);
+            return await MediaWikiAPI.api.post(finalParameters, ajaxOptions);
         } catch (error) {
             Log.error(
                 `Error occured while running MediaWiki API get call.`,
@@ -57,7 +61,10 @@ export class MediaWikiAPI {
         ajaxOptions?: AjaxSettings
     ): Promise<JQueryXHR> {
         try {
-            return await this.api.postWithEditToken(parameters, ajaxOptions);
+            return await MediaWikiAPI.api.postWithEditToken(
+                parameters,
+                ajaxOptions
+            );
         } catch (error) {
             Log.error(
                 `Error occured while running MediaWiki API postWithEditToken call.`,
@@ -72,8 +79,12 @@ export class MediaWikiAPI {
      */
     static async init(): Promise<void> {
         // Create the API interface.
-        this.api = new mw.Api({
-            parameters: { formatversion: 2 },
+        MediaWikiAPI.api = new mw.Api({
+            parameters: {
+                format: "json",
+                formatversion: 2,
+                errorformat: "plaintext",
+            },
             ajax: {
                 headers: {
                     "Api-User-Agent": i18next.t("common:redwarn.userAgent"),
@@ -83,12 +94,12 @@ export class MediaWikiAPI {
 
         // Initialize the current user.
         await ClientUser.i.init();
-        await this.loadGroupNames();
+        await MediaWikiAPI.loadGroupNames();
     }
 
     static async loadGroupNames(): Promise<Map<string, Group>> {
         const loadGroups = async () => {
-            const userGroupMemberTitles = await this.get({
+            const userGroupMemberTitles = await MediaWikiAPI.get({
                 action: "query",
                 format: "json",
                 meta: "allmessages",
@@ -97,7 +108,7 @@ export class MediaWikiAPI {
                 amfilter: "-member",
                 amprefix: "group-",
             });
-            const userGroupPages = await this.get({
+            const userGroupPages = await MediaWikiAPI.get({
                 action: "query",
                 format: "json",
                 meta: "allmessages",
@@ -162,7 +173,7 @@ export class MediaWikiAPI {
             return groups;
         };
 
-        if (!this.groups) {
+        if (!MediaWikiAPI.groups) {
             const groupCacheTimestamp = await RedWarnLocalDB.i.cacheTracker.get(
                 "groupCache"
             );
@@ -178,14 +189,45 @@ export class MediaWikiAPI {
                 groupCacheTimestamp == null ||
                 groupCacheTimestamp.timestamp < Date.now() - 604800000
             ) {
-                return (this.groups = await loadGroups());
+                return (MediaWikiAPI.groups = await loadGroups());
             } else {
-                return (this.groups = new Map<string, Group>(
+                return (MediaWikiAPI.groups = new Map<string, Group>(
                     Object.entries(groups)
                 ));
             }
         } else {
-            return this.groups;
+            return MediaWikiAPI.groups;
+        }
+    }
+
+    /**
+     * Get errors from a MediaWiki response.
+     *
+     * @param apiResponse The response from the MediaWiki Action API.
+     */
+    public static error(
+        apiResponse: Record<string, any>
+    ): GenericMediaWikiError | AggregateError {
+        if (!apiResponse["errors"] && !!apiResponse["error"]) {
+            // Legacy format. This should be avoided.
+            return new GenericMediaWikiError(apiResponse["error"]);
+        } else if (!!apiResponse["errors"]) {
+            // New error format.
+            const errors = [];
+
+            for (const error of apiResponse["errors"]) {
+                errors.push(
+                    SpecializedMediaWikiErrors[error["code"]] != null
+                        ? new SpecializedMediaWikiErrors[error["code"]](error)
+                        : new GenericMediaWikiError(error)
+                );
+            }
+
+            if (errors.length === 1) return errors[0];
+            else return new AggregateError(errors);
+        } else {
+            // No error occurred???
+            return new GenericMediaWikiError("Unknown MediaWiki API error.");
         }
     }
 }

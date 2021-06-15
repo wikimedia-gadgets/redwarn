@@ -23,6 +23,14 @@
                 "rollback": "Rollback (requires the rollback right)",
                 "undo": "Pseudo-rollback"
             }
+        },
+        "redirectIfNotLatest": {
+            "title": "Redirect if not latest",
+            "description": "If enabled, upon detection that revision being reverted is no longer the latest revision, you will be redirected to the latest revision of the page."
+        },
+        "ignoreSameUserLatest": {
+            "title": "Ignore latest revision from the same user",
+            "description": "If enabled, the revision to be reverted will be reverted anyway even if it is no longer the latest revision if the latest revision was made by the same user and has no intermediate edits."
         }
     },
     "ui" : {

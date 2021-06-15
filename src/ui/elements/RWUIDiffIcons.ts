@@ -1,6 +1,7 @@
 import RWUIElement from "rww/ui/elements/RWUIElement";
 import { Revision } from "rww/mediawiki";
 import { Direction } from "rww/definitions/Direction";
+import { RevertStage } from "rww/mediawiki/Revert";
 
 export interface RWUIDiffIconsProperties {
     /**
@@ -63,9 +64,28 @@ export class RWUIDiffIcons
     }
 
     /**
-     * Called at the end of a revert.
+     * Called when the stage of a revert has advanced.
+     * @param stage The current stage of the revert.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onRevertStageChange(stage: RevertStage): void {
+        return undefined;
+    }
+
+    /**
+     * Called at the end of a revert. This is not called when a revert fails,
+     * use {@link onRevertFailure} instead.
      */
     onEndRevert(): void {
+        return undefined;
+    }
+
+    /**
+     * Called when a revert fails.
+     * @param error The error that occurred.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onRevertFailure(error: Error): void {
         return undefined;
     }
 }

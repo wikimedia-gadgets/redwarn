@@ -5,7 +5,7 @@
  */
 
 export enum UIInputType {
-    Checkbox,
+    Switch,
     Checkboxes,
     Radio,
     Dropdown,
@@ -105,11 +105,11 @@ export class Setting<T> implements PrimitiveSetting<T> {
 
     static fromString<T>(str: string): Setting<T> {
         const obj: { id: string; value: T } = JSON.parse(str);
-        return this.fromPrimitive(obj);
+        return Setting.fromPrimitive(obj);
     }
 
     static fromPrimitive<T>(primitive: PrimitiveSetting<T>): Setting<T> {
-        return new this(primitive.id, primitive.value, null);
+        return new Setting(primitive.id, primitive.value, null);
     }
 }
 

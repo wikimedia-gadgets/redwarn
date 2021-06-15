@@ -81,12 +81,20 @@ export class MediaWikiAPI {
         // Create the API interface.
         MediaWikiAPI.api = new mw.Api({
             parameters: {
+                // Always serve JSON-format responses.
+                // https://www.mediawiki.org/wiki/API:Data_formats#Output
                 format: "json",
+                // Use the latest MediaWiki formatversion available (and supported by us).
+                // https://www.mediawiki.org/wiki/API:Data_formats#JSON_parameters
                 formatversion: 2,
+                // The format of the "errors" field.
+                // https://www.mediawiki.org/wiki/API:Errors_and_warnings#Error_formats
                 errorformat: "plaintext",
             },
             ajax: {
                 headers: {
+                    // Set a RedWarn user agent for RedWarn requests.
+                    // https://www.mediawiki.org/wiki/API:Etiquette#The_User-Agent_header
                     "Api-User-Agent": i18next.t("common:redwarn.userAgent"),
                 },
             },

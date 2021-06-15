@@ -1,7 +1,6 @@
 import RWUIElement from "rww/ui/elements/RWUIElement";
-import { Revision } from "rww/mediawiki";
+import { RevertStage, Revision } from "rww/mediawiki";
 import { Direction } from "rww/definitions/Direction";
-import { RevertStage } from "rww/mediawiki/Revert";
 
 export interface RWUIDiffIconsProperties {
     /**

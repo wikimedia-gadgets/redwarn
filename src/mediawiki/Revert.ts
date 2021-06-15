@@ -348,8 +348,7 @@ export class Revert {
                 res["errors"]
             );
 
-            // TODO: Proper errors
-            if (diffIcons) diffIcons.onRevertFailure(res["errors"]);
+            if (diffIcons) diffIcons.onRevertFailure(MediaWikiAPI.error(res));
             RedWarnUI.Toast.quickShow({
                 content: i18next.t("ui:toasts.rollbackError"),
             });
@@ -394,8 +393,7 @@ export class Revert {
             // An error occured during revert.
             Log.error("An error occured while performing a rollback.", res);
 
-            // TODO: Proper errors
-            if (diffIcons) diffIcons.onRevertFailure(new Error(res["errors"]));
+            if (diffIcons) diffIcons.onRevertFailure(MediaWikiAPI.error(res));
             RedWarnUI.Toast.quickShow({
                 content: i18next.t("ui:toasts.rollbackError"),
             });

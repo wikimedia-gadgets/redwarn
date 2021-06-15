@@ -8,9 +8,9 @@ import {
     RWUIWarnDialog,
 } from "./elements/RWUIDialog";
 // import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
-import { RevertContext } from "rww/definitions/RevertContext";
 import { RWUIToast } from "./elements/RWUIToast";
 import { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
+import { RevertContext } from "rww/mediawiki/Revert";
 
 /**
  * Redirect class for easy access. UI elements of RedWarn are also created here.

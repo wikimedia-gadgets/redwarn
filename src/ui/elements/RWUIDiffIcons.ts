@@ -34,12 +34,38 @@ export class RWUIDiffIcons
     newRevision: Revision | null;
     direction: Direction;
 
+    /**
+     * This element, as returned by {@link RWUIDiffIcons.render}.
+     */
+    self: HTMLElement;
+
     constructor(props: RWUIDiffIconsProperties) {
         super();
         Object.assign(props, this);
     }
 
+    /**
+     * Renders the diff icons. These are then wrapped by a RedWarn container
+     * element to isolate other elements.
+     *
+     * This is called only once: on insertion. Any subsequent expected changes
+     * to this element will be called through other functions.
+     */
     render(): Element {
+        return undefined;
+    }
+
+    /**
+     * Called on the start of a revert.
+     */
+    onStartRevert(): void {
+        return undefined;
+    }
+
+    /**
+     * Called at the end of a revert.
+     */
+    onEndRevert(): void {
         return undefined;
     }
 }

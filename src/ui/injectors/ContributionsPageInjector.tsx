@@ -30,7 +30,7 @@
 //                 <a
 //                     style="color:green;cursor:pointer;"
 //                     id={`rw-currentRevPrev${i}`}
-//                     onClick={() => Rollback.preview(context)}
+//                     onClick={() => Revert.preview(context)}
 //                     aria-describedby={`rw-currentRevPrev${i}T`}
 //                 >
 //                     {i18next.t<string>("ui:contribs.previewLink")}
@@ -54,7 +54,7 @@
 //                     style="color:red;cursor:pointer;"
 //                     id={`rw-currentRevRvv${i}`}
 //                     onClick={() =>
-//                         Rollback.rollback(
+//                         Revert.rollback(
 //                             context,
 //                             "[[WP:VANDAL|Possible vandalism]]",
 //                             "vandalism"
@@ -82,7 +82,7 @@
 //                 <a
 //                     style="color:blue;cursor:pointer;"
 //                     id={`rw-currentRevRb${i}`}
-//                     onClick={() => Rollback.promptRollbackReason(context, "")}
+//                     onClick={() => Revert.promptRollbackReason(context, "")}
 //                     aria-describedby={`rw-currentRevRb${i}T`}
 //                 >
 //                     {i18next.t<string>("ui:contribs.rollbackLink")}

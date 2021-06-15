@@ -1,6 +1,6 @@
 import { RW_CONFIG_VERSION } from "rww/data/RedWarnConstants";
 import { RevertMethod } from "rww/config/ConfigurationEnums";
-import { RevertDoneOption } from "rww/definitions/RollbackDoneOptions";
+import { RevertDoneOption } from "rww/definitions/RevertDoneOptions";
 import Log from "rww/data/RedWarnLog";
 
 type ConfigurationUpdater = (

@@ -24,10 +24,9 @@ export const RW_LOG_SIGNATURE = `RedWarn ${RW_VERSION_TAG}`;
 
 export const RW_SIGNATURE = "~~~~";
 
-// TODO: Wiki-specific configurations
-export const RW_SHARED_IP_ADVICE = "{{subst:Shared IP advice}}";
+export const RW_WIKI_CONFIGURATION = "Project:RedWarn/configuration.json";
+export const RW_WIKI_CONFIGURATION_VERSION = 1;
 
-/* Do not decode! The source code must NEVER have closing or opening nowiki tags! */
 export const RW_NOWIKI_OPEN = atob("PG5vd2lraT4=");
 export const RW_NOWIKI_CLOSE = atob("PC9ub3dpa2k+");
 

@@ -1,23 +1,43 @@
-// TODO: dev-rwTS-difficons
 // import i18next from "i18next";
 // import {RW_VERSION_TAG, RW_WIKIS_SPEEDUP, RW_WIKIS_TAGGABLE,} from "rww/data/RedWarnConstants";
 // import RedWarnStore from "rww/data/RedWarnStore";
 // import RedWarnUI from "rww/ui/RedWarnUI";
 // import redirect from "rww/util/redirect";
-// import {ClientUser, MediaWikiAPI, MediaWikiURL, Page, Revision, Warnings,} from "rww/mediawiki";
-// // import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
-// import {RevertContext} from "rww/definitions/RevertContext";
+import { Revision } from "rww/mediawiki";
 // import {Configuration, RevertMethod} from "rww/config";
 // import Log from "rww/data/RedWarnLog";
 //
-// // interface RevertContext {
-// //     reason: string;
-// //     defaultWarnIndex?: keyof Warnings;
-// //     showRollbackDoneOptions?: boolean;
-// //     targetRevision: Revision;
-// // }
+// /**
+//  * The context of a revert being performed.
+//  */
+export interface RevertContext {
+    /**
+     * The revision on the left side of a diff page.
+     */
+    sourceRevision?: Revision;
+    /**
+     * The revision on the right side of a diff page.
+     */
+    targetRevision: Revision;
+    /**
+     * The latest revision of this page.
+     */
+    latestRevision?: Revision;
+}
 //
-// export class Rollback {
+// /**
+//  * The current stage of a revert.
+//  */
+// export enum RevertStage {
+//     Details,
+//     Revert
+// }
+//
+// /**
+//  * This class handles all behavior related to undos and rollbacks: collectively
+//  * called "reverts".
+//  */
+// export class Revert {
 //     /**
 //      * Determines whether the given page is a diff page, and whether or not it
 //      * displays a single revision (if that revision is the only page revision) or
@@ -42,11 +62,11 @@
 //      *
 //      * @param targetRevision The target revision.
 //      */
-//     static async promptRestoreReason(targetRevision: Revision): Promise<void> {
+//     static async promptRestore(targetRevision: Revision): Promise<void> {
 //         const dialog = new RedWarnUI.InputDialog(i18next.t("ui:restore"));
 //         const reason = await dialog.show();
 //         if (reason !== null) {
-//             Rollback.restore(targetRevision, reason);
+//             Revert.restore(targetRevision, reason);
 //         }
 //     }
 //
@@ -60,7 +80,7 @@
 //      */
 //     static async restore(
 //         targetRevision: Revision,
-//         reason: string
+//         reason?: string
 //     ): Promise<boolean> {
 //         if (!targetRevision.isPopulated()) targetRevision.populate();
 //         const latestRevision = await targetRevision.page.getLatestRevision();
@@ -74,9 +94,8 @@
 //             }),
 //             undo: latestRevision.revisionID,
 //             undoafter: targetRevision.revisionID,
-//             tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
-//                 ? "RedWarn"
-//                 : null,
+//             tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID) ?
+//                 "RedWarn" : null,
 //         });
 //
 //         if (!result.edit) {
@@ -122,16 +141,16 @@
 //      *
 //      * @returns The newer revision. `null` if the page is not a valid diff page.
 //      */
-//     static getNewerRevisionId: typeof Rollback.getRevisionId = () =>
-//         Rollback.getRevisionId();
+//     static getNewerRevisionId: typeof Revert.getRevisionId = () =>
+//         Revert.getRevisionId();
 //     /**
 //      * Grab the older revision ID from the diff view. This also handles situations
 //      * where the diff view is reversed.
 //      *
 //      * @returns The older revision. `null` if the page is not a valid diff page.
 //      */
-//     static getOlderRevisionId: typeof Rollback.getRevisionId = () =>
-//         Rollback.getRevisionId(false);
+//     static getOlderRevisionId: typeof Revert.getRevisionId = () =>
+//         Revert.getRevisionId(false);
 //
 //     /**
 //      * Redirect the user to the latest version if this version is not the latest.
@@ -166,7 +185,7 @@
 //         //rw.ui.loadDialog.show("Loading preview...");
 //         // Check if latest, else redirect
 //
-//         const latestRevision = await Rollback.redirectIfNotLatest(
+//         const latestRevision = await Revert.redirectIfNotLatest(
 //             targetRevision
 //         );
 //
@@ -196,7 +215,7 @@
 //         context: RevertContext,
 //         defaultReason: string
 //     ): Promise<void> {
-//         await Rollback.redirectIfNotLatest(context.targetRevision);
+//         await Revert.redirectIfNotLatest(context.targetRevision);
 //         const dialog = new RedWarnUI.InputDialog({
 //             width: "40vw",
 //             ...i18next.t("ui:rollback"),
@@ -250,7 +269,7 @@
 //         } else {
 //             if (fromInjector) {
 //                 progressBar.close();
-//                 // return DiffViewerInjector.showRollbackDoneOptions(
+//                 // return DiffViewerInjector.showRevertDoneOptions(
 //                 //     context,
 //                 //     targetRevision.user.username,
 //                 //     defaultWarnIndex
@@ -296,7 +315,7 @@
 //
 //         if (fromInjector) {
 //             progressBar.close();
-//             // return DiffViewerInjector.showRollbackDoneOptions(
+//             // return DiffViewerInjector.showRevertDoneOptions(
 //             //     context,
 //             //     targetRevision.user.username,
 //             //     defaultWarnIndex
@@ -316,7 +335,7 @@
 //
 //         progressBar.open();
 //
-//         await Rollback.redirectIfNotLatest(targetRevision);
+//         await Revert.redirectIfNotLatest(targetRevision);
 //
 //         if (ClientUser.i.inGroup("rollbacker")) {
 //             switch (

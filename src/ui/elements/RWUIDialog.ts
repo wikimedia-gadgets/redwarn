@@ -1,11 +1,10 @@
 import { ComponentChild } from "tsx-dom";
 import generateId from "rww/util/generateId";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
-import { RevertContext } from "rww/definitions/RevertContext";
 import { User } from "rww/mediawiki/User";
-import { Warning, WarningOptions } from "rww/mediawiki/Warnings";
+import { Page, Warning, WarningOptions } from "rww/mediawiki";
 import { Dependency } from "rww/data/Dependencies";
-import { Page } from "rww/mediawiki";
+import { RevertContext } from "rww/mediawiki/Revert";
 
 export enum RWUIDialogActionType {
     /**

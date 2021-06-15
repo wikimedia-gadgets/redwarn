@@ -1,5 +1,4 @@
-import { Warnings } from "rww/mediawiki/Warnings";
-import { RevertContext } from "rww/definitions/RevertContext";
+import { RevertContext } from "rww/mediawiki/Revert";
 
 export enum RevertDoneOption {
     LatestRevision,
@@ -16,11 +15,11 @@ export interface RollbackDoneOptionDetails {
     action: (
         context: RevertContext,
         username: string,
-        warnIndex: keyof Warnings
+        warnIndex: string
     ) => any;
 }
 
-export const RollbackDoneOptions: Record<
+export const RevertDoneOptions: Record<
     RevertDoneOption,
     RollbackDoneOptionDetails
 > = {

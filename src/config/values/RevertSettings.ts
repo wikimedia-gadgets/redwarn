@@ -5,7 +5,7 @@
 import { ConfigurationSet, RevertMethod } from "..";
 import { Setting, UIInputType } from "../Setting";
 import i18next from "i18next";
-import { RevertDoneOption } from "rww/definitions/RollbackDoneOptions";
+import { RevertDoneOption } from "rww/definitions/RevertDoneOptions";
 
 const RevertSettings = <ConfigurationSet>{
     /**

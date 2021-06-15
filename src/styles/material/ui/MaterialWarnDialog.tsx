@@ -31,11 +31,12 @@ import {
 } from "rww/mediawiki";
 import { isIPAddress, normalize, warningSuffix } from "rww/util";
 
-import { RW_SHARED_IP_ADVICE, RW_SIGNATURE } from "rww/data/RedWarnConstants";
+import { RW_SIGNATURE } from "rww/data/RedWarnConstants";
 import MaterialIconButton from "./components/MaterialIconButton";
 import RedWarnUI from "rww/ui/RedWarnUI";
 
 import "../css/warnDialog.css";
+import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
 
 /**
  * A specific test performed to validate the values of a {@link MaterialWarnDialog}.
@@ -154,7 +155,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                 : ""
         }}} ${RW_SIGNATURE}${
             isIPAddress(this.mwdUser.MWDUser.user.username)
-                ? RW_SHARED_IP_ADVICE
+                ? RedWarnWikiConfiguration.c.warnings.ipAdvice
                 : ""
         }`;
     }

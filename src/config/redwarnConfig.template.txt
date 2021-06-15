@@ -8,10 +8,10 @@
  * compromise your account and will be reverted as soon as any configuration
  * value changes.
  *
- * !!!!!!!!!
- * Do not edit below this script unless you understand the risks!
- * !!!!!!!!!
-*/
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * !Do not edit below this script unless you understand the risks!
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ */
 // --nowikiOpen
 window.rw = window.rw || {}, window.rw.config = --configuration;
 // --nowikiClose

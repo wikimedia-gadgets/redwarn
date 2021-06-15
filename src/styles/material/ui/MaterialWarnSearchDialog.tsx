@@ -15,13 +15,7 @@ import MaterialDialog, {
 } from "./MaterialDialog";
 
 import "../css/warnDialog.css";
-import {
-    Warning,
-    WarningCategory,
-    WarningCategoryNames,
-    Warnings,
-    WarningsByCategory,
-} from "rww/mediawiki";
+import { Warning, WarningManager } from "rww/mediawiki";
 import MaterialTextInput, {
     MaterialTextInputUpgrade,
 } from "rww/styles/material/ui/components/MaterialTextInput";
@@ -108,19 +102,17 @@ function MaterialWarnSearchDialogWarnings(props: {
     dialog: MaterialWarnSearchDialog;
 }): JSX.Element {
     const warningElements: JSX.Element[] = [];
+    const warningCategories = WarningManager.warningCategoriesMap;
 
-    for (const [category, warnings] of Object.entries(WarningsByCategory)) {
+    for (const [category, warnings] of Object.entries(
+        WarningManager.warningsByCategories
+    )) {
         const categoryHeader = (
-            <div class="rw-warningCategory" data-rw-warningCategory={category}>
-                {
-                    WarningCategoryNames[
-                        // `category` is a string in this context, which is incompatible
-                        // with `WarningCategoryNames`' index type (`WarningCategory`).
-                        // Since `category` will always be a `WarningCategory` anyways,
-                        // we can just assert the type.
-                        (category as unknown) as WarningCategory
-                    ]
-                }
+            <div
+                class="rw-warningCategory"
+                data-rw-warningCategory={warningCategories[category].id}
+            >
+                {warningCategories[category].label}
             </div>
         );
         warningElements.push(categoryHeader);
@@ -287,7 +279,7 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
         for (const handler of this.events["select"]) {
             if (!(handler(event) ?? true)) break;
         }
-        this.selectedWarning = Warnings[event.warningId];
+        this.selectedWarning = WarningManager.warnings[event.warningId];
 
         const oldActions = this.actions;
 
@@ -373,7 +365,8 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
                                 this.performChange(event);
                             },
                             onSubmit: (warningId) => {
-                                this.selectedWarning = Warnings[warningId];
+                                this.selectedWarning =
+                                    WarningManager.warnings[warningId];
                                 this.dialog.close("submit");
                             },
                         }}

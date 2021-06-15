@@ -1,7 +1,6 @@
-import { Warnings } from "rww/mediawiki/Warnings";
-import { RevertContext } from "./RevertContext";
-import { Page } from "rww/mediawiki";
 import i18next from "i18next";
+import type { RevertContext } from "rww/mediawiki/Revert";
+import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
 
 /**
  * An action with a predefined revert summary.
@@ -15,7 +14,7 @@ interface ActionRevert {
     /**
      * The index of the warning in the list of warnings.
      */
-    ruleIndex?: keyof Warnings;
+    warning: string;
 }
 
 /**
@@ -41,7 +40,8 @@ interface ActionCustom {
     action: (revertContext: RevertContext) => any;
 }
 
-type RevertAction = ActionCustom | ActionRevert | ActionPromptedRevert;
+export type RevertAction = ActionCustom | ActionRevert | ActionPromptedRevert;
+export type SerializableRevertAction = ActionRevert | ActionPromptedRevert;
 
 interface RevertActionBase {
     /**
@@ -55,6 +55,8 @@ interface RevertActionBase {
 }
 
 export type RevertOption = RevertActionBase & RevertAction;
+export type SerializableRevertOption = RevertActionBase &
+    SerializableRevertAction;
 
 export const RequiredRevertOptions: RevertOption[] = [
     {
@@ -74,7 +76,7 @@ export const RequiredRevertOptions: RevertOption[] = [
         name: i18next.t("revert:preview.name"),
         action: (rollbackContext: RevertContext) => () => {
             // TODO: dev-rwTS-difficons
-            // Rollback.preview(rollbackContext);
+            // Revert.preview(rollbackContext);
         },
     },
     {
@@ -97,47 +99,11 @@ export const RequiredRevertOptions: RevertOption[] = [
 ];
 
 export default class RevertOptions {
-    public static readonly requiredOptions = RequiredRevertOptions;
-    public static loadedOptions: RevertOption[];
-
-    /**
-     * Initialize these revert options.
-     *
-     * @param optionsData
-     */
-    public static async initialize(optionsData?: string): Promise<void> {
-        if (!optionsData) {
-            try {
-                RevertOptions.loadedOptions = JSON.parse(
-                    (
-                        await Page.fromTitle(
-                            "Project:RedWarn/Default Rollback Options"
-                        ).getLatestRevision()
-                    ).content
-                ) as RevertOption[];
-            } catch (e) {
-                try {
-                    RevertOptions.loadedOptions = await fetch(
-                        ((): string => {
-                            const url = new URL(
-                                "//en.wikipedia.org/w/index.php"
-                            );
-
-                            url.searchParams.set(
-                                "title",
-                                "Wikipedia:RedWarn/Default Rollback Options"
-                            );
-                            url.searchParams.set("action", "raw");
-                            url.searchParams.set("ctype", "application/json");
-
-                            return url.toString();
-                        })()
-                    ).then((req) => req.json());
-                } catch (e) {
-                    // TODO: Proper errors
-                    throw new Error("Failed to initialize revert options.");
-                }
-            }
-        }
+    public static readonly required = RequiredRevertOptions;
+    public static get loaded(): RevertOption[] {
+        return RedWarnWikiConfiguration.c.revertOptions;
+    }
+    public static get all(): RevertOption[] {
+        return [...this.required, ...this.loaded];
     }
 }

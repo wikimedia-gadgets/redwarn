@@ -1,4 +1,4 @@
-// import { Page, Revision, Rollback } from "rww/mediawiki";
+// import { Page, Revision, Revert } from "rww/mediawiki";
 // import {
 //     RevertOption,
 //     RollbackOptions,
@@ -8,8 +8,8 @@
 // import { MDCLinearProgress } from "@material/linear-progress";
 // import {
 //     RevertDoneOption,
-//     RollbackDoneOptions,
-// } from "rww/definitions/RollbackDoneOptions";
+//     RevertDoneOptions,
+// } from "rww/definitions/RevertDoneOptions";
 // import { BaseProps, h } from "tsx-dom";
 // import { Warnings } from "rww/mediawiki/Warnings";
 // import { RWUISelectionDialogItem } from "../elements/RWUIDialog";
@@ -30,10 +30,10 @@
 //     } else {
 //         if (!option.promptReason) {
 //             clickHandler = () =>
-//                 Rollback.rollback(context, option.summary, option.ruleIndex);
+//                 Revert.rollback(context, option.summary, option.ruleIndex);
 //         } else {
 //             clickHandler = () =>
-//                 Rollback.promptRollbackReason(context, option.summary);
+//                 Revert.promptRollbackReason(context, option.summary);
 //         }
 //     }
 //
@@ -46,7 +46,7 @@
 //      * will trigger.
 //      */
 //     static async init(): Promise<void> {
-//         if (Rollback.isDiffPage()) {
+//         if (Revert.isDiffPage()) {
 //             Log.debug("Diff page detected!");
 //             await DiffViewerInjector.loadOptions(await this.getContext());
 //         }
@@ -57,13 +57,13 @@
 //      */
 //     static async getContext(): Promise<RevertContext> {
 //         const targetRevision: Revision = Revision.fromID(
-//             Rollback.getNewerRevisionId(),
+//             Revert.getNewerRevisionId(),
 //             {
 //                 page: Page.fromTitle(mw.config.get("wgRelevantPageName")),
 //             }
 //         );
 //         const sourceRevision: Revision = Revision.fromID(
-//             Rollback.getOlderRevisionId(),
+//             Revert.getOlderRevisionId(),
 //             {
 //                 page: Page.fromTitle(mw.config.get("wgRelevantPageName")),
 //             }
@@ -180,8 +180,8 @@
 //             context.progressBar.progress = 0;
 //             context.progressBar.buffer = 0;
 //
-//             const rollbackDoneOptions = (
-//                 <span id="rwRollbackDoneOptions" style="display:none;">
+//             const RevertDoneOptions = (
+//                 <span id="rwRevertDoneOptions" style="display:none;">
 //                     <div style="height:5px" />
 //                     <span style="font-family: Roboto;font-size: 16px;display: inline-flex;vertical-align: middle;">
 //                         <span
@@ -197,7 +197,7 @@
 //                 </span>
 //             );
 //
-//             Object.entries(RollbackDoneOptions).forEach(([id, option]) => {
+//             Object.entries(RevertDoneOptions).forEach(([id, option]) => {
 //                 const button = (
 //                     <button
 //                         class="mdc-icon-button material-icons"
@@ -224,7 +224,7 @@
 //                 );
 //                 toInit.push({ el: tooltip, component: MDCTooltip });
 //
-//                 $(rollbackDoneOptions).append(button, tooltip, "&nbsp;");
+//                 $(RevertDoneOptions).append(button, tooltip, "&nbsp;");
 //             });
 //
 //             currentRevisionOptions = (
@@ -241,7 +241,7 @@
 //                         <div style="height:5px" />
 //                         {/* <!-- spacer --> */}
 //                     </span>
-//                     {rollbackDoneOptions}
+//                     {RevertDoneOptions}
 //                 </div>
 //             );
 //         }
@@ -318,7 +318,7 @@
 //         return icons;
 //     }
 //
-//     static showRollbackDoneOptions(
+//     static showRevertDoneOptions(
 //         context: RevertContext,
 //         un: string,
 //         warnIndex: keyof Warnings
@@ -336,7 +336,7 @@
 //
 //         // Add click handlers
 //
-//         Object.entries(RollbackDoneOptions).forEach(([id, option]) => {
+//         Object.entries(RevertDoneOptions).forEach(([id, option]) => {
 //             $(`#rwRBDoneOption_${RevertDoneOption[+id]}`).on(
 //                 "click",
 //                 clickHandlerFactory(option.action)
@@ -352,7 +352,7 @@
 //         // Hides other options and shows the rollback done options and also checks for defaults, also adds click handlers
 //         $("#rwRollbackInProgress").fadeOut(() => {
 //             // fade out - looks smoother
-//             $("#rwRollbackDoneOptions").fadeIn(); //show our options
+//             $("#rwRevertDoneOptions").fadeIn(); //show our options
 //         });
 //     }
 // }
@@ -375,7 +375,7 @@
 //                     color: "purple",
 //                 }}
 //                 onClick={() => {
-//                     Rollback.promptRestoreReason(
+//                     Revert.promptRestore(
 //                         Revision.fromID(
 //                             +$(
 //                                 `#mw-diff-${

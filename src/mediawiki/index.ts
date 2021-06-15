@@ -74,7 +74,7 @@ export * from "./ClientUser";
 export * from "./Gender";
 export * from "./Page";
 export * from "./Revision";
-// export * from "./Rollback";
+// export * from "./Revert";
 export * from "./URL";
 export * from "./WarningLevel";
 export * from "./Warnings";

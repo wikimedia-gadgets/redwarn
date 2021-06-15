@@ -1,4 +1,4 @@
-// import {Rollback} from ".";
+// import {Revert} from ".";
 
 // TODO - JQUERY IS DEPRECIATED
 export class RevertSpeedup {
@@ -12,6 +12,6 @@ export class RevertSpeedup {
                 )
             )
         );
-        // Rollback.acceptInjector(i);
+        // Revert.acceptInjector(i);
     }
 }

@@ -1,4 +1,4 @@
-// import {Rollback} from "rww/mediawiki";
+// import {Revert} from "rww/mediawiki";
 // import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 
 export default class RealTimeRecentChanges {
@@ -14,7 +14,7 @@ export default class RealTimeRecentChanges {
             mw.hook("wikipage.diff").add(async (diff: JQuery) => {
                 // TODO: dev-rwTS-difficons
                 // const context = new RevertContext(
-                //     Revision.fromID(Rollback.getNewerRevisionId(), {
+                //     Revision.fromID(Revert.getNewerRevisionId(), {
                 //         page: Page.fromTitle(
                 //             diff.find("strong > a").attr("title")
                 //         ),

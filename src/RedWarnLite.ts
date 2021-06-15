@@ -2,7 +2,7 @@
  *
  * RedWarn - Recent Edits Patrol and Warning Tool
  * The user-friendly Wikipedia counter-vandalism tool.
-
+ *
  * (c) 2021 The RedWarn Development Team and contributors - ed6767wiki (at) gmail.com or [[WT:RW]]
  * Licensed under the Apache License 2.0 - read more at https://gitlab.com/redwarn/redwarn-web/
  * Other conditions may apply - please check prior to distribution
@@ -25,7 +25,7 @@ import MediaWiki, {
     MediaWikiURL,
     RevertSpeedup,
     User,
-    Warnings,
+    WarningManager,
     Watch,
 } from "./mediawiki";
 import * as RedWarnConstants from "./data/RedWarnConstants";
@@ -37,6 +37,7 @@ import UIInjectors from "rww/ui/injectors/UIInjectors";
 import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
 import Log from "rww/data/RedWarnLog";
 import RevertOptions from "rww/definitions/RevertOptions";
+import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
 
 $(document).ready(async () => {
     if (document.body.classList.contains("rw-disable")) {
@@ -86,6 +87,9 @@ $(document).ready(async () => {
     // Load style definitions first.
     await StyleManager.initialize();
 
+    // Load the on-wiki configuration file.
+    await RedWarnWikiConfiguration.loadWikiConfiguration();
+
     // Load the configuration
     await Configuration.refresh();
 
@@ -112,10 +116,7 @@ $(document).ready(async () => {
         RevertSpeedup.init();
     })();
 
-    await Promise.all([
-        RevertOptions.initialize(),
-        RedWarnHooks.executeHooks("init"),
-    ]);
+    await Promise.all([RedWarnHooks.executeHooks("init")]);
 
     /**
      * Send notice that RedWarn is done loading.
@@ -158,8 +159,8 @@ export default class RedWarn {
     static get MediaWikiAPI(): typeof MediaWikiAPI {
         return MediaWikiAPI;
     }
-    // static get Rollback(): typeof Rollback {
-    //     return Rollback;
+    // static get Revert(): typeof Revert {
+    //     return Revert;
     // }
     static get StyleManager(): typeof StyleManager {
         return StyleManager;
@@ -179,8 +180,8 @@ export default class RedWarn {
     static get User(): typeof User {
         return User;
     }
-    static get Warnings(): typeof Warnings {
-        return Warnings;
+    static get WarningManager(): typeof WarningManager {
+        return WarningManager;
     }
     static get Dependencies(): typeof Dependencies {
         return Dependencies;

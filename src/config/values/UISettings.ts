@@ -8,7 +8,7 @@ import i18next from "i18next";
 
 const UISettings = {
     /** Notice template order */
-    noticeOrder: new Setting("noticeOrder", false, {
+    noticeOrder: new Setting<"title" | "template">("noticeOrder", "title", {
         uiInputType: UIInputType.Radio,
 
         title: i18next.t("prefs:ui.noticeOrder.title"),
@@ -17,17 +17,17 @@ const UISettings = {
         validOptions: [
             {
                 name: i18next.t("prefs:ui.noticeOrder.options.title"),
-                value: false,
+                value: "title",
             },
             {
                 name: i18next.t("prefs:ui.noticeOrder.options.template"),
-                value: true,
+                value: "template",
             },
         ],
     }),
 
     /** UI style */
-    style: new Setting("style", DefaultRedWarnStyle),
+    style: new Setting<string>("style", DefaultRedWarnStyle),
 
     /** Array of viewed campaigns */
     campaigns: new Setting<string[]>("campaigns", []),

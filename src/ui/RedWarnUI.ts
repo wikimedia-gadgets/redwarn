@@ -7,7 +7,6 @@ import {
     RWUISelectionDialog,
     RWUIWarnDialog,
 } from "./elements/RWUIDialog";
-// import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 import { RWUIToast } from "./elements/RWUIToast";
 import { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
 import { RevertContext } from "rww/mediawiki/Revert";

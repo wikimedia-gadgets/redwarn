@@ -43,7 +43,7 @@ const RevertSettings = {
     }),
 
     /** Method of revert */
-    revertMethod: new Setting("revertMethod", RevertMethod.Undo, {
+    revertMethod: new Setting<RevertMethod>("revertMethod", RevertMethod.Undo, {
         title: i18next.t("prefs:revert.revertMethod.title"),
         description: i18next.t("prefs:revert.revertMethod.description"),
         uiInputType: UIInputType.Radio,
@@ -60,7 +60,7 @@ const RevertSettings = {
     }),
 
     /** Whether or not to redirect to the latest revision if one was found. */
-    redirectIfNotLatest: new Setting("redirectIfNotLatest", false, {
+    redirectIfNotLatest: new Setting<boolean>("redirectIfNotLatest", false, {
         title: i18next.t("prefs:revert.redirectIfNotLatest.title"),
         description: i18next.t("prefs:revert.redirectIfNotLatest.description"),
         uiInputType: UIInputType.Switch,
@@ -70,7 +70,7 @@ const RevertSettings = {
      * Whether or not to ignore the latest revision if it was made by the same
      * user and has no intermediate edits.
      */
-    ignoreSameUserLatest: new Setting("ignoreSameUserLatest", true, {
+    ignoreSameUserLatest: new Setting<boolean>("ignoreSameUserLatest", true, {
         title: i18next.t("prefs:revert.ignoreSameUserLatest.title"),
         description: i18next.t("prefs:revert.ignoreSameUserLatest.description"),
         uiInputType: UIInputType.Switch,

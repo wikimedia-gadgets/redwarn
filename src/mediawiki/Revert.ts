@@ -13,6 +13,7 @@ import {
     MediaWikiURL,
     Page,
     Revision,
+    Warning,
 } from "rww/mediawiki";
 import { Configuration, RevertMethod } from "rww/config";
 import Log from "rww/data/RedWarnLog";
@@ -21,9 +22,12 @@ import type { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
 import { RevertOption } from "rww/definitions/RevertOptions";
 
 /**
- * The context of a revert being performed.
+ * The context of a revert being performed. When used alone (not through
+ * {@link RevertContext}, this represents the context for a revert in-progress,
+ * that is, a revert that is yet to be performed; wherein the user has not yet
+ * decided on a revert reason.
  */
-export interface RevertContext {
+export interface RevertContextBase {
     /**
      * The revision on the left side of a diff page.
      */
@@ -36,14 +40,49 @@ export interface RevertContext {
      * The latest revision of this page.
      */
     latestRevision?: Revision;
+}
+
+/**
+ * The context of a revert being performed, given that this revert is
+ * entirely headless and does not update any graphics.
+ */
+interface HeadlessRevertContext extends RevertContextBase {
     /**
-     * If this revert isn't headless, the diff icons.
+     * The automatic reason for this revert.
      */
-    diffIcons?: RWUIDiffIcons;
+    prefilledReason: string;
     /**
-     * If this revert isn't headless, the selected revert option.
+     * The warning associated with this revert.
      */
-    revertOption?: RevertOption;
+    warning?: Warning;
+}
+
+/**
+ * The context of a revert being performed, given that this revert was
+ * triggered by a {@link RWUIDiffIcons} component.
+ */
+interface DiffIconRevertContext extends RevertContextBase {
+    /**
+     * The {@link RWUIDiffIcons} element for this revert.
+     */
+    diffIcons: RWUIDiffIcons;
+    /**
+     * The selected revert option, or the reason for the revert.
+     */
+    reason: RevertOption | string;
+}
+
+export type RevertContext = DiffIconRevertContext | HeadlessRevertContext;
+
+export function isHeadlessRevertContext(
+    context: RevertContext
+): context is HeadlessRevertContext {
+    return (context as Record<string, any>)["prefilledReason"] !== null;
+}
+export function isDiffIconContext(
+    context: RevertContext
+): context is DiffIconRevertContext {
+    return (context as Record<string, any>)["reason"] !== null;
 }
 
 /**
@@ -54,11 +93,11 @@ export enum RevertStage {
     Preparing,
     /**
      * Collecting details about the revision to revert to.
-     * This is entirely skipped if rollback was used.
      */
     Details,
     /**
-     * The revert is being made.
+     * The revert is being made. Once within the revert stage, cancelling
+     * the revert is impossible.
      */
     Revert,
     /**
@@ -72,6 +111,11 @@ export enum RevertStage {
  * called "reverts".
  */
 export class Revert {
+    static revertCancelled = false;
+    static readonly revertCancelListener = (event: KeyboardEvent) => {
+        if (event.key === "Escape") Revert.revertCancelled = true;
+    };
+
     /**
      * Determines whether the given page is a diff page, and whether or not it
      * displays a single revision (if that revision is the only page revision) or
@@ -145,49 +189,6 @@ export class Revert {
     }
 
     /**
-     * Grab the newer revision ID. This also handles situations where the diff
-     * view is reversed.
-     *
-     * @private
-     * @param newer Whether or not to get the newer revision of the two.
-     * @returns The newer revision if the `newer` parameter is `true` (default).
-     *          `null` if the page is not a valid diff page.
-     */
-    private static getRevisionId(newer = true): number {
-        const oldId = mw.config.get("wgDiffOldId");
-        const newId = mw.config.get("wgDiffNewId");
-
-        if (!newId && !!oldId) {
-            return oldId;
-        } else if ((!!newId && !oldId) || oldId === false) {
-            return newId;
-        } else if (newId != null && oldId != null) {
-            return (newId > oldId && newer) || (newId < oldId && !newer)
-                ? newId
-                : oldId;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Grab the newer revision ID from the diff view. This also handles situations
-     * where the diff view is reversed.
-     *
-     * @returns The newer revision. `null` if the page is not a valid diff page.
-     */
-    static getNewerRevisionId: typeof Revert.getRevisionId = () =>
-        Revert.getRevisionId();
-    /**
-     * Grab the older revision ID from the diff view. This also handles situations
-     * where the diff view is reversed.
-     *
-     * @returns The older revision. `null` if the page is not a valid diff page.
-     */
-    static getOlderRevisionId: typeof Revert.getRevisionId = () =>
-        Revert.getRevisionId(false);
-
-    /**
      * Checks whether or not the target revision is the latest revision.
      *
      * @param targetRevision The revision to redirect to.
@@ -237,7 +238,7 @@ export class Revert {
      * to the user.
      * @param targetRevision The revision that will be rolled back to.
      */
-    static async preview({ newRevision }: RevertContext): Promise<void> {
+    static async preview({ newRevision }: RevertContextBase): Promise<void> {
         // TODO dialog
         //rw.ui.loadDialog.show("Loading preview...");
         // Check if latest, else redirect
@@ -246,7 +247,10 @@ export class Revert {
             newRevision
         );
 
-        // Same page, so let's just use the latestRevision. Higher chance of being populated than newRevision.
+        // Cancel if no longer the latest revision.
+        if (latestRevision) return;
+
+        // Same page, so use the latestRevision. Higher chance of being populated than newRevision.
         const { revisionID } = await Page.fromID(
             latestRevision.page.pageID
         ).getLatestRevisionNotByUser(newRevision.user.username);
@@ -267,19 +271,36 @@ export class Revert {
      * given page to the target revision with that reason.
      * @param context The revert context.
      * @param defaultReason The default reason to use.
+     * @returns reason The rollback reason.
      */
     static async promptRollbackReason(
-        context: RevertContext,
+        context: RevertContextBase,
         defaultReason: string
-    ): Promise<void> {
+    ): Promise<string> {
         await Revert.latestRevertTargetCheck(context.newRevision);
         const dialog = new RedWarnUI.InputDialog({
             width: "40vw",
             ...i18next.t("ui:rollback"),
             defaultText: defaultReason,
         });
-        const reason = await dialog.show();
-        if (reason != null) return Revert.revert(context, reason);
+        return await dialog.show();
+
+        // TODO: Move this to the RevertOption native
+        // if (reason != null) return Revert.revert(context);
+    }
+
+    /**
+     * Get the reason of a revert using the context.
+     * @param context
+     */
+    static extractReasonFromContext(context: RevertContext): string {
+        if (isHeadlessRevertContext(context)) {
+            return context.prefilledReason;
+        } else if (isDiffIconContext(context)) {
+            return typeof context.reason === "string"
+                ? context.reason
+                : context.reason.name;
+        } else throw new Error("No reason was given for a revert.");
     }
 
     /**
@@ -289,13 +310,10 @@ export class Revert {
      * - Performs the revert
      *
      * @param context The context for this revert.
-     * @param reason The reason for this revert.
      */
-    static async pseudoRollback(
-        context: RevertContext,
-        reason: string
-    ): Promise<void> {
-        const { diffIcons, newRevision } = context;
+    static async pseudoRollback(context: RevertContext): Promise<void> {
+        const { newRevision } = context;
+        const diffIcons = isDiffIconContext(context) ? context.diffIcons : null;
 
         // Get target revision information.
         if (!newRevision.isPopulated()) newRevision.populate();
@@ -327,9 +345,14 @@ export class Revert {
             targetRevisionId: latestCleanRevision.revisionID,
             targetRevisionEditor: latestCleanRevision.user.username,
             version: RW_VERSION_TAG,
-            reason,
+            reason: Revert.extractReasonFromContext(context),
         });
 
+        if (Revert.revertCancelled) {
+            // Revert cancelled. Escape immediately!
+            if (diffIcons) diffIcons.onEndRevert(true);
+            return;
+        }
         if (diffIcons) diffIcons.onRevertStageChange(RevertStage.Revert);
         const res = await MediaWikiAPI.postWithEditToken({
             action: "edit",
@@ -362,22 +385,26 @@ export class Revert {
      * - Uses rollback to immediately revert all edits to the last one not by the target user.
      *
      * @param context The context for this revert.
-     * @param reason The reason for this revert.
      */
-    static async rollback(
-        context: RevertContext,
-        reason: string
-    ): Promise<void> {
-        const { diffIcons, newRevision } = context;
+    static async rollback(context: RevertContext): Promise<void> {
+        const { newRevision } = context;
+        const diffIcons = isDiffIconContext(context) ? context.diffIcons : null;
 
+        if (diffIcons) diffIcons.onRevertStageChange(RevertStage.Details);
         // Get target revision information.
         if (!newRevision.isPopulated()) newRevision.populate();
 
         const summary = i18next.t("mediawiki:summaries.rollback", {
             username: newRevision.user.username,
-            reason,
+            reason: Revert.extractReasonFromContext(context),
             version: RW_VERSION_TAG,
         });
+
+        if (Revert.revertCancelled) {
+            // Revert cancelled. Escape immediately!
+            if (diffIcons) diffIcons.onEndRevert(true);
+            return;
+        }
 
         if (diffIcons) diffIcons.onRevertStageChange(RevertStage.Revert);
         const res = await MediaWikiAPI.api.rollback(
@@ -402,8 +429,19 @@ export class Revert {
         }
     }
 
-    static async revert(context: RevertContext, reason: string): Promise<void> {
-        const { diffIcons, newRevision } = context;
+    /**
+     * Revert an edit. This will automatically use whichever revert method the
+     * user has chosen, whether it be through rollback or pseudo-rollback.
+     *
+     * @param context
+     */
+    static async revert(context: RevertContext): Promise<void> {
+        const { newRevision } = context;
+        const diffIcons = isDiffIconContext(context) ? context.diffIcons : null;
+
+        document.addEventListener("keydown", Revert.revertCancelListener);
+        Revert.revertCancelled = false;
+
         if (diffIcons) {
             diffIcons.onStartRevert();
             diffIcons.onRevertStageChange(RevertStage.Preparing);
@@ -415,10 +453,10 @@ export class Revert {
             const revert = async (): Promise<void> => {
                 switch (Configuration.Revert.revertMethod.value) {
                     case RevertMethod.Rollback:
-                        await Revert.rollback(context, reason);
+                        await Revert.rollback(context);
                         break;
                     case RevertMethod.Undo:
-                        await Revert.pseudoRollback(context, reason);
+                        await Revert.pseudoRollback(context);
                         break;
                     case RevertMethod.Unset:
                     default:
@@ -431,9 +469,10 @@ export class Revert {
             };
             await revert();
         } else {
-            return await Revert.pseudoRollback(context, reason);
+            return await Revert.pseudoRollback(context);
         }
 
+        document.removeEventListener("keydown", Revert.revertCancelListener);
         if (diffIcons) diffIcons.onRevertStageChange(RevertStage.Finished);
     }
 

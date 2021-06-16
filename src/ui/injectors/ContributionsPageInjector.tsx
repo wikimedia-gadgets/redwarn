@@ -1,132 +1,99 @@
-// TODO: dev-rwTS-difficons
-// import {Revision} from "rww/mediawiki";
-// import {MDCTooltip} from "@material/tooltip";
-// import {h} from "tsx-dom";
-// import {RevertContext} from "rww/definitions/RevertContext";
-// import i18next from "i18next";
-//
-// export default class DiffViewerInjector {
-//     /**
-//      * Initialize the injector. If the page is a diff page, this injector
-//      * will trigger.
-//      */
-//     static async init(): Promise<void> {
-//         if (mw.config.get("wgPageName").startsWith("Special:Contributions"))
-//             DiffViewerInjector.display();
-//     }
-//
-//     static display(): void {
-//         $("span.mw-uctop").each((i, el) => {
-//             const li = $(el).closest("li");
-//
-//             const context = new RevertContext(
-//                 Revision.fromID(+li.attr("data-mw-revisionID")),
-//                 undefined,
-//                 undefined,
-//                 false
-//             );
-//
-//             const previewLink = (
-//                 <a
-//                     style="color:green;cursor:pointer;"
-//                     id={`rw-currentRevPrev${i}`}
-//                     onClick={() => Revert.preview(context)}
-//                     aria-describedby={`rw-currentRevPrev${i}T`}
-//                 >
-//                     {i18next.t<string>("ui:contribs.previewLink")}
-//                 </a>
-//             );
-//             const previewTooltip = (
-//                 <div
-//                     id={`rw-currentRevPrev${i}T`}
-//                     class="mdc-tooltip"
-//                     role="tooltip"
-//                     aria-hidden="true"
-//                 >
-//                     <div class="mdc-tooltip__surface">
-//                         {i18next.t<string>("ui:contribs.previewTooltip")}
-//                     </div>
-//                 </div>
-//             );
-//
-//             const vandalLink = (
-//                 <a
-//                     style="color:red;cursor:pointer;"
-//                     id={`rw-currentRevRvv${i}`}
-//                     onClick={() =>
-//                         Revert.revert(
-//                             context,
-//                             "[[WP:VANDAL|Possible vandalism]]",
-//                             "vandalism"
-//                         )
-//                     }
-//                     aria-describedby={`rw-currentRevRvv${i}T`}
-//                 >
-//                     {i18next.t<string>("ui:contribs.vandalLink")}
-//                 </a>
-//             );
-//             const vandalTooltip = (
-//                 <div
-//                     id={`rw-currentRevRvv${i}T`}
-//                     class="mdc-tooltip"
-//                     role="tooltip"
-//                     aria-hidden="true"
-//                 >
-//                     <div class="mdc-tooltip__surface">
-//                         {i18next.t<string>("ui:contribs.vandalTooltip")}{" "}
-//                     </div>
-//                 </div>
-//             );
-//
-//             const rollbackLink = (
-//                 <a
-//                     style="color:blue;cursor:pointer;"
-//                     id={`rw-currentRevRb${i}`}
-//                     onClick={() => Revert.promptRollbackReason(context, "")}
-//                     aria-describedby={`rw-currentRevRb${i}T`}
-//                 >
-//                     {i18next.t<string>("ui:contribs.rollbackLink")}
-//                 </a>
-//             );
-//             const rollbackTooltip = (
-//                 <div
-//                     id={`rw-currentRevRb${i}T`}
-//                     class="mdc-tooltip"
-//                     role="tooltip"
-//                     aria-hidden="true"
-//                 >
-//                     <div class="mdc-tooltip__surface">
-//                         {i18next.t<string>("ui:contribs.rollbackTooltip")}
-//                     </div>
-//                 </div>
-//             );
-//
-//             const wrapper = (
-//                 <span id="rw-currentRev${i}" style="cursor:default">
-//                     {/* <!-- Wrapper --> */}
-//                     <span style="font-family:Roboto;font-weight:400;">
-//                         &nbsp; {/* <!-- Styling container --> */}
-//                         {previewLink}&nbsp;
-//                         {vandalLink}&nbsp;
-//                         {rollbackLink}&nbsp;
-//                         {previewTooltip}&nbsp;
-//                         {vandalTooltip}&nbsp;
-//                         {rollbackTooltip}
-//                     </span>
-//                 </span>
-//             );
-//
-//             $(el).append(wrapper);
-//
-//             // need to initialize *after* appending to dom since mdc looks for anchor elem
-//             const mdcPreviewTooltip = new MDCTooltip(previewTooltip);
-//             mdcPreviewTooltip.initialize();
-//
-//             const mdcVandalTooltip = new MDCTooltip(vandalTooltip);
-//             mdcVandalTooltip.initialize();
-//
-//             const mdcRollbackTooltip = new MDCTooltip(rollbackTooltip);
-//             mdcRollbackTooltip.initialize();
-//         });
-//     }
-// }
+import { h } from "tsx-dom";
+import i18next from "i18next";
+import { Revert, Revision } from "rww/mediawiki";
+import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
+
+export default class ContributionsPageInjector {
+    /**
+     * Initialize the injector. If the page is a diff page, this injector
+     * will trigger.
+     */
+    static async init(): Promise<void> {
+        if (mw.config.get("wgPageName").startsWith("Special:Contributions"))
+            ContributionsPageInjector.display();
+    }
+
+    static display(): void {
+        document
+            .querySelectorAll(
+                ".mw-contributions-list > li.mw-contributions-current[data-mw-revid]"
+            )
+            .forEach((li) => {
+                const revision = Revision.fromID(
+                    +li.getAttribute("data-mw-revid")
+                );
+
+                const context = {
+                    newRevision: revision,
+                    latestRevision: revision,
+                };
+
+                const previewLink = (
+                    <a
+                        style="color: green; cursor: pointer;"
+                        onClick={() => Revert.preview(context)}
+                        data-rw-tooltip={i18next.t<string>(
+                            "ui:contribs.previewTooltip"
+                        )}
+                    >
+                        {i18next.t<string>("ui:contribs.previewLink")}
+                    </a>
+                );
+
+                const vandalLink = (
+                    <a
+                        style="color: red; cursor: pointer;"
+                        onClick={() =>
+                            Revert.revert(
+                                Object.assign(context, {
+                                    prefilledReason:
+                                        RedWarnWikiConfiguration.c.warnings
+                                            .vandalismWarning.name,
+                                })
+                            )
+                        }
+                        data-rw-tooltip={i18next.t<string>(
+                            "ui:contribs.vandalTooltip"
+                        )}
+                    >
+                        {i18next.t<string>("ui:contribs.vandalLink")}
+                    </a>
+                );
+
+                const rollbackLink = (
+                    <a
+                        style="color: blue; cursor: pointer;"
+                        onClick={async () => {
+                            Revert.revert(
+                                Object.assign(context, {
+                                    prefilledReason: await Revert.promptRollbackReason(
+                                        context,
+                                        ""
+                                    ),
+                                })
+                            );
+                        }}
+                        data-rw-tooltip={i18next.t<string>(
+                            "ui:contribs.rollbackTooltip"
+                        )}
+                    >
+                        {i18next.t<string>("ui:contribs.rollbackLink")}
+                    </a>
+                );
+
+                const wrapper = (
+                    <span id="rw-currentRev${i}" style="cursor:default">
+                        {/* <!-- Wrapper --> */}
+                        <span style="font-family:Roboto;font-weight:400;">
+                            &nbsp; {/* <!-- Styling container --> */}
+                            {previewLink}&nbsp;
+                            {vandalLink}&nbsp;
+                            {rollbackLink}&nbsp;
+                        </span>
+                    </span>
+                );
+
+                li.querySelector(".mw-uctop").appendChild(wrapper);
+            });
+    }
+}

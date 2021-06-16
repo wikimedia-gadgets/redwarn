@@ -24,6 +24,7 @@ interface RawWikiConfiguration {
     };
     warnings: {
         ipAdvice: string | null;
+        vandalismWarning: string;
         signatures: Record<Exclude<WarningLevel, 0>, WarningLevelSignature[]>;
         categories: SerializedWarningCategories;
         warnings: Record<string, SerializedWarning>;
@@ -40,6 +41,7 @@ interface WikiConfiguration {
     };
     warnings: {
         ipAdvice?: string | null;
+        vandalismWarning: Warning;
         signatures: Record<Exclude<WarningLevel, 0>, WarningLevelSignature[]>;
         categories: WarningCategory[];
         warnings: Record<string, Warning>;
@@ -193,6 +195,7 @@ export default class RedWarnWikiConfiguration {
             meta: config.meta,
             warnings: {
                 ipAdvice: config.warnings.ipAdvice,
+                vandalismWarning: warnings[config.warnings.vandalismWarning],
                 signatures: config.warnings.signatures,
                 categories: categories,
                 warnings: warnings,

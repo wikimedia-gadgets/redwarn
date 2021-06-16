@@ -2,6 +2,7 @@ import { h } from "tsx-dom";
 import i18next from "i18next";
 import { Revert, Revision } from "rww/mediawiki";
 import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
+import Log from "rww/data/RedWarnLog";
 
 export default class ContributionsPageInjector {
     /**
@@ -14,6 +15,7 @@ export default class ContributionsPageInjector {
     }
 
     static display(): void {
+        Log.info("Loading contributions page buttons...");
         document
             .querySelectorAll(
                 ".mw-contributions-list > li.mw-contributions-current[data-mw-revid]"
@@ -82,14 +84,11 @@ export default class ContributionsPageInjector {
                 );
 
                 const wrapper = (
-                    <span id="rw-currentRev${i}" style="cursor:default">
-                        {/* <!-- Wrapper --> */}
-                        <span style="font-family:Roboto;font-weight:400;">
-                            &nbsp; {/* <!-- Styling container --> */}
-                            {previewLink}&nbsp;
-                            {vandalLink}&nbsp;
-                            {rollbackLink}&nbsp;
-                        </span>
+                    <span style="cursor: default; font-family: Roboto; font-weight: 400;">
+                        &nbsp;
+                        {previewLink}&nbsp;
+                        {vandalLink}&nbsp;
+                        {rollbackLink}
                     </span>
                 );
 

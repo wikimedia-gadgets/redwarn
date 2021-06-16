@@ -18,7 +18,8 @@ interface LogEntry {
 
 export default class Log {
     static logs: LogEntry[] = [];
-    static logLevel = LogLevel.Warn;
+    static logLevel =
+        process.env.NODE_ENV === "production" ? LogLevel.Warn : LogLevel.Trace;
 
     private static log(level: LogLevel, message: string, ...data: any[]) {
         if (level >= Log.logLevel)

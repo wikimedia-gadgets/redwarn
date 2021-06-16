@@ -11,7 +11,6 @@ import {
     ClientUser,
     MediaWikiAPI,
     MediaWikiURL,
-    Page,
     Revision,
     Warning,
 } from "rww/mediawiki";
@@ -202,6 +201,8 @@ export class Revert {
         redirectOnChange = true,
         ignoreSameUser = false
     ): Promise<Revision> {
+        if (targetRevision.page == null) await targetRevision.populate();
+
         const latestRevision = await targetRevision.getLatestRevision();
         if (latestRevision.revisionID !== targetRevision.revisionID) {
             if (
@@ -248,19 +249,24 @@ export class Revert {
         );
 
         // Cancel if no longer the latest revision.
-        if (latestRevision) return;
+        if (!latestRevision) return;
 
         // Same page, so use the latestRevision. Higher chance of being populated than newRevision.
-        const { revisionID } = await Page.fromID(
-            latestRevision.page.pageID
-        ).getLatestRevisionNotByUser(newRevision.user.username);
+        const targetRevision = await latestRevision.page.getLatestRevisionNotByUser(
+            latestRevision.user.username
+        );
+
+        if (targetRevision == null) {
+            // TODO: i18n
+            RedWarnUI.Toast.quickShow({
+                content: "Can't find an earlier revision to revert to.",
+            });
+            return;
+        }
 
         const url = MediaWikiURL.getDiffUrl(
-            revisionID,
-            +mw.util.getParamValue("diff"),
-            {
-                fragment: "rollbackPreview",
-            }
+            targetRevision.revisionID,
+            +mw.util.getParamValue("diff")
         );
 
         redirect(url);

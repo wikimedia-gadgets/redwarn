@@ -47,6 +47,7 @@ $(document).ready(async () => {
     }
 
     Log.info(`Starting RedWarn ${RW_VERSION}...`);
+    const startTime = Date.now();
 
     if (window.rw != null) {
         mw.notify(
@@ -122,6 +123,7 @@ $(document).ready(async () => {
      * Send notice that RedWarn is done loading.
      */
     await RedWarnHooks.executeHooks("postInit");
+    Log.debug(`Done loading (core): ${Date.now() - startTime}ms.`);
 
     // Inject all UI elements
     await RedWarnHooks.executeHooks("preUIInject");
@@ -129,6 +131,8 @@ $(document).ready(async () => {
     await UIInjectors.inject();
 
     await RedWarnHooks.executeHooks("postUIInject");
+
+    Log.debug(`Done loading (UI): ${Date.now() - startTime}ms.`);
 });
 
 /**

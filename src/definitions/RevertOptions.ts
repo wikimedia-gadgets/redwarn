@@ -1,6 +1,16 @@
 import i18next from "i18next";
 import type { RevertContext } from "rww/mediawiki/Revert";
+import { RevertContextBase } from "rww/mediawiki/Revert";
 import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
+
+export enum ActionSeverity {
+    Neutral,
+    GoodFaith,
+    Mild,
+    Moderate,
+    Severe,
+    Critical,
+}
 
 /**
  * An action with a predefined revert summary.
@@ -37,7 +47,7 @@ interface ActionCustom {
      * This action will be called to perform whatever function.
      * @param revertContext The context of this revert.
      */
-    action: (revertContext: RevertContext) => any;
+    action: (revertContext: RevertContextBase) => any;
 }
 
 export type RevertAction = ActionCustom | ActionRevert | ActionPromptedRevert;
@@ -52,9 +62,23 @@ interface RevertActionBase {
      * The name of this revert option.
      */
     name: string;
+    /**
+     * The icon for the action.
+     *
+     * TODO: Move to per-style icon map.
+     */
+    icon: string;
 }
 
 export type RevertOption = (RevertActionBase & RevertAction) & {
+    /**
+     * The ID of this action.
+     */
+    id: string;
+    /**
+     * The severity of the action.
+     */
+    severity: ActionSeverity;
     /**
      * System options are those built into RedWarn.
      * The wiki-specific configuration should not have this as true.
@@ -62,59 +86,85 @@ export type RevertOption = (RevertActionBase & RevertAction) & {
     system?: true;
 };
 export type SerializableRevertOption = RevertActionBase &
-    SerializableRevertAction;
+    SerializableRevertAction & {
+        /**
+         * The severity of the action.
+         */
+        severity: keyof typeof ActionSeverity;
+    };
 
-export const RequiredRevertOptions: RevertOption[] = [
-    {
+export const RequiredRevertOptions: Record<string, RevertOption> = {
+    revert: {
+        id: "revert",
         system: true,
         enabled: true,
-        name: i18next.t("revert:rollback.name"),
+        name: i18next.t("revert:rollbackOptions.rollback.name"),
         actionType: "promptedRevert",
+        severity: ActionSeverity.Mild,
+        icon: "replay",
     },
-    {
+    goodFaithRollback: {
+        id: "goodFaithRollback",
         system: true,
         enabled: true,
-        name: i18next.t("revert:agf.name"),
+        name: i18next.t("revert:rollbackOptions.agf.name"),
         actionType: "promptedRevert",
-        defaultSummary: i18next.t("revert:agf.summary"),
+        defaultSummary: i18next.t("revert:rollbackOptions.agf.summary"),
+        severity: ActionSeverity.GoodFaith,
+        icon: "thumb_up",
     },
-    {
+    preview: {
+        id: "preview",
         system: true,
         enabled: true,
         actionType: "custom",
-        name: i18next.t("revert:preview.name"),
+        name: i18next.t("revert:rollbackOptions.preview.name"),
         action: (rollbackContext: RevertContext) => () => {
             // TODO: dev-rwTS-difficons
             // Revert.preview(rollbackContext);
         },
+        severity: ActionSeverity.Neutral,
+        icon: "compare_arrows",
     },
-    {
+    quickTemplate: {
+        id: "quickTemplate",
         system: true,
         enabled: true,
         actionType: "custom",
-        name: i18next.t("revert:quick-template.name"),
+        name: i18next.t("revert:rollbackOptions.quick-template.name"),
         action: (rollbackContext: RevertContext) => async () => {
             // TODO for later
         },
+        severity: ActionSeverity.Neutral,
+        icon: "library_add",
     },
-    {
+    moreOptions: {
+        id: "moreOptions",
         system: true,
         enabled: true,
         actionType: "custom",
-        name: i18next.t("revert:more-options.name"),
+        name: i18next.t("revert:rollbackOptions.more-options.name"),
         action: (rollbackContext: RevertContext) => {
             // TODO: dev-rwTS-difficons
             // RedWarnUI.openExtendedOptionsDialog({ rollbackContext })
         },
+        severity: ActionSeverity.Neutral,
+        icon: "more_vert",
     },
-];
+};
 
 export default class RevertOptions {
     public static readonly required = RequiredRevertOptions;
-    public static get loaded(): RevertOption[] {
+    public static get loaded(): Record<string, RevertOption> {
         return RedWarnWikiConfiguration.c.revertOptions;
     }
-    public static get all(): RevertOption[] {
-        return [...RevertOptions.required, ...RevertOptions.loaded];
+    public static get all(): Record<string, RevertOption> {
+        return { ...RevertOptions.loaded, ...RevertOptions.required };
+    }
+    public static get allArray(): RevertOption[] {
+        return [
+            ...Object.values(RevertOptions.loaded),
+            ...Object.values(RevertOptions.required),
+        ];
     }
 }

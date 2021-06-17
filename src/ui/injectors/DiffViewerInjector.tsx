@@ -37,7 +37,7 @@ export default class DiffViewerInjector {
         if (!newRevision.isPopulated()) await newRevision.populate();
 
         return {
-            newRevision,
+            newRevision: newRevision,
             oldRevision:
                 oldRevId !== false
                     ? options?.baseContext?.oldRevision ??

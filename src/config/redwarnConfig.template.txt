@@ -1,16 +1,15 @@
 /**
  * This is your RedWarn configuration script. It is recommended that you
- * don't edit this yourself and use RedWarn's preferences instead.
+ * don't edit this yourself and use RedWarn's preferences menu instead.
  *
  * This script is run every time RedWarn loads and may be overwritten at any time.
  *
- * If somebody has asked you to add code to this page, DO NOT do so as it may
- * compromise your account and will be reverted as soon as any configuration
- * value changes.
+ * If somebody besides a RedWarn team member has asked you to add code
+ * to this page, DO NOT do so as it may compromise your account.
  *
- * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- * !Do not edit below this script unless you understand the risks!
- * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * !!! Do not edit below this script unless you understand the risks !!!
+ * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  */
 // --nowikiOpen
 window.rw = window.rw || {}, window.rw.config = --configuration;

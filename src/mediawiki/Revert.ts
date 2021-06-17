@@ -45,7 +45,7 @@ export interface RevertContextBase {
  * The context of a revert being performed, given that this revert is
  * entirely headless and does not update any graphics.
  */
-interface HeadlessRevertContext extends RevertContextBase {
+export interface HeadlessRevertContext extends RevertContextBase {
     /**
      * The automatic reason for this revert.
      */
@@ -60,7 +60,7 @@ interface HeadlessRevertContext extends RevertContextBase {
  * The context of a revert being performed, given that this revert was
  * triggered by a {@link RWUIDiffIcons} component.
  */
-interface DiffIconRevertContext extends RevertContextBase {
+export interface DiffIconRevertContext extends RevertContextBase {
     /**
      * The {@link RWUIDiffIcons} element for this revert.
      */
@@ -448,8 +448,11 @@ export class Revert {
         document.addEventListener("keydown", Revert.revertCancelListener);
         Revert.revertCancelled = false;
 
-        if (diffIcons) {
-            diffIcons.onStartRevert();
+        // The extra `isDiffIconContext` check is to satisfy the TypeScript linter,
+        // which can't tell that this was the condition used to check if `diffIcons`
+        // exists.
+        if (diffIcons && isDiffIconContext(context)) {
+            diffIcons.onStartRevert(context);
             diffIcons.onRevertStageChange(RevertStage.Preparing);
         }
 

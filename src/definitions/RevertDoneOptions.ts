@@ -1,22 +1,24 @@
-import { RevertContext } from "rww/mediawiki/Revert";
+import { DiffIconRevertContext } from "rww/mediawiki/Revert";
+import i18next from "i18next";
+import RedWarnUI from "rww/ui/RedWarnUI";
+import { User, WarningManager } from "rww/mediawiki";
 
 export enum RevertDoneOption {
     LatestRevision,
     NewMessage,
     QuickTemplate,
     WarnUser,
+    Report,
+    MoreOptions,
 }
-
-// TODO This is a style-specific file. Please transfer accordingly.
 
 export interface RollbackDoneOptionDetails {
     name: string;
+    /**
+     * TODO: Move to per-style icon map.
+     */
     icon: string;
-    action: (
-        context: RevertContext,
-        username: string,
-        warnIndex: string
-    ) => any;
+    action: (context: DiffIconRevertContext) => any;
 }
 
 export const RevertDoneOptions: Record<
@@ -24,13 +26,13 @@ export const RevertDoneOptions: Record<
     RollbackDoneOptionDetails
 > = {
     [RevertDoneOption.LatestRevision]: {
-        name: "Go to latest revision",
+        name: i18next.t("prefs:revert.revertDoneOption.options.latest"),
         icon: "watch_later",
-        action: async (context: RevertContext): Promise<void> =>
-            (await context.newRevision.page.getLatestRevision()).navigate(),
+        action: async (context): Promise<void> =>
+            context.newRevision.page.navigateToLatestRevision(),
     },
     [RevertDoneOption.NewMessage]: {
-        name: "New Message",
+        name: i18next.t("revert:rollbackDoneOptions.message"),
         icon: "send",
         action: (): void => {
             // TODO new message
@@ -38,7 +40,7 @@ export const RevertDoneOptions: Record<
         },
     },
     [RevertDoneOption.QuickTemplate]: {
-        name: "Quick Template",
+        name: i18next.t("revert:rollbackDoneOptions.template"),
         icon: "library_add",
         action: (): void => {
             // TODO quick template
@@ -46,19 +48,34 @@ export const RevertDoneOptions: Record<
         },
     },
     [RevertDoneOption.WarnUser]: {
-        name: "Warn User",
+        name: i18next.t("revert:rollbackDoneOptions.warn"),
         icon: "report",
+        action: async (context): Promise<void> => {
+            const warningOptions = await new RedWarnUI.WarnDialog({
+                targetUser: context.newRevision.user,
+                defaultWarnReason:
+                    typeof context.reason === "string"
+                        ? undefined
+                        : context.reason.actionType === "revert"
+                        ? WarningManager.warnings[context.reason.warning]
+                        : undefined,
+                relatedPage: context.newRevision.page,
+            }).show();
+            await User.warn(warningOptions);
+        },
+    },
+    [RevertDoneOption.Report]: {
+        name: i18next.t("revert:rollbackDoneOptions.report"),
+        icon: "gavel",
         action: (): void => {
-            // TODO auto warn
-            /* rw.ui.beginWarn(
-                false,
-                un,
-                mw.config.get("wgRelevantPageName"),
-                null,
-                null,
-                null,
-                warnIndex != null ? warnIndex : null
-            ) */
+            // TODO AIV
+        },
+    },
+    [RevertDoneOption.MoreOptions]: {
+        name: i18next.t("revert:rollbackDoneOptions.report"),
+        icon: "more_vert",
+        action: (): void => {
+            // TODO open prefs menu
         },
     },
 };

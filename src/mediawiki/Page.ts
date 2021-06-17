@@ -10,6 +10,7 @@ import {
 import { url as buildURL } from "rww/util";
 import redirect from "rww/util/redirect";
 import Section, { SectionContainer } from "rww/mediawiki/Section";
+import url from "rww/util/url";
 
 export interface PageEditOptions {
     /**
@@ -200,10 +201,22 @@ export class Page implements SectionContainer {
     }
 
     /**
-     * Redirects to the page.
+     * Navigate to the page.
      */
-    redirect(): void {
+    navigate(): void {
         redirect(this.url);
+    }
+
+    /**
+     * Navigate to the given revision's diff page.
+     */
+    navigateToLatestRevision(): void {
+        redirect(
+            url(RedWarnStore.wikiIndex, {
+                diff: 0,
+                title: this.title,
+            })
+        );
     }
 
     /**

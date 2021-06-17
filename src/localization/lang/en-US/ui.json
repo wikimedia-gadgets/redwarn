@@ -22,7 +22,7 @@
     "toasts": {
         "pleaseWait": "Please wait...",
         "restoreError": "Sorry, there was an error, likely an edit conflict. This edit has not been restored.",
-        "rollbackError": "Sorry, there was an error, likely an edit conflict. Your rollback has not been applied.",
+        "rollbackError": "Sorry, there was an error performing a rollback.",
         "newerRev": "A newer revision was detected. Your rollback has not been applied.",
         "userUndefined": "Sorry, the target user does not exist, cannot be found, or is hidden from the public. Your action has not been completed.",
         "watching": "Alerts Enabled - please keep this tab open.",
@@ -124,6 +124,15 @@
         },
 
         "ok": "Warn User"
+    },
+    "diff": {
+        "progress": {
+            "prepare": "Preparing...",
+            "details": "Getting revision information...",
+            "revert": "Reverting...",
+            "revert_rollback": "Rolling back...",
+            "finish": "Finished."
+        }
     },
     "close": "Close",
     "configErrorDialog": {

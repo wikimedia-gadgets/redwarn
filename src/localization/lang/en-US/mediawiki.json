@@ -11,5 +11,8 @@
         "warn_4": "Final Warning: {{reason}}",
         "warn_5": "ONLY Warning: {{reason}}"
     },
-    "ip": "Anonymous IP editor"
+    "ip": "Anonymous IP editor",
+    "error": {
+        "wikiConfigBad": "The RedWarn <a href=\"{{wikiIndex}}?title=Project:RW/C.JSON\">wiki-specific configuration</a> for this wiki is invalid. Please contact the <a href=\"{{wikiIndex}}?title=Project:RW/TEAM\">RedWarn maintainers</a> for this wiki."
+    }
 }

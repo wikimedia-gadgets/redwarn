@@ -39,6 +39,7 @@ const RevertSettings = {
                 name: i18next.t("prefs:revert.revertDoneOption.options.warn"),
                 value: RevertDoneOption.WarnUser,
             },
+            // Do not encourage automatic reporting to AIV.
         ],
     }),
 

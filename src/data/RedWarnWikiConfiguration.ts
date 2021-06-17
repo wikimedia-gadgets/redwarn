@@ -11,7 +11,11 @@ import {
     WarningLevelSignature,
     WarningManager,
 } from "rww/mediawiki";
-import type { SerializableRevertOption } from "rww/definitions/RevertOptions";
+import type {
+    RevertOption,
+    SerializableRevertOption,
+} from "rww/definitions/RevertOptions";
+import { ActionSeverity } from "rww/definitions/RevertOptions";
 import { RW_WIKI_CONFIGURATION_VERSION } from "rww/data/RedWarnConstants";
 import Log from "rww/data/RedWarnLog";
 
@@ -29,7 +33,7 @@ interface RawWikiConfiguration {
         categories: SerializedWarningCategories;
         warnings: Record<string, SerializedWarning>;
     };
-    revertOptions: SerializableRevertOption[];
+    revertOptions: Record<string, SerializableRevertOption>;
 }
 
 interface WikiConfiguration {
@@ -46,7 +50,7 @@ interface WikiConfiguration {
         categories: WarningCategory[];
         warnings: Record<string, Warning>;
     };
-    revertOptions: SerializableRevertOption[];
+    revertOptions: Record<string, RevertOption>;
 }
 
 /**
@@ -189,6 +193,20 @@ export default class RedWarnWikiConfiguration {
             }) as Warning;
         }
 
+        // Convert all SerializableRevertOptions to RevertOptions
+        const revertOptions: Record<string, RevertOption> = {};
+        for (const [id, option] of Object.entries(config.revertOptions)) {
+            revertOptions[id] = Object.assign(option, {
+                id: id,
+                severity:
+                    ActionSeverity[
+                        `${option.severity[0].toUpperCase()}${option.severity.substr(
+                            1
+                        )}` as keyof typeof ActionSeverity
+                    ],
+            });
+        }
+
         return {
             configVersion: config.configVersion,
             wiki: config.wiki,
@@ -200,7 +218,7 @@ export default class RedWarnWikiConfiguration {
                 categories: categories,
                 warnings: warnings,
             },
-            revertOptions: config.revertOptions,
+            revertOptions: revertOptions,
         };
     }
 }

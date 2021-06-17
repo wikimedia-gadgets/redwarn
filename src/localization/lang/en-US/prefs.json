@@ -12,7 +12,7 @@
             "options": {
                 "latest": "Go to the latest revision",
                 "message": "Send the user a message",
-                "template": "Select a quick template to send to the user",
+                "template": "Template the user",
                 "warn": "Warn the user"
             }
         },

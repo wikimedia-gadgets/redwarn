@@ -8,6 +8,8 @@ import {
 import redirect from "rww/util/redirect";
 import Log from "rww/data/RedWarnLog";
 import Section, { SectionContainer } from "rww/mediawiki/Section";
+import url from "rww/util/url";
+import RedWarnStore from "rww/data/RedWarnStore";
 
 /**
  * A revision is an object provided by the MediaWiki API which represents
@@ -262,6 +264,18 @@ export class Revision implements SectionContainer {
      */
     navigate(): void {
         redirect(MediaWikiURL.getDiffUrl(this.revisionID));
+    }
+
+    /**
+     * Navigate to the given revision's diff page.
+     */
+    navigateToLatestRevision(): void {
+        redirect(
+            url(RedWarnStore.wikiIndex, {
+                diff: 0,
+                title: this.page.title,
+            })
+        );
     }
 
     /**

@@ -38,6 +38,7 @@ import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
 import Log from "rww/data/RedWarnLog";
 import RevertOptions from "rww/definitions/RevertOptions";
 import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
+import MediaWikiNotificationContent from "rww/ui/MediaWikiNotificationContent";
 
 $(document).ready(async () => {
     if (document.body.classList.contains("rw-disable")) {
@@ -89,7 +90,21 @@ $(document).ready(async () => {
     await StyleManager.initialize();
 
     // Load the on-wiki configuration file.
-    await RedWarnWikiConfiguration.loadWikiConfiguration();
+    try {
+        await RedWarnWikiConfiguration.loadWikiConfiguration();
+        // Attempt to deserialize.
+        RedWarnWikiConfiguration.c;
+    } catch (e) {
+        Log.fatal("Wiki-specific configuration is broken!");
+        mw.notify(
+            MediaWikiNotificationContent(
+                i18next.t(`mediawiki:error.wikiConfigBad`, {
+                    wikiIndex: RedWarnStore.wikiIndex,
+                })
+            )
+        );
+        return;
+    }
 
     // Load the configuration
     await Configuration.refresh();

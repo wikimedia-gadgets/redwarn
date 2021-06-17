@@ -1,5 +1,28 @@
 {
-    "rollback": {
-        "name": ""
+    "rollbackOptions": {
+        "rollback": {
+            "name": "Rollback"
+        },
+        "agf": {
+            "name": "Assume good faith and rollback",
+            "summary": "Reverting [[WP:AGF|good faith]] edits"
+        },
+        "preview": {
+            "name": "Preview Rollback"
+        },
+        "quick-template": {
+            "name": "Quick Template"
+        },
+        "more-options": {
+            "name": "More options"
+        }
+    },
+    "rollbackDoneOptions": {
+        "latest": "Go to the latest revision",
+        "message": "Send this user a message",
+        "template": "Template this user",
+        "warn": "Warn this user",
+        "report": "Report this user",
+        "prefs": "Open the \"More Options\" panel"
     }
 }

@@ -16,7 +16,6 @@ import MaterialDiffIcons from "./ui/MaterialDiffIcons";
 
 import "./css/globals.css";
 import MaterialIFrameDialog from "rww/styles/material/ui/MaterialIFrameDialog";
-import { User } from "rww/mediawiki";
 
 const MaterialStyle: Style = {
     name: "material",
@@ -51,17 +50,7 @@ const MaterialStyle: Style = {
             type: "style",
             id: "mdc-styles",
             src:
-                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@10.0.0.min.css",
-            cache: {
-                delayedReload: true,
-                duration: 1209600000, // 14 days
-            },
-        },
-        {
-            type: "style",
-            id: "mdc-tooltip-styles",
-            src:
-                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@10.0.0.tooltip.min.css",
+                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@11.0.0.min.css",
             cache: {
                 delayedReload: true,
                 duration: 1209600000, // 14 days
@@ -93,11 +82,6 @@ const MaterialStyle: Style = {
 
     hooks: {
         preInit: [MaterialPreInitializationHooks],
-        postInit: [
-            () => {
-                new MaterialWarnDialog({}).show().then((res) => User.warn(res));
-            },
-        ],
     },
 };
 

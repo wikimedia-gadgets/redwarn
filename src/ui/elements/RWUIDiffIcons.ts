@@ -1,9 +1,9 @@
 import RWUIElement from "rww/ui/elements/RWUIElement";
-import { RevertContext, RevertStage, Revision } from "rww/mediawiki";
+import { DiffIconRevertContext, RevertStage, Revision } from "rww/mediawiki";
 import { BaseProps } from "tsx-dom";
 
 export type RWUIDiffIconsProperties = Pick<
-    RevertContext,
+    DiffIconRevertContext,
     "oldRevision" | "newRevision" | "latestRevision"
 >;
 
@@ -46,7 +46,7 @@ export class RWUIDiffIcons
     /**
      * Called on the start of a revert.
      */
-    onStartRevert(): void {
+    onStartRevert(context: DiffIconRevertContext): void {
         return undefined;
     }
 

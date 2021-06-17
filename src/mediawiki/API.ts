@@ -7,6 +7,7 @@ import {
     GenericMediaWikiError,
     SpecializedMediaWikiErrors,
 } from "rww/errors/MediaWikiErrors";
+import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 
@@ -100,9 +101,12 @@ export class MediaWikiAPI {
             },
         });
 
-        // Initialize the current user.
-        await ClientUser.i.init();
-        await MediaWikiAPI.loadGroupNames();
+        await Promise.all([
+            // Initialize the current user.
+            ClientUser.i.init(),
+            RedWarnWikiConfiguration.loadWikiConfiguration(),
+            MediaWikiAPI.loadGroupNames(),
+        ]);
     }
 
     static async loadGroupNames(): Promise<Map<string, Group>> {

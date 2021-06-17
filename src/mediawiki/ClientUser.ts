@@ -1,4 +1,4 @@
-import { MediaWikiAPI, Page, UserAccount } from "rww/mediawiki";
+import { Page, UserAccount } from "rww/mediawiki";
 
 interface ClientUserCache {
     groups?: string[];
@@ -43,27 +43,8 @@ export class ClientUser extends UserAccount {
 
     public async init(): Promise<void> {
         // Run all requests "parallel".
-        await Promise.all([
-            this.getGroups(),
-            new Promise<void>(async (resolve) => {
-                this.emailEnabled =
-                    (
-                        await MediaWikiAPI.get({
-                            action: "query",
-                            meta: "userinfo",
-                            uiprop: "email",
-                            format: "json",
-                        })
-                    ).query.userinfo.emailauthenticated != null;
-                resolve();
-            }),
-        ]);
+        await Promise.all([this.getGroups()]);
     }
-
-    /**
-     * Whether or not this user is able to send emails.
-     */
-    public emailEnabled: boolean;
 
     /**
      * The private cache for this ClientUser. Used to store groups.

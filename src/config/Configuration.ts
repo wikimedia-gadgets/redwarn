@@ -164,6 +164,7 @@ export class Configuration {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const template = require("./redwarnConfig.template.txt");
 
+        Log.debug("Updating configuration page...");
         await ClientUser.i.redwarnConfigPage.edit(
             Configuration.toJavascriptFile(
                 template,

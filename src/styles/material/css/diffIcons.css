@@ -1,6 +1,6 @@
 .rw-mdc-diffIcons {
     position: relative;
-    min-height: 48px;
+    min-height: 36px;
 
     font-family: "Roboto", "Arial", sans-serif;
 }
@@ -66,8 +66,8 @@
 }
 
 .rw-mdc-diffIcons-options .mdc-icon-button {
-    width: 34px;
-    height: 34px;
-    padding: 3px;
+    width: 36px;
+    height: 36px;
+    padding: 4px;
     font-size: 28px;
 }

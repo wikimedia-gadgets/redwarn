@@ -1,9 +1,5 @@
 import i18next from "i18next";
-import {
-    RW_VERSION_TAG,
-    RW_WIKIS_SPEEDUP,
-    RW_WIKIS_TAGGABLE,
-} from "rww/data/RedWarnConstants";
+import { RW_VERSION_TAG, RW_WIKIS_SPEEDUP } from "rww/data/RedWarnConstants";
 import RedWarnStore from "rww/data/RedWarnStore";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import redirect from "rww/util/redirect";
@@ -106,13 +102,23 @@ export enum RevertStage {
 }
 
 /**
+ * The current stage of a revision restore.
+ */
+export enum RestoreStage {
+    Preparing,
+    Details,
+    Restore,
+    Finished,
+}
+
+/**
  * This class handles all behavior related to undos and rollbacks: collectively
  * called "reverts".
  */
 export class Revert {
-    static revertCancelled = false;
+    static revertInProgress = false;
     static readonly revertCancelListener = (event: KeyboardEvent) => {
-        if (event.key === "Escape") Revert.revertCancelled = true;
+        if (event.key === "Escape") Revert.revertInProgress = true;
     };
 
     /**
@@ -138,12 +144,16 @@ export class Revert {
      * given page revision with that reason.
      *
      * @param targetRevision The target revision.
+     * @param diffIcons The {@link RWUIDiffIcons} that triggered this restore.
      */
-    static async promptRestore(targetRevision: Revision): Promise<void> {
+    static async promptRestore(
+        targetRevision: Revision,
+        diffIcons?: RWUIDiffIcons
+    ): Promise<void> {
         const dialog = new RedWarnUI.InputDialog(i18next.t("ui:restore"));
         const reason = await dialog.show();
         if (reason !== null) {
-            Revert.restore(targetRevision, reason);
+            Revert.restore(targetRevision, reason, diffIcons);
         }
     }
 
@@ -153,14 +163,35 @@ export class Revert {
      * content of the target revision.
      *
      * @param targetRevision The revision to restore to.
-     * @param reason The reason for restoring.
+     * @param reason The reason for restoring.,
+     * @param diffIcons The {@link RWUIDiffIcons} that triggered this restore.
      */
     static async restore(
         targetRevision: Revision,
-        reason?: string
-    ): Promise<boolean> {
+        reason?: string,
+        diffIcons?: RWUIDiffIcons
+    ): Promise<void> {
+        if (Revert.revertInProgress)
+            return RedWarnUI.Toast.quickShow({
+                // TODO i18n
+                content:
+                    "You cannot click on another icon while a revert or restore is ongoing.",
+            });
+
+        document.addEventListener("keydown", Revert.revertCancelListener);
+        Revert.revertInProgress = true;
+
+        if (diffIcons) {
+            diffIcons.onStartRestore(targetRevision);
+            diffIcons.onRestoreStageChange(RestoreStage.Preparing);
+        }
+
         if (!targetRevision.isPopulated()) targetRevision.populate();
+
+        if (diffIcons) diffIcons.onRestoreStageChange(RestoreStage.Details);
         const latestRevision = await targetRevision.page.getLatestRevision();
+
+        if (diffIcons) diffIcons.onRestoreStageChange(RestoreStage.Restore);
         const result = await MediaWikiAPI.postWithEditToken({
             action: "edit",
             pageid: targetRevision.page.pageID,
@@ -171,20 +202,23 @@ export class Revert {
             }),
             undo: latestRevision.revisionID,
             undoafter: targetRevision.revisionID,
-            tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
-                ? "RedWarn"
-                : null,
+            tags: RedWarnWikiConfiguration.c.meta.tag,
         });
 
         if (!result.edit) {
-            Log.error(result);
-            RedWarnUI.Toast.quickShow({
-                content: i18next.t("ui:toasts.pleaseWait"), // i.e. "Please wait..."
-            });
-            return false;
-        }
+            const error = MediaWikiAPI.error(result);
 
-        return true;
+            Log.error("Failed to restore revision.", error);
+            RedWarnUI.Toast.quickShow({
+                content: i18next.t("ui:toasts.restoreError"),
+            });
+            if (diffIcons) diffIcons.onRestoreFailure(error);
+        } else {
+            if (diffIcons) diffIcons.onEndRestore();
+        }
+        if (diffIcons) diffIcons.onRestoreStageChange(RestoreStage.Finished);
+
+        document.removeEventListener("keydown", Revert.revertCancelListener);
     }
 
     /**
@@ -354,7 +388,7 @@ export class Revert {
             reason: Revert.extractReasonFromContext(context),
         });
 
-        if (Revert.revertCancelled) {
+        if (!Revert.revertInProgress) {
             // Revert cancelled. Escape immediately!
             if (diffIcons) diffIcons.onEndRevert(true);
             return;
@@ -406,7 +440,7 @@ export class Revert {
             version: RW_VERSION_TAG,
         });
 
-        if (Revert.revertCancelled) {
+        if (!Revert.revertInProgress) {
             // Revert cancelled. Escape immediately!
             if (diffIcons) diffIcons.onEndRevert(true);
             return;
@@ -445,8 +479,15 @@ export class Revert {
         const { newRevision } = context;
         const diffIcons = isDiffIconContext(context) ? context.diffIcons : null;
 
+        if (Revert.revertInProgress)
+            return RedWarnUI.Toast.quickShow({
+                // TODO i18n
+                content:
+                    "You cannot click on another icon while a revert or restore is ongoing.",
+            });
+
         document.addEventListener("keydown", Revert.revertCancelListener);
-        Revert.revertCancelled = false;
+        Revert.revertInProgress = true;
 
         // The extra `isDiffIconContext` check is to satisfy the TypeScript linter,
         // which can't tell that this was the condition used to check if `diffIcons`
@@ -458,27 +499,34 @@ export class Revert {
 
         await Revert.latestRevertTargetCheck(newRevision);
 
-        if (ClientUser.i.inGroup("rollbacker")) {
-            const revert = async (): Promise<void> => {
-                switch (Configuration.Revert.revertMethod.value) {
-                    case RevertMethod.Rollback:
-                        await Revert.rollback(context);
-                        break;
-                    case RevertMethod.Undo:
-                        await Revert.pseudoRollback(context);
-                        break;
-                    case RevertMethod.Unset:
-                    default:
-                        Log.error(
-                            `RollbackMethod is invalid (${Configuration.Revert.revertMethod.value}), resetting`
-                        );
-                        await Revert.requestRevertMethod();
-                        await revert();
-                }
-            };
-            await revert();
-        } else {
-            return await Revert.pseudoRollback(context);
+        try {
+            if (ClientUser.i.inGroup("rollbacker")) {
+                const revert = async (): Promise<void> => {
+                    switch (Configuration.Revert.revertMethod.value) {
+                        case RevertMethod.Rollback:
+                            await Revert.rollback(context);
+                            break;
+                        case RevertMethod.Undo:
+                            await Revert.pseudoRollback(context);
+                            break;
+                        case RevertMethod.Unset:
+                        default:
+                            Log.error(
+                                `RollbackMethod is invalid (${Configuration.Revert.revertMethod.value}), resetting`
+                            );
+                            await Revert.requestRevertMethod();
+                            await revert();
+                    }
+                };
+                await revert();
+            } else {
+                return await Revert.pseudoRollback(context);
+            }
+        } catch (e) {
+            Log.error("Failed to revert.", e);
+            RedWarnUI.Toast.quickShow({
+                content: i18next.t("ui:toasts.rollbackError"),
+            });
         }
 
         document.removeEventListener("keydown", Revert.revertCancelListener);

@@ -5,6 +5,7 @@ import {
 } from "rww/ui/elements/RWUIDiffIcons";
 import {
     DiffIconRevertContext,
+    RestoreStage,
     Revert,
     RevertContextBase,
     RevertStage,
@@ -16,37 +17,48 @@ import RevertOptions, {
 import { MDCLinearProgress } from "@material/linear-progress/component";
 
 import "../css/diffIcons.css";
-import RedWarnUI from "rww/ui/RedWarnUI";
 import i18next from "i18next";
 import { Configuration, RevertMethod } from "rww/config";
 import { RevertDoneOptions } from "rww/definitions/RevertDoneOptions";
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
 
 function getRollbackOptionClickHandler(
-    context: RevertContextBase & { diffIcons: RWUIDiffIcons },
+    diffIcons: MaterialDiffIcons,
     option: RevertOption
 ): () => void {
+    const context = diffIcons.context;
     switch (option.actionType) {
         case "custom":
             return () => option.action(context);
         case "revert":
-            return () =>
+            return () => {
+                diffIcons.selectedReason = option;
                 Revert.revert(
                     Object.assign(context, {
                         reason: option,
                     }) as DiffIconRevertContext
                 );
+            };
         case "promptedRevert":
             return () =>
-                Revert.promptRollbackReason(context, option.defaultSummary);
+                Revert.promptRestore(
+                    context.side === "new"
+                        ? context.newRevision
+                        : context.oldRevision,
+                    context.diffIcons
+                );
     }
 }
 
-const MaterialRevertProgress: Record<RevertStage, number> = {
+const MaterialRevertProgress: Record<RevertStage | RestoreStage, number> = {
     [RevertStage.Preparing]: 0,
+    [RestoreStage.Preparing]: 0,
     [RevertStage.Details]: 1 / 3,
+    [RestoreStage.Details]: 1 / 3,
     [RevertStage.Revert]: 2 / 3,
+    [RestoreStage.Restore]: 2 / 3,
     [RevertStage.Finished]: 1,
+    [RestoreStage.Finished]: 1,
 };
 
 const MaterialActionSeverityColors: Record<ActionSeverity, string> = {
@@ -59,7 +71,22 @@ const MaterialActionSeverityColors: Record<ActionSeverity, string> = {
 };
 
 export default class MaterialDiffIcons extends RWUIDiffIcons {
-    context: DiffIconRevertContext;
+    _context: RevertContextBase &
+        Partial<DiffIconRevertContext> & {
+            diffIcons: RWUIDiffIcons;
+            side: "new" | "old";
+        };
+    get context(): MaterialDiffIcons["_context"] {
+        this._context = {
+            latestRevision: this.latestRevision,
+            newRevision: this.newRevision,
+            oldRevision: this.oldRevision,
+            side: this.side,
+            diffIcons: this,
+        };
+        return this._context;
+    }
+
     progressBar: {
         element: JSX.Element;
         progress: MDCLinearProgress;
@@ -67,9 +94,40 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
         progressLabel: JSX.Element;
     };
 
+    selectedReason: RevertOption;
+    readonly latestIcons;
+
     constructor(props: RWUIDiffIconsProperties & BaseProps) {
         super(props);
         Object.assign(this, props);
+        if (
+            props.latestRevision.revisionID ===
+            (props.side === "new"
+                ? props.newRevision.revisionID
+                : props.oldRevision.revisionID)
+        ) {
+            this.latestIcons = true;
+        }
+    }
+
+    renderRestoreIcon(): JSX.Element {
+        return (
+            <div class={"rw-mdc-diffIcons-options"}>
+                <MaterialIconButton
+                    label={"Restore this revision"}
+                    icon={"history"}
+                    iconColor={"purple"}
+                    onClick={() => {
+                        Revert.promptRestore(
+                            this.side === "new"
+                                ? this.newRevision
+                                : this.oldRevision,
+                            this
+                        );
+                    }}
+                />
+            </div>
+        );
     }
 
     renderRevertIcons(): JSX.Element {
@@ -135,14 +193,21 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
         const options: JSX.Element[] = [];
 
         for (const option of Object.values(RevertDoneOptions)) {
-            options.push(
-                <MaterialIconButton
-                    label={option.name}
-                    icon={option.icon}
-                    iconColor={"black"}
-                    onClick={() => option.action(this.context)}
-                />
-            );
+            if (this.latestIcons || (!this.latestIcons && option.showOnRestore))
+                options.push(
+                    <MaterialIconButton
+                        label={option.name}
+                        icon={option.icon}
+                        iconColor={"black"}
+                        onClick={() =>
+                            option.action(
+                                Object.assign(this.context, {
+                                    reason: this.selectedReason,
+                                })
+                            )
+                        }
+                    />
+                );
         }
 
         return <div class={"rw-mdc-diffIcons-doneOptions"}>{options}</div>;
@@ -151,24 +216,19 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
     render(): JSX.Element {
         this.self = (
             <div class={"rw-mdc-diffIcons"}>
-                {this.renderRevertIcons()}
+                {this.latestIcons
+                    ? this.renderRevertIcons()
+                    : this.renderRestoreIcon()}
                 {this.renderProgressBar()}
                 {this.renderRevertDoneOptions()}
             </div>
         );
 
         this.self.querySelectorAll("[data-rw-revert-option]").forEach((v) => {
-            const context = {
-                latestRevision: this.latestRevision,
-                newRevision: this.newRevision,
-                oldRevision: this.oldRevision,
-                diffIcons: this,
-            };
-
             v.addEventListener(
                 "click",
                 getRollbackOptionClickHandler(
-                    context,
+                    this,
                     RevertOptions.all[v.getAttribute("data-rw-revert-option")]
                 )
             );
@@ -178,7 +238,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
     }
 
     onStartRevert(context: DiffIconRevertContext) {
-        this.context = context;
+        Object.assign(this.context, context);
         this.self.classList.toggle("rw-mdc-diffIcons--reverting", true);
     }
 
@@ -211,9 +271,34 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
     onRevertFailure() {
         this.self.classList.toggle("rw-mdc-diffIcons--reverting", false);
         this.self.classList.toggle("rw-mdc-diffIcons--finished", false);
+    }
 
-        RedWarnUI.Toast.quickShow({
-            content: i18next.t("ui:toasts.rollbackError"),
-        });
+    onStartRestore(): void {
+        this.self.classList.toggle("rw-mdc-diffIcons--reverting", true);
+    }
+
+    onRestoreStageChange(stage: RestoreStage): void {
+        if (this.progressBar?.progress)
+            this.progressBar.progress.progress = MaterialRevertProgress[stage];
+        if (this.progressBar?.progressLabel) {
+            const MaterialRestoreProgressLabel: Record<RestoreStage, string> = {
+                [RestoreStage.Preparing]: i18next.t("ui:diff.progress.prepare"),
+                [RestoreStage.Details]: i18next.t("ui:diff.progress.details"),
+                [RestoreStage.Restore]: i18next.t("ui:diff.progress.restore"),
+                [RestoreStage.Finished]: i18next.t("ui:diff.progress.prepare"),
+            };
+            this.progressBar.progressLabel.innerText =
+                MaterialRestoreProgressLabel[stage];
+        }
+    }
+
+    onEndRestore(): void {
+        this.self.classList.toggle("rw-mdc-diffIcons--reverting", false);
+        this.self.classList.toggle("rw-mdc-diffIcons--finished", true);
+    }
+
+    onRestoreFailure(): void {
+        this.self.classList.toggle("rw-mdc-diffIcons--reverting", false);
+        this.self.classList.toggle("rw-mdc-diffIcons--finished", false);
     }
 }

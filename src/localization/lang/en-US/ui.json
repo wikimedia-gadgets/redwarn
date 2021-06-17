@@ -131,6 +131,7 @@
             "details": "Getting revision information...",
             "revert": "Reverting...",
             "revert_rollback": "Rolling back...",
+            "restore": "Restoring revision...",
             "finish": "Finished."
         }
     },

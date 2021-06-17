@@ -1,11 +1,18 @@
 import RWUIElement from "rww/ui/elements/RWUIElement";
-import { DiffIconRevertContext, RevertStage, Revision } from "rww/mediawiki";
+import {
+    DiffIconRevertContext,
+    RestoreStage,
+    RevertStage,
+    Revision,
+} from "rww/mediawiki";
 import { BaseProps } from "tsx-dom";
 
 export type RWUIDiffIconsProperties = Pick<
     DiffIconRevertContext,
     "oldRevision" | "newRevision" | "latestRevision"
->;
+> & {
+    side: "old" | "new";
+};
 
 /**
  * The RWUIDiffIcons are icons that are displayed on a diff page. Since they are injected
@@ -21,6 +28,8 @@ export class RWUIDiffIcons
     oldRevision: Revision;
     newRevision: Revision;
     latestRevision: Revision;
+
+    side: "old" | "new";
 
     /**
      * This element, as returned by {@link RWUIDiffIcons.render}.
@@ -76,6 +85,29 @@ export class RWUIDiffIcons
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onRevertFailure(error: Error): void {
+        return undefined;
+    }
+
+    // TODO: documentation
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onStartRestore(targetRevision: Revision): void {
+        return undefined;
+    }
+
+    // TODO: documentation
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onRestoreStageChange(stage: RestoreStage): void {
+        return undefined;
+    }
+
+    // TODO: documentation
+    onEndRestore(): void {
+        return undefined;
+    }
+
+    // TODO: documentation
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onRestoreFailure(error: Error): void {
         return undefined;
     }
 }

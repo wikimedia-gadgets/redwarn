@@ -226,27 +226,12 @@ export class Revision implements SectionContainer {
      * Get the page's latest revision.
      */
     async getLatestRevision(): Promise<Revision> {
-        if (!!this.page) {
+        if (!this.page) {
             // Big oh noes. We'll have to send an additional request just to get the page name.
             Log.warn("Page of revision was not set. This is inefficient!", {
-                stack: new Error().stack,
+                stack: new Error("Inefficient latest revision get."),
             });
-            const revisionInfoRequest = await MediaWikiAPI.get({
-                action: "query",
-                format: "json",
-                prop: "revisions",
-                revids: `${this.revisionID}`,
-                rvprop: "",
-                rvslots: "main",
-            });
-
-            const pageData: Record<string, any> = Object.values(
-                revisionInfoRequest["query"]["pages"]
-            )[0];
-            this.page = Page.fromIDAndTitle(
-                pageData["pageid"],
-                pageData["title"]
-            );
+            await this.populate();
         }
 
         return this.page.getLatestRevision();
@@ -288,10 +273,10 @@ export class Revision implements SectionContainer {
         text: string,
         options?: Omit<PageEditOptions, "mode" | "baseRevision">
     ): Promise<void> {
-        if (!!this.page) {
+        if (!this.page) {
             // Big oh noes. We'll have to send an additional request just to get the page name.
             Log.warn("Page of revision was not set. This is inefficient!", {
-                stack: new Error().stack,
+                stack: new Error("Inefficient revision content append."),
             });
             await this.populate();
         }

@@ -89,10 +89,8 @@ $(document).ready(async () => {
     // Load style definitions first.
     await StyleManager.initialize();
 
-    // Load the on-wiki configuration file.
     try {
-        await RedWarnWikiConfiguration.loadWikiConfiguration();
-        // Attempt to deserialize.
+        // Attempt to deserialize the per-wiki configuration.
         RedWarnWikiConfiguration.c;
     } catch (e) {
         Log.fatal("Wiki-specific configuration is broken!");
@@ -116,7 +114,8 @@ $(document).ready(async () => {
      */
     await Promise.all([
         RedWarnHooks.executeHooks("preInit"),
-        await Dependencies.resolve([RedWarnStore.dependencies]),
+        Dependencies.resolve([StyleManager.activeStyle.dependencies]),
+        Dependencies.resolve([RedWarnStore.dependencies]),
     ]);
 
     /**

@@ -66,17 +66,29 @@ export default class DiffViewerInjector {
             return;
         }
 
-        const diffIcons = new RedWarnUI.DiffIcons(context);
+        document
+            .querySelectorAll(".diff-ntitle, .diff-otitle")
+            .forEach((host) => {
+                const diffIcons = new RedWarnUI.DiffIcons({
+                    ...context,
+                    side: host.classList.contains("diff-ntitle")
+                        ? "new"
+                        : "old",
+                });
 
-        const icons = <div id={"rwDiffIcons"}>{diffIcons.render()}</div>;
+                const icons = (
+                    <div id={"rwDiffIcons"}>{diffIcons.render()}</div>
+                );
 
-        // Always show below the Twinkle buttons.
-        const twinkleRevertButtons = document.querySelector("#tw-revert");
+                // Always show below the Twinkle buttons.
+                const twinkleRevertButtons = host.querySelector(
+                    '[id^="tw-revert"]'
+                );
 
-        if (twinkleRevertButtons) twinkleRevertButtons.after(icons);
-        else {
-            const newDiffContainer = document.querySelector(".diff-ntitle");
-            newDiffContainer.firstElementChild.prepend(icons);
-        }
+                if (twinkleRevertButtons) twinkleRevertButtons.after(icons);
+                else {
+                    host.firstElementChild.prepend(icons);
+                }
+            });
     }
 }

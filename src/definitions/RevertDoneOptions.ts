@@ -18,6 +18,7 @@ export interface RollbackDoneOptionDetails {
      * TODO: Move to per-style icon map.
      */
     icon: string;
+    showOnRestore: boolean;
     action: (context: DiffIconRevertContext) => any;
 }
 
@@ -28,12 +29,14 @@ export const RevertDoneOptions: Record<
     [RevertDoneOption.LatestRevision]: {
         name: i18next.t("prefs:revert.revertDoneOption.options.latest"),
         icon: "watch_later",
+        showOnRestore: true,
         action: async (context): Promise<void> =>
             context.newRevision.page.navigateToLatestRevision(),
     },
     [RevertDoneOption.NewMessage]: {
         name: i18next.t("revert:rollbackDoneOptions.message"),
         icon: "send",
+        showOnRestore: false,
         action: (): void => {
             // TODO new message
             /* rw.ui.newMessage(un) */
@@ -42,6 +45,7 @@ export const RevertDoneOptions: Record<
     [RevertDoneOption.QuickTemplate]: {
         name: i18next.t("revert:rollbackDoneOptions.template"),
         icon: "library_add",
+        showOnRestore: false,
         action: (): void => {
             // TODO quick template
             /* rw.quickTemplate.openSelectPack(un) */
@@ -50,6 +54,7 @@ export const RevertDoneOptions: Record<
     [RevertDoneOption.WarnUser]: {
         name: i18next.t("revert:rollbackDoneOptions.warn"),
         icon: "report",
+        showOnRestore: false,
         action: async (context): Promise<void> => {
             const warningOptions = await new RedWarnUI.WarnDialog({
                 targetUser: context.newRevision.user,
@@ -67,6 +72,7 @@ export const RevertDoneOptions: Record<
     [RevertDoneOption.Report]: {
         name: i18next.t("revert:rollbackDoneOptions.report"),
         icon: "gavel",
+        showOnRestore: false,
         action: (): void => {
             // TODO AIV
         },
@@ -74,6 +80,7 @@ export const RevertDoneOptions: Record<
     [RevertDoneOption.MoreOptions]: {
         name: i18next.t("revert:rollbackDoneOptions.report"),
         icon: "more_vert",
+        showOnRestore: true,
         action: (): void => {
             // TODO open prefs menu
         },

@@ -72,6 +72,7 @@ export default class RedWarnWikiConfiguration {
      * English Wikipedia (https://w.wiki/3V4o).
      */
     static async loadWikiConfiguration(): Promise<void> {
+        Log.debug("Loading per-wiki configuration...");
         /**
          * A basic JSON object holding keys for what is supposed to be a {@link RawWikiConfiguration}.
          */
@@ -137,6 +138,7 @@ export default class RedWarnWikiConfiguration {
 
         // Refresh whatever needs refreshing.
         WarningManager.refresh();
+        Log.debug("Loaded per-wiki configuration.");
     }
 
     /**

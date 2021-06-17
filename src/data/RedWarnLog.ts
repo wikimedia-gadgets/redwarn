@@ -17,11 +17,19 @@ interface LogEntry {
 }
 
 export default class Log {
+    private static readonly startTime = Date.now();
     static logs: LogEntry[] = [];
     static logLevel =
         process.env.NODE_ENV === "production" ? LogLevel.Warn : LogLevel.Trace;
 
     private static log(level: LogLevel, message: string, ...data: any[]) {
+        const parts = [];
+        if (Log.logLevel === LogLevel.Trace)
+            parts.push(`[${Date.now() - Log.startTime}ms] `);
+        parts.push(`[${RW_LOG_SIGNATURE}] `);
+        parts.push(`[${LogLevel[level].toUpperCase()}] `);
+        parts.push(message);
+
         if (level >= Log.logLevel)
             console[
                 level > LogLevel.Warn
@@ -29,12 +37,7 @@ export default class Log {
                     : level == LogLevel.Warn
                     ? "warn"
                     : "log"
-            ](
-                `[${RW_LOG_SIGNATURE}] ${
-                    typeof message === "string" ? message : ""
-                }`,
-                ...(typeof message === "string" ? data : [message, ...data])
-            );
+            ](...(data.length > 0 ? [parts.join("")] : [parts.join(""), data]));
 
         Log.logs.push({
             date: Date.now(),

@@ -7,6 +7,7 @@ import {
     LogItem,
 } from "rww/data/database/RWDBObjectStoreDefinitions";
 import Group from "rww/definitions/Group";
+import Log from "rww/data/RedWarnLog";
 
 /**
  * A set of functions responsible for setting up the RedWarn IndexedDB
@@ -80,7 +81,9 @@ export default class RedWarnLocalDB {
     }
 
     async connect(): Promise<IDBDatabase> {
+        Log.trace("Connecting to RedWarn IDB...");
         const connect = await this.idb.connect();
+        Log.trace("Connected to IDB.");
 
         // Handle _open
         this._open = true;

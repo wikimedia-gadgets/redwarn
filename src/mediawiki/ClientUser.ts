@@ -1,4 +1,5 @@
 import { Page, UserAccount } from "rww/mediawiki";
+import Log from "rww/data/RedWarnLog";
 
 interface ClientUserCache {
     groups?: string[];
@@ -42,6 +43,7 @@ export class ClientUser extends UserAccount {
     }
 
     public async init(): Promise<void> {
+        Log.debug("Initializing ClientUser...");
         // Run all requests "parallel".
         await Promise.all([this.getGroups()]);
     }

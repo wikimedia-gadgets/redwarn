@@ -3,6 +3,7 @@ import {
     MediaWikiURL,
     Page,
     PageEditOptions,
+    PageLatestRevisionOptions,
     User,
 } from "rww/mediawiki";
 import redirect from "rww/util/redirect";
@@ -225,7 +226,9 @@ export class Revision implements SectionContainer {
     /**
      * Get the page's latest revision.
      */
-    async getLatestRevision(): Promise<Revision> {
+    async getLatestRevision(
+        options?: PageLatestRevisionOptions
+    ): Promise<Revision> {
         if (!this.page) {
             // Big oh noes. We'll have to send an additional request just to get the page name.
             Log.warn("Page of revision was not set. This is inefficient!", {
@@ -234,7 +237,7 @@ export class Revision implements SectionContainer {
             await this.populate();
         }
 
-        return this.page.getLatestRevision();
+        return this.page.getLatestRevision(options);
     }
 
     /**

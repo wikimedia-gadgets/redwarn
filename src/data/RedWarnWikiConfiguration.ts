@@ -66,28 +66,19 @@ export default class RedWarnWikiConfiguration {
         return RedWarnWikiConfiguration._loadedConfiguration;
     }
 
-    /**
-     * Loads the onwiki configuration file. If a configuration file was not found,
-     * it will fall back to the primary RedWarn configuration file, located on the
-     * English Wikipedia (https://w.wiki/3V4o).
-     */
-    static async loadWikiConfiguration(): Promise<void> {
-        Log.debug("Loading per-wiki configuration...");
-        /**
-         * A basic JSON object holding keys for what is supposed to be a {@link RawWikiConfiguration}.
-         */
-        let rawConfig: Record<string, any> = null;
+    private static preloadedData: Record<string, any>;
+    static async preloadWikiConfiguration(): Promise<Record<string, any>> {
         try {
-            rawConfig = JSON.parse(
+            RedWarnWikiConfiguration.preloadedData = JSON.parse(
                 (
                     await Page.fromTitle(
                         "Project:RedWarn/configuration.json"
-                    ).getLatestRevision()
+                    ).getLatestRevision({ forceRefresh: false })
                 ).content
             );
         } catch (e) {
             try {
-                rawConfig = await fetch(
+                RedWarnWikiConfiguration.preloadedData = await fetch(
                     ((): string => {
                         const url = new URL("//en.wikipedia.org/w/index.php");
 
@@ -107,6 +98,22 @@ export default class RedWarnWikiConfiguration {
                 throw new Error("Failed to get on-wiki configuration file.");
             }
         }
+        return RedWarnWikiConfiguration.preloadedData;
+    }
+
+    /**
+     * Loads the onwiki configuration file. If a configuration file was not found,
+     * it will fall back to the primary RedWarn configuration file, located on the
+     * English Wikipedia (https://w.wiki/3V4o).
+     */
+    static async loadWikiConfiguration(): Promise<void> {
+        Log.debug("Loading per-wiki configuration...");
+        /**
+         * A basic JSON object holding keys for what is supposed to be a {@link RawWikiConfiguration}.
+         */
+        const rawConfig: Record<string, any> =
+            RedWarnWikiConfiguration.preloadedData ??
+            (await RedWarnWikiConfiguration.preloadWikiConfiguration());
 
         /**
          * A fully-upgraded {@link RawWikiConfiguration} which can then be deserialized into

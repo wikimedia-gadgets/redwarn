@@ -37,7 +37,11 @@ export default class Log {
                     : level == LogLevel.Warn
                     ? "warn"
                     : "log"
-            ](...(data.length > 0 ? [parts.join("")] : [parts.join(""), data]));
+            ](
+                ...(data.length > 0
+                    ? [parts.join(""), ...data]
+                    : [parts.join("")])
+            );
 
         Log.logs.push({
             date: Date.now(),

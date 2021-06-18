@@ -16,6 +16,7 @@ import CoreSettings from "rww/config/values/CoreSettings";
 import UISettings from "rww/config/values/UISettings";
 import RevertSettings from "rww/config/values/RevertSettings";
 import AccessibilitySettings from "rww/config/values/AccessibilitySettings";
+import { isEmptyObject } from "rww/util";
 
 export type ConfigurationSet = Record<string, Setting<any>>;
 
@@ -38,6 +39,9 @@ export class Configuration {
         return Object.entries(Configuration.configurationSets).reduce(
             (out, [id, set]) => {
                 out[id] = Configuration.map(set);
+                if (isEmptyObject(out[id])) {
+                    delete out[id];
+                }
 
                 return out;
             },
@@ -200,7 +204,7 @@ export class Configuration {
         ).reduce((main, setting) => {
             if (
                 !forceInclude.includes(setting.id) &&
-                setting.value !== setting.defaultValue
+                setting.value === setting.defaultValue
             )
                 return main;
 

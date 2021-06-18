@@ -2,7 +2,7 @@
     "accessibility" : {
         "raiseActionButtons" : {
             "title" : "Raise action buttons",
-            "description" : "This option highlights action buttons (such as \"Warn User\", \"Okay\", \"Submit\") so that they are easier to distinguish from other buttons."
+            "description" : "This option highlights action buttons (such as \"Warn User\", \"OK\", \"Submit\") so that they are easier to distinguish from other buttons."
         }
     },
     "revert": {

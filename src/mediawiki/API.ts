@@ -101,6 +101,14 @@ export class MediaWikiAPI {
             },
         });
 
+        // Preload configurations
+        await Promise.all([
+            ClientUser.i.redwarnConfigPage.getLatestRevision({
+                forceRefresh: false,
+            }),
+            RedWarnWikiConfiguration.preloadWikiConfiguration(),
+        ]);
+
         await Promise.all([
             // Initialize the current user.
             ClientUser.i.init(),

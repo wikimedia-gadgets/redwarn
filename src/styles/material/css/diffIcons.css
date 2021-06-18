@@ -66,8 +66,9 @@
 }
 
 .rw-mdc-diffIcons-options .mdc-icon-button {
-    width: 36px;
-    height: 36px;
-    padding: 4px;
+    width: 40px;
+    height: 40px;
+    padding: 6px;
     font-size: 28px;
+    /*border-radius: 50%;*/
 }

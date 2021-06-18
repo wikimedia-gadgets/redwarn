@@ -23,10 +23,7 @@
 /* Self-implemented icon button hover animation */
 .mdc-icon-button {
     position: relative;
-}
-
-.mdc-icon-button:not(:disabled) .mdc-icon-button__ripple:hover {
-    background-color: rgba(0, 0, 0, 0.08);
+    --mdc-ripple-hover-opacity: 0.14;
 }
 
 .mdc-list .mdc-list-header {

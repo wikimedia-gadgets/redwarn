@@ -189,7 +189,9 @@ export class Revert {
         if (!targetRevision.isPopulated()) targetRevision.populate();
 
         if (diffIcons) diffIcons.onRestoreStageChange(RestoreStage.Details);
-        const latestRevision = await targetRevision.page.getLatestRevision();
+        const latestRevision = await targetRevision.page.getLatestRevision({
+            forceRefresh: false,
+        });
 
         if (diffIcons) diffIcons.onRestoreStageChange(RestoreStage.Restore);
         const result = await MediaWikiAPI.postWithEditToken({
@@ -237,7 +239,9 @@ export class Revert {
     ): Promise<Revision> {
         if (targetRevision.page == null) await targetRevision.populate();
 
-        const latestRevision = await targetRevision.getLatestRevision();
+        const latestRevision = await targetRevision.getLatestRevision({
+            forceRefresh: false,
+        });
         if (latestRevision.revisionID !== targetRevision.revisionID) {
             if (
                 ignoreSameUser &&

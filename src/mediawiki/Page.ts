@@ -1,5 +1,4 @@
 import { MediaWikiAPI, Revision, User } from "rww/mediawiki";
-import { RW_WIKIS_TAGGABLE } from "rww/data/RedWarnConstants";
 import RedWarnStore from "rww/data/RedWarnStore";
 import i18next from "i18next";
 import {
@@ -11,6 +10,7 @@ import { url as buildURL } from "rww/util";
 import redirect from "rww/util/redirect";
 import Section, { SectionContainer } from "rww/mediawiki/Section";
 import url from "rww/util/url";
+import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
 
 export interface PageEditOptions {
     /**
@@ -30,6 +30,11 @@ export interface PageEditOptions {
      * Omit this parameter to edit a page regardless of content.
      */
     baseRevision?: Revision;
+}
+
+export interface PageLatestRevisionOptions {
+    forceRefresh?: boolean;
+    excludeUser?: User;
 }
 
 /**
@@ -102,7 +107,7 @@ export class Page implements SectionContainer {
      */
     static async getLatestRevision(
         page: Page,
-        options?: { excludeUser: User }
+        options?: { excludeUser?: User }
     ): Promise<Revision> {
         const pageIdentifier = page.getIdentifier();
 
@@ -167,13 +172,16 @@ export class Page implements SectionContainer {
     /**
      * Get a page's latest revision.
      */
-    async getLatestRevision(options?: {
-        excludeUser: User;
-    }): Promise<Revision> {
-        return (this.latestCachedRevision = await Page.getLatestRevision(
-            this,
-            options
-        ));
+    async getLatestRevision(
+        options: PageLatestRevisionOptions = {}
+    ): Promise<Revision> {
+        if (options.forceRefresh || this.latestCachedRevision == null)
+            this.latestCachedRevision = await Page.getLatestRevision(
+                this,
+                options
+            );
+
+        return this.latestCachedRevision;
     }
 
     /**
@@ -322,9 +330,7 @@ export class Page implements SectionContainer {
             )}`,
 
             // Tags
-            tags: RW_WIKIS_TAGGABLE.includes(RedWarnStore.wikiID)
-                ? "RedWarn"
-                : null,
+            tags: RedWarnWikiConfiguration.c.meta.tag,
 
             // Base revision ID
             ...(options.baseRevision

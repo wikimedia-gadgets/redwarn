@@ -34,7 +34,7 @@ ${finalWarningHistoryHTML}
     <!-- FORM -->
     <form id="newNoticeForm">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:75%;"> <!-- 75% for account standing -->
-        <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="${rw.info.targetUsername(un)}" readonly>
+        <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="${rw.info.targetUsername(un).replace(/"/g, "&quot;")}" readonly>
         <label class="mdl-textfield__label" for="trgtUsrVisualBox">Target</label>
         <div class="mdl-tooltip" for="trgtUsrVisualBox">
             To target a different user, please visit their userpage, or right-click a link to their userpage.
@@ -185,7 +185,7 @@ ${finalWarningHistoryHTML}
     <span id="ordInfo"> <!-- ordinary info -->
         <!-- Related pages -->
         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:92.4%">
-            <input class="mdl-textfield__input" name="relatedPage" type="text" id="relatedPage" value="`+ rw.info.getRelatedPage(pg).replace(/_/g, ' ') +`">
+            <input class="mdl-textfield__input" name="relatedPage" type="text" id="relatedPage" value="`+ rw.info.getRelatedPage(pg).replace(/_/g, ' ').replace(/"/g, '&quot;') +`">
             <label class="mdl-textfield__label" for="relatedPage">Related Page</label>
             <div class="mdl-tooltip" for="relatedPage">
                 Optionally, enter the page that this notice relates to.

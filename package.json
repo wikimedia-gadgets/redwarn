@@ -50,7 +50,7 @@
         "text-loader": "0.0.1",
         "ts-jest": "^26.4.4",
         "ts-loader": "^8.0.12",
-        "types-mediawiki": "^1.1.0",
+        "types-mediawiki": "git+https://github.com/wikimedia-gadgets/types-mediawiki.git",
         "typescript": "^4.2.3",
         "webpack": "^5.11.1",
         "webpack-bundle-analyzer": "^4.4.2",
@@ -60,7 +60,7 @@
         "wrapper-webpack-plugin": "git+https://github.com/redwarnwp/wrapper-webpack-plugin.git"
     },
     "scripts": {
-        "build": "webpack",
+        "build": "cross-env NODE_ENV=production webpack",
         "build:prod": "cross-env NODE_ENV=production webpack",
         "build:dev": "cross-env NODE_ENV=development webpack",
         "clean": "rimraf build",

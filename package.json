@@ -55,7 +55,7 @@
         "webpack": "^5.11.1",
         "webpack-bundle-analyzer": "^4.4.2",
         "webpack-cli": "^4.3.0",
-        "webpack-dev-server": "^3.11.1",
+        "webpack-dev-server": "^4.0.0-beta.3",
         "webpack-plugin-buildinfo": "^0.3.0",
         "wrapper-webpack-plugin": "git+https://github.com/redwarnwp/wrapper-webpack-plugin.git"
     },

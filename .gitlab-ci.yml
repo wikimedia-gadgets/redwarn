@@ -14,7 +14,7 @@ deps_main:
         - "git config --global url.\"https://github.com/\".insteadOf git@github.com:"
         - "git config --global url.\"https://\".insteadOf ssh://"
         - cat package.json
-        - NODE_ENV=development npm ci
+        - NODE_ENV=development npx npm@7 ci
     # Cache `node_modules` for later jobs and pipelines.
     cache:
         key: "$CI_COMMIT_REF_SLUG"

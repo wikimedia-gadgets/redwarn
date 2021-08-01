@@ -12,6 +12,5 @@ export { default as normalize } from "./normalize";
 export { default as warningSuffix } from "./warningSuffix";
 export { default as formatAge } from "./formatAge";
 export { b64en, b64de } from "./b64";
-export { default as toBase64URL } from "./toBase64URL";
 export { default as sleep } from "./sleep";
 export { default as isEmptyObject } from "./isEmptyObject";

@@ -14,7 +14,7 @@
             "name": "Quick Template"
         },
         "more-options": {
-            "name": "More options"
+            "name": "Open the \"More Options\" panel"
         }
     },
     "rollbackDoneOptions": {
@@ -23,6 +23,7 @@
         "template": "Template this user",
         "warn": "Warn this user",
         "report": "Report this user",
-        "prefs": "Open the \"More Options\" panel"
+        "mat": "Multiple Action Tool",
+        "options": "Open the \"More Options\" panel"
     }
 }

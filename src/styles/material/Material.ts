@@ -50,12 +50,22 @@ const MaterialStyle: Style = {
             type: "style",
             id: "mdc-styles",
             src:
-                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@11.0.0.min.css",
+                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@12.0.0.min.css",
             cache: {
                 delayedReload: true,
                 duration: 1209600000, // 14 days
             },
         },
+        // {
+        //     type: "style",
+        //     id: "mdc-styles-tooltips",
+        //     src:
+        //         "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@12.0.0.tooltip.min.css",
+        //     cache: {
+        //         delayedReload: true,
+        //         duration: 1209600000, // 14 days
+        //     },
+        // },
         {
             type: "style",
             id: "roboto",
@@ -88,9 +98,9 @@ const MaterialStyle: Style = {
 export default MaterialStyle;
 
 export function upgradeMaterialDialogButtons(dialog: RWUIDialog): void {
-    $(dialog.element)
-        .find("button")
-        .each((_, el) => new MDCRipple(el).initialize());
+    dialog.element
+        .querySelectorAll("button")
+        .forEach((el) => new MDCRipple(el).initialize());
 }
 
 type WritableKeys<T> = {

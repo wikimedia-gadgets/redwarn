@@ -11,7 +11,6 @@
 
 /* Everything that needs DOM insertion tracking should be placed here. */
 [data-append-event],
-[data-rw-mdc-tooltip],
 .mdc-icon-button {
     animation: dummy 0s;
 }
@@ -20,10 +19,15 @@
     margin: 0 0.5em;
 }
 
-/* Self-implemented icon button hover animation */
 .mdc-icon-button {
     position: relative;
     --mdc-ripple-hover-opacity: 0.14;
+}
+
+/* Tooltip background color */
+.mdc-tooltip__surface {
+    background-color: rgba(0, 0, 0, 0.8) !important;
+    text-align: center !important;
 }
 
 .mdc-list .mdc-list-header {

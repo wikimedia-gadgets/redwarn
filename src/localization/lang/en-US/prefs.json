@@ -13,7 +13,10 @@
                 "latest": "Go to the latest revision",
                 "message": "Send the user a message",
                 "template": "Template the user",
-                "warn": "Warn the user"
+                "warn": "Warn the user",
+                "report": "Report this user to AIV",
+                "mat": "Multiple Action Tool",
+                "options": "More options"
             }
         },
         "revertMethod": {

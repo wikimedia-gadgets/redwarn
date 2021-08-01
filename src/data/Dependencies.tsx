@@ -1,5 +1,5 @@
 import { h } from "tsx-dom";
-import { generateId, toBase64URL } from "rww/util";
+import { generateId } from "rww/util";
 import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
 import Log from "rww/data/RedWarnLog";
 import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
@@ -144,7 +144,7 @@ export default class Dependencies {
 
         if (dependency.cache) {
             let cachedDep = await cacheStore.get(dependency.id);
-            let willRecacheNow = false;
+            let willRecacheNow: boolean;
 
             const recacheCheck = async () => {
                 try {
@@ -231,12 +231,22 @@ export default class Dependencies {
             // retrieval failed. There is, however, a "possibly null or undefined" linter
             // problem here, so the extra ternary operator is there to silence it.
 
+            // Strip source maps.
+            if (cachedDep != null && dependency.type === "style") {
+                cachedDep.data = cachedDep.data.replace(
+                    /\/\*\s*#\s*sourceMappingURL=.+?\s*\*\//g,
+                    ""
+                );
+            }
+
             return cachedDep
-                ? toBase64URL(
-                      cachedDep.data,
-                      dependency.type === "script"
-                          ? "application/javascript"
-                          : "text/css"
+                ? URL.createObjectURL(
+                      new Blob([cachedDep.data], {
+                          type:
+                              dependency.type === "script"
+                                  ? "application/javascript"
+                                  : "text/css",
+                      })
                   )
                 : dependency.src;
         } else {

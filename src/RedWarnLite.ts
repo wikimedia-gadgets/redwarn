@@ -36,7 +36,6 @@ import TamperProtection from "./tamper/TamperProtection";
 import UIInjectors from "rww/ui/injectors/UIInjectors";
 import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
 import Log from "rww/data/RedWarnLog";
-import RevertOptions from "rww/definitions/RevertOptions";
 import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
 import MediaWikiNotificationContent from "rww/ui/MediaWikiNotificationContent";
 
@@ -105,13 +104,6 @@ export default class RedWarn {
     static get Configuration(): typeof Configuration {
         return Configuration;
     }
-    static RevertOptions(): typeof RevertOptions {
-        return RevertOptions;
-    }
-    // Not compatible with new system!
-    // static get config(): Record<string, any> {
-    //     return Configuration.map();
-    // }
     static Database(): RedWarnLocalDB {
         return RedWarnLocalDB.i;
     }

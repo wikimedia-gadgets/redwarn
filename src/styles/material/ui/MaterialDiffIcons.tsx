@@ -21,6 +21,7 @@ import i18next from "i18next";
 import { Configuration, RevertMethod } from "rww/config";
 import { RevertDoneOptions } from "rww/definitions/RevertDoneOptions";
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
+import Log from "rww/data/RedWarnLog";
 
 function getRollbackOptionClickHandler(
     diffIcons: MaterialDiffIcons,
@@ -29,9 +30,13 @@ function getRollbackOptionClickHandler(
     const context = diffIcons.context;
     switch (option.actionType) {
         case "custom":
-            return () => option.action(context);
+            return () => {
+                Log.trace("custom RevertOption selected.", option);
+                option.action(context);
+            };
         case "revert":
             return () => {
+                Log.trace("revert RevertOption selected.", option);
                 diffIcons.selectedReason = option;
                 Revert.revert(
                     Object.assign(context, {
@@ -40,13 +45,18 @@ function getRollbackOptionClickHandler(
                 );
             };
         case "promptedRevert":
-            return () =>
+            return () => {
+                Log.trace("promptedRevert RevertOption selected.", option);
                 Revert.promptRestore(
                     context.side === "new"
                         ? context.newRevision
                         : context.oldRevision,
-                    context.diffIcons
+                    {
+                        diffIcons: context.diffIcons,
+                        defaultText: option.defaultSummary,
+                    }
                 );
+            };
     }
 }
 
@@ -122,7 +132,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
                             this.side === "new"
                                 ? this.newRevision
                                 : this.oldRevision,
-                            this
+                            { diffIcons: this }
                         );
                     }}
                 />
@@ -192,7 +202,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
     renderRevertDoneOptions(): JSX.Element {
         const options: JSX.Element[] = [];
 
-        for (const option of Object.values(RevertDoneOptions)) {
+        for (const option of Object.values(RevertDoneOptions())) {
             if (this.latestIcons || (!this.latestIcons && option.showOnRestore))
                 options.push(
                     <MaterialIconButton
@@ -210,7 +220,12 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
                 );
         }
 
-        return <div class={"rw-mdc-diffIcons-doneOptions"}>{options}</div>;
+        return (
+            <div class={"rw-mdc-diffIcons-doneOptions"}>
+                <div>{options}</div>
+                <div>Revert completed.</div>
+            </div>
+        );
     }
 
     render(): JSX.Element {

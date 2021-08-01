@@ -144,16 +144,23 @@ export class Revert {
      * given page revision with that reason.
      *
      * @param targetRevision The target revision.
-     * @param diffIcons The {@link RWUIDiffIcons} that triggered this restore.
+     * @param options The options for this prompted restore.
+     * @param options.diffIcons The {@link RWUIDiffIcons} that triggered this restore.
      */
     static async promptRestore(
         targetRevision: Revision,
-        diffIcons?: RWUIDiffIcons
+        options?: {
+            diffIcons?: RWUIDiffIcons;
+            defaultText?: string;
+        }
     ): Promise<void> {
-        const dialog = new RedWarnUI.InputDialog(i18next.t("ui:restore"));
+        const dialog = new RedWarnUI.InputDialog({
+            ...i18next.t("ui:restore"),
+            defaultText: options?.defaultText,
+        });
         const reason = await dialog.show();
         if (reason !== null) {
-            Revert.restore(targetRevision, reason, diffIcons);
+            Revert.restore(targetRevision, reason, options?.diffIcons);
         }
     }
 

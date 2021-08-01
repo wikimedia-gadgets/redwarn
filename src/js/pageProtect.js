@@ -4,12 +4,20 @@
  */
 rw.pageProtect = { // Used for [[WP:RFPP]]
     /**
-     * The RFPP page that RedWarn will edit
-     * @property rfppPage
+     * The RFPP page that RedWarn will edit for protection upgrades
+     * @property rfppPageUp
      * @type {string}
      * @extends rw.pageProtect
      */
-    "rfppPage" : "Wikipedia:Requests_for_page_protection", // !!! FOR PRODUCTION USE Wikipedia:Requests_for_page_protection ELSE USE User:Ed6767/sandbox/rwTests/rpp !!!
+    "rfppPageUp" : "Wikipedia:Requests_for_page_protection/Increase", // !!! FOR PRODUCTION USE Wikipedia:Requests_for_page_protection ELSE USE User:Ed6767/sandbox/rwTests/rpp !!!
+
+    /**
+     * The RFPP page that RedWarn will edit for protection downgrades
+     * @property rfppPageDown
+     * @type {string}
+     * @extends rw.pageProtect
+     */
+    "rfppPageDown" : "Wikipedia:Requests_for_page_protection/Decrease", // !!! FOR PRODUCTION USE Wikipedia:Requests_for_page_protection ELSE USE User:Ed6767/sandbox/rwTests/rpp !!!
     // THIS MODULE IS NOW LIVE!!!
 
     /**
@@ -169,7 +177,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
 '''${(requestProtect.name == "no protection" ? "Unprotection" : requestDuration + " " + requestProtect.name)}:''' ${(changeCoreReason == "Other rationale" ? "" : changeCoreReason + `. `)}${changeExtraInfo} `+ rw.sign();
 
                 // New req current page.
-                $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+ encodeURIComponent(rw.pageProtect.rfppPage) +"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
+                $.getJSON(rw.wikiAPI + "?action=query&prop=revisions&titles="+ encodeURIComponent(requestType == "upgrade" ? rw.pageProtect.rfppPageUp : rw.pageProtect.rfppPageDown ) +"&rvslots=*&rvprop=content&formatversion=2&format=json", latestR=>{
                     // Grab text from latest revision of talk page
                     // Check if exists
                     let revisionWikitext = "";
@@ -223,7 +231,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
                         "action": "edit",
                         "format": "json",
                         "token" : mw.user.tokens.get("csrfToken"),
-                        "title" : rw.pageProtect.rfppPage,
+                        "title" : requestType == "upgrade" ? rw.pageProtect.rfppPageUp : rw.pageProtect.rfppPageDown,
                         "summary" : `Requesting protection change for [[${mw.config.get("wgRelevantPageName").replace(/_/g, ' ')}]] [[w:en:WP:RW|(RW ${rw.version})]]`, // summary sign here
                         "text": finalTxt,
                         "tags" : ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia

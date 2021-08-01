@@ -43,6 +43,9 @@ export interface PageLatestRevisionOptions {
  * be created using a page ID or using its title.
  */
 export class Page implements SectionContainer {
+    /** An index of all cached pages. **/
+    private static pageIndex: Record<string, Page> = {};
+
     /** The ID of the page. */
     pageID?: number;
 
@@ -87,7 +90,10 @@ export class Page implements SectionContainer {
      * @param pageTitle The page's title (including namespace).
      */
     static fromTitle(pageTitle: string): Page {
-        return new Page({ title: pageTitle });
+        return (
+            Page.pageIndex[pageTitle] ??
+            (Page.pageIndex[pageTitle] = new Page({ title: pageTitle }))
+        );
     }
 
     /**
@@ -96,7 +102,13 @@ export class Page implements SectionContainer {
      * @param pageTitle The page's title (including namespace).
      */
     static fromIDAndTitle(pageID: number, pageTitle: string): Page {
-        return new Page({ pageID: pageID, title: pageTitle });
+        return (
+            Page.pageIndex[pageTitle] ??
+            (Page.pageIndex[pageTitle] = new Page({
+                pageID: pageID,
+                title: pageTitle,
+            }))
+        );
     }
 
     /**

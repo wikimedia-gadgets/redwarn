@@ -193,7 +193,7 @@ export default class RedWarn {
     // Load the configuration
     await Configuration.refresh();
 
-    // Only do hook calls after styles has been set to configuration preference!
+    // Only do hook calls after style has been set to configuration preference!
 
     /**
      * Extensions and styles can push their own dependencies here.

@@ -3,6 +3,17 @@
         "raiseActionButtons" : {
             "title" : "Raise action buttons",
             "description" : "This option highlights action buttons (such as \"Warn User\", \"OK\", \"Submit\") so that they are easier to distinguish from other buttons."
+        },
+        "rapidClickProtection": {
+            "title": "Rapid click protection",
+            "description": "Set the time period to wait before allowing clicks on potentially damaging buttons (rollbacks, warns).",
+            "options": {
+                "0": "Definitely safe (500ms)",
+                "1": "Standard (200ms)",
+                "2": "Quick (100ms)",
+                "3": "Dangerous (50ms)",
+                "4": "Fast and furious (0ms)"
+            }
         }
     },
     "revert": {

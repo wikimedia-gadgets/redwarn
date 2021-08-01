@@ -1,5 +1,8 @@
 import RedWarnIDB, { RedWarnIDBUpgradeHandler } from "rww/data/idb/RedWarnIDB";
-import { RW_DATABASE_VERSION } from "rww/data/RedWarnConstants";
+import {
+    RW_DATABASE_NAME,
+    RW_DATABASE_VERSION,
+} from "rww/data/RedWarnConstants";
 import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
 import {
     CachedDependency,
@@ -74,7 +77,7 @@ export default class RedWarnLocalDB {
             );
 
         this.idb = new RedWarnIDB(
-            "redwarnLiteDB",
+            RW_DATABASE_NAME,
             RW_DATABASE_VERSION,
             databaseUpdaters
         );

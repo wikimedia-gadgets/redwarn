@@ -16,7 +16,11 @@ import type {
     SerializableRevertOption,
 } from "rww/definitions/RevertOptions";
 import { ActionSeverity } from "rww/definitions/RevertOptions";
-import { RW_WIKI_CONFIGURATION_VERSION } from "rww/data/RedWarnConstants";
+import {
+    RW_FALLBACK_WIKI,
+    RW_WIKI_CONFIGURATION,
+    RW_WIKI_CONFIGURATION_VERSION,
+} from "rww/data/RedWarnConstants";
 import Log from "rww/data/RedWarnLog";
 
 interface RawWikiConfiguration {
@@ -72,7 +76,7 @@ export default class RedWarnWikiConfiguration {
             RedWarnWikiConfiguration.preloadedData = JSON.parse(
                 (
                     await Page.fromTitle(
-                        "Project:RedWarn/configuration.json"
+                        RW_WIKI_CONFIGURATION
                     ).getLatestRevision({ forceRefresh: false })
                 ).content
             );
@@ -80,13 +84,10 @@ export default class RedWarnWikiConfiguration {
             try {
                 RedWarnWikiConfiguration.preloadedData = await fetch(
                     ((): string => {
-                        const url = new URL("//en.wikipedia.org/w/index.php");
+                        const url = new URL(RW_FALLBACK_WIKI.indexPath);
 
-                        // Do not use the short URL (`/wiki/Wikipedia:RedWarn/configuration.json`)
-                        url.searchParams.set(
-                            "title",
-                            "Wikipedia:RedWarn/configuration.json"
-                        );
+                        // Do not use the short URL ("/wiki/Project:RedWarn/configuration.json")
+                        url.searchParams.set("title", RW_WIKI_CONFIGURATION);
                         url.searchParams.set("action", "raw");
                         url.searchParams.set("ctype", "application/json");
 

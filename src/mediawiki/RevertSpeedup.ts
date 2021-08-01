@@ -1,6 +1,8 @@
+/* eslint-disable */
 // import {Revert} from ".";
+// noinspection JSUnusedLocalSymbols
 
-// TODO - JQUERY IS DEPRECIATED
+// TODO - JQUERY IS DEPRECATED
 export class RevertSpeedup {
     static async init(): Promise<void> {
         const i = <() => any>(

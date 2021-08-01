@@ -2,6 +2,16 @@ import MessageHandler from "rww/event/MessageHandler";
 import { StyleStorage } from "rww/styles/Style";
 import { Dependency } from "rww/data/Dependencies";
 
+/**
+ * <b>RedWarnStore</b> is for live, in-memory data that does not require persistence
+ * or is rebuilt on every page load.
+ *
+ * If you wish to persistently save data,
+ * use {@link RedWarnLocalDB} instead. If you wish to create or access a
+ * constant value that can be loaded at any point, consider using {@link RedWarnConstants}
+ * instead. If you want to generate data for debugging, use {@link Log}
+ * instead.
+ */
 export default class RedWarnStore {
     // Initializations
     public static dependencies: Dependency[] = [];

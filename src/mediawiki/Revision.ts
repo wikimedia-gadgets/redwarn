@@ -17,6 +17,9 @@ import RedWarnStore from "rww/data/RedWarnStore";
  * a change in a page's content.
  */
 export class Revision implements SectionContainer {
+    /** An index of all revisions. */
+    private static revisionIndex: Record<number, Revision> = {};
+
     /** The ID of the revision. */
     revisionID: number;
 
@@ -60,10 +63,13 @@ export class Revision implements SectionContainer {
         revisionID: number,
         additionalProperties?: Partial<Revision>
     ): Revision {
-        return new Revision({
-            revisionID: revisionID,
-            ...(additionalProperties ?? {}),
-        });
+        return (
+            Revision.revisionIndex[revisionID] ??
+            (Revision.revisionIndex[revisionID] = new Revision({
+                revisionID: revisionID,
+                ...(additionalProperties ?? {}),
+            }))
+        );
     }
 
     /**
@@ -73,7 +79,10 @@ export class Revision implements SectionContainer {
      */
     static async fromIDToPopulated(revisionID: number): Promise<Revision> {
         return await Revision.populate(
-            new Revision({ revisionID: revisionID })
+            Revision.revisionIndex[revisionID] ??
+                (Revision.revisionIndex[revisionID] = new Revision({
+                    revisionID: revisionID,
+                }))
         );
     }
 
@@ -84,10 +93,13 @@ export class Revision implements SectionContainer {
      * @returns A partially populated Revision object.
      */
     static fromIDAndText(revisionID: number, wikitext: string): Revision {
-        return new Revision({
-            revisionID: revisionID,
-            content: wikitext,
-        });
+        const revision =
+            Revision.revisionIndex[revisionID] ??
+            (Revision.revisionIndex[revisionID] = new Revision({
+                revisionID: revisionID,
+            }));
+        revision.content = wikitext;
+        return revision;
     }
 
     /**
@@ -105,7 +117,7 @@ export class Revision implements SectionContainer {
             apiResult["query"]["pages"]
         )[0];
         const revisionData: Record<string, any> = pageData["revisions"][0];
-        return new Revision({
+        return (Revision.revisionIndex[revisionID] = new Revision({
             revisionID: revisionID,
             parentID: revisionData["parentid"],
             page: Page.fromIDAndTitle(pageData["pageid"], pageData["title"]),
@@ -114,7 +126,7 @@ export class Revision implements SectionContainer {
             time: new Date(revisionData["timestamp"]),
             size: revisionData["size"],
             content: revisionData["slots"]?.["main"]?.["content"],
-        });
+        }));
     }
 
     /**

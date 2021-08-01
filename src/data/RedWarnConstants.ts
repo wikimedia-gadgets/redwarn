@@ -1,6 +1,5 @@
+// Do not import any other file except the build information.
 import buildinfo from "!webpack-plugin-buildinfo?gitHash&gitHashShort&time&platform&arch!./buildinfo.js";
-
-// THIS FILE SHOULD NOT MAKE ANY OTHER IMPORTS THAN FROM BUILDINFO!
 
 export const RW_BUILDINFO = buildinfo;
 
@@ -17,7 +16,7 @@ export const RW_VERSION_TAG = `${RW_VERSION_PUBLIC}${
 export const RW_VERSION_SUMMARY = "nothing yet";
 
 export const RW_CONFIG_VERSION = 1;
-export const RW_DATABASE_NAME = "";
+export const RW_DATABASE_NAME = "redwarnLiteDB";
 export const RW_DATABASE_VERSION = 1;
 
 export const RW_LOG_SIGNATURE = `RedWarn ${RW_VERSION_TAG}`;
@@ -34,4 +33,8 @@ export const RW_LINK = "[[w:en:WP:RW|RedWarn]]";
 export const RW_WIKIS_TAGGABLE = ["enwiki"];
 export const RW_WIKIS_SPEEDUP = ["enwiki"];
 
-export const RW_FALLBACK_WIKI = "en.wikipedia.org";
+// TODO: Global configuration file on Meta instead of Wikipedia
+export const RW_FALLBACK_WIKI = {
+    indexPath: "//en.wikipedia.org/w/index.php",
+    apiPath: "//en.wikipedia.org/w/api.php",
+};

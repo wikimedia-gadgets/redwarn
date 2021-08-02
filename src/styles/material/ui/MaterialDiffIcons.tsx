@@ -150,7 +150,10 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
                 <MaterialIconButton
                     label={option.name}
                     icon={option.icon}
-                    iconColor={MaterialActionSeverityColors[option.severity]}
+                    iconColor={
+                        option.color ??
+                        MaterialActionSeverityColors[option.severity]
+                    }
                     data-rw-revert-option={option.id}
                 />
             );

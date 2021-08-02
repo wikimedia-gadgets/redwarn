@@ -5,6 +5,7 @@ import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
 import MaterialToast from "rww/styles/material/ui/MaterialToast";
 import { redirect, url } from "rww/util";
 import RedWarnStore from "rww/data/RedWarnStore";
+import { Configuration } from "rww/config";
 
 export enum ActionSeverity {
     Neutral,
@@ -62,6 +63,10 @@ interface RevertActionBase {
      */
     enabled: boolean;
     /**
+     * Whether or not this option is supposed to show by default.
+     */
+    default?: boolean;
+    /**
      * The name of this revert option.
      */
     name: string;
@@ -75,11 +80,11 @@ interface RevertActionBase {
 
 export type RevertOption = (RevertActionBase & RevertAction) & {
     /**
-     * The ID of this action.
+     * The ID of this option.
      */
     id: string;
     /**
-     * The severity of the action.
+     * The severity of the option.
      */
     severity: ActionSeverity;
     /**
@@ -87,6 +92,10 @@ export type RevertOption = (RevertActionBase & RevertAction) & {
      * The wiki-specific configuration should not have this as true.
      */
     system?: true;
+    /**
+     * A custom CSS color for this option.
+     */
+    color?: string;
 };
 export type SerializableRevertOption = RevertActionBase &
     SerializableRevertAction & {
@@ -174,7 +183,24 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
 
 export default class RevertOptions {
     public static get loaded(): Record<string, RevertOption> {
-        return RedWarnWikiConfiguration.c.revertOptions;
+        // Shallow copy
+        const options: Record<string, RevertOption> = {};
+
+        for (const [id, revertOption] of Object.entries(
+            RedWarnWikiConfiguration.c.revertOptions
+        )) {
+            options[id] = Object.assign(
+                {},
+                revertOption,
+                Configuration.Revert.revertOptions.value?.[id] ?? {}
+            );
+
+            if (options[id].enabled == null) {
+                options[id].enabled = options[id].default ?? false;
+            }
+        }
+
+        return options;
     }
     public static get all(): Record<string, RevertOption> {
         return { ...RevertOptions.loaded, ...RequiredRevertOptions() };

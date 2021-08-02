@@ -12,6 +12,7 @@ export enum UIInputType {
     Textbox,
     Number,
     ColorPicker,
+    RevertOptions,
 }
 
 export interface DisplayInformationOption {
@@ -32,15 +33,15 @@ interface DisplayInformationBase {
     /**
      * The human-readable title for this setting.
      */
-    title?: string;
+    title: string;
     /**
      * The description for this setting.
      */
-    description?: string;
+    description: string;
     /**
      * The display type for this specific setting.
      */
-    uiInputType?: UIInputType;
+    uiInputType: UIInputType;
 }
 
 /**

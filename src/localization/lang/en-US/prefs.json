@@ -17,6 +17,10 @@
         }
     },
     "revert": {
+        "revertOption": {
+            "title": "Revert options",
+            "description": "Main revert options, show whenever viewing a diff. Other revert options are available in the \"More Options\" panel. Available options are set on a per-wiki basis."
+        },
         "revertDoneOption": {
             "title": "Post-rollback action",
             "description": "The default action to take after reverting an edit by a user.",

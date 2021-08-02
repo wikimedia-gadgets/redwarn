@@ -5,15 +5,41 @@
 import { RevertMethod } from "..";
 import { Setting, UIInputType } from "../Setting";
 import i18next from "i18next";
-import { RevertDoneOption } from "rww/definitions/RevertDoneOptions";
+import { RevertDoneOption } from "rww/data/RevertDoneOptions";
+
+type RevertOptionOverrides = Record<
+    string,
+    Partial<{
+        enabled: boolean;
+        color: string;
+        icon: string;
+        name: string;
+        warning: string;
+        summary: string;
+    }>
+>;
 
 const RevertSettings = {
+    /**
+     * Revert options. Since revert options are determined per wiki, a value
+     * of `null` means the default per-wiki options will be used. If this is
+     * not null, this should be a list of per-wiki revert option overrides.
+     *
+     * Options are shown in the order that they are stored. Options that
+     * aren't in this menu are stored in the "More Options" panel.
+     */
+    revertOptions: new Setting<RevertOptionOverrides>("revertOptions", null, {
+        title: i18next.t("prefs:revert.revertOption.title"),
+        description: i18next.t("prefs:revert.revertOption.description"),
+        uiInputType: UIInputType.RevertOptions,
+    }),
+
     /**
      * Revert done option that is automatically executed on revert complete.
      *
      * If this is empty, the user will be prompted for the next action.
      */
-    revertDoneOption: new Setting<string[]>("rollbackDoneOption", [], {
+    revertDoneOption: new Setting<string[]>("revertDoneOption", [], {
         title: i18next.t("prefs:revert.revertDoneOption.title"),
         description: i18next.t("prefs:revert.revertDoneOption.description"),
         // Enable support for multiple actions (e.g. latest revision and user warning.)

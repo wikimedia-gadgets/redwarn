@@ -104,6 +104,9 @@ export default class RedWarn {
     static get Configuration(): typeof Configuration {
         return Configuration;
     }
+    static get WikiConfiguration(): typeof RedWarnWikiConfiguration {
+        return RedWarnWikiConfiguration;
+    }
     static Database(): RedWarnLocalDB {
         return RedWarnLocalDB.i;
     }

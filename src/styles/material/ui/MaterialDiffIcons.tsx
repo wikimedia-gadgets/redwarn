@@ -13,13 +13,13 @@ import {
 import RevertOptions, {
     ActionSeverity,
     RevertOption,
-} from "rww/definitions/RevertOptions";
+} from "rww/data/RevertOptions";
 import { MDCLinearProgress } from "@material/linear-progress/component";
 
 import "../css/diffIcons.css";
 import i18next from "i18next";
 import { Configuration, RevertMethod } from "rww/config";
-import { RevertDoneOptions } from "rww/definitions/RevertDoneOptions";
+import { RevertDoneOptions } from "rww/data/RevertDoneOptions";
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
 import Log from "rww/data/RedWarnLog";
 
@@ -144,6 +144,8 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
         const options: JSX.Element[] = [];
 
         for (const option of Object.values(RevertOptions.all)) {
+            if (!option.enabled && !option.system) continue;
+
             options.push(
                 <MaterialIconButton
                     label={option.name}

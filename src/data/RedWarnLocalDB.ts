@@ -9,7 +9,7 @@ import {
     CacheTracker,
     LogItem,
 } from "rww/data/database/RWDBObjectStoreDefinitions";
-import Group from "rww/definitions/Group";
+import Group from "rww/mediawiki/Group";
 import Log from "rww/data/RedWarnLog";
 
 /**

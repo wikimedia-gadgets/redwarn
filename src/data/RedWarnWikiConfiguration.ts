@@ -14,8 +14,8 @@ import {
 import type {
     RevertOption,
     SerializableRevertOption,
-} from "rww/definitions/RevertOptions";
-import { ActionSeverity } from "rww/definitions/RevertOptions";
+} from "rww/data/RevertOptions";
+import { ActionSeverity } from "rww/data/RevertOptions";
 import {
     RW_FALLBACK_WIKI,
     RW_WIKI_CONFIGURATION,

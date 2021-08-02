@@ -14,7 +14,7 @@ import { Configuration, RevertMethod } from "rww/config";
 import Log from "rww/data/RedWarnLog";
 import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
 import type { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
-import { RevertOption } from "rww/definitions/RevertOptions";
+import { RevertOption } from "rww/data/RevertOptions";
 
 /**
  * The context of a revert being performed. When used alone (not through

@@ -1,5 +1,5 @@
 import i18next from "i18next";
-import Group from "rww/definitions/Group";
+import Group from "rww/mediawiki/Group";
 import { ClientUser } from "rww/mediawiki";
 import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
 import Log from "rww/data/RedWarnLog";

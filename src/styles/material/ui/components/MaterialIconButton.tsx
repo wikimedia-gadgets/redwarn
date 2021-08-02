@@ -46,6 +46,7 @@ export default function (props: MaterialIconButtonProperties): JSX.Element {
                 ...(props.iconColor ? [`color:${props.iconColor}`] : []),
             ].join(";")}
             {...expandDataAttributes(props)}
+            data-mdc-ripple-is-unbounded={true}
         >
             {(ripple ?? true) && <span class="mdc-icon-button__ripple" />}
             {icon}
@@ -53,8 +54,7 @@ export default function (props: MaterialIconButtonProperties): JSX.Element {
     );
 
     if (ripple ?? true) {
-        const iconButtonRipple = new MDCRipple(iconButton);
-        iconButtonRipple.unbounded = true;
+        new MDCRipple(iconButton);
     }
 
     return iconButton;

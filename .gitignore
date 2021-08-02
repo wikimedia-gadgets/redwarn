@@ -21,8 +21,5 @@ node_modules/
 build/
 release/
 
-# Temporarily exclude while remaking
-.gitlab-ci.yml
-
 # caches
 .eslintcache

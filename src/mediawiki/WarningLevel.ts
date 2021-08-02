@@ -1,5 +1,5 @@
-import regexClone from "rww/util/regexClone";
-import { Page } from "rww/mediawiki";
+import type { Page } from "rww/mediawiki";
+import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
 
 /**
  * The Warning Level is derived from the English Wikipedia's four-level tier
@@ -53,29 +53,30 @@ export const WarningLevelComments: {
         description: "Assumes bad faith \u2013 cease and desist",
     },
     [WarningLevel.Final]: {
-        summary: "Final Warning",
+        summary: "Final warning",
         description: "Bad faith, last warning.",
     },
     [WarningLevel.Immediate]: {
         alternative: "4im",
-        summary: "Only Warning",
+        summary: "Only warning",
         description: "Only warning \u2013 used for severe policy violations",
     },
 };
 
-/**
- * Warning signatures are used to trace the existence of a warning on a user's
- * talk page. If a given signature was found on the talk page, the warning
- * level corresponding to that signature is used, with the highest level being
- * the final value.
- */
-export const WarningSignatures: { [key in WarningLevel]?: RegExp } = {
-    [WarningLevel.Notice]: /<!--\s*Template:uw-.+?1\s*-->/gi,
-    [WarningLevel.Caution]: /<!--\s*Template:uw-.+?2\s*-->/gi,
-    [WarningLevel.Warning]: /<!--\s*Template:uw-.+?3\s*-->/gi,
-    [WarningLevel.Final]: /<!--\s*Template:uw-.+?4\s*-->/gi,
-    [WarningLevel.Immediate]: /<!--\s*Template:uw-.+?4im\s*-->/gi,
-};
+export interface IncludesWarningLevelSignature {
+    type: "includes";
+    substring: string;
+}
+
+export interface RegexWarningLevelSignature {
+    type: "regex";
+    source: string;
+    flags: string;
+}
+
+export type WarningLevelSignature =
+    | IncludesWarningLevelSignature
+    | RegexWarningLevelSignature;
 
 /**
  * Grabs the highest warning value from wikitext.
@@ -84,13 +85,27 @@ export const WarningSignatures: { [key in WarningLevel]?: RegExp } = {
 export function getHighestWarningLevel(wikitext: string): WarningLevel {
     let highestWarningLevel = WarningLevel.None;
 
-    // TODO Implement per-wiki signature checking.
-    for (const [level, regex] of Object.entries(WarningSignatures).sort(
-        (a, b) => +b[0] - +a[0]
-    )) {
+    for (const [level, checks] of Object.entries(
+        RedWarnWikiConfiguration.c.warnings.signatures
+    ).sort((a, b) => +b[0] - +a[0])) {
         if (+level > +highestWarningLevel) {
-            if (regexClone(regex).test(wikitext)) {
-                highestWarningLevel = +level;
+            checkLoop: for (const check of checks) {
+                switch (check.type) {
+                    case "includes":
+                        if (wikitext.includes(check.substring)) {
+                            highestWarningLevel = +level;
+                            break checkLoop;
+                        }
+                        break;
+                    case "regex":
+                        if (
+                            new RegExp(check.source, check.flags).test(wikitext)
+                        ) {
+                            highestWarningLevel = +level;
+                            break checkLoop;
+                        }
+                        break;
+                }
             }
         }
     }

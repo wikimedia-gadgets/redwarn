@@ -1,11 +1,10 @@
 import { ComponentChild } from "tsx-dom";
 import generateId from "rww/util/generateId";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
-import { RollbackContext } from "rww/definitions/RollbackContext";
 import { User } from "rww/mediawiki/User";
-import { Warning, WarningOptions } from "rww/mediawiki/Warnings";
+import { Page, Warning, WarningOptions } from "rww/mediawiki";
 import { Dependency } from "rww/data/Dependencies";
-import { Page } from "rww/mediawiki";
+import { RevertContext } from "rww/mediawiki/Revert";
 
 export enum RWUIDialogActionType {
     /**
@@ -212,7 +211,7 @@ export class RWUISelectionDialog extends RWUIDialog {
 }
 
 export interface RWUIWarnDialogProps extends RWUIDialogProperties {
-    rollbackContext?: RollbackContext;
+    rollbackContext?: RevertContext;
     targetUser?: User;
     defaultWarnReason?: Warning;
     defaultWarnLevel?: number;

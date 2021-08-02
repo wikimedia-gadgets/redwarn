@@ -1,6 +1,6 @@
 import { RW_CONFIG_VERSION } from "rww/data/RedWarnConstants";
 import { RevertMethod } from "rww/config/ConfigurationEnums";
-import { RevertDoneOption } from "rww/definitions/RollbackDoneOptions";
+import { RevertDoneOption } from "rww/data/RevertDoneOptions";
 import Log from "rww/data/RedWarnLog";
 
 type ConfigurationUpdater = (
@@ -36,22 +36,22 @@ const configurationUpdaters: { [key: number]: ConfigurationUpdater } = {
                 case "rwRollbackDoneOption":
                     switch (value) {
                         case "RWRBDONEmrevPg":
-                            config.rollbackDoneOption =
+                            config.revertDoneOption =
                                 RevertDoneOption.LatestRevision;
                             break;
                         case "RWRBDONEnewUsrMsg":
-                            config.rollbackDoneOption =
+                            config.revertDoneOption =
                                 RevertDoneOption.NewMessage;
                             break;
                         case "RWRBDONEwelcomeUsr":
-                            config.rollbackDoneOption =
+                            config.revertDoneOption =
                                 RevertDoneOption.QuickTemplate;
                             break;
                         case "RWRBDONEwarnUsr":
-                            config.rollbackDoneOption = "warnUser";
+                            config.revertDoneOption = "warnUser";
                             break;
                         case "RWRBDONEreportUsr":
-                            config.rollbackDoneOption = "reportUser";
+                            config.revertDoneOption = "reportUser";
                             break;
                         default:
                             Log.error("Unknown rwRollbackDoneOption:", value);

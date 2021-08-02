@@ -1,4 +1,4 @@
-import { MediaWikiAPI, Page } from "rww/mediawiki";
+import { MediaWikiAPI, Page } from "rww/mediawiki/index";
 
 interface Group {
     name: string;

@@ -3,6 +3,7 @@ import i18next from "i18next";
 
 const mwChecks = {
     version: () => {
+        // Support for `wgDiffOldId` and `wgDiffNewId`
         return semanticDifference(mw.config.get("wgVersion"), "1.30.0") !== -1;
     },
     user: () => {
@@ -74,7 +75,7 @@ export * from "./ClientUser";
 export * from "./Gender";
 export * from "./Page";
 export * from "./Revision";
-export * from "./Rollback";
+export * from "./Revert";
 export * from "./URL";
 export * from "./WarningLevel";
 export * from "./Warnings";

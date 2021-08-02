@@ -451,8 +451,8 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
 
         this.updating = true;
 
+        // Reuse the previous user object if it's the same user.
         if (!!this.lastUser && user.username === this.lastUser.username)
-            // Let's not waste resources in getting the same user's data.
             this.user = this.lastUser;
         else this.user = user;
 
@@ -508,9 +508,9 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
 
             // Update default warning level of the reason component.
             this.props.warnDialog.mwdReason.MWDReason.defaultLevel =
-                user.warningAnalysis.level > 3
+                this.user.warningAnalysis.level > 3
                     ? 4
-                    : user.warningAnalysis.level + 1;
+                    : this.user.warningAnalysis.level + 1;
         }
 
         this.updating = false;

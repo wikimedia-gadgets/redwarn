@@ -15,23 +15,14 @@ import MaterialDialog, {
 } from "./MaterialDialog";
 
 import "../css/warnDialog.css";
-import {
-    Warning,
-    WarningCategory,
-    WarningCategoryNames,
-    WarningLevel,
-    Warnings,
-    WarningsByCategory,
-    WarningType,
-} from "rww/mediawiki";
+import { Warning, WarningManager } from "rww/mediawiki";
 import MaterialTextInput, {
     MaterialTextInputUpgrade,
 } from "rww/styles/material/ui/components/MaterialTextInput";
-import RedWarnStore from "rww/data/RedWarnStore";
-import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
 import { regexEscape } from "rww/util";
 import { MDCDialog } from "@material/dialog";
 import i18next from "i18next";
+import MaterialWarnSearchDialogCard from "rww/styles/material/ui/components/MaterialWarnSearchDialogCard";
 
 interface MaterialWarnSearchDialogProperties extends RWUIDialogProperties {
     /**
@@ -112,18 +103,17 @@ function MaterialWarnSearchDialogWarnings(props: {
 }): JSX.Element {
     const warningElements: JSX.Element[] = [];
 
-    for (const [category, warnings] of Object.entries(WarningsByCategory)) {
+    for (const [category, warnings] of Object.entries(
+        WarningManager.warningsByCategories
+    )) {
         const categoryHeader = (
-            <div class="rw-warningCategory" data-rw-warningCategory={category}>
-                {
-                    WarningCategoryNames[
-                        // `category` is a string in this context, which is incompatible
-                        // with `WarningCategoryNames`' index type (`WarningCategory`).
-                        // Since `category` will always be a `WarningCategory` anyways,
-                        // we can just assert the type.
-                        (category as unknown) as WarningCategory
-                    ]
+            <div
+                class="rw-warningCategory"
+                data-rw-warningCategory={
+                    WarningManager.warningCategoriesMap[category].id
                 }
+            >
+                {WarningManager.warningCategoriesMap[category].label}
             </div>
         );
         warningElements.push(categoryHeader);
@@ -133,84 +123,7 @@ function MaterialWarnSearchDialogWarnings(props: {
         for (const [id, warning] of Object.entries(warnings)) {
             // Generate cards for every warning
             const warningCard = (
-                <div
-                    class="rw-mdc-warnSearchDialog-warning mdc-card mdc-card--outlined"
-                    data-rw-warning={id}
-                >
-                    <table>
-                        <tr>
-                            <td style={"width: 100%"}>
-                                <div class={"rw-mdc-cardTitle"}>
-                                    {warning.name}
-                                </div>
-                            </td>
-                            <td rowSpan={4}>
-                                <MaterialIconButton
-                                    class={[
-                                        "mdc-card__action",
-                                        "mdc-card__action--icon",
-                                    ]}
-                                    icon={((): string => {
-                                        // Where icons are handled for listings
-                                        switch (warning.type) {
-                                            case WarningType.Tiered:
-                                                return "signal_cellular_alt";
-                                            case WarningType.SingleIssue:
-                                                return "info";
-                                            case WarningType.PolicyViolation:
-                                                return "new_releases";
-                                        }
-                                    })()}
-                                    ripple={false}
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style={"width: 100%"}>
-                                <div class={"rw-mdc-cardSubtitle"}>
-                                    <a
-                                        href={RedWarnStore.articlePath(
-                                            `Template:${warning.template}${
-                                                warning.type ===
-                                                WarningType.Tiered
-                                                    ? warning.levels[0] === 5
-                                                        ? "4im"
-                                                        : warning.levels[0]
-                                                    : ""
-                                            }`
-                                        )}
-                                        target="_blank"
-                                    >
-                                        {/* Opening and closing curlies */}
-                                        &#123;&#123;{warning.template}
-                                        &#125;&#125;
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class={"rw-mdc-cardSubtitle"}>
-                                    {warning.type === WarningType.Tiered &&
-                                        `Available levels: ${warning.levels
-                                            .map((v) => {
-                                                return `${WarningLevel[v]} (${
-                                                    v === WarningLevel.Immediate
-                                                        ? "4im"
-                                                        : v
-                                                })`;
-                                            })
-                                            .join(", ")}`}
-                                    {warning.type === WarningType.SingleIssue &&
-                                        `Single-issue warning`}
-                                    {warning.type ===
-                                        WarningType.PolicyViolation &&
-                                        `Policy violation warning`}
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
+                <MaterialWarnSearchDialogCard id={id} warning={warning} />
             );
 
             warningCard.addEventListener("click", (event) => {
@@ -241,10 +154,11 @@ function MaterialWarnSearchDialogWarnings(props: {
                 );
             });
 
+            // Checks whether or not the card should be hidden or not.
             props.dialog.addChangeListener((event) => {
-                // on textbox change, this is called on a per card basis!
-                // Actual search algorithm here - this doesn't do everything, just checks whether or not the card should hide itself
-                if (event.value.length === 0) {
+                // This is called for every card on the list.
+
+                if (event.value == null || event.value.length === 0) {
                     warningCard.classList.toggle("rw-warnSearch-hidden", false);
                     return;
                 }
@@ -366,7 +280,7 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
         for (const handler of this.events["select"]) {
             if (!(handler(event) ?? true)) break;
         }
-        this.selectedWarning = Warnings[event.warningId];
+        this.selectedWarning = WarningManager.warnings[event.warningId];
 
         const oldActions = this.actions;
 
@@ -452,7 +366,8 @@ export default class MaterialWarnSearchDialog extends RWUIDialog {
                                 this.performChange(event);
                             },
                             onSubmit: (warningId) => {
-                                this.selectedWarning = Warnings[warningId];
+                                this.selectedWarning =
+                                    WarningManager.warnings[warningId];
                                 this.dialog.close("submit");
                             },
                         }}

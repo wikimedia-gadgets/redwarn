@@ -1,10 +1,6 @@
 import { Revision } from "rww/mediawiki/Revision";
 import { Page, PageEditOptions } from "./Page";
 import { MediaWikiAPI } from "rww/mediawiki/API";
-import {
-    PageMissingError,
-    RevisionMissingError,
-} from "rww/errors/MediaWikiErrors";
 
 export interface APISection {
     /**
@@ -159,24 +155,9 @@ export default class Section {
             ],
         });
 
-        // TODO: Replace with a centralized error handling system in MediaWikiAPI
-        if (sectionsRequest["error"]) {
-            switch (sectionsRequest["error"]["code"]) {
-                case "missingtitle":
-                    // Always true, but here for type checks.
-                    if (context instanceof Page) {
-                        throw new PageMissingError(context);
-                    }
-                    break;
-                case "nosuchrevid":
-                    // Always true, but here for type checks.
-                    if (context instanceof Revision) {
-                        throw new RevisionMissingError(context.revisionID);
-                    }
-                    break;
-                default:
-                    throw new Error(sectionsRequest["error"]["info"]);
-            }
+        // TODO: error
+        if (sectionsRequest["errors"]) {
+            throw MediaWikiAPI.error(sectionsRequest);
         }
 
         if (

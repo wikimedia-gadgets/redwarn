@@ -12,10 +12,10 @@ import MaterialInputDialog from "./ui/MaterialInputDialog";
 import MaterialSelectionDialog from "./ui/MaterialSelectionDialog";
 import MaterialWarnDialog from "rww/styles/material/ui/MaterialWarnDialog";
 import MaterialToast from "./ui/MaterialToast";
+import MaterialDiffIcons from "./ui/MaterialDiffIcons";
 
 import "./css/globals.css";
 import MaterialIFrameDialog from "rww/styles/material/ui/MaterialIFrameDialog";
-import { User } from "rww/mediawiki";
 
 const MaterialStyle: Style = {
     name: "material",
@@ -42,6 +42,7 @@ const MaterialStyle: Style = {
             // Original: "https://fonts.googleapis.com/icon?family=Material+Icons"
             src: "https://redwarn.toolforge.org/cdn/css/materialicons.css",
             cache: {
+                delayedReload: true,
                 duration: 1209600000, // 14 days
             },
         },
@@ -49,26 +50,29 @@ const MaterialStyle: Style = {
             type: "style",
             id: "mdc-styles",
             src:
-                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@10.0.0.min.css",
+                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@12.0.0.min.css",
             cache: {
+                delayedReload: true,
                 duration: 1209600000, // 14 days
             },
         },
-        {
-            type: "style",
-            id: "mdc-tooltip-styles",
-            src:
-                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@10.0.0.tooltip.min.css",
-            cache: {
-                duration: 1209600000, // 14 days
-            },
-        },
+        // {
+        //     type: "style",
+        //     id: "mdc-styles-tooltips",
+        //     src:
+        //         "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@12.0.0.tooltip.min.css",
+        //     cache: {
+        //         delayedReload: true,
+        //         duration: 1209600000, // 14 days
+        //     },
+        // },
         {
             type: "style",
             id: "roboto",
             src:
                 "https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese",
             cache: {
+                delayedReload: true,
                 duration: 1209600000, // 14 days
             },
         },
@@ -83,23 +87,20 @@ const MaterialStyle: Style = {
         rwWarnDialog: MaterialWarnDialog,
         rwIFrameDialog: MaterialIFrameDialog,
         rwToast: MaterialToast,
+        rwDiffIcons: MaterialDiffIcons,
     },
 
     hooks: {
         preInit: [MaterialPreInitializationHooks],
-        postInit: [
-            () =>
-                new MaterialWarnDialog({}).show().then((res) => User.warn(res)),
-        ],
     },
 };
 
 export default MaterialStyle;
 
 export function upgradeMaterialDialogButtons(dialog: RWUIDialog): void {
-    $(dialog.element)
-        .find("button")
-        .each((_, el) => new MDCRipple(el).initialize());
+    dialog.element
+        .querySelectorAll("button")
+        .forEach((el) => new MDCRipple(el).initialize());
 }
 
 type WritableKeys<T> = {

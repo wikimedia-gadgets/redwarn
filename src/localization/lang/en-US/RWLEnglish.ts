@@ -26,6 +26,7 @@ window.RedWarnLanguages.push({
         mediawiki: require("./mediawiki.json"),
         ui: require("./ui.json"),
         misc: require("./misc.json"),
-        prop: require("./prefs.json"),
+        prefs: require("./prefs.json"),
+        revert: require("./revert.json"),
     },
 });

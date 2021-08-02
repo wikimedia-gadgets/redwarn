@@ -1,5 +1,6 @@
 import { RedWarnHook, RedWarnHookEventTypes } from "./RedWarnHookEvent";
 import StyleManager from "rww/styles/StyleManager";
+import Log from "rww/data/RedWarnLog";
 
 declare global {
     // noinspection JSUnusedGlobalSymbols
@@ -30,7 +31,8 @@ export default class RedWarnHooks {
         hookType: T,
         hook: RedWarnHook
     ): void {
-        this.assertHookType(hookType);
+        Log.trace(`Added hook: ${hookType}`, hook);
+        RedWarnHooks.assertHookType(hookType);
         (RedWarnHooks.hooks[hookType] as RedWarnHook[]).push(hook);
     }
 
@@ -38,7 +40,8 @@ export default class RedWarnHooks {
         hookType: T,
         hook: RedWarnHook
     ): void {
-        this.assertHookType(hookType);
+        Log.trace(`Removed hook: ${hookType}`, hook);
+        RedWarnHooks.assertHookType(hookType);
         (RedWarnHooks.hooks[hookType] as RedWarnHook[]).filter(
             (h) => h !== hook
         );
@@ -48,7 +51,8 @@ export default class RedWarnHooks {
         hookType: T,
         payload: Record<string, any> = {}
     ): Promise<void> {
-        this.assertHookType(hookType);
+        Log.debug(`Executing hook: ${hookType}`);
+        RedWarnHooks.assertHookType(hookType);
 
         if (StyleManager.activeStyle.hooks[hookType])
             for (const hook of StyleManager.activeStyle.hooks[
@@ -56,14 +60,30 @@ export default class RedWarnHooks {
             ] as RedWarnHook[]) {
                 const result = hook(payload);
                 if (result instanceof Promise) {
-                    await result;
+                    try {
+                        await result;
+                    } catch (e) {
+                        Log.error(`Hook failed for style: ${hookType}`, {
+                            type: hookType,
+                            hook: hook,
+                            paylod: payload,
+                        });
+                    }
                 }
             }
 
         for (const hook of RedWarnHooks.hooks[hookType] as RedWarnHook[]) {
             const result = hook(payload);
             if (result instanceof Promise) {
-                await result;
+                try {
+                    await result;
+                } catch (e) {
+                    Log.error(`Internal hook failed: ${hookType}`, {
+                        type: hookType,
+                        hook: hook,
+                        paylod: payload,
+                    });
+                }
             }
         }
 

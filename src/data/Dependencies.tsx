@@ -1,7 +1,9 @@
 import { h } from "tsx-dom";
-import { generateId, toBase64URL } from "rww/util";
+import { generateId } from "rww/util";
 import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
 import Log from "rww/data/RedWarnLog";
+import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
+import { CachedDependency } from "rww/data/database/RWDBObjectStoreDefinitions";
 
 /*
  * This file uses TSX only to quickly build <link> and <script>
@@ -16,6 +18,12 @@ export interface DependencyCacheOptions {
      * performed.
      */
     expireOnly?: boolean;
+    /**
+     * This will no longer wait for the HEAD check to finish before serving
+     * the dependency. Set this to `true` in the event that your dependency does
+     * not need to be of the latest version.
+     */
+    delayedReload?: boolean;
 }
 
 export interface DependencyGlobals {
@@ -54,7 +62,7 @@ export default class Dependencies {
      * @returns A boolean Promise, whether the element loaded successfully or not.
      */
     static async loadDependency(dependency: Dependency): Promise<boolean> {
-        const depElement = await this.buildDependency(dependency);
+        const depElement = await Dependencies.buildDependency(dependency);
         let oldElement;
         if ((oldElement = document.getElementById(depElement.id)) == null)
             document.head.append(depElement);
@@ -82,7 +90,7 @@ export default class Dependencies {
                     onLoad={() => {
                         resolver(true);
                     }}
-                    src={await this.getDependencyURI(dependency)}
+                    src={await Dependencies.getDependencyURI(dependency)}
                 />,
                 { promise: loadPromise }
             ) as HTMLElement & { promise: Promise<boolean> };
@@ -95,7 +103,7 @@ export default class Dependencies {
                     onLoad={() => {
                         resolver(true);
                     }}
-                    href={await this.getDependencyURI(dependency)}
+                    href={await Dependencies.getDependencyURI(dependency)}
                 />,
                 { promise: loadPromise }
             ) as HTMLElement & { promise: Promise<boolean> };
@@ -114,7 +122,7 @@ export default class Dependencies {
                 `Loading ${dependency.type} dependency: ${dependency.src}`
             );
 
-            buildPromises.push(this.buildDependency(dependency));
+            buildPromises.push(Dependencies.buildDependency(dependency));
         }
 
         return await Promise.all(buildPromises);
@@ -136,17 +144,9 @@ export default class Dependencies {
 
         if (dependency.cache) {
             let cachedDep = await cacheStore.get(dependency.id);
+            let willRecacheNow: boolean;
 
-            let willRecache = false;
-
-            if (cachedDep == null) willRecache = true;
-            else if (
-                Date.now() - cachedDep.lastCache >
-                dependency.cache.duration
-            )
-                // Cache has already expired.
-                willRecache = true;
-            else if (!dependency.cache.expireOnly) {
+            const recacheCheck = async () => {
                 try {
                     const { headers } = await fetch(dependency.src, {
                         method: "HEAD",
@@ -154,31 +154,47 @@ export default class Dependencies {
 
                     if (headers.get("ETag") ?? "" !== cachedDep.etag ?? "")
                         // ETag is different. This indicates a file change.
-                        willRecache = true;
+                        return true;
                     else if (
                         new Date(headers.get("Last-Modified")).getTime() >
                         cachedDep.lastCache
                     )
                         // File was updated.
-                        willRecache = true;
+                        return true;
                 } catch (e) {
                     // Something wrong happened during header retrieval. Just fallback to cached version.
+                    return false;
                 }
+            };
+
+            if (cachedDep == null)
+                // Cache if there is no cached dependency.
+                willRecacheNow = true;
+            else if (
+                Date.now() - cachedDep.lastCache >
+                dependency.cache.duration
+            )
+                // Cache has already expired.
+                willRecacheNow = true;
+            else if (
+                !dependency.cache.expireOnly &&
+                !dependency.cache.delayedReload
+            ) {
+                // Cache if needed.
+                willRecacheNow = await recacheCheck();
             }
+            // Fall back to cache.
+            else willRecacheNow = false;
 
-            if (willRecache) {
-                Log.debug(`Recaching dependency: ${dependency.src}`);
+            if (willRecacheNow) {
+                Log.trace(
+                    `Dependency needs caching: ${dependency.src}. Recaching immediately...`
+                );
                 try {
-                    const data = await fetch(dependency.src);
-
-                    cachedDep = {
-                        id: dependency.id,
-                        lastCache: Date.now(),
-                        etag: data.headers.get("ETag") ?? "",
-                        data: (await data.text()).toString(),
-                    };
-
-                    await cacheStore.put(cachedDep);
+                    cachedDep = await Dependencies.recacheDependency(
+                        cacheStore,
+                        dependency
+                    );
                 } catch (e) {
                     // Something wrong happened during reload. If a cache exists, use it. Otherwise,
                     // we'll just use the src as the URI and hope that the browser resolves the situation.
@@ -187,8 +203,27 @@ export default class Dependencies {
                             "Failed to load caching dependency. Falling back to browser...",
                             e
                         );
-                        return dependency.src;
                     }
+                }
+            } else {
+                // Keep inside else in order to prevent caching twice.
+
+                if (
+                    !dependency.cache.expireOnly &&
+                    dependency.cache.delayedReload
+                ) {
+                    // If it's delayed, asynchronously recache.
+                    recacheCheck().then(async (willRecache) => {
+                        if (willRecache) {
+                            await Dependencies.recacheDependency(
+                                cacheStore,
+                                dependency
+                            );
+                            Log.trace(
+                                `Finished HEAD checking for dependency: ${dependency.src}`
+                            );
+                        }
+                    });
                 }
             }
 
@@ -196,16 +231,45 @@ export default class Dependencies {
             // retrieval failed. There is, however, a "possibly null or undefined" linter
             // problem here, so the extra ternary operator is there to silence it.
 
+            // Strip source maps.
+            if (cachedDep != null && dependency.type === "style") {
+                cachedDep.data = cachedDep.data.replace(
+                    /\/\*\s*#\s*sourceMappingURL=.+?\s*\*\//g,
+                    ""
+                );
+            }
+
             return cachedDep
-                ? toBase64URL(
-                      cachedDep.data,
-                      dependency.type === "script"
-                          ? "application/javascript"
-                          : "text/css"
+                ? URL.createObjectURL(
+                      new Blob([cachedDep.data], {
+                          type:
+                              dependency.type === "script"
+                                  ? "application/javascript"
+                                  : "text/css",
+                      })
                   )
                 : dependency.src;
         } else {
             return dependency.src;
         }
+    }
+
+    static async recacheDependency(
+        cacheStore: RedWarnIDBObjectStore<CachedDependency>,
+        dependency: Dependency
+    ): Promise<CachedDependency> {
+        Log.debug(`Recaching dependency: ${dependency.src}`);
+        const data = await fetch(dependency.src);
+
+        const cachedDep = {
+            id: dependency.id,
+            lastCache: Date.now(),
+            etag: data.headers.get("ETag") ?? "",
+            data: (await data.text()).toString(),
+        };
+
+        await cacheStore.put(cachedDep);
+        Log.trace(`Redownloaded dependency: ${dependency.src}`);
+        return cachedDep;
     }
 }

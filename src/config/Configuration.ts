@@ -16,6 +16,7 @@ import CoreSettings from "rww/config/values/CoreSettings";
 import UISettings from "rww/config/values/UISettings";
 import RevertSettings from "rww/config/values/RevertSettings";
 import AccessibilitySettings from "rww/config/values/AccessibilitySettings";
+import { isEmptyObject } from "rww/util";
 
 export type ConfigurationSet = Record<string, Setting<any>>;
 
@@ -38,6 +39,9 @@ export class Configuration {
         return Object.entries(Configuration.configurationSets).reduce(
             (out, [id, set]) => {
                 out[id] = Configuration.map(set);
+                if (isEmptyObject(out[id])) {
+                    delete out[id];
+                }
 
                 return out;
             },
@@ -77,8 +81,8 @@ export class Configuration {
         // settings and integrations.
         if (
             (redwarnConfig.core &&
-                (redwarnConfig.core[this.Core.configVersion.id] ?? 0)) <
-            RW_CONFIG_VERSION
+                (redwarnConfig.core[Configuration.Core.configVersion.id] ??
+                    0)) < RW_CONFIG_VERSION
         ) {
             redwarnConfig = updateConfiguration(redwarnConfig);
             saveNow = true;
@@ -91,12 +95,13 @@ export class Configuration {
         for (const [key, set] of Object.entries(
             Configuration.configurationSets
         )) {
-            this.loadSettings(redwarnConfig, key.toLowerCase(), set);
+            Configuration.loadSettings(redwarnConfig, key.toLowerCase(), set);
         }
 
         try {
             StyleManager.setStyle(
-                redwarnConfig.ui[this.UI.style.id] ?? this.UI.style.defaultValue
+                redwarnConfig.ui[Configuration.UI.style.id] ??
+                    Configuration.UI.style.defaultValue
             );
         } catch (e) {
             if (e instanceof RedWarnStyleMissingError) {
@@ -109,7 +114,7 @@ export class Configuration {
         }
 
         if (saveNow) {
-            this.save();
+            Configuration.save();
         }
     }
 
@@ -147,7 +152,7 @@ export class Configuration {
         // Skip if undefined.
         if (rawConfiguration[configurationKey] == undefined) return;
 
-        this.allSettings(configurationSet).forEach((setting) => {
+        Configuration.allSettings(configurationSet).forEach((setting) => {
             // Only set if the value is present in the configuration file (i.e. a changed value).
             if (rawConfiguration[configurationKey][setting.id])
                 setting.value = rawConfiguration[configurationKey][setting.id];
@@ -163,10 +168,11 @@ export class Configuration {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const template = require("./redwarnConfig.template.txt");
 
+        Log.debug("Updating configuration page...");
         await ClientUser.i.redwarnConfigPage.edit(
             Configuration.toJavascriptFile(
                 template,
-                this.mappedConfigurationSets
+                Configuration.mappedConfigurationSets
             ),
             {
                 comment: "Updating configuration",
@@ -189,16 +195,16 @@ export class Configuration {
          * Keys that will be saved anyways, regardless of default status.
          */
         const forceInclude = [
-            this.Core.configVersion.id,
-            this.Core.latestVersion.id,
+            Configuration.Core.configVersion.id,
+            Configuration.Core.latestVersion.id,
         ];
 
         return Array.from(
-            this.allSettings(configurationSetToMap).values()
+            Configuration.allSettings(configurationSetToMap).values()
         ).reduce((main, setting) => {
             if (
                 !forceInclude.includes(setting.id) &&
-                setting.value !== setting.defaultValue
+                setting.value === setting.defaultValue
             )
                 return main;
 

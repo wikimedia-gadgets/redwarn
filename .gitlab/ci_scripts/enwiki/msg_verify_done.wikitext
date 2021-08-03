@@ -1,1 +1,1 @@
-''There are currently no outstanding commits for pushing. [https://gitlab.com/redwarn/redwarn-web/-/merge_requests Merge commits to master] and [https://gitlab.com/ChlodAlejandro/redwarn-web/-/pipelines trigger an update on GitLab] to start the update process.''
+''There are currently no outstanding commits for pushing. [https://gitlab.com/redwarn/redwarn-web/-/merge_requests Merge commits to master] and [https://gitlab.com/redwarn/redwarn-web/-/pipelines trigger an update on GitLab] to start the update process.''

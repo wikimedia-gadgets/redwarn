@@ -37,7 +37,8 @@ deploy_setup:
         url: https://en.wikipedia.org/wiki/User:RedWarn/.js
     allow_failure: false
     script:
-        - cd .gitlab/ci_scripts && npm install
+        - cd .gitlab/ci_scripts
+        - npm ci
     only:
         variables:
             - $CI_PROJECT_PATH == "redwarn/redwarn-web"
@@ -68,4 +69,5 @@ deploy_start:
             - master
     allow_failure: false
     script:
-        - cd .gitlab/ci_scripts && node enwiki/deploy.js
+        - cd .gitlab/ci_scripts
+        - node enwiki/deploy.js

@@ -1,16 +1,13 @@
 import Style from "rww/styles/Style";
+import { RWErrors, RWFormattedError } from "./RWError";
 
-export class RedWarnStyleMissingError extends Error {
-    constructor(styleId: string, message?: string) {
-        super(message ?? `The style "${styleId}" could not be found.`);
-    }
+export class StyleMissingError extends RWFormattedError<{ styleId: string }> {
+    static readonly code = RWErrors.StyleMissing;
+    static readonly message = 'The style "{{styleId}}" could not be found.';
 }
 
-export class RedWarnStyleLoadError extends Error {
-    constructor(style: Style, message?: string) {
-        super(
-            message ??
-                `An error ocurred while the style "${style.name}" was loading.`
-        );
-    }
+export class StyleLoadError extends RWFormattedError<{ style: Style }> {
+    static readonly code = RWErrors.StyleMissing;
+    static readonly message =
+        'An error ocurred while the style "{{style.name}}" was loading.';
 }

@@ -155,7 +155,8 @@
     function remapPages(pagesObject) {
         const finalObject = {};
         for (const value of Object.values(pagesObject)) {
-            finalObject[value["title"]] = value;
+            if (value["missing"] == null)
+                finalObject[value["title"]] = value;
         }
         return finalObject;
     }

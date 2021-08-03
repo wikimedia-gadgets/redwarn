@@ -103,6 +103,10 @@
         console.error("English Wikipedia password not supplied.");
         return;
     }
+    if (!fs.existsSync(path.resolve(root, "public", "redwarn.js"))) {
+        console.error("Compiled redwarn.js file missing.");
+        return;
+    }
 
     const apiEndpoint = "https://en.wikipedia.org/w/api.php";
 

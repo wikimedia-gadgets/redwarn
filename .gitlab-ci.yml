@@ -28,7 +28,7 @@ pages:
 deploy_setup:
     stage: build
     cache:
-        key: "$CI_COMMIT_REF_SLUG"
+        key: "enwiki_cd_$CI_COMMIT_REF_SLUG"
         paths:
             - .gitlab/ci_scripts/node_modules
         policy: push
@@ -54,7 +54,7 @@ deploy_setup:
 deploy_start:
     stage: deploy
     cache:
-        key: "$CI_COMMIT_REF_SLUG"
+        key: "enwiki_cd_$CI_COMMIT_REF_SLUG"
         paths:
             - .gitlab/ci_scripts/node_modules
         policy: pull

@@ -1,9 +1,32 @@
 {
+  "name": "redwarn-web-ci",
+  "version": "1.0.0",
+  "description": "RedWarn Web Continuous Deployment",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/redwarn/redwarn-web.git"
+  },
+  "keywords": [
+    "wikimedia",
+    "wikipedia",
+    "redwarn",
+    "mediawiki"
+  ],
+  "author": "The RedWarn Team",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://gitlab.com/redwarn/redwarn-web/issues"
+  },
+  "homepage": "https://gitlab.com/redwarn/redwarn-web#readme",
   "dependencies": {
     "axios": "^0.21.1",
     "axios-cookiejar-support": "^1.0.1",
     "git-commit-info": "^2.0.0",
     "gitlog": "^4.0.4",
     "tough-cookie": "^4.0.0"
-  }
+  },
+  "devDependencies": {}
 }

@@ -287,20 +287,22 @@
         console.log(`:: Approval page current revision: ${approvalPageRevision.revid}`);
     }
 
-    // Confirm contents of latest.json
-    if (
-        typeof latestData.hash !== "string"
-        || /[^a-f0-9]/g.test(latestData.hash)
-        || typeof latestData.message !== "string"
-        || typeof latestData.timestamp !== "number"
-        || typeof latestData.author !== "string"
-    ) {
-        // Invalid contents. Assume no latest data.
-        console.log(latestData);
-        latestData = null;
-        console.log(`:: Invalid latest on-wiki version metadata. Assuming none...`);
-    } else {
-        console.log(`:: On-wiki version: ${latestData.hash}`);
+    if (latestData != null) {
+        // Confirm contents of latest.json
+        if (
+            typeof latestData.hash !== "string"
+            || /[^a-f0-9]/g.test(latestData.hash)
+            || typeof latestData.message !== "string"
+            || typeof latestData.timestamp !== "number"
+            || typeof latestData.author !== "string"
+        ) {
+            // Invalid contents. Assume no latest data.
+            console.log(latestData);
+            latestData = null;
+            console.log(`:: Invalid latest on-wiki version metadata. Assuming none...`);
+        } else {
+            console.log(`:: On-wiki version: ${latestData.hash}`);
+        }
     }
 
     // ========================================================================

@@ -1,14 +1,71 @@
-# This file is a template, and might need editing before it works on your project.
-# Full project: https://gitlab.com/pages/plain-html
-image: php:latest
+image: node:14.16.1
 
+stages:
+    - build
+    - deploy
+
+# GitLab Pages deployment
 pages:
-  stage: deploy
-  script:
-    - php build.php > public/redwarn.js
-  artifacts:
-    paths:
-      - public
-  only:
-    refs:
-      - master
+    image: php:latest
+    stage: build
+    script:
+        - php build.php > public/redwarn.js
+    artifacts:
+        paths:
+            # GitLab pages
+            - public
+    only:
+        refs:
+            - master
+
+################################################################################
+# ENGLISH WIKIPEDIA DEPLOYMENT
+################################################################################
+# The following takes into consideration Wikipedia policy. Edits to any CI
+# process below this section MUST be reviewed by a RedWarn Core Team member
+# before merging.
+
+deploy_setup:
+    stage: build
+    cache:
+        key: "$CI_COMMIT_REF_SLUG"
+        paths:
+            - .gitlab/ci_scripts/node_modules
+        policy: push
+    environment:
+        name: production
+        url: https://en.wikipedia.org/wiki/User:RedWarn/.js
+    allow_failure: false
+    script:
+        - cd .gitlab/ci_scripts && npm install
+    only:
+        variables:
+            - $CI_PROJECT_PATH == "redwarn/redwarn-web"
+        refs:
+            - master
+        # Only rebuild `node_modules` in case any package
+        # file gets changed.
+        changes:
+            - .gitlab-ci.yml
+            - .gitlab/ci_scripts/package.json
+            - .gitlab/ci_scripts/package-lock.json
+
+deploy_start:
+    stage: deploy
+    cache:
+        key: "$CI_COMMIT_REF_SLUG"
+        paths:
+            - .gitlab/ci_scripts/node_modules
+        policy: pull
+    environment:
+        name: production
+        url: https://en.wikipedia.org/wiki/User:RedWarn/.js
+    when: manual
+    only:
+        variables:
+            - $CI_PROJECT_PATH == "redwarn/redwarn-web"
+        refs:
+            - master
+    allow_failure: false
+    script:
+        - cd .gitlab/ci_scripts && node enwiki/deploy.js

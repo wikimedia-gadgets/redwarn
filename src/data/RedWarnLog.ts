@@ -17,11 +17,20 @@ interface LogEntry {
 }
 
 export default class Log {
+    private static readonly startTime = Date.now();
     static logs: LogEntry[] = [];
-    static logLevel = LogLevel.Warn;
+    static logLevel =
+        process.env.NODE_ENV === "production" ? LogLevel.Warn : LogLevel.Trace;
 
     private static log(level: LogLevel, message: string, ...data: any[]) {
-        if (level >= this.logLevel)
+        const parts = [];
+        if (Log.logLevel === LogLevel.Trace)
+            parts.push(`[${Date.now() - Log.startTime}ms] `);
+        parts.push(`[${RW_LOG_SIGNATURE}] `);
+        parts.push(`[${LogLevel[level].toUpperCase()}] `);
+        parts.push(message);
+
+        if (level >= Log.logLevel)
             console[
                 level > LogLevel.Warn
                     ? "error"
@@ -29,13 +38,12 @@ export default class Log {
                     ? "warn"
                     : "log"
             ](
-                `[${RW_LOG_SIGNATURE}] ${
-                    typeof message === "string" ? message : ""
-                }`,
-                ...(typeof message === "string" ? data : [message, ...data])
+                ...(data.length > 0
+                    ? [parts.join(""), ...data]
+                    : [parts.join("")])
             );
 
-        this.logs.push({
+        Log.logs.push({
             date: Date.now(),
             level: level,
             message: message,
@@ -44,26 +52,26 @@ export default class Log {
     }
 
     static trace(message: string | any, data?: Record<string, any>) {
-        this.log(LogLevel.Trace, message, data);
+        Log.log(LogLevel.Trace, message, data);
     }
 
     static debug(message: string | any, data?: Record<string, any>) {
-        this.log(LogLevel.Debug, message, data);
+        Log.log(LogLevel.Debug, message, data);
     }
 
     static info(message: string | any, data?: Record<string, any>) {
-        this.log(LogLevel.Info, message, data);
+        Log.log(LogLevel.Info, message, data);
     }
 
     static warn(message: string | any, data?: Record<string, any>) {
-        this.log(LogLevel.Warn, message, data);
+        Log.log(LogLevel.Warn, message, data);
     }
 
     static error(message: string | any, data?: Record<string, any>) {
-        this.log(LogLevel.Error, message, data);
+        Log.log(LogLevel.Error, message, data);
     }
 
     static fatal(message: string | any, data?: Record<string, any>) {
-        this.log(LogLevel.Fatal, message, data);
+        Log.log(LogLevel.Fatal, message, data);
     }
 }

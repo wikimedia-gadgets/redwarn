@@ -22,7 +22,7 @@ module.exports = {
     moduleNameMapper: {
         "^rww(.*)$": "<rootDir>/src$1",
         "\\.(css)$": "<rootDir>/tests/__mocks__/style.js",
-        "!$": "<rootDir>/tests/__mocks__/buildinfo.js"
+        "buildinfo\.js$": "<rootDir>/tests/__mocks__/buildinfo.js"
     }
 
 };

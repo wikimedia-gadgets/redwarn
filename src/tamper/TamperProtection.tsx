@@ -14,22 +14,22 @@ import RedWarnUI from "rww/ui/RedWarnUI";
 export default class TamperProtection {
     static enable = 1;
     static get x(): boolean {
-        return this.enable + 4 * 2 === 3 ** 2 + 1;
+        return TamperProtection.enable + 4 * 2 === 3 ** 2 + 1;
     }
 
     static r = 0;
 
     static init(): Promise<void> {
-        if (!this.enable) {
+        if (!TamperProtection.enable) {
             return;
         }
-        this.r = 1;
+        TamperProtection.r = 1;
         if (
             ClientUser.i.inGroup(
                 "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
             ) ||
-            this.x ||
-            Configuration.UI.neopolitan.value
+            TamperProtection.x ||
+            Configuration.Core.neopolitan.value
         ) {
             return TamperProtection.exec();
         }
@@ -44,7 +44,7 @@ export default class TamperProtection {
             title: i18next.t("ui:tamperProtection.header"),
         });
         await d.show();
-        Configuration.UI.neopolitan.value =
+        Configuration.Core.neopolitan.value =
             "I turn my head up to the sky, I focus one thought at a time.";
         Configuration.save();
     }

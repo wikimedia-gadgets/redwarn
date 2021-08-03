@@ -3,7 +3,6 @@ import { DefaultRedWarnStyles } from "./RedWarnStyles";
 import Style from "./Style";
 import { DefaultRedWarnStyle } from "rww/styles/StyleConstants";
 import { RedWarnStyleMissingError } from "rww/errors/RedWarnStyleError";
-import Dependencies from "rww/data/Dependencies";
 
 export default class StyleManager {
     public static get defaultStyle(): string {
@@ -23,43 +22,44 @@ export default class StyleManager {
     // Restrict `activeStyle` to a private setter.
     private static _activeStyle: Style;
     static get activeStyle(): Style {
-        return this._activeStyle;
+        return StyleManager._activeStyle;
     }
 
     static async initialize(): Promise<void> {
-        if (this.styles == null) {
-            this.styles = DefaultRedWarnStyles;
+        if (StyleManager.styles == null) {
+            StyleManager.styles = DefaultRedWarnStyles;
         } else {
-            this.styles.push(...DefaultRedWarnStyles);
-            this.cleanStyles();
+            StyleManager.styles.push(...DefaultRedWarnStyles);
+            StyleManager.cleanStyles();
         }
 
-        this._activeStyle = this.findStyle(this.defaultStyle);
+        StyleManager._activeStyle = StyleManager.findStyle(
+            StyleManager.defaultStyle
+        );
 
-        if (this._activeStyle == null) {
+        if (StyleManager._activeStyle == null) {
             mw.notify(
                 "RedWarn styles loading failed. You might have loaded no styles at all."
             );
         } else {
-            await Dependencies.resolve([StyleManager.activeStyle.dependencies]);
-            this.ready = true;
+            StyleManager.ready = true;
         }
     }
 
     static setStyle(id: string): Style {
-        const foundStyle = this.findStyle(id);
+        const foundStyle = StyleManager.findStyle(id);
         if (foundStyle == null) throw new RedWarnStyleMissingError(id);
         return foundStyle;
     }
 
     static findStyle(id: string): Style | null {
-        return this.styles.find((v) => v.name === id) ?? null;
+        return StyleManager.styles.find((v) => v.name === id) ?? null;
     }
 
     static cleanStyles(): void {
-        let finalStyles = this.styles;
+        let finalStyles = StyleManager.styles;
 
-        for (const style of this.styles) {
+        for (const style of StyleManager.styles) {
             // Metadata checks
 
             if (style.name == null) {
@@ -112,6 +112,6 @@ export default class StyleManager {
             finalStyles = Object.values(styleVersions);
         }
 
-        this.styles = finalStyles;
+        StyleManager.styles = finalStyles;
     }
 }

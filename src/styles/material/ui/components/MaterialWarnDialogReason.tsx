@@ -1,14 +1,13 @@
 import { MaterialWarnDialogChildProps } from "rww/styles/material/ui/MaterialWarnDialog";
 
 import {
+    getWarningFieldVisibility,
     Page,
     User,
     Warning,
-    WarningCategory,
-    WarningCategoryNames,
     WarningLevel,
     WarningLevelComments,
-    Warnings,
+    WarningManager,
     WarningType,
 } from "rww/mediawiki";
 
@@ -48,29 +47,16 @@ function MaterialWarnDialogReasonDropdown({
     parent: MaterialWarnDialogReason;
 }): JSX.Element {
     const finalSelectItems: MaterialSelectItem<Warning>[] = [];
-    const categories: { [key: number]: Warning[] } = {
-        [WarningCategory.Common]: [],
-        [WarningCategory.Article]: [],
-        [WarningCategory.Spam]: [],
-        [WarningCategory.Editors]: [],
-        [WarningCategory.Remove]: [],
-        [WarningCategory.Other]: [],
-        [WarningCategory.Remind]: [],
-        [WarningCategory.Policy]: [],
-    };
-
-    for (const [, warning] of Object.entries(Warnings)) {
-        categories[warning.category].push(warning);
-    }
-
-    for (const [category, warningSet] of Object.entries(categories)) {
+    for (const [category, warningSet] of Object.entries(
+        WarningManager.warningArrayByCategories
+    )) {
         if (finalSelectItems.length !== 0)
             finalSelectItems.push({
                 type: "divider",
             });
         finalSelectItems.push({
             type: "header",
-            label: WarningCategoryNames[+category as WarningCategory],
+            label: WarningManager.warningCategoriesMap[category].label,
         });
 
         for (const warning of warningSet) {
@@ -396,7 +382,11 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
                                 }
                                 autofocus
                                 {...(this.warning != null
-                                    ? { [this.warning.relatedPage]: true }
+                                    ? {
+                                          [getWarningFieldVisibility(
+                                              this.warning.relatedPage
+                                          )]: true,
+                                      }
                                     : {})}
                             />
                         );
@@ -426,7 +416,11 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
                                 )}
                                 autofocus
                                 {...(this.warning != null
-                                    ? { [this.warning.additionalText]: true }
+                                    ? {
+                                          [getWarningFieldVisibility(
+                                              this.warning.additionalText
+                                          )]: true,
+                                      }
                                     : {})}
                             />
                         );

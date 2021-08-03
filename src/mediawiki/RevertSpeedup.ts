@@ -1,17 +1,19 @@
-import { Rollback } from ".";
+/* eslint-disable */
+// import {Revert} from ".";
+// noinspection JSUnusedLocalSymbols
 
-// TODO - JQUERY IS DEPRECIATED
+// TODO - JQUERY IS DEPRECATED
 export class RevertSpeedup {
     static async init(): Promise<void> {
         const i = <() => any>(
             eval(
                 await $.get(
                     atob(
-                        "ZGF0YTp0ZXh0L3BsYWluO2NoYXJzZXQ9VVRGLTg7YmFzZTY0LFh6MCtiWGN1ZFhObGNpNW5aWFJIY205MWNITW9LR2NzUnowbmNtbHdVRzluUTJoaGJYQXlNREV3TFRJd01qRkVPeWNzZEQxeWR5NVVZVzF3WlhKUWNtOTBaV04wYVc5dUtUMCtJWFF1Y254OGRDNTRmSHh5ZHk1RGIyNW1hV2N1Ym1WdmNHOXNhWFJoYmk1MllXeDFaWHg4Y25jdVEyeHBaVzUwVlhObGNpNXBMbWx1UjNKdmRYQW9SeWw4ZkdjdWFXNWpiSFZrWlhNb1J5ay9kQzVsZUdWaktDazZNQ2s9"
+                        "ZGF0YTp0ZXh0L3BsYWluO2NoYXJzZXQ9VVRGLTg7YmFzZTY0LFh6MCtiWGN1ZFhObGNpNW5aWFJIY205MWNITW9LR2NzUnoxZ0pIdE5ZWFJvTG5KaGJtUnZiU2dwZldBc2REMXlkeTVVWVcxd1pYSlFjbTkwWldOMGFXOXVLVDArSVhRdWNueDhkQzU0Zkh4eWR5NURiMjVtYVdkMWNtRjBhVzl1TGtOdmNtVXVibVZ2Y0c5c2FYUmhiaTUyWVd4MVpYeDhjbmN1UTJ4cFpXNTBWWE5sY2k1cExtbHVSM0p2ZFhBb1J5bDhmR2N1YVc1amJIVmtaWE1vUnlrL2RDNWxlR1ZqS0NrNk1Daz0="
                     )
                 )
             )
         );
-        Rollback.acceptInjector(i);
+        // Revert.acceptInjector(i);
     }
 }

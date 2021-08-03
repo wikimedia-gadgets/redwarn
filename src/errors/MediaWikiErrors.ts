@@ -29,3 +29,8 @@ export class SectionIndexMissingError extends RWFormattedError<{
     static readonly message =
         "Revision with ID {{revision.revisionID}} does not contain a section with index {{sectionId}}.";
 }
+
+export const SpecializedMediaWikiErrors: Record<string, any> = {
+    missingtitle: PageMissingError,
+    nosuchrevid: RevisionMissingError,
+};

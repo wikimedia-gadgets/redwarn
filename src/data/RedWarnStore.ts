@@ -1,9 +1,17 @@
-// noinspection JSDeprecatedSymbols
 import MessageHandler from "rww/event/MessageHandler";
 import { StyleStorage } from "rww/styles/Style";
 import { Dependency } from "rww/data/Dependencies";
 
-// noinspection JSDeprecatedSymbols
+/**
+ * <b>RedWarnStore</b> is for live, in-memory data that does not require persistence
+ * or is rebuilt on every page load.
+ *
+ * If you wish to persistently save data,
+ * use {@link RedWarnLocalDB} instead. If you wish to create or access a
+ * constant value that can be loaded at any point, consider using {@link RedWarnConstants}
+ * instead. If you want to generate data for debugging, use {@link Log}
+ * instead.
+ */
 export default class RedWarnStore {
     // Initializations
     public static dependencies: Dependency[] = [];
@@ -31,23 +39,23 @@ export default class RedWarnStore {
     public static windowFocused = false;
 
     public static registerDependency(dependency: Dependency): void {
-        this.dependencies.push(dependency);
+        RedWarnStore.dependencies.push(dependency);
     }
 
     public static initializeStore(): void {
-        this.messageHandler = new MessageHandler();
-        this.wikiArticlePath = mw.config.get("wgArticlePath") as string;
-        this.wikiBase = mw.config.get("wgServer") as string;
-        this.wikiIndex =
+        RedWarnStore.messageHandler = new MessageHandler();
+        RedWarnStore.wikiArticlePath = mw.config.get("wgArticlePath") as string;
+        RedWarnStore.wikiBase = mw.config.get("wgServer") as string;
+        RedWarnStore.wikiIndex =
             (mw.config.get("wgServer") as string) +
             (mw.config.get("wgScript") as string);
-        this.wikiAPI = `${
+        RedWarnStore.wikiAPI = `${
             (mw.config.get("wgServer") as string) +
             (mw.config.get("wgScriptPath") as string)
         }/api.php`;
-        this.wikiID = mw.config.get("wgWikiID") as string;
+        RedWarnStore.wikiID = mw.config.get("wgWikiID") as string;
 
-        window.RedWarnStore = this;
+        window.RedWarnStore = RedWarnStore;
     }
 
     static articlePath(target: string): string {

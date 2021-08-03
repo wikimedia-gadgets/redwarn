@@ -1,12 +1,16 @@
 import RedWarnIDB, { RedWarnIDBUpgradeHandler } from "rww/data/idb/RedWarnIDB";
-import { RW_DATABASE_VERSION } from "rww/data/RedWarnConstants";
+import {
+    RW_DATABASE_NAME,
+    RW_DATABASE_VERSION,
+} from "rww/data/RedWarnConstants";
 import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
 import {
     CachedDependency,
     CacheTracker,
     LogItem,
 } from "rww/data/database/RWDBObjectStoreDefinitions";
-import Group from "rww/definitions/Group";
+import Group from "rww/mediawiki/Group";
+import Log from "rww/data/RedWarnLog";
 
 /**
  * A set of functions responsible for setting up the RedWarn IndexedDB
@@ -73,14 +77,16 @@ export default class RedWarnLocalDB {
             );
 
         this.idb = new RedWarnIDB(
-            "redwarnLiteDB",
+            RW_DATABASE_NAME,
             RW_DATABASE_VERSION,
             databaseUpdaters
         );
     }
 
     async connect(): Promise<IDBDatabase> {
+        Log.trace("Connecting to RedWarn IDB...");
         const connect = await this.idb.connect();
+        Log.trace("Connected to IDB.");
 
         // Handle _open
         this._open = true;

@@ -2,34 +2,59 @@
     "accessibility" : {
         "raiseActionButtons" : {
             "title" : "Raise action buttons",
-            "description" : "This option highlights action buttons (such as \"Warn User\", \"Okay\", \"Submit\") so that they are easier to distinguish from other buttons."
+            "description" : "This option highlights action buttons (such as \"Warn User\", \"OK\", \"Submit\") so that they are easier to distinguish from other buttons."
+        },
+        "rapidClickProtection": {
+            "title": "Rapid click protection",
+            "description": "Set the time period to wait before allowing clicks on potentially damaging buttons (rollbacks, warns).",
+            "options": {
+                "0": "Definitely safe (500ms)",
+                "1": "Standard (200ms)",
+                "2": "Quick (100ms)",
+                "3": "Dangerous (50ms)",
+                "4": "Fast and furious (0ms)"
+            }
         }
     },
     "revert": {
+        "revertOption": {
+            "title": "Revert options",
+            "description": "Main revert options, show whenever viewing a diff. Other revert options are available in the \"More Options\" panel. Available options are set on a per-wiki basis."
+        },
         "revertDoneOption": {
             "title": "Post-rollback action",
-            "description": "The action to take after reverting an edit by a user.",
+            "description": "The default action to take after reverting an edit by a user.",
             "options": {
                 "latest": "Go to the latest revision",
                 "message": "Send the user a message",
-                "template": "Quite template a user",
-                "warn": "Send the user a warning"
+                "template": "Template the user",
+                "warn": "Warn the user",
+                "report": "Report this user to AIV",
+                "mat": "Multiple Action Tool",
+                "options": "More options"
             }
         },
         "revertMethod": {
             "title": "Revert method",
-            "description": "The method of rollback to use. Rollback requires the rollback right, but is much faster than a standard undo. Psuedo-rollback (or \"rollback-like\") requires no special rights, but is slower than rollback (significantly for slower connections).",
+            "description": "The method of reversion to use. Rollback requires the rollback right, but is much faster than a standard undo. Psuedo-rollback (also known as \"rollback-like\") requires no special rights, but is slower than rollback (especially for slower connections).",
             "options": {
                 "rollback": "Rollback (requires the rollback right)",
                 "undo": "Pseudo-rollback"
             }
+        },
+        "redirectIfNotLatest": {
+            "title": "Redirect if not latest",
+            "description": "If enabled, upon detection that revision being reverted is no longer the latest revision, you will be redirected to the latest revision of the page."
+        },
+        "ignoreSameUserLatest": {
+            "title": "Ignore latest revision from the same user",
+            "description": "If enabled, the revision to be reverted will be reverted anyway even if it is no longer the latest revision if the latest revision was made by the same user and has no intermediate edits."
         }
     },
     "ui" : {
         "noticeOrder" : {
             "title" : "Notice template order",
-            "description": "You can sort notice templates by their title (e.g. \"Vandalism\"), or by their template name (e.g. uw-vandalism).",
-
+            "description": "You can sort notice templates by their title (e.g. \"Vandalism\"), or by their template name (e.g. \"uw-vandalism\").",
             "options": {
                 "title": "By title",
                 "template": "By template name"

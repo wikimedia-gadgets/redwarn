@@ -13,7 +13,7 @@ export default function formatAge(age: Date): string {
     const minutes = Math.floor(difference / 60000);
     const seconds = Math.floor(difference / 1000);
 
-    let str = "";
+    let str: string;
     if (seconds <= 44) {
         str = ageFormat.s;
     } else if (seconds <= 89) {
@@ -29,9 +29,9 @@ export default function formatAge(age: Date): string {
     } else if (days <= 25) {
         str = ageFormat.dd.replace("%d", days.toString());
     } else if (days <= 45) {
-        str = ageFormat.m;
+        str = ageFormat.M;
     } else if (days <= 319) {
-        str = ageFormat.mm.replace("%d", months.toString());
+        str = ageFormat.MM.replace("%d", months.toString());
     } else if (days <= 547) {
         str = ageFormat.y;
     } else {

@@ -25,36 +25,8 @@ pages:
 # process below this section MUST be reviewed by a RedWarn Core Team member
 # before merging.
 
-# deploy_setup:
-#     stage: build
-#     cache:
-#         key: "enwiki_cd_$CI_COMMIT_REF_SLUG"
-#         paths:
-#             - .gitlab/ci_scripts/node_modules
-#         policy: push
-#     allow_failure: false
-#     script:
-#         - cd .gitlab/ci_scripts
-#         - npm ci
-#     only:
-#         variables:
-#             - $CI_PROJECT_PATH == "redwarn/redwarn-web"
-#         refs:
-#             - master
-#         # Only rebuild `node_modules` in case any package
-#         # file gets changed.
-#         changes:
-#             - .gitlab-ci.yml
-#             - .gitlab/ci_scripts/package.json
-#             - .gitlab/ci_scripts/package-lock.json
-
 deploy_start:
     stage: deploy
-#     cache:
-#         key: "enwiki_cd_$CI_COMMIT_REF_SLUG"
-#         paths:
-#             - .gitlab/ci_scripts/node_modules
-#         policy: pull
     environment:
         name: production
         url: https://en.wikipedia.org/wiki/User:RedWarn/.js
@@ -64,6 +36,11 @@ deploy_start:
             - $CI_PROJECT_PATH == "redwarn/redwarn-web"
         refs:
             - master
+        changes:
+            - .gitlab-ci.yml
+            - build.php
+            - src/**/*
+            - .gitlab/ci_scripts/**/*
     allow_failure: false
     script:
         - cd .gitlab/ci_scripts

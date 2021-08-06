@@ -25,6 +25,7 @@ import i18next, { i18n } from "i18next";
 export const enum RWErrors {
     UNSET = "RW0000",
     StartupComplete = "RW0001",
+    APIError = "RW4000",
     PageMissing = "RW4001",
     PageInvalid = "RW4002",
     RevisionMissing = "RW4003",
@@ -38,7 +39,7 @@ export const enum RWErrors {
  * and other errors without classes GenericRWError may be used.
  */
 export default abstract class RWErrorBase {
-    static readonly code: RWErrors = RWErrors.UNSET;
+    readonly code: RWErrors = RWErrors.UNSET;
     static readonly message: string = "";
     get message(): string {
         // basically the equivalent of this.constructor.message, i.e. RWErrorBase.message
@@ -75,10 +76,10 @@ export class RWFormattedError<
     // Leverage i18next to format error strings, in the future this can also be used to i18n error strings
     static i18next: i18n;
     static async init() {
-        if (this.i18next != null) {
+        if (RWFormattedError.i18next != null) {
             throw "Already initialized!";
         }
-        this.i18next = i18next.createInstance();
-        await this.i18next.init();
+        RWFormattedError.i18next = i18next.createInstance();
+        await RWFormattedError.i18next.init();
     }
 }

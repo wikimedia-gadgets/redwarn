@@ -4,7 +4,7 @@ import { ClientUser } from "rww/mediawiki";
 import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
 import Log from "rww/data/RedWarnLog";
 import {
-    GenericMediaWikiError,
+    GenericAPIError,
     SpecializedMediaWikiErrors,
 } from "rww/errors/MediaWikiErrors";
 import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
@@ -227,10 +227,10 @@ export class MediaWikiAPI {
      */
     public static error(
         apiResponse: Record<string, any>
-    ): GenericMediaWikiError | AggregateError {
+    ): GenericAPIError | AggregateError {
         if (!apiResponse["errors"] && !!apiResponse["error"]) {
             // Legacy format. This should be avoided.
-            return new GenericMediaWikiError(apiResponse["error"]);
+            return new GenericAPIError(apiResponse["error"]);
         } else if (!!apiResponse["errors"]) {
             // New error format.
             const errors = [];
@@ -239,7 +239,7 @@ export class MediaWikiAPI {
                 errors.push(
                     SpecializedMediaWikiErrors[error["code"]] != null
                         ? new SpecializedMediaWikiErrors[error["code"]](error)
-                        : new GenericMediaWikiError(error)
+                        : new GenericAPIError(error)
                 );
             }
 
@@ -247,7 +247,7 @@ export class MediaWikiAPI {
             else return new AggregateError(errors);
         } else {
             // No error occurred???
-            return new GenericMediaWikiError("Unknown MediaWiki API error.");
+            return new GenericAPIError("Unknown MediaWiki API error.");
         }
     }
 }

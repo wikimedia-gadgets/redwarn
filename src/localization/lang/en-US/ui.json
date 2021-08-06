@@ -1,5 +1,5 @@
 {
-    "unfinished" : "Hmm, looks like we haven't implemented this feature yet. Check back later!",
+    "unfinished": "Hmm, looks like we haven't implemented this feature yet. Check back later!",
 
     "restore": {
         "label": "Restore Reason",
@@ -83,28 +83,28 @@
             "levelSelectionLevel": "Level {{level}} {{levelReadable}}: {{levelDescription}}",
             "searchDialogOpenerTooltip": "Search for a warning",
             "warningSelectionDropdownTitle": "Warning",
-            "singleIssueTemplate" : "Reminder",
-            "policyViolationTemplate" : "Policy Violation Warning",
-            "warningLevel" : "Warning level",
-            "noWarningSelected" : "No warning selected."
+            "singleIssueTemplate": "Reminder",
+            "policyViolationTemplate": "Policy Violation Warning",
+            "warningLevel": "Warning level",
+            "noWarningSelected": "No warning selected."
         },
 
-        "templateSearchDialog" : {
+        "templateSearchDialog": {
             "dialogTitle": "Warnings",
-            "searchBoxLabel" : "Search for a warning...",
-            "instantSelect" : "Press ENTER to use this template",
-            "tip" : "Tip: Double-click a warning to quickly select it, or press ENTER to select the top result."
+            "searchBoxLabel": "Search for a warning...",
+            "instantSelect": "Press ENTER to use this template",
+            "tip": "Tip: Double-click a warning to quickly select it, or press ENTER to select the top result."
         },
 
-        "validation" : {
-            "validationFailedIconTooltip" : "There are issues which are preventing you from sending this warning. Click here for more information.",
+        "validation": {
+            "validationFailedIconTooltip": "There are issues which are preventing you from sending this warning. Click here for more information.",
 
             "validationDialogTitle": "Issue found",
             "validationDialogTitle_plural": "Issues found",
             "validationDialogIntro": "The following issues are preventing you from sending a warning:",
 
             "fail": "An unknown issue ocurred.",
-            "fail_template" : "You don't have a warning template selected.",
+            "fail_template": "You don't have a warning template selected.",
             "fail_level": "You haven't selected a warning level.",
             "fail_user": "You haven't selected a target user.",
             "fail_self": "You are not allowed to warn yourself.",

@@ -142,7 +142,10 @@ export class Page implements SectionContainer {
             if (!!revisionInfoRequest["query"]["pages"]["-1"]["invalid"])
                 throw new PageInvalidError({
                     page,
-                    //   revisionInfoRequest["query"]["pages"]["-1"]["invalidreason"]
+                    reason:
+                        revisionInfoRequest["query"]["pages"]["-1"][
+                            "invalidreason"
+                        ],
                 });
 
             throw new Error("Invalid page ID or title.");
@@ -289,7 +292,7 @@ export class Page implements SectionContainer {
             if (existingSection == null) {
                 if (!revision && typeof options.section === "number") {
                     // Immediate failure since a non-existent page has no sections.
-                    throw new PageMissingError(this);
+                    throw new PageMissingError({ page: this });
                 } else if (typeof options.section === "number") {
                     existingSection = revisionSections.filter(
                         (s) => s.index === options.section
@@ -297,10 +300,10 @@ export class Page implements SectionContainer {
 
                     // Section not found. Hard fail since there's no fallback title.
                     if (existingSection == null)
-                        throw new SectionIndexMissingError(
-                            options.section,
-                            revision
-                        );
+                        throw new SectionIndexMissingError({
+                            sectionId: options.section,
+                            revision,
+                        });
                 } else {
                     existingSection = revisionSections.filter(
                         (s) => s.title === options.section

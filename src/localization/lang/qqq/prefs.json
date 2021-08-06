@@ -1,8 +1,8 @@
 {
-    "accessibility" : {
-        "raiseActionButtons" : {
-            "title" : "Configuration option name for raising action buttons",
-            "description" : "Text describing the configuration option"
+    "accessibility": {
+        "raiseActionButtons": {
+            "title": "Configuration option name for raising action buttons",
+            "description": "Text describing the configuration option"
         }
     },
     "revert": {
@@ -25,9 +25,9 @@
             }
         }
     },
-    "ui" : {
-        "noticeOrder" : {
-            "title" : "Configuration option name for the order of which warning templates are displayed",
+    "ui": {
+        "noticeOrder": {
+            "title": "Configuration option name for the order of which warning templates are displayed",
             "description": "Text describing the configuration option",
             "options": {
                 "title": "Option to sort by the title of the warning template",

@@ -1,8 +1,8 @@
 {
-    "accessibility" : {
-        "raiseActionButtons" : {
-            "title" : "Raise action buttons",
-            "description" : "This option highlights action buttons (such as \"Warn User\", \"OK\", \"Submit\") so that they are easier to distinguish from other buttons."
+    "accessibility": {
+        "raiseActionButtons": {
+            "title": "Raise action buttons",
+            "description": "This option highlights action buttons (such as \"Warn User\", \"OK\", \"Submit\") so that they are easier to distinguish from other buttons."
         },
         "rapidClickProtection": {
             "title": "Rapid click protection",
@@ -51,9 +51,9 @@
             "description": "If enabled, the revision to be reverted will be reverted anyway even if it is no longer the latest revision if the latest revision was made by the same user and has no intermediate edits."
         }
     },
-    "ui" : {
-        "noticeOrder" : {
-            "title" : "Notice template order",
+    "ui": {
+        "noticeOrder": {
+            "title": "Notice template order",
             "description": "You can sort notice templates by their title (e.g. \"Vandalism\"), or by their template name (e.g. \"uw-vandalism\").",
             "options": {
                 "title": "By title",

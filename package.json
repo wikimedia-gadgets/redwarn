@@ -65,7 +65,7 @@
         "start": "cross-env NODE_ENV=development webpack serve --config webpack.config.js",
         "profile": "webpack --profile",
         "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
-        "lint": "eslint --cache --fix && prettier --write"
+        "lint": "eslint --cache --fix && prettier --write src/"
     },
     "repository": {
         "type": "git",

@@ -824,7 +824,12 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
         $("#RWRBDONEreportUsr").click(() => rw.ui.adminReportSelector(un)); // report to admin
 
         // Now perform default (if set)
-        if ((rw.config.rwRollbackDoneOption != null) || (rw.config.rwRollbackDoneOption != "none")) $(`#${rw.config.rwRollbackDoneOption}`).click();
+        let rollbackDoneOption = rw.config.rwRollbackDoneOption;
+        if (rollbackDoneOption === "RWRBDONEwarnUsr" && un === rw.info.getUsername()) { // warning ourselves
+            rollbackDoneOption = "none";
+        }
+        // TODO: && instead of ||?
+        if ((rollbackDoneOption != null) || (rollbackDoneOption !== "none")) $(`#${rollbackDoneOption}`).click();
 
         // Hides other icons and shows the rollback done options and also checks for defaults, also adds click handlers
         $("#rwRollbackInProgress").fadeOut(() => { // fade out - looks smoother

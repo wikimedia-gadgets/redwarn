@@ -70,6 +70,8 @@ export default class MediaWiki {
 // To avoid circular imports, all imports MUST come explicitly from this
 // index file and this index file alone.
 
+export * from "./RevertStage";
+export * from "./WarningLevel";
 export * from "./User";
 export * from "./ClientUser";
 export * from "./Gender";
@@ -77,7 +79,6 @@ export * from "./Page";
 export * from "./Revision";
 export * from "./Revert";
 export * from "./URL";
-export * from "./WarningLevel";
 export * from "./Warnings";
 export * from "./Watch";
 export * from "./API";

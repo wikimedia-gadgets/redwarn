@@ -1,5 +1,6 @@
-import { MediaWikiURL } from "../../src/mediawiki/URL";
-import RedWarnStore from "../../src/data/RedWarnStore";
+// noinspection ES6PreferShortImport
+import { MediaWikiURL } from "../../../src/mediawiki/URL";
+import RedWarnStore from "../../../src/data/RedWarnStore";
 
 describe("URL generation tests", () => {
     // Mock English Wikipedia

@@ -1,4 +1,6 @@
 {
+    "unfinished" : "Message shown when a features is marked ad ",
+
     "restore": {
         "label": "The title of the dialog prompting users for a reason to restore.",
         "helperText": "Text prompting the users to enter a reason",
@@ -47,12 +49,21 @@
     "close": "Default close button text",
     "configErrorDialog": {
         "title": "Title for the dialog used to inform the user that the loading of their configuration file failed.",
-        "content": "Body text for the dialog used to inform the user that the loading of their configuration file failed. Should inform the user that it has been reset to the default.",
+        "content": "Body text for the dialog used to inform the user that the loading of their configuration file failed. Inform the user that it has been reset to the default settings .",
         "actions": [
             {
                 "data": "This should be kept the same as the English one, since it uses the default OK text."
             }
         ]
+    },
+    "styleError": {
+        "missing": {
+            "title": "Title for the dialog used to inform the user that the style set in their configuration file could not be found.",
+            "content": "Body text for the dialog used to inform the user that style set in their configuration file could not be found. Inform the user that it has been reset to the default style.",
+            "actions": [
+                { "data": "This should be kept the same as the English one, since it uses the default OK text." }
+            ]
+        }
     },
     "contribs": {
         "previewLink": "Used for the preview rollback link on contributions page. Should be short/abbreviated.",

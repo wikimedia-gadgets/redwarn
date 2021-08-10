@@ -3,9 +3,24 @@
         "raiseActionButtons" : {
             "title" : "Configuration option name for raising action buttons",
             "description" : "Text describing the configuration option"
+        },
+        "rapidClickProtection": {
+            "title": "Configuration option name for the minimum duration between clicks on potentially damaging buttons (for example, rollback and warning buttons)",
+            "description": "Text describing the configuration option",
+            "options": {
+                "0": "Option for a 500ms wait",
+                "1": "Option for a 200ms wait",
+                "2": "Option for a 100ms wait",
+                "3": "Option for a 50ms wait",
+                "4": "Option for a 0ms wait (no wait)"
+            }
         }
     },
     "revert": {
+        "revertOption": {
+            "title": "Title for revert options dialog",
+            "description": "Description of the options dialog for revert options, which are shown whenever viewing a diff"
+        },
         "revertDoneOption": {
             "title": "Configuration option name for what to do after a rollback is completed",
             "description": "Text describing the configuration option",
@@ -13,16 +28,27 @@
                 "latest": "Option to go to the latest revision's diff",
                 "message": "Option to send the user a message",
                 "template": "Option to send a quick template to the user",
-                "warn": "Option to warn the user"
+                "warn": "Option to warn the user",
+                "report": "Option to report the user to a board (eg [[WP:AIV]] on enwiki)",
+                "mat": "Option to open the Multiple Action Tool",
+                "options": "More options"
             }
         },
         "revertMethod": {
             "title": "Configuration option name for the method of reversion to use",
-            "description": "Text describing the configuration option, include the fact that mediawiki rollback requires the right but is faster",
+            "description": "Text describing the configuration option - include the fact that MediaWiki rollback requires the  rollback user right but is faster",
             "options": {
                 "rollback": "Option to use MediaWiki rollback (for rollbackers only)",
                 "undo": "Option to use rollback-like"
             }
+        },
+        "redirectIfNotLatest": {
+            "title": "Configuration option name for the option to redirect to the latest revision if reverting an old revision",
+            "description": "Text describing the configuration option"
+        },
+        "ignoreSameUserLatest": {
+            "title": "Configuration option name for the option to ignore the latest revision from a user if reverting an older revision by them",
+            "description": "Text describing the configuration option - mention that it will only be reverted if the latest revision was made by the same user and there are no intermediate edits by other users"
         }
     },
     "ui" : {

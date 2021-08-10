@@ -19,7 +19,7 @@
     "revert": {
         "revertOption": {
             "title": "Revert options",
-            "description": "Main revert options, show whenever viewing a diff. Other revert options are available in the \"More Options\" panel. Available options are set on a per-wiki basis."
+            "description": "Main revert options, shown whenever viewing a diff. Other revert options are available in the \"More Options\" panel. Available options are set on a per-wiki basis."
         },
         "revertDoneOption": {
             "title": "Post-rollback action",
@@ -44,7 +44,7 @@
         },
         "redirectIfNotLatest": {
             "title": "Redirect if not latest",
-            "description": "If enabled, upon detection that revision being reverted is no longer the latest revision, you will be redirected to the latest revision of the page."
+            "description": "If enabled, upon detection that the revision being reverted is no longer the latest revision, you will be redirected to the latest revision of the page."
         },
         "ignoreSameUserLatest": {
             "title": "Ignore latest revision from the same user",

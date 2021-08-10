@@ -43,7 +43,7 @@ interface ActionPromptedRevert {
 }
 
 /**
- * An action with a custom
+ * An action with a custom edit summary.
  */
 interface ActionCustom {
     actionType: "custom";

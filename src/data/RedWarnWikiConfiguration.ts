@@ -82,21 +82,45 @@ export default class RedWarnWikiConfiguration {
             );
         } catch (e) {
             try {
-                RedWarnWikiConfiguration.preloadedData = await fetch(
-                    ((): string => {
-                        const url = new URL(RW_FALLBACK_WIKI.indexPath);
+                // Use the API to get the fallback configuration.
+                RedWarnWikiConfiguration.preloadedData = JSON.parse(
+                    Object.values<Record<string, any>>(
+                        (
+                            await fetch(
+                                ((): string => {
+                                    const url = new URL(
+                                        RW_FALLBACK_WIKI.apiPath
+                                    );
 
-                        // Do not use the short URL ("/wiki/Project:RedWarn/configuration.json")
-                        url.searchParams.set("title", RW_WIKI_CONFIGURATION);
-                        url.searchParams.set("action", "raw");
-                        url.searchParams.set("ctype", "application/json");
+                                    // Need to indicate origin for CORS.
+                                    url.searchParams.set(
+                                        "origin",
+                                        window.origin
+                                    );
+                                    url.searchParams.set("action", "query");
+                                    url.searchParams.set("format", "json");
+                                    url.searchParams.set("prop", "revisions");
+                                    url.searchParams.set(
+                                        "titles",
+                                        RW_FALLBACK_WIKI.configuration ??
+                                            RW_WIKI_CONFIGURATION
+                                    );
+                                    url.searchParams.set("rvprop", "content");
+                                    url.searchParams.set("rvslots", "main");
+                                    url.searchParams.set("rvlimit", "1");
 
-                        return url.toString();
-                    })()
-                ).then((req) => req.json());
+                                    return url.toString();
+                                })()
+                            ).then((req) => req.json())
+                        )["query"]["pages"]
+                    )[0]["revisions"][0]["slots"]["main"]["*"]
+                );
             } catch (e) {
                 // TODO: Proper errors
-                throw new Error("Failed to get on-wiki configuration file.");
+                throw new AggregateError(
+                    "Failed to get on-wiki configuration file.",
+                    e
+                );
             }
         }
         return RedWarnWikiConfiguration.preloadedData;
@@ -134,8 +158,11 @@ export default class RedWarnWikiConfiguration {
                     config.wiki
                 }", got "${mw.config.get(
                     "wgDBname"
-                )} instead. Templates may be missing or broken.`
+                )}" instead. Templates may be missing or broken.`
             );
+
+            // Force remove tag (to avoid errors)
+            delete config.meta.tag;
         } else if (rawConfig.configVersion < RW_WIKI_CONFIGURATION_VERSION) {
             // TODO: Suggest saving the upgraded config file to the user (if it's the same wiki).
         }

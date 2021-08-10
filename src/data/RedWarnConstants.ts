@@ -35,6 +35,7 @@ export const RW_WIKIS_SPEEDUP = ["enwiki"];
 
 // TODO: Global configuration file on Meta instead of Wikipedia
 export const RW_FALLBACK_WIKI = {
-    indexPath: "//en.wikipedia.org/w/index.php",
-    apiPath: "//en.wikipedia.org/w/api.php",
+    indexPath: "https://en.wikipedia.org/w/index.php",
+    apiPath: "https://en.wikipedia.org/w/api.php",
+    configuration: RW_WIKI_CONFIGURATION,
 };

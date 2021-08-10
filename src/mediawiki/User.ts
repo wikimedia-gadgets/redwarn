@@ -5,6 +5,8 @@ import {
     GenderDict,
     GenderPronoun,
     getHighestWarningLevel,
+    GroupArray,
+    GroupsFromNames,
     MediaWikiAPI,
     Page,
     PageEditOptions,
@@ -15,7 +17,6 @@ import {
 } from "rww/mediawiki";
 import i18next from "i18next";
 import { PageMissingError } from "rww/errors/MediaWikiErrors";
-import { GroupArray, GroupsFromNames } from "rww/mediawiki/Group";
 import { isIPAddress } from "rww/util";
 import { WarningType } from "./Warnings";
 import Section from "rww/mediawiki/Section";

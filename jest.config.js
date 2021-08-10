@@ -8,7 +8,8 @@ module.exports = {
     preset: "ts-jest",
     testEnvironment: "jsdom",
     transform: {
-        '^.+\\.m?[tj]sx?$': 'ts-jest'
+        "\\.m?[tj]sx?$": "ts-jest",
+        "\\.txt$": "jest-raw-loader"
     },
     transformIgnorePatterns: [
         "node_modules[/\\\\](?!@material)"

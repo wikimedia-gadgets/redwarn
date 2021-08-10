@@ -55,13 +55,19 @@ export class Configuration {
             saveNow = false;
 
         try {
-            redwarnConfig = JSON.parse(
-                // Strip everything except the actual JSON part.
-                /rw\.config\s*=\s*({(?:.|\s)*});(?:\n|\s*\/\/<\/nowiki>)(?:.|\s)*/g.exec(
-                    (await ClientUser.i.redwarnConfigPage.getLatestRevision())
-                        .content
-                )[1]
-            );
+            const configLatestRev = await ClientUser.i.redwarnConfigPage.getLatestRevision();
+            if (configLatestRev == null) {
+                // Configuration does not exist. Create one.
+                redwarnConfig = {};
+                // Need to save the new config.
+                saveNow = true;
+            } else
+                redwarnConfig = JSON.parse(
+                    // Strip everything except the actual JSON part.
+                    /rw\.config\s*=\s*({(?:.|\s)*});(?:\n|\s*\/\/<\/nowiki>)(?:.|\s)*/g.exec(
+                        configLatestRev.content
+                    )[1]
+                );
         } catch (e) {
             Log.error("Configuration loading error.", e);
             // Fallback style

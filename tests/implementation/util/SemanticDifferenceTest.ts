@@ -1,6 +1,6 @@
-import semanticDifference from "../../src/util/semanticDifference";
+import semanticDifference from "../../../src/util/semanticDifference";
 
-describe("Semantic Difference tests", () => {
+describe("Semantic difference tests", () => {
     const pairs: [number, string, string][] = [
         [0, "1.0.0", "1.0.0"],
         [0, "1.2.2", "1.2.2"],

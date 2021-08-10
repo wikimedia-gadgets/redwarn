@@ -14,3 +14,4 @@ export { default as formatAge } from "./formatAge";
 export { b64en, b64de } from "./b64";
 export { default as sleep } from "./sleep";
 export { default as isEmptyObject } from "./isEmptyObject";
+export { default as getHighestWarningLevel } from "./getHighestWarningLevel";

@@ -1,11 +1,11 @@
 import path from "path";
 import fs from "fs";
 import * as constants from "../../src/data/RedWarnConstants";
+import { rootDir } from "../RedWarnWebTestUtils";
 
 describe("RedWarn Constants file tests", () => {
-    const srcFolder = path.resolve(__dirname, "..", "..", "src");
     const constantsFile = fs.readFileSync(
-        path.resolve(srcFolder, "data", "RedWarnConstants.ts"),
+        path.resolve(rootDir, "src", "data", "RedWarnConstants.ts"),
         "utf8"
     );
 

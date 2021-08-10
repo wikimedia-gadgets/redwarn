@@ -1,5 +1,6 @@
 import path from "path";
 import fs from "fs";
+import { rootDir } from "../RedWarnWebTestUtils";
 
 describe("Ensure no usage of <nowiki> inside of source files", () => {
     const filter = /\.[jt]sx?$/;
@@ -19,7 +20,7 @@ describe("Ensure no usage of <nowiki> inside of source files", () => {
         return files;
     };
 
-    const srcFolder = path.resolve(__dirname, "..", "src");
+    const srcFolder = path.resolve(rootDir, "src");
     for (const sourceFile of enterDirectory(srcFolder)) {
         test(path.relative(srcFolder, sourceFile), () => {
             expect(

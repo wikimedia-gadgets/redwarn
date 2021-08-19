@@ -39,3 +39,6 @@ export const RW_FALLBACK_WIKI = {
     apiPath: "https://en.wikipedia.org/w/api.php",
     configuration: RW_WIKI_CONFIGURATION,
 };
+
+export const RW_FALLBACK_CONFIG =
+    "https://redwarn-lite.wmcloud.org/static/default-config.json";

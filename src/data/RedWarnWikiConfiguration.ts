@@ -17,7 +17,7 @@ import type {
 } from "rww/data/RevertOptions";
 import { ActionSeverity } from "rww/data/RevertOptions";
 import {
-    RW_FALLBACK_WIKI,
+    RW_FALLBACK_CONFIG,
     RW_WIKI_CONFIGURATION,
     RW_WIKI_CONFIGURATION_VERSION,
 } from "rww/data/RedWarnConstants";
@@ -86,32 +86,9 @@ export default class RedWarnWikiConfiguration {
                 RedWarnWikiConfiguration.preloadedData = JSON.parse(
                     Object.values<Record<string, any>>(
                         (
-                            await fetch(
-                                ((): string => {
-                                    const url = new URL(
-                                        RW_FALLBACK_WIKI.apiPath
-                                    );
-
-                                    // Need to indicate origin for CORS.
-                                    url.searchParams.set(
-                                        "origin",
-                                        window.origin
-                                    );
-                                    url.searchParams.set("action", "query");
-                                    url.searchParams.set("format", "json");
-                                    url.searchParams.set("prop", "revisions");
-                                    url.searchParams.set(
-                                        "titles",
-                                        RW_FALLBACK_WIKI.configuration ??
-                                            RW_WIKI_CONFIGURATION
-                                    );
-                                    url.searchParams.set("rvprop", "content");
-                                    url.searchParams.set("rvslots", "main");
-                                    url.searchParams.set("rvlimit", "1");
-
-                                    return url.toString();
-                                })()
-                            ).then((req) => req.json())
+                            await fetch(RW_FALLBACK_CONFIG).then((req) =>
+                                req.json()
+                            )
                         )["query"]["pages"]
                     )[0]["revisions"][0]["slots"]["main"]["*"]
                 );

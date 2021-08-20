@@ -41,4 +41,4 @@ export const RW_FALLBACK_WIKI = {
 };
 
 export const RW_FALLBACK_CONFIG =
-    "https://redwarn-lite.wmcloud.org/static/default-config.json";
+    "https://redwarn-web.wmcloud.org/static/default-config.json";

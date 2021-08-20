@@ -105,7 +105,7 @@ module.exports = {
     mode: process.env.NODE_ENV === "production" ? "production" : "development",
     ...(devtool ? { devtool } : void 0),
     entry: {
-        redwarn: "./src/RedWarnLite.ts"
+        redwarn: "./src/RedWarn.ts"
     },
     output: {
         path: path.resolve(__dirname, "build"),

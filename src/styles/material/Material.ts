@@ -50,7 +50,7 @@ const MaterialStyle: Style = {
             type: "style",
             id: "mdc-styles",
             src:
-                "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@12.0.0.min.css",
+                "https://redwarn-web.wmcloud.org/static/styles/material-components-web@12.0.0.min.css",
             cache: {
                 delayedReload: true,
                 duration: 1209600000, // 14 days
@@ -60,7 +60,7 @@ const MaterialStyle: Style = {
         //     type: "style",
         //     id: "mdc-styles-tooltips",
         //     src:
-        //         "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@12.0.0.tooltip.min.css",
+        //         "https://redwarn-web.wmcloud.org/static/styles/material-components-web@12.0.0.tooltip.min.css",
         //     cache: {
         //         delayedReload: true,
         //         duration: 1209600000, // 14 days

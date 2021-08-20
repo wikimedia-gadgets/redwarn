@@ -121,11 +121,8 @@ module.exports = {
         compress: false,
         port: 45991,
         /* Wikipedia will block the request due to CORS. Just refresh like a normal person. */
+        client: false,
         hot: false,
-        client: {
-            needClientEntry: false,
-            needHotEntry: false,
-        },
         liveReload: false
     },
     plugins,

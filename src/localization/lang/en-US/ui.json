@@ -36,8 +36,8 @@
         "content": "You have rollback permissions! Would you like to use the faster rollback API in future or continue using a rollback-like setting? You can change this in your preferences at any time."
     },
     "tamperProtection": {
-        "header": "ATTENTION!",
-        "warningContent": "You are currently using RedWarn in a way that is strongly discouraged under guidelines set at <a href=\"/wiki/Wikipedia:REDWARN/A\" class=\"mw-redirect\" title=\"Wikipedia:REDWARN/A\">WP:REDWARN/A</a>."
+        "header": "Attention!",
+        "warningContent": "You are currently using RedWarn in a way that is strongly discouraged under guidelines set at <a href=\"https://en.wikipedia.org/wiki/Wikipedia:RW/A\" title=\"Wikipedia:RW/A\">Wikipedia:RedWarn/Abuse</a>. This will be permanently recorded and will prevent you from running legitimate installations of RedWarn. Please contact a RedWarn team developer for assistance."
     },
     "warn": {
         "title": "Warn User",

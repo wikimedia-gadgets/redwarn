@@ -83,15 +83,9 @@ export default class RedWarnWikiConfiguration {
         } catch (e) {
             try {
                 // Use the API to get the fallback configuration.
-                RedWarnWikiConfiguration.preloadedData = JSON.parse(
-                    Object.values<Record<string, any>>(
-                        (
-                            await fetch(RW_FALLBACK_CONFIG).then((req) =>
-                                req.json()
-                            )
-                        )["query"]["pages"]
-                    )[0]["revisions"][0]["slots"]["main"]["*"]
-                );
+                RedWarnWikiConfiguration.preloadedData = await fetch(
+                    RW_FALLBACK_CONFIG
+                ).then((req) => req.json());
             } catch (e) {
                 // TODO: Proper errors
                 throw new AggregateError(

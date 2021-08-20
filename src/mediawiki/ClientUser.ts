@@ -75,10 +75,7 @@ export class ClientUser extends UserAccount {
         // Scenario 1: The group is found.
         if (groups.includes(group)) return true;
 
-        // Scenario 2: The user is an administrator.
-        if (groups.includes("sysop")) return true;
-
-        // Scenario 3: The user is `confirmed` but not `autoconfirmed`.
+        // Scenario 2: The user is `confirmed` but not `autoconfirmed`.
         // Collapsed `if` into one `return` for ease.
         return group === "confirmed" && groups.includes("autoconfirmed");
     }

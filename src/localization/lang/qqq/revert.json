@@ -1,28 +1,29 @@
 {
     "rollbackOptions": {
         "rollback": {
-            "name": "Rollback"
+            "name": "Option to rollback the edit"
         },
         "agf": {
-            "name": "Assume good faith and rollback",
-            "summary": "Reverting [[WP:AGF|good faith]] edits"
+            "name": "Option to assume good faith and rollback the edit",
+            "summary": "The edit summary used for good faith rollbacks - something like 'Reverting [[WP:AGF|good faith]] edits', linking to the relevant project page"
         },
         "preview": {
-            "name": "Preview Rollback"
+            "name": "Option to preview the rollback"
         },
         "quick-template": {
-            "name": "Quick Template"
+            "name": "Option to use a Quick Template"
         },
         "more-options": {
-            "name": "More options"
+            "name": "Option to see more options"
         }
     },
     "rollbackDoneOptions": {
-        "latest": "Go to the latest revision",
-        "message": "Send this user a message",
-        "template": "Template this user",
-        "warn": "Warn this user",
-        "report": "Report this user",
-        "prefs": "Open the \"More Options\" panel"
+        "latest": "Option to go to the latest revision",
+        "message": "Option to send the user a message",
+        "template": "Option to template the user",
+        "warn": "Option to warn the user",
+        "report": "Option to report this user (eg to [[WP:AIV]] on enwiki)",
+        "mat": "Option to open the Multiple Action Tool",
+        "prefs": "Option to open the \"More Options\" panel"
     }
 }

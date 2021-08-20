@@ -75,6 +75,7 @@ export * from "./WarningLevel";
 export * from "./User";
 export * from "./ClientUser";
 export * from "./Gender";
+export * from "./Group";
 export * from "./Page";
 export * from "./Revision";
 export * from "./Revert";

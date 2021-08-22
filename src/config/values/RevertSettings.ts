@@ -16,6 +16,7 @@ type RevertOptionOverrides = Record<
         name: string;
         warning: string;
         summary: string;
+        // TODO: Order
     }>
 >;
 

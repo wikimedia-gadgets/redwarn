@@ -1,10 +1,10 @@
 import {
     MediaWikiAPI,
     MediaWikiURL,
+    NamedPage,
     Page,
     PageEditOptions,
     PageLatestRevisionOptions,
-    PopulatedPage,
     User,
 } from "rww/mediawiki";
 import redirect from "rww/util/redirect";
@@ -25,7 +25,7 @@ export class Revision implements SectionContainer {
     revisionID: number;
 
     /** The page of the revision. */
-    page?: Page & PopulatedPage;
+    page?: Page & NamedPage;
 
     /** The edit comment for that revision. */
     comment?: string;

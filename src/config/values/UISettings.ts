@@ -6,6 +6,14 @@ import { DefaultRedWarnStyle } from "rww/styles/StyleConstants";
 import { Setting, UIInputType } from "../Setting";
 import i18next from "i18next";
 
+type PageIconOverrides = Record<
+    string,
+    Partial<{
+        enabled: boolean;
+        // TODO: Order
+    }>
+>;
+
 const UISettings = {
     /** Notice template order */
     noticeOrder: new Setting<"title" | "template">("noticeOrder", "title", {
@@ -26,8 +34,21 @@ const UISettings = {
         ],
     }),
 
+    /** Visible page icons */
+    pageIcons: new Setting<PageIconOverrides>("pageIcons", null, {
+        uiInputType: UIInputType.Style,
+
+        title: i18next.t("prefs:ui.pageIcons.title"),
+        description: i18next.t("prefs:ui.pageIcons.description"),
+    }),
+
     /** UI style */
-    style: new Setting<string>("style", DefaultRedWarnStyle),
+    style: new Setting<string>("style", DefaultRedWarnStyle, {
+        uiInputType: UIInputType.Style,
+
+        title: i18next.t("prefs:ui.style.title"),
+        description: i18next.t("prefs:ui.style.description"),
+    }),
 
     /** Array of viewed campaigns */
     campaigns: new Setting<string[]>("campaigns", []),

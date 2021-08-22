@@ -37,17 +37,6 @@ const MaterialStyle: Style = {
     },
     dependencies: [
         {
-            // Material Icons
-            type: "style",
-            id: "material-icons",
-            // Original: "https://fonts.googleapis.com/icon?family=Material+Icons"
-            src: "https://redwarn.toolforge.org/cdn/css/materialicons.css",
-            cache: {
-                delayedReload: true,
-                duration: 1209600000, // 14 days
-            },
-        },
-        {
             type: "style",
             id: "mdc-styles",
             src:

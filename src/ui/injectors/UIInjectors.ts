@@ -1,5 +1,6 @@
-import DiffViewerInjector from "./DiffViewerInjector";
+import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 import ContributionsPageInjector from "rww/ui/injectors/ContributionsPageInjector";
+import PageIconsInjector from "rww/ui/injectors/PageIconsInjector";
 
 export default class UIInjectors {
     /**
@@ -13,6 +14,7 @@ export default class UIInjectors {
         return Promise.all([
             DiffViewerInjector.init(),
             ContributionsPageInjector.init(),
+            PageIconsInjector.init(),
         ]);
     }
 }

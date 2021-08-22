@@ -1,5 +1,4 @@
 import RWUIElement from "rww/ui/elements/RWUIElement";
-import { BaseProps } from "tsx-dom";
 
 /**
  * The RWUIPageIcons handle the page customization icons found in the top-right
@@ -15,11 +14,6 @@ export class RWUIPageIcons extends RWUIElement {
      * This element, as returned by {@link RWUIPageIcons.render}.
      */
     self: HTMLElement;
-
-    constructor(props?: BaseProps) {
-        super();
-        Object.assign(props, this);
-    }
 
     /**
      * Renders the page icons. These are then wrapped by a RedWarn container

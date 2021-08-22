@@ -1,0 +1,21 @@
+@keyframes pageIconsExpand {
+    from {
+        max-width: 0;
+    }
+    to {
+        max-width: 100%;
+    }
+}
+
+#rwPageIcons {
+    overflow: hidden;
+    height: 28px;
+    animation: pageIconsExpand 0.2s ease-in-out;
+}
+
+.rw-mdc-pageIcons-icon {
+    padding: 2px !important;
+    height: 24px !important;
+    width: 24px !important;
+    box-sizing: content-box !important;
+}

@@ -15,7 +15,19 @@ import { NamedPage, Page } from "rww/mediawiki";
  */
 export default class RedWarnStore {
     // Initializations
-    public static dependencies: Dependency[] = [];
+    public static dependencies: Dependency[] = [
+        {
+            // Material Icons
+            type: "style",
+            id: "material-icons",
+            // Original: "https://fonts.googleapis.com/icon?family=Material+Icons"
+            src: "https://redwarn.toolforge.org/cdn/css/materialicons.css",
+            cache: {
+                delayedReload: true,
+                duration: 1209600000, // 14 days
+            },
+        },
+    ];
 
     // Wiki automated config
 

@@ -11,7 +11,7 @@ interface PageIcon {
     /** Whether or not this icon is required on the toolbar. */
     required?: boolean;
     visible(): PromiseOrNot<boolean>;
-    action(): Promise<any> | void;
+    action(event: MouseEvent): Promise<any> | void;
 }
 
 function isUserspacePage() {
@@ -74,7 +74,7 @@ const PageIcons: PageIcon[] = [
     },
     {
         id: "latestRevision",
-        icon: "clock",
+        icon: "watch_later",
         default: true,
         visible: () => !isSpecialPage(),
         action() {

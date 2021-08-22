@@ -2,7 +2,19 @@
     "unfinished" : "Hmm, looks like we haven't implemented this feature yet. Check back later!",
 
     "pageIcons": {
-        "": ""
+        "message": "New Message",
+        "quickTemplate": "Quick Template",
+        "warn": "Warn User",
+        "protection": "Page Protection",
+        "alertOnChange": "Alert on Change",
+        "latestRevision": "Latest Revision",
+        "moreOptions": "More Options",
+        "reportAIV": "Report to AIV",
+        "reportUAA": "Report to UAA",
+        "reportOversight": "Report user to Oversight",
+        "reportTAS": "Report user to Wikimedia Trust & Safety",
+        "preferences": "RedWarn Preferences",
+        "rwTalk": "RedWarn talk page"
     },
     "restore": {
         "label": "Restore Reason",

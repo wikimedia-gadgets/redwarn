@@ -31,6 +31,9 @@ export default function ({
         target.setAttribute("aria-describedby", _id);
     }
 
-    new MDCTooltip(tooltipElement);
+    const tooltip = new MDCTooltip(tooltipElement);
+    // Instant show and hide delays.
+    tooltip.setShowDelay(0);
+    tooltip.setHideDelay(0);
     return tooltipElement;
 }

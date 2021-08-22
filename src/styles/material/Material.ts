@@ -17,6 +17,7 @@ import MaterialIFrameDialog from "rww/styles/material/ui/MaterialIFrameDialog";
 
 import "./css/globals.css";
 import MaterialPageIcons from "rww/styles/material/ui/MaterialPageIcons";
+import MaterialExtendedOptions from "rww/styles/material/ui/MaterialExtendedOptions";
 
 const MaterialStyle: Style = {
     name: "material",
@@ -79,7 +80,7 @@ const MaterialStyle: Style = {
         rwToast: MaterialToast,
         rwDiffIcons: MaterialDiffIcons,
         rwPageIcons: MaterialPageIcons,
-        rwExtendedOptions: null
+        rwExtendedOptions: MaterialExtendedOptions
     },
 
     hooks: {

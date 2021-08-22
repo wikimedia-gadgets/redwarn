@@ -1,5 +1,6 @@
 import generateId from "rww/util/generateId";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
+import RedWarnUI from "rww/ui/RedWarnUI";
 
 export interface RWUIToastProperties extends RWUIElementProperties {
     content: string;
@@ -55,7 +56,7 @@ export class RWUIToast extends RWUIElement {
      * Helper function to create and instantly show a toast.
      */
     static quickShow(props: RWUIToastProperties): Promise<void> {
-        const toast = new RWUIToast(props);
+        const toast = new RedWarnUI.Toast(props);
         return toast.show();
     }
 

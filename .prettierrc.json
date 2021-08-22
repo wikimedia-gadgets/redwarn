@@ -1,5 +1,6 @@
 {
     "tabWidth": 4,
     "quoteProps": "consistent",
-    "jsxBracketSameLine": false
+    "jsxBracketSameLine": false,
+    "bracketSpacing": true
 }

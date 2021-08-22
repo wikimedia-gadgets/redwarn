@@ -46,8 +46,9 @@ const PageIcons: PageIcon[] = [
         icon: "report",
         default: true,
         visible: isUserspacePage,
-        action() {
+        async action() {
             new RedWarnUI.WarnDialog({
+                autoWarn: true,
                 targetUser:
                     mw.config.get("wgRelevantUserName") &&
                     User.fromUsername(mw.config.get("wgRelevantUserName"))
@@ -78,7 +79,7 @@ const PageIcons: PageIcon[] = [
         default: true,
         visible: () => !isSpecialPage(),
         action() {
-            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
+            RedWarnStore.currentPage.navigateToLatestRevision();
         }
     },
     {
@@ -88,7 +89,7 @@ const PageIcons: PageIcon[] = [
         required: true,
         visible: () => !isSpecialPage(),
         action() {
-            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
+            new RedWarnUI.ExtendedOptions().show();
         }
     },
     {

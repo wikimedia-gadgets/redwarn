@@ -15,8 +15,18 @@ export default function ({
 }: MaterialDialogProperties): JSX.Element {
     return (
         <div id={id} class="mdc-dialog">
-            <div class="mdc-dialog__container" {...containerProperties}>
-                <div class="mdc-dialog__surface" {...surfaceProperties}>
+            <div
+                {...containerProperties}
+                class={`mdc-dialog__container ${
+                    containerProperties.class ?? ""
+                }`}
+            >
+                <div
+                    {...surfaceProperties}
+                    class={`mdc-dialog__surface ${
+                        surfaceProperties.class ?? ""
+                    }`}
+                >
                     {children}
                 </div>
             </div>

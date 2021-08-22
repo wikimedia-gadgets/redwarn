@@ -73,17 +73,7 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
                 }}
                 id={this.id}
             >
-                <MaterialDialogTitle
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        fontWeight: "200",
-                        fontSize: "45px",
-                        lineHeight: "48px",
-                        borderStyle: "none",
-                        marginTop: "4vh"
-                    }}
-                >
+                <MaterialDialogTitle>
                     <span style={{ float: "left" }}>{this.props.title}</span>
                     <MaterialButton
                         dialogAction="close"

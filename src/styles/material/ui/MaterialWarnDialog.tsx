@@ -245,8 +245,6 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                             WarningType.Tiered) ||
                     this.mwdReason?.MWDReason?.warningLevel != null
             }
-            // TODO: prevents users without EC warning more than 1 user
-            // TODO: prevents ALL USERS warning > 15 users
         ];
         console.log(this.mwdReason?.MWDReason?.warning); // debug
         // Find all tests that failed.
@@ -319,6 +317,28 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                             warning: this.mwdReason.MWDReason.warning
                         };
                     } else this._result = null;
+
+                    if (!!this._result && this.props.autoWarn) {
+                        User.warn(this._result)
+                            .then(() => {
+                                RedWarnUI.Toast.quickShow({
+                                    content: i18next.t("ui:toasts.userWarned")
+                                });
+                            })
+                            .catch(() => {
+                                RedWarnUI.Toast.quickShow({
+                                    content: i18next.t(
+                                        "ui:toasts.userWarnFailed"
+                                    ),
+                                    action: {
+                                        text: "Verify",
+                                        callback: () => {
+                                            this.user.talkPage.navigate();
+                                        }
+                                    }
+                                });
+                            });
+                    }
 
                     styleStorage.dialogTracker.delete(this.id);
                     resolve(this._result);

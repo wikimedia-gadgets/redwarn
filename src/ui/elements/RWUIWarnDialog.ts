@@ -13,6 +13,8 @@ export interface RWUIWarnDialogProps extends RWUIDialogProperties {
     defaultWarnReason?: Warning;
     defaultWarnLevel?: number;
     relatedPage?: Page;
+    /* Whether or not the user will be warned immediately when the dialog closes. */
+    autoWarn?: boolean;
 }
 
 export class RWUIWarnDialog extends RWUIDialog {
@@ -29,5 +31,5 @@ export class RWUIWarnDialog extends RWUIDialog {
         super(props);
     }
 
-    protected _result: WarningOptions;
+    protected _result: WarningOptions | null;
 }

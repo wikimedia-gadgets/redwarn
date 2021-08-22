@@ -1,17 +1,18 @@
-import RWUIElement from "./RWUIElement";
-import { BaseProps } from "tsx-dom";
+import { RWUIDialog, RWUIDialogProperties } from "rww/ui/elements/RWUIDialog";
 
-export class RWUIExtendedOptions extends RWUIElement {
-    public static readonly elementName = "rwExtendedOptions";
-
-    constructor(readonly props: BaseProps) {
-        super();
-    }
-
-    /**
-     * Renders the ExtendedOptions.
-     */
-    render(): JSX.Element {
+export class RWUIExtendedOptions extends RWUIDialog {
+    show(): Promise<string> {
         throw new Error("Attempted to call abstract method");
     }
+    render(): HTMLDialogElement {
+        throw new Error("Attempted to call abstract method");
+    }
+
+    public static readonly elementName = "rwExtendedOptions";
+
+    constructor(readonly props: RWUIDialogProperties = {}) {
+        super(props);
+    }
+
+    protected _result: string;
 }

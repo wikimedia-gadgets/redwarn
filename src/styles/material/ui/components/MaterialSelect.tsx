@@ -2,6 +2,12 @@ import { h } from "tsx-dom";
 import { MDCSelect } from "@material/select/component";
 import { generateId } from "rww/util";
 import Log from "rww/data/RedWarnLog";
+import {
+    MaterialList,
+    MaterialListDivider,
+    MaterialListItem,
+    MaterialListSubheader
+} from "rww/styles/material/ui/components/MaterialList";
 
 export interface MaterialSelectDivider {
     type: "divider";
@@ -85,8 +91,8 @@ export default function <T>(
             </div>
 
             <div class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth">
-                <ul
-                    class="mdc-list"
+                <MaterialList
+                    initialized={false}
                     role="listbox"
                     aria-hidden="true"
                     aria-orientation="vertical"
@@ -96,44 +102,33 @@ export default function <T>(
                     {props.items.map((item) => {
                         switch (item.type) {
                             case "divider":
-                                return (
-                                    <li
-                                        class="mdc-list-divider"
-                                        role="separator"
-                                    />
-                                );
+                                return <MaterialListDivider />;
                             case "header":
                                 return (
-                                    <li
-                                        class="mdc-list-item mdc-list-header mdc-list-item--disabled"
-                                        role="separator"
-                                    >
+                                    <MaterialListSubheader>
                                         {item.label}
-                                    </li>
+                                    </MaterialListSubheader>
                                 );
                             case "action":
                                 const itemId = generateId();
                                 valueSet[itemId] = item.value;
                                 return (
-                                    <li
-                                        class={`mdc-list-item ${
+                                    <MaterialListItem
+                                        class={
                                             item.selected
                                                 ? " mdc-list-item--selected"
                                                 : ""
-                                        }`}
+                                        }
                                         aria-selected={item.selected ?? "false"}
                                         role="option"
                                         data-value={itemId}
                                     >
-                                        <span class="mdc-list-item__ripple" />
-                                        <span class="mdc-list-item__text">
-                                            {item.label}
-                                        </span>
-                                    </li>
+                                        {item.label}
+                                    </MaterialListItem>
                                 );
                         }
                     })}
-                </ul>
+                </MaterialList>
             </div>
         </div>
     );

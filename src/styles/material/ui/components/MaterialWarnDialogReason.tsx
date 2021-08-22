@@ -378,7 +378,8 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
                                 width={"100%"}
                                 label={i18next.t("ui:warn.reason.page")}
                                 defaultText={
-                                    this.props.relatedPage?.title ?? ""
+                                    this.props.relatedPage?.title?.toString() ??
+                                    ""
                                 }
                                 autofocus
                                 {...(this.warning != null

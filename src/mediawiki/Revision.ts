@@ -273,7 +273,7 @@ export class Revision implements SectionContainer {
         redirect(
             url(RedWarnStore.wikiIndex, {
                 diff: 0,
-                title: this.page.title,
+                title: `${this.page.title}`,
             })
         );
     }

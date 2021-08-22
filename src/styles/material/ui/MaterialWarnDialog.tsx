@@ -181,7 +181,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         const parseRequest = await MediaWikiAPI.post({
             action: "parse",
             format: "json",
-            title: this.user?.talkPage?.title ?? "Example",
+            title: this.user?.talkPage?.title?.toString() ?? "Example",
             text: warningText,
             contentmodel: "wikitext",
             prop: "text",

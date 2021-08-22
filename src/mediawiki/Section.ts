@@ -26,7 +26,7 @@ export interface APISection {
     /**
      * The title of the page this section belongs to.
      */
-    fromtitle: string;
+    fromtitle: mw.Title;
     /**
      * The byte at which the first character of the heading starts.
      *
@@ -140,7 +140,7 @@ export default class Section {
             format: "json",
             ...(context instanceof Page
                 ? {
-                      page: context.title,
+                      page: `${context.title}`,
                   }
                 : {
                       oldid: context.revisionID,

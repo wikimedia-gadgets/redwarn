@@ -77,7 +77,7 @@ export default class DiffViewerInjector {
                 });
 
                 const icons = (
-                    <div id={"rwDiffIcons"}>{diffIcons.render()}</div>
+                    <div class={"rwDiffIcons"}>{diffIcons.render()}</div>
                 );
 
                 // Always show below the Twinkle buttons.

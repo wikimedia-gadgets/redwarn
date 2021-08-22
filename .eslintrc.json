@@ -75,7 +75,8 @@
         // Enforce spacing between keywords.
         "keyword-spacing": "warn",
         // Enforce spacing inside of curly brackets.
-        "object-curly-spacing": ["warn", "always"],
+        // TODO: Conflicts with Prettier
+        // "object-curly-spacing": ["warn", "always"],
         // Enforces spaces after commas.
         "comma-spacing": ["error", {
             "before": false,

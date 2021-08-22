@@ -45,7 +45,7 @@ export class RWUIToast extends RWUIElement {
      */
     element?: HTMLDivElement;
 
-    private constructor(readonly props: RWUIToastProperties) {
+    protected constructor(readonly props: RWUIToastProperties) {
         super();
         this.id = `toast__${props.id || generateId(16)}`;
         this.props.style ??= RWUIToastStyle.Normal;

@@ -1,6 +1,6 @@
 import { ComponentChild, h } from "tsx-dom";
 
-import { RWUIAlertDialog } from "rww/ui/elements/RWUIDialog";
+import { RWUIAlertDialog } from "rww/ui/elements/RWUIAlertDialog";
 import {
     registerMaterialDialog,
     upgradeMaterialDialog

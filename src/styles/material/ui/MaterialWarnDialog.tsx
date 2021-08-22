@@ -1,7 +1,7 @@
 import { h } from "tsx-dom";
 import i18next from "i18next";
 
-import { RWUIWarnDialog } from "rww/ui/elements/RWUIDialog";
+import { RWUIWarnDialog } from "rww/ui/elements/RWUIWarnDialog";
 
 import {
     registerMaterialDialog,

@@ -78,7 +78,8 @@ const MaterialStyle: Style = {
         rwIFrameDialog: MaterialIFrameDialog,
         rwToast: MaterialToast,
         rwDiffIcons: MaterialDiffIcons,
-        rwPageIcons: MaterialPageIcons
+        rwPageIcons: MaterialPageIcons,
+        rwExtendedOptions: null
     },
 
     hooks: {

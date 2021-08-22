@@ -2,7 +2,6 @@ import { DiffIconRevertContext } from "rww/mediawiki/Revert";
 import i18next from "i18next";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import { User, WarningManager } from "rww/mediawiki";
-import MaterialToast from "rww/styles/material/ui/MaterialToast";
 
 export enum RevertDoneOption {
     LatestRevision,
@@ -41,9 +40,9 @@ export function RevertDoneOptions(): Record<
             icon: "send",
             showOnRestore: false,
             action: (): void => {
-                new MaterialToast({
+                RedWarnUI.Toast.quickShow({
                     content: "This feature has not been implemented yet."
-                }).show();
+                });
             }
         },
         [RevertDoneOption.QuickTemplate]: {
@@ -51,9 +50,9 @@ export function RevertDoneOptions(): Record<
             icon: "library_add",
             showOnRestore: false,
             action: (): void => {
-                new MaterialToast({
+                RedWarnUI.Toast.quickShow({
                     content: "This feature has not been implemented yet."
-                }).show();
+                });
             }
         },
         [RevertDoneOption.WarnUser]: {
@@ -79,9 +78,9 @@ export function RevertDoneOptions(): Record<
             icon: "gavel",
             showOnRestore: false,
             action: (): void => {
-                new MaterialToast({
+                RedWarnUI.Toast.quickShow({
                     content: "This feature has not been implemented yet."
-                }).show();
+                });
             }
         },
         [RevertDoneOption.MultipleActionTool]: {
@@ -90,9 +89,9 @@ export function RevertDoneOptions(): Record<
             showOnRestore: true,
             action: (): void => {
                 // TODO: Multiple Action Tool
-                new MaterialToast({
+                RedWarnUI.Toast.quickShow({
                     content: "This feature has not been implemented yet."
-                }).show();
+                });
             }
         },
         [RevertDoneOption.MoreOptions]: {
@@ -101,9 +100,9 @@ export function RevertDoneOptions(): Record<
             showOnRestore: true,
             action: (): void => {
                 // TODO: Preferences
-                new MaterialToast({
+                RedWarnUI.Toast.quickShow({
                     content: "This feature has not been implemented yet."
-                }).show();
+                });
             }
         }
     };

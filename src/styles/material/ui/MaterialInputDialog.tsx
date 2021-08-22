@@ -5,7 +5,7 @@ import { MDCTextFieldIcon } from "@material/textfield/icon";
 import i18next from "i18next";
 import { h } from "tsx-dom";
 
-import { RWUIInputDialog } from "rww/ui/elements/RWUIDialog";
+import { RWUIInputDialog } from "rww/ui/elements/RWUIInputDialog";
 import {
     registerMaterialDialog,
     upgradeMaterialDialog

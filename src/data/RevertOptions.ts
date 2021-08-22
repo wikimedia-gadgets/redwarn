@@ -2,10 +2,10 @@ import i18next from "i18next";
 import type { RevertContext } from "rww/mediawiki/Revert";
 import { RevertContextBase } from "rww/mediawiki/Revert";
 import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
-import MaterialToast from "rww/styles/material/ui/MaterialToast";
 import { redirect, url } from "rww/util";
 import RedWarnStore from "rww/data/RedWarnStore";
 import { Configuration } from "rww/config";
+import RedWarnUI from "rww/ui/RedWarnUI";
 
 export enum ActionSeverity {
     Neutral,
@@ -135,9 +135,9 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             name: i18next.t("revert:rollbackOptions.preview.name"),
             action: async (rollbackContext: RevertContext) => {
                 // TODO: Toast on reload.
-                new MaterialToast({
+                RedWarnUI.Toast.quickShow({
                     content: "Redirecting to preview..."
-                }).show();
+                });
                 redirect(
                     url(RedWarnStore.wikiIndex, {
                         diff: rollbackContext.oldRevision.revisionID,
@@ -156,9 +156,9 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             name: i18next.t("revert:rollbackOptions.quick-template.name"),
             action: () => async () => {
                 // TODO: Quick Template
-                new MaterialToast({
+                RedWarnUI.Toast.quickShow({
                     content: "This feature has not been implemented yet."
-                }).show();
+                });
             },
             severity: ActionSeverity.Neutral,
             icon: "library_add"
@@ -171,9 +171,9 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             name: i18next.t("revert:rollbackOptions.more-options.name"),
             action: () => {
                 // TODO: Preferences
-                new MaterialToast({
+                RedWarnUI.Toast.quickShow({
                     content: "This feature has not been implemented yet."
-                }).show();
+                });
             },
             severity: ActionSeverity.Neutral,
             icon: "more_vert"

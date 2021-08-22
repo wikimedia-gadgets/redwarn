@@ -183,9 +183,9 @@ function MaterialWarnDialogUserCard({
                             ? {
                                   onClick: () => {
                                       // TODO AIV thing
-                                      new RedWarnUI.Toast({
+                                      RedWarnUI.Toast.quickShow({
                                           content: i18next.t("ui:unfinished")
-                                      }).show();
+                                      });
                                   }
                               }
                             : {})}
@@ -324,11 +324,11 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                             onClick={() => {
                                 if (!this.updating) this.updateUser(this.user);
                                 else
-                                    new RedWarnUI.Toast({
+                                    RedWarnUI.Toast.quickShow({
                                         content: i18next.t(
                                             "ui:warn.user.load_wait"
                                         )
-                                    }).show();
+                                    });
                             }}
                         >
                             {this.user.username}

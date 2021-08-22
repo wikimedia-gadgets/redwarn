@@ -29,7 +29,7 @@ const PageIcons: PageIcon[] = [
         default: true,
         visible: isUserspacePage,
         action() {
-            new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
+            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
         }
     },
     {
@@ -38,7 +38,7 @@ const PageIcons: PageIcon[] = [
         default: true,
         visible: isUserspacePage,
         action() {
-            new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
+            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
         }
     },
     {
@@ -60,7 +60,7 @@ const PageIcons: PageIcon[] = [
         default: true,
         visible: () => !isSpecialPage(),
         action() {
-            new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
+            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
         }
     },
     {
@@ -69,7 +69,7 @@ const PageIcons: PageIcon[] = [
         default: true,
         visible: () => !isSpecialPage(),
         action() {
-            new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
+            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
         }
     },
     {
@@ -78,7 +78,7 @@ const PageIcons: PageIcon[] = [
         default: true,
         visible: () => !isSpecialPage(),
         action() {
-            new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
+            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
         }
     },
     {
@@ -88,7 +88,7 @@ const PageIcons: PageIcon[] = [
         required: true,
         visible: () => !isSpecialPage(),
         action() {
-            new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
+            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
         }
     },
     {
@@ -96,7 +96,7 @@ const PageIcons: PageIcon[] = [
         icon: "flag",
         visible: isUserspacePage,
         action() {
-            new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
+            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
         }
     },
     {
@@ -104,7 +104,7 @@ const PageIcons: PageIcon[] = [
         icon: "person_remove",
         visible: isUserspacePage,
         action() {
-            new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
+            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
         }
     },
     {
@@ -112,7 +112,7 @@ const PageIcons: PageIcon[] = [
         icon: "visibility_off",
         visible: isUserspacePage,
         action() {
-            new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
+            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
         }
     },
     {
@@ -120,7 +120,7 @@ const PageIcons: PageIcon[] = [
         icon: "phone_in_talk",
         visible: isUserspacePage,
         action() {
-            new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
+            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
         }
     },
     {
@@ -128,7 +128,7 @@ const PageIcons: PageIcon[] = [
         icon: "settings",
         visible: () => true,
         action() {
-            new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
+            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
         }
     },
     {

@@ -4,13 +4,13 @@
 export default class RealTimeRecentChanges {
     private static onRTRC: boolean;
     static init(): void {
-        this.onRTRC =
+        RealTimeRecentChanges.onRTRC =
             (mw.config.get("wgTitle") === "Krinkle/RTRC" &&
                 mw.config.get("wgAction") === "view") ||
             (mw.config.get("wgCanonicalSpecialPageName") === "Blankpage" &&
                 // https://github.com/Krinkle/mw-gadget-rtrc/blob/f84d47fa8e776d31ad6f83764930a352a695d572/src/rtrc.js#L1655-L1656
                 mw.config.get("wgTitle").split("/", 2)[1] === "RTRC");
-        if (this.onRTRC) {
+        if (RealTimeRecentChanges.onRTRC) {
             mw.hook("wikipage.diff").add(async (diff: JQuery) => {
                 // TODO: dev-rwTS-difficons
                 // const context = new RevertContext(
@@ -30,7 +30,7 @@ export default class RealTimeRecentChanges {
 
     static nextDiff(): void {
         if (
-            this.onRTRC &&
+            RealTimeRecentChanges.onRTRC &&
             ($('input[name="autoDiff"]')[0] as HTMLInputElement).checked
         ) {
             $("#diffNext").trigger("click");

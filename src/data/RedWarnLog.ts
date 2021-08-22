@@ -47,7 +47,7 @@ export default class Log {
             date: Date.now(),
             level: level,
             message: message,
-            data: data,
+            data: data
         });
     }
 

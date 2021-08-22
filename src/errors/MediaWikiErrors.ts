@@ -21,7 +21,10 @@ export class GenericMediaWikiError extends Error {
 export class PageMissingError extends GenericMediaWikiError {
     readonly code = "missingtitle";
     constructor(readonly page: Page, message?: string) {
-        super(message ?? `The page "${page.title}" could not be found.`);
+        super(
+            message ??
+                `The page "${page.title.getPrefixedText()}" could not be found.`
+        );
     }
 }
 
@@ -36,7 +39,10 @@ export class RevisionMissingError extends GenericMediaWikiError {
 
 export class PageInvalidError extends GenericMediaWikiError {
     constructor(readonly page: Page, message?: string) {
-        super(message ?? `The page "${page.title}" could not be found.`);
+        super(
+            message ??
+                `The page "${page.title.getPrefixedText()}" could not be found.`
+        );
     }
 }
 
@@ -55,5 +61,5 @@ export class SectionIndexMissingError extends GenericMediaWikiError {
 
 export const SpecializedMediaWikiErrors: Record<string, any> = {
     missingtitle: PageMissingError,
-    nosuchrevid: RevisionMissingError,
+    nosuchrevid: RevisionMissingError
 };

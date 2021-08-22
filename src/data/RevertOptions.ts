@@ -2,10 +2,10 @@ import i18next from "i18next";
 import type { RevertContext } from "rww/mediawiki/Revert";
 import { RevertContextBase } from "rww/mediawiki/Revert";
 import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
-import MaterialToast from "rww/styles/material/ui/MaterialToast";
 import { redirect, url } from "rww/util";
 import RedWarnStore from "rww/data/RedWarnStore";
 import { Configuration } from "rww/config";
+import RedWarnUI from "rww/ui/RedWarnUI";
 
 export enum ActionSeverity {
     Neutral,
@@ -115,7 +115,7 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             name: i18next.t("revert:rollbackOptions.rollback.name"),
             actionType: "promptedRevert",
             severity: ActionSeverity.Mild,
-            icon: "replay",
+            icon: "replay"
         },
         goodFaithRollback: {
             id: "goodFaithRollback",
@@ -125,7 +125,7 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             actionType: "promptedRevert",
             defaultSummary: i18next.t("revert:rollbackOptions.agf.summary"),
             severity: ActionSeverity.GoodFaith,
-            icon: "thumb_up",
+            icon: "thumb_up"
         },
         preview: {
             id: "preview",
@@ -135,18 +135,18 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             name: i18next.t("revert:rollbackOptions.preview.name"),
             action: async (rollbackContext: RevertContext) => {
                 // TODO: Toast on reload.
-                new MaterialToast({
-                    content: "Redirecting to preview...",
-                }).show();
+                RedWarnUI.Toast.quickShow({
+                    content: "Redirecting to preview..."
+                });
                 redirect(
                     url(RedWarnStore.wikiIndex, {
                         diff: rollbackContext.oldRevision.revisionID,
-                        oldid: rollbackContext.newRevision.revisionID,
+                        oldid: rollbackContext.newRevision.revisionID
                     })
                 );
             },
             severity: ActionSeverity.Neutral,
-            icon: "compare_arrows",
+            icon: "compare_arrows"
         },
         quickTemplate: {
             id: "quickTemplate",
@@ -156,12 +156,12 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             name: i18next.t("revert:rollbackOptions.quick-template.name"),
             action: () => async () => {
                 // TODO: Quick Template
-                new MaterialToast({
-                    content: "This feature has not been implemented yet.",
-                }).show();
+                RedWarnUI.Toast.quickShow({
+                    content: "This feature has not been implemented yet."
+                });
             },
             severity: ActionSeverity.Neutral,
-            icon: "library_add",
+            icon: "library_add"
         },
         moreOptions: {
             id: "moreOptions",
@@ -171,13 +171,13 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             name: i18next.t("revert:rollbackOptions.more-options.name"),
             action: () => {
                 // TODO: Preferences
-                new MaterialToast({
-                    content: "This feature has not been implemented yet.",
-                }).show();
+                RedWarnUI.Toast.quickShow({
+                    content: "This feature has not been implemented yet."
+                });
             },
             severity: ActionSeverity.Neutral,
-            icon: "more_vert",
-        },
+            icon: "more_vert"
+        }
     };
 }
 
@@ -208,7 +208,7 @@ export default class RevertOptions {
     public static get allArray(): RevertOption[] {
         return [
             ...Object.values(RevertOptions.loaded),
-            ...Object.values(RequiredRevertOptions()),
+            ...Object.values(RequiredRevertOptions())
         ];
     }
 }

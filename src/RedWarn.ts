@@ -26,7 +26,7 @@ import MediaWiki, {
     RevertSpeedup,
     User,
     WarningManager,
-    Watch,
+    Watch
 } from "./mediawiki";
 import * as RedWarnConstants from "./data/RedWarnConstants";
 import { RW_VERSION } from "./data/RedWarnConstants";
@@ -185,7 +185,7 @@ export default class RedWarn {
         mw.notify(
             MediaWikiNotificationContent(
                 i18next.t(`mediawiki:error.wikiConfigBad`, {
-                    wikiIndex: RedWarnStore.wikiIndex,
+                    wikiIndex: RedWarnStore.wikiIndex
                 })
             ),
             { type: "error" }
@@ -204,7 +204,7 @@ export default class RedWarn {
     await Promise.all([
         RedWarnHooks.executeHooks("preInit"),
         Dependencies.resolve([StyleManager.activeStyle.dependencies]),
-        Dependencies.resolve([RedWarnStore.dependencies]),
+        Dependencies.resolve([RedWarnStore.dependencies])
     ]);
 
     /**

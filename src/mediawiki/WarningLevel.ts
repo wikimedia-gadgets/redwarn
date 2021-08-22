@@ -40,26 +40,26 @@ export const WarningLevelComments: {
 } = {
     [WarningLevel.None]: {
         // Unused. Here for type checks.
-        description: "Friendly reminder",
+        description: "Friendly reminder"
     },
     [WarningLevel.Notice]: {
-        description: "Assumes good faith",
+        description: "Assumes good faith"
     },
     [WarningLevel.Caution]: {
-        description: "No assumption of faith",
+        description: "No assumption of faith"
     },
     [WarningLevel.Warning]: {
-        description: "Assumes bad faith \u2013 cease and desist",
+        description: "Assumes bad faith \u2013 cease and desist"
     },
     [WarningLevel.Final]: {
         summary: "Final warning",
-        description: "Bad faith, last warning.",
+        description: "Bad faith, last warning."
     },
     [WarningLevel.Immediate]: {
         alternative: "4im",
         summary: "Only warning",
-        description: "Only warning \u2013 used for severe policy violations",
-    },
+        description: "Only warning \u2013 used for severe policy violations"
+    }
 };
 
 export interface IncludesWarningLevelSignature {

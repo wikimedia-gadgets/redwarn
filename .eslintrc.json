@@ -25,6 +25,10 @@
         }
     },
     "rules": {
+
+        // ====================================================================
+        // TypeScript Rules
+        // ====================================================================
         // Allow explicit `any`s.
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
@@ -35,10 +39,21 @@
                 "varsIgnorePattern": "h"
             }
         ],
+        // TypeScript handles unresolved import issues.
+        "import/no-unresolved": "off",
+
+        // ====================================================================
+        // Style choices
+        // ====================================================================
+
         // Always require semicolons.
         "semi": ["error", "always"],
         // Prefer camelCase for variable names. Use quotes to bypass this.
         "camelcase": ["warn"],
+
+        // ====================================================================
+        // Semantics
+        // ====================================================================
         // Prefer constants instead of `var` or `let` when not reassigned.
         "prefer-const": [
             "error",
@@ -46,17 +61,29 @@
                 "destructuring": "all"
             }
         ],
-        // Enforce spacing between keys and values in objects.
-        "key-spacing": "warn",
-        // Enforce spacing between keywords.
-        "keyword-spacing": "warn",
-        // TypeScript handles unresolved import issues.
-        "import/no-unresolved": "off",
         // Prevent `this` in static usages. Use the class name instead for clarity.
         "no-restricted-syntax": ["error", {
             "selector": "MethodDefinition[static = true] ThisExpression",
             "message": "`this` is being used in a static context."
-        }]
+        }],
+
+        // ====================================================================
+        // Spacing
+        // ====================================================================
+        // Enforce spacing between keys and values in objects.
+        "key-spacing": "warn",
+        // Enforce spacing between keywords.
+        "keyword-spacing": "warn",
+        // Enforce spacing inside of curly brackets.
+        // TODO: Conflicts with Prettier
+        // "object-curly-spacing": ["warn", "always"],
+        // Enforces spaces after commas.
+        "comma-spacing": ["error", {
+            "before": false,
+            "after": true
+        }],
+        // Prevents dangling commas at the end of arrays and objects.
+        "comma-dangle": ["warn", "never"]
     },
     "settings": {
         "import/parsers": { "@typescript-eslint/parser": [".ts", ".tsx"] }

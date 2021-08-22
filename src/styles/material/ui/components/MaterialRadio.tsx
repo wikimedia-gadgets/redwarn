@@ -48,6 +48,6 @@ export default function <T>(
 
     return Object.assign(element, {
         MDCRadio: radio,
-        radioValue: props.value,
+        radioValue: props.value
     });
 }

@@ -42,9 +42,7 @@ export default function (props: MaterialIconButtonProperties): JSX.Element {
                 (tooltip ?? label)
             }
             onClick={onClick}
-            style={[
-                ...(props.iconColor ? [`color:${props.iconColor}`] : []),
-            ].join(";")}
+            style={[...(iconColor ? [`color:${iconColor}`] : [])].join(";")}
             {...expandDataAttributes(props)}
             data-mdc-ripple-is-unbounded={true}
         >

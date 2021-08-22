@@ -1,6 +1,24 @@
 {
     "unfinished" : "Hmm, looks like we haven't implemented this feature yet. Check back later!",
 
+    "extendedOptions": {
+        "title": "More Options"
+    },
+    "pageIcons": {
+        "message": "New Message",
+        "quickTemplate": "Quick Template",
+        "warn": "Warn User",
+        "protection": "Page Protection",
+        "alertOnChange": "Alert on Change",
+        "latestRevision": "Latest Revision",
+        "moreOptions": "More Options",
+        "reportAIV": "Report to AIV",
+        "reportUAA": "Report to UAA",
+        "reportOversight": "Report user to Oversight",
+        "reportTAS": "Report user to Wikimedia Trust & Safety",
+        "preferences": "RedWarn Preferences",
+        "rwTalk": "RedWarn talk page"
+    },
     "restore": {
         "label": "Restore Reason",
         "helperText": "Enter a reason for this restore",
@@ -25,6 +43,8 @@
         "rollbackError": "Sorry, there was an error performing a rollback.",
         "newerRev": "A newer revision was detected. Your rollback has not been applied.",
         "userUndefined": "Sorry, the target user does not exist, cannot be found, or is hidden from the public. Your action has not been completed.",
+        "userWarned": "User warned.",
+        "userWarnFailed": "Sorry, there was an error. Please verify if the user has been warned before issuing another warning.",
         "watching": "Alerts Enabled - please keep this tab open.",
         "stoppedWatching": "Alerts Disabled."
     },
@@ -140,7 +160,7 @@
         "title": "Configuration Error",
         "content": "Your RedWarn configuration could not be loaded correctly and has been reset. If this issue persists, please contact the RedWarn team.",
         "actions": [
-            { 
+            {
                 "data": "$t(ui:okCancel.ok)"
             }
         ]

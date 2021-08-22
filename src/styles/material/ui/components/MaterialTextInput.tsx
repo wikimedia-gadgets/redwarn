@@ -46,7 +46,7 @@ export default function (props: MaterialTextInputProps): JSX.Element {
         <span
             data-mdc-textinput={id}
             style={{
-                width: props.width ?? "100%",
+                width: props.width ?? "100%"
             }}
             class={props.class}
         >
@@ -94,7 +94,7 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                         {...(props.leadingIcon.action && {
                             tabIndex: 0,
                             role: "button",
-                            onClick: props.leadingIcon.action,
+                            onClick: props.leadingIcon.action
                         })}
                     >
                         {props.leadingIcon.icon}
@@ -106,19 +106,19 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                     id={`${id}_input`}
                     {...(props.helperText && {
                         "aria-controls": `${id}_helper`,
-                        "aria-describedby": `${id}_helper`,
+                        "aria-describedby": `${id}_helper`
                     })}
                     {...(props.defaultText && {
-                        value: props.defaultText,
+                        value: props.defaultText
                     })}
                     {...(props.maxCharacterCount && {
-                        maxLength: props.maxCharacterCount,
+                        maxLength: props.maxCharacterCount
                     })}
                     {...(props.autofocus && {
-                        autofocus: true,
+                        autofocus: true
                     })}
                     {...(props.required && {
-                        autofocus: true,
+                        autofocus: true
                     })}
                 />
                 {props.trailingIcon && (
@@ -128,7 +128,7 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                         {...(props.trailingIcon.action && {
                             tabIndex: 0,
                             role: "button",
-                            onClick: props.trailingIcon.action,
+                            onClick: props.trailingIcon.action
                         })}
                     >
                         {props.trailingIcon.icon}
@@ -165,7 +165,7 @@ export default function (props: MaterialTextInputProps): JSX.Element {
     MaterialTextInputTrack.set(id, {
         element: element,
         props: props,
-        components: null,
+        components: null
     });
     return element;
 }
@@ -193,7 +193,7 @@ export function MaterialTextInputUpgrade(
     );
     const { props } = trackingObject;
     const components: MaterialTextInputComponents = {
-        textField: new MDCTextField(element.querySelector(".mdc-text-field")),
+        textField: new MDCTextField(element.querySelector(".mdc-text-field"))
     };
     components.textField.initialize();
 

@@ -1,15 +1,15 @@
 import StyleManager from "rww/styles/StyleManager";
 import { UserAccount } from "rww/mediawiki";
-import {
-    RWUIAlertDialog,
-    RWUIIFrameDialog,
-    RWUIInputDialog,
-    RWUISelectionDialog,
-    RWUIWarnDialog,
-} from "./elements/RWUIDialog";
 import { RWUIToast } from "./elements/RWUIToast";
 import { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
 import { RevertContext } from "rww/mediawiki/Revert";
+import { RWUIPageIcons } from "rww/ui/elements/RWUIPageIcons";
+import { RWUIAlertDialog } from "rww/ui/elements/RWUIAlertDialog";
+import { RWUIInputDialog } from "rww/ui/elements/RWUIInputDialog";
+import { RWUISelectionDialog } from "rww/ui/elements/RWUISelectionDialog";
+import { RWUIIFrameDialog } from "rww/ui/elements/RWUIIFrameDialog";
+import { RWUIWarnDialog } from "rww/ui/elements/RWUIWarnDialog";
+import { RWUIExtendedOptions } from "rww/ui/elements/RWUIExtendedOptions";
 
 /**
  * Redirect class for easy access. UI elements of RedWarn are also created here.
@@ -43,43 +43,12 @@ export default class RedWarnUI {
     static get DiffIcons(): typeof RWUIDiffIcons {
         return StyleManager.activeStyle.classMap.rwDiffIcons;
     }
-
-    /**
-     * Opens extended options that can be opened from any page (preferences, oversight and TAS reporting)
-     */
-    static openExtendedOptionsDialog(): // TODO: dev-rwTS-difficons
-    // ctx: ExtendedOptionsContext
-    Promise<any> {
-        // const items: RWUISelectionDialogItem[] = [];
-        // const rollbackIcons =
-        //     (ctx.rollbackContext &&
-        //         DiffViewerInjector.getDisabledOptions(ctx.rollbackContext)) ??
-        //     [];
-        // if (rollbackIcons.length > 0) {
-        //     items.push(...rollbackIcons);
-        // }
-        //
-        // // TODO topIcons
-        //
-        // const targetUser = ctx.user ?? ctx.rollbackContext?.newRevision.user;
-        //
-        // if (targetUser) {
-        //     // TODO AIV
-        //     // TODO UAA
-        // }
-        //
-        // if (ClientUser.i.emailEnabled) {
-        //     // TODO oversight
-        //     // TODO 911
-        // }
-        //
-        // const dialog = new this.SelectionDialog({
-        //     items,
-        //     title: "More Options",
-        // });
-        //
-        // return dialog.show();
-        return null;
+    /** Alias of {@link StyleManager.activeStyle.classMap.rwPageIcons} */
+    static get PageIcons(): typeof RWUIPageIcons {
+        return StyleManager.activeStyle.classMap.rwPageIcons;
+    }
+    static get ExtendedOptions(): typeof RWUIExtendedOptions {
+        return StyleManager.activeStyle.classMap.rwExtendedOptions;
     }
 }
 
@@ -99,4 +68,6 @@ export const RWUIElements = {
     [RWUIIFrameDialog.elementName]: RWUIIFrameDialog,
     [RWUIToast.elementName]: RWUIToast,
     [RWUIDiffIcons.elementName]: RWUIDiffIcons,
+    [RWUIPageIcons.elementName]: RWUIPageIcons,
+    [RWUIExtendedOptions.elementName]: RWUIExtendedOptions
 };

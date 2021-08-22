@@ -5,14 +5,31 @@
  */
 
 export enum UIInputType {
+    /** A simple switch that provides a boolean value. */
     Switch,
+    /** A set of checkboxes which returns an array containing the value of all checked options. */
     Checkboxes,
+    /** A set of radio buttons which returns the value of the selected option. */
     Radio,
+    /** A dropdown which returns the value of the selected option. */
     Dropdown,
+    /** A textbox which returns a string. */
     Textbox,
+    /** A number input field which returns a number. */
     Number,
+    /** A color picker which returns a color. */
     ColorPicker,
+    /** A dropdown which returns a RedWarnStyle. */
+    Style,
+    /**
+     * A menu which shows all (and allows addition of more) revert options and
+     * allows customization of color, order, visibility, or icon.
+     */
     RevertOptions,
+    /**
+     * A menu which shows all page icons and allows customization of order and visibility.
+     */
+    PageIcons,
 }
 
 export interface DisplayInformationOption {

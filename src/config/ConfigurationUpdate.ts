@@ -82,7 +82,7 @@ const configurationUpdaters: { [key: number]: ConfigurationUpdater } = {
 
         config.configVersion = 1;
         return config;
-    },
+    }
 };
 
 /**

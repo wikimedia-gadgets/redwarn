@@ -1,5 +1,9 @@
 import { MDCMenu } from "@material/menu";
 import { BaseProps, h } from "tsx-dom";
+import {
+    MaterialList,
+    MaterialListItem
+} from "rww/styles/material/ui/components/MaterialList";
 
 /* Specificity is key */
 type MaterialMenuID = string;
@@ -43,8 +47,8 @@ export default function (props: MaterialMenuProps): JSX.Element {
     const menu = (
         <span data-append-event={true}>
             <div id={props.id} class="mdc-menu mdc-menu-surface">
-                <ul
-                    class="mdc-list"
+                <MaterialList
+                    initialized={false}
                     role="menu"
                     aria-hidden="true"
                     aria-orientation="vertical"
@@ -52,26 +56,18 @@ export default function (props: MaterialMenuProps): JSX.Element {
                 >
                     {props.items.map<JSX.Element>((menuAction) => {
                         return (
-                            <li
-                                class="mdc-list-item"
+                            <MaterialListItem
                                 role="menuitem"
                                 onClick={() => {
                                     menuAction.action();
                                 }}
+                                icon={menuAction.icon}
                             >
-                                <span class="mdc-list-item__ripple" />
-                                {menuAction.icon && (
-                                    <span class="mdc-list-item__graphic material-icons">
-                                        {menuAction.icon}
-                                    </span>
-                                )}
-                                <span class="mdc-list-item__text">
-                                    {menuAction.label}
-                                </span>
-                            </li>
+                                {menuAction.label}
+                            </MaterialListItem>
                         );
                     })}
-                </ul>
+                </MaterialList>
             </div>
         </span>
     );

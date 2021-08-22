@@ -1,6 +1,7 @@
 import MessageHandler from "rww/event/MessageHandler";
 import { StyleStorage } from "rww/styles/Style";
 import { Dependency } from "rww/data/Dependencies";
+import { NamedPage, Page } from "rww/mediawiki";
 
 /**
  * <b>RedWarnStore</b> is for live, in-memory data that does not require persistence
@@ -14,7 +15,19 @@ import { Dependency } from "rww/data/Dependencies";
  */
 export default class RedWarnStore {
     // Initializations
-    public static dependencies: Dependency[] = [];
+    public static dependencies: Dependency[] = [
+        {
+            // Material Icons
+            type: "style",
+            id: "material-icons",
+            // Original: "https://fonts.googleapis.com/icon?family=Material+Icons"
+            src: "https://redwarn.toolforge.org/cdn/css/materialicons.css",
+            cache: {
+                delayedReload: true,
+                duration: 1209600000 // 14 days
+            }
+        }
+    ];
 
     // Wiki automated config
 
@@ -38,6 +51,8 @@ export default class RedWarnStore {
     public static styleStorage: StyleStorage = null;
     public static windowFocused = false;
 
+    public static currentPage: Page & NamedPage;
+
     public static registerDependency(dependency: Dependency): void {
         RedWarnStore.dependencies.push(dependency);
     }
@@ -54,6 +69,7 @@ export default class RedWarnStore {
             (mw.config.get("wgScriptPath") as string)
         }/api.php`;
         RedWarnStore.wikiID = mw.config.get("wgWikiID") as string;
+        RedWarnStore.currentPage = Page.fromTitle(mw.config.get("wgPageName"));
 
         window.RedWarnStore = RedWarnStore;
     }

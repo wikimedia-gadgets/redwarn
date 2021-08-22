@@ -24,7 +24,7 @@ export default function (props: MaterialButtonProperties): JSX.Element {
         iconColor,
         style,
         disabled,
-        raised,
+        raised
     } = props;
     const classes = ["mdc-button"];
 

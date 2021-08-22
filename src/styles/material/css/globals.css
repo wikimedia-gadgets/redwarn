@@ -19,9 +19,13 @@
     margin: 0 0.5em;
 }
 
+.mdc-icon-button,
+.mdc-list-item {
+    --mdc-ripple-hover-opacity: 0.14;
+}
+
 .mdc-icon-button {
     position: relative;
-    --mdc-ripple-hover-opacity: 0.14;
 }
 
 /* Tooltip background color */
@@ -35,6 +39,11 @@
     font-size: small;
     line-height: 2em;
     height: 2em;
+}
+
+.mdc-list-item {
+    /** odd bug */
+    align-items: center !important;
 }
 
 .rw-mdc-subtitle {

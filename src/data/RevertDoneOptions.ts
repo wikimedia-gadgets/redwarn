@@ -2,7 +2,6 @@ import { DiffIconRevertContext } from "rww/mediawiki/Revert";
 import i18next from "i18next";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import { User, WarningManager } from "rww/mediawiki";
-import MaterialToast from "rww/styles/material/ui/MaterialToast";
 
 export enum RevertDoneOption {
     LatestRevision,
@@ -34,27 +33,27 @@ export function RevertDoneOptions(): Record<
             icon: "watch_later",
             showOnRestore: true,
             action: async (context): Promise<void> =>
-                context.newRevision.page.navigateToLatestRevision(),
+                context.newRevision.page.navigateToLatestRevision()
         },
         [RevertDoneOption.NewMessage]: {
             name: i18next.t("revert:rollbackDoneOptions.message"),
             icon: "send",
             showOnRestore: false,
             action: (): void => {
-                new MaterialToast({
-                    content: "This feature has not been implemented yet.",
-                }).show();
-            },
+                RedWarnUI.Toast.quickShow({
+                    content: "This feature has not been implemented yet."
+                });
+            }
         },
         [RevertDoneOption.QuickTemplate]: {
             name: i18next.t("revert:rollbackDoneOptions.template"),
             icon: "library_add",
             showOnRestore: false,
             action: (): void => {
-                new MaterialToast({
-                    content: "This feature has not been implemented yet.",
-                }).show();
-            },
+                RedWarnUI.Toast.quickShow({
+                    content: "This feature has not been implemented yet."
+                });
+            }
         },
         [RevertDoneOption.WarnUser]: {
             name: i18next.t("revert:rollbackDoneOptions.warn"),
@@ -69,20 +68,20 @@ export function RevertDoneOptions(): Record<
                             : context.reason.actionType === "revert"
                             ? WarningManager.warnings[context.reason.warning]
                             : undefined,
-                    relatedPage: context.newRevision.page,
+                    relatedPage: context.newRevision.page
                 }).show();
                 await User.warn(warningOptions);
-            },
+            }
         },
         [RevertDoneOption.Report]: {
             name: i18next.t("revert:rollbackDoneOptions.report"),
             icon: "gavel",
             showOnRestore: false,
             action: (): void => {
-                new MaterialToast({
-                    content: "This feature has not been implemented yet.",
-                }).show();
-            },
+                RedWarnUI.Toast.quickShow({
+                    content: "This feature has not been implemented yet."
+                });
+            }
         },
         [RevertDoneOption.MultipleActionTool]: {
             name: i18next.t("revert:rollbackDoneOptions.mat"),
@@ -90,10 +89,10 @@ export function RevertDoneOptions(): Record<
             showOnRestore: true,
             action: (): void => {
                 // TODO: Multiple Action Tool
-                new MaterialToast({
-                    content: "This feature has not been implemented yet.",
-                }).show();
-            },
+                RedWarnUI.Toast.quickShow({
+                    content: "This feature has not been implemented yet."
+                });
+            }
         },
         [RevertDoneOption.MoreOptions]: {
             name: i18next.t("revert:rollbackDoneOptions.options"),
@@ -101,10 +100,10 @@ export function RevertDoneOptions(): Record<
             showOnRestore: true,
             action: (): void => {
                 // TODO: Preferences
-                new MaterialToast({
-                    content: "This feature has not been implemented yet.",
-                }).show();
-            },
-        },
+                RedWarnUI.Toast.quickShow({
+                    content: "This feature has not been implemented yet."
+                });
+            }
+        }
     };
 }

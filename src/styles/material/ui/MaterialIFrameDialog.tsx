@@ -1,9 +1,9 @@
 import { ComponentChild, h } from "tsx-dom";
 
-import { RWUIIFrameDialog } from "rww/ui/elements/RWUIDialog";
+import { RWUIIFrameDialog } from "rww/ui/elements/RWUIIFrameDialog";
 import {
     registerMaterialDialog,
-    upgradeMaterialDialog,
+    upgradeMaterialDialog
 } from "rww/styles/material/Material";
 
 import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
@@ -11,7 +11,7 @@ import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
-    MaterialDialogTitle,
+    MaterialDialogTitle
 } from "./MaterialDialog";
 import i18next from "i18next";
 import Dependencies from "rww/data/Dependencies";
@@ -51,7 +51,7 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
                             ? action.data
                             : {
                                   data: action.data,
-                                  text: action.text,
+                                  text: action.text
                               }
                     }
                 >
@@ -78,7 +78,7 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
                         this.props.height ?? "90vh"
                     };`,
                     "aria-modal": true,
-                    "aria-labelledby": this.props.title ?? "RedWarn dialog",
+                    "aria-labelledby": this.props.title ?? "RedWarn dialog"
                 }}
                 id={this.id}
             >
@@ -92,7 +92,7 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
                         src={
                             !!this.props.fragment
                                 ? url(this.props.src, undefined, {
-                                      fragment: this.props.fragment,
+                                      fragment: this.props.fragment
                                   })
                                 : this.props.src
                         }
@@ -119,13 +119,13 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
                     id: `rw-iframe-dialog-customStyle`,
                     src: `data:text/css;base64,${btoa(
                         this.props.customStyle.reduce((p, n) => `${p}\n\n${n}`)
-                    )}`,
+                    )}`
                 });
             } else {
                 actualDependencies.push({
                     type: "style",
                     id: "rw-iframe-dialog-customStyle",
-                    src: `data:text/css;base64,${btoa(this.props.customStyle)}`,
+                    src: `data:text/css;base64,${btoa(this.props.customStyle)}`
                 });
             }
         }
@@ -139,7 +139,7 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
                         this.props.customScripts.reduce(
                             (p, n) => `${p}\n\n${n}`
                         )
-                    )}`,
+                    )}`
                 });
             } else {
                 actualDependencies.push({
@@ -147,7 +147,7 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
                     id: "rw-iframe-dialog-customScript",
                     src: `data:text/javascript;base64,${btoa(
                         this.props.customScripts
-                    )}`,
+                    )}`
                 });
             }
         }

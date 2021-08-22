@@ -4,7 +4,7 @@ import i18next from "i18next";
 import {
     PageInvalidError,
     PageMissingError,
-    SectionIndexMissingError,
+    SectionIndexMissingError
 } from "rww/errors/MediaWikiErrors";
 import { url as buildURL } from "rww/util";
 import redirect from "rww/util/redirect";
@@ -37,6 +37,16 @@ export interface PageLatestRevisionOptions {
     excludeUser?: User;
 }
 
+export interface PopulatedPage {
+    pageID: number;
+    namespace: number;
+    title: mw.Title;
+}
+
+export interface NamedPage {
+    title: mw.Title;
+}
+
 /**
  * A page is an object in a MediaWiki installation. All revisions stem from one page, and all
  * pages stem from one namespace. Since a `Page` object cannot be manually constructed, it must
@@ -44,13 +54,13 @@ export interface PageLatestRevisionOptions {
  */
 export class Page implements SectionContainer {
     /** An index of all cached pages. **/
-    private static pageIndex: Record<string, Page> = {};
+    private static pageIndex: Record<string, Page & NamedPage> = {};
 
     /** The ID of the page. */
     pageID?: number;
 
     /** The page title. */
-    title?: string;
+    title?: mw.Title;
 
     /** The number that represents the namespace this page belongs to (i.e. its namespace ID). */
     namespace?: number;
@@ -67,7 +77,9 @@ export class Page implements SectionContainer {
     get url(): string {
         const identifier = this.getIdentifier();
         return buildURL(RedWarnStore.wikiIndex, {
-            [typeof identifier === "string" ? "title" : "curid"]: identifier,
+            [typeof identifier === "string"
+                ? "title"
+                : "curid"]: `${identifier}`
         });
     }
 
@@ -78,7 +90,9 @@ export class Page implements SectionContainer {
     }
 
     /**
-     * Creates a `Page` object from its ID.
+     * Creates a `Page` object from its ID. This is not suggested, as
+     * it almost always needs extra population before actual usage.
+     *
      * @param pageID The page's ID.
      */
     static fromID(pageID: number): Page {
@@ -89,10 +103,15 @@ export class Page implements SectionContainer {
      * Creates a `Page` object from its title.
      * @param pageTitle The page's title (including namespace).
      */
-    static fromTitle(pageTitle: string): Page {
+    static fromTitle(pageTitle: string | mw.Title): Page & NamedPage {
+        const mwTitle =
+            typeof pageTitle == "string" ? new mw.Title(pageTitle) : pageTitle;
         return (
-            Page.pageIndex[pageTitle] ??
-            (Page.pageIndex[pageTitle] = new Page({ title: pageTitle }))
+            Page.pageIndex[`${mwTitle}`] ??
+            (Page.pageIndex[`${mwTitle}`] = <Page & NamedPage> new Page({
+                title: mwTitle,
+                namespace: mwTitle.namespace
+            }))
         );
     }
 
@@ -101,14 +120,74 @@ export class Page implements SectionContainer {
      * @param pageID The page's ID.
      * @param pageTitle The page's title (including namespace).
      */
-    static fromIDAndTitle(pageID: number, pageTitle: string): Page {
+    static fromIDAndTitle(
+        pageID: number,
+        pageTitle: string
+    ): Page & PopulatedPage {
+        const mwTitle =
+            typeof pageTitle == "string" ? new mw.Title(pageTitle) : pageTitle;
+
+        if (Page.pageIndex[`${mwTitle}`].pageID == null)
+            Page.pageIndex[`${mwTitle}`].pageID = pageID;
+
         return (
-            Page.pageIndex[pageTitle] ??
-            (Page.pageIndex[pageTitle] = new Page({
+            <Page & PopulatedPage>Page.pageIndex[`${mwTitle}`] ??
+            (Page.pageIndex[`${mwTitle}`] = <Page & PopulatedPage> new Page({
                 pageID: pageID,
-                title: pageTitle,
+                title: mwTitle,
+                namespace: mwTitle.namespace
             }))
         );
+    }
+
+    static isSpecialPage(
+        page: (Page & NamedPage) | (Page & { namespace: number })
+    ): boolean;
+    static isSpecialPage(page: Page): Promise<boolean>;
+    /**
+     * Determines whether or not this page is a userspace (either
+     * User or User talk page).
+     *
+     * This is not configurable on most wikis unless completely
+     * modified since MediaWiki ships with NS_USER and NS_USER_TALK
+     * hardcoded as PHP constants.
+     */
+    static isSpecialPage(page: Page): PromiseOrNot<boolean> {
+        if (page.isNamed() || page.namespace != null) {
+            return (page.namespace || page.title.getNamespaceId()) < 0;
+        } else {
+            // If RW reaches this, something is clearly inefficient.
+            // Populate `this.title`.
+            return page
+                .getLatestRevision()
+                .then((revision) => Page.isSpecialPage(revision.page));
+        }
+    }
+
+    static isUserspacePage(page: Page & NamedPage): "user" | "talk" | false;
+    static isUserspacePage(page: Page): Promise<"user" | "talk" | false>;
+    /**
+     * Determines whether or not this page is a userspace (either
+     * User or User talk page).
+     *
+     * This is not configurable on most wikis unless completely
+     * modified since MediaWiki ships with NS_USER and NS_USER_TALK
+     * hardcoded as PHP constants.
+     */
+    static isUserspacePage(page: Page): PromiseOrNot<"user" | "talk" | false> {
+        if (page.isNamed()) {
+            return (
+                (page.namespace == 2 && "user") ||
+                (page.namespace == 3 && "talk") ||
+                false
+            );
+        } else {
+            if (page.title == null)
+                // Populate `this.title`.
+                return page
+                    .getLatestRevision()
+                    .then((revision) => Page.isUserspacePage(revision.page));
+        }
     }
 
     /**
@@ -130,10 +209,10 @@ export class Page implements SectionContainer {
             prop: "revisions",
             [typeof pageIdentifier === "number"
                 ? "pageids"
-                : "titles"]: pageIdentifier,
+                : "titles"]: `${pageIdentifier}`,
             rvprop: ["ids", "comment", "user", "timestamp", "size", "content"],
             rvslots: "main",
-            rvexcludeuser: options?.excludeUser?.username ?? undefined,
+            rvexcludeuser: options?.excludeUser?.username ?? undefined
         });
 
         if (revisionInfoRequest["query"]["pages"]["-1"]) {
@@ -167,6 +246,9 @@ export class Page implements SectionContainer {
         ));
     }
 
+    isNamed(): this is NamedPage {
+        return this.title != null;
+    }
     /**
      * Grabs either the page's title or ID. Returns the ID if both exist as long as
      * `favorTitle` is set to false.
@@ -174,7 +256,7 @@ export class Page implements SectionContainer {
      * If this function returns `null`, the `Page` was illegally created.
      * @param favorTitle Whether or not to favor the title over the ID.
      */
-    getIdentifier(favorTitle = false): number | string {
+    getIdentifier(favorTitle = false): number | mw.Title {
         if (!!this.pageID && !favorTitle) return this.pageID;
         else if (!this.pageID && !favorTitle) return this.title ?? null;
         else if (!!this.title && favorTitle) return this.title;
@@ -216,7 +298,7 @@ export class Page implements SectionContainer {
      */
     async getLatestRevisionNotByUser(username: string): Promise<Revision> {
         return this.getLatestRevision({
-            excludeUser: User.fromUsername(username),
+            excludeUser: User.fromUsername(username)
         });
     }
 
@@ -234,7 +316,7 @@ export class Page implements SectionContainer {
         redirect(
             url(RedWarnStore.wikiIndex, {
                 diff: 0,
-                title: this.title,
+                title: this.title
             })
         );
     }
@@ -252,7 +334,7 @@ export class Page implements SectionContainer {
      * @returns The subpage requested.
      */
     getSubpage(subpage: string): Page {
-        return Page.fromTitle(`${this.title}/${subpage}`);
+        return Page.fromTitle(`${this.title.getPrefixedText()}/${subpage}`);
     }
 
     /**
@@ -334,7 +416,7 @@ export class Page implements SectionContainer {
             // Page ID or title
             [typeof pageIdentifier === "number"
                 ? "pageid"
-                : "title"]: pageIdentifier,
+                : "title"]: `${pageIdentifier}`,
 
             // Edit summary
             summary: `${options.comment ?? ""} ${i18next.t(
@@ -347,7 +429,7 @@ export class Page implements SectionContainer {
             // Base revision ID
             ...(options.baseRevision
                 ? {
-                      baserevid: options.baseRevision.revisionID,
+                      baserevid: options.baseRevision.revisionID
                   }
                 : {}),
 
@@ -355,15 +437,15 @@ export class Page implements SectionContainer {
             ...(options.section
                 ? existingSection
                     ? {
-                          section: existingSection.index,
+                          section: existingSection.index
                       }
                     : {
                           section: "new",
-                          sectiontitle: options.section,
+                          sectiontitle: options.section
                       }
                 : {}),
 
-            ...textArgument,
+            ...textArgument
         });
     }
 

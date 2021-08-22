@@ -37,6 +37,16 @@ export interface PageLatestRevisionOptions {
     excludeUser?: User;
 }
 
+export interface PopulatedPage {
+    pageID: number;
+    namespace: number;
+    title: mw.Title;
+}
+
+export interface NamedPage {
+    title: mw.Title;
+}
+
 /**
  * A page is an object in a MediaWiki installation. All revisions stem from one page, and all
  * pages stem from one namespace. Since a `Page` object cannot be manually constructed, it must
@@ -44,7 +54,7 @@ export interface PageLatestRevisionOptions {
  */
 export class Page implements SectionContainer {
     /** An index of all cached pages. **/
-    private static pageIndex: Record<string, Page> = {};
+    private static pageIndex: Record<string, Page & NamedPage> = {};
 
     /** The ID of the page. */
     pageID?: number;
@@ -93,11 +103,15 @@ export class Page implements SectionContainer {
      * Creates a `Page` object from its title.
      * @param pageTitle The page's title (including namespace).
      */
-    static fromTitle(pageTitle: string): Page {
-        const mwTitle = new mw.Title(pageTitle);
+    static fromTitle(pageTitle: string | mw.Title): Page & NamedPage {
+        const mwTitle =
+            typeof pageTitle == "string" ? new mw.Title(pageTitle) : pageTitle;
         return (
             Page.pageIndex[`${mwTitle}`] ??
-            (Page.pageIndex[`${mwTitle}`] = new Page({ title: mwTitle }))
+            (Page.pageIndex[`${mwTitle}`] = <Page & NamedPage> new Page({
+                title: mwTitle,
+                namespace: mwTitle.namespace,
+            }))
         );
     }
 
@@ -106,17 +120,30 @@ export class Page implements SectionContainer {
      * @param pageID The page's ID.
      * @param pageTitle The page's title (including namespace).
      */
-    static fromIDAndTitle(pageID: number, pageTitle: string): Page {
-        const mwTitle = new mw.Title(pageTitle);
+    static fromIDAndTitle(
+        pageID: number,
+        pageTitle: string
+    ): Page & PopulatedPage {
+        const mwTitle =
+            typeof pageTitle == "string" ? new mw.Title(pageTitle) : pageTitle;
+
+        if (Page.pageIndex[`${mwTitle}`].pageID == null)
+            Page.pageIndex[`${mwTitle}`].pageID = pageID;
+
         return (
-            Page.pageIndex[`${mwTitle}`] ??
-            (Page.pageIndex[`${mwTitle}`] = new Page({
+            <Page & PopulatedPage>Page.pageIndex[`${mwTitle}`] ??
+            (Page.pageIndex[`${mwTitle}`] = <Page & PopulatedPage> new Page({
                 pageID: pageID,
                 title: mwTitle,
+                namespace: mwTitle.namespace,
             }))
         );
     }
 
+    static isSpecialPage(
+        page: (Page & NamedPage) | (Page & { namespace: number })
+    ): boolean;
+    static isSpecialPage(page: Page): Promise<boolean>;
     /**
      * Determines whether or not this page is a userspace (either
      * User or User talk page).
@@ -125,12 +152,42 @@ export class Page implements SectionContainer {
      * modified since MediaWiki ships with NS_USER and NS_USER_TALK
      * hardcoded as PHP constants.
      */
-    async isUserspacePage(): Promise<"user" | "talk" | false> {
-        return (
-            (this.namespace == 2 && "user") ||
-            (this.namespace == 3 && "talk") ||
-            false
-        );
+    static isSpecialPage(page: Page): PromiseOrNot<boolean> {
+        if (page.isNamed() || page.namespace != null) {
+            return (page.namespace || page.title.getNamespaceId()) < 0;
+        } else {
+            // If RW reaches this, something is clearly inefficient.
+            // Populate `this.title`.
+            return page
+                .getLatestRevision()
+                .then((revision) => Page.isSpecialPage(revision.page));
+        }
+    }
+
+    static isUserspacePage(page: Page & NamedPage): "user" | "talk" | false;
+    static isUserspacePage(page: Page): Promise<"user" | "talk" | false>;
+    /**
+     * Determines whether or not this page is a userspace (either
+     * User or User talk page).
+     *
+     * This is not configurable on most wikis unless completely
+     * modified since MediaWiki ships with NS_USER and NS_USER_TALK
+     * hardcoded as PHP constants.
+     */
+    static isUserspacePage(page: Page): PromiseOrNot<"user" | "talk" | false> {
+        if (page.isNamed()) {
+            return (
+                (page.namespace == 2 && "user") ||
+                (page.namespace == 3 && "talk") ||
+                false
+            );
+        } else {
+            if (page.title == null)
+                // Populate `this.title`.
+                return page
+                    .getLatestRevision()
+                    .then((revision) => Page.isUserspacePage(revision.page));
+        }
     }
 
     /**
@@ -189,6 +246,9 @@ export class Page implements SectionContainer {
         ));
     }
 
+    isNamed(): this is NamedPage {
+        return this.title != null;
+    }
     /**
      * Grabs either the page's title or ID. Returns the ID if both exist as long as
      * `favorTitle` is set to false.

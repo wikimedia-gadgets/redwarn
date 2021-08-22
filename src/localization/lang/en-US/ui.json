@@ -1,6 +1,9 @@
 {
     "unfinished" : "Hmm, looks like we haven't implemented this feature yet. Check back later!",
 
+    "pageIcons": {
+        "": ""
+    },
     "restore": {
         "label": "Restore Reason",
         "helperText": "Enter a reason for this restore",
@@ -140,7 +143,7 @@
         "title": "Configuration Error",
         "content": "Your RedWarn configuration could not be loaded correctly and has been reset. If this issue persists, please contact the RedWarn team.",
         "actions": [
-            { 
+            {
                 "data": "$t(ui:okCancel.ok)"
             }
         ]

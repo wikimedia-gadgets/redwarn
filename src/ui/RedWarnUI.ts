@@ -10,6 +10,7 @@ import {
 import { RWUIToast } from "./elements/RWUIToast";
 import { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
 import { RevertContext } from "rww/mediawiki/Revert";
+import { RWUIPageIcons } from "rww/ui/elements/RWUIPageIcons";
 
 /**
  * Redirect class for easy access. UI elements of RedWarn are also created here.
@@ -42,6 +43,10 @@ export default class RedWarnUI {
     /** Alias of {@link StyleManager.activeStyle.classMap.rwDiffIcons} */
     static get DiffIcons(): typeof RWUIDiffIcons {
         return StyleManager.activeStyle.classMap.rwDiffIcons;
+    }
+    /** Alias of {@link StyleManager.activeStyle.classMap.rwPageIcons} */
+    static get PageIcons(): typeof RWUIPageIcons {
+        return StyleManager.activeStyle.classMap.rwPageIcons;
     }
 
     /**
@@ -99,4 +104,5 @@ export const RWUIElements = {
     [RWUIIFrameDialog.elementName]: RWUIIFrameDialog,
     [RWUIToast.elementName]: RWUIToast,
     [RWUIDiffIcons.elementName]: RWUIDiffIcons,
+    [RWUIPageIcons.elementName]: RWUIPageIcons,
 };

@@ -1,6 +1,7 @@
 import MessageHandler from "rww/event/MessageHandler";
 import { StyleStorage } from "rww/styles/Style";
 import { Dependency } from "rww/data/Dependencies";
+import { NamedPage, Page } from "rww/mediawiki";
 
 /**
  * <b>RedWarnStore</b> is for live, in-memory data that does not require persistence
@@ -38,6 +39,8 @@ export default class RedWarnStore {
     public static styleStorage: StyleStorage = null;
     public static windowFocused = false;
 
+    public static currentPage: Page & NamedPage;
+
     public static registerDependency(dependency: Dependency): void {
         RedWarnStore.dependencies.push(dependency);
     }
@@ -54,6 +57,7 @@ export default class RedWarnStore {
             (mw.config.get("wgScriptPath") as string)
         }/api.php`;
         RedWarnStore.wikiID = mw.config.get("wgWikiID") as string;
+        RedWarnStore.currentPage = Page.fromTitle(mw.config.get("wgPageName"));
 
         window.RedWarnStore = RedWarnStore;
     }

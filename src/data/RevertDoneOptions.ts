@@ -34,7 +34,7 @@ export function RevertDoneOptions(): Record<
             icon: "watch_later",
             showOnRestore: true,
             action: async (context): Promise<void> =>
-                context.newRevision.page.navigateToLatestRevision(),
+                context.newRevision.page.navigateToLatestRevision()
         },
         [RevertDoneOption.NewMessage]: {
             name: i18next.t("revert:rollbackDoneOptions.message"),
@@ -42,9 +42,9 @@ export function RevertDoneOptions(): Record<
             showOnRestore: false,
             action: (): void => {
                 new MaterialToast({
-                    content: "This feature has not been implemented yet.",
+                    content: "This feature has not been implemented yet."
                 }).show();
-            },
+            }
         },
         [RevertDoneOption.QuickTemplate]: {
             name: i18next.t("revert:rollbackDoneOptions.template"),
@@ -52,9 +52,9 @@ export function RevertDoneOptions(): Record<
             showOnRestore: false,
             action: (): void => {
                 new MaterialToast({
-                    content: "This feature has not been implemented yet.",
+                    content: "This feature has not been implemented yet."
                 }).show();
-            },
+            }
         },
         [RevertDoneOption.WarnUser]: {
             name: i18next.t("revert:rollbackDoneOptions.warn"),
@@ -69,10 +69,10 @@ export function RevertDoneOptions(): Record<
                             : context.reason.actionType === "revert"
                             ? WarningManager.warnings[context.reason.warning]
                             : undefined,
-                    relatedPage: context.newRevision.page,
+                    relatedPage: context.newRevision.page
                 }).show();
                 await User.warn(warningOptions);
-            },
+            }
         },
         [RevertDoneOption.Report]: {
             name: i18next.t("revert:rollbackDoneOptions.report"),
@@ -80,9 +80,9 @@ export function RevertDoneOptions(): Record<
             showOnRestore: false,
             action: (): void => {
                 new MaterialToast({
-                    content: "This feature has not been implemented yet.",
+                    content: "This feature has not been implemented yet."
                 }).show();
-            },
+            }
         },
         [RevertDoneOption.MultipleActionTool]: {
             name: i18next.t("revert:rollbackDoneOptions.mat"),
@@ -91,9 +91,9 @@ export function RevertDoneOptions(): Record<
             action: (): void => {
                 // TODO: Multiple Action Tool
                 new MaterialToast({
-                    content: "This feature has not been implemented yet.",
+                    content: "This feature has not been implemented yet."
                 }).show();
-            },
+            }
         },
         [RevertDoneOption.MoreOptions]: {
             name: i18next.t("revert:rollbackDoneOptions.options"),
@@ -102,9 +102,9 @@ export function RevertDoneOptions(): Record<
             action: (): void => {
                 // TODO: Preferences
                 new MaterialToast({
-                    content: "This feature has not been implemented yet.",
+                    content: "This feature has not been implemented yet."
                 }).show();
-            },
-        },
+            }
+        }
     };
 }

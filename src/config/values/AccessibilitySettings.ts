@@ -14,8 +14,8 @@ const AccessibilitySettings = {
         title: i18next.t("prefs:accessibility.raiseActionButtons.title"),
         description: i18next.t(
             "prefs:accessibility.raiseActionButtons.description"
-        ),
-    }),
+        )
+    })
 };
 
 export default AccessibilitySettings;

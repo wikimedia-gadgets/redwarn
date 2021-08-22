@@ -23,7 +23,7 @@ export class MediaWikiURL {
             RedWarnStore.wikiIndex,
             {
                 title: mw.util.wikiUrlencode(page),
-                action: "history",
+                action: "history"
             },
             additionalURIComponents
         );
@@ -46,7 +46,7 @@ export class MediaWikiURL {
             {
                 diff: targetRevisionID,
                 oldid: sourceRevisionID,
-                diffmode: "source",
+                diffmode: "source"
             },
             additionalURIComponents
         );

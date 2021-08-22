@@ -30,7 +30,7 @@ const PageIcons: PageIcon[] = [
         visible: isUserspacePage,
         action() {
             new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
-        },
+        }
     },
     {
         id: "quickTemplate",
@@ -39,7 +39,7 @@ const PageIcons: PageIcon[] = [
         visible: isUserspacePage,
         action() {
             new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
-        },
+        }
     },
     {
         id: "warn",
@@ -50,9 +50,9 @@ const PageIcons: PageIcon[] = [
             new RedWarnUI.WarnDialog({
                 targetUser:
                     mw.config.get("wgRelevantUserName") &&
-                    User.fromUsername(mw.config.get("wgRelevantUserName")),
+                    User.fromUsername(mw.config.get("wgRelevantUserName"))
             }).show();
-        },
+        }
     },
     {
         id: "protection",
@@ -61,7 +61,7 @@ const PageIcons: PageIcon[] = [
         visible: () => !isSpecialPage(),
         action() {
             new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
-        },
+        }
     },
     {
         id: "alertOnChange",
@@ -70,7 +70,7 @@ const PageIcons: PageIcon[] = [
         visible: () => !isSpecialPage(),
         action() {
             new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
-        },
+        }
     },
     {
         id: "latestRevision",
@@ -79,7 +79,7 @@ const PageIcons: PageIcon[] = [
         visible: () => !isSpecialPage(),
         action() {
             new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
-        },
+        }
     },
     {
         id: "moreOptions",
@@ -89,7 +89,7 @@ const PageIcons: PageIcon[] = [
         visible: () => !isSpecialPage(),
         action() {
             new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
-        },
+        }
     },
     {
         id: "reportAIV",
@@ -97,7 +97,7 @@ const PageIcons: PageIcon[] = [
         visible: isUserspacePage,
         action() {
             new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
-        },
+        }
     },
     {
         id: "reportUAA",
@@ -105,7 +105,7 @@ const PageIcons: PageIcon[] = [
         visible: isUserspacePage,
         action() {
             new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
-        },
+        }
     },
     {
         id: "reportOversight",
@@ -113,7 +113,7 @@ const PageIcons: PageIcon[] = [
         visible: isUserspacePage,
         action() {
             new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
-        },
+        }
     },
     {
         id: "reportTAS",
@@ -121,7 +121,7 @@ const PageIcons: PageIcon[] = [
         visible: isUserspacePage,
         action() {
             new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
-        },
+        }
     },
     {
         id: "preferences",
@@ -129,7 +129,7 @@ const PageIcons: PageIcon[] = [
         visible: () => true,
         action() {
             new RedWarnUI.Toast({ content: i18next.t("ui:unfinished") });
-        },
+        }
     },
     {
         id: "rwTalk",
@@ -137,8 +137,8 @@ const PageIcons: PageIcon[] = [
         visible: () => true,
         action() {
             window.location.href = "https://w.wiki/s6j";
-        },
-    },
+        }
+    }
 ];
 
 export default PageIcons;

@@ -59,7 +59,7 @@ export default class RedWarnIDB {
         columns: (string | RWIDBColumn)[]
     ) {
         const objectStore = database.createObjectStore(store, {
-            keyPath: keyPath,
+            keyPath: keyPath
         });
 
         for (const column of Object.values(columns)) {

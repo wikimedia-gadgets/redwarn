@@ -2,13 +2,13 @@ import { h } from "tsx-dom";
 import { RWUISelectionDialog } from "rww/ui/elements/RWUIDialog";
 import {
     registerMaterialDialog,
-    upgradeMaterialDialog,
+    upgradeMaterialDialog
 } from "rww/styles/material/Material";
 import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogContent,
-    MaterialDialogTitle,
+    MaterialDialogTitle
 } from "./MaterialDialog";
 
 export default class MaterialSelectionDialog extends RWUISelectionDialog {
@@ -50,26 +50,26 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
                 style={{
                     width: "100%",
                     textAlign: "left",
-                    display: "inline-block",
+                    display: "inline-block"
                 }}
                 contentStyle={{
                     ...(item.content.length > 40 && { fontSize: "12px" }),
-                    marginLeft: "10px",
+                    marginLeft: "10px"
                 }}
             >
                 {item.content}
             </MaterialButton>,
-            <hr style={{ margin: "0" }} />,
+            <hr style={{ margin: "0" }} />
         ]);
         this.element = (
             <MaterialDialog
                 surfaceProperties={{
                     "style": {
                         width: this.props.width ?? "30vw",
-                        height: "60vh",
+                        height: "60vh"
                     },
                     "aria-modal": true,
-                    "aria-labelledby": this.props.title ?? "RedWarn dialog",
+                    "aria-labelledby": this.props.title ?? "RedWarn dialog"
                 }}
                 id={this.id}
             >
@@ -81,7 +81,7 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
                         fontSize: "45px",
                         lineHeight: "48px",
                         borderStyle: "none",
-                        marginTop: "4vh",
+                        marginTop: "4vh"
                     }}
                 >
                     <span style={{ float: "left" }}>{this.props.title}</span>
@@ -95,7 +95,7 @@ export default class MaterialSelectionDialog extends RWUISelectionDialog {
                     style={{
                         height: "400px",
                         overflowY: "auto",
-                        overflowX: "hidden",
+                        overflowX: "hidden"
                     }}
                 >
                     <hr style={{ margin: "0" }} />

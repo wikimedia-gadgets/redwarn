@@ -26,7 +26,7 @@ export default function (): void {
             });
     }).observe(document.body, {
         childList: true,
-        subtree: true,
+        subtree: true
     });
     Log.debug("MutationObserver stared.");
 

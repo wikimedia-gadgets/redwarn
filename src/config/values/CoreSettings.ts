@@ -13,7 +13,7 @@ const CoreSettings = {
     configVersion: new Setting("configVersion", RW_CONFIG_VERSION, null),
 
     /** Neopolitan. */
-    neopolitan: new Setting("neopolitan", null),
+    neopolitan: new Setting("neopolitan", null)
 };
 
 export default CoreSettings;

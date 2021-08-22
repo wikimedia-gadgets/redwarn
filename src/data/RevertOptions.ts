@@ -115,7 +115,7 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             name: i18next.t("revert:rollbackOptions.rollback.name"),
             actionType: "promptedRevert",
             severity: ActionSeverity.Mild,
-            icon: "replay",
+            icon: "replay"
         },
         goodFaithRollback: {
             id: "goodFaithRollback",
@@ -125,7 +125,7 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             actionType: "promptedRevert",
             defaultSummary: i18next.t("revert:rollbackOptions.agf.summary"),
             severity: ActionSeverity.GoodFaith,
-            icon: "thumb_up",
+            icon: "thumb_up"
         },
         preview: {
             id: "preview",
@@ -136,17 +136,17 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             action: async (rollbackContext: RevertContext) => {
                 // TODO: Toast on reload.
                 new MaterialToast({
-                    content: "Redirecting to preview...",
+                    content: "Redirecting to preview..."
                 }).show();
                 redirect(
                     url(RedWarnStore.wikiIndex, {
                         diff: rollbackContext.oldRevision.revisionID,
-                        oldid: rollbackContext.newRevision.revisionID,
+                        oldid: rollbackContext.newRevision.revisionID
                     })
                 );
             },
             severity: ActionSeverity.Neutral,
-            icon: "compare_arrows",
+            icon: "compare_arrows"
         },
         quickTemplate: {
             id: "quickTemplate",
@@ -157,11 +157,11 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             action: () => async () => {
                 // TODO: Quick Template
                 new MaterialToast({
-                    content: "This feature has not been implemented yet.",
+                    content: "This feature has not been implemented yet."
                 }).show();
             },
             severity: ActionSeverity.Neutral,
-            icon: "library_add",
+            icon: "library_add"
         },
         moreOptions: {
             id: "moreOptions",
@@ -172,12 +172,12 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             action: () => {
                 // TODO: Preferences
                 new MaterialToast({
-                    content: "This feature has not been implemented yet.",
+                    content: "This feature has not been implemented yet."
                 }).show();
             },
             severity: ActionSeverity.Neutral,
-            icon: "more_vert",
-        },
+            icon: "more_vert"
+        }
     };
 }
 
@@ -208,7 +208,7 @@ export default class RevertOptions {
     public static get allArray(): RevertOption[] {
         return [
             ...Object.values(RevertOptions.loaded),
-            ...Object.values(RequiredRevertOptions()),
+            ...Object.values(RequiredRevertOptions())
         ];
     }
 }

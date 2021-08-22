@@ -2,7 +2,7 @@ import { ComponentChild } from "tsx-dom";
 import {
     RWUIDialog,
     RWUIDialogAction,
-    RWUIDialogProperties,
+    RWUIDialogProperties
 } from "rww/ui/elements/RWUIDialog";
 
 export interface RWUIAlertDialogProps extends RWUIDialogProperties {

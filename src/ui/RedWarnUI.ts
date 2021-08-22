@@ -1,16 +1,14 @@
 import StyleManager from "rww/styles/StyleManager";
 import { UserAccount } from "rww/mediawiki";
-import {
-    RWUIAlertDialog,
-    RWUIIFrameDialog,
-    RWUIInputDialog,
-    RWUISelectionDialog,
-    RWUIWarnDialog,
-} from "./elements/RWUIDialog";
 import { RWUIToast } from "./elements/RWUIToast";
 import { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
 import { RevertContext } from "rww/mediawiki/Revert";
 import { RWUIPageIcons } from "rww/ui/elements/RWUIPageIcons";
+import { RWUIAlertDialog } from "rww/ui/elements/RWUIAlertDialog";
+import { RWUIInputDialog } from "rww/ui/elements/RWUIInputDialog";
+import { RWUISelectionDialog } from "rww/ui/elements/RWUISelectionDialog";
+import { RWUIIFrameDialog } from "rww/ui/elements/RWUIIFrameDialog";
+import { RWUIWarnDialog } from "rww/ui/elements/RWUIWarnDialog";
 
 /**
  * Redirect class for easy access. UI elements of RedWarn are also created here.
@@ -104,5 +102,5 @@ export const RWUIElements = {
     [RWUIIFrameDialog.elementName]: RWUIIFrameDialog,
     [RWUIToast.elementName]: RWUIToast,
     [RWUIDiffIcons.elementName]: RWUIDiffIcons,
-    [RWUIPageIcons.elementName]: RWUIPageIcons,
+    [RWUIPageIcons.elementName]: RWUIPageIcons
 };

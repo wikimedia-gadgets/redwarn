@@ -24,9 +24,9 @@ export default class RedWarnStore {
             src: "https://redwarn.toolforge.org/cdn/css/materialicons.css",
             cache: {
                 delayedReload: true,
-                duration: 1209600000, // 14 days
-            },
-        },
+                duration: 1209600000 // 14 days
+            }
+        }
     ];
 
     // Wiki automated config

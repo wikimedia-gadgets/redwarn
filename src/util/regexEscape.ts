@@ -32,7 +32,7 @@ export default function (string: string): string {
         "\\",
         "^",
         "$",
-        "|",
+        "|"
     ];
 
     // I choose to escape every character with '\'

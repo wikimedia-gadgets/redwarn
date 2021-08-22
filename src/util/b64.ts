@@ -96,6 +96,7 @@ class Base64 {
         let string = "";
         let i = 0;
         let c, c1, c2, c3;
+        // eslint-disable-next-line
         c = c1 = c2 = 0;
 
         while (i < utftext.length) {

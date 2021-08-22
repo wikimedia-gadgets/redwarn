@@ -90,7 +90,7 @@ export const SerializedWarningType: Record<
 > = {
     tiered: WarningType.Tiered,
     single: WarningType.SingleIssue,
-    policy: WarningType.PolicyViolation,
+    policy: WarningType.PolicyViolation
 };
 
 export interface SerializedTieredWarning extends WarningBase {

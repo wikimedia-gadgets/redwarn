@@ -2,7 +2,7 @@ import { Dependency } from "rww/data/Dependencies";
 import {
     RWUIDialog,
     RWUIDialogAction,
-    RWUIDialogProperties,
+    RWUIDialogProperties
 } from "rww/ui/elements/RWUIDialog";
 
 export interface RWUIIFrameDialogProps extends RWUIDialogProperties {

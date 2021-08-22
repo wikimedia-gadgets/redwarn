@@ -162,6 +162,6 @@ export default function <T>(
                 (element.querySelector(
                     `li[data-value="${targetValue[0]}"]`
                 ) as HTMLElement).click();
-        },
+        }
     });
 }

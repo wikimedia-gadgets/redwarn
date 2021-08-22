@@ -1,13 +1,13 @@
 import RedWarnIDB, { RedWarnIDBUpgradeHandler } from "rww/data/idb/RedWarnIDB";
 import {
     RW_DATABASE_NAME,
-    RW_DATABASE_VERSION,
+    RW_DATABASE_VERSION
 } from "rww/data/RedWarnConstants";
 import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
 import {
     CachedDependency,
     CacheTracker,
-    LogItem,
+    LogItem
 } from "rww/data/database/RWDBObjectStoreDefinitions";
 import Group from "rww/mediawiki/Group";
 import Log from "rww/data/RedWarnLog";
@@ -25,23 +25,23 @@ const databaseUpdaters: { [key: number]: RedWarnIDBUpgradeHandler } = {
 
         // Creates the dependency cache
         RedWarnIDB.createObjectStore(database, "cacheTracker", "id", [
-            "timestamp",
+            "timestamp"
         ]);
         RedWarnIDB.createObjectStore(database, "dependencyCache", "id", [
             "lastCache",
             "etag",
-            "data",
+            "data"
         ]);
         RedWarnIDB.createObjectStore(database, "groupCache", "name", [
             "page",
-            "displayName",
+            "displayName"
         ]);
 
         // Logging
         RedWarnIDB.createObjectStore(database, "errorLog", "id", [
             "timestamp",
             "code",
-            "data",
+            "data"
         ]);
         // TODO only on debug mode
         /* RedWarnIDB.createObjectStore(database, "combinedLog", "id", [
@@ -49,7 +49,7 @@ const databaseUpdaters: { [key: number]: RedWarnIDBUpgradeHandler } = {
             "code",
             "data",
         ]); */
-    },
+    }
 };
 
 export default class RedWarnLocalDB {

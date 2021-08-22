@@ -32,7 +32,7 @@ const RevertSettings = {
     revertOptions: new Setting<RevertOptionOverrides>("revertOptions", null, {
         title: i18next.t("prefs:revert.revertOption.title"),
         description: i18next.t("prefs:revert.revertOption.description"),
-        uiInputType: UIInputType.RevertOptions,
+        uiInputType: UIInputType.RevertOptions
     }),
 
     /**
@@ -48,26 +48,26 @@ const RevertSettings = {
         validOptions: [
             {
                 name: i18next.t("prefs:revert.revertDoneOption.options.latest"),
-                value: RevertDoneOption.LatestRevision,
+                value: RevertDoneOption.LatestRevision
             },
             {
                 name: i18next.t(
                     "prefs:revert.revertDoneOption.options.message"
                 ),
-                value: RevertDoneOption.NewMessage,
+                value: RevertDoneOption.NewMessage
             },
             {
                 name: i18next.t(
                     "prefs:revert.revertDoneOption.options.template"
                 ),
-                value: RevertDoneOption.QuickTemplate,
+                value: RevertDoneOption.QuickTemplate
             },
             {
                 name: i18next.t("prefs:revert.revertDoneOption.options.warn"),
-                value: RevertDoneOption.WarnUser,
-            },
+                value: RevertDoneOption.WarnUser
+            }
             // Do not encourage automatic reporting to AIV.
-        ],
+        ]
     }),
 
     /** Method of revert */
@@ -78,20 +78,20 @@ const RevertSettings = {
         validOptions: [
             {
                 name: i18next.t("prefs:revert.revertMethod.options.rollback"),
-                value: RevertMethod.Rollback,
+                value: RevertMethod.Rollback
             },
             {
                 name: i18next.t("prefs:revert.revertMethod.options.undo"),
-                value: RevertMethod.Undo,
-            },
-        ],
+                value: RevertMethod.Undo
+            }
+        ]
     }),
 
     /** Whether or not to redirect to the latest revision if one was found. */
     redirectIfNotLatest: new Setting<boolean>("redirectIfNotLatest", false, {
         title: i18next.t("prefs:revert.redirectIfNotLatest.title"),
         description: i18next.t("prefs:revert.redirectIfNotLatest.description"),
-        uiInputType: UIInputType.Switch,
+        uiInputType: UIInputType.Switch
     }),
 
     /**
@@ -101,8 +101,8 @@ const RevertSettings = {
     ignoreSameUserLatest: new Setting<boolean>("ignoreSameUserLatest", true, {
         title: i18next.t("prefs:revert.ignoreSameUserLatest.title"),
         description: i18next.t("prefs:revert.ignoreSameUserLatest.description"),
-        uiInputType: UIInputType.Switch,
-    }),
+        uiInputType: UIInputType.Switch
+    })
 };
 
 export default RevertSettings;

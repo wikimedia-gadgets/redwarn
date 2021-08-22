@@ -8,7 +8,7 @@ const mwChecks = {
     },
     user: () => {
         return mw.user.getName() !== null;
-    },
+    }
 };
 
 type MediaWikiCheck = keyof typeof mwChecks;

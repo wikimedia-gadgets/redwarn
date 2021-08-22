@@ -5,7 +5,7 @@ import Style from "rww/styles/Style";
 import MaterialPreInitializationHooks from "./hooks/MaterialPreInitializationHooks";
 import {
     getMaterialStorage,
-    MaterialStyleStorage,
+    MaterialStyleStorage
 } from "./data/MaterialStyleStorage";
 import MaterialAlertDialog from "./ui/MaterialAlertDialog";
 import MaterialInputDialog from "./ui/MaterialInputDialog";
@@ -32,8 +32,8 @@ const MaterialStyle: Style = {
 
             homepage: "https://en.wikipedia.org/wiki/WP:RW",
             repository: "https://gitlab.com/redwarn/redwarn-web",
-            issues: "https://gitlab.com/redwarn/redwarn-web/-/issues",
-        },
+            issues: "https://gitlab.com/redwarn/redwarn-web/-/issues"
+        }
     },
     dependencies: [
         {
@@ -43,8 +43,8 @@ const MaterialStyle: Style = {
                 "https://redwarn-lite.wmcloud.org/static/styles/material-components-web@12.0.0.min.css",
             cache: {
                 delayedReload: true,
-                duration: 1209600000, // 14 days
-            },
+                duration: 1209600000 // 14 days
+            }
         },
         // {
         //     type: "style",
@@ -63,9 +63,9 @@ const MaterialStyle: Style = {
                 "https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese",
             cache: {
                 delayedReload: true,
-                duration: 1209600000, // 14 days
-            },
-        },
+                duration: 1209600000 // 14 days
+            }
+        }
     ],
 
     storage: new MaterialStyleStorage(),
@@ -78,12 +78,12 @@ const MaterialStyle: Style = {
         rwIFrameDialog: MaterialIFrameDialog,
         rwToast: MaterialToast,
         rwDiffIcons: MaterialDiffIcons,
-        rwPageIcons: MaterialPageIcons,
+        rwPageIcons: MaterialPageIcons
     },
 
     hooks: {
-        preInit: [MaterialPreInitializationHooks],
-    },
+        preInit: [MaterialPreInitializationHooks]
+    }
 };
 
 export default MaterialStyle;

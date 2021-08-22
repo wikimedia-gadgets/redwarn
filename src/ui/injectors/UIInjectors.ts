@@ -14,7 +14,7 @@ export default class UIInjectors {
         return Promise.all([
             DiffViewerInjector.init(),
             ContributionsPageInjector.init(),
-            PageIconsInjector.init(),
+            PageIconsInjector.init()
         ]);
     }
 }

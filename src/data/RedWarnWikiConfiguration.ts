@@ -1,7 +1,7 @@
 import type {
     SerializedWarningCategories,
     Warning,
-    WarningCategory,
+    WarningCategory
 } from "rww/mediawiki";
 import {
     Page,
@@ -9,17 +9,17 @@ import {
     SerializedWarningType,
     WarningLevel,
     WarningLevelSignature,
-    WarningManager,
+    WarningManager
 } from "rww/mediawiki";
 import type {
     RevertOption,
-    SerializableRevertOption,
+    SerializableRevertOption
 } from "rww/data/RevertOptions";
 import { ActionSeverity } from "rww/data/RevertOptions";
 import {
     RW_FALLBACK_CONFIG,
     RW_WIKI_CONFIGURATION,
-    RW_WIKI_CONFIGURATION_VERSION,
+    RW_WIKI_CONFIGURATION_VERSION
 } from "rww/data/RedWarnConstants";
 import Log from "rww/data/RedWarnLog";
 
@@ -193,11 +193,11 @@ export default class RedWarnWikiConfiguration {
             warnings[id] = Object.assign(warning, {
                 category: Object.assign(
                     {
-                        id: /* Category ID */ warning.category,
+                        id: /* Category ID */ warning.category
                     },
                     config.warnings.categories[warning.category]
                 ),
-                type: SerializedWarningType[warning.type],
+                type: SerializedWarningType[warning.type]
             }) as Warning;
         }
 
@@ -211,7 +211,7 @@ export default class RedWarnWikiConfiguration {
                         `${option.severity[0].toUpperCase()}${option.severity.substr(
                             1
                         )}` as keyof typeof ActionSeverity
-                    ],
+                    ]
             });
         }
 
@@ -224,9 +224,9 @@ export default class RedWarnWikiConfiguration {
                 vandalismWarning: warnings[config.warnings.vandalismWarning],
                 signatures: config.warnings.signatures,
                 categories: categories,
-                warnings: warnings,
+                warnings: warnings
             },
-            revertOptions: revertOptions,
+            revertOptions: revertOptions
         };
     }
 }

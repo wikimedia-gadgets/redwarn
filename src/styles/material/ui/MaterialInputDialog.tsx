@@ -8,17 +8,17 @@ import { h } from "tsx-dom";
 import { RWUIInputDialog } from "rww/ui/elements/RWUIDialog";
 import {
     registerMaterialDialog,
-    upgradeMaterialDialog,
+    upgradeMaterialDialog
 } from "rww/styles/material/Material";
 import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
-    MaterialDialogTitle,
+    MaterialDialogTitle
 } from "./MaterialDialog";
 import MaterialTextInput, {
-    MaterialTextInputUpgrade,
+    MaterialTextInputUpgrade
 } from "rww/styles/material/ui/components/MaterialTextInput";
 
 /**
@@ -103,7 +103,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                 surfaceProperties={{
                     "style": `width: ${this.props.width ?? "30vw"};`,
                     "aria-modal": true,
-                    "aria-labelledby": this.props.title ?? "RedWarn dialog",
+                    "aria-labelledby": this.props.title ?? "RedWarn dialog"
                 }}
                 id={this.id}
             >

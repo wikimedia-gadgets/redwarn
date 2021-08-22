@@ -12,7 +12,7 @@ import {
     Revision,
     WarningAnalysis,
     WarningLevel,
-    WarningOptions,
+    WarningOptions
 } from "rww/mediawiki";
 import i18next from "i18next";
 import { PageMissingError } from "rww/errors/MediaWikiErrors";
@@ -92,7 +92,7 @@ export class User {
             format: "json",
             list: ["usercontribs"],
             uclimit: 1,
-            ucuser: user.username,
+            ucuser: user.username
         });
 
         const userLatestEdit = userInfoRequest["query"]["usercontribs"][0];
@@ -107,7 +107,7 @@ export class User {
                 parentID: userLatestEdit["pageid"],
                 time: new Date(userLatestEdit["timestamp"]),
                 comment: userLatestEdit["comment"],
-                size: userLatestEdit["size"],
+                size: userLatestEdit["size"]
             });
         } else user.latestEdit = null;
 
@@ -144,7 +144,7 @@ export class User {
                     this.warningAnalysis = {
                         level: WarningLevel.None,
                         notices: null,
-                        page: talkPage,
+                        page: talkPage
                     };
                 } else {
                     const currentMonthSection = talkPageSections.filter(
@@ -154,7 +154,7 @@ export class User {
                         this.warningAnalysis = {
                             level: WarningLevel.None,
                             notices: null,
-                            page: talkPage,
+                            page: talkPage
                         };
                     else {
                         const content = currentMonthSection.getContent();
@@ -162,7 +162,7 @@ export class User {
                         this.warningAnalysis = {
                             level: getHighestWarningLevel(content),
                             notices: content,
-                            page: talkPage,
+                            page: talkPage
                         };
                     }
                 }
@@ -171,7 +171,7 @@ export class User {
                     this.warningAnalysis = {
                         level: WarningLevel.None,
                         notices: null,
-                        page: talkPage,
+                        page: talkPage
                     };
                 } else throw e;
             }
@@ -201,7 +201,7 @@ export class User {
             `${this.username}`.toLowerCase() == "undefined"
         ) {
             RedWarnUI.Toast.quickShow({
-                content: i18next.t("ui:toasts.userUndefined"),
+                content: i18next.t("ui:toasts.userUndefined")
             });
             return;
         }
@@ -222,7 +222,7 @@ export class User {
             if (revision.content.includes(options.blacklist.target)) {
                 // Don't continue and show toast
                 RedWarnUI.Toast.quickShow({
-                    content: options.blacklist.message,
+                    content: options.blacklist.message
                 });
                 return;
             }
@@ -265,16 +265,16 @@ export class User {
         const level = {
             [WarningType.Tiered]: options.warnLevel,
             [WarningType.PolicyViolation]: 5,
-            [WarningType.SingleIssue]: 0,
+            [WarningType.SingleIssue]: 0
         }[options.warning.type];
         await options.targetUser.appendToUserTalk(
             `\r\n\r\n${options.warningText}`,
             {
                 comment: i18next.t("mediawiki:summaries.warn", {
                     context: level,
-                    reason: options.warning.name,
+                    reason: options.warning.name
                 }),
-                section: getMonthHeader(),
+                section: getMonthHeader()
             }
         );
     }
@@ -341,7 +341,7 @@ export class UserAccount extends User {
             usprop: toPopulate,
             [typeof identifier === "string"
                 ? "ususers"
-                : "ususerids"]: identifier,
+                : "ususerids"]: identifier
         });
 
         const userData = userInfoRequest["query"]["users"][0];
@@ -371,7 +371,7 @@ export class UserAccount extends User {
                         ? false
                         : new Date(userData["blockexpiry"]),
                 partial: !!userData["blockpartial"],
-                creationBlocked: !!userData["blocknocreate"],
+                creationBlocked: !!userData["blocknocreate"]
             };
         else if (!user.blocked) user.blocked = false;
 

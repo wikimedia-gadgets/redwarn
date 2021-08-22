@@ -21,7 +21,7 @@ export default function (
                 ? url(page.url, { safemode: "true" })
                 : page.url,
             width: "calc(100vw - 176px)",
-            height: "90vh",
+            height: "90vh"
         },
         additionalProps
     );

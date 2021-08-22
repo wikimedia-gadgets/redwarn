@@ -11,7 +11,7 @@ export default function ({
     containerProperties,
     surfaceProperties,
     children,
-    id,
+    id
 }: MaterialDialogProperties): JSX.Element {
     return (
         <div id={id} class="mdc-dialog">
@@ -28,7 +28,7 @@ export default function ({
 export function MaterialDialogTitle({
     children,
     style,
-    tabIndex,
+    tabIndex
 }: BaseProps & {
     style?: Partial<CSSStyleDeclaration>;
     tabIndex?: number;
@@ -42,7 +42,7 @@ export function MaterialDialogTitle({
 
 export function MaterialDialogContent({
     children,
-    style,
+    style
 }: BaseProps & { style?: Partial<CSSStyleDeclaration> }): JSX.Element {
     return (
         <div class="mdc-dialog__content" style={style}>
@@ -53,7 +53,7 @@ export function MaterialDialogContent({
 
 export function MaterialDialogActions({
     children,
-    style,
+    style
 }: BaseProps & { style?: Partial<CSSStyleDeclaration> }): JSX.Element {
     return (
         <div class="mdc-dialog__actions" style={style}>

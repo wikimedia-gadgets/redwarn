@@ -84,7 +84,7 @@ export abstract class RWUIDialog extends RWUIElement {
     }
 
     protected constructor(readonly props: RWUIDialogProperties) {
-        super();
+        super(props);
         this.id = `dialog__${props.id || generateId(16)}`;
     }
 

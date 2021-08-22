@@ -4,7 +4,7 @@ import i18next from "i18next";
 import {
     PageInvalidError,
     PageMissingError,
-    SectionIndexMissingError,
+    SectionIndexMissingError
 } from "rww/errors/MediaWikiErrors";
 import { url as buildURL } from "rww/util";
 import redirect from "rww/util/redirect";
@@ -79,7 +79,7 @@ export class Page implements SectionContainer {
         return buildURL(RedWarnStore.wikiIndex, {
             [typeof identifier === "string"
                 ? "title"
-                : "curid"]: `${identifier}`,
+                : "curid"]: `${identifier}`
         });
     }
 
@@ -110,7 +110,7 @@ export class Page implements SectionContainer {
             Page.pageIndex[`${mwTitle}`] ??
             (Page.pageIndex[`${mwTitle}`] = <Page & NamedPage> new Page({
                 title: mwTitle,
-                namespace: mwTitle.namespace,
+                namespace: mwTitle.namespace
             }))
         );
     }
@@ -135,7 +135,7 @@ export class Page implements SectionContainer {
             (Page.pageIndex[`${mwTitle}`] = <Page & PopulatedPage> new Page({
                 pageID: pageID,
                 title: mwTitle,
-                namespace: mwTitle.namespace,
+                namespace: mwTitle.namespace
             }))
         );
     }
@@ -212,7 +212,7 @@ export class Page implements SectionContainer {
                 : "titles"]: `${pageIdentifier}`,
             rvprop: ["ids", "comment", "user", "timestamp", "size", "content"],
             rvslots: "main",
-            rvexcludeuser: options?.excludeUser?.username ?? undefined,
+            rvexcludeuser: options?.excludeUser?.username ?? undefined
         });
 
         if (revisionInfoRequest["query"]["pages"]["-1"]) {
@@ -298,7 +298,7 @@ export class Page implements SectionContainer {
      */
     async getLatestRevisionNotByUser(username: string): Promise<Revision> {
         return this.getLatestRevision({
-            excludeUser: User.fromUsername(username),
+            excludeUser: User.fromUsername(username)
         });
     }
 
@@ -316,7 +316,7 @@ export class Page implements SectionContainer {
         redirect(
             url(RedWarnStore.wikiIndex, {
                 diff: 0,
-                title: this.title,
+                title: this.title
             })
         );
     }
@@ -429,7 +429,7 @@ export class Page implements SectionContainer {
             // Base revision ID
             ...(options.baseRevision
                 ? {
-                      baserevid: options.baseRevision.revisionID,
+                      baserevid: options.baseRevision.revisionID
                   }
                 : {}),
 
@@ -437,15 +437,15 @@ export class Page implements SectionContainer {
             ...(options.section
                 ? existingSection
                     ? {
-                          section: existingSection.index,
+                          section: existingSection.index
                       }
                     : {
                           section: "new",
-                          sectiontitle: options.section,
+                          sectiontitle: options.section
                       }
                 : {}),
 
-            ...textArgument,
+            ...textArgument
         });
     }
 

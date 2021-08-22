@@ -61,5 +61,5 @@ export class SectionIndexMissingError extends GenericMediaWikiError {
 
 export const SpecializedMediaWikiErrors: Record<string, any> = {
     missingtitle: PageMissingError,
-    nosuchrevid: RevisionMissingError,
+    nosuchrevid: RevisionMissingError
 };

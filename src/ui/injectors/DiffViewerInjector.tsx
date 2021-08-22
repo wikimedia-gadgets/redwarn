@@ -31,7 +31,7 @@ export default class DiffViewerInjector {
         const newRevision: Revision =
             options?.baseContext?.newRevision ??
             Revision.fromID(newRevId, {
-                page: Page.fromTitle(mw.config.get("wgRelevantPageName")),
+                page: Page.fromTitle(mw.config.get("wgRelevantPageName"))
             });
 
         if (!newRevision.isPopulated()) await newRevision.populate();
@@ -44,10 +44,10 @@ export default class DiffViewerInjector {
                       Revision.fromID(oldRevId, {
                           page: Page.fromTitle(
                               mw.config.get("wgRelevantPageName")
-                          ),
+                          )
                       })
                     : undefined,
-            latestRevision: Revision.fromID(+mw.config.get("wgCurRevisionId")),
+            latestRevision: Revision.fromID(+mw.config.get("wgCurRevisionId"))
         };
     }
 
@@ -73,7 +73,7 @@ export default class DiffViewerInjector {
                     ...context,
                     side: host.classList.contains("diff-ntitle")
                         ? "new"
-                        : "old",
+                        : "old"
                 });
 
                 const icons = (

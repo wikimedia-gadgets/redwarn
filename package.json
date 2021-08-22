@@ -2,7 +2,7 @@
     "name": "redwarn-web",
     "version": "0.2.0",
     "description": "Wikipedia patrol and counter-vandalism tool.",
-    "main": "src/RedWarnLite.ts",
+    "main": "src/RedWarn.ts",
     "dependencies": {
         "@material/dialog": "12.0.0",
         "@material/form-field": "12.0.0",

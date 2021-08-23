@@ -106,7 +106,6 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                     "aria-labelledby": this.props.title ?? "RedWarn dialog"
                 }}
                 id={this.id}
-                draggable
             >
                 {this.props.title && (
                     <MaterialDialogTitle>

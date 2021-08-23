@@ -365,7 +365,6 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         i18next.t("ui:warn.title").toString()
                 }}
                 id={this.id}
-                draggable
             >
                 <MaterialDialogTitle
                     style={{

@@ -38,7 +38,7 @@ export default function (): void {
                     ".mdc-dialog__scrim"
                 );
                 scrim.style.pointerEvents = "none";
-                scrim.style.opacity = "0";
+                scrim.style.opacity = "0.5";
 
                 // Allow clickthrough
                 const surface: HTMLElement = element.querySelector(

@@ -66,7 +66,6 @@ export default class MaterialExtendedOptions extends RWUIExtendedOptions {
                 containerProperties={{
                     class: "rw-mdc-extendedOptions"
                 }}
-                draggable
             >
                 <MaterialDialogTitle tabIndex={0}>
                     <span style={{ float: "left" }}>

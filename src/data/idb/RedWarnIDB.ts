@@ -87,8 +87,15 @@ export default class RedWarnIDB {
         mode: IDBTransactionMode,
         _database?: IDBDatabase
     ): Promise<IDBTransaction> {
-        const database = _database ?? this.database;
-        return database.transaction(store, mode);
+        try {
+            const database = _database || this.database;
+            return database.transaction(store, mode);
+        } catch (error) {
+            Log.error(error);
+            return new Promise(async (r, rj) =>
+                rj("Error occured before transaction attempt, see log.")
+            );
+        }
     }
 
     /**

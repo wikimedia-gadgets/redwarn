@@ -1,6 +1,8 @@
 import RedWarnIDBError from "rww/data/idb/RedWarnIDBError";
 import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
 import Log from "rww/data/RedWarnLog";
+import RedWarn from "rww/RedWarn";
+import RedWarnUI from "rww/ui/RedWarnUI";
 
 // The `idb` directory is for the IndexedDB wrapper. You might be
 // looking for `database` instead, which contains RedWarn-specialized
@@ -138,21 +140,33 @@ export default class RedWarnIDB {
             const transaction = await this.transaction(store, mode);
             const objectStore = transaction.objectStore(store);
 
-            const request = callback(objectStore);
-
-            request.addEventListener("success", () => {
-                resolve(request.result);
-            });
-            request.addEventListener("abort", () => {
+            try {
+                const request = callback(objectStore);
+                request.addEventListener("success", () => {
+                    resolve(request.result);
+                });
+                request.addEventListener("abort", () => {
+                    reject(
+                        new RedWarnIDBError(
+                            "Transaction aborted",
+                            this.database,
+                            transaction,
+                            request
+                        )
+                    );
+                });
+            } catch (error) {
+                Log.error(error);
+                // Reject promise
                 reject(
                     new RedWarnIDBError(
-                        "Transaction aborted",
+                        "A general error occured during IDB load",
                         this.database,
                         transaction,
-                        request
+                        null
                     )
                 );
-            });
+            }
         });
     }
 

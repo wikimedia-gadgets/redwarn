@@ -4,6 +4,7 @@ import { MaterialStyleStorage } from "rww/styles/material/data/MaterialStyleStor
 import { h } from "tsx-dom";
 import Log from "rww/data/RedWarnLog";
 import MaterialTooltip from "rww/styles/material/ui/components/MaterialTooltip";
+import toCSS from "rww/styles/material/util/toCSS";
 
 export default function (): void {
     RedWarnStore.styleStorage = new MaterialStyleStorage();
@@ -23,6 +24,83 @@ export default function (): void {
                         {element.getAttribute("data-rw-mdc-tooltip")}
                     </MaterialTooltip>
                 );
+            });
+
+        document
+            .querySelectorAll(
+                "[data-rw-mdc-dialog-draggable]:not(.data-rw-mdc-dialog-draggable__upgraded)"
+            )
+            .forEach((element: HTMLElement) => {
+                element.classList.add("data-rw-mdc-dialog-draggable__upgraded");
+
+                // Disable scrim
+                const scrim: HTMLElement = element.querySelector(
+                    ".mdc-dialog__scrim"
+                );
+                scrim.style.pointerEvents = "none";
+                scrim.style.opacity = "0";
+
+                // Allow clickthrough
+                const surface: HTMLElement = element.querySelector(
+                    ".mdc-dialog__surface"
+                );
+                element.style.pointerEvents = "none";
+                surface.style.pointerEvents = "all";
+
+                // Allow dragging
+                const title: HTMLElement = element.querySelector(
+                    ".mdc-dialog__title"
+                );
+                title.style.userSelect = "none";
+                surface.style.position = "relative";
+                surface.style.top = "var(--rw-mdc-dialog-draggable--top)";
+                surface.style.left = "var(--rw-mdc-dialog-draggable--left)";
+                element.setAttribute("data-x", "0");
+                element.setAttribute("data-y", "0");
+                const updateStyle = () => {
+                    element.setAttribute(
+                        "style",
+                        toCSS({
+                            "--rw-mdc-dialog-draggable--top":
+                                -element.getAttribute("data-y") + "px",
+                            "--rw-mdc-dialog-draggable--left":
+                                -element.getAttribute("data-x") + "px"
+                        })
+                    );
+                };
+                updateStyle();
+                title.style.cursor = "move";
+                title.addEventListener("mousedown", (event) => {
+                    title.toggleAttribute("data-dragging", true);
+
+                    title.setAttribute("data-drag-x", `${event.clientX}`);
+                    title.setAttribute("data-drag-y", `${event.clientY}`);
+                });
+                title.addEventListener("mouseup", () => {
+                    title.toggleAttribute("data-dragging", false);
+                });
+                title.addEventListener("mousemove", (event) => {
+                    if (!title.hasAttribute("data-dragging")) return;
+
+                    const pastX = +title.getAttribute("data-drag-x");
+                    const pastY = +title.getAttribute("data-drag-y");
+
+                    const deltaX = pastX - event.clientX;
+                    const deltaY = pastY - event.clientY;
+
+                    element.setAttribute(
+                        "data-x",
+                        `${+element.getAttribute("data-x") + deltaX}`
+                    );
+                    element.setAttribute(
+                        "data-y",
+                        `${+element.getAttribute("data-y") + deltaY}`
+                    );
+                    updateStyle();
+
+                    title.setAttribute("data-drag-x", `${event.clientX}`);
+                    title.setAttribute("data-drag-y", `${event.clientY}`);
+                });
             });
     }).observe(document.body, {
         childList: true,

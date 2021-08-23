@@ -1,6 +1,7 @@
 import { BaseProps, ComponentChildren, h } from "tsx-dom";
 
 export interface MaterialDialogProperties {
+    draggable?: boolean;
     containerProperties?: JSX.HTMLAttributes & Record<string, any>;
     surfaceProperties?: JSX.HTMLAttributes & Record<string, any>;
     children: ComponentChildren;
@@ -11,10 +12,15 @@ export default function ({
     containerProperties,
     surfaceProperties,
     children,
-    id
+    id,
+    draggable
 }: MaterialDialogProperties): JSX.Element {
     return (
-        <div id={id} class="mdc-dialog">
+        <div
+            id={id}
+            class="mdc-dialog"
+            data-rw-mdc-dialog-draggable={draggable}
+        >
             <div
                 {...containerProperties}
                 class={`mdc-dialog__container ${

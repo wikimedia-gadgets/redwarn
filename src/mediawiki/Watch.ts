@@ -3,8 +3,6 @@
  *
  * This class is available in every loaded page of Wikipedia, therefore it can
  * simply be used as a static class.
- *
- * @deprecated Not yet usable as the watching interface is not yet developed.
  */
 export class Watch {
     static active = false;

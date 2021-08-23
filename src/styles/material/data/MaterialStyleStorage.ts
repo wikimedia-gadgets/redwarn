@@ -22,6 +22,12 @@ export class MaterialDialogTrackMap extends Map<RWUIDialogID, RWUIDialog> {
     }
 
     delete(key: RWUIDialogID): boolean {
+        // Delete dialog element after 2 seconds.
+        setTimeout(() => {
+            document
+                .getElementById(key)
+                ?.parentElement?.removeChild(document.getElementById(key));
+        }, 2000);
         return super.delete(key);
     }
 }

@@ -133,6 +133,7 @@ export default class RedWarnIDB {
         mode: IDBTransactionMode,
         callback: (objectStore: IDBObjectStore) => IDBRequest<T>
     ): Promise<T> {
+        // Safari bug fix needed
         return new Promise(async (resolve, reject) => {
             const transaction = await this.transaction(store, mode);
             const objectStore = transaction.objectStore(store);

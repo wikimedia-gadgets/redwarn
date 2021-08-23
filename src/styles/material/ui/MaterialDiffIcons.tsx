@@ -75,7 +75,7 @@ const MaterialActionSeverityColors: Record<ActionSeverity, string> = {
     [ActionSeverity.Neutral]: "black",
     [ActionSeverity.GoodFaith]: "green",
     [ActionSeverity.Mild]: "blue",
-    [ActionSeverity.Moderate]: "yellow",
+    [ActionSeverity.Moderate]: "gold",
     [ActionSeverity.Severe]: "orange",
     [ActionSeverity.Critical]: "red"
 };

@@ -75,10 +75,13 @@ export default class RedWarnStore {
         }/api.php`;
         RedWarnStore.wikiID = mw.config.get("wgWikiID") as string;
         RedWarnStore.wikiLogo =
-            /^url\("(.+)"\)$/.exec(
-                window.getComputedStyle(document.querySelector(".mw-wiki-logo"))
-                    ?.backgroundImage
-            )?.[1] ?? RW_LOGO;
+            (document.querySelector(".mw-wiki-logo") &&
+                /^url\("(.+)"\)$/.exec(
+                    window.getComputedStyle(
+                        document.querySelector(".mw-wiki-logo")
+                    )?.backgroundImage
+                )?.[1]) ??
+            RW_LOGO;
         RedWarnStore.currentPage = Page.fromIDAndTitle(
             mw.config.get("wgArticleId"),
             mw.config.get("wgPageName")

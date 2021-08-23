@@ -71,12 +71,27 @@ const MaterialRevertProgress: Record<RevertStage | RestoreStage, number> = {
     [RestoreStage.Finished]: 1
 };
 
+// This value depends on accessibility settings, and can be overridden by the user elsewhere. Treat these as defaults.
 const MaterialActionSeverityColors: Record<ActionSeverity, string> = {
+    // Default (HIGH CONTRAST: OFF)
     [ActionSeverity.Neutral]: "black",
     [ActionSeverity.GoodFaith]: "green",
     [ActionSeverity.Mild]: "blue",
     [ActionSeverity.Moderate]: "gold",
     [ActionSeverity.Severe]: "orange",
+    [ActionSeverity.Critical]: "red"
+};
+
+const MaterialHighContrastActionSeverityColors: Record<
+    ActionSeverity,
+    string
+> = {
+    // Accessible mode (HIGH CONTRAST: ON)
+    [ActionSeverity.Neutral]: "black",
+    [ActionSeverity.GoodFaith]: "blue",
+    [ActionSeverity.Mild]: "blue",
+    [ActionSeverity.Moderate]: "red",
+    [ActionSeverity.Severe]: "red",
     [ActionSeverity.Critical]: "red"
 };
 
@@ -151,8 +166,12 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
                     label={option.name}
                     icon={option.icon}
                     iconColor={
-                        option.color ??
-                        MaterialActionSeverityColors[option.severity]
+                        option.color ?? // user/config preference
+                        Configuration.Accessibility.highContrast.value
+                            ? MaterialHighContrastActionSeverityColors[
+                                  option.severity
+                              ] //high contrast default
+                            : MaterialActionSeverityColors[option.severity] // default based on severity rating
                     }
                     data-rw-revert-option={option.id}
                 />

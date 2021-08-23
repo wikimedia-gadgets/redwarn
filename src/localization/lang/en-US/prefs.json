@@ -14,6 +14,10 @@
                 "3": "Dangerous (50ms)",
                 "4": "Fast and furious (0ms)"
             }
+        },
+        "highContrast" : {
+            "title" : "High Contrast",
+            "description" : "Where supported, make icons less coloured and favour higher contrast. This will override only default colours, and not those you have customised."
         }
     },
     "revert": {

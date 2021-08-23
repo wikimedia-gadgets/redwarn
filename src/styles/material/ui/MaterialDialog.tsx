@@ -24,13 +24,13 @@ export default function ({
             <div
                 {...containerProperties}
                 class={`mdc-dialog__container ${
-                    containerProperties.class ?? ""
+                    containerProperties?.class ?? ""
                 }`}
             >
                 <div
                     {...surfaceProperties}
                     class={`mdc-dialog__surface ${
-                        surfaceProperties.class ?? ""
+                        surfaceProperties?.class ?? ""
                     }`}
                 >
                     {children}

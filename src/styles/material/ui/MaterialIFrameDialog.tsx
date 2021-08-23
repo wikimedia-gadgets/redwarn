@@ -18,6 +18,7 @@ import Dependencies from "rww/data/Dependencies";
 
 import "../css/iframeDialog.css";
 import { url } from "rww/util";
+import RedWarnUI from "rww/ui/RedWarnUI";
 
 export default class MaterialIFrameDialog extends RWUIIFrameDialog {
     /**
@@ -70,6 +71,7 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
      * @returns A {@link HTMLDialogElement}.
      */
     render(): HTMLDialogElement {
+        let iframe: HTMLIFrameElement;
         this.element = (
             <MaterialDialog
                 surfaceProperties={{
@@ -88,24 +90,54 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
                     </MaterialDialogTitle>
                 )}
                 <MaterialDialogContent>
-                    <iframe
-                        src={
-                            !!this.props.fragment
-                                ? url(this.props.src, undefined, {
-                                      fragment: this.props.fragment
-                                  })
-                                : this.props.src
-                        }
-                    />
+                    {
+                        (iframe = (
+                            <iframe
+                                src={
+                                    !!this.props.fragment
+                                        ? url(this.props.src, undefined, {
+                                              fragment: this.props.fragment
+                                          })
+                                        : this.props.src
+                                }
+                            />
+                        ) as HTMLIFrameElement)
+                    }
                 </MaterialDialogContent>
                 <MaterialDialogActions>
-                    {!!this.props.actions && this.props.actions.length > 0 ? (
-                        this.renderActions()
-                    ) : (
-                        <MaterialButton dialogAction={"close"}>
-                            {`${i18next.t("ui:close")}`}
-                        </MaterialButton>
-                    )}
+                    {!!this.props.actions && this.props.actions.length > 0
+                        ? this.renderActions()
+                        : [
+                              <MaterialButton
+                                  onClick={() => {
+                                      navigator.clipboard
+                                          .writeText(
+                                              iframe.contentDocument.location
+                                                  .href
+                                          )
+                                          .then(() => {
+                                              RedWarnUI.Toast.quickShow({
+                                                  content: i18next.t(
+                                                      "ui:copyURL.success"
+                                                  )
+                                              });
+                                          })
+                                          .catch(() => {
+                                              RedWarnUI.Toast.quickShow({
+                                                  content: i18next.t(
+                                                      "ui:copyURL.failure"
+                                                  )
+                                              });
+                                          });
+                                  }}
+                                  style={{ float: "left", marginRight: "auto" }}
+                              >
+                                  {`${i18next.t("ui:copyURL.button")}`}
+                              </MaterialButton>,
+                              <MaterialButton dialogAction={"close"}>
+                                  {`${i18next.t("ui:close")}`}
+                              </MaterialButton>
+                          ]}
                 </MaterialDialogActions>
             </MaterialDialog>
         ) as HTMLDialogElement;
@@ -152,7 +184,6 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
             }
         }
 
-        const iframe: HTMLIFrameElement = this.element.querySelector("iframe");
         const iframeInit = () => {
             if (!document.body.contains(this.element)) return;
 

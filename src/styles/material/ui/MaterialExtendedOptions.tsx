@@ -19,6 +19,7 @@ import {
 import { Configuration } from "rww/config";
 import PageIcons from "rww/data/PageIcons";
 import "../css/extendedOptions.css";
+import toCSS from "rww/styles/material/util/toCSS";
 
 export default class MaterialExtendedOptions extends RWUIExtendedOptions {
     show(): Promise<string> {
@@ -46,7 +47,11 @@ export default class MaterialExtendedOptions extends RWUIExtendedOptions {
                 icon.visible()
             ) {
                 items.push(
-                    <MaterialListItem icon={icon.icon} onClick={icon.action}>
+                    <MaterialListItem
+                        icon={icon.icon}
+                        color={icon.color ?? "black"}
+                        onClick={icon.action}
+                    >
                         {`${i18next.t(`ui:pageIcons.${icon.id}`)}`}
                     </MaterialListItem>
                 );
@@ -68,7 +73,7 @@ export default class MaterialExtendedOptions extends RWUIExtendedOptions {
                 }}
             >
                 <MaterialDialogTitle tabIndex={0}>
-                    <span style={{ float: "left" }}>
+                    <span style={toCSS({ fontWeight: "bold" })}>
                         {i18next.t("ui:extendedOptions.title").toString()}
                     </span>
                 </MaterialDialogTitle>

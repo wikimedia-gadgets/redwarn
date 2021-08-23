@@ -16,7 +16,7 @@
         "reportUAA": "Report to UAA",
         "reportOversight": "Report user to Oversight",
         "reportTAS": "Report user to Wikimedia Trust & Safety",
-        "preferences": "RedWarn Preferences",
+        "preferences": "Preferences",
         "rwTalk": "RedWarn talk page"
     },
     "restore": {
@@ -36,6 +36,11 @@
     "okCancel": {
         "ok": "OK",
         "cancel": "Cancel"
+    },
+    "copyURL": {
+        "button": "Copy URL",
+        "success": "URL copied.",
+        "failure": "Failed to copy URL. Have you given the browser proper permissions?"
     },
     "toasts": {
         "pleaseWait": "Please wait...",

@@ -29,6 +29,7 @@ export default class MaterialPageIcons extends RWUIPageIcons {
                     <MaterialIconButton
                         class="rw-mdc-pageIcons-icon"
                         icon={icon.icon}
+                        iconColor={icon.color ?? "black"}
                         tooltip={`${i18next.t(`ui:pageIcons.${icon.id}`)}`}
                         onClick={icon.action}
                     />

@@ -6,6 +6,7 @@ import { Page, User } from "rww/mediawiki";
 interface PageIcon {
     id: string;
     icon: string;
+    color?: string;
     /** Whether or not this icon is on the toolbar by default. */
     default?: boolean;
     /** Whether or not this icon is required on the toolbar. */
@@ -119,6 +120,7 @@ const PageIcons: PageIcon[] = [
     {
         id: "reportTAS",
         icon: "phone_in_talk",
+        color: "red",
         visible: isUserspacePage,
         action() {
             RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });

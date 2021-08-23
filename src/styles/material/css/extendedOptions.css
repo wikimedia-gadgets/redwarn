@@ -7,14 +7,9 @@
     height: 38px !important;
 }
 
-.rw-mdc-extendedOptions .mdc-list-item .mdc-list-item__text {
-    text-transform: uppercase;
-}
-
 .rw-mdc-extendedOptions .mdc-list-item,
 .rw-mdc-extendedOptions .mdc-list-item .material-icons {
-    color: black !important;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 .rw-mdc-extendedOptions .mdc-deprecated-list-item__graphic {

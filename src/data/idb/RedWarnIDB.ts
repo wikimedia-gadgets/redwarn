@@ -1,8 +1,6 @@
 import RedWarnIDBError from "rww/data/idb/RedWarnIDBError";
 import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
 import Log from "rww/data/RedWarnLog";
-import RedWarn from "rww/RedWarn";
-import RedWarnUI from "rww/ui/RedWarnUI";
 
 // The `idb` directory is for the IndexedDB wrapper. You might be
 // looking for `database` instead, which contains RedWarn-specialized

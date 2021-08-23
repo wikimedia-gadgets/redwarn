@@ -246,8 +246,8 @@ export default class RedWarn {
     const standardCSS =
         "background: #e0005a; color: #ffffff; font-weight: bold; font-size: x-large;";
     console.group(
-        "%cRedWarn failed to load." +
-            "%cIf the problem persists, please contact the RedWarn developers. " +
+        `%cRedWarn failed to load.` +
+            "%cIf the problem persists, please contact the RedWarn developers. ( RedWarn 加载失败。 请联系 RedWarn Team. / RedWarn no se pudo cargar. Comuníquese con el RedWarn Team. )" +
             "Additional debug information is provided below. " +
             "If requested by a RedWarn team member, please provide the text through a private channel (email, IRC, etc.). " +
             'You can right click the text and select "Copy Object" to copy faster.',

@@ -79,7 +79,7 @@ export default function (): void {
                 title.addEventListener("mouseup", () => {
                     title.toggleAttribute("data-dragging", false);
                 });
-                title.addEventListener("mousemove", (event) => {
+                document.addEventListener("mousemove", (event) => {
                     if (!title.hasAttribute("data-dragging")) return;
 
                     const pastX = +title.getAttribute("data-drag-x");

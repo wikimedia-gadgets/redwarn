@@ -48,8 +48,11 @@ export default class Localization {
         await Localization.assertLanguages();
         await i18next.use(LanguageDetector).init({
             fallbackLng: Localization.fallbackLanguage,
-            debug: true,
-            returnObjects: true
+            debug: process.env.NODE_ENV !== "production",
+            returnObjects: true,
+            interpolation: {
+                escapeValue: false
+            }
         });
 
         // Register all namespaces from all languages.

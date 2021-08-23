@@ -61,7 +61,7 @@ export default class RedWarnIDBObjectStore<T> {
             this.storeName,
             "readwrite",
             (store) => {
-                return store.count(key);
+                return store.delete(key);
             }
         );
     }

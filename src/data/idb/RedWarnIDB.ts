@@ -75,6 +75,9 @@ export default class RedWarnIDB {
             await new Promise((resolve, reject) => {
                 this.request.addEventListener("success", resolve);
                 this.request.addEventListener("error", reject);
+                setInterval(() => {
+                    if (this.request.readyState === "done") resolve(null);
+                }, 5);
             });
         return (this.database = this.request.result);
     }

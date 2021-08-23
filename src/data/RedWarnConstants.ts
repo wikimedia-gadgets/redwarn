@@ -12,6 +12,11 @@ export const RW_VERSION_TAG = `${RW_VERSION_PUBLIC}${
         : ""
 }`;
 
+// RW
+export const RW_LOGO = "https://w.wiki/3wk4";
+// RedWarn
+export const RW_WORDRMARK = "https://w.wiki/3wk6";
+
 // TODO: not have this here
 export const RW_VERSION_SUMMARY = "nothing yet";
 

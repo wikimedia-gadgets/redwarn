@@ -233,7 +233,10 @@ export default class RedWarn {
 
     await UIInjectors.inject();
 
-    await RedWarnHooks.executeHooks("postUIInject");
+    await Promise.all([
+        RedWarnHooks.executeHooks("postUIInject"),
+        Watch.init()
+    ]);
 
     Log.debug(`Done loading (UI): ${Date.now() - startTime}ms.`);
 })().catch((e) => {

@@ -19,6 +19,10 @@
     margin: 0 0.5em;
 }
 
+.mdc-dialog__actions {
+    font-family: "Roboto", sans-serif;
+}
+
 .mdc-icon-button,
 .mdc-list-item {
     --mdc-ripple-hover-opacity: 0.14;
@@ -68,7 +72,6 @@
 }
 
 .rw-mdc-dialog-helperText {
-    position: absolute;
-    left: 0;
-    padding: 16px;
+    margin-right: auto;
+    padding: 16px 0;
 }

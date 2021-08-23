@@ -1,4 +1,8 @@
-export default function (rules: Record<string, any>) {
+export default function (rules: Record<string, any>): string {
+    // TypeScript gets mad if we try to do this in one `return rules;`.
+    if (rules === null) return null;
+    if (rules === undefined) return undefined;
+
     const transformedRules: Record<string, any> = {};
 
     for (const [key, value] of Object.entries(rules)) {

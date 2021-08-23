@@ -80,7 +80,7 @@ export default class RedWarn {
     static get StyleManager(): typeof StyleManager {
         return StyleManager;
     }
-    static get RWUI(): typeof RedWarnUI {
+    static get RedWarnUI(): typeof RedWarnUI {
         return RedWarnUI;
     }
     static get RTRC(): typeof RealTimeRecentChanges {
@@ -233,7 +233,27 @@ export default class RedWarn {
 
     await UIInjectors.inject();
 
-    await RedWarnHooks.executeHooks("postUIInject");
+    await Promise.all([
+        RedWarnHooks.executeHooks("postUIInject"),
+        Watch.init()
+    ]);
 
     Log.debug(`Done loading (UI): ${Date.now() - startTime}ms.`);
-})();
+})().catch((e) => {
+    // DO NOT USE i18n! i18next might not be able to load, causing the issue in the first place.
+    Log.fatal("Error loading RedWarn!", e);
+
+    const standardCSS =
+        "background: #e0005a; color: #ffffff; font-weight: bold; font-size: x-large;";
+    console.group(
+        "%cRedWarn failed to load." +
+            "%cIf the problem persists, please contact the RedWarn developers. " +
+            "Additional debug information is provided below. " +
+            "If requested by a RedWarn team member, please provide the text through a private channel (email, IRC, etc.). " +
+            'You can right click the text and select "Copy Object" to copy faster.',
+        `padding: 2px 8px; border-radius: 8px; ${standardCSS}`,
+        "display: block; margin-top: 8px; width: 50vw;"
+    );
+    console.log("%c" + btoa(JSON.stringify(Log.dump())), "color: lime;");
+    console.groupEnd();
+});

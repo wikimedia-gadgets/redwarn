@@ -1,11 +1,12 @@
 import RedWarnStore from "rww/data/RedWarnStore";
 import i18next from "i18next";
 import RedWarnUI from "rww/ui/RedWarnUI";
-import { Page, User } from "rww/mediawiki";
+import { Page, User, Watch } from "rww/mediawiki";
 
 interface PageIcon {
     id: string;
     icon: string;
+    color?: string;
     /** Whether or not this icon is on the toolbar by default. */
     default?: boolean;
     /** Whether or not this icon is required on the toolbar. */
@@ -68,9 +69,10 @@ const PageIcons: PageIcon[] = [
         id: "alertOnChange",
         icon: "notification_important",
         default: true,
+        color: "var(--rw-icon-alertonchange-color, black)",
         visible: () => !isSpecialPage(),
         action() {
-            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
+            Watch.toggle();
         }
     },
     {
@@ -111,6 +113,7 @@ const PageIcons: PageIcon[] = [
     {
         id: "reportOversight",
         icon: "visibility_off",
+        color: "midnightblue",
         visible: isUserspacePage,
         action() {
             RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
@@ -119,6 +122,7 @@ const PageIcons: PageIcon[] = [
     {
         id: "reportTAS",
         icon: "phone_in_talk",
+        color: "red",
         visible: isUserspacePage,
         action() {
             RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });

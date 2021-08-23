@@ -77,9 +77,9 @@ export class Page implements SectionContainer {
     get url(): string {
         const identifier = this.getIdentifier();
         return buildURL(RedWarnStore.wikiIndex, {
-            [typeof identifier === "string"
-                ? "title"
-                : "curid"]: `${identifier}`
+            [typeof identifier === "number"
+                ? "curid"
+                : "title"]: `${identifier}`
         });
     }
 
@@ -127,7 +127,10 @@ export class Page implements SectionContainer {
         const mwTitle =
             typeof pageTitle == "string" ? new mw.Title(pageTitle) : pageTitle;
 
-        if (Page.pageIndex[`${mwTitle}`].pageID == null)
+        if (
+            Page.pageIndex[`${mwTitle}`] &&
+            Page.pageIndex[`${mwTitle}`].pageID == null
+        )
             Page.pageIndex[`${mwTitle}`].pageID = pageID;
 
         return (
@@ -250,13 +253,13 @@ export class Page implements SectionContainer {
         return this.title != null;
     }
     /**
-     * Grabs either the page's title or ID. Returns the ID if both exist as long as
-     * `favorTitle` is set to false.
+     * Grabs either the page's title or ID. Returns the title if both exist as long as
+     * `favorTitle` is set to true.
      *
      * If this function returns `null`, the `Page` was illegally created.
      * @param favorTitle Whether or not to favor the title over the ID.
      */
-    getIdentifier(favorTitle = false): number | mw.Title {
+    getIdentifier(favorTitle = true): number | mw.Title {
         if (!!this.pageID && !favorTitle) return this.pageID;
         else if (!this.pageID && !favorTitle) return this.title ?? null;
         else if (!!this.title && favorTitle) return this.title;

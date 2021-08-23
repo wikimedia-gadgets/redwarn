@@ -390,7 +390,6 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         overflowX: "hidden"
                     }}
                 >
-                    <hr style={{ margin: "0" }} />
                     {this.mwdUser ??
                         (this.mwdUser = (
                             <MaterialWarnDialogUser
@@ -422,15 +421,6 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         ))}
                 </MaterialDialogContent>
                 <MaterialDialogActions>
-                    {this._helperText ??
-                        (this._helperText = (
-                            <div
-                                class={
-                                    "rw-mdc-dialog-helperText rw-mdc-warnDialog-helperTextHider"
-                                }
-                            />
-                        ))}
-
                     {this.mwdErrors ??
                         (this.mwdErrors = (
                             <MaterialIconButton
@@ -464,7 +454,14 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                                 }}
                             />
                         ))}
-
+                    {this._helperText ??
+                        (this._helperText = (
+                            <div
+                                class={
+                                    "rw-mdc-dialog-helperText rw-mdc-warnDialog-helperTextHider"
+                                }
+                            />
+                        ))}
                     <MaterialButton dialogAction="cancel">
                         {i18next.t<string>("ui:okCancel.cancel")}
                     </MaterialButton>
@@ -472,6 +469,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         (this.dialogConfirmButton = (
                             <MaterialButton
                                 dialogAction="confirm"
+                                raised
                                 action
                                 disabled
                             >

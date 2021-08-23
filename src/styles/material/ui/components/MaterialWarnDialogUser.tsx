@@ -147,7 +147,7 @@ function MaterialWarnDialogUserCard({
     const cardId = generateId(8);
     const warningIcon = WarningIcons[user.warningAnalysis.level];
 
-    const card = (
+    return (
         <table>
             <tr>
                 <td rowSpan={2}>
@@ -243,8 +243,6 @@ function MaterialWarnDialogUserCard({
             </tr>
         </table>
     );
-
-    return card;
 }
 
 class MaterialWarnDialogUser extends MaterialWarnDialogChild {
@@ -272,10 +270,11 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
         if (!!this.elementSet.root) {
             this.elementSet.root.classList.toggle(
                 "rw-mdc-warnDialog-user--active",
-                this._active
+                value
             );
         }
         this._active = value;
+        console.log(this.elementSet.root, value, this._active);
     }
 
     lastUser: User;
@@ -413,15 +412,24 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
     }
 
     renderMain(): JSX.Element {
+        console.log(
+            this.active,
+            !!this.user,
+            this.user.isPopulated(),
+            !!this.user.warningAnalysis
+        );
         this.elementSet.main = (
             <div class={"rw-mdc-warnDialog-user--main"}>
-                {!!this.user &&
-                this.user.isPopulated() &&
-                !!this.user.warningAnalysis ? (
-                    <MaterialWarnDialogUserCard parent={this} />
-                ) : (
-                    ""
-                )}
+                {
+                    // Do not use `this.active` - this will require two refreshes.
+                    !!this.user &&
+                    this.user.isPopulated() &&
+                    !!this.user.warningAnalysis ? (
+                        <MaterialWarnDialogUserCard parent={this} />
+                    ) : (
+                        ""
+                    )
+                }
             </div>
         );
         return this.elementSet.main;
@@ -449,8 +457,6 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                 "Attempted to update user twice. Subsequent attempt blocked."
             );
 
-        this.updating = true;
-
         // Reuse the previous user object if it's the same user.
         if (!!this.lastUser && user.username === this.lastUser.username)
             this.user = this.lastUser;
@@ -459,7 +465,7 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
         if (this.user != null) {
             if (!this.user.isPopulated()) {
                 // Set to inactive in order to hoist loading screen.
-                this.active = false;
+                this.updating = true;
                 this.refresh();
 
                 await this.user.populate();
@@ -499,8 +505,8 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
             }
 
             if (!this.user.warningAnalysis) {
-                // Set to inactive in order to hoist loading screen.
-                this.active = false;
+                // Set to updating in order to hoist loading screen.
+                this.updating = true;
                 this.refresh();
 
                 await this.user.getWarningAnalysis();
@@ -513,9 +519,8 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                     : this.user.warningAnalysis.level + 1;
         }
 
-        this.updating = false;
         // All done. Show!
-        this.active = true;
+        this.updating = false;
 
         // Small delay in order to let previous refreshes pass through.
         setTimeout(() => {
@@ -547,7 +552,9 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
             );
         } else this.elementSet.root = root;
 
+        // Setter requires `this.elementSet.root` to be up to date.
         this.active =
+            !this.updating &&
             !!this.user &&
             this.user.isPopulated() &&
             !!this.user.warningAnalysis;

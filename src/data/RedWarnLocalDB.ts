@@ -7,7 +7,8 @@ import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
 import {
     CachedDependency,
     CacheTracker,
-    LogItem
+    LogItem,
+    WatchedPage
 } from "rww/data/database/RWDBObjectStoreDefinitions";
 import Group from "rww/mediawiki/Group";
 import Log from "rww/data/RedWarnLog";
@@ -36,6 +37,7 @@ const databaseUpdaters: { [key: number]: RedWarnIDBUpgradeHandler } = {
             "page",
             "displayName"
         ]);
+        RedWarnIDB.createObjectStore(database, "watchedPages", "title", []);
 
         // Logging
         RedWarnIDB.createObjectStore(database, "errorLog", "id", [
@@ -59,6 +61,7 @@ export default class RedWarnLocalDB {
     cacheTracker: RedWarnIDBObjectStore<CacheTracker>;
     dependencyCache: RedWarnIDBObjectStore<CachedDependency>;
     groupCache: RedWarnIDBObjectStore<Group>;
+    watchedPages: RedWarnIDBObjectStore<WatchedPage>;
     errorLog: RedWarnIDBObjectStore<LogItem>;
     combinedLog?: RedWarnIDBObjectStore<LogItem>;
     // Object stores go above.
@@ -100,6 +103,7 @@ export default class RedWarnLocalDB {
             "dependencyCache"
         );
         this.groupCache = this.idb.store<Group>("groupCache");
+        this.watchedPages = this.idb.store<WatchedPage>("watchedPages");
 
         this.errorLog = this.idb.store<LogItem>("errorLog");
         // TODO only on debug mode

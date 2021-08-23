@@ -16,7 +16,7 @@
         "reportUAA": "Report to UAA",
         "reportOversight": "Report user to Oversight",
         "reportTAS": "Report user to Wikimedia Trust & Safety",
-        "preferences": "RedWarn Preferences",
+        "preferences": "Preferences",
         "rwTalk": "RedWarn talk page"
     },
     "restore": {
@@ -37,6 +37,11 @@
         "ok": "OK",
         "cancel": "Cancel"
     },
+    "copyURL": {
+        "button": "Copy URL",
+        "success": "URL copied.",
+        "failure": "Failed to copy URL. Have you given the browser proper permissions?"
+    },
     "toasts": {
         "pleaseWait": "Please wait...",
         "restoreError": "Sorry, there was an error, likely an edit conflict. This edit has not been restored.",
@@ -44,9 +49,20 @@
         "newerRev": "A newer revision was detected. Your rollback has not been applied.",
         "userUndefined": "Sorry, the target user does not exist, cannot be found, or is hidden from the public. Your action has not been completed.",
         "userWarned": "User warned.",
-        "userWarnFailed": "Sorry, there was an error. Please verify if the user has been warned before issuing another warning.",
-        "watching": "Alerts Enabled - please keep this tab open.",
-        "stoppedWatching": "Alerts Disabled."
+        "userWarnFailed": "Sorry, there was an error. Please verify if the user has been warned before issuing another warning."
+    },
+    "watch": {
+        "denied": "Permission to show notifications denied.",
+        "watching": "Watching for changes on {{page}}. Keep this tab open.",
+        "stoppedWatching": "Stopped watching for changes on {{page}}.",
+        "prefix": "[New edit(s)!] ",
+        "notification": {
+            "title": "New edit to {{page}}",
+            "title_plural": "{{count}} new edits to {{page}}",
+            "header": "Click here to view.",
+            "diff": "Latest revision by {{author}} ({{since}}): \"{{comment}}\".",
+            "diff_nosummary": "Latest revision by {{author}} ({{since}})."
+        }
     },
     "rollbackAvailableDialog": {
         "actions": {
@@ -82,7 +98,7 @@
 
             "report": "Click to report to AIV.",
             "edits": "{{edits}} edits",
-            "age": "Created {{localeAge}}",
+            "age": "Joined {{localeAge}}",
 
             "talk": {
                 "main": "User talk page",

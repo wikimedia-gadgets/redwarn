@@ -1,6 +1,7 @@
 import { BaseProps, h } from "tsx-dom";
 import { MDCRipple } from "@material/ripple";
 import { MDCList } from "@material/list/component";
+import toCSS from "rww/styles/material/util/toCSS";
 
 export function MaterialList(
     props: BaseProps & JSX.HTMLAttributes & { initialized?: boolean }
@@ -27,6 +28,8 @@ export function MaterialListItem(
     props: BaseProps &
         JSX.HTMLAttributes & {
             icon?: string;
+            iconColor?: string;
+            color?: string;
         }
 ): JSX.Element {
     const ripple = <span class="mdc-list-item__ripple" />;
@@ -47,11 +50,21 @@ export function MaterialListItem(
                 <span
                     class="mdc-deprecated-list-item__graphic material-icons"
                     aria-hidden="true"
+                    style={toCSS({
+                        color: props.iconColor ?? props.color ?? undefined
+                    })}
                 >
                     {props.icon}
                 </span>
             )}
-            <span class="mdc-list-item__text">{props.children}</span>
+            <span
+                class="mdc-list-item__text"
+                style={toCSS({
+                    color: props.color ?? undefined
+                })}
+            >
+                {props.children}
+            </span>
         </li>
     );
 }

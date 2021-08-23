@@ -23,3 +23,6 @@ release/
 
 # caches
 .eslintcache
+
+# certificate files
+localhos*.pem

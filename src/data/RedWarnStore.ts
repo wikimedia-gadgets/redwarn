@@ -2,7 +2,6 @@ import MessageHandler from "rww/event/MessageHandler";
 import { StyleStorage } from "rww/styles/Style";
 import { Dependency } from "rww/data/Dependencies";
 import { NamedPage, Page } from "rww/mediawiki";
-import { RW_LOGO } from "rww/data/RedWarnConstants";
 
 /**
  * <b>RedWarnStore</b> is for live, in-memory data that does not require persistence
@@ -50,8 +49,9 @@ export default class RedWarnStore {
     public static wikiAPI: string;
     // "enwiki"
     public static wikiID: string;
-    // "https://en.wikipedia.org/static/images/project-logos/enwiki.png"
-    public static wikiLogo: string;
+    // URL: "https//en.wikipedia.org/static/images/project-logos/enwiki.png"
+    // WARNING: Not calculated on page load. Must be assigned to be `Watch.ts`
+    public static wikiLogo: URL;
 
     public static styleStorage: StyleStorage = null;
     public static windowFocused = false;
@@ -74,14 +74,6 @@ export default class RedWarnStore {
             (mw.config.get("wgScriptPath") as string)
         }/api.php`;
         RedWarnStore.wikiID = mw.config.get("wgWikiID") as string;
-        RedWarnStore.wikiLogo =
-            (document.querySelector(".mw-wiki-logo") &&
-                /^url\("(.+)"\)$/.exec(
-                    window.getComputedStyle(
-                        document.querySelector(".mw-wiki-logo")
-                    )?.backgroundImage
-                )?.[1]) ??
-            RW_LOGO;
         RedWarnStore.currentPage = Page.fromIDAndTitle(
             mw.config.get("wgArticleId"),
             mw.config.get("wgPageName")

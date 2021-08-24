@@ -12,6 +12,7 @@ import { MediaWikiAPI } from "rww/mediawiki/API";
 import redirect from "rww/util/redirect";
 import { MediaWikiURL } from "rww/mediawiki/URL";
 import { formatAge } from "rww/util";
+import { RW_LOGO } from "rww/data/RedWarnConstants";
 
 export class Watch {
     static active = false;
@@ -103,7 +104,13 @@ export class Watch {
             rvprop: "ids|timestamp|flags|comment|user",
             // Inclusive, so increment revision ID by 1.
             rvstartid: Watch.lastRevId + 1,
-            rvdir: "newer"
+            rvdir: "newer",
+            ...(RedWarnStore.wikiLogo == null
+                ? {
+                      // Get logo URL if not yet set.
+                      meta: "siteinfo"
+                  }
+                : {})
         });
 
         const revisions: Record<string, any>[] = (
@@ -112,6 +119,12 @@ export class Watch {
                 any
             >)["revisions"] ?? []
         ).filter((v: any) => v.revid !== Watch.lastRevId);
+
+        if (RedWarnStore.wikiLogo == null)
+            RedWarnStore.wikiLogo = new URL(
+                newRevisionsRequest["query"]?.["general"]?.["logo"] ?? RW_LOGO,
+                window.location.href
+            );
 
         if (revisions.length > 0) {
             // New revisions detected.
@@ -135,7 +148,7 @@ export class Watch {
                             since: formatAge(new Date(revisions[0].timestamp)),
                             comment: revisions[0].comment
                         })}`,
-                        image: RedWarnStore.wikiLogo
+                        icon: RedWarnStore.wikiLogo.toString()
                     }
                 );
                 document.addEventListener("focus", () => {

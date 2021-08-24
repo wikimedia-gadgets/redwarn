@@ -36,7 +36,7 @@ import MaterialIconButton from "./components/MaterialIconButton";
 import RedWarnUI from "rww/ui/RedWarnUI";
 
 import "../css/warnDialog.css";
-import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "rww/data/wikiconfig/RedWarnWikiConfiguration";
 
 /**
  * A specific test performed to validate the values of a {@link MaterialWarnDialog}.

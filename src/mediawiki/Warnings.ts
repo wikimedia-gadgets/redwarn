@@ -1,6 +1,6 @@
 import { WarningLevel } from "./WarningLevel";
 import type { User } from "rww/mediawiki/User";
-import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "rww/data/wikiconfig/RedWarnWikiConfiguration";
 
 // TODO Move this to wiki-specific definition files.
 // TODO i18n
@@ -21,7 +21,13 @@ export enum WarningType {
 }
 
 export interface WarningCategory {
+    /**
+     * The ID of this warning category.
+     */
     id: string;
+    /**
+     * The label of this warning category.
+     */
     label: string;
 }
 
@@ -94,13 +100,42 @@ export const SerializedWarningType: Record<
 };
 
 export interface SerializedTieredWarning extends WarningBase {
+    /**
+     * The category of this warning. If a category is not provided, it
+     * will be classified under "Uncategorized".
+     */
+    // TODO: Classify warnings under "Uncategorized".
     category: string;
+    /**
+     * The type of the warning determines how it can be used. Tiered
+     * warnings usually come in four warnings, with a special immediate
+     * warning. Single-issue notices and policy violation warnings
+     * are only issued once, and do not have tier options.
+     */
     type: Extract<SerializedWarningTypes, "tiered">;
+    /**
+     * The available tiers for this warning set. The level number is
+     * appended to the end of the warning. The number `5` is used for
+     * warnings which have an immediate warning. The contents of this
+     * array may only go from 1 to 5.
+     *
+     * @TJS-example [[1, 2, 3, 4, 5], [1], [1, 2, 3, 4]]
+     */
     levels: WarningLevel[];
 }
 
 export interface SerializedNonTieredWarning extends WarningBase {
+    /**
+     * The category of this warning. If a category is not provided, it
+     * will be classified under "Uncategorized".
+     */
     category: string;
+    /**
+     * The type of the warning determines how it can be used. Tiered
+     * warnings usually come in four warnings, with a special immediate
+     * warning. Single-issue notices and policy violation warnings
+     * are only issued once, and do not have tier options.
+     */
     type: Exclude<SerializedWarningTypes, "tiered">;
 }
 

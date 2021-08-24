@@ -1,4 +1,4 @@
-import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "rww/data/wikiconfig/RedWarnWikiConfiguration";
 import { WarningLevel } from "rww/mediawiki";
 
 /**

@@ -7,7 +7,7 @@ import {
     GenericMediaWikiError,
     SpecializedMediaWikiErrors
 } from "rww/errors/MediaWikiErrors";
-import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "rww/data/wikiconfig/RedWarnWikiConfiguration";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 

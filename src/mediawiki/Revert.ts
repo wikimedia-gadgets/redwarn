@@ -14,7 +14,7 @@ import {
 } from "rww/mediawiki";
 import { Configuration, RevertMethod } from "rww/config";
 import Log from "rww/data/RedWarnLog";
-import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "rww/data/wikiconfig/RedWarnWikiConfiguration";
 import type { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
 import { RevertOption } from "rww/data/RevertOptions";
 

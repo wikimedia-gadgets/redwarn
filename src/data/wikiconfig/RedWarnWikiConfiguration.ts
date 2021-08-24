@@ -1,20 +1,6 @@
-import type {
-    SerializedWarningCategories,
-    Warning,
-    WarningCategory
-} from "rww/mediawiki";
-import {
-    Page,
-    SerializedWarning,
-    SerializedWarningType,
-    WarningLevel,
-    WarningLevelSignature,
-    WarningManager
-} from "rww/mediawiki";
-import type {
-    RevertOption,
-    SerializableRevertOption
-} from "rww/data/RevertOptions";
+import type { Warning, WarningCategory } from "rww/mediawiki";
+import { Page, SerializedWarningType, WarningManager } from "rww/mediawiki";
+import type { RevertOption } from "rww/data/RevertOptions";
 import { ActionSeverity } from "rww/data/RevertOptions";
 import {
     RW_FALLBACK_CONFIG,
@@ -22,40 +8,8 @@ import {
     RW_WIKI_CONFIGURATION_VERSION
 } from "rww/data/RedWarnConstants";
 import Log from "rww/data/RedWarnLog";
-
-interface RawWikiConfiguration {
-    configVersion: number;
-    wiki: string;
-    meta: {
-        tag: string;
-        link: string;
-    };
-    warnings: {
-        ipAdvice: string | null;
-        vandalismWarning: string;
-        signatures: Record<Exclude<WarningLevel, 0>, WarningLevelSignature[]>;
-        categories: SerializedWarningCategories;
-        warnings: Record<string, SerializedWarning>;
-    };
-    revertOptions: Record<string, SerializableRevertOption>;
-}
-
-interface WikiConfiguration {
-    configVersion: number;
-    wiki: string;
-    meta: {
-        tag?: string;
-        link: string;
-    };
-    warnings: {
-        ipAdvice?: string | null;
-        vandalismWarning: Warning;
-        signatures: Record<Exclude<WarningLevel, 0>, WarningLevelSignature[]>;
-        categories: WarningCategory[];
-        warnings: Record<string, Warning>;
-    };
-    revertOptions: Record<string, RevertOption>;
-}
+import WikiConfiguration from "./WikiConfiguration";
+import RawWikiConfiguration from "./RawWikiConfiguration";
 
 /**
  * This class handles every single contact with the RedWarn per-wiki

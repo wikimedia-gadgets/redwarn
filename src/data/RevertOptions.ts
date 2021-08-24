@@ -1,7 +1,7 @@
 import i18next from "i18next";
 import type { RevertContext } from "rww/mediawiki/Revert";
 import { RevertContextBase } from "rww/mediawiki/Revert";
-import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "rww/data/wikiconfig/RedWarnWikiConfiguration";
 import { redirect, url } from "rww/util";
 import RedWarnStore from "rww/data/RedWarnStore";
 import { Configuration } from "rww/config";
@@ -72,8 +72,6 @@ interface RevertActionBase {
     name: string;
     /**
      * The icon for the action.
-     *
-     * TODO: Move to per-style icon map.
      */
     icon: string;
 }
@@ -100,7 +98,8 @@ export type RevertOption = (RevertActionBase & RevertAction) & {
 export type SerializableRevertOption = RevertActionBase &
     SerializableRevertAction & {
         /**
-         * The severity of the action.
+         * The severity of the action. This determines the color of
+         * the revert button.
          */
         severity: keyof typeof ActionSeverity;
     };

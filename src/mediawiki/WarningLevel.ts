@@ -62,15 +62,44 @@ export const WarningLevelComments: {
     }
 };
 
+/**
+ * A warning level signature that searches a page for a specific string of wikitext.
+ */
 export interface IncludesWarningLevelSignature {
+    /**
+     * The type determines whether or not this signature is includes-based or
+     * regular expression-based.
+     */
     type: "includes";
+    /**
+     * The wikitext to look for.
+     *
+     * @TJS-example "<-- uw:1 -->"
+     */
     substring: string;
 }
 
 export interface RegexWarningLevelSignature {
+    /**
+     * The type determines whether or not this signature is includes-based or
+     * regular expression-based.
+     */
     type: "regex";
+    /**
+     * The regular expression source. If you were writing a JavaScript RegExp
+     * literal, this would be what goes in between the slashes.
+     *
+     * @TJS-example "<!--\s*Template:uw-.+?1\s*-->"
+     */
     source: string;
-    flags: string;
+    /**
+     * The regular expression flags. This is equal to the flags provided by
+     * JavaScript. You are not required to add a "g" flag, since RedWarn
+     * will locate only one instance of that signature.
+     *
+     * @TJS-example "i"
+     */
+    flags?: string;
 }
 
 export type WarningLevelSignature =

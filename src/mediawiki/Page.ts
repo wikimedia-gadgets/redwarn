@@ -10,7 +10,7 @@ import { url as buildURL } from "rww/util";
 import redirect from "rww/util/redirect";
 import Section, { SectionContainer } from "rww/mediawiki/Section";
 import url from "rww/util/url";
-import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "rww/data/wikiconfig/RedWarnWikiConfiguration";
 
 export interface PageEditOptions {
     /**

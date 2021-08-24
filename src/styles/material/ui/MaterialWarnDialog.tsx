@@ -469,7 +469,6 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         (this.dialogConfirmButton = (
                             <MaterialButton
                                 dialogAction="confirm"
-                                raised
                                 action
                                 disabled
                             >

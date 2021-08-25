@@ -104,6 +104,16 @@ export type SerializableRevertOption = RevertActionBase &
         severity: keyof typeof ActionSeverity;
     };
 
+export function deserializeRevertOption(
+    id: string,
+    option: SerializableRevertOption
+): RevertOption {
+    return Object.assign(option, {
+        id,
+        severity: ActionSeverity[option.severity]
+    });
+}
+
 /* Implemented as a function in order to parse internationalization strings at runtime. */
 export function RequiredRevertOptions(): Record<string, RevertOption> {
     return {

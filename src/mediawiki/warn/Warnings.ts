@@ -143,6 +143,33 @@ export type SerializedWarning =
     | SerializedTieredWarning
     | SerializedNonTieredWarning;
 
+export function isSerializedTieredWarning(
+    warning: Record<string, any> & SerializedWarning
+): warning is SerializedTieredWarning {
+    return warning.levels != null;
+}
+
+export function deserializeWarning(
+    warning: SerializedWarning,
+    categories?: WarningCategory[]
+): Warning {
+    return Object.assign(
+        warning,
+        {
+            category: (
+                categories ?? RedWarnWikiConfiguration.c.warnings.categories
+            ).find((v) => v.id === warning.category),
+            type:
+                warning.type === "tiered"
+                    ? WarningType.Tiered
+                    : warning.type === "single"
+                    ? WarningType.SingleIssue
+                    : WarningType.PolicyViolation
+        },
+        warning.type === "tiered" ? { levels: warning.levels } : {}
+    );
+}
+
 export class WarningManager {
     private static _warnings: Record<string, Warning>;
     private static _warningCategories: WarningCategory[];

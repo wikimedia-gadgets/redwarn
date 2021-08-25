@@ -1,7 +1,4 @@
-import type { Warning, WarningCategory } from "rww/mediawiki";
-import { Page, SerializedWarningType, WarningManager } from "rww/mediawiki";
-import type { RevertOption } from "rww/mediawiki/revert/RevertOptions";
-import { ActionSeverity } from "rww/mediawiki/revert/RevertOptions";
+import { Page, WarningManager } from "rww/mediawiki";
 import {
     RW_FALLBACK_CONFIG,
     RW_WIKI_CONFIGURATION,
@@ -11,6 +8,7 @@ import Log from "rww/data/RedWarnLog";
 import WikiConfiguration from "./WikiConfiguration";
 import WikiConfigurationRaw from "./WikiConfigurationRaw";
 import updateWikiConfiguration from "rww/config/wiki/updateWikiConfiguration";
+import WikiConfigurationDeserializers from "rww/config/wiki/WikiConfigurationDeserializers";
 
 /**
  * This class handles every single contact with the RedWarn per-wiki
@@ -114,54 +112,41 @@ export default class RedWarnWikiConfiguration {
     private static deserializeWikiConfiguration(
         config: WikiConfigurationRaw
     ): WikiConfiguration {
-        // Convert all warning category keypairs to WarningCategory objects.
-        const categories: WarningCategory[] = [];
-        for (const [id, details] of Object.entries(
-            config.warnings.categories
-        )) {
-            categories.push(Object.assign({ id: id }, details));
-        }
+        const preDeserializeConfig = JSON.parse(JSON.stringify(config));
+        const deserializeChunk = (
+            chunk: Record<string, any>,
+            deserializerSet: Record<string, any>
+        ) => {
+            // Run through fields first.
+            for (const [key, deserializer] of Object.entries(deserializerSet)) {
+                if (chunk[key] != null) {
+                    if (typeof deserializer === "function")
+                        chunk[key] = deserializer(
+                            chunk[key],
+                            preDeserializeConfig,
+                            config
+                        );
+                    else if (typeof deserializer._self === "function")
+                        chunk[key] = deserializer._self(
+                            chunk[key],
+                            preDeserializeConfig,
+                            config
+                        );
+                }
+            }
 
-        // Convert all SerializableWarnings to Warnings
-        const warnings: Record<string, Warning> = {};
-        for (const [id, warning] of Object.entries(config.warnings.warnings)) {
-            warnings[id] = Object.assign(warning, {
-                category: Object.assign(
-                    {
-                        id: /* Category ID */ warning.category
-                    },
-                    config.warnings.categories[warning.category]
-                ),
-                type: SerializedWarningType[warning.type]
-            }) as Warning;
-        }
+            // Run through subrecords.
+            for (const [key, value] of Object.entries(deserializerSet)) {
+                if (chunk[key] != null && typeof value === "object") {
+                    chunk[key] = deserializeChunk(chunk[key], value);
+                }
+            }
 
-        // Convert all SerializableRevertOptions to RevertOptions
-        const revertOptions: Record<string, RevertOption> = {};
-        for (const [id, option] of Object.entries(config.revertOptions)) {
-            revertOptions[id] = Object.assign(option, {
-                id: id,
-                severity:
-                    ActionSeverity[
-                        `${option.severity[0].toUpperCase()}${option.severity.substr(
-                            1
-                        )}` as keyof typeof ActionSeverity
-                    ]
-            });
-        }
-
-        return {
-            configVersion: config.configVersion,
-            wiki: config.wiki,
-            meta: config.meta,
-            warnings: {
-                ipAdvice: config.warnings.ipAdvice,
-                vandalismWarning: warnings[config.warnings.vandalismWarning],
-                signatures: config.warnings.signatures,
-                categories: categories,
-                warnings: warnings
-            },
-            revertOptions: revertOptions
+            return chunk;
         };
+        return deserializeChunk(
+            config,
+            WikiConfigurationDeserializers
+        ) as WikiConfiguration;
     }
 }

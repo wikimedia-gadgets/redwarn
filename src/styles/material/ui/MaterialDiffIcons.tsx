@@ -18,10 +18,12 @@ import { MDCLinearProgress } from "@material/linear-progress/component";
 
 import "../css/diffIcons.css";
 import i18next from "i18next";
-import { Configuration, RevertMethod } from "rww/config/user";
+
 import { RevertDoneOptions } from "rww/mediawiki/revert/RevertDoneOptions";
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
 import Log from "rww/data/RedWarnLog";
+import { Configuration } from "rww/config/user/Configuration";
+import { RevertMethod } from "rww/config/user/ConfigurationEnums";
 
 function getRollbackOptionClickHandler(
     diffIcons: MaterialDiffIcons,
@@ -166,12 +168,12 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
                     label={option.name}
                     icon={option.icon}
                     iconColor={
-                        option.color ?? // user/config preference
+                        option.color ??
                         Configuration.Accessibility.highContrast.value
                             ? MaterialHighContrastActionSeverityColors[
                                   option.severity
-                              ] //high contrast default
-                            : MaterialActionSeverityColors[option.severity] // default based on severity rating
+                              ]
+                            : MaterialActionSeverityColors[option.severity]
                     }
                     data-rw-revert-option={option.id}
                 />

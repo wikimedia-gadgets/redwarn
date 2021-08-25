@@ -16,10 +16,10 @@ import {
     MaterialList,
     MaterialListItem
 } from "rww/styles/material/ui/components/MaterialList";
-import { Configuration } from "rww/config/user";
 import PageIcons from "rww/ui/definitions/PageIcons";
 import "../css/extendedOptions.css";
 import toCSS from "rww/styles/material/util/toCSS";
+import { Configuration } from "rww/config/user/Configuration";
 
 export default class MaterialExtendedOptions extends RWUIExtendedOptions {
     show(): Promise<string> {

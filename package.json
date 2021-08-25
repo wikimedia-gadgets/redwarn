@@ -61,13 +61,14 @@
         "wrapper-webpack-plugin": "git+https://github.com/redwarnwp/wrapper-webpack-plugin.git"
     },
     "scripts": {
-        "build": "webpack",
-        "build:prod": "cross-env NODE_ENV=production webpack",
-        "build:dev": "cross-env NODE_ENV=development webpack",
+        "build": "npm run clean && webpack",
+        "build:prod": "npm run clean && cross-env NODE_ENV=production webpack",
+        "build:dev": "npm run clean && cross-env NODE_ENV=development webpack",
         "clean": "rimraf build",
         "start": "cross-env NODE_ENV=development webpack serve --config webpack.config.js",
         "profile": "webpack --profile",
-        "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
+        "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+        "coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --collectCoverageFrom=src/**/*.{js,jsx,ts,tsx}"
     },
     "repository": {
         "type": "git",
@@ -79,7 +80,7 @@
         "vandalism",
         "redwarn"
     ],
-    "author": "RedWarn Development Team",
+    "author": "RedWarn Development Team <tools.redwarn@toolforge.org>",
     "license": "Apache-2.0",
     "bugs": {
         "url": "https://gitlab.com/redwarn/redwarn-web/issues"

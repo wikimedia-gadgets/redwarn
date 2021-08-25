@@ -1,11 +1,11 @@
 import { RWUIPageIcons } from "rww/ui/elements/RWUIPageIcons";
 import { h } from "tsx-dom";
 import PageIcons from "rww/ui/definitions/PageIcons";
-import { Configuration } from "rww/config/user";
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
 import i18next from "i18next";
 
 import "../css/pageIcons.css";
+import { Configuration } from "rww/config/user/Configuration";
 
 export default class MaterialPageIcons extends RWUIPageIcons {
     public static readonly elementName = "rwPageIcons";

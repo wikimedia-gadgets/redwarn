@@ -11,3 +11,4 @@ export { default as regexEscape } from "./regexEscape";
 export { default as semanticDifference } from "./semanticDifference";
 export { default as sleep } from "./sleep";
 export { default as url } from "./url";
+export { default as notifyLazyLoad } from "./notifyLazyLoad";

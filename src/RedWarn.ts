@@ -39,7 +39,7 @@ import {
     WarningManager,
     Watch
 } from "./mediawiki";
-import { Configuration } from "./config/user";
+import { Configuration } from "./config/user/Configuration";
 
 declare global {
     interface Window {

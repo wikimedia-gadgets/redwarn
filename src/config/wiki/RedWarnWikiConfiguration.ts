@@ -10,6 +10,7 @@ import {
 import Log from "rww/data/RedWarnLog";
 import WikiConfiguration from "./WikiConfiguration";
 import RawWikiConfiguration from "./RawWikiConfiguration";
+import updateWikiConfiguration from "rww/config/wiki/updateWikiConfiguration";
 
 /**
  * This class handles every single contact with the RedWarn per-wiki
@@ -71,7 +72,7 @@ export default class RedWarnWikiConfiguration {
          */
         let config: RawWikiConfiguration;
         if (rawConfig.configVersion < RW_WIKI_CONFIGURATION_VERSION)
-            config = RedWarnWikiConfiguration.upgradeWikiConfiguration(
+            config = await RedWarnWikiConfiguration.upgradeWikiConfiguration(
                 rawConfig
             );
         else config = rawConfig as RawWikiConfiguration;
@@ -104,30 +105,10 @@ export default class RedWarnWikiConfiguration {
     /**
      * Attempt to upgrade an outdated configuration file.
      */
-    private static upgradeWikiConfiguration(
+    private static async upgradeWikiConfiguration(
         config: Record<string, any>
-    ): RawWikiConfiguration {
-        const upgraders: Record<
-            number,
-            (oldConfiguration: Record<string, any>) => Record<string, any>
-        > = {};
-
-        while (
-            config.configVersion < RW_WIKI_CONFIGURATION_VERSION &&
-            upgraders[config.configVersion] != null
-        ) {
-            config = upgraders[config.configVersion](config);
-        }
-
-        if (config.configVersion === RW_WIKI_CONFIGURATION_VERSION) {
-            return config as RawWikiConfiguration;
-        } else {
-            // We ran out of valid upgraders.
-            // TODO: Proper errors
-            throw new Error(
-                "Cannot upgrade wiki-configuration file: no valid configuration available."
-            );
-        }
+    ): Promise<RawWikiConfiguration> {
+        return updateWikiConfiguration(config);
     }
 
     private static deserializeWikiConfiguration(

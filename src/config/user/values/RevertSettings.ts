@@ -2,10 +2,10 @@
  * Revert settings.
  */
 
-import { RevertMethod } from "../index";
 import { Setting, UIInputType } from "../Setting";
 import i18next from "i18next";
 import { RevertDoneOption } from "rww/mediawiki/revert/RevertDoneOptions";
+import { RevertMethod } from "rww/config/user/ConfigurationEnums";
 
 type RevertOptionOverrides = Record<
     string,

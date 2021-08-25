@@ -21,8 +21,11 @@ node_modules/
 build/
 release/
 
+# Test results
+coverage/
+
 # caches
 .eslintcache
 
 # certificate files
-localhos*.pem
+*.pem

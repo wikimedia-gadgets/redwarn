@@ -1,7 +1,7 @@
 import { BaseProps, h } from "tsx-dom";
 import expandDataAttributes from "rww/styles/material/util/expandDataAttributes";
-import { Configuration } from "rww/config/user";
 import toCSS from "rww/styles/material/util/toCSS";
+import { Configuration } from "rww/config/user/Configuration";
 
 export interface MaterialButtonProperties extends BaseProps {
     action?: boolean; // whether or not this button is an action button, such as "ok", "submit", etc. used for accessibility

@@ -4,8 +4,8 @@ import { RevertContextBase } from "rww/mediawiki/revert/Revert";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import { redirect, url } from "rww/util";
 import RedWarnStore from "rww/data/RedWarnStore";
-import { Configuration } from "rww/config/user";
 import RedWarnUI from "rww/ui/RedWarnUI";
+import { Configuration } from "rww/config/user/Configuration";
 
 export enum ActionSeverity {
     Neutral,

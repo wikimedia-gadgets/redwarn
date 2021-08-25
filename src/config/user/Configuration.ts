@@ -5,7 +5,6 @@ import {
 } from "rww/data/RedWarnConstants";
 import { ClientUser } from "rww/mediawiki";
 import { Setting } from "./Setting";
-import { updateConfiguration } from "./ConfigurationUpdate";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import i18next from "i18next";
 import StyleManager from "rww/styles/StyleManager";
@@ -17,6 +16,7 @@ import UISettings from "rww/config/user/values/UISettings";
 import RevertSettings from "rww/config/user/values/RevertSettings";
 import AccessibilitySettings from "rww/config/user/values/AccessibilitySettings";
 import { isEmptyObject } from "rww/util";
+import updateConfiguration from "./updateConfiguration";
 
 export type ConfigurationSet = Record<string, Setting<any>>;
 

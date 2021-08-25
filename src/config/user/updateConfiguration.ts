@@ -89,9 +89,7 @@ const configurationUpdaters: { [key: number]: ConfigurationUpdater } = {
  * Recursively updates a config through each version to get it up to the latest.
  * @param oldConfig
  */
-export function updateConfiguration(
-    oldConfig: Record<string, any>
-): Record<string, any> {
+export default function (oldConfig: Record<string, any>): Record<string, any> {
     let modifiedConfig: Record<string, any> = JSON.parse(
         JSON.stringify(oldConfig)
     );

@@ -74,7 +74,7 @@ export interface IncludesWarningLevelSignature {
     /**
      * The wikitext to look for.
      *
-     * @TJS-example "<-- uw:1 -->"
+     * @example "<-- uw:1 -->"
      */
     substring: string;
 }
@@ -89,7 +89,7 @@ export interface RegexWarningLevelSignature {
      * The regular expression source. If you were writing a JavaScript RegExp
      * literal, this would be what goes in between the slashes.
      *
-     * @TJS-example "<!--\s*Template:uw-.+?1\s*-->"
+     * @example "<!--\s*Template:uw-.+?1\s*-->"
      */
     source: string;
     /**
@@ -97,7 +97,7 @@ export interface RegexWarningLevelSignature {
      * JavaScript. You are not required to add a "g" flag, since RedWarn
      * will locate only one instance of that signature.
      *
-     * @TJS-example "i"
+     * @example "i"
      */
     flags?: string;
 }

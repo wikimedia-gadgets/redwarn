@@ -1,26 +1,15 @@
-import type {
-    Warning,
-    WarningCategory,
-    WarningLevel,
-    WarningLevelSignature
-} from "rww/mediawiki";
-import type { RevertOption } from "rww/mediawiki/revert/RevertOptions";
+// Overrides WikiConfigurationBase with RedWarn-usable types.
+import WikiConfigurationBase from "rww/config/wiki/WikiConfigurationBase";
+import { Warning, WarningCategory } from "rww/mediawiki";
+import { RevertOption } from "rww/mediawiki/revert/RevertOptions";
 
-interface WikiConfiguration {
-    configVersion: number;
-    wiki: string;
-    meta: {
-        tag?: string;
-        link: string;
-    };
-    warnings: {
-        ipAdvice?: string | null;
-        vandalismWarning: Warning;
-        signatures: Record<Exclude<WarningLevel, 0>, WarningLevelSignature[]>;
-        categories: WarningCategory[];
+type WikiConfiguration = WikiConfigurationBase & {
+    warnings?: {
+        categories?: WarningCategory[];
+        vandalismWarning?: Warning;
         warnings: Record<string, Warning>;
     };
-    revertOptions: Record<string, RevertOption>;
-}
+    revertOptions?: Record<string, RevertOption>;
+};
 
 export default WikiConfiguration;

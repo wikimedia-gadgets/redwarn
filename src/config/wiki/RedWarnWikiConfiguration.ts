@@ -9,7 +9,7 @@ import {
 } from "rww/data/RedWarnConstants";
 import Log from "rww/data/RedWarnLog";
 import WikiConfiguration from "./WikiConfiguration";
-import RawWikiConfiguration from "./RawWikiConfiguration";
+import WikiConfigurationRaw from "./WikiConfigurationRaw";
 import updateWikiConfiguration from "rww/config/wiki/updateWikiConfiguration";
 
 /**
@@ -60,22 +60,22 @@ export default class RedWarnWikiConfiguration {
     static async loadWikiConfiguration(): Promise<void> {
         Log.debug("Loading per-wiki configuration...");
         /**
-         * A basic JSON object holding keys for what is supposed to be a {@link RawWikiConfiguration}.
+         * A basic JSON object holding keys for what is supposed to be a {@link WikiConfigurationRaw}.
          */
         const rawConfig: Record<string, any> =
             RedWarnWikiConfiguration.preloadedData ??
             (await RedWarnWikiConfiguration.preloadWikiConfiguration());
 
         /**
-         * A fully-upgraded {@link RawWikiConfiguration} which can then be deserialized into
+         * A fully-upgraded {@link WikiConfigurationRaw} which can then be deserialized into
          * a proper {@link WikiConfiguration}.
          */
-        let config: RawWikiConfiguration;
+        let config: WikiConfigurationRaw;
         if (rawConfig.configVersion < RW_WIKI_CONFIGURATION_VERSION)
             config = await RedWarnWikiConfiguration.upgradeWikiConfiguration(
                 rawConfig
             );
-        else config = rawConfig as RawWikiConfiguration;
+        else config = rawConfig as WikiConfigurationRaw;
 
         if (config.wiki != mw.config.get("wgDBname")) {
             // No need for i18n; this is debug information.
@@ -107,12 +107,12 @@ export default class RedWarnWikiConfiguration {
      */
     private static async upgradeWikiConfiguration(
         config: Record<string, any>
-    ): Promise<RawWikiConfiguration> {
+    ): Promise<WikiConfigurationRaw> {
         return updateWikiConfiguration(config);
     }
 
     private static deserializeWikiConfiguration(
-        config: RawWikiConfiguration
+        config: WikiConfigurationRaw
     ): WikiConfiguration {
         // Convert all warning category keypairs to WarningCategory objects.
         const categories: WarningCategory[] = [];

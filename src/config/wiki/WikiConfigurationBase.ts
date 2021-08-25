@@ -1,10 +1,15 @@
 import type {
+    PageProtectionRequestTarget,
+    ProtectionLevel,
     SerializedWarning,
     SerializedWarningCategories,
+    Warning,
     WarningLevel,
     WarningLevelSignature
 } from "rww/mediawiki";
+import { WarningCategory } from "rww/mediawiki";
 import type { SerializableRevertOption } from "rww/mediawiki/revert/RevertOptions";
+import { RevertOption } from "rww/mediawiki/revert/RevertOptions";
 
 /**
  * This is a configuration file used by RedWarn to provide wiki-specific
@@ -15,7 +20,7 @@ import type { SerializableRevertOption } from "rww/mediawiki/revert/RevertOption
  *
  * This schema uses the English Wikipedia configuration as an example.
  */
-interface RawWikiConfiguration {
+interface WikiConfigurationBase {
     /**
      * The config version specifies the current version of this configuration
      * file. RedWarn will try to upgrade outdated configuration files based
@@ -81,14 +86,14 @@ interface RawWikiConfiguration {
          *
          * @example "vandalism"
          */
-        vandalismWarning?: string;
+        vandalismWarning?: string | Warning;
         /**
          * Warning signatures are indicators that a talk page has a warning on
          * it. If a talk page has a warning under the current month that matches
          * a signature, the warning level will be raised to the highest level
          * triggered.
          *
-         * @TJS-example { "1": { "type": "includes", "substring": "<!--uw:1-->" } }
+         * @example { "1": { "type": "includes", "substring": "<!--uw:1-->" } }
          */
         signatures?: Record<Exclude<WarningLevel, 0>, WarningLevelSignature[]>;
         /**
@@ -96,23 +101,25 @@ interface RawWikiConfiguration {
          * user warnings in the `warnings` array. This is an array of warning category
          * IDs (as used in the array) with their respective labels.
          *
-         * @TJS-example { "common": { "label": "Common warnings" } }
+         * @example { "common": { "label": "Common warnings" } }
          */
-        categories?: SerializedWarningCategories;
+        categories?: SerializedWarningCategories | WarningCategory[];
         /**
          * A full list of user warnings available on this wiki. This is required to
          * enable user warnings. Each warning contains data about the warning, its
          * template name, and a user-friendly name, along with additional tags for
          * searching.
          */
-        warnings: Record<string, SerializedWarning>;
+        warnings: Record<string, SerializedWarning> | Record<string, Warning>;
     };
     /**
      * Revert options determine the options show to a user when viewing a diff page.
      * If not supplied, this will only show built-in options (which include normal
      * rollback and good-faith reverts).
      */
-    revertOptions?: Record<string, SerializableRevertOption>;
+    revertOptions?:
+        | Record<string, SerializableRevertOption>
+        | Record<string, RevertOption>;
     /**
      * Protection options facilitates page protection requests for wikis which allow
      * page protection requests. This also enables support for wikis which have FlaggedRevs,
@@ -140,75 +147,4 @@ interface RawWikiConfiguration {
     };
 }
 
-// TODO: Move to dedicated class.
-/**
- * A page or section where page protection requests will be added.
- */
-interface PageProtectionRequestTarget {
-    /**
-     * The target page to add to.
-     *
-     * @TJS-example Wikipedia:Requests for page protection/Increase
-     */
-    page: string;
-    /**
-     * The target section ID to add to. If each request adds a new level
-     * 2 heading, this value should be set to "new".
-     */
-    section?: number | "new";
-    /**
-     * The wikitext to add to the target page/section.
-     */
-    template: string;
-    /**
-     * Whether or not the content will be appended or prepended to the
-     * target page/section.
-     *
-     * @default "prepend"
-     */
-    method?: "append" | "prepend";
-    /**
-     * The amount of new lines to add before/after each request when
-     * appending/prepending, respectively.
-     *
-     * @default 0
-     */
-    extraLines: 0;
-}
-
-// TODO: Move to dedicated class.
-/**
- * A protection level provided by the wiki, used in protection level detection
- * and page protection requests.
- */
-interface ProtectionLevel {
-    /**
-     * The name of this protection level.
-     *
-     * @TJS-example semi-protection
-     */
-    name: string;
-    /**
-     * A string denoting the status of a page under this protection level.
-     *
-     * @TJS-example semi-protected
-     */
-    statusName: string;
-    /**
-     * The restriction group of this protection level, as defined by the MediaWiki
-     * wiki configuration. If this level pertains to the pseudo-level given by
-     * FlaggedRevs, this value should be set to `_flaggedrevs`.
-     *
-     * @TJS-example ["autoconfirmed", "_flaggedrevs"]
-     */
-    id: string;
-    /**
-     * Whether or not this can be used as a target protection level when requesting
-     * page protection.
-     *
-     * @default true
-     */
-    requestable?: boolean;
-}
-
-export default RawWikiConfiguration;
+export default WikiConfigurationBase;

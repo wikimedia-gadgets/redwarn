@@ -119,7 +119,7 @@ export interface SerializedTieredWarning extends WarningBase {
      * warnings which have an immediate warning. The contents of this
      * array may only go from 1 to 5.
      *
-     * @TJS-example [[1, 2, 3, 4, 5], [1], [1, 2, 3, 4]]
+     * @example [1, 2, 3, 4, 5]
      */
     levels: WarningLevel[];
 }

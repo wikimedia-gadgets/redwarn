@@ -9,7 +9,7 @@ import {
 } from "rww/mediawiki";
 import redirect from "rww/util/redirect";
 import Log from "rww/data/RedWarnLog";
-import Section, { SectionContainer } from "rww/mediawiki/Section";
+import Section, { SectionContainer } from "rww/mediawiki/core/Section";
 import url from "rww/util/url";
 import RedWarnStore from "rww/data/RedWarnStore";
 

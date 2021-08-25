@@ -1,4 +1,4 @@
-import RedWarnIDB from "rww/data/idb/RedWarnIDB";
+import RedWarnIDB from "rww/data/database/RedWarnIDB";
 
 type IDBStoreKeyType =
     | number

@@ -1,11 +1,11 @@
-import RedWarnWikiConfiguration from "rww/data/wikiconfig/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import { WarningLevel } from "rww/mediawiki";
 
 /**
  * Grabs the highest warning value from wikitext.
  * @param wikitext The wikitext to check for.
  */
-export default function (wikitext: string): WarningLevel {
+export function highestWarningLevel(wikitext: string): WarningLevel {
     let highestWarningLevel = WarningLevel.None;
 
     for (const [level, checks] of Object.entries(
@@ -34,4 +34,23 @@ export default function (wikitext: string): WarningLevel {
     }
 
     return highestWarningLevel;
+}
+
+export function warningSuffix(warningLevel: WarningLevel): string {
+    switch (warningLevel) {
+        case null:
+            return "";
+        case WarningLevel.None:
+            return "";
+        case WarningLevel.Notice:
+            return "1";
+        case WarningLevel.Caution:
+            return "2";
+        case WarningLevel.Warning:
+            return "3";
+        case WarningLevel.Final:
+            return "4";
+        case WarningLevel.Immediate:
+            return "4im";
+    }
 }

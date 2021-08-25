@@ -1,4 +1,4 @@
-import generateId from "rww/util/generateId";
+import random from "rww/util/random";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 import RedWarnUI from "rww/ui/RedWarnUI";
 
@@ -48,7 +48,7 @@ export class RWUIToast extends RWUIElement {
 
     protected constructor(readonly props: RWUIToastProperties) {
         super();
-        this.id = `toast__${props.id || generateId(16)}`;
+        this.id = `toast__${props.id || random(16)}`;
         this.props.style ??= RWUIToastStyle.Normal;
     }
 

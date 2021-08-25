@@ -1,7 +1,7 @@
 import { RWUIPageIcons } from "rww/ui/elements/RWUIPageIcons";
 import { h } from "tsx-dom";
-import PageIcons from "rww/data/PageIcons";
-import { Configuration } from "rww/config";
+import PageIcons from "rww/ui/definitions/PageIcons";
+import { Configuration } from "rww/config/user";
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
 import i18next from "i18next";
 

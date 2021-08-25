@@ -4,7 +4,7 @@ import type {
     WarningLevel,
     WarningLevelSignature
 } from "rww/mediawiki";
-import type { RevertOption } from "rww/data/RevertOptions";
+import type { RevertOption } from "rww/mediawiki/revert/RevertOptions";
 
 interface WikiConfiguration {
     configVersion: number;

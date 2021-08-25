@@ -1,4 +1,4 @@
-import { Page } from "rww/mediawiki/Page";
+import { Page } from "rww/mediawiki/core/Page";
 import { Revision } from "rww/mediawiki";
 
 export class GenericMediaWikiError extends Error {

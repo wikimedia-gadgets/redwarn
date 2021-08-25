@@ -8,9 +8,9 @@ import {
 } from "rww/errors/MediaWikiErrors";
 import { url as buildURL } from "rww/util";
 import redirect from "rww/util/redirect";
-import Section, { SectionContainer } from "rww/mediawiki/Section";
+import Section, { SectionContainer } from "rww/mediawiki/core/Section";
 import url from "rww/util/url";
-import RedWarnWikiConfiguration from "rww/data/wikiconfig/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 
 export interface PageEditOptions {
     /**
@@ -76,11 +76,16 @@ export class Page implements SectionContainer {
      */
     get url(): string {
         const identifier = this.getIdentifier();
-        return buildURL(RedWarnStore.wikiIndex, {
-            [typeof identifier === "number"
-                ? "curid"
-                : "title"]: `${identifier}`
-        });
+        if (typeof identifier === "number")
+            return buildURL(RedWarnStore.wikiIndex, { curid: identifier });
+        else return this.articleURL;
+    }
+
+    /**
+     * Gets this page's article URL (/wiki/Page)
+     */
+    get articleURL(): string {
+        return RedWarnStore.articlePath(this.title.getPrefixedText());
     }
 
     private constructor(object?: Partial<Page>) {

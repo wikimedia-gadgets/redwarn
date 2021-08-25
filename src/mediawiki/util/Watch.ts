@@ -4,13 +4,13 @@
  * This class is available in every loaded page of Wikipedia, therefore it can
  * simply be used as a static class.
  */
-import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
+import RedWarnLocalDB from "rww/data/database/RedWarnLocalDB";
 import RedWarnStore from "rww/data/RedWarnStore";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import i18next from "i18next";
-import { MediaWikiAPI } from "rww/mediawiki/API";
+import { MediaWikiAPI } from "rww/mediawiki/core/API";
 import redirect from "rww/util/redirect";
-import { MediaWikiURL } from "rww/mediawiki/URL";
+import { MediaWikiURL } from "rww/mediawiki/util/URL";
 import { formatAge } from "rww/util";
 import { RW_LOGO } from "rww/data/RedWarnConstants";
 

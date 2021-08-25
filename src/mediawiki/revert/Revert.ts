@@ -12,11 +12,11 @@ import {
     Revision,
     Warning
 } from "rww/mediawiki";
-import { Configuration, RevertMethod } from "rww/config";
+import { Configuration, RevertMethod } from "rww/config/user";
 import Log from "rww/data/RedWarnLog";
-import RedWarnWikiConfiguration from "rww/data/wikiconfig/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import type { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
-import { RevertOption } from "rww/data/RevertOptions";
+import { RevertOption } from "rww/mediawiki/revert/RevertOptions";
 
 /**
  * The context of a revert being performed. When used alone (not through

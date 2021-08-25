@@ -1,13 +1,13 @@
 import i18next from "i18next";
-import Group from "rww/mediawiki/Group";
+import Group from "rww/mediawiki/core/Group";
 import { ClientUser } from "rww/mediawiki";
-import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
+import RedWarnLocalDB from "rww/data/database/RedWarnLocalDB";
 import Log from "rww/data/RedWarnLog";
 import {
     GenericMediaWikiError,
     SpecializedMediaWikiErrors
 } from "rww/errors/MediaWikiErrors";
-import RedWarnWikiConfiguration from "rww/data/wikiconfig/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 

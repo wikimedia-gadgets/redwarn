@@ -1,6 +1,6 @@
-import { Revision } from "rww/mediawiki/Revision";
+import { Revision } from "rww/mediawiki/core/Revision";
 import { Page, PageEditOptions } from "./Page";
-import { MediaWikiAPI } from "rww/mediawiki/API";
+import { MediaWikiAPI } from "rww/mediawiki/core/API";
 
 export interface APISection {
     /**

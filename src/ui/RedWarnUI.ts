@@ -2,7 +2,7 @@ import StyleManager from "rww/styles/StyleManager";
 import { UserAccount } from "rww/mediawiki";
 import { RWUIToast } from "./elements/RWUIToast";
 import { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
-import { RevertContext } from "rww/mediawiki/Revert";
+import { RevertContext } from "rww/mediawiki/revert/Revert";
 import { RWUIPageIcons } from "rww/ui/elements/RWUIPageIcons";
 import { RWUIAlertDialog } from "rww/ui/elements/RWUIAlertDialog";
 import { RWUIInputDialog } from "rww/ui/elements/RWUIInputDialog";

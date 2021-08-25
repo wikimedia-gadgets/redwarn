@@ -1,4 +1,4 @@
-import generateId from "rww/util/generateId";
+import random from "rww/util/random";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 
 export enum RWUIDialogActionType {
@@ -85,7 +85,7 @@ export abstract class RWUIDialog extends RWUIElement {
 
     protected constructor(readonly props: RWUIDialogProperties) {
         super();
-        this.id = `dialog__${props.id || generateId(16)}`;
+        this.id = `dialog__${props.id || random(16)}`;
     }
 
     /**

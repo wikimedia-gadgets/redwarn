@@ -12,10 +12,10 @@ import StyleManager from "rww/styles/StyleManager";
 import { RedWarnStyleMissingError } from "rww/errors/RedWarnStyleError";
 import Log from "rww/data/RedWarnLog";
 
-import CoreSettings from "rww/config/values/CoreSettings";
-import UISettings from "rww/config/values/UISettings";
-import RevertSettings from "rww/config/values/RevertSettings";
-import AccessibilitySettings from "rww/config/values/AccessibilitySettings";
+import CoreSettings from "rww/config/user/values/CoreSettings";
+import UISettings from "rww/config/user/values/UISettings";
+import RevertSettings from "rww/config/user/values/RevertSettings";
+import AccessibilitySettings from "rww/config/user/values/AccessibilitySettings";
 import { isEmptyObject } from "rww/util";
 
 export type ConfigurationSet = Record<string, Setting<any>>;

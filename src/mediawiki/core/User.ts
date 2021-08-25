@@ -12,13 +12,15 @@ import {
     Revision,
     WarningAnalysis,
     WarningLevel,
-    WarningOptions
+    WarningOptions,
+    WarningType
 } from "rww/mediawiki";
 import i18next from "i18next";
 import { PageMissingError } from "rww/errors/MediaWikiErrors";
-import { getHighestWarningLevel, isIPAddress } from "rww/util";
-import { WarningType } from "./Warnings";
-import Section from "rww/mediawiki/Section";
+import { isIPAddress } from "rww/util";
+
+import Section from "rww/mediawiki/core/Section";
+import { highestWarningLevel } from "rww/mediawiki/warn/WarningUtils";
 
 /**
  * The User represents a MediaWiki editor, be it a registered user or an IP address.
@@ -160,7 +162,7 @@ export class User {
                         const content = currentMonthSection.getContent();
 
                         this.warningAnalysis = {
-                            level: getHighestWarningLevel(content),
+                            level: highestWarningLevel(content),
                             notices: content,
                             page: talkPage
                         };

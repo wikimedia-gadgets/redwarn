@@ -12,32 +12,34 @@
 /* Libraries */
 
 import i18next from "i18next";
-import RedWarnStore from "./data/RedWarnStore";
-import RedWarnHooks from "./event/RedWarnHooks";
-import RealTimeRecentChanges from "./integrations/RealTimeRecentChanges";
-import Localization from "./localization/Localization";
-import StyleManager from "./styles/StyleManager";
+import * as RedWarnConstants from "./data/RedWarnConstants";
+import { RW_VERSION } from "./data/RedWarnConstants";
+import * as Util from "./util";
 import Dependencies from "./data/Dependencies";
+import Localization from "./localization/Localization";
+import Log from "rww/data/RedWarnLog";
+import MediaWikiNotificationContent from "rww/ui/MediaWikiNotificationContent";
+import RealTimeRecentChanges from "./integrations/RealTimeRecentChanges";
+import RedWarnHooks from "./event/RedWarnHooks";
+import RedWarnLocalDB from "rww/data/database/RedWarnLocalDB";
+import RedWarnStore from "./data/RedWarnStore";
 import RedWarnUI from "./ui/RedWarnUI";
-import MediaWiki, {
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
+import StyleManager from "./styles/StyleManager";
+import TamperProtection from "./tamper/TamperProtection";
+import UIInjectors from "rww/ui/injectors/UIInjectors";
+import {
     ClientUser,
+    MediaWiki,
     MediaWikiAPI,
     MediaWikiURL,
+    Revert,
     RevertSpeedup,
     User,
     WarningManager,
     Watch
 } from "./mediawiki";
-import * as RedWarnConstants from "./data/RedWarnConstants";
-import { RW_VERSION } from "./data/RedWarnConstants";
-import * as Util from "./util";
-import { Configuration } from "./config";
-import TamperProtection from "./tamper/TamperProtection";
-import UIInjectors from "rww/ui/injectors/UIInjectors";
-import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
-import Log from "rww/data/RedWarnLog";
-import RedWarnWikiConfiguration from "rww/data/wikiconfig/RedWarnWikiConfiguration";
-import MediaWikiNotificationContent from "rww/ui/MediaWikiNotificationContent";
+import { Configuration } from "./config/user";
 
 declare global {
     interface Window {
@@ -74,9 +76,9 @@ export default class RedWarn {
     static get MediaWikiAPI(): typeof MediaWikiAPI {
         return MediaWikiAPI;
     }
-    // static get Revert(): typeof Revert {
-    //     return Revert;
-    // }
+    static get Revert(): typeof Revert {
+        return Revert;
+    }
     static get StyleManager(): typeof StyleManager {
         return StyleManager;
     }
@@ -107,7 +109,7 @@ export default class RedWarn {
     static get WikiConfiguration(): typeof RedWarnWikiConfiguration {
         return RedWarnWikiConfiguration;
     }
-    static Database(): RedWarnLocalDB {
+    static get Database(): RedWarnLocalDB {
         return RedWarnLocalDB.i;
     }
 

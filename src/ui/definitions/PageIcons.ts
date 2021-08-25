@@ -2,6 +2,7 @@ import RedWarnStore from "rww/data/RedWarnStore";
 import i18next from "i18next";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import { Page, User, Watch } from "rww/mediawiki";
+import { redirect } from "rww/util";
 
 interface PageIcon {
     id: string;
@@ -141,7 +142,7 @@ const PageIcons: PageIcon[] = [
         icon: "question_answer",
         visible: () => true,
         action() {
-            window.location.href = "https://w.wiki/s6j";
+            redirect("https://w.wiki/s6j", true);
         }
     }
 ];

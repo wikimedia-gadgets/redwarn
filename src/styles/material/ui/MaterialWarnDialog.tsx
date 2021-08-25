@@ -29,14 +29,15 @@ import {
     WarningOptions,
     WarningType
 } from "rww/mediawiki";
-import { isIPAddress, normalize, warningSuffix } from "rww/util";
+import { isIPAddress, normalize } from "rww/util";
 
 import { RW_SIGNATURE } from "rww/data/RedWarnConstants";
 import MaterialIconButton from "./components/MaterialIconButton";
 import RedWarnUI from "rww/ui/RedWarnUI";
 
 import "../css/warnDialog.css";
-import RedWarnWikiConfiguration from "rww/data/wikiconfig/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
+import { warningSuffix } from "rww/mediawiki/warn/WarningUtils";
 
 /**
  * A specific test performed to validate the values of a {@link MaterialWarnDialog}.

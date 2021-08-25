@@ -1,4 +1,4 @@
-import { DiffIconRevertContext } from "rww/mediawiki/Revert";
+import { DiffIconRevertContext } from "rww/mediawiki/revert/Revert";
 import i18next from "i18next";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import { User, WarningManager } from "rww/mediawiki";

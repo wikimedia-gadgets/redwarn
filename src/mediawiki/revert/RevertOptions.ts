@@ -1,10 +1,10 @@
 import i18next from "i18next";
-import type { RevertContext } from "rww/mediawiki/Revert";
-import { RevertContextBase } from "rww/mediawiki/Revert";
-import RedWarnWikiConfiguration from "rww/data/wikiconfig/RedWarnWikiConfiguration";
+import type { RevertContext } from "rww/mediawiki/revert/Revert";
+import { RevertContextBase } from "rww/mediawiki/revert/Revert";
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import { redirect, url } from "rww/util";
 import RedWarnStore from "rww/data/RedWarnStore";
-import { Configuration } from "rww/config";
+import { Configuration } from "rww/config/user";
 import RedWarnUI from "rww/ui/RedWarnUI";
 
 export enum ActionSeverity {

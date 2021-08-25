@@ -1,7 +1,7 @@
 import type { Warning, WarningCategory } from "rww/mediawiki";
 import { Page, SerializedWarningType, WarningManager } from "rww/mediawiki";
-import type { RevertOption } from "rww/data/RevertOptions";
-import { ActionSeverity } from "rww/data/RevertOptions";
+import type { RevertOption } from "rww/mediawiki/revert/RevertOptions";
+import { ActionSeverity } from "rww/mediawiki/revert/RevertOptions";
 import {
     RW_FALLBACK_CONFIG,
     RW_WIKI_CONFIGURATION,

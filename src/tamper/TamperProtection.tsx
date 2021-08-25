@@ -1,6 +1,6 @@
 import { h } from "tsx-dom";
 import i18next from "i18next";
-import { Configuration } from "rww/config";
+import { Configuration } from "rww/config/user";
 import { ClientUser } from "rww/mediawiki";
 import RedWarnUI from "rww/ui/RedWarnUI";
 

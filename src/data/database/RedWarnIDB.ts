@@ -1,5 +1,5 @@
-import RedWarnIDBError from "rww/data/idb/RedWarnIDBError";
-import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
+import RedWarnIDBError from "rww/data/database/RedWarnIDBError";
+import RedWarnIDBObjectStore from "rww/data/database/RedWarnIDBObjectStore";
 import Log from "rww/data/RedWarnLog";
 
 // The `idb` directory is for the IndexedDB wrapper. You might be

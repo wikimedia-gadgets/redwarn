@@ -16,8 +16,8 @@ import {
     MaterialList,
     MaterialListItem
 } from "rww/styles/material/ui/components/MaterialList";
-import { Configuration } from "rww/config";
-import PageIcons from "rww/data/PageIcons";
+import { Configuration } from "rww/config/user";
+import PageIcons from "rww/ui/definitions/PageIcons";
 import "../css/extendedOptions.css";
 import toCSS from "rww/styles/material/util/toCSS";
 

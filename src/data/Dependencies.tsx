@@ -1,8 +1,8 @@
 import { h } from "tsx-dom";
 import { generateId } from "rww/util";
-import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
+import RedWarnLocalDB from "rww/data/database/RedWarnLocalDB";
 import Log from "rww/data/RedWarnLog";
-import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
+import RedWarnIDBObjectStore from "rww/data/database/RedWarnIDBObjectStore";
 import { CachedDependency } from "rww/data/database/RWDBObjectStoreDefinitions";
 
 /*

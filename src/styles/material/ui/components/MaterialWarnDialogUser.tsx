@@ -10,7 +10,6 @@ import RedWarnUI from "rww/ui/RedWarnUI";
 import i18next from "i18next";
 import Bullet from "./Bullet";
 import {
-    articlePath,
     capitalize,
     formatAge,
     generateId,
@@ -23,6 +22,7 @@ import { MaterialWarnDialogChild } from "./MaterialWarnDialogChild";
 import { WarningIcons } from "rww/styles/material/data/WarningIcons";
 import MaterialAlertDialog from "rww/styles/material/ui/MaterialAlertDialog";
 import Log from "rww/data/RedWarnLog";
+import Group from "rww/mediawiki/core/Group";
 
 interface OverlayContentLoading {
     type: "loading";
@@ -51,13 +51,11 @@ function MaterialWarnDialogUserCardAccountGroups({
             <b>Groups:</b>{" "}
             {user.groups
                 .map<JSX.Element>(
-                    (group): JSX.Element => {
+                    (group: Group): JSX.Element => {
                         return (
                             <a
                                 target={group.page && "_blank"}
-                                href={
-                                    group.page && `${articlePath(group.page)}`
-                                }
+                                href={group.page.url}
                             >
                                 {capitalize(group.displayName)}
                             </a>

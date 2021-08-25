@@ -1,6 +1,6 @@
 import { WarningLevel } from "./WarningLevel";
-import type { User } from "rww/mediawiki/User";
-import RedWarnWikiConfiguration from "rww/data/wikiconfig/RedWarnWikiConfiguration";
+import type { User } from "rww/mediawiki/core/User";
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 
 // TODO Move this to wiki-specific definition files.
 // TODO i18n

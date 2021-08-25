@@ -1,16 +1,18 @@
-import RedWarnIDB, { RedWarnIDBUpgradeHandler } from "rww/data/idb/RedWarnIDB";
+import RedWarnIDB, {
+    RedWarnIDBUpgradeHandler
+} from "rww/data/database/RedWarnIDB";
 import {
     RW_DATABASE_NAME,
     RW_DATABASE_VERSION
 } from "rww/data/RedWarnConstants";
-import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
+import RedWarnIDBObjectStore from "rww/data/database/RedWarnIDBObjectStore";
 import {
     CachedDependency,
     CacheTracker,
     LogItem,
     WatchedPage
 } from "rww/data/database/RWDBObjectStoreDefinitions";
-import Group from "rww/mediawiki/Group";
+import Group from "rww/mediawiki/core/Group";
 import Log from "rww/data/RedWarnLog";
 
 /**

@@ -4,7 +4,7 @@ import type {
     WarningLevel,
     WarningLevelSignature
 } from "rww/mediawiki";
-import type { SerializableRevertOption } from "rww/data/RevertOptions";
+import type { SerializableRevertOption } from "rww/mediawiki/revert/RevertOptions";
 
 /**
  * This is a configuration file used by RedWarn to provide wiki-specific

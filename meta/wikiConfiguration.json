@@ -1063,13 +1063,12 @@
         ],
         "requests": {
             "increase": {
-                "page": "Wikipedia:Requests for page protection/Increase",
-                "section": "number, should be optional"
+                "page": "Wikipedia:Requests for page protection/Increase"
             },
             "decrease": {
-                "page": "Wikipedia:Requests for page protection/Decrease",
-                "section": "number, should be optional"
+                "page": "Wikipedia:Requests for page protection/Decrease"
             }
-        }
+        },
+        "reasons": []
     }
 }

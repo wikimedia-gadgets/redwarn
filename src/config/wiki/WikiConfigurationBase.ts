@@ -144,6 +144,10 @@ interface WikiConfigurationBase {
          * Target pages for page protection requests.
          */
         requests: Record<"increase" | "decrease", PageProtectionRequestTarget>;
+        /**
+         * Built-in reasons for page protection.
+         */
+        reasons: string[];
     };
 }
 

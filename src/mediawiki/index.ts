@@ -18,3 +18,4 @@ export * from "./warn/WarningLevel";
 export * from "./warn/Warnings";
 export * from "./protection/PageProtectionRequestTarget";
 export * from "./protection/ProtectionLevel";
+export * from "./protection/ProtectionManager";

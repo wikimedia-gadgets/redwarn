@@ -14,7 +14,7 @@
 import i18next from "i18next";
 import * as RedWarnConstants from "./data/RedWarnConstants";
 import { RW_VERSION } from "./data/RedWarnConstants";
-import * as Util from "./util";
+import * as Utilities from "./util";
 import Dependencies from "./data/Dependencies";
 import Localization from "./localization/Localization";
 import Log from "rww/data/RedWarnLog";
@@ -28,14 +28,12 @@ import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import StyleManager from "./styles/StyleManager";
 import TamperProtection from "./tamper/TamperProtection";
 import UIInjectors from "rww/ui/injectors/UIInjectors";
+import * as MediaWikiClasses from "./mediawiki";
 import {
     ClientUser,
     MediaWiki,
     MediaWikiAPI,
-    MediaWikiURL,
-    Revert,
     RevertSpeedup,
-    User,
     WarningManager,
     Watch
 } from "./mediawiki";
@@ -73,11 +71,8 @@ export default class RedWarn {
     static get i18next(): typeof i18next {
         return i18next;
     }
-    static get MediaWikiAPI(): typeof MediaWikiAPI {
-        return MediaWikiAPI;
-    }
-    static get Revert(): typeof Revert {
-        return Revert;
+    static get MediaWikiClasses(): typeof MediaWikiClasses {
+        return MediaWikiClasses;
     }
     static get StyleManager(): typeof StyleManager {
         return StyleManager;
@@ -88,14 +83,8 @@ export default class RedWarn {
     static get RTRC(): typeof RealTimeRecentChanges {
         return RealTimeRecentChanges;
     }
-    static get Util(): typeof Util {
-        return Util;
-    }
-    static get MediaWikiURL(): typeof MediaWikiURL {
-        return MediaWikiURL;
-    }
-    static get User(): typeof User {
-        return User;
+    static get Utilities(): typeof Utilities {
+        return Utilities;
     }
     static get WarningManager(): typeof WarningManager {
         return WarningManager;

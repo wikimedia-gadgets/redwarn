@@ -1038,7 +1038,7 @@
             {
                 "name": "pending changes protection",
                 "statusName": "pending changes protected",
-                "id": "flaggedrevs"
+                "id": "_flaggedrevs"
             },
             {
                 "name": "semi-protection",

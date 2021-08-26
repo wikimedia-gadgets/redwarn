@@ -208,16 +208,12 @@ export class Page implements SectionContainer {
         page: Page,
         options?: { excludeUser?: User }
     ): Promise<Revision> {
-        const pageIdentifier = page.getIdentifier();
-
         // Returns one revision from one page (the given page).
         const revisionInfoRequest = await MediaWikiAPI.get({
             action: "query",
             format: "json",
             prop: "revisions",
-            [typeof pageIdentifier === "number"
-                ? "pageids"
-                : "titles"]: `${pageIdentifier}`,
+            ...page.getAPIIdentifier(),
             rvprop: ["ids", "comment", "user", "timestamp", "size", "content"],
             rvslots: "main",
             rvexcludeuser: options?.excludeUser?.username ?? undefined
@@ -269,6 +265,18 @@ export class Page implements SectionContainer {
         else if (!this.pageID && !favorTitle) return this.title ?? null;
         else if (!!this.title && favorTitle) return this.title;
         else if (!this.title && favorTitle) return this.pageID ?? null;
+    }
+
+    /**
+     * Get an object with all parameters required for a page when using the API's query module.
+     */
+    getAPIIdentifier(): Record<string, any> {
+        const identifier = this.getIdentifier();
+        return {
+            [typeof identifier === "number"
+                ? "pageids"
+                : "titles"]: `${identifier}`
+        };
     }
 
     /**

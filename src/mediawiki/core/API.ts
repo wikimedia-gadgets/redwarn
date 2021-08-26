@@ -20,7 +20,13 @@ export class MediaWikiAPI {
         ajaxOptions?: AjaxSettings
     ): Promise<JQueryXHR> {
         try {
-            const finalParameters = Object.assign({}, parameters);
+            const finalParameters = Object.assign(
+                {
+                    format: "json",
+                    formatversion: 2
+                },
+                parameters
+            );
             for (const key of Object.keys(finalParameters)) {
                 if (Array.isArray(finalParameters[key]))
                     finalParameters[key] = finalParameters[key].join("|");

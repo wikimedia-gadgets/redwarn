@@ -14,6 +14,7 @@ export class ProtectionManager {
             flaggedrevs?: Record<string, any>;
         } = {};
 
+        // Run requests in parallel.
         await Promise.all([
             (async () => {
                 preload["protection"] = await MediaWikiAPI.get({
@@ -24,16 +25,20 @@ export class ProtectionManager {
                 });
             })(),
             (async () => {
-                preload["flaggedrevs"] = await MediaWikiAPI.get({
-                    action: "query",
-                    list: "logevents",
-                    titles: "",
-                    letype: "stable",
-                    letitle: page.title.getPrefixedText(),
-                    // Get as much stable config changes in case this page has magically been
-                    // moved 500 times.
-                    lelimit: 500
-                });
+                if (
+                    (RedWarnWikiConfiguration.c?.protection?.flaggedrevs ??
+                        false) &&
+                    _flaggedRevs !== false
+                )
+                    preload["flaggedrevs"] = await MediaWikiAPI.get({
+                        action: "query",
+                        list: "logevents",
+                        letype: "stable",
+                        letitle: page.title.getPrefixedText(),
+                        // Get as much stable config changes in case this page has magically been
+                        // moved 500 times.
+                        lelimit: 500
+                    });
             })()
         ]);
 

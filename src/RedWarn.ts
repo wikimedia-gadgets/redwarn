@@ -164,20 +164,17 @@ export default class RedWarn {
     // Verify our MediaWiki installation.
     if (!MediaWiki.mwCheck()) return;
 
-    Log.debug("Initializing local database connection...");
-    // Initialize RedWarn Local Database.
-    await RedWarnLocalDB.i.connect();
-
-    // Create the MediaWiki API connector.
-    await MediaWikiAPI.init();
-
-    Log.debug("Initializing store...");
-    // Initialize RedWarn store.
-    RedWarnStore.initializeStore();
-
-    Log.debug("Loading style definitions...");
-    // Load style definitions first.
-    await StyleManager.initialize();
+    // Static dependency initialization.
+    await Promise.all([
+        // Connect to the Indexed DB database.
+        RedWarnLocalDB.i.connect(),
+        // Initialize the MediaWiki API.
+        MediaWikiAPI.init(),
+        (async () => {
+            RedWarnStore.initializeStore();
+        })(),
+        StyleManager.initialize()
+    ]);
 
     try {
         // Attempt to deserialize the per-wiki configuration.
@@ -195,7 +192,7 @@ export default class RedWarn {
         return;
     }
 
-    // Load the configuration
+    // Load in the configuration file (preloads need to be finished by this point).
     await Configuration.refresh();
 
     // Only do hook calls after style has been set to configuration preference!

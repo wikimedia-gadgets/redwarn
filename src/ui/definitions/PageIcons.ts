@@ -96,6 +96,14 @@ const PageIcons: PageIcon[] = [
         }
     },
     {
+        id: "vandalismStatistics",
+        icon: "auto_graph",
+        visible: () => true,
+        action() {
+            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
+        }
+    },
+    {
         id: "reportAIV",
         icon: "flag",
         visible: isUserspacePage,

@@ -16,6 +16,6 @@ export * from "./util/URL";
 export * from "./util/Watch";
 export * from "./warn/WarningLevel";
 export * from "./warn/Warnings";
-export * from "./protection/PageProtectionRequestTarget";
+export * from "./protection/ProtectionRequestTarget";
 export * from "./protection/ProtectionLevel";
 export * from "./protection/ProtectionManager";

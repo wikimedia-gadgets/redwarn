@@ -1038,37 +1038,43 @@
             {
                 "name": "pending changes protection",
                 "statusName": "pending changes protected",
-                "id": "_flaggedrevs"
+                "id": "_flaggedrevs",
+                "iconURL": "https://w.wiki/3xfd"
             },
             {
                 "name": "semi-protection",
                 "statusName": "semi-protected",
-                "id": "autoconfirmed"
+                "id": "autoconfirmed",
+                "iconURL": "https://w.wiki/3xfe"
             },
             {
                 "name": "extended-confirmed protection",
                 "statusName": "extended-confirmed protected",
-                "id": "extendedconfirmed"
+                "id": "extendedconfirmed",
+                "iconURL": "https://w.wiki/3xff"
             },
             {
                 "name": "template protection",
                 "statusName": "template protected",
-                "id": "templateeditor"
+                "id": "templateeditor",
+                "iconURL": "https://w.wiki/3xfg"
             },
             {
                 "name": "full protection",
                 "statusName": "fully protected",
-                "id": "sysop"
+                "id": "sysop",
+                "iconURL": "https://w.wiki/3xfh"
             }
         ],
         "requests": {
             "increase": {
-                "page": "Wikipedia:Requests for page protection/Increase"
+                "page": "Wikipedia:Requests for page protection/Increase",
+                "template": "=== [[{{{title}}}]] ===\n* {{pagelinks|{{{title}}}}}\n'''{{{level}}}:''' {{{reason}}}"
             },
             "decrease": {
-                "page": "Wikipedia:Requests for page protection/Decrease"
+                "page": "Wikipedia:Requests for page protection/Decrease",
+                "template": "=== [[{{{title}}}]] ===\n* {{pagelinks|{{{title}}}}}\n'''{{{level}}}:''' {{{reason}}}"
             }
-        },
-        "reasons": []
+        }
     }
 }

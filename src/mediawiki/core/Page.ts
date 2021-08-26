@@ -221,7 +221,7 @@ export class Page implements SectionContainer {
 
         if (revisionInfoRequest["query"]["pages"]["-1"]) {
             if (!!revisionInfoRequest["query"]["pages"]["-1"]["missing"])
-                throw new PageMissingError(page);
+                throw new PageMissingError({ page: page });
             if (!!revisionInfoRequest["query"]["pages"]["-1"]["invalid"])
                 throw new PageInvalidError(
                     page,
@@ -387,7 +387,7 @@ export class Page implements SectionContainer {
             if (existingSection == null) {
                 if (!revision && typeof options.section === "number") {
                     // Immediate failure since a non-existent page has no sections.
-                    throw new PageMissingError(this);
+                    throw new PageMissingError({ page: this });
                 } else if (typeof options.section === "number") {
                     existingSection = revisionSections.filter(
                         (s) => s.index === options.section

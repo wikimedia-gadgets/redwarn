@@ -22,7 +22,7 @@ import toCSS from "rww/styles/material/util/toCSS";
 import { Configuration } from "rww/config/user/Configuration";
 
 export default class MaterialExtendedOptions extends RWUIExtendedOptions {
-    show(): Promise<string> {
+    show(): Promise<void> {
         const styleStorage = getMaterialStorage();
         registerMaterialDialog(this);
         const dialog = upgradeMaterialDialog(this);
@@ -30,7 +30,7 @@ export default class MaterialExtendedOptions extends RWUIExtendedOptions {
         return new Promise((resolve) => {
             dialog.listen("MDCDialog:closed", async () => {
                 styleStorage.dialogTracker.delete(this.id);
-                resolve(this._result);
+                resolve();
             });
         });
     }

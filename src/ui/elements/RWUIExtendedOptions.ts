@@ -1,7 +1,7 @@
 import { RWUIDialog, RWUIDialogProperties } from "rww/ui/elements/RWUIDialog";
 
-export class RWUIExtendedOptions extends RWUIDialog {
-    show(): Promise<string> {
+export class RWUIExtendedOptions extends RWUIDialog<void> {
+    show(): Promise<void> {
         throw new Error("Attempted to call abstract method");
     }
     render(): HTMLDialogElement {
@@ -13,6 +13,4 @@ export class RWUIExtendedOptions extends RWUIDialog {
     constructor(readonly props: RWUIDialogProperties = {}) {
         super(props);
     }
-
-    protected _result: string;
 }

@@ -38,6 +38,7 @@ import RedWarnUI from "rww/ui/RedWarnUI";
 import "../css/warnDialog.css";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import { warningSuffix } from "rww/mediawiki/warn/WarningUtils";
+import toCSS from "rww/styles/material/util/toCSS";
 
 /**
  * A specific test performed to validate the values of a {@link MaterialWarnDialog}.
@@ -155,7 +156,8 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                   }''`
                 : ""
         }}} ${RW_SIGNATURE}${
-            isIPAddress(this.mwdUser.MWDUser.user.username)
+            isIPAddress(this.mwdUser.MWDUser.user.username) &&
+            RedWarnWikiConfiguration.c.warnings?.ipAdvice != null
                 ? RedWarnWikiConfiguration.c.warnings.ipAdvice
                 : ""
         }`;
@@ -367,29 +369,17 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                 }}
                 id={this.id}
             >
-                <MaterialDialogTitle
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        fontWeight: "200",
-                        fontSize: "45px",
-                        lineHeight: "48px",
-                        borderStyle: "none",
-                        marginTop: "4vh"
-                    }}
-                    tabIndex={0}
-                >
+                <MaterialDialogTitle tabIndex={0}>
                     <span style={{ float: "left" }}>
                         {this.props.title ??
                             i18next.t("ui:warn.title").toString()}
                     </span>
                 </MaterialDialogTitle>
                 <MaterialDialogContent
-                    style={{
-                        height: "400px",
+                    style={toCSS({
                         overflowY: "auto",
                         overflowX: "hidden"
-                    }}
+                    })}
                 >
                     {this.mwdUser ??
                         (this.mwdUser = (

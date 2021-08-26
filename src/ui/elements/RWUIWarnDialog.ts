@@ -17,7 +17,7 @@ export interface RWUIWarnDialogProps extends RWUIDialogProperties {
     autoWarn?: boolean;
 }
 
-export class RWUIWarnDialog extends RWUIDialog {
+export class RWUIWarnDialog extends RWUIDialog<WarningOptions | null> {
     show(): Promise<WarningOptions> {
         throw new Error("Attempted to call abstract method");
     }
@@ -30,6 +30,4 @@ export class RWUIWarnDialog extends RWUIDialog {
     constructor(readonly props: RWUIWarnDialogProps) {
         super(props);
     }
-
-    protected _result: WarningOptions | null;
 }

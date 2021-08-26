@@ -27,7 +27,7 @@ export interface RWUIIFrameDialogProps extends RWUIDialogProperties {
     disableRedWarn?: boolean;
 }
 
-export class RWUIIFrameDialog extends RWUIDialog {
+export class RWUIIFrameDialog extends RWUIDialog<void> {
     show(): Promise<any> {
         throw new Error("Attempted to call abstract method");
     }

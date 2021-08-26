@@ -1,7 +1,7 @@
 /**
  * A page or section where page protection requests will be added.
  */
-export interface PageProtectionRequestTarget {
+export interface ProtectionRequestTarget {
     /**
      * The target page to add to.
      *
@@ -9,10 +9,9 @@ export interface PageProtectionRequestTarget {
      */
     page: string;
     /**
-     * The target section ID to add to. If each request adds a new level
-     * 2 heading, this value should be set to "new".
+     * The target section ID to add to.
      */
-    section?: number | "new";
+    section?: number;
     /**
      * The wikitext to add to the target page/section.
      */
@@ -21,7 +20,7 @@ export interface PageProtectionRequestTarget {
      * Whether or not the content will be appended or prepended to the
      * target page/section.
      *
-     * @default "prepend"
+     * @default "append"
      */
     method?: "append" | "prepend";
     /**
@@ -30,5 +29,5 @@ export interface PageProtectionRequestTarget {
      *
      * @default 0
      */
-    extraLines: 0;
+    extraLines?: number;
 }

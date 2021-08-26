@@ -14,7 +14,7 @@ export interface RWUISelectionDialogProps extends RWUIDialogProperties {
     items: RWUISelectionDialogItem[];
 }
 
-export class RWUISelectionDialog extends RWUIDialog {
+export class RWUISelectionDialog extends RWUIDialog<string> {
     show(): Promise<string> {
         throw new Error("Attempted to call abstract method");
     }
@@ -27,6 +27,4 @@ export class RWUISelectionDialog extends RWUIDialog {
     constructor(readonly props: RWUISelectionDialogProps) {
         super(props);
     }
-
-    protected _result: string;
 }

@@ -3,6 +3,7 @@ import i18next from "i18next";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import { Page, User, Watch } from "rww/mediawiki";
 import { redirect } from "rww/util";
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 
 interface PageIcon {
     id: string;
@@ -47,7 +48,8 @@ const PageIcons: PageIcon[] = [
         id: "warn",
         icon: "report",
         default: true,
-        visible: isUserspacePage,
+        visible: () =>
+            isUserspacePage() && RedWarnWikiConfiguration.c.warnings != null,
         async action() {
             new RedWarnUI.WarnDialog({
                 autoWarn: true,
@@ -61,7 +63,8 @@ const PageIcons: PageIcon[] = [
         id: "protection",
         icon: "lock",
         default: true,
-        visible: () => !isSpecialPage(),
+        visible: () =>
+            !isSpecialPage() && RedWarnWikiConfiguration.c.protection != null,
         action() {
             RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
         }

@@ -64,7 +64,7 @@ export interface RWUIDialogProperties extends RWUIElementProperties {
  * differs from normal elements, which are usually inserted using
  * {@link document.appendChild}, as the dialog is shown using {@link show} instead.
  */
-export abstract class RWUIDialog extends RWUIElement {
+export abstract class RWUIDialog<T> extends RWUIElement {
     /**
      * A unique identifier for this dialog, to allow multiple active dialogs.
      */
@@ -75,23 +75,24 @@ export abstract class RWUIDialog extends RWUIElement {
      */
     element?: HTMLDialogElement;
 
-    protected _result: any;
+    protected _result: T;
     /**
      * The result of the dialog.
      */
-    get result() {
+    get result(): T {
         return this._result;
     }
 
-    protected constructor(readonly props: RWUIDialogProperties) {
+    protected constructor(readonly props: RWUIDialogProperties = {}) {
         super();
-        this.id = `dialog__${props.id || random(16)}`;
+        this.id = `dialog__${props.id ?? random(16)}`;
+        this.props = props;
     }
 
     /**
      * Shows the dialog as a modal.
      */
-    abstract show(): Promise<any>;
+    abstract show(): Promise<T>;
 
     /**
      * Renders the dialog. This only creates the dialog body, and does not show

@@ -128,4 +128,55 @@ export class ProtectionManager {
 
         return entries;
     }
+
+    /**
+     * Get the protection reasons for this wiki. This may come from the configuration
+     * for this wiki or MediaWiki:Protect-dropdown, if unavailable.
+     */
+    static async getProtectionReasons(
+        page?: Page
+    ): Promise<Record<string, string[]>> {
+        let configReasons =
+            RedWarnWikiConfiguration.c.protection?.reasons ?? {};
+
+        if (Array.isArray(configReasons))
+            configReasons = { Uncategorized: configReasons };
+
+        for (const [k, v] of Object.entries(configReasons)) {
+            // Remove category if it has no contents.
+            if (v.length === 0) delete configReasons[k];
+        }
+
+        if (Object.values(configReasons).length === 0) {
+            // No reasons detected. Fallback to MediaWiki.
+            const messageRequest = await MediaWikiAPI.getMessage(
+                ["Protect-dropdown"],
+                {
+                    amenableparser: true,
+                    amtitle: page?.title.getPrefixedText() ?? undefined
+                }
+            );
+
+            const message = messageRequest["Protect-dropdown"].trim();
+            // Parse the message.
+            let header = "Uncategorized";
+            for (const line of message.split("\n")) {
+                if (/^\*(?!\*)\s*/.test(line)) {
+                    header = line.slice(1).trim();
+                } else if (/^\*{2}\s*/.test(line)) {
+                    // Only add it in if the bullet actual contains something.
+                    const trimmed = line.slice(2).trim();
+                    if (trimmed.length > 0) {
+                        if (configReasons[header] == null)
+                            configReasons[header] = [];
+
+                        configReasons[header].push(trimmed);
+                    }
+                }
+                // else, an unrecognizable line. Dispose.
+            }
+        }
+
+        return configReasons;
+    }
 }

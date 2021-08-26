@@ -1,8 +1,6 @@
 import StyleManager from "rww/styles/StyleManager";
-import { UserAccount } from "rww/mediawiki";
 import { RWUIToast } from "./elements/RWUIToast";
 import { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
-import { RevertContext } from "rww/mediawiki/revert/Revert";
 import { RWUIPageIcons } from "rww/ui/elements/RWUIPageIcons";
 import { RWUIAlertDialog } from "rww/ui/elements/RWUIAlertDialog";
 import { RWUIInputDialog } from "rww/ui/elements/RWUIInputDialog";
@@ -10,6 +8,7 @@ import { RWUISelectionDialog } from "rww/ui/elements/RWUISelectionDialog";
 import { RWUIIFrameDialog } from "rww/ui/elements/RWUIIFrameDialog";
 import { RWUIWarnDialog } from "rww/ui/elements/RWUIWarnDialog";
 import { RWUIExtendedOptions } from "rww/ui/elements/RWUIExtendedOptions";
+import { RWUIProtectionRequestDialog } from "rww/ui/elements/RWUIProtectionRequestDialog";
 
 /**
  * Redirect class for easy access. UI elements of RedWarn are also created here.
@@ -31,6 +30,10 @@ export default class RedWarnUI {
     static get WarnDialog(): typeof RWUIWarnDialog {
         return StyleManager.activeStyle.classMap.rwWarnDialog;
     }
+    /** Alias of {@link StyleManager.activeStyle.classMap.rwProtectionRequestDialog} */
+    static get ProtectionRequestDialog(): typeof RWUIProtectionRequestDialog {
+        return StyleManager.activeStyle.classMap.rwProtectionRequestDialog;
+    }
     /** Alias of {@link StyleManager.activeStyle.classMap.rwIFrameDialog} */
     static get IFrameDialog(): typeof RWUIIFrameDialog {
         return StyleManager.activeStyle.classMap.rwIFrameDialog;
@@ -47,14 +50,10 @@ export default class RedWarnUI {
     static get PageIcons(): typeof RWUIPageIcons {
         return StyleManager.activeStyle.classMap.rwPageIcons;
     }
+    /** Alias of {@link StyleManager.activeStyle.classMap.rwExtendedOptions} */
     static get ExtendedOptions(): typeof RWUIExtendedOptions {
         return StyleManager.activeStyle.classMap.rwExtendedOptions;
     }
-}
-
-export interface ExtendedOptionsContext {
-    user?: UserAccount;
-    rollbackContext?: RevertContext;
 }
 
 /**
@@ -65,6 +64,7 @@ export const RWUIElements = {
     [RWUIInputDialog.elementName]: RWUIInputDialog,
     [RWUISelectionDialog.elementName]: RWUISelectionDialog,
     [RWUIWarnDialog.elementName]: RWUIWarnDialog,
+    [RWUIProtectionRequestDialog.elementName]: RWUIProtectionRequestDialog,
     [RWUIIFrameDialog.elementName]: RWUIIFrameDialog,
     [RWUIToast.elementName]: RWUIToast,
     [RWUIDiffIcons.elementName]: RWUIDiffIcons,

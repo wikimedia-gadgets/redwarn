@@ -153,12 +153,11 @@ export default class Section {
                     ? []
                     : ["wikitext"])
             ]
+        }).catch((e) => {
+            throw MediaWikiAPI.error(e, {
+                [context instanceof Page ? "page" : "revision"]: context
+            });
         });
-
-        // TODO: error
-        if (sectionsRequest["errors"]) {
-            throw MediaWikiAPI.error(sectionsRequest);
-        }
 
         if (
             sectionsRequest["parse"] == null ||

@@ -1,6 +1,6 @@
 import type {
-    PageProtectionRequestTarget,
     ProtectionLevel,
+    ProtectionRequestTarget,
     SerializedWarning,
     SerializedWarningCategories,
     Warning,
@@ -143,11 +143,12 @@ interface WikiConfigurationBase {
         /**
          * Target pages for page protection requests.
          */
-        requests: Record<"increase" | "decrease", PageProtectionRequestTarget>;
+        requests: Record<"increase" | "decrease", ProtectionRequestTarget>;
         /**
-         * Built-in reasons for page protection.
+         * Built-in reasons for page protection. If this is not supplied, the wiki's protection
+         * options will be used instead (MediaWiki:Protect-dropdown).
          */
-        reasons: string[];
+        reasons?: string[] | Record<string, string[]>;
     };
 }
 

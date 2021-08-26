@@ -272,7 +272,6 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
             );
         }
         this._active = value;
-        console.log(this.elementSet.root, value, this._active);
     }
 
     lastUser: User;
@@ -410,12 +409,6 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
     }
 
     renderMain(): JSX.Element {
-        console.log(
-            this.active,
-            !!this.user,
-            this.user.isPopulated(),
-            !!this.user.warningAnalysis
-        );
         this.elementSet.main = (
             <div class={"rw-mdc-warnDialog-user--main"}>
                 {

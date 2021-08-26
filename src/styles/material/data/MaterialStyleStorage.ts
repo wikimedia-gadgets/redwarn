@@ -3,7 +3,7 @@ import { RWUIDialog, RWUIDialogID } from "rww/ui/elements/RWUIDialog";
 import { StyleStorage } from "rww/styles/Style";
 import MaterialToast from "rww/styles/material/ui/MaterialToast";
 
-export class MaterialDialogTrackMap extends Map<RWUIDialogID, RWUIDialog> {
+export class MaterialDialogTrackMap extends Map<RWUIDialogID, RWUIDialog<any>> {
     domRemove(key: RWUIDialogID): void {
         const remove = (i = 0) => {
             const dialogElement = this.get(key).element;
@@ -34,7 +34,10 @@ export class MaterialDialogTrackMap extends Map<RWUIDialogID, RWUIDialog> {
 
 export class MaterialStyleStorage extends StyleStorage {
     // Caches
-    dialogTracker: Map<RWUIDialogID, RWUIDialog> = new MaterialDialogTrackMap();
+    dialogTracker: Map<
+        RWUIDialogID,
+        RWUIDialog<any>
+    > = new MaterialDialogTrackMap();
     toastQueue: MaterialToast[] = [];
 }
 

@@ -1,6 +1,14 @@
 import { Page } from "rww/mediawiki/core/Page";
 import { Revision } from "rww/mediawiki";
 
+/**
+ * Additional data for MediaWiki errors.
+ */
+export interface MediaWikiErrorData {
+    page?: Page;
+    revision?: Revision;
+}
+
 export class GenericMediaWikiError extends Error {
     readonly code: string;
 
@@ -20,18 +28,21 @@ export class GenericMediaWikiError extends Error {
 
 export class PageMissingError extends GenericMediaWikiError {
     readonly code = "missingtitle";
-    constructor(readonly page: Page, message?: string) {
+    constructor(readonly data: MediaWikiErrorData, message?: string) {
         super(
             message ??
-                `The page "${page.title.getPrefixedText()}" could not be found.`
+                `The page "${data.page.title.getPrefixedText()}" could not be found.`
         );
     }
 }
 
 export class RevisionMissingError extends GenericMediaWikiError {
     readonly code = "nosuchrevid";
-    constructor(readonly revisionID: number, message?: string) {
-        super(message ?? `There is no revision with ID ${revisionID}.`);
+    constructor(readonly data: MediaWikiErrorData, message?: string) {
+        super(
+            message ??
+                `There is no revision with ID ${data.revision.revisionID}.`
+        );
     }
 }
 

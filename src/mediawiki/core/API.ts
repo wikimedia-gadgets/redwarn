@@ -5,9 +5,11 @@ import RedWarnLocalDB from "rww/data/database/RedWarnLocalDB";
 import Log from "rww/data/RedWarnLog";
 import {
     GenericMediaWikiError,
+    MediaWikiErrorData,
     SpecializedMediaWikiErrors
 } from "rww/errors/MediaWikiErrors";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
+import { ApiQueryAllMessagesParams } from "types-mediawiki/api_params";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
 
@@ -19,62 +21,74 @@ export class MediaWikiAPI {
         parameters: Record<string, any>,
         ajaxOptions?: AjaxSettings
     ): Promise<JQueryXHR> {
-        try {
-            const finalParameters = Object.assign(
-                {
-                    format: "json",
-                    formatversion: 2
-                },
-                parameters
-            );
-            for (const key of Object.keys(finalParameters)) {
-                if (Array.isArray(finalParameters[key]))
-                    finalParameters[key] = finalParameters[key].join("|");
-            }
-
-            return await MediaWikiAPI.api.get(finalParameters, ajaxOptions);
-        } catch (error) {
-            Log.error(
-                `Error occured while running MediaWiki API get call.`,
-                error
-            );
-            throw error;
+        const finalParameters = Object.assign(
+            {
+                format: "json",
+                formatversion: 2
+            },
+            parameters
+        );
+        for (const key of Object.keys(finalParameters)) {
+            if (Array.isArray(finalParameters[key]))
+                finalParameters[key] = finalParameters[key].join("|");
         }
+
+        return MediaWikiAPI.api
+            .get(finalParameters, ajaxOptions)
+            .catch((code, result) => {
+                Log.warn(
+                    `Error occured while running MediaWiki API get call. Make sure this is handled!`,
+                    code
+                );
+                throw result;
+            });
     }
 
     static async post(
         parameters: Record<string, any>,
         ajaxOptions?: AjaxSettings
     ): Promise<JQueryXHR> {
-        try {
-            const finalParameters = Object.assign({}, parameters);
-            for (const key of Object.keys(finalParameters)) {
-                if (Array.isArray(finalParameters[key]))
-                    finalParameters[key] = finalParameters[key].join("|");
-            }
-
-            return await MediaWikiAPI.api.post(finalParameters, ajaxOptions);
-        } catch (error) {
-            Log.error(
-                `Error occured while running MediaWiki API get call.`,
-                error
-            );
-            throw error;
+        const finalParameters = Object.assign({}, parameters);
+        for (const key of Object.keys(finalParameters)) {
+            if (Array.isArray(finalParameters[key]))
+                finalParameters[key] = finalParameters[key].join("|");
         }
+
+        return MediaWikiAPI.api
+            .post(finalParameters, ajaxOptions)
+            .catch((code, result) => {
+                Log.warn(
+                    `Error occured while running MediaWiki API get call. Make sure this is handled!`,
+                    code
+                );
+                throw result;
+            });
     }
 
     static async postWithEditToken(
         parameters: Record<string, any>,
         ajaxOptions?: AjaxSettings
     ): Promise<JQueryXHR> {
+        return MediaWikiAPI.api
+            .postWithEditToken(parameters, ajaxOptions)
+            .catch((code, result) => {
+                Log.warn(
+                    `Error occured while running MediaWiki API get call. Make sure this is handled!`,
+                    code
+                );
+                throw result;
+            });
+    }
+
+    static async getMessage(
+        messages: string[],
+        ajaxOptions?: ApiQueryAllMessagesParams
+    ): Promise<Record<string, any>> {
         try {
-            return await MediaWikiAPI.api.postWithEditToken(
-                parameters,
-                ajaxOptions
-            );
+            return await MediaWikiAPI.api.getMessages(messages, ajaxOptions);
         } catch (error) {
-            Log.error(
-                `Error occured while running MediaWiki API postWithEditToken call.`,
+            Log.warn(
+                `Error occured while running MediaWiki API getMessage call. Make sure this is handled!`,
                 error
             );
             throw error;
@@ -230,9 +244,11 @@ export class MediaWikiAPI {
      * Get errors from a MediaWiki response.
      *
      * @param apiResponse The response from the MediaWiki Action API.
+     * @param data Additional data for the error.
      */
     public static error(
-        apiResponse: Record<string, any>
+        apiResponse: Record<string, any>,
+        data?: MediaWikiErrorData
     ): GenericMediaWikiError | AggregateError {
         if (!apiResponse["errors"] && !!apiResponse["error"]) {
             // Legacy format. This should be avoided.
@@ -244,7 +260,7 @@ export class MediaWikiAPI {
             for (const error of apiResponse["errors"]) {
                 errors.push(
                     SpecializedMediaWikiErrors[error["code"]] != null
-                        ? new SpecializedMediaWikiErrors[error["code"]](error)
+                        ? new SpecializedMediaWikiErrors[error["code"]](data)
                         : new GenericMediaWikiError(error)
                 );
             }

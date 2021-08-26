@@ -30,4 +30,13 @@ export interface ProtectionLevel {
      * @default true
      */
     requestable?: boolean;
+    /**
+     * URL to an image representing this protection level. This will override the
+     * icon of the protection level.
+     */
+    iconURL?: string;
+    /**
+     * The CSS color for this protection level. Overriden if an iconURL is provided.
+     */
+    color?: string;
 }

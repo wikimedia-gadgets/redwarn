@@ -9,6 +9,9 @@ import WikiConfiguration from "./WikiConfiguration";
 import WikiConfigurationRaw from "./WikiConfigurationRaw";
 import updateWikiConfiguration from "rww/config/wiki/updateWikiConfiguration";
 import WikiConfigurationDeserializers from "rww/config/wiki/WikiConfigurationDeserializers";
+import i18next from "i18next";
+import RedWarnUI from "rww/ui/RedWarnUI";
+import MediaWikiNotificationContent from "rww/ui/MediaWikiNotificationContent";
 
 /**
  * This class handles every single contact with the RedWarn per-wiki
@@ -40,6 +43,14 @@ export default class RedWarnWikiConfiguration {
                     RW_FALLBACK_CONFIG
                 ).then((req) => req.json());
             } catch (e) {
+                if (e.message.includes("NetworkError")) {
+                    new RedWarnUI.Dialog({
+                        content: MediaWikiNotificationContent(
+                            i18next.t("mediawiki:error.wikiConfigBlocked")
+                        ),
+                        actions: [{ data: `${i18next.t("ui:close")}` }]
+                    });
+                }
                 // TODO: Proper errors
                 throw new AggregateError(
                     "Failed to get on-wiki configuration file.",

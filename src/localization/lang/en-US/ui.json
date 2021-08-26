@@ -198,5 +198,9 @@
         "vandalTooltip": "Quick Rollback Vandalism",
         "rollbackLink": "rb",
         "rollbackTooltip": "Rollback"
+    },
+    "protectionRequest": {
+        "title": "Request Page Protection",
+        "ok": "Request"
     }
 }

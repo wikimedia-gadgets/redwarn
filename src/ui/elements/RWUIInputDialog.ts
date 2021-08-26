@@ -20,7 +20,7 @@ export interface RWUIInputDialogProps extends RWUIDialogProperties {
     actions?: OKCancelActions;
 }
 
-export class RWUIInputDialog extends RWUIDialog {
+export class RWUIInputDialog extends RWUIDialog<string> {
     show(): Promise<string> {
         throw new Error("Attempted to call abstract method");
     }
@@ -33,6 +33,4 @@ export class RWUIInputDialog extends RWUIDialog {
     constructor(readonly props: RWUIInputDialogProps) {
         super(props);
     }
-
-    protected _result: string;
 }

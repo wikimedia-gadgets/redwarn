@@ -1,7 +1,6 @@
 import { h } from "tsx-dom";
 import { MDCSelect } from "@material/select/component";
 import { generateId } from "rww/util";
-import Log from "rww/data/RedWarnLog";
 import {
     MaterialList,
     MaterialListDivider,
@@ -135,7 +134,6 @@ export default function <T>(
 
     const select = new MDCSelect(element);
 
-    Log.trace(valueSet);
     if (props.onChange)
         select.listen("MDCSelect:change", () => {
             props.onChange(select.selectedIndex, valueSet[select.value]);

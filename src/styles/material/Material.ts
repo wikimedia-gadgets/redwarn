@@ -18,6 +18,7 @@ import MaterialIFrameDialog from "rww/styles/material/ui/MaterialIFrameDialog";
 import "./css/globals.css";
 import MaterialPageIcons from "rww/styles/material/ui/MaterialPageIcons";
 import MaterialExtendedOptions from "rww/styles/material/ui/MaterialExtendedOptions";
+import MaterialProtectionRequestDialog from "rww/styles/material/ui/MaterialProtectionRequestDialog";
 
 const MaterialStyle: Style = {
     name: "material",
@@ -76,6 +77,7 @@ const MaterialStyle: Style = {
         rwInputDialog: MaterialInputDialog,
         rwSelectionDialog: MaterialSelectionDialog,
         rwWarnDialog: MaterialWarnDialog,
+        rwProtectionRequestDialog: MaterialProtectionRequestDialog,
         rwIFrameDialog: MaterialIFrameDialog,
         rwToast: MaterialToast,
         rwDiffIcons: MaterialDiffIcons,
@@ -90,7 +92,7 @@ const MaterialStyle: Style = {
 
 export default MaterialStyle;
 
-export function upgradeMaterialDialogButtons(dialog: RWUIDialog): void {
+export function upgradeMaterialDialogButtons(dialog: RWUIDialog<any>): void {
     dialog.element
         .querySelectorAll("button")
         .forEach((el) => new MDCRipple(el).initialize());
@@ -105,7 +107,7 @@ type WritableKeys<T> = {
 }[keyof T]; // https://stackoverflow.com/a/49579497/12573645
 
 export function upgradeMaterialDialog(
-    dialog: RWUIDialog,
+    dialog: RWUIDialog<any>,
     options?: Map<WritableKeys<MDCDialog>, any>
 ): MDCDialog {
     upgradeMaterialDialogButtons(dialog);
@@ -122,7 +124,7 @@ export function upgradeMaterialDialog(
     return mdcDialog;
 }
 
-export function registerMaterialDialog(dialog: RWUIDialog): void {
+export function registerMaterialDialog(dialog: RWUIDialog<any>): void {
     getMaterialStorage().dialogTracker.set(dialog.id, dialog);
     document.body.appendChild(dialog.render());
 }

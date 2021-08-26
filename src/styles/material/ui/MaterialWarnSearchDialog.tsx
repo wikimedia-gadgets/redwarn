@@ -243,7 +243,7 @@ function MaterialWarnSearchDialogWarnings(props: {
     );
 }
 
-export default class MaterialWarnSearchDialog extends RWUIDialog {
+export default class MaterialWarnSearchDialog extends RWUIDialog<Warning> {
     public constructor(props: MaterialWarnSearchDialogProperties) {
         super(props);
         this.props.width = props.width ?? "80vw";

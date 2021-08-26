@@ -20,7 +20,7 @@ export interface RWUIAlertDialogProps extends RWUIDialogProperties {
     preformattedContent?: string;
 }
 
-export class RWUIAlertDialog extends RWUIDialog {
+export class RWUIAlertDialog extends RWUIDialog<string> {
     show(): Promise<string> {
         throw new Error("Attempted to call abstract method");
     }
@@ -33,6 +33,4 @@ export class RWUIAlertDialog extends RWUIDialog {
     constructor(readonly props: RWUIAlertDialogProps) {
         super(props);
     }
-
-    protected _result: string;
 }

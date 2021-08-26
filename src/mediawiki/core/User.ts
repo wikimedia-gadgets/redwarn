@@ -270,6 +270,7 @@ export class User {
             [WarningType.SingleIssue]: 0
         }[options.warning.type];
         await options.targetUser.appendToUserTalk(
+            // Adds in one empty line.
             `\r\n\r\n${options.warningText}`,
             {
                 comment: i18next.t("mediawiki:summaries.warn", {

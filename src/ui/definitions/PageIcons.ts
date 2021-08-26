@@ -66,7 +66,7 @@ const PageIcons: PageIcon[] = [
         visible: () =>
             !isSpecialPage() && RedWarnWikiConfiguration.c.protection != null,
         action() {
-            RedWarnUI.Toast.quickShow({ content: i18next.t("ui:unfinished") });
+            new RedWarnUI.ProtectionRequestDialog().show();
         }
     },
     {

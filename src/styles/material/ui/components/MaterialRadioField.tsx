@@ -11,6 +11,8 @@ export interface MaterialRadioFieldProps<T> {
     name?: string;
     class?: string | string[];
     onChange?: (value: T, radio: MaterialRadioElement<T>) => void;
+    /** Whether or not this field goes vertical or horizontal. */
+    direction?: "vertical" | "horizontal";
 }
 
 export type MaterialRadioFieldElement<T> = JSX.Element & {
@@ -28,7 +30,7 @@ export default function <T>(
                     name: props.name ?? radioFieldId
                 })}
             >
-                {radio.children}
+                {radio.children ?? `${radio.value}`}
             </MaterialRadio>
         ) as MaterialRadioElement<T>;
     });
@@ -36,7 +38,9 @@ export default function <T>(
     const element = (
         <div
             id={radioFieldId}
-            class={`mdc-form-field ${
+            class={`mdc-form-field rw-mdc-radiofield--${
+                props.direction ?? "horizontal"
+            } ${
                 props.class
                     ? Array.isArray(props.class)
                         ? props.class.join(" ")

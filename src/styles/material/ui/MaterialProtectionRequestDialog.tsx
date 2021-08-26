@@ -15,6 +15,14 @@ import MaterialDialog, {
 import { h } from "tsx-dom";
 import i18next from "i18next";
 import MaterialButton from "rww/styles/material/ui/components/MaterialButton";
+import toCSS from "rww/styles/material/util/toCSS";
+import MaterialRadioField, {
+    MaterialRadioFieldElement,
+    MaterialRadioFieldProps
+} from "rww/styles/material/ui/components/MaterialRadioField";
+import "../css/protectionRequestDialog.css";
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
+import { capitalize } from "rww/util";
 
 export default class MaterialProtectionRequestDialog extends RWUIProtectionRequestDialog {
     page: Page = RedWarnStore.currentPage;
@@ -27,6 +35,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
 
     elementSet: Partial<{
         dialogConfirmButton: JSX.Element;
+        levels: MaterialRadioFieldElement<ProtectionLevel>;
     }> = {};
 
     show(): Promise<ProtectionRequest> {
@@ -57,6 +66,55 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
         });
     }
 
+    renderLevels(): MaterialRadioFieldElement<ProtectionLevel> {
+        const radioButtons: MaterialRadioFieldProps<
+            ProtectionLevel
+        >["radios"] = [];
+
+        for (const level of [
+            Object.assign(RedWarnWikiConfiguration.c.protection.deprotect, {
+                id: null
+            }),
+            ...RedWarnWikiConfiguration.c.protection.levels
+        ]) {
+            if (level.requestable === false) continue;
+
+            radioButtons.push({
+                children: (
+                    <div
+                        style={toCSS({
+                            display: "inline-block"
+                        })}
+                    >
+                        {level.iconURL ? (
+                            <img alt={level.name} src={level.iconURL} />
+                        ) : (
+                            <span
+                                class="material-icons"
+                                style={toCSS({
+                                    color: level.color ?? "black"
+                                })}
+                            >
+                                lock
+                            </span>
+                        )}
+                        <span class={"rw-mdc-protectionLevels--name"}>
+                            {capitalize(level.name)}
+                        </span>
+                    </div>
+                ),
+                value: level
+            });
+        }
+
+        return (
+            <MaterialRadioField<ProtectionLevel>
+                radios={radioButtons}
+                direction="vertical"
+            />
+        ) as MaterialRadioFieldElement<ProtectionLevel>;
+    }
+
     render(): HTMLDialogElement {
         this.element = (
             <MaterialDialog
@@ -74,30 +132,26 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                 }}
                 id={this.id}
             >
-                <MaterialDialogTitle
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        fontWeight: "200",
-                        fontSize: "45px",
-                        lineHeight: "48px",
-                        borderStyle: "none",
-                        marginTop: "4vh"
-                    }}
-                    tabIndex={0}
-                >
+                <MaterialDialogTitle tabIndex={0}>
                     <span style={{ float: "left" }}>
                         {this.props.title ??
                             i18next.t("ui:protectionRequest.title").toString()}
                     </span>
                 </MaterialDialogTitle>
                 <MaterialDialogContent
-                    style={{
-                        height: "400px",
+                    style={toCSS({
                         overflowY: "auto",
                         overflowX: "hidden"
-                    }}
-                ></MaterialDialogContent>
+                    })}
+                >
+                    <div>
+                        <div class={"rw-mdc-protectionRequestDialog--title"}>
+                            {this.page.title.getPrefixedText()}
+                        </div>
+                        <p>Determining page protection level...</p>
+                    </div>
+                    {(this.elementSet.levels = this.renderLevels())}
+                </MaterialDialogContent>
                 <MaterialDialogActions>
                     <MaterialButton dialogAction="cancel">
                         {i18next.t<string>("ui:okCancel.cancel")}

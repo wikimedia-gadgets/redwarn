@@ -135,6 +135,10 @@ interface WikiConfigurationBase {
          */
         flaggedrevs?: boolean;
         /**
+         * Display information for deprotection.
+         */
+        deprotect?: Omit<ProtectionLevel, "id">;
+        /**
          * Levels of protection available on this wiki. If this is not supplied, protection
          * level detection will be disabled and no option will be provided to target specific
          * protection levels when requesting page protection.

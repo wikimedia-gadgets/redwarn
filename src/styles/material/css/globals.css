@@ -2,6 +2,16 @@
     width: 100%;
 }
 
+.mdc-form-field.rw-mdc-radiofield--vertical {
+    flex-direction: column;
+    align-items: start !important;
+}
+
+.mdc-form-field.rw-mdc-radiofield--horizontal {
+    flex-direction: row;
+    justify-content: start;
+}
+
 @keyframes dummy {
     from {
     }
@@ -13,6 +23,12 @@
 [data-append-event],
 .mdc-icon-button {
     animation: dummy 0s;
+}
+
+.mdc-radio + label {
+    vertical-align: top;
+    display: inline-block;
+    height: 100%;
 }
 
 .bullet {

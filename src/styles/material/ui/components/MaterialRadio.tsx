@@ -20,7 +20,7 @@ export default function <T>(
 ): MaterialRadioElement<T> {
     const id = `rwMdcRadio__${generateId()}`;
     const element = (
-        <span data-rw-mdc-tooltip={props.tooltip}>
+        <span class="rw-mdc-radio" data-rw-mdc-tooltip={props.tooltip}>
             <div
                 class={`mdc-radio ${
                     props.checked ? "mdc-radio--checked" : ""

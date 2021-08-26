@@ -1,0 +1,24 @@
+.mdc-dialog .rw-mdc-protectionRequestDialog.mdc-dialog__surface {
+    height: 95vh;
+    max-width: 100vw;
+    width: 45vw;
+}
+
+.rw-mdc-protectionRequestDialog .mdc-radio + label > div {
+    height: 24px;
+    padding: 8px 0;
+}
+
+.rw-mdc-protectionRequestDialog .mdc-radio + label img {
+    height: 24px;
+    width: auto;
+}
+
+.rw-mdc-protectionRequestDialog .mdc-radio + label > div > span + span {
+    vertical-align: top;
+}
+
+.rw-mdc-protectionRequestDialog .rw-mdc-protectionLevels--name {
+    margin-left: 8px;
+    vertical-align: middle;
+}

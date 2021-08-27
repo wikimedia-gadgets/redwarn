@@ -95,31 +95,46 @@ export class ProtectionManager {
                         "$1-$2-$3T$4:$5:$6Z"
                     );
 
-                    entries.push({
-                        type: "_flaggedrevs",
-                        level: level,
-                        expiry:
-                            expiry === "infinity" ? expiry : new Date(expiry)
-                    });
+                    if (expiry !== "infinity" && new Date(expiry) > new Date())
+                        entries.push({
+                            type: "_flaggedrevs",
+                            level: level,
+                            expiry:
+                                expiry === "infinity"
+                                    ? expiry
+                                    : new Date(expiry)
+                        });
                     break;
                 } else if (event.action === "config") {
                     // `override` is `1` if the stable version is used as the display version.
-                    const level = (<string>(
-                        Object.values(event.params).find((v: string) =>
-                            v.startsWith("autoreview=")
-                        )
-                    )).slice(11);
-                    const expiry = (<string>(
-                        Object.values(event.params).find((v: string) =>
-                            v.startsWith("expiry=")
-                        )
-                    )).slice(7);
-                    entries.push({
-                        type: "_flaggedrevs",
-                        level: level,
-                        expiry:
-                            expiry === "infinity" ? expiry : new Date(expiry)
-                    });
+                    const level =
+                        event.params["autoreview"] ??
+                        (<string>(
+                            Object.values(event.params).find((v: string) =>
+                                v.startsWith("autoreview=")
+                            )
+                        )).slice(11);
+                    const expiry = (
+                        event.params["expiry"] ??
+                        (<string>(
+                            Object.values(event.params).find((v: string) =>
+                                v.startsWith("expiry=")
+                            )
+                        )).slice(7)
+                    ).replace(
+                        /(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/g,
+                        "$1-$2-$3T$4:$5:$6Z"
+                    );
+
+                    if (expiry !== "infinity" && new Date(expiry) > new Date())
+                        entries.push({
+                            type: "_flaggedrevs",
+                            level: level,
+                            expiry:
+                                expiry === "infinity"
+                                    ? expiry
+                                    : new Date(expiry)
+                        });
                     break;
                 }
                 // Move to next log event if action === "move_stable" (page moved).

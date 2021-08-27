@@ -31,3 +31,9 @@ interface FlaggedRevsProtectionEntry extends ProtectionEntryBase {
 
 type ProtectionEntry = MediaWikiProtectionEntry | FlaggedRevsProtectionEntry;
 export default ProtectionEntry;
+
+export function isFlaggedRevsProtectionEntry(
+    entry: ProtectionEntry
+): entry is FlaggedRevsProtectionEntry {
+    return entry.type === "_flaggedrevs";
+}

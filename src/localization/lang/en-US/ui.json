@@ -201,6 +201,23 @@
     },
     "protectionRequest": {
         "title": "Request Page Protection",
-        "ok": "Request"
+        "ok": "Request",
+        "page": {
+            "label": "Target page",
+            "change": "Change the target page",
+            "loadingText": "Loading protection information...",
+            "inputSubmit": "Target this page",
+            "inputCancel": "Cancel"
+        },
+        "info": {
+            "unprotected": "Page is not protected.",
+            "cascaded": "cascaded",
+            "cascading": "cascading",
+            "note": " ({{detail}})",
+            "detailed": "{{statusName}} until {{date}}{{note}}",
+            "detailed_indefinite": "Indefinitely {{statusName}}{{note}}",
+            "fallback": "{{type}} protected against non-{{level}} users until {{date}}{{note}}",
+            "fallback_indefinite": "Indefinitely {{type}} against for non-{{level}} users{{note}}"
+        }
     }
 }

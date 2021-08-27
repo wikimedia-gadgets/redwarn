@@ -5,6 +5,7 @@ import { MDCTextField } from "@material/textfield";
 import { MDCTextFieldCharacterCounter } from "@material/textfield/character-counter";
 import { MDCTextFieldIcon } from "@material/textfield/icon";
 import { MDCTextFieldHelperText } from "@material/textfield/helper-text";
+import toCSS from "rww/styles/material/util/toCSS";
 
 interface MaterialTextInputProps extends BaseProps {
     id?: string;
@@ -45,9 +46,9 @@ export default function (props: MaterialTextInputProps): JSX.Element {
     const element = (
         <span
             data-mdc-textinput={id}
-            style={{
+            style={toCSS({
                 width: props.width ?? "100%"
-            }}
+            })}
             class={props.class}
         >
             <label

@@ -23,9 +23,26 @@ import MaterialRadioField, {
 import "../css/protectionRequestDialog.css";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import { capitalize } from "rww/util";
+import MaterialProtectionRequestDialogPage from "rww/styles/material/ui/components/MaterialProtectionRequestDialogPage";
+import ProtectionEntry from "rww/mediawiki/protection/ProtectionEntry";
 
 export default class MaterialProtectionRequestDialog extends RWUIProtectionRequestDialog {
     page: Page = RedWarnStore.currentPage;
+
+    _protectionInformation: ProtectionEntry[];
+    get protectionInformation(): ProtectionEntry[] {
+        return this._protectionInformation;
+    }
+    set protectionInformation(value: ProtectionEntry[]) {
+        if (value == null && this.elementSet.levels != null) {
+            this.elementSet.levels.disable();
+        } else if (this.elementSet.levels != null) {
+            this.elementSet.levels.enable();
+        }
+
+        this._protectionInformation = value;
+    }
+
     // TODO getter
     level: ProtectionLevel;
     // TODO getter
@@ -36,6 +53,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
     elementSet: Partial<{
         dialogConfirmButton: JSX.Element;
         levels: MaterialRadioFieldElement<ProtectionLevel>;
+        titleSelect: ReturnType<typeof MaterialProtectionRequestDialogPage>;
     }> = {};
 
     show(): Promise<ProtectionRequest> {
@@ -85,6 +103,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                         style={toCSS({
                             display: "inline-block"
                         })}
+                        class={"rw-mdc-prd-protectionLevel"}
                     >
                         {level.iconURL ? (
                             <img alt={level.name} src={level.iconURL} />
@@ -95,7 +114,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                                     color: level.color ?? "black"
                                 })}
                             >
-                                lock
+                                {level.id === null ? "lock_open" : "lock"}
                             </span>
                         )}
                         <span class={"rw-mdc-protectionLevels--name"}>
@@ -111,6 +130,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
             <MaterialRadioField<ProtectionLevel>
                 radios={radioButtons}
                 direction="vertical"
+                disabled
             />
         ) as MaterialRadioFieldElement<ProtectionLevel>;
     }
@@ -144,12 +164,18 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                         overflowX: "hidden"
                     })}
                 >
-                    <div>
-                        <div class={"rw-mdc-protectionRequestDialog--title"}>
-                            {this.page.title.getPrefixedText()}
-                        </div>
-                        <p>Determining page protection level...</p>
-                    </div>
+                    {
+                        (this.elementSet.titleSelect = (
+                            <MaterialProtectionRequestDialogPage
+                                label={i18next.t(
+                                    "ui:protectionRequest.page.label"
+                                )}
+                                parent={this}
+                            />
+                        ) as ReturnType<
+                            typeof MaterialProtectionRequestDialogPage
+                        >)
+                    }
                     {(this.elementSet.levels = this.renderLevels())}
                 </MaterialDialogContent>
                 <MaterialDialogActions>

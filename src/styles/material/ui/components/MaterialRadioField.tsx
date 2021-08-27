@@ -13,10 +13,13 @@ export interface MaterialRadioFieldProps<T> {
     onChange?: (value: T, radio: MaterialRadioElement<T>) => void;
     /** Whether or not this field goes vertical or horizontal. */
     direction?: "vertical" | "horizontal";
+    disabled?: boolean;
 }
 
 export type MaterialRadioFieldElement<T> = JSX.Element & {
     MDCRadios: MaterialRadioElement<T>[];
+    enable: () => void;
+    disable: () => void;
 };
 
 export default function <T>(
@@ -27,7 +30,8 @@ export default function <T>(
         return (
             <MaterialRadio<T>
                 {...Object.assign(radio, {
-                    name: props.name ?? radioFieldId
+                    name: props.name ?? radioFieldId,
+                    disabled: props.disabled ?? false
                 })}
             >
                 {radio.children ?? `${radio.value}`}
@@ -62,6 +66,12 @@ export default function <T>(
     });
 
     return Object.assign(element, {
-        MDCRadios: radios
+        MDCRadios: radios,
+        enable() {
+            radios.forEach((v) => v.enable());
+        },
+        disable() {
+            radios.forEach((v) => v.disable());
+        }
     });
 }

@@ -31,6 +31,14 @@
     height: 100%;
 }
 
+.mdc-list .mdc-list-group__subheader {
+    margin: 0;
+    padding: 2px 16px;
+    background-color: #ddd;
+    color: #000;
+    font-weight: bold;
+}
+
 .bullet {
     margin: 0 0.5em;
 }

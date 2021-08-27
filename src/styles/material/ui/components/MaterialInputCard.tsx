@@ -178,7 +178,7 @@ export default abstract class MaterialInputCard {
                     ...(this.props.class ?? [])
                 )}
             >
-                {(this.elementSet.main = <span />)}
+                {(this.elementSet.main = <div class="rw-mdc-inputCard-main" />)}
                 {(this.elementSet.input = this.renderInput())}
                 {(this.elementSet.loading = this.renderLoading())}
             </div>

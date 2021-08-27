@@ -36,6 +36,9 @@ export class MaterialProtectionRequestDialogPage extends MaterialInputCard {
         this.parent.protectionInformation = await ProtectionManager.getProtectionInformation(
             this.parent.page
         );
+        this.parent.protectionReasons = await ProtectionManager.getProtectionReasons(
+            this.parent.page
+        );
 
         // Turn information into elements.
         const protectionEntryElements: JSX.Element[] = [];

@@ -25,9 +25,28 @@ import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import { capitalize } from "rww/util";
 import MaterialProtectionRequestDialogPage from "rww/styles/material/ui/components/MaterialProtectionRequestDialogPage";
 import ProtectionEntry from "rww/mediawiki/protection/ProtectionEntry";
+import { MaterialTextInputComponents } from "rww/styles/material/ui/components/MaterialTextInput";
+import MaterialSelect, {
+    MaterialSelectElement,
+    MaterialSelectItem
+} from "rww/styles/material/ui/components/MaterialSelect";
 
 export default class MaterialProtectionRequestDialog extends RWUIProtectionRequestDialog {
     page: Page = RedWarnStore.currentPage;
+
+    _protectionReasons: Record<string, any>;
+    set protectionReasons(reasons: Record<string, string[]>) {
+        this._protectionReasons = reasons;
+
+        if (this.elementSet.reason) {
+            const reasonDropdown = this.renderReasonDropdown();
+            this.elementSet.reason.parentElement.replaceChild(
+                reasonDropdown,
+                this.elementSet.reason
+            );
+            this.elementSet.reason = reasonDropdown;
+        }
+    }
 
     _protectionInformation: ProtectionEntry[];
     get protectionInformation(): ProtectionEntry[] {
@@ -38,6 +57,30 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
             this.elementSet.levels.disable();
         } else if (this.elementSet.levels != null) {
             this.elementSet.levels.enable();
+
+            // Automatically select and disable the original value.
+            if (!value.some((v) => v.type === "edit")) {
+                for (const radio of this.elementSet.levels.MDCRadios) {
+                    if (radio.radioValue.id === null) {
+                        radio.MDCRadio.checked = true;
+                        radio.MDCRadio.disabled = true;
+                    }
+                }
+            } else {
+                for (const entry of value) {
+                    if (
+                        entry.type === "edit" ||
+                        entry.type === "_flaggedrevs"
+                    ) {
+                        for (const radio of this.elementSet.levels.MDCRadios) {
+                            if (radio.radioValue.id === entry.level) {
+                                radio.MDCRadio.checked = true;
+                                radio.MDCRadio.disabled = true;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         this._protectionInformation = value;
@@ -54,6 +97,11 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
         dialogConfirmButton: JSX.Element;
         levels: MaterialRadioFieldElement<ProtectionLevel>;
         titleSelect: ReturnType<typeof MaterialProtectionRequestDialogPage>;
+        reason: MaterialSelectElement<string>;
+        additionalInformation: {
+            element: JSX.Element;
+            components: MaterialTextInputComponents;
+        };
     }> = {};
 
     show(): Promise<ProtectionRequest> {
@@ -135,6 +183,48 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
         ) as MaterialRadioFieldElement<ProtectionLevel>;
     }
 
+    renderReasonDropdown(): MaterialSelectElement<string> {
+        const items: MaterialSelectItem<string>[] = [];
+
+        // Blank (other reason)
+        items.push({
+            label: "",
+            value: null,
+            type: "action"
+        });
+        if (this._protectionReasons) {
+            for (const [key, entries] of Object.entries(
+                this._protectionReasons
+            )) {
+                items.push({
+                    type: "header",
+                    label: key
+                });
+                for (const entry of entries) {
+                    items.push({
+                        label: entry,
+                        value: entry,
+                        type: "action"
+                    });
+                }
+            }
+        }
+
+        const el: MaterialSelectElement<string> = (
+            <MaterialSelect<string>
+                label={i18next.t("ui:protectionRequest.reasons")}
+                items={items}
+                onChange={(i, v) => {
+                    this.reason = v;
+                }}
+                class={"rw-mdc-prd-reason"}
+                required
+            />
+        ) as MaterialSelectElement<string>;
+        el.MDCSelect.disabled = this._protectionReasons == null;
+        return el;
+    }
+
     render(): HTMLDialogElement {
         this.element = (
             <MaterialDialog
@@ -142,7 +232,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                     "class":
                         "rw-mdc-protectionRequestDialog mdc-dialog__surface",
                     "style": {
-                        width: this.props.width ?? "50vw",
+                        width: this.props.width ?? "70vw",
                         height: "95vh"
                     },
                     "aria-modal": true,
@@ -170,13 +260,17 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                                 label={i18next.t(
                                     "ui:protectionRequest.page.label"
                                 )}
+                                value={RedWarnStore.currentPage.title.getPrefixedText()}
                                 parent={this}
                             />
                         ) as ReturnType<
                             typeof MaterialProtectionRequestDialogPage
                         >)
                     }
-                    {(this.elementSet.levels = this.renderLevels())}
+                    <div class={"rw-mdc-prd-options"}>
+                        {(this.elementSet.reason = this.renderReasonDropdown())}
+                        {(this.elementSet.levels = this.renderLevels())}
+                    </div>
                 </MaterialDialogContent>
                 <MaterialDialogActions>
                     <MaterialButton dialogAction="cancel">

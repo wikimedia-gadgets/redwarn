@@ -169,16 +169,6 @@
     align-items: center;
 }
 
-.rw-mdc-warnDialog-reason
-    .rw-mdc-warnDialog-reason--dropdown
-    .mdc-list-group__subheader {
-    margin: 0;
-    padding: 2px 16px;
-    background-color: #ddd;
-    color: #000;
-    font-weight: bold;
-}
-
 .rw-mdc-warnDialog-reason .mdc-select {
     width: calc(100% - 56px); /* IconButton width + 8px margin */
 }

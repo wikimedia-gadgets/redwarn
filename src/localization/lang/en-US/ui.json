@@ -218,6 +218,7 @@
             "detailed_indefinite": "Indefinitely {{statusName}}{{note}}",
             "fallback": "{{type}} protected against non-{{level}} users until {{date}}{{note}}",
             "fallback_indefinite": "Indefinitely {{type}} against for non-{{level}} users{{note}}"
-        }
+        },
+        "reasons": "Reason"
     }
 }

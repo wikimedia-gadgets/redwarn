@@ -7,6 +7,7 @@ import {
     MaterialListItem,
     MaterialListSubheader
 } from "rww/styles/material/ui/components/MaterialList";
+import classMix from "rww/styles/material/util/classMix";
 
 export interface MaterialSelectDivider {
     type: "divider";
@@ -36,6 +37,7 @@ export interface MaterialSelectProps<T> {
     onChange?: (index: number, value: T) => void;
     onKeyDown?: (event: KeyboardEvent) => void;
     required?: boolean;
+    class?: string;
 }
 
 export type MaterialSelectElement<T> = JSX.Element & {
@@ -56,9 +58,12 @@ export default function <T>(
 
     const element = (
         <div
-            class={`mdc-select mdc-select--outlined${
-                props.required ? " mdc-select--required" : ""
-            }`}
+            class={classMix(
+                "mdc-select",
+                "mdc-select--outlined",
+                props.required ? "mdc-select--required" : false,
+                props.class
+            )}
         >
             <div
                 class="mdc-select__anchor"

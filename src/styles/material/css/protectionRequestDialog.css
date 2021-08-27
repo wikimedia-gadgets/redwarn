@@ -17,6 +17,10 @@
     position: relative;
 }
 
+.rw-mdc-protectionRequestDialog .mdc-radio--disabled + label {
+    color: gray;
+}
+
 .rw-mdc-prd-protectionLevel img {
     height: 24px;
     width: auto;
@@ -50,4 +54,14 @@
 
 .rw-mdc-prd-protectionInfo {
     margin-top: 16px;
+}
+
+.rw-mdc-prd-reason {
+    display: block;
+    width: 100%;
+    margin: 16px 0;
+}
+
+.rw-mdc-prd-reason .mdc-menu {
+    max-height: 275px !important;
 }

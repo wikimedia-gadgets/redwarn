@@ -680,13 +680,27 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                         dialogEngine.dialog.showModal();
                     } else {
                         // Success!
-                        if (callback != null) { callback(); return; }; // callback and stop if set, else..
+                        // Check if adding to the watchlist is enabled (!0)
+                        if (rw.config.rwWatchTime !== 0) {
+                            // Add page to watchlist
+                            rw.info.watchPage("User talk:" + user, rw.config.rwWatchTime, wCb => {
+                                // Was the page added to the watchlist successfully?
+                                if (wCb != false || wCb != null) {
+                                    rw.visuals.toast.show("Page successfully added to watchlist");
+                                } else {
+                                    rw.visuals.toast.show("Sorry, there was an error adding this page to your watchlist.");
+                                }
+                                // Regardless, continue..
 
-                        // Redirect to complete page
-                        let reloadNeeded = window.location.href.includes(rw.wikiBase + "/wiki/User_talk:" + encodeURIComponent(user)); // if we are already on the talk page we need to refresh as this would just change the hash
-                        redirect(rw.wikiBase + "/wiki/User_talk:" + encodeURIComponent(user) + "#noticeApplied-" + dt.edit.newrevid + "-" + dt.edit.oldrevid); // go to talk page
-                        if (reloadNeeded) { location.reload(); }
-                        // We done
+                                if (callback != null) { callback(); return; }; // callback and stop if set, else..
+
+                                // Redirect to complete page
+                                let reloadNeeded = window.location.href.includes(rw.wikiBase + "/wiki/User_talk:" + encodeURIComponent(user)); // if we are already on the talk page we need to refresh as this would just change the hash
+                                redirect(rw.wikiBase + "/wiki/User_talk:" + encodeURIComponent(user) + "#noticeApplied-" + dt.edit.newrevid + "-" + dt.edit.oldrevid); // go to talk page
+                                if (reloadNeeded) { location.reload(); }
+                                // We done
+                            });
+                        }
                     }
                 });
             };
@@ -960,5 +974,27 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                 rw.info.changeWatch.active = false;
             }
         }
+    },
+
+    /**
+     * Adds a page to the user's watchlist
+     *
+     * @param {string} page Page title
+     * @param {string} expiry Relative natural language expiry (e.g. "1 week")
+     * @param {function} callback callback(successful) Bool of API result
+     * @method watchPage
+     * @extends rw.info
+     */
+    "watchPage": (page, expiry, callback) => {
+        // https://www.mediawiki.org/wiki/API:Watch
+        // MediawikiJS api
+        new mw.Api().postWithToken( 'watch', { action: 'watch', titles: page, format: 'json', expiry: expiry } ).done( ( data ) => {
+            if (data.errors == null || data.errors.length < 1) {
+                callback(true);
+            } else {
+                console.error(data);
+                callback(false);
+            }
+        } );
     }
 };

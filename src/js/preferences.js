@@ -230,6 +230,20 @@ rw.preferences = {
                     }
                 },
 
+                // Add user talk page to watchlist
+                "rwWatchTime" : {
+                    "optionTitle" : "Watch Time",
+                    "supportingText": "Change how long RedWarn watches a page for after leaving a warning",
+
+                    // Config options
+                    "options" : { 
+                        "Disable (default)*" : 0,
+                        "Indefinite": "indefinite",
+                        "1 day": "1 day",
+                        "1 week": "1 week",
+                        "1 month": "1 month"
+                    }
+                },
 
                 // developer safe mode
                 "debugMode" : {

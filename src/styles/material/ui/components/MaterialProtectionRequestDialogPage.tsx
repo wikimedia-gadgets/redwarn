@@ -66,7 +66,7 @@ export class MaterialProtectionRequestDialogPage extends MaterialInputCard {
             protectionEntryElements.push(
                 <div
                     style={toCSS({
-                        display: "inline-block"
+                        display: "block"
                     })}
                     class={"rw-mdc-prd-protectionLevel"}
                 >

@@ -8,6 +8,10 @@ const mwChecks = {
     },
     user: () => {
         return mw.user.getName() !== null;
+    },
+    skin: () => {
+        // Minerva is unsupported as of now. Disable.
+        return mw.config.get("skin") !== "minerva";
     }
 };
 

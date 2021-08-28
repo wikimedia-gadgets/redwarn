@@ -6,6 +6,7 @@ import { MDCTextFieldCharacterCounter } from "@material/textfield/character-coun
 import { MDCTextFieldIcon } from "@material/textfield/icon";
 import { MDCTextFieldHelperText } from "@material/textfield/helper-text";
 import toCSS from "rww/styles/material/util/toCSS";
+import classMix from "rww/styles/material/util/classMix";
 
 interface MaterialTextInputProps extends BaseProps {
     id?: string;
@@ -20,6 +21,7 @@ interface MaterialTextInputProps extends BaseProps {
     suffix?: string;
     width?: string;
     outlined?: boolean;
+    area?: boolean;
     autofocus?: boolean;
     required?: boolean;
 }
@@ -44,27 +46,21 @@ const MaterialTextInputTrack = new Map<
 export default function (props: MaterialTextInputProps): JSX.Element {
     const id = props.id ?? generateId(8);
     const element = (
-        <span
-            data-mdc-textinput={id}
-            style={toCSS({
-                width: props.width ?? "100%"
-            })}
-            class={props.class}
-        >
+        <span data-mdc-textinput={id} class={props.class}>
             <label
-                class={`rw-mdc-full-width mdc-text-field ${
+                style={toCSS({
+                    width: props.width ?? "100%"
+                })}
+                class={classMix(
+                    "rw-mdc-full-width",
+                    "mdc-text-field",
                     props.outlined
                         ? " mdc-text-field--outlined"
-                        : " mdc-text-field--filled"
-                }${
-                    (props.leadingIcon &&
-                        " mdc-text-field--with-leading-icon") ??
-                    ""
-                }${
-                    (props.trailingIcon &&
-                        " mdc-text-field--with-trailing-icon") ??
-                    ""
-                }`}
+                        : " mdc-text-field--filled",
+                    props.leadingIcon && "mdc-text-field--with-leading-icon",
+                    props.trailingIcon && "mdc-text-field--with-trailing-icon",
+                    props.area && "mdc-text-field--textarea"
+                )}
             >
                 {props.outlined ? (
                     <span class="mdc-notched-outline">
@@ -101,27 +97,50 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                         {props.leadingIcon.icon}
                     </i>
                 )}
-                <input
-                    type="text"
-                    class="mdc-text-field__input"
-                    id={`${id}_input`}
-                    {...(props.helperText && {
-                        "aria-controls": `${id}_helper`,
-                        "aria-describedby": `${id}_helper`
-                    })}
-                    {...(props.defaultText && {
-                        value: props.defaultText
-                    })}
-                    {...(props.maxCharacterCount && {
-                        maxLength: props.maxCharacterCount
-                    })}
-                    {...(props.autofocus && {
-                        autofocus: true
-                    })}
-                    {...(props.required && {
-                        autofocus: true
-                    })}
-                />
+                {!!props.area ? (
+                    <textarea
+                        class="mdc-text-field__input"
+                        id={`${id}_input`}
+                        {...(props.helperText && {
+                            "aria-controls": `${id}_helper`,
+                            "aria-describedby": `${id}_helper`
+                        })}
+                        {...(props.defaultText && {
+                            value: props.defaultText
+                        })}
+                        {...(props.maxCharacterCount && {
+                            maxLength: props.maxCharacterCount
+                        })}
+                        {...(props.autofocus && {
+                            autofocus: true
+                        })}
+                        {...(props.required && {
+                            required: true
+                        })}
+                    />
+                ) : (
+                    <input
+                        type="text"
+                        class="mdc-text-field__input"
+                        id={`${id}_input`}
+                        {...(props.helperText && {
+                            "aria-controls": `${id}_helper`,
+                            "aria-describedby": `${id}_helper`
+                        })}
+                        {...(props.defaultText && {
+                            value: props.defaultText
+                        })}
+                        {...(props.maxCharacterCount && {
+                            maxLength: props.maxCharacterCount
+                        })}
+                        {...(props.autofocus && {
+                            autofocus: true
+                        })}
+                        {...(props.required && {
+                            required: true
+                        })}
+                    />
+                )}
                 {props.trailingIcon && (
                     <i
                         class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing"
@@ -172,6 +191,7 @@ export default function (props: MaterialTextInputProps): JSX.Element {
 }
 
 export interface MaterialTextInputComponents {
+    element: JSX.Element;
     textField: MDCTextField;
     characterCounter?: MDCTextFieldCharacterCounter;
     leadingIcon?: MDCTextFieldIcon;
@@ -184,7 +204,7 @@ export interface MaterialTextInputComponents {
  * @param element
  */
 export function MaterialTextInputUpgrade(
-    element: Element
+    element: JSX.Element
 ): MaterialTextInputComponents {
     if (!element.hasAttribute("data-mdc-textinput"))
         throw new Error("Not a valid MaterialTextInput");
@@ -194,6 +214,7 @@ export function MaterialTextInputUpgrade(
     );
     const { props } = trackingObject;
     const components: MaterialTextInputComponents = {
+        element,
         textField: new MDCTextField(element.querySelector(".mdc-text-field"))
     };
     components.textField.initialize();

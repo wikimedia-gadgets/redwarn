@@ -99,3 +99,9 @@
     margin-right: auto;
     padding: 16px 0;
 }
+
+@media (max-width: 1165px) {
+    .rw-mdc-dialog-helperText {
+        display: none;
+    }
+}

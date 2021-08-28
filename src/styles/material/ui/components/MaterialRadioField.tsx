@@ -18,6 +18,7 @@ export interface MaterialRadioFieldProps<T> {
 
 export type MaterialRadioFieldElement<T> = JSX.Element & {
     MDCRadios: MaterialRadioElement<T>[];
+    reset: () => void;
     enable: () => void;
     disable: () => void;
 };
@@ -67,6 +68,10 @@ export default function <T>(
 
     return Object.assign(element, {
         MDCRadios: radios,
+        reset() {
+            radios.forEach((v) => (v.MDCRadio.checked = false));
+            props.onChange(null, null);
+        },
         enable() {
             radios.forEach((v) => v.enable());
         },

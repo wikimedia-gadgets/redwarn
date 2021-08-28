@@ -6,6 +6,7 @@ export default function (rules: Record<string, any>): string {
     const transformedRules: Record<string, any> = {};
 
     for (const [key, value] of Object.entries(rules)) {
+        if (value == null) continue;
         const splitKey = key.split(/(?=[A-Z])/).map((v) => v.toLowerCase());
         transformedRules[splitKey.join("-")] = value;
     }

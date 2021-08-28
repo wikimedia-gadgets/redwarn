@@ -215,6 +215,7 @@ export default abstract class MaterialInputCard {
             this.elementSet.inputBox.components.textField.value = this.value;
         } else this.elementSet.inputCancel.style.display = "none";
         this.state = MaterialInputCardState.Input;
+        this.elementSet.inputBox.components.textField.focus();
     }
 
     /**

@@ -8,7 +8,7 @@ import {
     upgradeMaterialDialog
 } from "rww/styles/material/Material";
 import RedWarnStore from "rww/data/RedWarnStore";
-import { Page, ProtectionLevel } from "rww/mediawiki";
+import { Page, ProtectionLevel, ProtectionManager } from "rww/mediawiki";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
@@ -145,6 +145,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                         for (const radio of this.elementSet.levels.MDCRadios) {
                             if (radio.radioValue.id === entry.level) {
                                 radio.MDCRadio.checked = true;
+                                this._level = radio.radioValue;
                             }
                         }
                         for (const radio of this.elementSet.duration
@@ -235,6 +236,15 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                     } else this._result = null;
 
                     if (!!this._result && this.props.autoRequest) {
+                        ProtectionManager.requestProtection(this._result).then(
+                            () => {
+                                RedWarnUI.Toast.quickShow({
+                                    content: i18next.t(
+                                        "ui:protectionRequest.done"
+                                    )
+                                });
+                            }
+                        );
                     }
 
                     styleStorage.dialogTracker.delete(this.id);
@@ -250,7 +260,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
         >["radios"] = [];
 
         for (const level of [
-            Object.assign(RedWarnWikiConfiguration.c.protection.deprotect, {
+            Object.assign(RedWarnWikiConfiguration.c.protection.unprotect, {
                 id: null
             }),
             ...RedWarnWikiConfiguration.c.protection.levels

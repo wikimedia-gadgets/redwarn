@@ -11,7 +11,7 @@ export interface ProtectionRequestTarget {
     /**
      * The target section ID to add to.
      */
-    section?: number;
+    section?: number | string;
     /**
      * The wikitext to add to the target page/section.
      */
@@ -30,4 +30,14 @@ export interface ProtectionRequestTarget {
      * @default 0
      */
     extraLines?: number;
+}
+
+export function isProtectionRequestTarget(
+    object: any
+): object is ProtectionRequestTarget {
+    return (
+        typeof object === "object" &&
+        typeof object["page"] === "string" &&
+        typeof object["template"] === "string"
+    );
 }

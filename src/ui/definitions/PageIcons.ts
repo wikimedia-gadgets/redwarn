@@ -64,9 +64,14 @@ const PageIcons: PageIcon[] = [
         icon: "lock",
         default: true,
         visible: () =>
-            !isSpecialPage() && RedWarnWikiConfiguration.c.protection != null,
+            !isSpecialPage() &&
+            RedWarnWikiConfiguration.c.protection?.duration?.temporary !=
+                null &&
+            RedWarnWikiConfiguration.c.protection?.duration?.indefinite != null,
         action() {
-            new RedWarnUI.ProtectionRequestDialog().show();
+            new RedWarnUI.ProtectionRequestDialog({
+                autoRequest: true
+            }).show();
         }
     },
     {

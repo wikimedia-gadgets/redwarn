@@ -135,9 +135,16 @@ interface WikiConfigurationBase {
          */
         flaggedrevs?: boolean;
         /**
+         * Text to use for the duration of protection.
+         */
+        duration: {
+            temporary: string;
+            indefinite: string;
+        };
+        /**
          * Display information for deprotection.
          */
-        deprotect?: Omit<ProtectionLevel, "id">;
+        unprotect?: Omit<ProtectionLevel, "id">;
         /**
          * Levels of protection available on this wiki. If this is not supplied, protection
          * level detection will be disabled and no option will be provided to target specific
@@ -147,7 +154,9 @@ interface WikiConfigurationBase {
         /**
          * Target pages for page protection requests.
          */
-        requests: Record<"increase" | "decrease", ProtectionRequestTarget>;
+        requests:
+            | ProtectionRequestTarget
+            | Record<"increase" | "decrease", ProtectionRequestTarget>;
         /**
          * Built-in reasons for page protection. If this is not supplied, the wiki's protection
          * options will be used instead (MediaWiki:Protect-dropdown).

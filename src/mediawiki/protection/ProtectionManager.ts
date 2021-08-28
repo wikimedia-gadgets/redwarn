@@ -1,13 +1,43 @@
 import ProtectionEntry from "rww/mediawiki/protection/ProtectionEntry";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import { MediaWikiAPI } from "../core/API";
-import type { Page } from "rww/mediawiki";
+import {
+    isProtectionRequestTarget,
+    Page,
+    ProtectionRequestTarget
+} from "rww/mediawiki";
+import ProtectionRequest, {
+    ProtectionDuration
+} from "rww/mediawiki/protection/ProtectionRequest";
+import i18next from "i18next";
+import RedWarnUI from "rww/ui/RedWarnUI";
+import { capitalize } from "rww/util";
 
 export class ProtectionManager {
+    private static protectionEntryCache: Map<
+        Page & { flaggedRevs: boolean },
+        ProtectionEntry[]
+    > = new Map();
+
+    /**
+     * Get a page's protection information.
+     *
+     * @param page The page to check.
+     * @param _flaggedRevs Whether or not to check for FlaggedRevs as well (makes an extra HTTP request)
+     * @param fromCache Whether or not to get data from the cache instead.
+     */
     static async getProtectionInformation(
         page: Page,
-        _flaggedRevs?: boolean
+        _flaggedRevs?: boolean,
+        fromCache = false
     ): Promise<ProtectionEntry[]> {
+        const cacheKey = Object.assign(page, {
+            flaggedRevs: _flaggedRevs !== false
+        });
+
+        if (fromCache && ProtectionManager.protectionEntryCache.has(cacheKey))
+            return ProtectionManager.protectionEntryCache.get(cacheKey);
+
         const entries: ProtectionEntry[] = [];
         const preload: {
             protection?: Record<string, any>;
@@ -141,6 +171,8 @@ export class ProtectionManager {
             }
         }
 
+        ProtectionManager.protectionEntryCache.set(cacheKey, entries);
+
         return entries;
     }
 
@@ -193,5 +225,154 @@ export class ProtectionManager {
         }
 
         return configReasons;
+    }
+
+    static buildRequest(
+        request: ProtectionRequest,
+        target: ProtectionRequestTarget
+    ) {
+        // `!== "prepend"` in order to handle `null` cases.
+        const durationText =
+            request.duration === 0
+                ? RedWarnWikiConfiguration.c.protection?.duration?.temporary
+                : RedWarnWikiConfiguration.c.protection?.duration?.indefinite;
+        return (
+            (target.method !== "prepend"
+                ? "\n".repeat((target.extraLines ?? 0) + 2)
+                : "") +
+            target.template
+                .replace(/{{{title}}}/g, request.page.title.getPrefixedText())
+                .replace(/{{{duration}}}/g, durationText)
+                .replace(/{{{level}}}/g, request.level.name)
+                // TODO i18n: RTL support
+                .replace(
+                    /{{{duration\+level}}}/g,
+                    capitalize(
+                        request.level.id == null
+                            ? RedWarnWikiConfiguration.c.protection.unprotect
+                                  .name
+                            : capitalize(
+                                  `${durationText} ${request.level.name}`
+                              )
+                    )
+                )
+                // TODO i18n: RTL support
+                .replace(
+                    /{{{reason}}}/g,
+                    request.reason.length > 0
+                        ? request.additionalInformation.length > 0
+                            ? `${request.reason}. ${request.additionalInformation}`
+                            : `${request.reason}.`
+                        : request.additionalInformation
+                ) +
+            (target.method === "prepend"
+                ? "\n".repeat((target.extraLines ?? 0) + 2)
+                : "")
+        );
+    }
+
+    static async requestProtection(request: ProtectionRequest) {
+        if (
+            isProtectionRequestTarget(
+                RedWarnWikiConfiguration.c.protection?.requests
+            )
+        ) {
+            // Single-target page.
+            const target = RedWarnWikiConfiguration.c.protection.requests;
+            const targetPage = Page.fromTitle(target.page);
+            targetPage.edit(ProtectionManager.buildRequest(request, target), {
+                section: target.section ?? undefined,
+                mode: target.method ?? "append",
+                comment: i18next.t("mediawiki:summaries.protection", {
+                    title: request.page.title.getPrefixedText()
+                })
+            });
+        } else {
+            // Identify if increase/decrease in level.
+            let sourceKey: number, targetKey: number;
+            let sourceDuration: ProtectionDuration;
+            const currentLevel = await ProtectionManager.getProtectionInformation(
+                request.page,
+                true,
+                true
+            );
+            const currentEditLevel = currentLevel.filter(
+                (v) =>
+                    (v.type === "edit" && v.source == null) ||
+                    v.type === "_flaggedrevs"
+            );
+
+            let isIncrease = null;
+            if (currentEditLevel.length === 0) {
+                // Likely unprotected
+                isIncrease = true;
+            } else if (request.level.id == null) {
+                // Likely asking for unprotection
+                isIncrease = false;
+            } else {
+                RedWarnWikiConfiguration.c.protection.levels.forEach(
+                    (level, key) => {
+                        for (const currentLevel of currentEditLevel) {
+                            if (level.id === currentLevel.level) {
+                                sourceKey = key;
+                                sourceDuration =
+                                    currentLevel.expiry === "infinity"
+                                        ? ProtectionDuration.Indefinite
+                                        : ProtectionDuration.Temporary;
+                            }
+                            if (level.id === request.level.id) {
+                                targetKey = key;
+                            }
+                        }
+                    }
+                );
+
+                console.log(currentEditLevel);
+                if (sourceKey != null && targetKey != null) {
+                    isIncrease =
+                        sourceKey < targetKey ||
+                        (sourceKey === targetKey &&
+                            sourceDuration < request.duration);
+                } else {
+                    // Cannot determine if increase or decrease. Request user input.
+                    const dialogResult = await new RedWarnUI.Dialog({
+                        content: `${i18next.t(
+                            "ui:protectionRequest.retarget.text"
+                        )}`,
+                        actions: [
+                            {
+                                data: "decrease",
+                                text: i18next.t(
+                                    "ui:protectionRequest.retarget.decrease"
+                                )
+                            },
+                            {
+                                data: "increase",
+                                text: i18next.t(
+                                    "ui:protectionRequest.retarget.increase"
+                                )
+                            }
+                        ]
+                    }).show();
+                    if (dialogResult == null)
+                        // Cancel.
+                        return;
+                    isIncrease = dialogResult === "increase";
+                }
+            }
+
+            const target = isIncrease
+                ? RedWarnWikiConfiguration.c.protection.requests.increase
+                : RedWarnWikiConfiguration.c.protection.requests.decrease;
+            const targetPage = Page.fromTitle(target.page);
+
+            targetPage.edit(ProtectionManager.buildRequest(request, target), {
+                section: target.section ?? undefined,
+                mode: target.method ?? "append",
+                comment: i18next.t("mediawiki:summaries.protection", {
+                    title: request.page.title.getPrefixedText()
+                })
+            });
+        }
     }
 }

@@ -249,6 +249,12 @@
             "failDetailed_noAdditionalReason": "$t(ui:protectionRequest.validation.fail_noAdditionalReason) Please provide an additional reason, or switch to a provided reason using the dropdown.",
 
             "pass": "No issues were found."
-        }
+        },
+        "retarget": {
+            "text": "RedWarn cannot determine if this is an increase or decrease in protection level. This is likely due to a problem in the RedWarn per-wiki configuration. Please indicate whether or not this request in an increase or decrease in protection level.",
+            "increase": "Increase",
+            "decrease": "Decrease"
+        },
+        "done": "Request filed."
     }
 }

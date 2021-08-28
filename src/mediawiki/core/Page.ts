@@ -380,6 +380,8 @@ export class Page implements SectionContainer {
                 // Replace section option with section title for automatic correction.
                 options.section = options.section.title;
 
+            if (this.sections == null) await this.getSections();
+
             const revision = this.sections[0].revision;
             const revisionSections = this.sections;
 

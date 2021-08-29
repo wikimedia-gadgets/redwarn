@@ -680,6 +680,17 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                         dialogEngine.dialog.showModal();
                     } else {
                         // Success!
+                        
+                        var handleFinish = () => {
+                            if (callback != null) { callback(); return; }; // callback and stop if set, else..
+
+                            // Redirect to complete page
+                            let reloadNeeded = window.location.href.includes(rw.wikiBase + "/wiki/User_talk:" + encodeURIComponent(user)); // if we are already on the talk page we need to refresh as this would just change the hash
+                            redirect(rw.wikiBase + "/wiki/User_talk:" + encodeURIComponent(user) + "#noticeApplied-" + dt.edit.newrevid + "-" + dt.edit.oldrevid); // go to talk page
+                            if (reloadNeeded) { location.reload(); }
+                            // We done
+                        };
+                        
                         // Check if adding to the watchlist is enabled (!0)
                         if (rw.config.rwWatchTime !== 0) {
                             // Add page to watchlist
@@ -691,15 +702,10 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                                     rw.visuals.toast.show("Sorry, there was an error adding this page to your watchlist.");
                                 }
                                 // Regardless, continue..
-
-                                if (callback != null) { callback(); return; }; // callback and stop if set, else..
-
-                                // Redirect to complete page
-                                let reloadNeeded = window.location.href.includes(rw.wikiBase + "/wiki/User_talk:" + encodeURIComponent(user)); // if we are already on the talk page we need to refresh as this would just change the hash
-                                redirect(rw.wikiBase + "/wiki/User_talk:" + encodeURIComponent(user) + "#noticeApplied-" + dt.edit.newrevid + "-" + dt.edit.oldrevid); // go to talk page
-                                if (reloadNeeded) { location.reload(); }
-                                // We done
+                                handleFinish();
                             });
+                        } else {
+                            handleFinish();
                         }
                     }
                 });

@@ -59,7 +59,7 @@ export default function (props: MaterialButtonProperties): JSX.Element {
                 <i
                     class="material-icons mdc-button__icon"
                     aria-hidden="true"
-                    {...(iconColor && { style: { color: iconColor } })}
+                    {...(iconColor && { style: toCSS({ color: iconColor }) })}
                 >
                     {icon}
                 </i>

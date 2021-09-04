@@ -2,7 +2,7 @@ import i18next from "i18next";
 import type { RevertContext } from "rww/mediawiki/revert/Revert";
 import { RevertContextBase } from "rww/mediawiki/revert/Revert";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
-import { redirect, url } from "rww/util";
+import { capitalize, redirect, url } from "rww/util";
 import RedWarnStore from "rww/data/RedWarnStore";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import { Configuration } from "rww/config/user/Configuration";
@@ -108,6 +108,10 @@ export function deserializeRevertOption(
     id: string,
     option: SerializableRevertOption
 ): RevertOption {
+    // TODO: Util for string to enum conversions
+    option.severity = capitalize(
+        option.severity
+    ) as keyof typeof ActionSeverity;
     return Object.assign(option, {
         id,
         severity: ActionSeverity[option.severity]

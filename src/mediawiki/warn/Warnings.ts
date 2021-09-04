@@ -66,7 +66,7 @@ export function getWarningFieldVisibility(
               label?: string;
           }
 ): WarningFieldVisibility {
-    return typeof field === "string" ? field : field.visibility;
+    return typeof field === "string" ? field : field?.visibility ?? "optional";
 }
 
 export interface TieredWarning extends WarningBase {

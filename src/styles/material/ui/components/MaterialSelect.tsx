@@ -1,7 +1,13 @@
 import { h } from "tsx-dom";
 import { MDCSelect } from "@material/select/component";
 import { generateId } from "rww/util";
-import Log from "rww/data/RedWarnLog";
+import {
+    MaterialList,
+    MaterialListDivider,
+    MaterialListItem,
+    MaterialListSubheader
+} from "rww/styles/material/ui/components/MaterialList";
+import classMix from "rww/styles/material/util/classMix";
 
 export interface MaterialSelectDivider {
     type: "divider";
@@ -31,6 +37,7 @@ export interface MaterialSelectProps<T> {
     onChange?: (index: number, value: T) => void;
     onKeyDown?: (event: KeyboardEvent) => void;
     required?: boolean;
+    class?: string;
 }
 
 export type MaterialSelectElement<T> = JSX.Element & {
@@ -51,9 +58,12 @@ export default function <T>(
 
     const element = (
         <div
-            class={`mdc-select mdc-select--outlined${
-                props.required ? " mdc-select--required" : ""
-            }`}
+            class={classMix(
+                "mdc-select",
+                "mdc-select--outlined",
+                props.required ? "mdc-select--required" : false,
+                props.class
+            )}
         >
             <div
                 class="mdc-select__anchor"
@@ -85,8 +95,8 @@ export default function <T>(
             </div>
 
             <div class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth">
-                <ul
-                    class="mdc-list"
+                <MaterialList
+                    initialized={false}
                     role="listbox"
                     aria-hidden="true"
                     aria-orientation="vertical"
@@ -96,51 +106,39 @@ export default function <T>(
                     {props.items.map((item) => {
                         switch (item.type) {
                             case "divider":
-                                return (
-                                    <li
-                                        class="mdc-list-divider"
-                                        role="separator"
-                                    />
-                                );
+                                return <MaterialListDivider />;
                             case "header":
                                 return (
-                                    <li
-                                        class="mdc-list-item mdc-list-header mdc-list-item--disabled"
-                                        role="separator"
-                                    >
+                                    <MaterialListSubheader>
                                         {item.label}
-                                    </li>
+                                    </MaterialListSubheader>
                                 );
                             case "action":
                                 const itemId = generateId();
                                 valueSet[itemId] = item.value;
                                 return (
-                                    <li
-                                        class={`mdc-list-item ${
+                                    <MaterialListItem
+                                        class={
                                             item.selected
                                                 ? " mdc-list-item--selected"
                                                 : ""
-                                        }`}
+                                        }
                                         aria-selected={item.selected ?? "false"}
                                         role="option"
                                         data-value={itemId}
                                     >
-                                        <span class="mdc-list-item__ripple" />
-                                        <span class="mdc-list-item__text">
-                                            {item.label}
-                                        </span>
-                                    </li>
+                                        {item.label}
+                                    </MaterialListItem>
                                 );
                         }
                     })}
-                </ul>
+                </MaterialList>
             </div>
         </div>
     );
 
     const select = new MDCSelect(element);
 
-    Log.trace(valueSet);
     if (props.onChange)
         select.listen("MDCSelect:change", () => {
             props.onChange(select.selectedIndex, valueSet[select.value]);
@@ -162,6 +160,6 @@ export default function <T>(
                 (element.querySelector(
                     `li[data-value="${targetValue[0]}"]`
                 ) as HTMLElement).click();
-        },
+        }
     });
 }

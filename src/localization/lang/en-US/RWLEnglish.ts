@@ -12,14 +12,14 @@ window.RedWarnLanguages.push({
         translators: ["The RedWarn Contributors"],
         license: {
             url: "https://www.apache.org/licenses/LICENSE-2.0.txt",
-            text: "Apache License 2.0",
+            text: "Apache License 2.0"
         },
         version: RW_VERSION,
         links: {
             home: "https://en.wikipedia.org/wiki/Wikpedia:RedWarn",
             license:
-                "https://gitlab.com/redwarn/redwarn-web/-/blob/master/LICENSE",
-        },
+                "https://gitlab.com/redwarn/redwarn-web/-/blob/master/LICENSE"
+        }
     },
     namespaces: {
         common: require("./common.json"),
@@ -27,6 +27,6 @@ window.RedWarnLanguages.push({
         ui: require("./ui.json"),
         misc: require("./misc.json"),
         prefs: require("./prefs.json"),
-        revert: require("./revert.json"),
-    },
+        revert: require("./revert.json")
+    }
 });

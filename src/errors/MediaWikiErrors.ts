@@ -1,4 +1,4 @@
-import { Page } from "rww/mediawiki/Page";
+import { Page } from "rww/mediawiki/core/Page";
 import { Revision } from "rww/mediawiki";
 import RWErrorBase, { RWErrors, RWFormattedError } from "./RWError";
 
@@ -49,5 +49,5 @@ export class GenericAPIError extends RWErrorBase {
 
 export const SpecializedMediaWikiErrors: Record<string, any> = {
     missingtitle: PageMissingError,
-    nosuchrevid: RevisionMissingError,
+    nosuchrevid: RevisionMissingError
 };

@@ -1,0 +1,112 @@
+.mdc-dialog .rw-mdc-protectionRequestDialog.mdc-dialog__surface {
+    height: 95vh;
+    max-width: 100vw;
+    width: 55vw;
+}
+
+.mdc-dialog[data-invalid]
+    .rw-mdc-protectionRequestDialog
+    .rw-mdc-prd-validation,
+.mdc-dialog[data-invalid]
+    .rw-mdc-protectionRequestDialog
+    .rw-mdc-dialog-helperText {
+    display: inline-block;
+}
+
+.rw-mdc-protectionRequestDialog .rw-mdc-prd-validation,
+.rw-mdc-protectionRequestDialog .rw-mdc-dialog-helperText {
+    color: var(--mdc-theme-error);
+    display: none;
+}
+
+.rw-mdc-protectionRequestDialog .mdc-dialog__content {
+    padding-top: 24px !important;
+}
+
+.rw-mdc-protectionRequestDialog .mdc-radio + label > div {
+    height: 24px;
+    padding: 8px 0;
+}
+
+.rw-mdc-protectionRequestDialog .rw-mdc-prd-options {
+    position: relative;
+}
+
+.rw-mdc-protectionRequestDialog .mdc-radio--disabled + label {
+    color: gray;
+}
+
+.rw-mdc-prd-protectionLevel img {
+    height: 24px;
+    width: auto;
+}
+
+.rw-mdc-prd-protectionLevel > span {
+    vertical-align: top;
+}
+
+.rw-mdc-prd-protectionLevel > span + span {
+    vertical-align: middle;
+}
+
+.rw-mdc-prd-protectionLevel + .rw-mdc-prd-protectionLevel {
+    margin-top: 4px;
+}
+
+.rw-mdc-protectionRequestDialog .rw-mdc-protectionLevels--name {
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.rw-mdc-prd-options {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.rw-mdc-prd-options > div {
+    flex: 1;
+}
+
+.rw-mdc-prd-title__title {
+    font-size: xx-large;
+}
+
+.rw-mdc-prd-title__title:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.rw-mdc-prd-protectionInfo {
+    margin-top: 16px;
+}
+
+.rw-mdc-prd-reason {
+    display: block;
+    margin: 16px 0;
+    flex: initial !important;
+}
+
+.rw-mdc-prd-reason,
+.rw-mdc-prd-reason > div {
+    width: 100%;
+}
+
+.rw-mdc-prd-reason .mdc-menu {
+    max-height: 275px !important;
+}
+
+.rw-mdc-prd-duration--label,
+.rw-mdc-prd-duration .rw-mdc-radio .material-icons {
+    margin: 8px 0;
+}
+
+.rw-mdc-prd-duration--label {
+    margin-right: 8px !important;
+    border-right: 1px solid gray;
+    padding-right: 8px;
+}
+
+.rw-mdc-prd-notice {
+    font-size: small;
+    line-height: 1.2em;
+}

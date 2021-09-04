@@ -25,12 +25,6 @@ deps_main:
         refs:
             - master
             - /^dev(-.+)?$/
-        # Only rebuild `node_modules` in case any package
-        # file gets changed.
-        changes:
-            - .gitlab-ci.yml
-            - package.json
-            - package-lock.json
 
 # Perform tests with Jest
 test_jest:

@@ -1,0 +1,1080 @@
+{
+    "configVersion": 1,
+    "wiki": "enwiki",
+    "meta": {
+        "tag": "RedWarn",
+        "link": "[[w:en:WP:RW|RedWarn]]"
+    },
+    "warnings": {
+        "ipAdvice": "{{subst:Shared IP advice}}",
+        "vandalismWarning": "vandalism",
+        "signatures": {
+            "1": [
+                {
+                    "type": "regex",
+                    "source": "\u003C!--\\s*Template:uw-.+?1\\s*--\u003E",
+                    "flags": "gi"
+                }
+            ],
+            "2": [
+                {
+                    "type": "regex",
+                    "source": "\u003C!--\\s*Template:uw-.+?2\\s*--\u003E",
+                    "flags": "gi"
+                }
+            ],
+            "3": [
+                {
+                    "type": "regex",
+                    "source": "\u003C!--\\s*Template:uw-.+?3\\s*--\u003E",
+                    "flags": "gi"
+                }
+            ],
+            "4": [
+                {
+                    "type": "regex",
+                    "source": "\u003C!--\\s*Template:uw-.+?4\\s*--\u003E",
+                    "flags": "gi"
+                }
+            ],
+            "5": [
+                {
+                    "type": "regex",
+                    "source": "\u003C!--\\s*Template:uw-.+?4im\\s*--\u003E",
+                    "flags": "gi"
+                }
+            ]
+        },
+        "categories": {
+            "common": {
+                "label": "Common warnings"
+            },
+            "article": {
+                "label": "Article conduct warnings"
+            },
+            "spam": {
+                "label": "Promotions and spam"
+            },
+            "editors": {
+                "label": "Behavior towards other editors"
+            },
+            "remove": {
+                "label": "Removal of deletion tags"
+            },
+            "other": {
+                "label": "Other"
+            },
+            "remind": {
+                "label": "Reminders"
+            },
+            "policy": {
+                "label": "Policy violation warnings"
+            }
+        },
+        "warnings": {
+            "vandalism": {
+                "name": "Vandalism",
+                "category": "common",
+                "template": "uw-vandalism",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "disruptive": {
+                "name": "Disruptive editing",
+                "category": "common",
+                "template": "uw-disruptive",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "test": {
+                "name": "Editing tests",
+                "category": "common",
+                "template": "uw-test",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3
+                ]
+            },
+            "delete": {
+                "name": "Removal of content, blanking",
+                "category": "common",
+                "template": "uw-delete",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "generic": {
+                "name": "Generic warning (for template series missing level 4)",
+                "category": "common",
+                "template": "uw-generic",
+                "type": "tiered",
+                "levels": [
+                    4
+                ]
+            },
+            "biog": {
+                "name": "Adding unreferenced information about living persons",
+                "category": "article",
+                "template": "uw-biog",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "error": {
+                "name": "Introducing deliberate factual errors",
+                "category": "article",
+                "template": "uw-error",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "genre": {
+                "name": "Frequent or mass changes to genres without consensus or reference",
+                "category": "article",
+                "template": "uw-genre",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "image": {
+                "name": "Image-related vandalism",
+                "category": "article",
+                "template": "uw-image",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "joke": {
+                "name": "Using improper humor",
+                "category": "article",
+                "template": "uw-joke",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "nor": {
+                "name": "Adding original research, including unpublished syntheses of sources",
+                "category": "article",
+                "template": "uw-nor",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "notcensored": {
+                "name": "Censorship of material",
+                "category": "article",
+                "template": "uw-notcensored",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3
+                ]
+            },
+            "own": {
+                "name": "Ownership of articles",
+                "category": "article",
+                "template": "uw-own",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "tdel": {
+                "name": "Removal of maintenance templates",
+                "category": "article",
+                "template": "uw-tdel",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "unsourced": {
+                "name": "Addition of unsourced or improperly cited material",
+                "category": "article",
+                "template": "uw-unsourced",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "advert": {
+                "name": "Using Wikipedia for advertising or promotion",
+                "category": "spam",
+                "template": "uw-advert",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "npov": {
+                "name": "Not adhering to neutral point of view",
+                "category": "spam",
+                "template": "uw-npov",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "paid": {
+                "name": "Paid editing without disclosure under the Wikimedia Terms of Use",
+                "category": "spam",
+                "template": "uw-paid",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "spam": {
+                "name": "Adding spam links",
+                "category": "spam",
+                "template": "uw-spam",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "agf": {
+                "name": "Not assuming good faith",
+                "category": "editors",
+                "template": "uw-agf",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3
+                ]
+            },
+            "harass": {
+                "name": "Harassment of other users",
+                "category": "editors",
+                "template": "uw-harass",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "npa": {
+                "name": "Personal attack directed at a specific editor",
+                "category": "editors",
+                "template": "uw-npa",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "tempabuse": {
+                "name": "Improper use of warning or blocking template",
+                "category": "editors",
+                "template": "uw-tempabuse",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2
+                ]
+            },
+            "afd": {
+                "name": "Removing {{afd}} templates",
+                "category": "remove",
+                "template": "uw-afd",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "blpprod": {
+                "name": "Removing {{blp prod}} templates",
+                "category": "remove",
+                "template": "uw-blpprod",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "idt": {
+                "name": "Removing file deletion tags",
+                "category": "remove",
+                "template": "uw-idt",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "speedy": {
+                "name": "Removing speedy deletion tags",
+                "category": "remove",
+                "template": "uw-speedy",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "attempt": {
+                "name": "Triggering the edit filter",
+                "category": "other",
+                "template": "uw-attempt",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "chat": {
+                "name": "Using talk page as forum",
+                "category": "other",
+                "template": "uw-chat",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "create": {
+                "name": "Creating inappropriate pages",
+                "category": "other",
+                "template": "uw-create",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "mos": {
+                "name": "Manual of style",
+                "category": "other",
+                "template": "uw-mos",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            },
+            "move": {
+                "name": "Page moves against naming conventions or consensus",
+                "category": "other",
+                "template": "uw-move",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "tpv": {
+                "name": "Refactoring others' talk page comments",
+                "category": "other",
+                "template": "uw-tpv",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "upload": {
+                "name": "Uploading unencyclopedic images",
+                "category": "other",
+                "template": "uw-upload",
+                "type": "tiered",
+                "levels": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5
+                ]
+            },
+            "aiv": {
+                "name": "Bad AIV report",
+                "category": "remind",
+                "template": "uw-aiv",
+                "type": "single"
+            },
+            "autobiography": {
+                "name": "Creating autobiographies",
+                "category": "remind",
+                "template": "uw-autobiography",
+                "type": "single"
+            },
+            "badcat": {
+                "name": "Adding incorrect categories",
+                "category": "remind",
+                "template": "uw-badcat",
+                "type": "single"
+            },
+            "badlistentry": {
+                "name": "Adding inappropriate entries to lists",
+                "category": "remind",
+                "template": "uw-badlistentry",
+                "type": "single"
+            },
+            "bite": {
+                "name": "Being harsh to newcomers",
+                "category": "remind",
+                "template": "uw-bite",
+                "type": "single"
+            },
+            "coi": {
+                "name": "Conflict of interest",
+                "category": "remind",
+                "template": "uw-coi",
+                "type": "single"
+            },
+            "controversial": {
+                "name": "Introducing controversial material",
+                "category": "remind",
+                "template": "uw-controversial",
+                "type": "single"
+            },
+            "copying": {
+                "name": "Copying text to another page",
+                "category": "remind",
+                "template": "uw-copying",
+                "type": "single"
+            },
+            "crystal": {
+                "name": "Adding speculative or unconfirmed information",
+                "category": "remind",
+                "template": "uw-crystal",
+                "type": "single"
+            },
+            "cpmove": {
+                "name": "Cut and paste moves",
+                "category": "remind",
+                "template": "uw-c\u0026pmove",
+                "type": "single"
+            },
+            "dab": {
+                "name": "Incorrect edit to a disambiguation page",
+                "category": "remind",
+                "template": "uw-dab",
+                "type": "single"
+            },
+            "date": {
+                "name": "Unnecessarily changing date formats",
+                "category": "remind",
+                "template": "uw-date",
+                "type": "single"
+            },
+            "deadlink": {
+                "name": "Removing proper sources containing dead links",
+                "category": "remind",
+                "template": "uw-deadlink",
+                "type": "single"
+            },
+            "draftfirst": {
+                "name": "User should draft in draftspace or userspace",
+                "category": "remind",
+                "template": "uw-draftfirst",
+                "type": "single"
+            },
+            "editsummary": {
+                "name": "Not using edit comment",
+                "category": "remind",
+                "template": "uw-editsummary",
+                "type": "single"
+            },
+            "elinbody": {
+                "name": "Adding external links to the body of an article",
+                "category": "remind",
+                "template": "uw-elinbody",
+                "type": "single"
+            },
+            "english": {
+                "name": "Not communicating in English",
+                "category": "remind",
+                "template": "uw-english",
+                "type": "single"
+            },
+            "hasty": {
+                "name": "Hasty addition of speedy deletion tags",
+                "category": "remind",
+                "template": "uw-hasty",
+                "type": "single"
+            },
+            "italicize": {
+                "name": "Italicize books, films, albums, magazines, TV series, etc within articles",
+                "category": "remind",
+                "template": "uw-italicize",
+                "type": "single"
+            },
+            "lang": {
+                "name": "Unnecessarily changing between British and American English",
+                "category": "remind",
+                "template": "uw-lang",
+                "type": "single"
+            },
+            "linking": {
+                "name": "Excessive addition of redlinks or repeated blue links",
+                "category": "remind",
+                "template": "uw-linking",
+                "type": "single"
+            },
+            "minor": {
+                "name": "Incorrect use of minor edits check box",
+                "category": "remind",
+                "template": "uw-minor",
+                "type": "single"
+            },
+            "notenglish": {
+                "name": "Creating non-English articles",
+                "category": "remind",
+                "template": "uw-notenglish",
+                "type": "single"
+            },
+            "notvote": {
+                "name": "We use consensus, not voting",
+                "category": "remind",
+                "template": "uw-notvote",
+                "type": "single"
+            },
+            "plagiarism": {
+                "name": "Copying from public domain sources without attribution",
+                "category": "remind",
+                "template": "uw-plagiarism",
+                "type": "single"
+            },
+            "preview": {
+                "name": "Use preview button to avoid mistakes",
+                "category": "remind",
+                "template": "uw-preview",
+                "type": "single"
+            },
+            "redlink": {
+                "name": "Indiscriminate removal of redlinks",
+                "category": "remind",
+                "template": "uw-redlink",
+                "type": "single"
+            },
+            "selfrevert": {
+                "name": "Reverting self tests",
+                "category": "remind",
+                "template": "uw-selfrevert",
+                "type": "single"
+            },
+            "socialnetwork": {
+                "name": "Wikipedia is not a social network",
+                "category": "remind",
+                "template": "uw-socialnetwork",
+                "type": "single"
+            },
+            "sofixit": {
+                "name": "Be bold and fix things yourself",
+                "category": "remind",
+                "template": "uw-sofixit",
+                "type": "single"
+            },
+            "spoiler": {
+                "name": "Adding spoiler alerts or removing spoilers from appropriate sections",
+                "category": "remind",
+                "template": "uw-spoiler",
+                "type": "single"
+            },
+            "talkinarticle": {
+                "name": "Talk in article",
+                "category": "remind",
+                "template": "uw-talkinarticle",
+                "type": "single"
+            },
+            "tilde": {
+                "name": "Not signing posts",
+                "category": "remind",
+                "template": "uw-tilde",
+                "type": "single"
+            },
+            "toppost": {
+                "name": "Posting at the top of talk pages",
+                "category": "remind",
+                "template": "uw-toppost",
+                "type": "single"
+            },
+            "userspaceDraftFinish": {
+                "name": "Stale userspace draft",
+                "category": "remind",
+                "template": "uw-userspace draft finish",
+                "type": "single"
+            },
+            "vgscope": {
+                "name": "Adding video game walkthroughs, cheats or instructions",
+                "category": "remind",
+                "template": "uw-vgscope",
+                "type": "single"
+            },
+            "warn": {
+                "name": "Place user warning templates when reverting vandalism",
+                "category": "remind",
+                "template": "uw-warn",
+                "type": "single"
+            },
+            "wrongsummary": {
+                "name": "Using inaccurate or inappropriate edit summaries",
+                "category": "remind",
+                "template": "uw-wrongsummary",
+                "type": "single"
+            },
+            "3rr": {
+                "name": "Potential three-revert rule violation",
+                "category": "policy",
+                "template": "uw-3rr",
+                "type": "policy"
+            },
+            "affiliate": {
+                "name": "Affiliate marketing",
+                "category": "policy",
+                "template": "uw-affiliate",
+                "type": "policy"
+            },
+            "agfsock": {
+                "name": "Use of multiple accounts (assuming good faith)",
+                "category": "policy",
+                "template": "uw-agf-sock",
+                "type": "policy"
+            },
+            "attack": {
+                "name": "Creating attack pages",
+                "category": "policy",
+                "template": "uw-attack",
+                "type": "policy"
+            },
+            "botun": {
+                "name": "Bot username",
+                "category": "policy",
+                "template": "uw-botun",
+                "type": "policy",
+                "note": "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
+            },
+            "canvass": {
+                "name": "Canvassing",
+                "category": "policy",
+                "template": "uw-canvass",
+                "type": "policy"
+            },
+            "copyright": {
+                "name": "Copyright violation",
+                "category": "policy",
+                "template": "uw-copyright",
+                "type": "policy"
+            },
+            "copyrightlink": {
+                "name": "Linking to copyrighted works violation",
+                "category": "policy",
+                "template": "uw-copyright-link",
+                "type": "policy"
+            },
+            "copyrightnew": {
+                "name": "Copyright violation (with explanation for new users)",
+                "category": "policy",
+                "template": "uw-copyright-new",
+                "type": "policy"
+            },
+            "copyrightremove": {
+                "name": "Removing {{copyvio}} template from articles",
+                "category": "policy",
+                "template": "uw-copyright-remove",
+                "type": "policy"
+            },
+            "efsummary": {
+                "name": "Edit comment triggering the edit filter",
+                "category": "policy",
+                "template": "uw-efsummary",
+                "type": "policy"
+            },
+            "ew": {
+                "name": "Edit warring (stronger wording)",
+                "category": "policy",
+                "template": "uw-ew",
+                "type": "policy"
+            },
+            "ewsoft": {
+                "name": "Edit warring (softer wording for newcomers)",
+                "category": "policy",
+                "template": "uw-ewsoft",
+                "type": "policy"
+            },
+            "hijacking": {
+                "name": "Hijacking articles",
+                "category": "policy",
+                "template": "uw-hijacking",
+                "type": "policy"
+            },
+            "hoax": {
+                "name": "Creating hoaxes",
+                "category": "policy",
+                "template": "uw-hoax",
+                "type": "policy"
+            },
+            "legal": {
+                "name": "Making legal threats",
+                "category": "policy",
+                "template": "uw-legal",
+                "type": "policy"
+            },
+            "login": {
+                "name": "Editing while logged out",
+                "category": "policy",
+                "template": "uw-login",
+                "type": "policy"
+            },
+            "multipleIPs": {
+                "name": "Usage of multiple IPs",
+                "category": "policy",
+                "template": "uw-multipleIPs",
+                "type": "policy"
+            },
+            "pinfo": {
+                "name": "Personal info",
+                "category": "policy",
+                "template": "uw-pinfo",
+                "type": "policy"
+            },
+            "salt": {
+                "name": "Recreating salted articles under a different title",
+                "category": "policy",
+                "template": "uw-salt",
+                "type": "policy"
+            },
+            "socksuspect": {
+                "name": "Sockpuppetry",
+                "category": "policy",
+                "template": "uw-socksuspect",
+                "type": "policy"
+            },
+            "upv": {
+                "name": "Userpage vandalism",
+                "category": "policy",
+                "template": "uw-upv",
+                "type": "policy"
+            },
+            "username": {
+                "name": "Username is against policy",
+                "category": "policy",
+                "template": "uw-username",
+                "type": "policy",
+                "note": "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins.",
+                "keywords": [
+                    "uaa"
+                ],
+                "relatedPage": {
+                    "visibility": "required",
+                    "label": "Username"
+                }
+            },
+            "coiusername": {
+                "name": "Username is against policy, and conflict of interest",
+                "category": "policy",
+                "template": "uw-coi-username",
+                "type": "policy",
+                "note": "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
+            },
+            "userpage": {
+                "name": "Userpage or subpage is against policy",
+                "category": "policy",
+                "template": "uw-userpage",
+                "type": "policy",
+                "note": "Username notices should not be added for blatant violations. In these cases, click the gavel to report the username to the admins."
+            }
+        }
+    },
+    "revertOptions": {
+        "vandalism": {
+            "default": true,
+            "actionType": "revert",
+            "name": "Vandalism",
+            "summary": "[[WP:VD|Possible vandalism]]",
+            "warning": "vandalism",
+            "severity": "critical",
+            "icon": "delete_forever"
+        },
+        "_3rr": {
+            "default": false,
+            "actionType": "revert",
+            "name": "Three-revert rule violation",
+            "summary": "[[WP:3RR|Three-revert rule violation]]",
+            "warning": "_3rr",
+            "severity": "critical",
+            "icon": "filter_3"
+        },
+        "npa": {
+            "default": false,
+            "actionType": "revert",
+            "name": "Personal attacks towards another editor",
+            "summary": "[[WP:NPA|Personal attack (NPA)]] towards another editor",
+            "warning": "npa",
+            "severity": "critical",
+            "icon": "offline_bolt"
+        },
+        "copyright": {
+            "default": false,
+            "actionType": "revert",
+            "name": "Copyright violation",
+            "summary": "Possible [[WP:COPYVIO|copyright violation]]",
+            "warning": "copyright",
+            "severity": "critical",
+            "icon": "copyright"
+        },
+        "biog": {
+            "default": false,
+            "actionType": "revert",
+            "name": "BLP violation",
+            "summary": "[[WP:BLP|Biography of living persons]] policy violation",
+            "warning": "biog",
+            "severity": "critical",
+            "icon": "face"
+        },
+        "advert": {
+            "default": false,
+            "actionType": "revert",
+            "name": "Advertising/promotional content",
+            "summary": "Using Wikipedia for [[WP:PROMO|advertising and/or promotion]]",
+            "warning": "advert",
+            "severity": "critical",
+            "icon": "monetization_on"
+        },
+        "spam": {
+            "default": false,
+            "actionType": "revert",
+            "name": "Unnecessary or inappropriate external links",
+            "summary": "Addition of unnecessary/inappropriate [[WP:EL|external links]]",
+            "warning": "spam",
+            "severity": "critical",
+            "icon": "link_off"
+        },
+        "delete": {
+            "default": true,
+            "actionType": "revert",
+            "name": "Unexplained content removal",
+            "summary": "[[WP:CRV|Unexplained content removal]]",
+            "warning": "delete",
+            "severity": "severe",
+            "icon": "format_indent_increase"
+        },
+        "unsourced": {
+            "default": false,
+            "actionType": "revert",
+            "name": "No reliable source",
+            "summary": "[[WP:RS|Not providing a reliable source]]",
+            "warning": "unsourced",
+            "severity": "severe",
+            "icon": "history_edu"
+        },
+        "disruptive": {
+            "default": false,
+            "actionType": "revert",
+            "name": "Disruptive editing",
+            "summary": "[[WP:DE|Disruptive editing]]",
+            "warning": "disruptive",
+            "severity": "severe",
+            "icon": "error"
+        },
+        "error": {
+            "default": false,
+            "actionType": "revert",
+            "name": "Factual errors",
+            "summary": "Likely [[WP:PROVEIT|factual errors]]",
+            "warning": "error",
+            "severity": "severe",
+            "icon": "menu_book"
+        },
+        "joke": {
+            "default": false,
+            "actionType": "revert",
+            "name": "Joke edit",
+            "summary": "Joke edit",
+            "warning": "joke",
+            "severity": "severe",
+            "icon": "child_care"
+        },
+        "npov": {
+            "default": false,
+            "actionType": "revert",
+            "name": "NPOV issues",
+            "summary": "Not adhering to a [[WP:NPOV|neutral point of view]]",
+            "warning": "npov",
+            "severity": "severe",
+            "icon": "campaign"
+        },
+        "talkinarticle": {
+            "default": false,
+            "name": "Talk in article",
+            "actionType": "revert",
+            "summary": "Using the article as a [[WP:TPHELP|talk page]]",
+            "warning": "talkinarticle",
+            "severity": "severe",
+            "icon": "announcement"
+        },
+        "non-constructive": {
+            "default": true,
+            "actionType": "revert",
+            "name": "Non-constructive edit",
+            "summary": "Non-constructive edit",
+            "warning": "non-constructive",
+            "severity": "moderate",
+            "icon": "work_outline"
+        },
+        "mos": {
+            "default": false,
+            "name": "Manual of Style issues",
+            "actionType": "revert",
+            "summary": "[[WP:MOS|Manual of Style]] issues",
+            "warning": "mos",
+            "severity": "mild",
+            "icon": "brush"
+        },
+        "test": {
+            "default": false,
+            "name": "Test edits",
+            "actionType": "revert",
+            "summary": "Misplaced [[WP:SANDBOX|test edits]]",
+            "warning": "test",
+            "severity": "mild",
+            "icon": "build"
+        }
+    },
+    "protection": {
+        "flaggedrevs": true,
+        "levels": [
+            {
+                "name": "pending changes protection",
+                "statusName": "pending changes protected",
+                "id": "_flaggedrevs",
+                "iconURL": "https://w.wiki/3xfd"
+            },
+            {
+                "name": "semi-protection",
+                "statusName": "semi-protected",
+                "id": "autoconfirmed",
+                "iconURL": "https://w.wiki/3xfe"
+            },
+            {
+                "name": "extended-confirmed protection",
+                "statusName": "extended-confirmed protected",
+                "id": "extendedconfirmed",
+                "iconURL": "https://w.wiki/3xff"
+            },
+            {
+                "name": "template protection",
+                "statusName": "template protected",
+                "id": "templateeditor",
+                "iconURL": "https://w.wiki/3xfg"
+            },
+            {
+                "name": "full protection",
+                "statusName": "fully protected",
+                "id": "sysop",
+                "iconURL": "https://w.wiki/3xfh"
+            }
+        ],
+        "requests": {
+            "increase": {
+                "page": "Wikipedia:Requests for page protection/Increase",
+                "template": "=== [[{{{title}}}]] ===\n* {{pagelinks|{{{title}}}}}\n'''{{{level}}}:''' {{{reason}}}"
+            },
+            "decrease": {
+                "page": "Wikipedia:Requests for page protection/Decrease",
+                "template": "=== [[{{{title}}}]] ===\n* {{pagelinks|{{{title}}}}}\n'''{{{level}}}:''' {{{reason}}}"
+            }
+        }
+    }
+}

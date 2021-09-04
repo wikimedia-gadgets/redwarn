@@ -9,10 +9,13 @@
         "warn_2": "Caution: {{reason}}",
         "warn_3": "Warning: {{reason}}",
         "warn_4": "Final Warning: {{reason}}",
-        "warn_5": "ONLY Warning: {{reason}}"
+        "warn_5": "ONLY Warning: {{reason}}",
+        "protection": "Requesting page protection for {{title}}"
     },
     "ip": "Anonymous IP editor",
     "error": {
-        "wikiConfigBad": "The RedWarn <a href=\"{{wikiIndex}}?title=Project:RW/C.JSON\">wiki-specific configuration</a> for this wiki is invalid. Please contact the <a href=\"{{wikiIndex}}?title=Project:RW/TEAM\">RedWarn maintainers</a> for this wiki."
+        "wikiConfigBad": "The RedWarn <a href=\"{{wikiIndex}}?title=Project:RW/C.JSON\">wiki-specific configuration</a> for this wiki is invalid. Please contact the <a href=\"{{wikiIndex}}?title=Project:RW/TEAM\">RedWarn maintainers</a> for this wiki.",
+        "wikiConfigBlocked": "This wiki does not have a wiki-specific configuration, and attempts at receiving the fallback configuration are being blocked. Please create a configuration for this wiki on the \"Project:RedWarn/configuration.json\" page before continuing.",
+        "apiError": "An error occurred while contacting the MediaWiki API."
     }
 }

@@ -3,7 +3,7 @@ import {
     DiffIconRevertContext,
     RestoreStage,
     RevertStage,
-    Revision,
+    Revision
 } from "rww/mediawiki";
 import { BaseProps } from "tsx-dom";
 
@@ -55,6 +55,7 @@ export class RWUIDiffIcons
     /**
      * Called on the start of a revert.
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onStartRevert(context: DiffIconRevertContext): void {
         return undefined;
     }

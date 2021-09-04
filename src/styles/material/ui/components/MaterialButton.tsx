@@ -1,6 +1,7 @@
 import { BaseProps, h } from "tsx-dom";
 import expandDataAttributes from "rww/styles/material/util/expandDataAttributes";
-import { Configuration } from "rww/config";
+import toCSS from "rww/styles/material/util/toCSS";
+import { Configuration } from "rww/config/user/Configuration";
 
 export interface MaterialButtonProperties extends BaseProps {
     action?: boolean; // whether or not this button is an action button, such as "ok", "submit", etc. used for accessibility
@@ -24,7 +25,7 @@ export default function (props: MaterialButtonProperties): JSX.Element {
         iconColor,
         style,
         disabled,
-        raised,
+        raised
     } = props;
     const classes = ["mdc-button"];
 
@@ -48,9 +49,10 @@ export default function (props: MaterialButtonProperties): JSX.Element {
                     ? dialogAction
                     : dialogAction.data
             }
-            style={style}
+            style={toCSS(style)}
             disabled={disabled}
             {...expandDataAttributes(props)}
+            onClick={props.onClick}
         >
             <div class="mdc-button__ripple" />
             {icon && (

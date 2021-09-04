@@ -10,26 +10,34 @@ export enum LogLevel {
 }
 
 interface LogEntry {
-    date: number;
+    tOffset: number;
     level: LogLevel;
     message: string;
     data: Record<string, any>;
+    stack?: string;
+}
+
+interface LogDump {
+    startTime: number;
+    entries: LogEntry[];
 }
 
 export default class Log {
     private static readonly startTime = Date.now();
-    static logs: LogEntry[] = [];
+    static entries: LogEntry[] = [];
     static logLevel =
         process.env.NODE_ENV === "production" ? LogLevel.Warn : LogLevel.Trace;
 
     private static log(level: LogLevel, message: string, ...data: any[]) {
+        const tOffset = Date.now() - Log.startTime;
         const parts = [];
-        if (Log.logLevel === LogLevel.Trace)
-            parts.push(`[${Date.now() - Log.startTime}ms] `);
+
+        if (Log.logLevel === LogLevel.Trace) parts.push(`[${tOffset}ms] `);
         parts.push(`[${RW_LOG_SIGNATURE}] `);
         parts.push(`[${LogLevel[level].toUpperCase()}] `);
         parts.push(message);
 
+        if (data[0] === undefined) data = [];
         if (level >= Log.logLevel)
             console[
                 level > LogLevel.Warn
@@ -43,12 +51,28 @@ export default class Log {
                     : [parts.join("")])
             );
 
-        Log.logs.push({
-            date: Date.now(),
-            level: level,
-            message: message,
-            data: data,
+        Log.entries.push({
+            tOffset: tOffset,
+            level,
+            message,
+            data: data.map((v) => {
+                if (v instanceof Error)
+                    return {
+                        stack: v.stack,
+                        message: v.message,
+                        name: v.name
+                    };
+                else return v;
+            }),
+            stack: level > LogLevel.Info ? new Error().stack : undefined
         });
+    }
+
+    static dump(): LogDump {
+        return {
+            startTime: Log.startTime,
+            entries: Log.entries
+        };
     }
 
     static trace(message: string | any, data?: Record<string, any>) {

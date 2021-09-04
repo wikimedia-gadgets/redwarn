@@ -1,0 +1,17 @@
+.rw-mdc-extendedOptions .mdc-dialog__content {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.rw-mdc-extendedOptions .mdc-list-item {
+    height: 38px !important;
+}
+
+.rw-mdc-extendedOptions .mdc-list-item,
+.rw-mdc-extendedOptions .mdc-list-item .material-icons {
+    font-weight: 500;
+}
+
+.rw-mdc-extendedOptions .mdc-deprecated-list-item__graphic {
+    margin-right: 16px;
+}

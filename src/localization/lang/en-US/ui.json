@@ -1,6 +1,25 @@
 {
     "unfinished": "Hmm, looks like we haven't implemented this feature yet. Check back later!",
 
+    "extendedOptions": {
+        "title": "More Options"
+    },
+    "pageIcons": {
+        "message": "New Message",
+        "quickTemplate": "Quick Template",
+        "warn": "Warn User",
+        "protection": "Page Protection",
+        "alertOnChange": "Alert on Change",
+        "latestRevision": "Latest Revision",
+        "moreOptions": "More Options",
+        "vandalismStatistics": "Vandalism statistics",
+        "reportAIV": "Report to AIV",
+        "reportUAA": "Report to UAA",
+        "reportOversight": "Report user to Oversight",
+        "reportTAS": "Report user to Wikimedia Trust & Safety",
+        "preferences": "Preferences",
+        "rwTalk": "RedWarn talk page"
+    },
     "restore": {
         "label": "Restore Reason",
         "helperText": "Enter a reason for this restore",
@@ -19,14 +38,32 @@
         "ok": "OK",
         "cancel": "Cancel"
     },
+    "copyURL": {
+        "button": "Copy URL",
+        "success": "URL copied.",
+        "failure": "Failed to copy URL. Have you given the browser proper permissions?"
+    },
     "toasts": {
         "pleaseWait": "Please wait...",
         "restoreError": "Sorry, there was an error, likely an edit conflict. This edit has not been restored.",
         "rollbackError": "Sorry, there was an error performing a rollback.",
         "newerRev": "A newer revision was detected. Your rollback has not been applied.",
         "userUndefined": "Sorry, the target user does not exist, cannot be found, or is hidden from the public. Your action has not been completed.",
-        "watching": "Alerts Enabled - please keep this tab open.",
-        "stoppedWatching": "Alerts Disabled."
+        "userWarned": "User warned.",
+        "userWarnFailed": "Sorry, there was an error. Please verify if the user has been warned before issuing another warning."
+    },
+    "watch": {
+        "denied": "Permission to show notifications denied.",
+        "watching": "Watching for changes on {{page}}. Keep this tab open.",
+        "stoppedWatching": "Stopped watching for changes on {{page}}.",
+        "prefix": "[New edit(s)!] ",
+        "notification": {
+            "title": "New edit to {{page}}",
+            "title_plural": "{{count}} new edits to {{page}}",
+            "header": "Click here to view.",
+            "diff": "Latest revision by {{author}} ({{since}}): \"{{comment}}\".",
+            "diff_nosummary": "Latest revision by {{author}} ({{since}})."
+        }
     },
     "rollbackAvailableDialog": {
         "actions": {
@@ -36,8 +73,8 @@
         "content": "You have rollback permissions! Would you like to use the faster rollback API in future or continue using a rollback-like setting? You can change this in your preferences at any time."
     },
     "tamperProtection": {
-        "header": "ATTENTION!",
-        "warningContent": "You are currently using RedWarn in a way that is strongly discouraged under guidelines set at <a href=\"/wiki/Wikipedia:REDWARN/A\" class=\"mw-redirect\" title=\"Wikipedia:REDWARN/A\">WP:REDWARN/A</a>."
+        "header": "Attention!",
+        "warningContent": "You are currently using RedWarn in a way that is strongly discouraged under guidelines set at <a href=\"https://en.wikipedia.org/wiki/Wikipedia:RW/A\" title=\"Wikipedia:RW/A\">Wikipedia:RedWarn/Abuse</a>. This will be permanently recorded and will prevent you from running legitimate installations of RedWarn. Please contact a RedWarn team developer for assistance."
     },
     "warn": {
         "title": "Warn User",
@@ -62,7 +99,7 @@
 
             "report": "Click to report to AIV.",
             "edits": "{{edits}} edits",
-            "age": "Created {{localeAge}}",
+            "age": "Joined {{localeAge}}",
 
             "talk": {
                 "main": "User talk page",
@@ -139,13 +176,19 @@
     "configErrorDialog": {
         "title": "Configuration Error",
         "content": "Your RedWarn configuration could not be loaded correctly and has been reset. If this issue persists, please contact the RedWarn team.",
-        "actions": [{ "data": "$t(ui:okCancel.ok)" }]
+        "actions": [
+            {
+                "data": "$t(ui:okCancel.ok)"
+            }
+        ]
     },
     "styleError": {
         "missing": {
             "title": "Style Missing",
             "content": "The style set in your RedWarn configuration cannot be found. It has been set to the default style for now.",
-            "actions": [{ "data": "$t(ui:okCancel.ok)" }]
+            "actions": [
+                { "data": "$t(ui:okCancel.ok)" }
+            ]
         }
     },
     "contribs": {
@@ -155,5 +198,63 @@
         "vandalTooltip": "Quick Rollback Vandalism",
         "rollbackLink": "rb",
         "rollbackTooltip": "Rollback"
+    },
+    "protectionRequest": {
+        "title": "Request Page Protection",
+        "ok": "Request",
+        "page": {
+            "label": "Target page",
+            "change": "Change the target page",
+            "loadingText": "Loading protection information...",
+            "inputSubmit": "Target this page",
+            "inputCancel": "Cancel"
+        },
+        "info": {
+            "unprotected": "Page is not protected.",
+            "cascaded": "cascaded",
+            "cascading": "cascading",
+            "note": " ({{detail}})",
+            "detailed": "{{statusName}} until {{date}}{{note}}",
+            "detailed_indefinite": "Indefinitely {{statusName}}{{note}}",
+            "fallback": "{{type}} protected against non-{{level}} users until {{date}}{{note}}",
+            "fallback_indefinite": "Indefinitely {{type}} against for non-{{level}} users{{note}}"
+        },
+        "reasons": "Reason",
+        "additionalInformation": "Additional information",
+        "duration": {
+            "label": "Duration",
+            "temporary": "Temporary",
+            "indefinite": "Indefinite"
+        },
+        "notice": "You should not consider requesting page protection as a method for continuing an argument from elsewhere nor as a venue for starting a new discussion regarding article content. If a request contains excessive argument, appears to be intended to resolve a content dispute, includes personal attacks or uncivil comments, or has any other unrelated discussion, it will be removed and no action will be taken.",
+        "validation" : {
+            "validationFailedIconTooltip" : "There are issues which are preventing you from requesting protection on this page. Click here for more information.",
+
+            "validationDialogTitle": "Issue found",
+            "validationDialogTitle_plural": "Issues found",
+            "validationDialogIntro": "The following issues are preventing you from sending requesting protection on this page:",
+
+            "fail": "An unknown issue ocurred.",
+            "fail_noLevel" : "You don't have a protection level selected.",
+            "fail_noDuration" : "You don't have a protection duration selected.",
+            "fail_levelEqual": "The level and duration requested is already applied.",
+            "fail_noReason": "No reason was provided.",
+            "fail_noAdditionalReason": "No additional reason was provided.",
+
+            "failDetailed": "$t(ui:protectionRequest.validation.fail) If this problem persists, inform the developers.",
+            "failDetailed_noLevel": "$t(ui:protectionRequest.validation.fail_noLevel) Select one from the left-side panel.",
+            "failDetailed_noDuration": "$t(ui:protectionRequest.validation.fail_noDuration) Select either \"Temporary\" or \"Indefinite\" from the provided options.",
+            "failDetailed_levelEqual": "$t(ui:protectionRequest.validation.fail_levelEqual) Please select a protection level or duration different from the current protection level/duration.",
+            "failDetailed_noReason": "$t(ui:protectionRequest.validation.fail_noReason) A reason must be provided for protection requests.",
+            "failDetailed_noAdditionalReason": "$t(ui:protectionRequest.validation.fail_noAdditionalReason) Please provide an additional reason, or switch to a provided reason using the dropdown.",
+
+            "pass": "No issues were found."
+        },
+        "retarget": {
+            "text": "RedWarn cannot determine if this is an increase or decrease in protection level. This is likely due to a problem in the RedWarn per-wiki configuration. Please indicate whether or not this request in an increase or decrease in protection level.",
+            "increase": "Increase",
+            "decrease": "Decrease"
+        },
+        "done": "Request filed."
     }
 }

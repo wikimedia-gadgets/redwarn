@@ -12,6 +12,11 @@ export const RW_VERSION_TAG = `${RW_VERSION_PUBLIC}${
         : ""
 }`;
 
+// RW
+export const RW_LOGO = "https://w.wiki/3wk4";
+// RedWarn
+export const RW_WORDRMARK = "https://w.wiki/3wk6";
+
 // TODO: not have this here
 export const RW_VERSION_SUMMARY = "nothing yet";
 
@@ -35,6 +40,10 @@ export const RW_WIKIS_SPEEDUP = ["enwiki"];
 
 // TODO: Global configuration file on Meta instead of Wikipedia
 export const RW_FALLBACK_WIKI = {
-    indexPath: "//en.wikipedia.org/w/index.php",
-    apiPath: "//en.wikipedia.org/w/api.php",
+    indexPath: "https://en.wikipedia.org/w/index.php",
+    apiPath: "https://en.wikipedia.org/w/api.php",
+    configuration: RW_WIKI_CONFIGURATION
 };
+
+export const RW_FALLBACK_CONFIG =
+    "https://redwarn-web.wmcloud.org/static/default-config.json";

@@ -1,7 +1,7 @@
 import { h } from "tsx-dom";
 import i18next from "i18next";
 import { Revert, Revision } from "rww/mediawiki";
-import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import Log from "rww/data/RedWarnLog";
 
 export default class ContributionsPageInjector {
@@ -27,7 +27,7 @@ export default class ContributionsPageInjector {
 
                 const context = {
                     newRevision: revision,
-                    latestRevision: revision,
+                    latestRevision: revision
                 };
 
                 const previewLink = (
@@ -50,7 +50,7 @@ export default class ContributionsPageInjector {
                                 Object.assign(context, {
                                     prefilledReason:
                                         RedWarnWikiConfiguration.c.warnings
-                                            .vandalismWarning.name,
+                                            .vandalismWarning.name
                                 })
                             )
                         }
@@ -71,7 +71,7 @@ export default class ContributionsPageInjector {
                                     prefilledReason: await Revert.promptRollbackReason(
                                         context,
                                         ""
-                                    ),
+                                    )
                                 })
                             );
                         }}

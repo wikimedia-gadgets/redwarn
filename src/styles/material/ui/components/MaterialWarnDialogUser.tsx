@@ -2,7 +2,7 @@ import { h } from "tsx-dom";
 import { Page, User, UserAccount, WarningLevel } from "rww/mediawiki";
 import MaterialTextInput, {
     MaterialTextInputComponents,
-    MaterialTextInputUpgrade,
+    MaterialTextInputUpgrade
 } from "rww/styles/material/ui/components/MaterialTextInput";
 import { MaterialWarnDialogChildProps } from "rww/styles/material/ui/MaterialWarnDialog";
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
@@ -10,12 +10,11 @@ import RedWarnUI from "rww/ui/RedWarnUI";
 import i18next from "i18next";
 import Bullet from "./Bullet";
 import {
-    articlePath,
     capitalize,
     formatAge,
     generateId,
     getMonthHeader,
-    normalize,
+    normalize
 } from "rww/util";
 import MaterialMenu, { openMenu } from "./MaterialMenu";
 import showPlainMediaWikiIFrameDialog from "rww/styles/material/util/showPlainMediaWikiIFrameDialog";
@@ -23,6 +22,7 @@ import { MaterialWarnDialogChild } from "./MaterialWarnDialogChild";
 import { WarningIcons } from "rww/styles/material/data/WarningIcons";
 import MaterialAlertDialog from "rww/styles/material/ui/MaterialAlertDialog";
 import Log from "rww/data/RedWarnLog";
+import Group from "rww/mediawiki/core/Group";
 
 interface OverlayContentLoading {
     type: "loading";
@@ -37,7 +37,7 @@ interface OverlayContentInput {
 type OverlayContent = OverlayContentInput | OverlayContentLoading;
 
 function MaterialWarnDialogUserCardAccountGroups({
-    parent,
+    parent
 }: {
     parent: MaterialWarnDialogUser;
 }): JSX.Element {
@@ -51,13 +51,11 @@ function MaterialWarnDialogUserCardAccountGroups({
             <b>Groups:</b>{" "}
             {user.groups
                 .map<JSX.Element>(
-                    (group): JSX.Element => {
+                    (group: Group): JSX.Element => {
                         return (
                             <a
                                 target={group.page && "_blank"}
-                                href={
-                                    group.page && `${articlePath(group.page)}`
-                                }
+                                href={group.page.url}
                             >
                                 {capitalize(group.displayName)}
                             </a>
@@ -74,7 +72,7 @@ function MaterialWarnDialogUserCardAccountGroups({
 }
 
 function MaterialWarnDialogUserCardAccountInfo({
-    parent,
+    parent
 }: {
     parent: MaterialWarnDialogUser;
 }): JSX.Element {
@@ -100,7 +98,7 @@ function MaterialWarnDialogUserCardAccountInfo({
                         ),
                         {
                             disableRedWarn: true,
-                            safeMode: true,
+                            safeMode: true
                         }
                     );
                 }}
@@ -109,7 +107,7 @@ function MaterialWarnDialogUserCardAccountInfo({
                 )}
             >
                 {`${i18next.t("ui:warn.user.edits", {
-                    edits: user.editCount.toLocaleString(),
+                    edits: user.editCount.toLocaleString()
                 })}`}
             </a>
             <Bullet />
@@ -117,12 +115,12 @@ function MaterialWarnDialogUserCardAccountInfo({
                 onClick={() => {
                     showPlainMediaWikiIFrameDialog(user.userPage, {
                         disableRedWarn: true,
-                        safeMode: true,
+                        safeMode: true
                     });
                 }}
                 data-rw-mdc-tooltip={i18next.t("ui:warn.user.show.userpage")}
             >{`${i18next.t("ui:warn.user.age", {
-                localeAge: formatAge(user.registered),
+                localeAge: formatAge(user.registered)
             })}`}</a>
         </div>
     );
@@ -132,7 +130,7 @@ function MaterialWarnDialogUserCardAccountInfo({
  * The actual user card. Used when the user is loaded.
  */
 function MaterialWarnDialogUserCard({
-    parent,
+    parent
 }: {
     parent: MaterialWarnDialogUser;
 }): JSX.Element {
@@ -147,7 +145,7 @@ function MaterialWarnDialogUserCard({
     const cardId = generateId(8);
     const warningIcon = WarningIcons[user.warningAnalysis.level];
 
-    const card = (
+    return (
         <table>
             <tr>
                 <td rowSpan={2}>
@@ -177,16 +175,16 @@ function MaterialWarnDialogUserCard({
                         tooltip={`${i18next.t(`ui:warn.user.levelInfo`, {
                             context: `${WarningLevel[
                                 user.warningAnalysis.level
-                            ].toLowerCase()}`,
+                            ].toLowerCase()}`
                         })}`}
                         {...(user.warningAnalysis.level > 3
                             ? {
                                   onClick: () => {
                                       // TODO AIV thing
-                                      new RedWarnUI.Toast({
-                                          content: i18next.t("ui:unfinished"),
-                                      }).show();
-                                  },
+                                      RedWarnUI.Toast.quickShow({
+                                          content: i18next.t("ui:unfinished")
+                                      });
+                                  }
                               }
                             : {})}
                     />
@@ -219,10 +217,10 @@ function MaterialWarnDialogUserCard({
                                             ),
                                             customStyle: `#${mw.util.wikiUrlencode(
                                                 getMonthHeader()
-                                            )} { background-color: #fd0; }`,
+                                            )} { background-color: #fd0; }`
                                         }
                                     );
-                                },
+                                }
                             },
                             {
                                 label: i18next
@@ -232,19 +230,17 @@ function MaterialWarnDialogUserCard({
                                     showPlainMediaWikiIFrameDialog(
                                         user.talkPage,
                                         {
-                                            disableRedWarn: true,
+                                            disableRedWarn: true
                                         }
                                     );
-                                },
-                            },
+                                }
+                            }
                         ]}
                     />
                 </td>
             </tr>
         </table>
     );
-
-    return card;
 }
 
 class MaterialWarnDialogUser extends MaterialWarnDialogChild {
@@ -272,7 +268,7 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
         if (!!this.elementSet.root) {
             this.elementSet.root.classList.toggle(
                 "rw-mdc-warnDialog-user--active",
-                this._active
+                value
             );
         }
         this._active = value;
@@ -302,13 +298,13 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
             overlayInfo = !!this.user
                 ? {
                       type: "loading",
-                      user: this.user,
+                      user: this.user
                   }
                 : {
                       type: "input",
                       onFinish: (newName) => {
                           this.updateUser(User.fromUsername(newName));
-                      },
+                      }
                   };
         }
 
@@ -324,11 +320,11 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                             onClick={() => {
                                 if (!this.updating) this.updateUser(this.user);
                                 else
-                                    new RedWarnUI.Toast({
+                                    RedWarnUI.Toast.quickShow({
                                         content: i18next.t(
                                             "ui:warn.user.load_wait"
-                                        ),
-                                    }).show();
+                                        )
+                                    });
                             }}
                         >
                             {this.user.username}
@@ -347,7 +343,7 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                 );
                 this.elementSet.targetUserInput = {
                     element: textInput,
-                    components: MaterialTextInputUpgrade(textInput),
+                    components: MaterialTextInputUpgrade(textInput)
                 };
 
                 const updateName = () => {
@@ -415,13 +411,16 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
     renderMain(): JSX.Element {
         this.elementSet.main = (
             <div class={"rw-mdc-warnDialog-user--main"}>
-                {!!this.user &&
-                this.user.isPopulated() &&
-                !!this.user.warningAnalysis ? (
-                    <MaterialWarnDialogUserCard parent={this} />
-                ) : (
-                    ""
-                )}
+                {
+                    // Do not use `this.active` - this will require two refreshes.
+                    !!this.user &&
+                    this.user.isPopulated() &&
+                    !!this.user.warningAnalysis ? (
+                        <MaterialWarnDialogUserCard parent={this} />
+                    ) : (
+                        ""
+                    )
+                }
             </div>
         );
         return this.elementSet.main;
@@ -449,8 +448,6 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                 "Attempted to update user twice. Subsequent attempt blocked."
             );
 
-        this.updating = true;
-
         // Reuse the previous user object if it's the same user.
         if (!!this.lastUser && user.username === this.lastUser.username)
             this.user = this.lastUser;
@@ -459,7 +456,7 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
         if (this.user != null) {
             if (!this.user.isPopulated()) {
                 // Set to inactive in order to hoist loading screen.
-                this.active = false;
+                this.updating = true;
                 this.refresh();
 
                 await this.user.populate();
@@ -485,12 +482,12 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                         ),
                         actions: [
                             {
-                                data: "cancel",
+                                data: "cancel"
                             },
                             {
-                                data: "proceed",
-                            },
-                        ],
+                                data: "proceed"
+                            }
+                        ]
                     }).show()) !== "proceed"
                 ) {
                     await this.clearUser(this.lastUser);
@@ -499,8 +496,8 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
             }
 
             if (!this.user.warningAnalysis) {
-                // Set to inactive in order to hoist loading screen.
-                this.active = false;
+                // Set to updating in order to hoist loading screen.
+                this.updating = true;
                 this.refresh();
 
                 await this.user.getWarningAnalysis();
@@ -513,9 +510,8 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                     : this.user.warningAnalysis.level + 1;
         }
 
-        this.updating = false;
         // All done. Show!
-        this.active = true;
+        this.updating = false;
 
         // Small delay in order to let previous refreshes pass through.
         setTimeout(() => {
@@ -547,7 +543,9 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
             );
         } else this.elementSet.root = root;
 
+        // Setter requires `this.elementSet.root` to be up to date.
         this.active =
+            !this.updating &&
             !!this.user &&
             this.user.isPopulated() &&
             !!this.user.warningAnalysis;
@@ -605,7 +603,7 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                         statePostUpdate: this._active,
                         updating: this.updating,
                         user: this.user,
-                        lastUser: this.lastUser,
+                        lastUser: this.lastUser
                     }
                 );
                 this.refresh();
@@ -622,6 +620,6 @@ export default function generator(
 ): JSX.Element & { MWDUser: MaterialWarnDialogUser } {
     const mwdUser = new MaterialWarnDialogUser(props);
     return Object.assign(mwdUser.render(), {
-        MWDUser: mwdUser,
+        MWDUser: mwdUser
     });
 }

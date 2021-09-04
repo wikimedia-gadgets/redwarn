@@ -1,0 +1,71 @@
+@keyframes loadingPulse {
+    0% {
+        color: lightgray;
+    }
+    100% {
+        color: gray;
+    }
+}
+
+.rw-mdc-inputCard:not([data-state="loading"]) .rw-mdc-inputCard-loading,
+.rw-mdc-inputCard:not([data-state="input"]) .rw-mdc-inputCard-input,
+.rw-mdc-inputCard:not([data-state="ready"]) .rw-mdc-inputCard-main {
+    pointer-events: none;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.rw-mdc-inputCard {
+    position: relative;
+}
+
+.rw-mdc-inputCard > div {
+    box-sizing: border-box;
+    min-height: 98px;
+    width: 100%;
+    height: 100%;
+    padding: 16px;
+}
+
+.rw-mdc-inputCard-input,
+.rw-mdc-inputCard-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+}
+
+.rw-mdc-inputCard-input > button {
+    margin: 0 4px;
+}
+
+.rw-mdc-inputCard-input > span:first-child {
+    display: inline-block;
+}
+
+.rw-mdc-inputCard-input > span:first-child > label {
+    width: 75%;
+}
+
+.rw-mdc-inputCard-loading {
+    transition: opacity 0.2s ease-in-out;
+}
+
+.rw-mdc-inputCard-loading__title {
+    width: 100%;
+    box-sizing: border-box;
+    height: 1.2em;
+    padding: 0 16px;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    font-size: xx-large;
+    line-height: 1.2em;
+}
+
+.rw-mdc-inputCard-loading__subtitle {
+    animation: loadingPulse 1s linear alternate;
+}

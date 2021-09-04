@@ -1,4 +1,6 @@
 {
+    "unfinished" : "Message shown when a features is marked ad ",
+
     "restore": {
         "label": "The title of the dialog prompting users for a reason to restore.",
         "helperText": "Text prompting the users to enter a reason",
@@ -38,21 +40,119 @@
         "warningContent": "Body text of the tamper protection dialog. Should inform users that behavior like theirs is discouraged, and should be stopped. Optionally include a link using <a> tag syntax"
     },
     "warn": {
+        "title": "Title of the warn user dialog.",
+
+        "user": {
+            "change": "Option to change the target user",
+            "confirm": "Confirmation button for changing the target user",
+
+            "load_wait": "Message shown while getting user information, telling the user to wait",
+            "loading": "Message shown while loading user information",
+            "input": "Column showing the target user",
+
+            "highestLevel": "Highest warning level",
+
+            "levelInfo": "The user's highest warning level",
+            "levelInfo_none": "Message shown when the target user has received no warnings in the last month",
+            "levelInfo_notice": "Message shown when the target user has received a level 1 notice in the last month",
+            "levelInfo_caution": "Message shown when the target user has received a level 2 notice in the last month",
+            "levelInfo_warning": "Message shown when the target user has received a level 3 warning in the last month",
+            "levelInfo_final": "Message shown when the target user has received a level 4 (final) warning in the last month",
+            "levelInfo_immediate": "Message shown when the target user has received an immediate level 4 notice in the last month. Include the following as appropriate: $t(ui:warn.user.report)",
+
+            "report": "Button to report the user to a board (like [[WP:AIV]] on enwiki)",
+            "edits": "The number of edits by the target user - use the {{edits}} param as appropriate",
+            "age": "How old the target user's account is - use the {{localeAge}} param as appropriate",
+
+            "talk": {
+                "main": "Button to show the target user's talk page",
+                "month": "The amount of notices the target user has received in the last month",
+                "whole": "Button to show the target user's entire talk page"
+            },
+
+            "show": {
+                "userpage": "Button to display the target user's user page",
+                "contributions": "Button to display the target user's contributions"
+            }
+        },
+
         "reason": {
             "page": "Text of the field prompting users for the related page",
-            "additionalText": "Text of the field prompting users for additional text"
+            "additionalText": "Text of the field prompting users for additional text",
+            "levelSelectionLevelNotPresent": "Message shown when there is not a template at the specified level for the specified warning - use the {{level}} and {{levelReadable}} params as appropriate",
+            "levelSelectionLevel": "Selector for the template level - use the {{level}}, {{levelReadable}} and {{levelDescription}} params as appropriate",
+            "searchDialogOpenerTooltip": "Tooltip for the opener for the warning search dialog",
+            "warningSelectionDropdownTitle": "Name for warning templates (eg \"Warning\")",
+            "singleIssueTemplate" : "Name for single issue templates (eg \"Reminder\")",
+            "policyViolationTemplate" : "Name for warnings related to policy violations (eg \"Policy Violation Warning\")",
+            "warningLevel" : "Text for specifying the warning level",
+            "noWarningSelected" : "Message shown when no warnings have been selected"
         },
+
+        "templateSearchDialog" : {
+            "dialogTitle": "Title for the dialog",
+            "searchBoxLabel" : "Label for the search box",
+            "instantSelect" : "Message telling the user to press ENTER to select the warnin",
+            "tip" : "Tip explaining that you can double click to select a specific warning, or that you can press ENTER to select the top warning"
+        },
+
+        "validation" : {
+            "validationFailedIconTooltip" : "Message informing the user that there is an issue preventing them from sending the warning",
+
+            "validationDialogTitle": "Message when a single issue has been found",
+            "validationDialogTitle_plural": "Message when multiple issues have been foung",
+            "validationDialogIntro": "Text preceeding the list of issues (eg \"The following issues are preventing this:\")",
+            
+            "fail": "Message when an unknown issue has occurred",
+            "fail_template" : "Message when the user has not selected a template",
+            "fail_level": "Message when the user has not selected a warning level",
+            "fail_user": "Message when the user has not selected a target user",
+            "fail_self": "Message when the user is trying to warn themselves",
+
+            "failDetailed": "Message asking the user to inform the RedWarn developers if the issue persists - include $t(ui:warn.validation.fail) as appropriate",
+            "failDetailed_template": "Message asking the user to select a warning template through the dropdown or search tool - include $t(ui:warn.validation.fail_template) as appropriate",
+            "failDetailed_level": "Message asking the user to select a level for the warning template - include $t(ui:warn.validation.fail_level) as appropriate",
+            "failDetailed_user": "Message asking the user to enter a username in the target user box - include $t(ui:warn.validation.fail_user) as appropriate",
+            "failDetailed_self": "Message asking the user to use a sandbox user for testing - include $t(ui:warn.validation.fail_self) as appropriate",
+
+            "pass": "Message shown if there are no issues"
+        },
+
+        "risky": {
+            "title": "Title for the risk revert dialog",
+            "content": "Message informing the user that they are about to warn an administator and asking for confirmation"
+        },
+
         "ok": "Text of the warn button"
+    },
+    "diff": {
+        "progress": {
+            "prepare": "Message shown while preparing the rollback/revert/revision restoration",
+            "details": "Message shown while getting information about the revision",
+            "revert": "Message shown while reverting the revision",
+            "revert_rollback": "Message shown while rolling back the revision",
+            "restore": "Message shown while restoring the revision",
+            "finish": "Message shown once the rollback/revert/revision restoration is complete"
+        }
     },
     "close": "Default close button text",
     "configErrorDialog": {
         "title": "Title for the dialog used to inform the user that the loading of their configuration file failed.",
-        "content": "Body text for the dialog used to inform the user that the loading of their configuration file failed. Should inform the user that it has been reset to the default.",
+        "content": "Body text for the dialog used to inform the user that the loading of their configuration file failed. Inform the user that it has been reset to the default settings .",
         "actions": [
             {
                 "data": "This should be kept the same as the English one, since it uses the default OK text."
             }
         ]
+    },
+    "styleError": {
+        "missing": {
+            "title": "Title for the dialog used to inform the user that the style set in their configuration file could not be found.",
+            "content": "Body text for the dialog used to inform the user that style set in their configuration file could not be found. Inform the user that it has been reset to the default style.",
+            "actions": [
+                { "data": "This should be kept the same as the English one, since it uses the default OK text." }
+            ]
+        }
     },
     "contribs": {
         "previewLink": "Used for the preview rollback link on contributions page. Should be short/abbreviated.",

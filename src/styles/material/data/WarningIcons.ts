@@ -5,26 +5,26 @@ export const WarningIcons: {
 } = {
     [WarningLevel.None]: {
         icon: "check_circle",
-        iconColor: "green",
+        iconColor: "green"
     },
     [WarningLevel.Notice]: {
         icon: "info",
-        iconColor: "blue",
+        iconColor: "blue"
     },
     [WarningLevel.Caution]: {
         icon: "announcement",
-        iconColor: "orange",
+        iconColor: "orange"
     },
     [WarningLevel.Warning]: {
         icon: "warning",
-        iconColor: "red",
+        iconColor: "red"
     },
     [WarningLevel.Final]: {
         icon: "report", // This one has hard edges
-        iconColor: "darkred",
+        iconColor: "darkred"
     },
     [WarningLevel.Immediate]: {
         icon: "new_releases", // This one has star-like edges
-        iconColor: "darkred",
-    },
+        iconColor: "darkred"
+    }
 };

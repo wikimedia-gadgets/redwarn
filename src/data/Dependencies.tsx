@@ -1,8 +1,8 @@
 import { h } from "tsx-dom";
 import { generateId } from "rww/util";
-import RedWarnLocalDB from "rww/data/RedWarnLocalDB";
+import RedWarnLocalDB from "rww/data/database/RedWarnLocalDB";
 import Log from "rww/data/RedWarnLog";
-import RedWarnIDBObjectStore from "rww/data/idb/RedWarnIDBObjectStore";
+import RedWarnIDBObjectStore from "rww/data/database/RedWarnIDBObjectStore";
 import { CachedDependency } from "rww/data/database/RWDBObjectStoreDefinitions";
 
 /*
@@ -149,7 +149,7 @@ export default class Dependencies {
             const recacheCheck = async () => {
                 try {
                     const { headers } = await fetch(dependency.src, {
-                        method: "HEAD",
+                        method: "HEAD"
                     });
 
                     if (headers.get("ETag") ?? "" !== cachedDep.etag ?? "")
@@ -245,7 +245,7 @@ export default class Dependencies {
                           type:
                               dependency.type === "script"
                                   ? "application/javascript"
-                                  : "text/css",
+                                  : "text/css"
                       })
                   )
                 : dependency.src;
@@ -265,7 +265,7 @@ export default class Dependencies {
             id: dependency.id,
             lastCache: Date.now(),
             etag: data.headers.get("ETag") ?? "",
-            data: (await data.text()).toString(),
+            data: (await data.text()).toString()
         };
 
         await cacheStore.put(cachedDep);

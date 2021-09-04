@@ -1,8 +1,8 @@
 import { h } from "tsx-dom";
 import i18next from "i18next";
-import { Configuration } from "rww/config";
 import { ClientUser } from "rww/mediawiki";
 import RedWarnUI from "rww/ui/RedWarnUI";
+import { Configuration } from "rww/config/user/Configuration";
 
 /**
  * Tamper protection module.
@@ -41,7 +41,7 @@ export default class TamperProtection {
         const d = new RedWarnUI.Dialog({
             actions: [],
             content,
-            title: i18next.t("ui:tamperProtection.header"),
+            title: i18next.t("ui:tamperProtection.header")
         });
         await d.show();
         Configuration.Core.neopolitan.value =

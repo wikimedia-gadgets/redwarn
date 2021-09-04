@@ -1,11 +1,11 @@
 import { h } from "tsx-dom";
 import i18next from "i18next";
 
-import { RWUIWarnDialog } from "rww/ui/elements/RWUIDialog";
+import { RWUIWarnDialog } from "rww/ui/elements/RWUIWarnDialog";
 
 import {
     registerMaterialDialog,
-    upgradeMaterialDialog,
+    upgradeMaterialDialog
 } from "rww/styles/material/Material";
 
 import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
@@ -13,30 +13,32 @@ import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
-    MaterialDialogTitle,
+    MaterialDialogTitle
 } from "./MaterialDialog";
 
 import MaterialWarnDialogUser, {
-    MaterialWarnDialogUserController,
+    MaterialWarnDialogUserController
 } from "./components/MaterialWarnDialogUser";
 import MaterialWarnDialogReason, {
-    MaterialWarnDialogReasonController,
+    MaterialWarnDialogReasonController
 } from "rww/styles/material/ui/components/MaterialWarnDialogReason";
 import {
     ClientUser,
     MediaWikiAPI,
     User,
     WarningOptions,
-    WarningType,
+    WarningType
 } from "rww/mediawiki";
-import { isIPAddress, normalize, warningSuffix } from "rww/util";
+import { isIPAddress, normalize } from "rww/util";
 
 import { RW_SIGNATURE } from "rww/data/RedWarnConstants";
 import MaterialIconButton from "./components/MaterialIconButton";
 import RedWarnUI from "rww/ui/RedWarnUI";
 
 import "../css/warnDialog.css";
-import RedWarnWikiConfiguration from "rww/data/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
+import { warningSuffix } from "rww/mediawiki/warn/WarningUtils";
+import toCSS from "rww/styles/material/util/toCSS";
 
 /**
  * A specific test performed to validate the values of a {@link MaterialWarnDialog}.
@@ -70,7 +72,7 @@ function MaterialWarnDialogErrors(props: {
         <div>
             {i18next
                 .t("ui:warn.validation.validationDialogIntro", {
-                    count: failingIds.length,
+                    count: failingIds.length
                 })
                 .toString()}
             <ul>
@@ -79,7 +81,7 @@ function MaterialWarnDialogErrors(props: {
                         <li>
                             {i18next
                                 .t("ui:warn.validation.failDetailed", {
-                                    context: id,
+                                    context: id
                                 })
                                 .toString()}
                         </li>
@@ -154,7 +156,8 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                   }''`
                 : ""
         }}} ${RW_SIGNATURE}${
-            isIPAddress(this.mwdUser.MWDUser.user.username)
+            isIPAddress(this.mwdUser.MWDUser.user.username) &&
+            RedWarnWikiConfiguration.c.warnings?.ipAdvice != null
                 ? RedWarnWikiConfiguration.c.warnings.ipAdvice
                 : ""
         }`;
@@ -181,13 +184,13 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         const parseRequest = await MediaWikiAPI.post({
             action: "parse",
             format: "json",
-            title: this.user?.talkPage?.title ?? "Example",
+            title: this.user?.talkPage?.title?.toString() ?? "Example",
             text: warningText,
             contentmodel: "wikitext",
             prop: "text",
             pst: true,
             assert: "user",
-            disablelimitreport: true,
+            disablelimitreport: true
         });
 
         if (+this.mwdXray.getAttribute("data-last-update") > requestTime)
@@ -224,17 +227,17 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
             {
                 // Prevent self-warning
                 id: "self",
-                condition: this.user?.username !== ClientUser.i.username,
+                condition: this.user?.username !== ClientUser.i.username
             },
             {
                 // Asserts user
                 id: "user",
-                condition: this.user != null,
+                condition: this.user != null
             },
             {
                 // Asserts warning template
                 id: "template",
-                condition: this.mwdReason?.MWDReason?.warning != null,
+                condition: this.mwdReason?.MWDReason?.warning != null
             },
             {
                 // Asserts warning level is set (given it is a tiered warning)
@@ -243,10 +246,8 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                     (this.mwdReason?.MWDReason?.warning != null &&
                         this.mwdReason?.MWDReason?.warning.type !=
                             WarningType.Tiered) ||
-                    this.mwdReason?.MWDReason?.warningLevel != null,
-            },
-            // TODO: prevents users without EC warning more than 1 user
-            // TODO: prevents ALL USERS warning > 15 users
+                    this.mwdReason?.MWDReason?.warningLevel != null
+            }
         ];
         console.log(this.mwdReason?.MWDReason?.warning); // debug
         // Find all tests that failed.
@@ -271,7 +272,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
 
         if (valid !== true) {
             this.helperText = i18next.t("ui:warn.validation.fail", {
-                context: valid[0].id,
+                context: valid[0].id
             });
             this.helperTextColor = "var(--mdc-theme-error)";
 
@@ -316,9 +317,31 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                                 .additionalText,
                             relatedPage: this.mwdReason.MWDReason.relatedPage,
                             warnLevel: this.mwdReason.MWDReason.warningLevel,
-                            warning: this.mwdReason.MWDReason.warning,
+                            warning: this.mwdReason.MWDReason.warning
                         };
                     } else this._result = null;
+
+                    if (!!this._result && this.props.autoWarn) {
+                        User.warn(this._result)
+                            .then(() => {
+                                RedWarnUI.Toast.quickShow({
+                                    content: i18next.t("ui:toasts.userWarned")
+                                });
+                            })
+                            .catch(() => {
+                                RedWarnUI.Toast.quickShow({
+                                    content: i18next.t(
+                                        "ui:toasts.userWarnFailed"
+                                    ),
+                                    action: {
+                                        text: "Verify",
+                                        callback: () => {
+                                            this.user.talkPage.navigate();
+                                        }
+                                    }
+                                });
+                            });
+                    }
 
                     styleStorage.dialogTracker.delete(this.id);
                     resolve(this._result);
@@ -337,40 +360,27 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                     "class": "rw-mdc-warnDialog mdc-dialog__surface",
                     "style": {
                         width: this.props.width ?? "50vw",
-                        height: "95vh",
+                        height: "95vh"
                     },
                     "aria-modal": true,
                     "aria-labelledby":
                         this.props.title ??
-                        i18next.t("ui:warn.title").toString(),
+                        i18next.t("ui:warn.title").toString()
                 }}
                 id={this.id}
             >
-                <MaterialDialogTitle
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        fontWeight: "200",
-                        fontSize: "45px",
-                        lineHeight: "48px",
-                        borderStyle: "none",
-                        marginTop: "4vh",
-                    }}
-                    tabIndex={0}
-                >
+                <MaterialDialogTitle tabIndex={0}>
                     <span style={{ float: "left" }}>
                         {this.props.title ??
                             i18next.t("ui:warn.title").toString()}
                     </span>
                 </MaterialDialogTitle>
                 <MaterialDialogContent
-                    style={{
-                        height: "400px",
+                    style={toCSS({
                         overflowY: "auto",
-                        overflowX: "hidden",
-                    }}
+                        overflowX: "hidden"
+                    })}
                 >
-                    <hr style={{ margin: "0" }} />
                     {this.mwdUser ??
                         (this.mwdUser = (
                             <MaterialWarnDialogUser
@@ -402,15 +412,6 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         ))}
                 </MaterialDialogContent>
                 <MaterialDialogActions>
-                    {this._helperText ??
-                        (this._helperText = (
-                            <div
-                                class={
-                                    "rw-mdc-dialog-helperText rw-mdc-warnDialog-helperTextHider"
-                                }
-                            />
-                        ))}
-
                     {this.mwdErrors ??
                         (this.mwdErrors = (
                             <MaterialIconButton
@@ -436,15 +437,22 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                                             {
                                                 data: i18next.t(
                                                     "ui:okCancel.ok"
-                                                ),
-                                            },
-                                        ],
+                                                )
+                                            }
+                                        ]
                                     });
                                     dialog.show();
                                 }}
                             />
                         ))}
-
+                    {this._helperText ??
+                        (this._helperText = (
+                            <div
+                                class={
+                                    "rw-mdc-dialog-helperText rw-mdc-warnDialog-helperTextHider"
+                                }
+                            />
+                        ))}
                     <MaterialButton dialogAction="cancel">
                         {i18next.t<string>("ui:okCancel.cancel")}
                     </MaterialButton>

@@ -2,6 +2,16 @@
     width: 100%;
 }
 
+.mdc-form-field.rw-mdc-radiofield--vertical {
+    flex-direction: column;
+    align-items: start !important;
+}
+
+.mdc-form-field.rw-mdc-radiofield--horizontal {
+    flex-direction: row;
+    justify-content: start;
+}
+
 @keyframes dummy {
     from {
     }
@@ -15,13 +25,35 @@
     animation: dummy 0s;
 }
 
+.mdc-radio + label {
+    vertical-align: top;
+    display: inline-block;
+    height: 100%;
+}
+
+.mdc-list .mdc-list-group__subheader {
+    margin: 0;
+    padding: 2px 16px;
+    background-color: #ddd;
+    color: #000;
+    font-weight: bold;
+}
+
 .bullet {
     margin: 0 0.5em;
 }
 
+.mdc-dialog__actions {
+    font-family: "Roboto", sans-serif;
+}
+
+.mdc-icon-button,
+.mdc-list-item {
+    --mdc-ripple-hover-opacity: 0.14;
+}
+
 .mdc-icon-button {
     position: relative;
-    --mdc-ripple-hover-opacity: 0.14;
 }
 
 /* Tooltip background color */
@@ -35,6 +67,11 @@
     font-size: small;
     line-height: 2em;
     height: 2em;
+}
+
+.mdc-list-item {
+    /** odd bug */
+    align-items: center !important;
 }
 
 .rw-mdc-subtitle {
@@ -59,7 +96,12 @@
 }
 
 .rw-mdc-dialog-helperText {
-    position: absolute;
-    left: 0;
-    padding: 16px;
+    margin-right: auto;
+    padding: 16px 0;
+}
+
+@media (max-width: 1165px) {
+    .rw-mdc-dialog-helperText {
+        display: none;
+    }
 }

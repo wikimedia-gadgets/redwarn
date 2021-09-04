@@ -105,7 +105,7 @@ module.exports = {
     mode: process.env.NODE_ENV === "production" ? "production" : "development",
     ...(devtool ? { devtool } : void 0),
     entry: {
-        redwarn: "./src/RedWarnLite.ts"
+        redwarn: "./src/RedWarn.ts"
     },
     output: {
         path: path.resolve(__dirname, "build"),
@@ -121,11 +121,8 @@ module.exports = {
         compress: false,
         port: 45991,
         /* Wikipedia will block the request due to CORS. Just refresh like a normal person. */
+        client: false,
         hot: false,
-        client: {
-            needClientEntry: false,
-            needHotEntry: false,
-        },
         liveReload: false
     },
     plugins,

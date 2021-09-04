@@ -23,7 +23,7 @@ export default class Localization {
         }
         await import("./lang/en-US/RWLEnglish");
 
-        this.cleanLanguages();
+        Localization.cleanLanguages();
     }
 
     /**
@@ -45,11 +45,14 @@ export default class Localization {
      * Initialize the localization handler.
      */
     public static async init(): Promise<void> {
-        await this.assertLanguages();
+        await Localization.assertLanguages();
         await i18next.use(LanguageDetector).init({
-            fallbackLng: this.fallbackLanguage,
-            debug: true,
+            fallbackLng: Localization.fallbackLanguage,
+            debug: process.env.NODE_ENV !== "production",
             returnObjects: true,
+            interpolation: {
+                escapeValue: false
+            }
         });
 
         // Register all namespaces from all languages.

@@ -21,3 +21,7 @@ export interface LogItem {
     code: RWErrors;
     data: Record<string, any>;
 }
+
+export interface WatchedPage {
+    title?: string;
+}

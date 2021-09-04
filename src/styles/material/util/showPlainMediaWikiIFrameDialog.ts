@@ -1,6 +1,6 @@
 import { Page } from "rww/mediawiki";
 import RedWarnUI from "rww/ui/RedWarnUI";
-import { RWUIIFrameDialogProps } from "rww/ui/elements/RWUIDialog";
+import { RWUIIFrameDialogProps } from "rww/ui/elements/RWUIIFrameDialog";
 import { url } from "rww/util";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -21,7 +21,7 @@ export default function (
                 ? url(page.url, { safemode: "true" })
                 : page.url,
             width: "calc(100vw - 176px)",
-            height: "90vh",
+            height: "90vh"
         },
         additionalProps
     );

@@ -1,5 +1,6 @@
-import generateId from "rww/util/generateId";
+import random from "rww/util/random";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
+import RedWarnUI from "rww/ui/RedWarnUI";
 
 export interface RWUIToastProperties extends RWUIElementProperties {
     content: string;
@@ -36,7 +37,7 @@ export class RWUIToast extends RWUIElement {
     public static readonly elementName = "rwToast";
 
     /**
-     * A unique identifier for this dialog, to allow multiple active toasts.
+     * A unique identifier for this toast, to allow multiple active toasts.
      */
     id: string;
 
@@ -45,9 +46,9 @@ export class RWUIToast extends RWUIElement {
      */
     element?: HTMLDivElement;
 
-    constructor(readonly props: RWUIToastProperties) {
+    protected constructor(readonly props: RWUIToastProperties) {
         super();
-        this.id = `toast__${props.id || generateId(16)}`;
+        this.id = `toast__${props.id || random(16)}`;
         this.props.style ??= RWUIToastStyle.Normal;
     }
 
@@ -55,7 +56,7 @@ export class RWUIToast extends RWUIElement {
      * Helper function to create and instantly show a toast.
      */
     static quickShow(props: RWUIToastProperties): Promise<void> {
-        const toast = new this(props);
+        const toast = new RedWarnUI.Toast(props);
         return toast.show();
     }
 

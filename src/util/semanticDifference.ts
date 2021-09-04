@@ -17,10 +17,6 @@ export default function (
         return null;
     }
 
-    if (versionAWhole === versionBWhole) {
-        return 0;
-    }
-
     if (+versionAMajor > +versionBMajor) {
         return 1;
     } else if (+versionAMajor < +versionBMajor) {

@@ -1,6 +1,7 @@
 import { BaseProps, ComponentChildren, h } from "tsx-dom";
 
 export interface MaterialDialogProperties {
+    draggable?: boolean;
     containerProperties?: JSX.HTMLAttributes & Record<string, any>;
     surfaceProperties?: JSX.HTMLAttributes & Record<string, any>;
     children: ComponentChildren;
@@ -12,11 +13,26 @@ export default function ({
     surfaceProperties,
     children,
     id,
+    draggable
 }: MaterialDialogProperties): JSX.Element {
     return (
-        <div id={id} class="mdc-dialog">
-            <div class="mdc-dialog__container" {...containerProperties}>
-                <div class="mdc-dialog__surface" {...surfaceProperties}>
+        <div
+            id={id}
+            class="mdc-dialog"
+            data-rw-mdc-dialog-draggable={draggable}
+        >
+            <div
+                {...containerProperties}
+                class={`mdc-dialog__container ${
+                    containerProperties?.class ?? ""
+                }`}
+            >
+                <div
+                    {...surfaceProperties}
+                    class={`mdc-dialog__surface ${
+                        surfaceProperties?.class ?? ""
+                    }`}
+                >
                     {children}
                 </div>
             </div>
@@ -28,7 +44,7 @@ export default function ({
 export function MaterialDialogTitle({
     children,
     style,
-    tabIndex,
+    tabIndex
 }: BaseProps & {
     style?: Partial<CSSStyleDeclaration>;
     tabIndex?: number;
@@ -42,7 +58,7 @@ export function MaterialDialogTitle({
 
 export function MaterialDialogContent({
     children,
-    style,
+    style
 }: BaseProps & { style?: Partial<CSSStyleDeclaration> }): JSX.Element {
     return (
         <div class="mdc-dialog__content" style={style}>
@@ -53,7 +69,7 @@ export function MaterialDialogContent({
 
 export function MaterialDialogActions({
     children,
-    style,
+    style
 }: BaseProps & { style?: Partial<CSSStyleDeclaration> }): JSX.Element {
     return (
         <div class="mdc-dialog__actions" style={style}>

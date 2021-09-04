@@ -1,27 +1,29 @@
 import { BaseProps, h } from "tsx-dom";
 import {
     RWUIDiffIcons,
-    RWUIDiffIconsProperties,
+    RWUIDiffIconsProperties
 } from "rww/ui/elements/RWUIDiffIcons";
 import {
     DiffIconRevertContext,
     RestoreStage,
     Revert,
     RevertContextBase,
-    RevertStage,
+    RevertStage
 } from "rww/mediawiki";
 import RevertOptions, {
     ActionSeverity,
-    RevertOption,
-} from "rww/data/RevertOptions";
+    RevertOption
+} from "rww/mediawiki/revert/RevertOptions";
 import { MDCLinearProgress } from "@material/linear-progress/component";
 
 import "../css/diffIcons.css";
 import i18next from "i18next";
-import { Configuration, RevertMethod } from "rww/config";
-import { RevertDoneOptions } from "rww/data/RevertDoneOptions";
+
+import { RevertDoneOptions } from "rww/mediawiki/revert/RevertDoneOptions";
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
 import Log from "rww/data/RedWarnLog";
+import { Configuration } from "rww/config/user/Configuration";
+import { RevertMethod } from "rww/config/user/ConfigurationEnums";
 
 function getRollbackOptionClickHandler(
     diffIcons: MaterialDiffIcons,
@@ -40,7 +42,7 @@ function getRollbackOptionClickHandler(
                 diffIcons.selectedReason = option;
                 Revert.revert(
                     Object.assign(context, {
-                        reason: option,
+                        reason: option
                     }) as DiffIconRevertContext
                 );
             };
@@ -53,7 +55,7 @@ function getRollbackOptionClickHandler(
                         : context.oldRevision,
                     {
                         diffIcons: context.diffIcons,
-                        defaultText: option.defaultSummary,
+                        defaultText: option.defaultSummary
                     }
                 );
             };
@@ -68,16 +70,31 @@ const MaterialRevertProgress: Record<RevertStage | RestoreStage, number> = {
     [RevertStage.Revert]: 2 / 3,
     [RestoreStage.Restore]: 2 / 3,
     [RevertStage.Finished]: 1,
-    [RestoreStage.Finished]: 1,
+    [RestoreStage.Finished]: 1
 };
 
+// This value depends on accessibility settings, and can be overridden by the user elsewhere. Treat these as defaults.
 const MaterialActionSeverityColors: Record<ActionSeverity, string> = {
+    // Default (HIGH CONTRAST: OFF)
     [ActionSeverity.Neutral]: "black",
     [ActionSeverity.GoodFaith]: "green",
     [ActionSeverity.Mild]: "blue",
-    [ActionSeverity.Moderate]: "yellow",
+    [ActionSeverity.Moderate]: "gold",
     [ActionSeverity.Severe]: "orange",
-    [ActionSeverity.Critical]: "red",
+    [ActionSeverity.Critical]: "red"
+};
+
+const MaterialHighContrastActionSeverityColors: Record<
+    ActionSeverity,
+    string
+> = {
+    // Accessible mode (HIGH CONTRAST: ON)
+    [ActionSeverity.Neutral]: "black",
+    [ActionSeverity.GoodFaith]: "blue",
+    [ActionSeverity.Mild]: "blue",
+    [ActionSeverity.Moderate]: "red",
+    [ActionSeverity.Severe]: "red",
+    [ActionSeverity.Critical]: "red"
 };
 
 export default class MaterialDiffIcons extends RWUIDiffIcons {
@@ -92,7 +109,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
             newRevision: this.newRevision,
             oldRevision: this.oldRevision,
             side: this.side,
-            diffIcons: this,
+            diffIcons: this
         };
         return this._context;
     }
@@ -152,7 +169,11 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
                     icon={option.icon}
                     iconColor={
                         option.color ??
-                        MaterialActionSeverityColors[option.severity]
+                        Configuration.Accessibility.highContrast.value
+                            ? MaterialHighContrastActionSeverityColors[
+                                  option.severity
+                              ]
+                            : MaterialActionSeverityColors[option.severity]
                     }
                     data-rw-revert-option={option.id}
                 />
@@ -198,7 +219,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
             element: element,
             progress: new MDCLinearProgress(progressElement),
             progressElement: progressElement,
-            progressLabel: progressLabel,
+            progressLabel: progressLabel
         };
 
         return element;
@@ -217,7 +238,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
                         onClick={() =>
                             option.action(
                                 Object.assign(this.context, {
-                                    reason: this.selectedReason,
+                                    reason: this.selectedReason
                                 })
                             )
                         }
@@ -274,9 +295,9 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
                         Configuration.Revert.revertMethod.value ===
                         RevertMethod.Rollback
                             ? "rollback"
-                            : undefined,
+                            : undefined
                 }),
-                [RevertStage.Finished]: i18next.t("ui:diff.progress.prepare"),
+                [RevertStage.Finished]: i18next.t("ui:diff.progress.prepare")
             };
             this.progressBar.progressLabel.innerText =
                 MaterialRevertProgressLabel[stage];
@@ -305,7 +326,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
                 [RestoreStage.Preparing]: i18next.t("ui:diff.progress.prepare"),
                 [RestoreStage.Details]: i18next.t("ui:diff.progress.details"),
                 [RestoreStage.Restore]: i18next.t("ui:diff.progress.restore"),
-                [RestoreStage.Finished]: i18next.t("ui:diff.progress.prepare"),
+                [RestoreStage.Finished]: i18next.t("ui:diff.progress.prepare")
             };
             this.progressBar.progressLabel.innerText =
                 MaterialRestoreProgressLabel[stage];

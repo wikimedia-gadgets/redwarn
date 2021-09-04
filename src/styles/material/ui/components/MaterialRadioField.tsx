@@ -1,7 +1,7 @@
 import { h } from "tsx-dom";
 import type {
     MaterialRadioElement,
-    MaterialRadioProps,
+    MaterialRadioProps
 } from "rww/styles/material/ui/components/MaterialRadio";
 import MaterialRadio from "rww/styles/material/ui/components/MaterialRadio";
 import { generateId } from "rww/util";
@@ -11,10 +11,16 @@ export interface MaterialRadioFieldProps<T> {
     name?: string;
     class?: string | string[];
     onChange?: (value: T, radio: MaterialRadioElement<T>) => void;
+    /** Whether or not this field goes vertical or horizontal. */
+    direction?: "vertical" | "horizontal";
+    disabled?: boolean;
 }
 
 export type MaterialRadioFieldElement<T> = JSX.Element & {
     MDCRadios: MaterialRadioElement<T>[];
+    reset: () => void;
+    enable: () => void;
+    disable: () => void;
 };
 
 export default function <T>(
@@ -26,9 +32,10 @@ export default function <T>(
             <MaterialRadio<T>
                 {...Object.assign(radio, {
                     name: props.name ?? radioFieldId,
+                    disabled: props.disabled ?? false
                 })}
             >
-                {radio.children}
+                {radio.children ?? `${radio.value}`}
             </MaterialRadio>
         ) as MaterialRadioElement<T>;
     });
@@ -36,7 +43,9 @@ export default function <T>(
     const element = (
         <div
             id={radioFieldId}
-            class={`mdc-form-field ${
+            class={`mdc-form-field rw-mdc-radiofield--${
+                props.direction ?? "horizontal"
+            } ${
                 props.class
                     ? Array.isArray(props.class)
                         ? props.class.join(" ")
@@ -59,5 +68,15 @@ export default function <T>(
 
     return Object.assign(element, {
         MDCRadios: radios,
+        reset() {
+            radios.forEach((v) => (v.MDCRadio.checked = false));
+            props.onChange(null, null);
+        },
+        enable() {
+            radios.forEach((v) => v.enable());
+        },
+        disable() {
+            radios.forEach((v) => v.disable());
+        }
     });
 }

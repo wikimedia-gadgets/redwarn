@@ -8,7 +8,7 @@ import { Setting } from "./Setting";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import i18next from "i18next";
 import StyleManager from "rww/styles/StyleManager";
-import { RedWarnStyleMissingError } from "rww/errors/RedWarnStyleError";
+import { StyleMissingError } from "rww/errors/RedWarnStyleError";
 import Log from "rww/data/RedWarnLog";
 
 import CoreSettings from "rww/config/user/values/CoreSettings";
@@ -110,7 +110,7 @@ export class Configuration {
                     Configuration.UI.style.defaultValue
             );
         } catch (e) {
-            if (e instanceof RedWarnStyleMissingError) {
+            if (e instanceof StyleMissingError) {
                 StyleManager.setStyle(StyleManager.defaultStyle);
                 const dialog = new RedWarnUI.Dialog(
                     i18next.t("ui:styleError.missing")

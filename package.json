@@ -51,7 +51,7 @@
         "text-loader": "0.0.1",
         "ts-jest": "^26.4.4",
         "ts-loader": "^8.0.12",
-        "types-mediawiki": "^1.2.0",
+        "types-mediawiki": "git+https://github.com/wikimedia-gadgets/types-mediawiki.git",
         "typescript": "^4.2.3",
         "typescript-json-schema": "^0.50.1",
         "webpack": "^5.51.1",
@@ -62,7 +62,7 @@
         "wrapper-webpack-plugin": "git+https://github.com/redwarnwp/wrapper-webpack-plugin.git"
     },
     "scripts": {
-        "build": "npm run clean && webpack",
+        "build": "npm run clean && cross-env NODE_ENV=production webpack",
         "build:prod": "npm run clean && cross-env NODE_ENV=production webpack",
         "build:dev": "npm run clean && cross-env NODE_ENV=development webpack",
         "schema": "typescript-json-schema tsconfig.json WikiConfigurationRaw -o build/WikiConfigurationRaw.schema.json",
@@ -70,6 +70,7 @@
         "start": "cross-env NODE_ENV=development webpack serve --config webpack.config.js",
         "profile": "webpack --profile",
         "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+        "lint": "eslint --cache --fix && prettier --write src/",
         "coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --collectCoverageFrom=src/**/*.{js,jsx,ts,tsx}"
     },
     "repository": {

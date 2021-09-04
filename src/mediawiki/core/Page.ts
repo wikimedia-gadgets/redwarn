@@ -221,12 +221,15 @@ export class Page implements SectionContainer {
 
         if (revisionInfoRequest["query"]["pages"]["-1"]) {
             if (!!revisionInfoRequest["query"]["pages"]["-1"]["missing"])
-                throw new PageMissingError({ page: page });
+                throw new PageMissingError({ page });
             if (!!revisionInfoRequest["query"]["pages"]["-1"]["invalid"])
-                throw new PageInvalidError(
+                throw new PageInvalidError({
                     page,
-                    revisionInfoRequest["query"]["pages"]["-1"]["invalidreason"]
-                );
+                    reason:
+                        revisionInfoRequest["query"]["pages"]["-1"][
+                            "invalidreason"
+                        ]
+                });
 
             throw new Error("Invalid page ID or title.");
         }
@@ -397,10 +400,10 @@ export class Page implements SectionContainer {
 
                     // Section not found. Hard fail since there's no fallback title.
                     if (existingSection == null)
-                        throw new SectionIndexMissingError(
-                            options.section,
+                        throw new SectionIndexMissingError({
+                            sectionId: options.section,
                             revision
-                        );
+                        });
                 } else {
                     existingSection = revisionSections.filter(
                         (s) => s.title === options.section

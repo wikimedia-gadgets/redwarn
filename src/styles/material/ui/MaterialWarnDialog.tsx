@@ -375,6 +375,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                             i18next.t("ui:warn.title").toString()}
                     </span>
                 </MaterialDialogTitle>
+                <br />
                 <MaterialDialogContent
                     style={toCSS({
                         overflowY: "auto",

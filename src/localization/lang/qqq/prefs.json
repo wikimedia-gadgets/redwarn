@@ -1,8 +1,8 @@
 {
-    "accessibility" : {
-        "raiseActionButtons" : {
-            "title" : "Configuration option name for raising action buttons",
-            "description" : "Text describing the configuration option"
+    "accessibility": {
+        "raiseActionButtons": {
+            "title": "Configuration option name for raising action buttons",
+            "description": "Text describing the configuration option"
         },
         "rapidClickProtection": {
             "title": "Configuration option name for the minimum duration between clicks on potentially damaging buttons (for example, rollback and warning buttons)",
@@ -51,9 +51,9 @@
             "description": "Text describing the configuration option - mention that it will only be reverted if the latest revision was made by the same user and there are no intermediate edits by other users"
         }
     },
-    "ui" : {
-        "noticeOrder" : {
-            "title" : "Configuration option name for the order of which warning templates are displayed",
+    "ui": {
+        "noticeOrder": {
+            "title": "Configuration option name for the order of which warning templates are displayed",
             "description": "Text describing the configuration option",
             "options": {
                 "title": "Option to sort by the title of the warning template",

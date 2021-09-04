@@ -2,7 +2,7 @@ import semanticDifference from "rww/util/semanticDifference";
 import { DefaultRedWarnStyles } from "./RedWarnStyles";
 import Style from "./Style";
 import { DefaultRedWarnStyle } from "rww/styles/StyleConstants";
-import { RedWarnStyleMissingError } from "rww/errors/RedWarnStyleError";
+import { StyleMissingError } from "rww/errors/RedWarnStyleError";
 
 export default class StyleManager {
     public static get defaultStyle(): string {
@@ -48,7 +48,7 @@ export default class StyleManager {
 
     static setStyle(id: string): Style {
         const foundStyle = StyleManager.findStyle(id);
-        if (foundStyle == null) throw new RedWarnStyleMissingError(id);
+        if (foundStyle == null) throw new StyleMissingError({ styleId: id });
         return foundStyle;
     }
 

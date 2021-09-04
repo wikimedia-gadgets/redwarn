@@ -18,6 +18,7 @@ import type { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
 import { RevertOption } from "rww/mediawiki/revert/RevertOptions";
 import { RevertMethod } from "rww/config/user/ConfigurationEnums";
 import { Configuration } from "rww/config/user/Configuration";
+import { RevisionNotLatestError } from "rww/errors/MediaWikiErrors";
 
 /**
  * The context of a revert being performed. When used alone (not through
@@ -358,7 +359,9 @@ export class Revert {
             // TODO: Proper errors
             if (diffIcons)
                 diffIcons.onRevertFailure(
-                    new Error("Target revision is not the latest revision.")
+                    new RevisionNotLatestError({
+                        revision: context.newRevision
+                    })
                 );
             return;
         }

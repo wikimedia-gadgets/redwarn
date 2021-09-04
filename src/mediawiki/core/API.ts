@@ -4,14 +4,15 @@ import { ClientUser } from "rww/mediawiki";
 import RedWarnLocalDB from "rww/data/database/RedWarnLocalDB";
 import Log from "rww/data/RedWarnLog";
 import {
-    GenericMediaWikiError,
-    MediaWikiErrorData,
+    GenericAPIError,
+    GenericAPIErrorData,
     SpecializedMediaWikiErrors
 } from "rww/errors/MediaWikiErrors";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import { ApiQueryAllMessagesParams } from "types-mediawiki/api_params";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
+import { RWAggregateError } from "rww/errors/RWError";
 
 export class MediaWikiAPI {
     static groups: Map<string, Group>;
@@ -240,7 +241,6 @@ export class MediaWikiAPI {
         }
     }
 
-    // TODO: rewrite with new error system
     /**
      * Get errors from a MediaWiki response.
      *
@@ -249,8 +249,8 @@ export class MediaWikiAPI {
      */
     public static error(
         apiResponse: Record<string, any>,
-        data?: MediaWikiErrorData
-    ): GenericMediaWikiError | AggregateError {
+        data?: GenericAPIErrorData
+    ): GenericAPIError | RWAggregateError {
         if (!apiResponse["errors"] && !!apiResponse["error"]) {
             // Legacy format. This should be avoided.
             return new GenericAPIError(apiResponse["error"]);
@@ -262,12 +262,13 @@ export class MediaWikiAPI {
                 errors.push(
                     SpecializedMediaWikiErrors[error["code"]] != null
                         ? new SpecializedMediaWikiErrors[error["code"]](data)
-                        : new GenericMediaWikiError(error)
+                        : new GenericAPIError(error)
                 );
             }
 
             if (errors.length === 1) return errors[0];
-            else return new AggregateError(errors);
+
+            return new RWAggregateError(errors);
         } else {
             // No error occurred???
             return new GenericAPIError("Unknown MediaWiki API error.");

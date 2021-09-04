@@ -6,6 +6,7 @@ import {
     Revision
 } from "rww/mediawiki";
 import { BaseProps } from "tsx-dom";
+import RWErrorBase from "rww/errors/RWError";
 
 export type RWUIDiffIconsProperties = Pick<
     DiffIconRevertContext,
@@ -85,7 +86,7 @@ export class RWUIDiffIcons
      * @param error The error that occurred.
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onRevertFailure(error: Error): void {
+    onRevertFailure(error: RWErrorBase): void {
         return undefined;
     }
 
@@ -108,7 +109,7 @@ export class RWUIDiffIcons
 
     // TODO: documentation
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    onRestoreFailure(error: Error): void {
+    onRestoreFailure(error: RWErrorBase): void {
         return undefined;
     }
 }

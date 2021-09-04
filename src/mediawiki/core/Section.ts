@@ -154,9 +154,16 @@ export default class Section {
                     : ["wikitext"])
             ]
         }).catch((e) => {
-            throw MediaWikiAPI.error(e, {
-                [context instanceof Page ? "page" : "revision"]: context
-            });
+            let data;
+            if (context instanceof Page) {
+                data = { page: context };
+            } else if (context instanceof Revision) {
+                data = { revision: context };
+            } else {
+                // ??? how did we get here
+                throw "Impossible else";
+            }
+            throw MediaWikiAPI.error(e, data);
         });
 
         if (

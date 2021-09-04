@@ -30,6 +30,14 @@ export class SectionIndexMissingError extends RWFormattedError<{
         "Revision with ID {{revision.revisionID}} does not contain a section with index {{sectionId}}.";
 }
 
+export class RevisionNotLatestError extends RWFormattedError<{
+    revision: Revision;
+}> {
+    readonly code = RWErrors.RevisionNotLatest;
+    static readonly message =
+        "Target revision {{revision.revisionID}} is not the latest revision.";
+}
+
 export class GenericAPIError extends RWErrorBase {
     readonly code = RWErrors.APIError;
 
@@ -46,6 +54,8 @@ export class GenericAPIError extends RWErrorBase {
                   "Unknown MediaWiki API error.";
     }
 }
+
+export type GenericAPIErrorData = { page: Page } | { revision: Revision };
 
 export const SpecializedMediaWikiErrors: Record<string, any> = {
     missingtitle: PageMissingError,

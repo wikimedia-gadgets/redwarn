@@ -19,9 +19,8 @@ import i18next, { i18n } from "i18next";
  * | 7XXX    | Style          |
  * | 8XXX    | <unused>       |
  * | 9XXX    | Misc.          |
- *
+ * !!! IMPORTANT: FOR BACKWARDS COMPATIBILITY, DO **NOT** CHANGE AN ERROR'S CODE !!!
  */
-
 export const enum RWErrors {
     UNSET = "RW0000",
     StartupComplete = "RW0001",
@@ -30,7 +29,9 @@ export const enum RWErrors {
     PageInvalid = "RW4002",
     RevisionMissing = "RW4003",
     SectionIndexMissing = "RW4004",
+    RevisionNotLatest = "RW4005",
     StyleMissing = "RW7000",
+    AggregateError = "RW9000",
 }
 
 /**
@@ -81,5 +82,32 @@ export class RWFormattedError<
         }
         RWFormattedError.i18next = i18next.createInstance();
         await RWFormattedError.i18next.init();
+    }
+}
+
+export class RWAggregateError<
+    T extends RWErrorBase = RWErrorBase
+> extends RWErrorBase {
+    readonly code = RWErrors.AggregateError;
+    constructor(readonly errors: T[]) {
+        super();
+    }
+    get message() {
+        const len = this.errors.length;
+        /**
+         * len === 0        `0 errors`
+         * len === 1        `1 error: ${err}`
+         * len === 2        `2 errors: ${err[0]}, ${err[1]}`
+         * len === 3        `3 errors: ${err[0]}, ${err[1]}, ${err[2]}`
+         * etc.
+         */
+        let msg = `${len} error${len === 1 ? "s" : ""}${len > 0 ? ": " : ""}`;
+        this.errors.forEach((e, i) => {
+            if (i === 0) {
+                return (msg += e.message);
+            }
+            msg += ", " + e.message;
+        });
+        return msg;
     }
 }

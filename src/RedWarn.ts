@@ -3,9 +3,9 @@
  * RedWarn - Recent Edits Patrol and Warning Tool
  * The user-friendly Wikipedia counter-vandalism tool.
  *
- * (c) 2021 The RedWarn Development Team and contributors - ed6767wiki (at) gmail.com or [[WT:RW]]
+ * (c) 2021 The RedWarn Development Team and contributors - tools.redwarn@toolforge.org or [[WT:RW]]
  * Licensed under the Apache License 2.0 - read more at https://gitlab.com/redwarn/redwarn-web/
- * Other conditions may apply - please check prior to distribution
+ * Other conditions may apply - check LICENSE for more information.
  *
  **/
 

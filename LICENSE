@@ -1,39 +1,73 @@
 RedWarn License Declaration
 
 This file itself is not a license, but an informative description of RedWarn's
-copyright status.
+copyright and license status, and consequently the copyright and license status of
+any code that you contribute.
 
 PREAMBLE
 
-    RedWarn is, and always will be, an open-source project, made
-    entirely by volunteers. Since RedWarn is used on openly-sourced
-    projects, we need to provide RedWarn under the proper licenses
-    to make it usable but still retain proper attribution for our work.
-
-    This repository's contents is available under the following licenses,
-    unless otherwise explicitly stated by an additional LICENSE file in
-    the directory of the included content.
+    RedWarn is a fully free (as in free beer) open-source project developed by many people,
+    however unlike most open-source projects because of RedWarn's use on Wikimedia and
+    other projects, we don't simply have one license in all cases.
 
 LICENSES
 
-    RedWarn is licensed under the Apache License 2.0. The terms of this
-    license is available in the file named `LICENSE.APACHE`. If you did
-    not receive a copy of this file, it is available on the Internet under
-    the following URL.
+    RedWarn is de-facto licensed under the Apache License 2.0.
+    The terms of this license is available in the file named `LICENSE.APACHE`.
+    If you did not receive a copy of this file, it is available at:
 
         https://www.apache.org/licenses/LICENSE-2.0.txt
 
-    To comply with the copyright of Wikimedia Foundation wikis, we are also
-    required to license the _transpiled files_ under the Creative Commons
-    Attribution-ShareAlike 3.0 Unported License and the GNU Free Documentation
-    License. The terms of these are available on the Internet
-    under the following URLs, respectively.
+    For releases compiled and localised for Wikimedia and other authorised Wikis ONLY:
+
+    To comply with the copyright of Wikimedia Foundation and other autorised wikis,
+    we are also required to license the _transpiled files_ (i.e. "built" versions of
+    RedWarn) that have been released on-Wiki by us under the Creative Commons
+    Attribution-ShareAlike 3.0 Unported License and the GNU Free Documentation License.
+    The terms of these are available at:
 
         https://creativecommons.org/licenses/by-sa/3.0/legalcode.txt
         https://www.gnu.org/licenses/fdl-1.3.txt
 
-    The source files are not inherently available under the CC BY-SA 3.0 and
-    GFDL license, but you may sublicense them given any potential contributions.
+    Critically, the source files are not inherently available under the CC BY-SA 3.0 and
+    GFDL license, and never will be. The licensors will not provide raw source files under
+    any other licenses, commercial or non-commercial, except under the Apache License 2.0.
+
+AUTHORISED WIKIS
+
+    The list of Wikis that have Apache-incompatible licenses that are currently
+    authorised to host RedWarn are as follows:
+    - all Wikimedia projects
+
+    Not every Wiki that supports CC BY-SA 3.0 can host RedWarn on-wiki without
+    authorisation from the licensors. For more information regarding licensing,
+    email ed6767wiki (!at!) gmail dot com.
+
+SOLE LICENSOR
+
+    Only the RedWarn Team can license other RedWarn builds. By contributing to
+    the RedWarn respository or any forks of it, you allow the RedWarn Team to
+    license your code on your behalf.
+
+BASICALLY, WHAT YOU CAN AND CAN'T DO
+
+    You can:
+    - use or modify the code and any transpiled versions under the conditions
+      of the Apache License 2.0
+    - use or modify the transpiled versions that are released on-Wiki under the
+      Apache License 2.0
+    - release or host RedWarn, or any modifications of it on your Wiki without
+      authorisation, if the license under which the code will be hosted is
+      compatible with the Apache License 2.0
+
+    You can't:
+    - build or transpile RedWarn yourself from source and release it on Wikis
+      that do not support the Apache License 2.0 without express permission from
+      the licensors.
+    - release versions of RedWarn yourself that are built from source on
+      Apache-incompatible Wiki's that haven't been released by the RedWarn Team.
+      Remember: only the RedWarn Team can license and release transpilled
+      versions of RedWarn under CC BY SA and GFDL.
 
 REASONING
 
@@ -52,20 +86,21 @@ REASONING
     both under the Apache license and the GFDL and CC BY-SA 3.0 tandem that
     Wikipedia uses.
 
+KEEP OTHER LIBARIES SEPERATE
+
+    For code and libaries that can't be released under CC BY-SA 3.0 or GFDL,
+    and don't support sub-licensing, these must be kept seperate and included via a CDN.
+
 SUMMARY
 
     In summary, ALL CONTRIBUTIONS TO THIS REPOSITORY MUST BE LICENSED UNDER
-    THE Apache License 2.0. Transpiled versions of the code available on
-    Wikimedia Foundation wikis are also licensed under the GFDL and CC BY-SA 3.0
-    licenses.
+    THE Apache License 2.0. Transpiled versions of the code made available by
+    the RedWarn Team on Wikimedia Foundation and other authorised wikis are also
+    licensed under the GFDL and CC BY-SA 3.0 licenses.
+    
+    By contibuting, you let us license your code on your behalf to make this
+    possible.
 
-    This will provide RedWarn with enough protection as an open-source code
-    project while still allowing anyone to contribute, modify, redistribute,
-    and republish the code.
-
-    You are allowed to take the Wikipedia versions of the userscript (which
-    are multi-licensed under all three aforementioned licenses) and use it
-    with any CC BY-SA 3.0-compatible wiki.
 
 DISCLAIMER
 

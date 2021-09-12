@@ -28,4 +28,4 @@ If you wish to contribute in the development of RedWarn, follow the instructions
 
 ## License
 
-Copyright © 2020–2021 The RedWarn Contributors. Released under the Apache License 2.0, Creative Commons Attribution-ShareAlike 3.0 Unported License, and GNU Free Documentation License 1.3. See [LICENSE](/LICENSE) for more information.
+Copyright © 2020–2021 The RedWarn Contributors. Released under the Apache License 2.0. Versions on Wikimedia Foundation wikis are also released under the Creative Commons Attribution-ShareAlike 3.0 Unported License, and GNU Free Documentation License 1.3. See [LICENSE](/LICENSE) for more information.

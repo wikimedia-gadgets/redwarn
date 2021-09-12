@@ -24,7 +24,7 @@ If you add code from an external source/reuse code within Redwarn, please make s
 
 ## Making a submission to this repo
 
-**NOTE:** By contributing code to this repository, you agree to license your contributions under the Apache License 2.0, Creative Commons Attribution-ShareAlike 3.0 Unported License, AND the GNU Free Documentation License 1.3. More information is available in the [LICENSE](/LICENSE) file of this repo.
+**NOTE:** By contributing code to this repository, you agree to license your contributions under the Apache License 2.0. More information is available in the [LICENSE](/LICENSE) file of this repo.
 
 When pushing submissions to this repo we require that you make a seperate fork for you to make your modification on as you see fit then sent back via a merge request. We do however have some rules surrounding the formatting of your contribution:
 

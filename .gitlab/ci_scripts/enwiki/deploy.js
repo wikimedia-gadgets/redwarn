@@ -346,7 +346,7 @@
             }`,
             summary: `Preparing verification page for [[User:${
                 username
-            }/.js]] [[WP:RW/CI|update]] to commit ${
+            }/.js]] [[WP:RW/CD|update]] to commit ${
                 headCommit.shortHash
             } ([[WP:BOT|bot]])`,
             bot: true,
@@ -404,7 +404,7 @@
             }`,
             summary: `Preparing verification page for [[User:${
                 username
-            }/.js]] [[WP:RW/CI|update]] to commit ${
+            }/.js]] [[WP:RW/CD|update]] to commit ${
                 headCommit.shortHash
             } ([[WP:BOT|bot]])`,
             bot: true,
@@ -547,7 +547,7 @@
             text: 
                 fs.readFileSync(path.resolve(root, "public", "redwarn.js"))
                     .toString(),
-            summary: `[[WP:RW/CI|Updating script]] to commit as of ${
+            summary: `[[WP:RW/CD|Updating script]] to commit as of ${
                 headCommit.shortHash
             }: "${
                 headCommit.message
@@ -582,7 +582,7 @@
                 }
             }
             ),
-            summary: `[[WP:RW/CI|Updating latest commit tracking file]] to commit as of ${
+            summary: `[[WP:RW/CD|Updating latest commit tracking file]] to commit as of ${
                 headCommit.shortHash
             }: "${
                 headCommit.message
@@ -613,7 +613,7 @@
         text: 
             fs.readFileSync(path.join(__dirname, "msg_verify_done.wikitext"))
                 .toString(),
-        summary: `[[WP:RW/CI|Cleaning up...]] ([[WP:BOT|bot]])`,
+        summary: `[[WP:RW/CD|Cleaning up...]] ([[WP:BOT|bot]])`,
         bot: true,
         token: await grabToken("csrf")
     }))).data);

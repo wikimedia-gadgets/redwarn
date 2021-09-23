@@ -38,6 +38,7 @@ import {
     Watch
 } from "./mediawiki";
 import { Configuration } from "./config/user/Configuration";
+import LoadErrorTranslations from "rww/errors/LoadErrorTranslations";
 
 declare global {
     interface Window {
@@ -52,6 +53,8 @@ declare global {
  */
 export default class RedWarn {
     static readonly version = RW_VERSION;
+
+    // TODO: Remove exposure of unused classes.
 
     static get RedWarnConstants(): typeof RedWarnConstants {
         return RedWarnConstants;
@@ -117,128 +120,131 @@ export default class RedWarn {
     static get TamperProtection(): typeof TamperProtection {
         return TamperProtection;
     }
+
+    static async initialize() {
+        if (document.body.classList.contains("rw-disable")) {
+            // We've been prevented from running on this page.
+            Log.info("Page is blocking RedWarn loading. Shutting down...");
+            return;
+        }
+
+        Log.info(`Starting RedWarn ${RW_VERSION}...`);
+        const startTime = Date.now();
+
+        if (window.rw != null) {
+            mw.notify(
+                "You have two versions of RedWarn installed at once! Please edit your common.js or skin js files to ensure that you only use one instance to prevent issues.",
+                { type: "error", title: "Conflict" }
+            );
+            return; // die
+        }
+
+        window.RedWarn = RedWarn;
+        window.rw = RedWarn;
+
+        // Initialize components here.
+        // As much as possible, each component should be its own class to make everything
+        // organized.
+
+        // Load in languages first.
+        await Localization.init();
+
+        // Load in MediaWiki dependencies
+        await MediaWiki.loadDependencies();
+
+        // Verify our MediaWiki installation.
+        if (!MediaWiki.mwCheck()) return;
+
+        // Static dependency initialization.
+        await Promise.all([
+            // Connect to the Indexed DB database.
+            RedWarnLocalDB.i.connect(),
+            // Initialize the MediaWiki API.
+            MediaWikiAPI.init(),
+            (async () => {
+                RedWarnStore.initializeStore();
+            })(),
+            StyleManager.initialize()
+        ]);
+
+        try {
+            // Attempt to deserialize the per-wiki configuration.
+            RedWarnWikiConfiguration.c;
+        } catch (e) {
+            Log.fatal("Wiki-specific configuration is broken!");
+            mw.notify(
+                MediaWikiNotificationContent(
+                    i18next.t(`mediawiki:error.wikiConfigBad`, {
+                        wikiIndex: RedWarnStore.wikiIndex
+                    })
+                ),
+                { type: "error" }
+            );
+            return;
+        }
+
+        // Load in the configuration file (preloads need to be finished by this point).
+        await Configuration.refresh();
+
+        // Only do hook calls after style has been set to configuration preference!
+
+        /**
+         * Extensions and styles can push their own dependencies here.
+         */
+        await Promise.all([
+            RedWarnHooks.executeHooks("preInit"),
+            Dependencies.resolve([StyleManager.activeStyle.dependencies]),
+            Dependencies.resolve([RedWarnStore.dependencies])
+        ]);
+
+        /**
+         * Initialize everything
+         */
+
+        // Non-blocking initializers.
+        (() => {
+            RealTimeRecentChanges.init();
+            TamperProtection.init();
+
+            // Call RevertSpeedup last.
+            RevertSpeedup.init();
+        })();
+
+        await Promise.all([RedWarnHooks.executeHooks("init")]);
+
+        /**
+         * Send notice that RedWarn is done loading.
+         */
+        await RedWarnHooks.executeHooks("postInit");
+        Log.debug(`Done loading (core): ${Date.now() - startTime}ms.`);
+
+        // Inject all UI elements
+        await RedWarnHooks.executeHooks("preUIInject");
+
+        await UIInjectors.inject();
+
+        await Promise.all([
+            RedWarnHooks.executeHooks("postUIInject"),
+            Watch.init()
+        ]);
+
+        Log.debug(`Done loading (UI): ${Date.now() - startTime}ms.`);
+    }
 }
 
-(async () => {
-    if (document.body.classList.contains("rw-disable")) {
-        // We've been prevented from running on this page.
-        Log.info("Page is blocking RedWarn loading. Shutting down...");
-        return;
-    }
-
-    Log.info(`Starting RedWarn ${RW_VERSION}...`);
-    const startTime = Date.now();
-
-    if (window.rw != null) {
-        mw.notify(
-            "You have two versions of RedWarn installed at once! Please edit your common.js or skin js files to ensure that you only use one instance to prevent issues.",
-            { type: "error", title: "Conflict" }
-        );
-        return; // die
-    }
-
-    window.RedWarn = RedWarn;
-    window.rw = RedWarn;
-
-    // Initialize components here.
-    // As much as possible, each component should be its own class to make everything
-    // organized.
-
-    // Load in languages first.
-    await Localization.init();
-
-    // Load in MediaWiki dependencies
-    await MediaWiki.loadDependencies();
-
-    // Verify our MediaWiki installation.
-    if (!MediaWiki.mwCheck()) return;
-
-    // Static dependency initialization.
-    await Promise.all([
-        // Connect to the Indexed DB database.
-        RedWarnLocalDB.i.connect(),
-        // Initialize the MediaWiki API.
-        MediaWikiAPI.init(),
-        (async () => {
-            RedWarnStore.initializeStore();
-        })(),
-        StyleManager.initialize()
-    ]);
-
-    try {
-        // Attempt to deserialize the per-wiki configuration.
-        RedWarnWikiConfiguration.c;
-    } catch (e) {
-        Log.fatal("Wiki-specific configuration is broken!");
-        mw.notify(
-            MediaWikiNotificationContent(
-                i18next.t(`mediawiki:error.wikiConfigBad`, {
-                    wikiIndex: RedWarnStore.wikiIndex
-                })
-            ),
-            { type: "error" }
-        );
-        return;
-    }
-
-    // Load in the configuration file (preloads need to be finished by this point).
-    await Configuration.refresh();
-
-    // Only do hook calls after style has been set to configuration preference!
-
-    /**
-     * Extensions and styles can push their own dependencies here.
-     */
-    await Promise.all([
-        RedWarnHooks.executeHooks("preInit"),
-        Dependencies.resolve([StyleManager.activeStyle.dependencies]),
-        Dependencies.resolve([RedWarnStore.dependencies])
-    ]);
-
-    /**
-     * Initialize everything
-     */
-
-    // Non-blocking initializers.
-    (() => {
-        RealTimeRecentChanges.init();
-        TamperProtection.init();
-
-        // Call RevertSpeedup last.
-        RevertSpeedup.init();
-    })();
-
-    await Promise.all([RedWarnHooks.executeHooks("init")]);
-
-    /**
-     * Send notice that RedWarn is done loading.
-     */
-    await RedWarnHooks.executeHooks("postInit");
-    Log.debug(`Done loading (core): ${Date.now() - startTime}ms.`);
-
-    // Inject all UI elements
-    await RedWarnHooks.executeHooks("preUIInject");
-
-    await UIInjectors.inject();
-
-    await Promise.all([
-        RedWarnHooks.executeHooks("postUIInject"),
-        Watch.init()
-    ]);
-
-    Log.debug(`Done loading (UI): ${Date.now() - startTime}ms.`);
-})().catch((e) => {
-    // DO NOT USE i18n! i18next might not be able to load, causing the issue in the first place.
+RedWarn.initialize().catch((e) => {
+    // DO NOT USE i18next! i18next might not be able to load, causing the issue in the first place.
     Log.fatal("Error loading RedWarn!", e);
+
+    const translated =
+        LoadErrorTranslations[navigator.language] ?? // "zh-TW"
+        LoadErrorTranslations[/^[A-Z]+/i.exec(navigator.language)[0]] ?? // "en"
+        LoadErrorTranslations["en"]; // fallback
 
     const standardCSS =
         "background: #e0005a; color: #ffffff; font-weight: bold; font-size: x-large;";
     console.group(
-        `%cRedWarn failed to load.` +
-            "%cIf the problem persists, please contact the RedWarn developers. ( RedWarn 加载失败。 请联系 RedWarn Team. / RedWarn no se pudo cargar. Comuníquese con el RedWarn Team. )" +
-            "Additional debug information is provided below. " +
-            "If requested by a RedWarn team member, please provide the text through a private channel (email, IRC, etc.). " +
-            'You can right click the text and select "Copy Object" to copy faster.',
+        `%c${translated[0]}%c${translated.slice(1).join(" ")}`,
         `padding: 2px 8px; border-radius: 8px; ${standardCSS}`,
         "display: block; margin-top: 8px; width: 50vw;"
     );

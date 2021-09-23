@@ -634,7 +634,7 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                     "token": mw.user.tokens.get("csrfToken"),
                     "title": "User talk:" + user,
                     "summary": summary + " [[w:en:WP:RW|(RW " + rw.version + ")]]", // summary sign here
-                    "text": finalTxt,
+                    "text": finalTxt.trim(),
                     "tags": ((rw.wikiID == "enwiki") ? "RedWarn" : null) // Only add tags if on english wikipedia
                 }).done(dt => {
                     // We done. Check for errors, then callback appropriately

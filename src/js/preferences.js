@@ -97,7 +97,7 @@ rw.preferences = {
                 // Warn user automation
                 "rwautoLevelSelectDisable" : {
                     "optionTitle" : "Automation",
-                    "supportingText": "Enable or disable RedWarn's automation features, such as automatically choosing a warning level and template for you. Please note that in order to reduce abuse, your preference will not be honored unless you are a extended-confirmed user. If you have a legitimate alternate account, <a href='https://en.wikipedia.org/wiki/Wikipedia:Requests_for_permissions/Extended_confirmed' target='_blank'>you can request that the extended-confrimed right be granted to it.</a>",
+                    "supportingText": "Enable or disable RedWarn's automation features, such as automatically choosing a warning level and template for you. Please note that in order to reduce abuse, your preference will not be honored unless you are a extended-confirmed user. If you have a legitimate alternate account, <a href='https://en.wikipedia.org/wiki/Wikipedia:Requests_for_permissions/Extended_confirmed' target='_blank'>you can request that the extended-confirmed right be granted to it.</a>",
 
                     // Config options
                     "options" : { 

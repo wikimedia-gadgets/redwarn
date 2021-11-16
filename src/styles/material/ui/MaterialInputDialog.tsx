@@ -6,11 +6,7 @@ import i18next from "i18next";
 import { h } from "tsx-dom";
 
 import { RWUIInputDialog } from "rww/ui/elements/RWUIInputDialog";
-import {
-    registerMaterialDialog,
-    upgradeMaterialDialog
-} from "rww/styles/material/Material";
-import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
+import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
@@ -44,29 +40,21 @@ export default class MaterialInputDialog extends RWUIInputDialog {
      * Show a dialog on screen. You can await this if you want to block until the dialog closes.
      * @returns The result - the value returned by the selected button in {@link RWUIDialogProperties.actions}.
      */
-    show(): Promise<any> {
-        const styleStorage = getMaterialStorage();
-        registerMaterialDialog(this);
-
-        this.MDCComponents = MaterialTextInputUpgrade(this.textFieldElement);
-
-        const dialog = upgradeMaterialDialog(this);
-
-        return new Promise((resolve) => {
-            dialog.listen(
-                "MDCDialog:closed",
-                async (event: Event & { detail: { action: string } }) => {
-                    if (event.detail.action === "confirm") {
-                        this._result = this.MDCComponents.textField.value;
-                    } else if (event.detail.action === "cancel") {
-                        this._result = null;
-                    }
-
-                    styleStorage.dialogTracker.delete(this.id);
-                    resolve(this._result);
+    show(): Promise<string> {
+        return upgradeMaterialDialog(this, {
+            onPostInit: async () => {
+                this.MDCComponents = MaterialTextInputUpgrade(
+                    this.textFieldElement
+                );
+            },
+            onClose: async (event) => {
+                if (event.detail.action === "confirm") {
+                    return this.MDCComponents.textField.value;
+                } else if (event.detail.action === "cancel") {
+                    return null;
                 }
-            );
-        });
+            }
+        }).then((v) => v.wait());
     }
 
     /**

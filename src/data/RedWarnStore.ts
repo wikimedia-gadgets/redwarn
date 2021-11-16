@@ -1,4 +1,3 @@
-import MessageHandler from "rww/event/MessageHandler";
 import { StyleStorage } from "rww/styles/Style";
 import { Dependency } from "rww/data/Dependencies";
 import { NamedPage, Page } from "rww/mediawiki";
@@ -31,14 +30,6 @@ export default class RedWarnStore {
         }
     ];
 
-    // Wiki automated config
-
-    /**
-     * @deprecated Only for backwards compatibility
-     * !!! DO NOT USE FOR NEW FEATURES !!!
-     */
-    public static messageHandler: MessageHandler;
-
     // //en.wikipedia.org
     public static wikiBase: string;
     // /wiki/$1
@@ -63,7 +54,6 @@ export default class RedWarnStore {
     }
 
     public static initializeStore(): void {
-        RedWarnStore.messageHandler = new MessageHandler();
         RedWarnStore.wikiArticlePath = mw.config.get("wgArticlePath") as string;
         RedWarnStore.wikiBase = mw.config.get("wgServer") as string;
         RedWarnStore.wikiIndex =

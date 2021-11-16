@@ -1,9 +1,10 @@
 import RedWarnStore from "rww/data/RedWarnStore";
 import i18next from "i18next";
 import RedWarnUI from "rww/ui/RedWarnUI";
-import { Page, User, Watch } from "rww/mediawiki";
+import { Page, ProtectionManager, User, Watch } from "rww/mediawiki";
 import { redirect } from "rww/util";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
+import Log from "rww/data/RedWarnLog";
 
 interface PageIcon {
     id: string;
@@ -51,12 +52,32 @@ const PageIcons: PageIcon[] = [
         visible: () =>
             isUserspacePage() && RedWarnWikiConfiguration.c.warnings != null,
         async action() {
-            new RedWarnUI.WarnDialog({
-                autoWarn: true,
+            const options = await new RedWarnUI.WarnDialog({
                 targetUser:
                     mw.config.get("wgRelevantUserName") &&
                     User.fromUsername(mw.config.get("wgRelevantUserName"))
             }).show();
+            User.warn(options)
+                .then((v) => {
+                    if (v) {
+                        RedWarnUI.Toast.quickShow({
+                            content: i18next.t("ui:toasts.userWarned"),
+                            action: {
+                                text: i18next.t("ui:toasts.userWarnedAction"),
+                                callback: () => {
+                                    options.targetUser.talkPage.navigate();
+                                }
+                            }
+                        });
+                    }
+                })
+                .catch((e) => {
+                    // TODO: Provide more details.
+                    RedWarnUI.Toast.quickShow({
+                        content: i18next.t("ui:toasts.userWarnFailed")
+                    });
+                    Log.error(e);
+                });
         }
     },
     {
@@ -68,10 +89,29 @@ const PageIcons: PageIcon[] = [
             RedWarnWikiConfiguration.c.protection?.duration?.temporary !=
                 null &&
             RedWarnWikiConfiguration.c.protection?.duration?.indefinite != null,
-        action() {
-            new RedWarnUI.ProtectionRequestDialog({
-                autoRequest: true
-            }).show();
+        async action() {
+            const options = await new RedWarnUI.ProtectionRequestDialog().show();
+            ProtectionManager.requestProtection(options)
+                .then((v) => {
+                    if (v) {
+                        RedWarnUI.Toast.quickShow({
+                            content: i18next.t("ui:toasts.protectionRequested"),
+                            action: {
+                                text: i18next.t("ui:toasts.viewAction"),
+                                callback: () => {
+                                    v.navigate();
+                                }
+                            }
+                        });
+                    }
+                })
+                .catch((e) => {
+                    // TODO: Provide more details.
+                    RedWarnUI.Toast.quickShow({
+                        content: i18next.t("ui:toasts.protectionRequestFailed")
+                    });
+                    Log.error(e);
+                });
         }
     },
     {

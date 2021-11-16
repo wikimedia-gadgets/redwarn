@@ -1,9 +1,5 @@
 import { RWUIExtendedOptions } from "rww/ui/elements/RWUIExtendedOptions";
-import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
-import {
-    registerMaterialDialog,
-    upgradeMaterialDialog
-} from "rww/styles/material/Material";
+import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
@@ -23,16 +19,7 @@ import { Configuration } from "rww/config/user/Configuration";
 
 export default class MaterialExtendedOptions extends RWUIExtendedOptions {
     show(): Promise<void> {
-        const styleStorage = getMaterialStorage();
-        registerMaterialDialog(this);
-        const dialog = upgradeMaterialDialog(this);
-
-        return new Promise((resolve) => {
-            dialog.listen("MDCDialog:closed", async () => {
-                styleStorage.dialogTracker.delete(this.id);
-                resolve();
-            });
-        });
+        return upgradeMaterialDialog<void>(this).then((v) => v.wait());
     }
 
     renderOptions(): JSX.Element[] {

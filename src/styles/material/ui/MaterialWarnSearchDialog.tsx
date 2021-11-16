@@ -1,12 +1,7 @@
 import { ComponentChild, h } from "tsx-dom";
 
 import { RWUIDialog, RWUIDialogProperties } from "rww/ui/elements/RWUIDialog";
-import {
-    registerMaterialDialog,
-    upgradeMaterialDialog
-} from "rww/styles/material/Material";
-
-import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
+import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
@@ -308,16 +303,9 @@ export default class MaterialWarnSearchDialog extends RWUIDialog<Warning> {
      * @returns The result - the value returned by the selected button in {@link RWUIDialogProperties.actions}.
      */
     show(): Promise<Warning> {
-        const styleStorage = getMaterialStorage();
-        registerMaterialDialog(this);
-        this.dialog = upgradeMaterialDialog(this);
-
-        return new Promise((resolve) => {
-            this.dialog.listen("MDCDialog:closed", async () => {
-                styleStorage.dialogTracker.delete(this.id);
-                resolve(this.selectedWarning);
-            });
-        });
+        return upgradeMaterialDialog(this, {
+            onClose: () => this.selectedWarning
+        }).then((v) => v.wait());
     }
 
     /**

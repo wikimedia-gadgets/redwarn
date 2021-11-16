@@ -263,7 +263,8 @@ export class User {
      * Warn a user.
      * @param options Warning options
      */
-    static async warn(options: WarningOptions): Promise<void> {
+    static async warn(options: WarningOptions): Promise<boolean> {
+        if (options == null) return false;
         const level = {
             [WarningType.Tiered]: options.warnLevel,
             [WarningType.PolicyViolation]: 5,
@@ -280,6 +281,7 @@ export class User {
                 section: getMonthHeader()
             }
         );
+        return true;
     }
 }
 

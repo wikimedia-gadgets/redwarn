@@ -9,6 +9,7 @@ import { RWUIIFrameDialog } from "rww/ui/elements/RWUIIFrameDialog";
 import { RWUIWarnDialog } from "rww/ui/elements/RWUIWarnDialog";
 import { RWUIExtendedOptions } from "rww/ui/elements/RWUIExtendedOptions";
 import { RWUIProtectionRequestDialog } from "rww/ui/elements/RWUIProtectionRequestDialog";
+import { RWUIReportingDialog } from "rww/ui/elements/RWUIReportingDialog";
 
 /**
  * Redirect class for easy access. UI elements of RedWarn are also created here.
@@ -54,6 +55,10 @@ export default class RedWarnUI {
     static get ExtendedOptions(): typeof RWUIExtendedOptions {
         return StyleManager.activeStyle.classMap.rwExtendedOptions;
     }
+    /** Alias of {@link StyleManager.activeStyle.classMap.rwReportingDialog} */
+    static get ReportingDialog(): typeof RWUIReportingDialog {
+        return StyleManager.activeStyle.classMap.rwReportingDialog;
+    }
 }
 
 /**
@@ -69,5 +74,6 @@ export const RWUIElements = {
     [RWUIToast.elementName]: RWUIToast,
     [RWUIDiffIcons.elementName]: RWUIDiffIcons,
     [RWUIPageIcons.elementName]: RWUIPageIcons,
-    [RWUIExtendedOptions.elementName]: RWUIExtendedOptions
+    [RWUIExtendedOptions.elementName]: RWUIExtendedOptions,
+    [RWUIReportingDialog.elementName]: RWUIReportingDialog
 };

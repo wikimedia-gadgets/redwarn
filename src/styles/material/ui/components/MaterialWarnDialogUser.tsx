@@ -335,7 +335,7 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
             case "input":
                 const textInput = (
                     <MaterialTextInput
-                        width={"400px"}
+                        width={"100%"}
                         label={i18next.t("ui:warn.user.input")}
                         defaultText={this.lastUser?.username ?? ""}
                         autofocus

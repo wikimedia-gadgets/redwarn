@@ -2,13 +2,9 @@ import { RWUIProtectionRequestDialog } from "rww/ui/elements/RWUIProtectionReque
 import ProtectionRequest, {
     ProtectionDuration
 } from "rww/mediawiki/protection/ProtectionRequest";
-import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
-import {
-    registerMaterialDialog,
-    upgradeMaterialDialog
-} from "rww/styles/material/Material";
+import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import RedWarnStore from "rww/data/RedWarnStore";
-import { Page, ProtectionLevel, ProtectionManager } from "rww/mediawiki";
+import { Page, ProtectionLevel } from "rww/mediawiki";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
@@ -41,7 +37,7 @@ import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconBu
 import RedWarnUI from "rww/ui/RedWarnUI";
 
 /**
- * A specific test performed to validate the values of a {@link MaterialWarnDialog}.
+ * A specific test performed to validate the values of a {@link MaterialProtectionRequestDialog}.
  */
 interface MaterialProtectionRequestDialogValidationTest {
     /** The name of this condition. */
@@ -217,41 +213,19 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
     }> = {};
 
     show(): Promise<ProtectionRequest> {
-        const styleStorage = getMaterialStorage();
-        registerMaterialDialog(this);
-        const dialog = upgradeMaterialDialog(this);
-
-        return new Promise((resolve) => {
-            dialog.listen(
-                "MDCDialog:closed",
-                async (event: Event & { detail: { action: string } }) => {
-                    if (event.detail.action === "confirm") {
-                        this._result = {
-                            page: this.page,
-                            level: this.level,
-                            reason: this.reason,
-                            additionalInformation: this.additionalInformation,
-                            duration: this.duration
-                        };
-                    } else this._result = null;
-
-                    if (!!this._result && this.props.autoRequest) {
-                        ProtectionManager.requestProtection(this._result).then(
-                            () => {
-                                RedWarnUI.Toast.quickShow({
-                                    content: i18next.t(
-                                        "ui:protectionRequest.done"
-                                    )
-                                });
-                            }
-                        );
-                    }
-
-                    styleStorage.dialogTracker.delete(this.id);
-                    resolve(this._result);
-                }
-            );
-        });
+        return upgradeMaterialDialog(this, {
+            onClose: async (event) => {
+                if (event.detail.action === "confirm") {
+                    return {
+                        page: this.page,
+                        level: this.level,
+                        reason: this.reason,
+                        additionalInformation: this.additionalInformation,
+                        duration: this.duration
+                    };
+                } else return null;
+            }
+        }).then((v) => v.wait());
     }
 
     renderLevels(): MaterialRadioFieldElement<ProtectionLevel> {

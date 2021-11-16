@@ -104,10 +104,6 @@ export default class RedWarn {
     static get Database(): RedWarnLocalDB {
         return RedWarnLocalDB.i;
     }
-
-    /**
-     * @deprecated not yet implemented
-     */
     static get Watch(): typeof Watch {
         return Watch;
     }
@@ -122,7 +118,10 @@ export default class RedWarn {
     }
 
     static async initialize() {
-        if (document.body.classList.contains("rw-disable")) {
+        if (
+            document.body.classList.contains("rw-disable") ||
+            new URL(window.location.href).searchParams.get("redwarn") === "0"
+        ) {
             // We've been prevented from running on this page.
             Log.info("Page is blocking RedWarn loading. Shutting down...");
             return;

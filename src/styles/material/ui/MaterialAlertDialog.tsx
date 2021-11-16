@@ -1,12 +1,7 @@
 import { ComponentChild, h } from "tsx-dom";
 
 import { RWUIAlertDialog } from "rww/ui/elements/RWUIAlertDialog";
-import {
-    registerMaterialDialog,
-    upgradeMaterialDialog
-} from "rww/styles/material/Material";
-
-import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
+import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
@@ -25,32 +20,22 @@ export default class MaterialAlertDialog extends RWUIAlertDialog {
      * Show a dialog on screen. You can await this if you want to block until the dialog closes.
      * @returns The result - the value returned by the selected button in {@link RWUIDialogProperties.actions}.
      */
-    show(): Promise<any> {
-        const styleStorage = getMaterialStorage();
-        registerMaterialDialog(this);
-        const dialog = upgradeMaterialDialog(this);
-
-        return new Promise((resolve) => {
-            dialog.listen(
-                "MDCDialog:closed",
-                async (event: Event & { detail: { action: string } }) => {
-                    const actionSelected = this.props.actions.find(
-                        (action) => action.data === event.detail.action
-                    );
-                    if (actionSelected != null) {
-                        this._result = actionSelected.action
-                            ? (await actionSelected.action(event)) ??
+    show(): Promise<string> {
+        return upgradeMaterialDialog(this, {
+            onClose: async (event) => {
+                const actionSelected = this.props.actions.find(
+                    (action) => action.data === event.detail.action
+                );
+                if (actionSelected != null) {
+                    return actionSelected.action
+                        ? (await actionSelected.action(event)) ??
                               event.detail.action
-                            : event.detail.action;
-                    } else {
-                        this._result = event.detail.action;
-                    }
-
-                    styleStorage.dialogTracker.delete(this.id);
-                    resolve(this._result);
+                        : event.detail.action;
+                } else {
+                    return event.detail.action;
                 }
-            );
-        });
+            }
+        }).then((v) => v.wait());
     }
 
     /**

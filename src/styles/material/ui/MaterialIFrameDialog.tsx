@@ -1,12 +1,7 @@
 import { ComponentChild, h } from "tsx-dom";
 
 import { RWUIIFrameDialog } from "rww/ui/elements/RWUIIFrameDialog";
-import {
-    registerMaterialDialog,
-    upgradeMaterialDialog
-} from "rww/styles/material/Material";
-
-import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
+import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
@@ -25,17 +20,8 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
      * Show a dialog on screen. You can await this if you want to block until the dialog closes.
      * @returns The result - the value returned by the selected button in {@link RWUIDialogProperties.actions}.
      */
-    show(): Promise<any> {
-        const styleStorage = getMaterialStorage();
-        registerMaterialDialog(this);
-        const dialog = upgradeMaterialDialog(this);
-
-        return new Promise((resolve) => {
-            dialog.listen("MDCDialog:closed", async () => {
-                styleStorage.dialogTracker.delete(this.id);
-                resolve(null);
-            });
-        });
+    show(): Promise<void> {
+        return upgradeMaterialDialog<void>(this).then((v) => v.wait());
     }
 
     /**

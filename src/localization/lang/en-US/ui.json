@@ -44,13 +44,16 @@
         "failure": "Failed to copy URL. Have you given the browser proper permissions?"
     },
     "toasts": {
+        "viewAction": "View",
         "pleaseWait": "Please wait...",
         "restoreError": "Sorry, there was an error, likely an edit conflict. This edit has not been restored.",
         "rollbackError": "Sorry, there was an error performing a rollback.",
         "newerRev": "A newer revision was detected. Your rollback has not been applied.",
         "userUndefined": "Sorry, the target user does not exist, cannot be found, or is hidden from the public. Your action has not been completed.",
         "userWarned": "User warned.",
-        "userWarnFailed": "Sorry, there was an error. Please verify if the user has been warned before issuing another warning."
+        "userWarnFailed": "There was a problem warning the user. Please verify if the user has been warned before issuing another warning.",
+        "protectionRequested": "Protection requested.",
+        "protectionRequestFailed": "There was a problem requesting protection. Please verify if the request has been made before requesting again."
     },
     "watch": {
         "denied": "Permission to show notifications denied.",

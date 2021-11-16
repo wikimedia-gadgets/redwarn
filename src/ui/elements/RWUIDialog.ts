@@ -75,13 +75,10 @@ export abstract class RWUIDialog<T> extends RWUIElement {
      */
     element?: HTMLDialogElement;
 
-    protected _result: T;
     /**
      * The result of the dialog.
      */
-    get result(): T {
-        return this._result;
-    }
+    public result: T;
 
     protected constructor(readonly props: RWUIDialogProperties = {}) {
         super();

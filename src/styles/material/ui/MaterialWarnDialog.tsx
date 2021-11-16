@@ -1,21 +1,13 @@
 import { h } from "tsx-dom";
 import i18next from "i18next";
-
 import { RWUIWarnDialog } from "rww/ui/elements/RWUIWarnDialog";
-
-import {
-    registerMaterialDialog,
-    upgradeMaterialDialog
-} from "rww/styles/material/Material";
-
-import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
+import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
     MaterialDialogTitle
 } from "./MaterialDialog";
-
 import MaterialWarnDialogUser, {
     MaterialWarnDialogUserController
 } from "./components/MaterialWarnDialogUser";
@@ -289,65 +281,31 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
      * Shows the dialog.
      */
     show(): Promise<WarningOptions> {
-        const styleStorage = getMaterialStorage();
-        registerMaterialDialog(this);
-        const dialog = upgradeMaterialDialog(
-            this,
-            new Map([["autoStackButtons", false]])
-        );
+        return upgradeMaterialDialog(this, {
+            onPostInit: (dialog) => {
+                dialog.autoStackButtons = false;
 
-        // Automatically grab user information if we're already on a user talk page.
-        if (this.user == null && mw.config.get("wgRelevantUserName")) {
-            this.mwdUser.MWDUser.updateUser(
-                User.fromUsername(mw.config.get("wgRelevantUserName"))
-            );
-            this.uiValidate();
-        }
-
-        return new Promise((resolve) => {
-            dialog.listen(
-                "MDCDialog:closed",
-                async (event: Event & { detail: { action: string } }) => {
-                    console.log(event.detail.action);
-                    if (event.detail.action === "confirm") {
-                        this._result = {
-                            warningText: this.warningWikitext,
-                            targetUser: this.user,
-                            additionalText: this.mwdReason.MWDReason
-                                .additionalText,
-                            relatedPage: this.mwdReason.MWDReason.relatedPage,
-                            warnLevel: this.mwdReason.MWDReason.warningLevel,
-                            warning: this.mwdReason.MWDReason.warning
-                        };
-                    } else this._result = null;
-
-                    if (!!this._result && this.props.autoWarn) {
-                        User.warn(this._result)
-                            .then(() => {
-                                RedWarnUI.Toast.quickShow({
-                                    content: i18next.t("ui:toasts.userWarned")
-                                });
-                            })
-                            .catch(() => {
-                                RedWarnUI.Toast.quickShow({
-                                    content: i18next.t(
-                                        "ui:toasts.userWarnFailed"
-                                    ),
-                                    action: {
-                                        text: "Verify",
-                                        callback: () => {
-                                            this.user.talkPage.navigate();
-                                        }
-                                    }
-                                });
-                            });
-                    }
-
-                    styleStorage.dialogTracker.delete(this.id);
-                    resolve(this._result);
+                // Automatically grab user information if we're already on a user talk page.
+                if (this.user == null && mw.config.get("wgRelevantUserName")) {
+                    this.mwdUser.MWDUser.updateUser(
+                        User.fromUsername(mw.config.get("wgRelevantUserName"))
+                    );
+                    this.uiValidate();
                 }
-            );
-        });
+            },
+            onClose: async (event) => {
+                if (event.detail.action === "confirm") {
+                    return {
+                        warningText: this.warningWikitext,
+                        targetUser: this.user,
+                        additionalText: this.mwdReason.MWDReason.additionalText,
+                        relatedPage: this.mwdReason.MWDReason.relatedPage,
+                        warnLevel: this.mwdReason.MWDReason.warningLevel,
+                        warning: this.mwdReason.MWDReason.warning
+                    };
+                } else return null;
+            }
+        }).then((v) => v.wait());
     }
 
     /**

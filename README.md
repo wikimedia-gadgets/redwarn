@@ -6,16 +6,9 @@ The RedWarn userscript [as seen on Wikipedia](https://en.wikipedia.org/wiki/User
 
 ## Contributors
 
-RedWarn is primarily maintained and developed by the RedWarn contributors.
+RedWarn is primarily maintained and developed by:
 
-- **[@ed_E](https://gitlab.com/ed_e)** ([\[\[User:Ed6767\]\]](https://en.wikipedia.org/wiki/User:Ed6767)) - lead developer, designer, and chief maintainer
-- **[@pr0mpted](https://gitlab.com/pr0mpted)** - ([\[\[User:Prompt0259\]\]](https://en.wikipedia.org/wiki/User:Prompt0259)) - additional development and design
-- **[@ChlodAlejandro](https://gitlab.com/ChlodAlejandro)** - ([\[\[User:Chlod\]\]](https://en.wikipedia.org/wiki/User:Chlod)) - additional development and design
-- **[@leijurv](https://gitlab.com/leijurv)** - ([\[\[User:Leijurv\]\]](https://en.wikipedia.org/wiki/User:Leijurv)) - additional development and design
-- **[@sportshead](https://gitlab.com/sportshead)** - ([\[\[User:Sportzpikachu\]\]](https://en.wikipedia.org/wiki/User:Sportzpikachu)) - additional development and design
-- **[@Asartea](https://gitlab.com/Asartea)** - ([\[\[User:Asartea\]\]](https://en.wikipedia.org/wiki/User:Asartea)) - documentation and copyediting
-- **[@Berrely](https://gitlab.com/Berrely)** - ([\[\[User:Berrely\]\]](https://en.wikipedia.org/wiki/User:Berrely)) - documentation
-- **[and everyone else on the RedWarn development team](https://en.wikipedia.org/wiki/Wikipedia:RedWarn/Team)**
+- **[The RedWarn Team](https://en.wikipedia.org/wiki/Wikipedia:RedWarn/Team)**
 - **[with some additional development from Wikipedia editors](https://en.wikipedia.org/wiki/WP:RW#Credits)**
 - **[and other contributors.](https://gitlab.com/redwarn/redwarn-web/-/graphs/master)**
 
@@ -25,7 +18,7 @@ If you wish to contribute in the development of RedWarn, follow the instructions
 
 ## License
 
-Copyright 2020 The RedWarn Contributors.
+Copyright 2021 The RedWarn Contributors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use the source except in compliance with the License.

@@ -25,7 +25,6 @@
      * Authorized Wikipedia users for verification.
      */
     const authorizedUsers = [
-        "Ed6767",
         "Chlod"
     ];
 

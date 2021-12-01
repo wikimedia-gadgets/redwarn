@@ -335,6 +335,7 @@
             text: `${
                 fs.readFileSync(path.join(__dirname, "msg_verify_head.wikitext"))
                     .toString()
+                    .replace(/\{\{\{env:([^}]+)\}\}\}/g, (_, env) => process.env[env])
             }\n${
                 fs.readFileSync(path.join(__dirname, "msg_verify_first.wikitext"))
                     .toString()
@@ -342,6 +343,16 @@
             }\n${
                 fs.readFileSync(path.join(__dirname, "msg_verify_tail.wikitext"))
                     .toString()
+                    .replace(/\{\{\{users\}\}\}/g, 
+                        authorizedUsers
+                        .map((v, i) => `${
+                            authorizedUsers.length > 1 &&
+                            i == authorizedUsers.length - 1 ?
+                                " or " : ""
+                        }{{u|${v}}}`)
+                        .join(authorizedUsers.length > 2 ? ", " : "")
+                        .replace(/\s+/g, " ")
+                    )
             }`,
             summary: `Preparing verification page for [[User:${
                 username

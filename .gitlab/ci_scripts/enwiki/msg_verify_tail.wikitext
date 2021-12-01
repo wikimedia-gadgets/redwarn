@@ -1,4 +1,4 @@
-Approval from either [[WP:RW/TEAM|RedWarn Team]] member {{u|Ed6767}} or {{u|Chlod}} is required for these changes. Please sign the table below with four tildes (<code>~~<nowiki/>~~</code>) between the <nowiki><span></nowiki> tags, completely replacing the comment. '''Do not''' add comments, as your signature will be verified character per character with the signature you have saved within MediaWiki.
+Approval from [[WP:RW/TEAM|RedWarn Team]] member(s) {{{users}}} is required for these changes. Please sign the table below with four tildes (<code>~~<nowiki/>~~</code>) between the <nowiki><span></nowiki> tags, completely replacing the comment. '''Do not''' add comments, as your signature will be verified character per character with the signature you have saved within MediaWiki.
 
 {| class="wikitable" style="width:100%"
 ! style="width:300px" | Approver

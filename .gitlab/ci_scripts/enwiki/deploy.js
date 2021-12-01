@@ -536,18 +536,15 @@
 
     console.log(":: Revision waiting done.");
 
+    // ========================================================================
+    // Saving
+    // ========================================================================
     if (!signingInfo) {
         // No approvals. Cancel.
         console.warn("No approvals. Push cancelled.");
         return;
-    } else if (signingInfo) {
+    } else  {
         console.log(`Approved by ${signingInfo.user}.`);
-    }
-
-    // ========================================================================
-    // Saving
-    // ========================================================================
-    if (signingInfo) {
         console.log("Making changes to the userscript...");
 
         console.log((await axios.post(apiEndpoint, qs.stringify({

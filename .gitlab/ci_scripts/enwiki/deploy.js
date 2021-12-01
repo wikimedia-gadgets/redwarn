@@ -335,6 +335,7 @@
             text: `${
                 fs.readFileSync(path.join(__dirname, "msg_verify_head.wikitext"))
                     .toString()
+                    .replace(/\{\{\{env:([^}]+)\}\}\}/g, (_, env) => process.env[env])
             }\n${
                 fs.readFileSync(path.join(__dirname, "msg_verify_first.wikitext"))
                     .toString()
@@ -342,6 +343,16 @@
             }\n${
                 fs.readFileSync(path.join(__dirname, "msg_verify_tail.wikitext"))
                     .toString()
+                    .replace(/\{\{\{users\}\}\}/g, 
+                        authorizedUsers
+                        .map((v, i) => `${
+                            authorizedUsers.length > 1 &&
+                            i == authorizedUsers.length - 1 ?
+                                " or " : ""
+                        }{{u|${v}}}`)
+                        .join(authorizedUsers.length > 2 ? ", " : "")
+                        .replace(/\s+/g, " ")
+                    )
             }`,
             summary: `Preparing verification page for [[User:${
                 username
@@ -525,18 +536,15 @@
 
     console.log(":: Revision waiting done.");
 
+    // ========================================================================
+    // Saving
+    // ========================================================================
     if (!signingInfo) {
         // No approvals. Cancel.
         console.warn("No approvals. Push cancelled.");
         return;
-    } else if (signingInfo) {
+    } else {
         console.log(`Approved by ${signingInfo.user}.`);
-    }
-
-    // ========================================================================
-    // Saving
-    // ========================================================================
-    if (signingInfo) {
         console.log("Making changes to the userscript...");
 
         console.log((await axios.post(apiEndpoint, qs.stringify({

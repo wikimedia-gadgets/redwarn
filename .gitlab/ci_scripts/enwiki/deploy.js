@@ -543,7 +543,7 @@
         // No approvals. Cancel.
         console.warn("No approvals. Push cancelled.");
         return;
-    } else  {
+    } else {
         console.log(`Approved by ${signingInfo.user}.`);
         console.log("Making changes to the userscript...");
 

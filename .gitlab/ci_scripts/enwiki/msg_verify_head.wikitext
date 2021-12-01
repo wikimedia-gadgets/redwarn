@@ -1,3 +1,3 @@
 {{/notice}}
 <!-- DO NOT EDIT ANYTHING BELOW THIS COMMENT! -->
-A request for immediate editing of the live production RedWarn script was made at ~~~~~.
+A request for immediate editing of the live production RedWarn script was made at ~~~~~. This deployment was started by [https://gitlab.com/{{{env:GITLAB_USER_LOGIN}}} {{{env:GITLAB_USER_NAME}}}] on GitLab with job ID [{{{env:CI_JOB_URL}}} #{{{env:CI_JOB_ID}}}] ({{{env:CI_JOB_STAGE}}}/{{{env:CI_JOB_NAME}}}) at {{{env:CI_JOB_STARTED_AT}}}.

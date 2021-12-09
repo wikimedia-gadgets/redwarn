@@ -236,7 +236,7 @@
             params: {
                 action: "query",
                 format: "json",
-                formatVersion: 2,
+                formatversion: 2,
                 prop: "revisions",
                 titles: [
                     `User:${username}/Commit Approval`,
@@ -399,7 +399,7 @@
         console.log(preVerificationRevision = (await axios.post(apiEndpoint, qs.stringify({
             action: "edit",
             format: "json",
-            formatVersion: 2,
+            formatversion: 2,
             title: `User:${username}/Commit Approval`,
             text: `${
                 fs.readFileSync(path.join(__dirname, "msg_verify_head.wikitext"))

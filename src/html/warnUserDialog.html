@@ -539,7 +539,7 @@ ${finalWarningHistoryHTML}
         if ($("#specialInfo:visible").length > 0) {
             callback(currentTemplate + currentLevel + "|" + data.specialInfo); // callback w data for special
         } else {
-            callback(currentTemplate + currentLevel + "|" + $("#relatedPage").val() + "|" + "'' "+ data.extraInfo +"''"); // callback, extra info italics
+            callback(currentTemplate + currentLevel + "|1=" + $("#relatedPage").val() + (data.extraInfo.trim().length > 0 ? "|2=''" + data.extraInfo + "''" : "")); // callback, extra info italics
         }
     };
 

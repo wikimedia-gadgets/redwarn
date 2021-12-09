@@ -488,6 +488,7 @@
             const signature = (await axios.post(apiEndpoint, qs.stringify({
                 action: "parse",
                 format: "json",
+                formatversion: 2,
                 title: `User:${username}/Commit Approval`,
                 text: (await axios.get(
                     `https://signatures.toolforge.org/api/v1/check/en.wikipedia.org/${

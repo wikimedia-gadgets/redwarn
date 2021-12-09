@@ -246,6 +246,7 @@
                 rvslots: "main"
             }
         });
+
     } catch (e) {
         crashAndBurn(e);
     }
@@ -272,7 +273,7 @@
         latestData = JSON.parse(
             deployMetadataPages
                 [`User:${username}/Commit Approval/latest.json`]
-                ["revisions"][0]["slots"]["main"]["*"]
+                ["revisions"][0]["slots"]["main"]["content"]
         )["details"];
     }
             
@@ -496,14 +497,14 @@
                 prop: "text",
                 onlypst: 1,
                 contentmodel: "wikitext"
-            }))).data["parse"]["text"]["*"];
+            }))).data["parse"]["text"];
             
             console.log(`:: Expecting signature: ${signature}`);
 
             const signatureRegexEscaped = signature
                 .replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 
-            const content = revision["slots"]["main"]["*"];
+            const content = revision["slots"]["main"]["content"];
 
             if (!signingDone) {
                 const a1Regex = (new RegExp(`<span id="rwci-a1">\\s*(${

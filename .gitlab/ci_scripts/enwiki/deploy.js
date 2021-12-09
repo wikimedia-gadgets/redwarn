@@ -57,6 +57,8 @@
         CI_DEPLOYSCRIPT_VERSION
     }`);
     console.log("============================================================");
+    if (process.env["DRY_RUN"] === "1")
+        console.warn("Performing a dry run! No changes will be saved!");
     console.log();
 
     /**
@@ -370,8 +372,9 @@
         const toPush = git.log({
             repo: root,
             after: new Date(latestData.timestamp + 1000),
-            fields: ["hash", "abbrevHash", "authorDate", "authorName", "rawBody"]
-        })
+            fields: ["hash", "abbrevHash", "authorDate", "authorName", "rawBody"],
+            number: 100
+        });
 
         if (toPush.length === 0) {
             console.warn("Nothing to push. Stopping here.");
@@ -454,6 +457,7 @@
             params: {
                 action: "query",
                 format: "json",
+                formatversion: 2,
                 titles: `User:${username}/Commit Approval`,
                 prop: "revisions",
                 rvdir: "newer",
@@ -503,14 +507,17 @@
             console.log(`:: Expecting signature: ${signature}`);
 
             const signatureRegexEscaped = signature
-                .replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+                .replace(/[-[\]{}()*+?.,\\\/^$|#\s]/g, '\\$&');
 
             const content = revision["slots"]["main"]["content"];
 
             if (!signingDone) {
-                const a1Regex = (new RegExp(`<span id="rwci-a1">\\s*(${
+                const signatureRegex = new RegExp(`<span id="rwci-a1">\\s*(${
                     signatureRegexEscaped
-                }) (\\d{2}:.+\\(UTC\\))\\s*<\\/span>`)).exec(content);
+                }) (\\d{2}:.+\\(UTC\\))\\s*<\\/span>`);
+                const a1Regex = signatureRegex.exec(content);
+
+                console.log(`:: Built RegExp: /${signatureRegex.source}/${signatureRegex.flags}`);
                 
                 if (a1Regex != null && a1Regex[1] && a1Regex[2]) {
                     signingInfo = {
@@ -524,6 +531,11 @@
                     } has verified themselves at ${signingInfo["date"]}`);
 
                     signingDone = true;
+                } else {
+                    console.log(`:: Failed to verify user ${
+                        revision["user"]
+                    }'s approval.`);
+                    console.log(a1Regex);
                 }
             }
 
@@ -555,6 +567,9 @@
     if (!signingInfo) {
         // No approvals. Cancel.
         console.warn("No approvals. Push cancelled.");
+    } else if (process.env["DRY_RUN"] === "1") {
+        console.log(`Approved by ${signingInfo.user}.`);
+        console.log("Doing a dry run, not saving changes.");
     } else {
         console.log(`Approved by ${signingInfo.user}.`);
         console.log("Making changes to the userscript...");

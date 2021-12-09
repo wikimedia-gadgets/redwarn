@@ -93,11 +93,11 @@ function getCredits() {
 RedWarn - Recent Edits Patrol and Warning Tool
 The user-friendly Wikipedia counter-vandalism tool.
 
-(c) 2020 The RedWarn Development Team and contributors - ed6767wiki (at) gmail.com or [[WT:RW]]
+(c) 2020-2021 The RedWarn Development Team and contributors - tools.redwarn@toolforge.org or [[WT:RW]]
 Licensed under the Apache License 2.0 - read more at https://www.apache.org/licenses/LICENSE-2.0.txt
 
 -----------------------------------------------------------------------------
-Copyright 2020 The RedWarn Development Team
+Copyright 2020-2021 The RedWarn Development Team
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -112,14 +112,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 Notice for on-wiki versions:
-Compiled on-wiki versions are made available by the copyright holders on Wikimedia projects under the Creative Commons Attribution-ShareAlike 3.0 Unported License.
-
-We, the copyright holders, also authorise you to upload the result of the build script from Apache 2.0 licensed source code to any Wikimedia project.
-
-For all other non-Wikimedia wikis: Rebuilds using the Apache 2.0 licensed source code must be uploaded under an Apache 2.0 compatible license.
-It is the copyright holders understanding that Creative Commons Attribution-ShareAlike 3.0 Unported is not a compatible license for on-wiki release.
-That being said, as an open-source project, we welcome collaboration, extensions and translations!
-Please email ed6767wiki@gmail.com if you need help with licensing RedWarn for another wiki.
+Compiled on-wiki versions are made available on Wikimedia projects under the
+Creative Commons Attribution-ShareAlike 3.0 Unported License, sublicensed from
+the source code's Apache License 2.0.
 -----------------------------------------------------------------------------
 
 <?php

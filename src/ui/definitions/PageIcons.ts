@@ -8,6 +8,7 @@ import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 interface PageIcon {
     id: string;
     icon: string;
+    /** The colour of the icon. */
     color?: string;
     /** Whether or not this icon is on the toolbar by default. */
     default?: boolean;

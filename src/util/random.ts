@@ -5,7 +5,7 @@ const characters =
  * Generates a random string of a given length. CRYPTOGRAPHICALLY
  * INSECURE!
  *
- * @param length
+ * @param length The length of the string. Defaults to 8.
  */
 export default function (length = 8): string {
     let out = "";

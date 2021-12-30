@@ -1,6 +1,12 @@
 import i18next from "i18next";
 
 // TODO write tests for these
+
+/**
+ * Returns a formatted version of the age of the provided date.
+ *
+ * @param age The date to process.
+ */
 export default function formatAge(age: Date): string {
     const ageFormat = i18next.t<Record<string, string>>("misc:ageFormat");
 

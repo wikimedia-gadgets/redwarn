@@ -1,9 +1,13 @@
+import { URIComponents } from "rww/mediawiki/util/URL";
+
 /**
  * Creates a URL string from a given set of parameters. This automatically
  * handles escaping.
+ *
+ * @param baseURL The base URL.
+ * @param queryParameters A set of parameters that will be passed in the returned URL.
+ * @param additionalURIComponents Additonal components of the URL.
  */
-import { URIComponents } from "rww/mediawiki/util/URL";
-
 export default function (
     baseURL: string | URL,
     queryParameters?: Record<string, any>,

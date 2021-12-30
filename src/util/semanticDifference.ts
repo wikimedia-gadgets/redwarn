@@ -1,8 +1,10 @@
 /**
- * Parses to semantic versioning strings and returns -1, 0, or 1 based on the difference.
+ * Parses two semantic versioning strings and returns -1, 0, or 1 based on the difference.
+ * @param versionA The first version.
+ * @param versionB The second version.
  * @returns `-1` if the first version is older than the second version,
  *          `0` if the first version is equal to the second version,
- *          `1` if the first version is newer than the second version
+ *          or `1` if the first version is newer than the second version.
  */
 export default function (
     versionA: string,

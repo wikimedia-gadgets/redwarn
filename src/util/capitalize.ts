@@ -1,5 +1,5 @@
 /**
- * Capitalises the given string.
+ * Capitalizes the given string.
  * @param target The string to capitalise.
  */
 export default function (target: string): string {

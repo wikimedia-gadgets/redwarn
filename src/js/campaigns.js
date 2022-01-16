@@ -1,8 +1,8 @@
 // Used to show WikiText headers to users, that can be dimissed.
 rw.campaigns = {
     "load" : ()=>{ // the only function that handles everything
-        // Request campaign info from User:Ed6767/redwarn/campaign.json
-        $.getJSON("https://en.wikipedia.org/w/index.php?title=User:Ed6767/redwarn/campaign.json&action=raw&ctype=text/json", c=>{
+        // Request campaign info from User:RedWarn/campaign.json
+        $.getJSON("https://en.wikipedia.org/w/index.php?title=User:RedWarn/campaign.json&action=raw&ctype=text/json", c=>{
             if (c.active && rw.config["campaign_"+ c.id] == null) { // only show if active and not dismissed
                 // Finally, add a notification above the string
                 $("#rwPGIconContainer").append(`

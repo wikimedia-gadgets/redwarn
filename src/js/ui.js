@@ -684,7 +684,7 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
      */
     "openAdminReport": (un, doNotShowDialog) => { // Open admin report dialog
         // Setup AIV page for development or production
-        const aivPage = (rw.debugMenu == null ? "Wikipedia:Administrator_intervention_against_vandalism" : "User:Ed6767/sandbox");
+        const aivPage = (rw.debugMenu == null ? "Wikipedia:Administrator_intervention_against_vandalism" : "User:Chlod/playground");
 
         // Add toast handler
         addMessageHandler("pushToast`*", m => rw.visuals.toast.show(m.split('`')[1], false, false, 2500));
@@ -858,7 +858,7 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
             return; // stop
         }
 
-        const uaaPage = (rw.debugMenu == null ? "Wikipedia:Usernames_for_administrator_attention" : "User:Ed6767/sandbox"); // set UAA based on debug mode
+        const uaaPage = (rw.debugMenu == null ? "Wikipedia:Usernames_for_administrator_attention" : "User:Chlod/playground"); // set UAA based on debug mode
 
         // Add toast handler
         addMessageHandler("pushToast`*", m => rw.visuals.toast.show(m.split('`')[1], false, false, 2500));

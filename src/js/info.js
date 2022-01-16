@@ -135,6 +135,7 @@ rw.info = { // API
 
                         "DISMISS", () => {
                             dialogEngine.closeDialog();
+                            localStorage.setItem("rw-specific-bug-20220116", true);
                         }, 20);
                     }
                     console.error(e);

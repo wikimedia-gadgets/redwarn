@@ -129,7 +129,7 @@ rw.info = { // API
                     if (localStorage.getItem("rw-specific-bug-20220116") == null) {
                         rw.ui.confirmDialog(`Hello! The RedWarn team is looking for a very specific issue that your browser seems to have encountered. Would you mind reporting the details of this issue to the RedWarn developers? This would help us out a lot. Thanks!`,
                         "Report Bug", () => {
-                            rw.ui.reportBug(`<!-- Please do not edit anything below! --><pre>${err.stack}</pre>`);
+                            rw.ui.reportBug(`<!-- Please do not edit anything below! --><pre>${e.stack}</pre>`);
                             localStorage.setItem("rw-specific-bug-20220116", true);
                         },
 

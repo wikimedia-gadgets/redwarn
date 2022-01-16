@@ -708,7 +708,7 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                         };
                         
                         // Check if adding to the watchlist is enabled (!0)
-                        if (rw.config.rwWatchTime != "0") {
+                        if (rw.config.rwWatchTime != null && rw.config.rwWatchTime != "0") {
                             // Add page to watchlist
                             rw.info.watchPage("User talk:" + user, rw.config.rwWatchTime, wCb => {
                                 // Was the page added to the watchlist successfully?

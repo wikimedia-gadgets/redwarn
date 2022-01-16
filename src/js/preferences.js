@@ -236,8 +236,9 @@ rw.preferences = {
                     "supportingText": "Change how long RedWarn watches a page for after leaving a warning. This will follow your MediaWiki preferences by default.",
 
                     // Config options
-                    "options" : { 
-                        "Disable" : 0,
+                    "options" : {
+                        "Disable*": null,
+                        "Don't watch" : 0,
                         "Indefinite": "indefinite",
                         "1 day": "1 day",
                         "1 week": "1 week",

@@ -707,8 +707,8 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
                             // We done
                         };
                         
-                        // Check if adding to the watchlist is enabled (!0)
-                        if (rw.config.rwWatchTime != null && rw.config.rwWatchTime != "0") {
+                        // Check if watchlist preference is enabled
+                        if (rw.config.rwWatchTime != null) {
                             // Add page to watchlist
                             rw.info.watchPage("User talk:" + user, rw.config.rwWatchTime, wCb => {
                                 // Was the page added to the watchlist successfully?
@@ -1010,7 +1010,8 @@ window.rw = window.rw || {}, window.rw.config = ` + JSON.stringify(rw.config) + 
     "watchPage": (page, expiry, callback) => {
         // https://www.mediawiki.org/wiki/API:Watch
         // MediawikiJS api
-        new mw.Api().postWithToken( 'watch', { action: 'watch', titles: page, format: 'json', expiry: expiry } ).done( ( data ) => {
+        const expireParam = expiry == 0 ? { unwatch: true } : { expiry: expiry };
+        new mw.Api().postWithToken( 'watch', { action: 'watch', titles: page, format: 'json', ...expireParam } ).done( ( data ) => {
             if (data.errors == null || data.errors.length < 1) {
                 callback(true);
             } else {

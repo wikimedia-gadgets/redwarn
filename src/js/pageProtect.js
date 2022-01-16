@@ -9,7 +9,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
      * @type {string}
      * @extends rw.pageProtect
      */
-    "rfppPageUp" : "Wikipedia:Requests_for_page_protection/Increase", // !!! FOR PRODUCTION USE Wikipedia:Requests_for_page_protection ELSE USE User:Ed6767/sandbox/rwTests/rpp !!!
+    "rfppPageUp" : "Wikipedia:Requests_for_page_protection/Increase", // !!! FOR PRODUCTION USE Wikipedia:Requests_for_page_protection ELSE USE A DIFFERENT PAGE !!!
 
     /**
      * The RFPP page that RedWarn will edit for protection downgrades
@@ -17,7 +17,7 @@ rw.pageProtect = { // Used for [[WP:RFPP]]
      * @type {string}
      * @extends rw.pageProtect
      */
-    "rfppPageDown" : "Wikipedia:Requests_for_page_protection/Decrease", // !!! FOR PRODUCTION USE Wikipedia:Requests_for_page_protection ELSE USE User:Ed6767/sandbox/rwTests/rpp !!!
+    "rfppPageDown" : "Wikipedia:Requests_for_page_protection/Decrease", // !!! FOR PRODUCTION USE Wikipedia:Requests_for_page_protection ELSE USE A DIFFERENT PAGE !!!
     // THIS MODULE IS NOW LIVE!!!
 
     /**

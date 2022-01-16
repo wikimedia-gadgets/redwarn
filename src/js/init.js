@@ -261,7 +261,7 @@ var rw = {
 
             // RedWarn user highlighter
             if (mw.config.get('wgArticleId') === 64182209) { // Wikipedia talk:RedWarn
-                $("a[href='/wiki/User:Sportzpikachu'],[href='/wiki/User:Ed6767'],[href='/wiki/User:Chlod'],[href='/wiki/User:Berrely'],[href='/wiki/User:Leijurv'],[href='/wiki/User:Asartea'],[href='/wiki/User:Prompt0259'],[href='/wiki/User:Sennecaster'],[href='/wiki/User:Remagoxer']").each(function (i) {
+                $("a[href='/wiki/User:Sportzpikachu'],[href='/wiki/User:Chlod'],[href='/wiki/User:Berrely'],[href='/wiki/User:Leijurv'],[href='/wiki/User:Asartea'],[href='/wiki/User:Prompt0259'],[href='/wiki/User:Sennecaster'],[href='/wiki/User:Remagoxer']").each(function (i) {
                     let emoji = document.createElement("img");
                     emoji.id = `rwHighlighter_${i}`;
                     emoji.src = "//upload.wikimedia.org/wikipedia/commons/thumb/9/98/NotoemojiCowboy.png/48px-NotoemojiCowboy.png";

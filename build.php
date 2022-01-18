@@ -406,17 +406,22 @@ function buildScript() {
 <?php echo createIncludedFileObject(); ?>
 // ========================= END DEPENDENCIES =========================
 // ========================== BEGIN REDWARN ===========================
-<?php echo $sources; ?>
+(function () {
+    <?php echo $sources; ?>
+
+    window.rw = rw;
+
+    $(document).ready(async function() {
+        // Initialize RedWarn once the page is loaded.
+        try {
+            await initRW();
+        } catch (err) {
+            mw.notify("Sorry, an error occured while loading RedWarn.");
+            console.error(err);
+        }
+    });
+})();
 // =========================== END REDWARN ============================
-$(document).ready(async function() {
-    // Initialize RedWarn once the page is loaded.
-    try {
-        await initRW();
-    } catch (err) {
-        mw.notify("Sorry, an error occured while loading RedWarn.");
-        console.error(err);
-    }
-});
 // </nowiki>
 <?php
 }

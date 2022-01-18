@@ -123,23 +123,7 @@ rw.info = { // API
                 // Config doesn't exist  we need to make it
                 console.log("creating config file");
                 rw.config = defaultConfig;
-                try {
-                    rw.info.writeConfig(true, () => { if (callback != null) callback(); }); // write new config file and callback if possible, else, add welcome screen here
-                } catch (e) {
-                    if (localStorage.getItem("rw-specific-bug-20220116") == null) {
-                        rw.ui.confirmDialog(`Hello! The RedWarn team is looking for a very specific issue that your browser seems to have encountered. Would you mind reporting the details of this issue to the RedWarn developers? This would help us out a lot. Thanks!`,
-                        "Report Bug", () => {
-                            rw.ui.reportBug(`<!-- Please do not edit anything below! --><pre>${e.stack}</pre>`);
-                            localStorage.setItem("rw-specific-bug-20220116", true);
-                        },
-
-                        "DISMISS", () => {
-                            dialogEngine.closeDialog();
-                            localStorage.setItem("rw-specific-bug-20220116", true);
-                        }, 20);
-                    }
-                    console.error(e);
-                }
+                rw.info.writeConfig(true, () => { if (callback != null) callback(); }); // write new config file and callback if possible, else, add welcome screen here
                 return;
             }
 

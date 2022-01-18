@@ -499,7 +499,6 @@ var rw = {
  * @property windowFocused
  * @type {boolean}
  * @default true
- * @extends window
  */
 // Window focus checking n things
 var windowFocused = true;
@@ -519,7 +518,6 @@ window.onfocus = function () {
  * @param {number} old_index
  * @param {number} new_index
  * @returns {array}
- * @extends window
  */
 var arrayMove = (arr, old_index, new_index) => {
     if (new_index >= arr.length) {
@@ -537,7 +535,6 @@ var arrayMove = (arr, old_index, new_index) => {
  *
  * @method waitForMDLLoad
  * @param {function} cb Callback function
- * @extends window
  */
 function waitForMDLLoad(cb) { // Used to wait for MDL load
     if (typeof componentHandler !== "undefined") {
@@ -553,7 +550,6 @@ function waitForMDLLoad(cb) { // Used to wait for MDL load
  * @method redirect
  * @param {string} url URL to redirect to
  * @param {boolean} inNewTab if set to true, will open the URL in a new tab
- * @extends window
  */
 function redirect(url, inNewTab) {
     if (inNewTab) {
@@ -569,7 +565,6 @@ function redirect(url, inNewTab) {
  * @property messageHandlers
  * @type {object}
  * @default '{"testHandler": () => {alert("Working!");}};'
- * @extends window
  */
 var messageHandlers = { "testHandler": () => { alert("Working!"); } };
 
@@ -579,7 +574,6 @@ var messageHandlers = { "testHandler": () => { alert("Working!"); } };
  * @param {string} msg The message that will trigger the callback. If ending with *, this will check if the message contains the prefixed value instead of a direct match.
  * @param {function} callback Callback for when this message is recieved
  * @method addMessageHandler
- * @extends window
  */
 function addMessageHandler(msg, callback) { // calling more than once will just overwrite
     Object.assign(messageHandlers, ((a, b) => { let _ = {}; _[a] = b; return _; })(msg, callback)); // function ab returns a good formatted obj
@@ -602,7 +596,6 @@ window.onmessage = e => {
  * Initalises and loads everything in RedWarn, including main feature level restrictions, visual initalisation and window.location.hash handling.
  *
  * @method initRW
- * @extends window
  */
 function initRW() {
     rw.visuals.init(() => {

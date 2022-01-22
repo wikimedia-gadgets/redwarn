@@ -25,7 +25,8 @@
      * Authorized Wikipedia users for verification.
      */
     const authorizedUsers = [
-        "Chlod"
+        "Chlod",
+        "Sportzpikachu"
     ];
 
     const signatureWaitTime = 300;

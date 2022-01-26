@@ -42,7 +42,7 @@ const MaterialStyle: Style = {
             type: "style",
             id: "mdc-styles",
             src:
-                "https://redwarn-web.wmcloud.org/static/styles/material-components-web@12.0.0.min.css",
+                "https://tools-static.wmflabs.org/cdnjs/ajax/libs/material-components-web/12.0.0/material-components-web.min.css",
             cache: {
                 delayedReload: true,
                 duration: 1209600000 // 14 days

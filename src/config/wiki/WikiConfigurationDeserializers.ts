@@ -14,7 +14,7 @@ import {
 } from "rww/mediawiki/revert/RevertOptions";
 import {
     deserializeReportVenue,
-    ReportVenue
+    SerializableReportVenue
 } from "rww/mediawiki/report/ReportVenue";
 
 // T - Type of root data (original raw configuration as parsed JSON)
@@ -104,13 +104,9 @@ const WikiConfigurationDeserializers: WikiConfigurationDeserializer = {
         return deserializedOptions;
     },
     reporting: (data) => {
-        const deserializedVenues: ReportVenue[] = [];
-
-        for (const venue of data) {
-            deserializedVenues.push(deserializeReportVenue(venue));
-        }
-
-        return deserializedVenues;
+        return data.map((venue: SerializableReportVenue) =>
+            deserializeReportVenue(venue)
+        );
     }
 };
 

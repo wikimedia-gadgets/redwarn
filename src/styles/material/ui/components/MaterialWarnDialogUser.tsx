@@ -81,7 +81,7 @@ function MaterialWarnDialogUserCardAccountInfo({
             <div class={"rw-mdc-warnDialog-user--overview"}>
                 {/* TODO Eventually replace with per-wiki page */}
                 <a href={"/wiki/w:en:IP_address"} target="_blank">
-                    {`${i18next.t("mediawiki:ip")}`}
+                    {i18next.t<string>("mediawiki:ip")}
                 </a>
             </div>
         );
@@ -106,9 +106,9 @@ function MaterialWarnDialogUserCardAccountInfo({
                     "ui:warn.user.show.contributions"
                 )}
             >
-                {`${i18next.t("ui:warn.user.edits", {
+                {i18next.t<string>("ui:warn.user.edits", {
                     edits: user.editCount.toLocaleString()
-                })}`}
+                })}
             </a>
             <Bullet />
             <a
@@ -119,9 +119,11 @@ function MaterialWarnDialogUserCardAccountInfo({
                     });
                 }}
                 data-rw-mdc-tooltip={i18next.t("ui:warn.user.show.userpage")}
-            >{`${i18next.t("ui:warn.user.age", {
-                localeAge: formatAge(user.registered)
-            })}`}</a>
+            >
+                {i18next.t<string>("ui:warn.user.age", {
+                    localeAge: formatAge(user.registered)
+                })}
+            </a>
         </div>
     );
 }
@@ -172,11 +174,11 @@ function MaterialWarnDialogUserCard({
                     <MaterialIconButton
                         {...warningIcon}
                         label={i18next.t("ui:warn.user.highestLevel")}
-                        tooltip={`${i18next.t(`ui:warn.user.levelInfo`, {
+                        tooltip={i18next.t<string>(`ui:warn.user.levelInfo`, {
                             context: `${WarningLevel[
                                 user.warningAnalysis.level
                             ].toLowerCase()}`
-                        })}`}
+                        })}
                         {...(user.warningAnalysis.level > 3
                             ? {
                                   onClick: () => {
@@ -329,7 +331,7 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                         >
                             {this.user.username}
                         </div>
-                        <div>{`${i18next.t("ui:warn.user.loading")}`}</div>
+                        <div>{i18next.t<string>("ui:warn.user.loading")}</div>
                     </div>
                 );
             case "input":

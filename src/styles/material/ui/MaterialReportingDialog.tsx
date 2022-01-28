@@ -2,6 +2,7 @@ import i18next from "i18next";
 import { h } from "tsx-dom";
 import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import MaterialButton from "rww/styles/material/ui/components/MaterialButton";
+import MaterialReportingDialogTarget from "rww/styles/material/ui/components//MaterialReportingDialogTarget";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
@@ -12,8 +13,13 @@ import {
     RWUIReportingDialogProps
 } from "rww/ui/elements/RWUIReportingDialog";
 import toCSS from "rww/styles/material/util/toCSS";
+import type { Page } from "rww/mediawiki";
 
 export default class MaterialReportingDialog extends RWUIReportingDialog {
+    target: Page;
+
+    mrdTarget: ReturnType<typeof MaterialReportingDialogTarget>;
+
     constructor(props: RWUIReportingDialogProps) {
         super(props);
 
@@ -35,16 +41,34 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
         }).then((v) => v.wait());
     }
 
+    renderTarget(): JSX.Element {
+        return (this.mrdTarget = (
+            <MaterialReportingDialogTarget
+                reportingDialog={this}
+                originalTarget={this.props.target}
+            />
+        ) as ReturnType<typeof MaterialReportingDialogTarget>);
+    }
+
+    refresh(): void {
+        this.mrdTarget.MRDTarget.refresh();
+    }
+
     render(): HTMLDialogElement {
-        return (this.element = (
-            <MaterialDialog id={this.id}>
+        this.element = (
+            <MaterialDialog
+                id={this.id}
+                surfaceProperties={{
+                    style: toCSS({ width: "600px" })
+                }}
+            >
                 {this.props.title && (
                     <MaterialDialogTitle>
                         {this.props.title}
                     </MaterialDialogTitle>
                 )}
                 <MaterialDialogContent style={toCSS({ width: "100%" })}>
-                    teststs
+                    {this.renderTarget()}
                 </MaterialDialogContent>
                 <MaterialDialogActions>
                     <MaterialButton dialogAction="cancel">
@@ -55,6 +79,15 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
                     </MaterialButton>
                 </MaterialDialogActions>
             </MaterialDialog>
-        ) as HTMLDialogElement);
+        ) as HTMLDialogElement;
+
+        if (this.props.target) {
+        }
+
+        return this.element;
     }
+}
+
+export interface MaterialReportingDialogChildProps {
+    reportingDialog: MaterialReportingDialog;
 }

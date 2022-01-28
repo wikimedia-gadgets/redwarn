@@ -5,6 +5,7 @@ import i18next from "i18next";
 import RedWarnStore from "rww/data/RedWarnStore";
 import Log from "rww/data/RedWarnLog";
 import RedWarnUI from "rww/ui/RedWarnUI";
+import { capitalize } from "rww/util";
 
 /**
  * Display locations for a ReportVenue. This uses a bit map, meaning each
@@ -18,14 +19,20 @@ export enum ReportVenueDisplayLocations {
     ExtendedOptions = 1 << 1,
 }
 
+export enum ReportVenueMode {
+    Page,
+    User,
+}
+
 interface BaseReportVenue {
     type: string;
     name: string;
     shortName?: string;
     icon: string;
     color?: string;
-    userspaceOnly?: boolean;
+    allowedNamespaces: number[];
     display: ReportVenueDisplayLocations;
+    mode: ReportVenueMode;
 }
 
 export type PageReportVenueTemplate = Record<"user" | "anon", string>;
@@ -46,14 +53,33 @@ export interface MediaWikiEmailReportVenue extends BaseReportVenue {
 
 export type ReportVenue = PageReportVenue | MediaWikiEmailReportVenue;
 
-export type SerializableReportVenue = Omit<ReportVenue, "display"> & {
+export type SerializableReportVenue = Omit<
+    ReportVenue,
+    "display" | "number" | "mode"
+> & {
+    /**
+     * A list of allowed display areas. Can contain the following values:
+     * `pageOptions`, `extendedOptions`.
+     */
     display: string[];
+    /**
+     * The allowed namespaces. If this is a built-in MediaWiki namespace,
+     * you may supply the non-localized (English) namespace name. If not,
+     * the namespace ID or exact namespace name must be used.
+     */
+    allowedNamespaces: (string | number)[];
+    /**
+     * Whether reporting to this venue will report a page or a user.
+     */
+    mode: "page" | "user";
 };
 
 export function deserializeReportVenue(
     venue: SerializableReportVenue
 ): ReportVenue {
     let displayBitmap = ReportVenueDisplayLocations.None;
+    // Null by default (to allow all namespaces except virtual namespaces)
+    let namespaces: number[] = null;
 
     for (const _displayLocation of venue.display) {
         const displayLocation = _displayLocation.toLowerCase();
@@ -68,9 +94,28 @@ export function deserializeReportVenue(
         }
     }
 
+    for (const namespace of venue.allowedNamespaces ?? []) {
+        // Instantiate if null.
+        if (namespaces == null) namespaces = [];
+
+        if (typeof namespace === "number") namespaces.push(namespace);
+        else {
+            const namespaceId = RedWarnStore.getNamespaceId(namespace);
+            if (namespaceId) namespaces.push(namespaceId);
+            else Log.warn(`Namespace not found: ${namespace}`);
+        }
+    }
+
+    if (venue.mode == null) throw new Error("Venue mode must be a valid mode.");
+
     // Forced conversion due to union type issues.
     return (Object.assign(venue, {
-        display: displayBitmap
+        display: displayBitmap,
+        allowedNamespaces: namespaces,
+        mode:
+            ReportVenueMode[
+                capitalize(venue.mode) as keyof typeof ReportVenueMode
+            ]
     }) as unknown) as ReportVenue;
 }
 
@@ -83,11 +128,13 @@ export function getReportVenueIcons(): PageIcon[] {
             }),
             icon: venue.icon,
             color: venue.color,
-            // Require explicit false for `venue.userspaceOnly`
-            visible:
-                venue.userspaceOnly === false
-                    ? () => !RedWarnStore.isSpecialPage()
-                    : RedWarnStore.isUserspacePage,
+            // Allow all allowed namespaces (all namespaces by default) except special pages.
+            visible: () =>
+                !RedWarnStore.isSpecialPage() &&
+                (venue.allowedNamespaces?.includes(
+                    RedWarnStore.currentNamespaceID
+                ) ??
+                    true),
             action(): void {
                 Log.info("venue", venue);
                 new RedWarnUI.ReportingDialog({ venue }).show();

@@ -118,10 +118,10 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
                                   }}
                                   style={{ float: "left", marginRight: "auto" }}
                               >
-                                  {`${i18next.t("ui:copyURL.button")}`}
+                                  {i18next.t<string>("ui:copyURL.button")}
                               </MaterialButton>,
                               <MaterialButton dialogAction={"close"}>
-                                  {`${i18next.t("ui:close")}`}
+                                  {i18next.t<string>("ui:close")}
                               </MaterialButton>
                           ]}
                 </MaterialDialogActions>

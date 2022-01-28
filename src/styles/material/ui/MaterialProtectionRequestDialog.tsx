@@ -468,9 +468,9 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                                     (this.elementSet.duration = this.renderDuration())
                                 }
                                 <p class={"rw-mdc-prd-notice"}>
-                                    {`${i18next.t(
+                                    {i18next.t<string>(
                                         "ui:protectionRequest.notice"
-                                    )}`}
+                                    )}
                                 </p>
                             </div>
                         </div>

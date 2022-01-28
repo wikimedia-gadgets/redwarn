@@ -48,6 +48,14 @@ export default class RedWarnStore {
     public static windowFocused = false;
 
     public static currentPage: Page & NamedPage;
+    public static get currentNamespaceID(): number {
+        return RedWarnStore.currentPage.namespace;
+    }
+    public static get currentNamespace(): string {
+        return RedWarnStore.currentPage.title
+            .getNamespacePrefix()
+            .replace(/:$/, "");
+    }
 
     public static registerDependency(dependency: Dependency): void {
         RedWarnStore.dependencies.push(dependency);
@@ -79,11 +87,17 @@ export default class RedWarnStore {
         );
     }
 
-    static isUserspacePage() {
+    static getNamespaceId(namespace: string): number | null {
+        return mw.config.get("wgNamespaceIds")[
+            namespace.replace(/\s/g, "_").toLowerCase()
+        ];
+    }
+
+    static isUserspacePage(): boolean {
         return Page.isUserspacePage(RedWarnStore.currentPage) !== false;
     }
 
-    static isSpecialPage() {
+    static isSpecialPage(): boolean {
         return Page.isSpecialPage(RedWarnStore.currentPage) !== false;
     }
 }

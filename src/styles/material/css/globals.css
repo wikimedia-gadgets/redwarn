@@ -43,6 +43,10 @@
     margin: 0 0.5em;
 }
 
+.mdc-dialog__title {
+    margin-bottom: 8px !important;
+}
+
 .mdc-dialog__actions {
     font-family: "Roboto", sans-serif;
 }

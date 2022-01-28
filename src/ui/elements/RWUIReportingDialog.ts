@@ -1,9 +1,9 @@
-import type { Page, User } from "rww/mediawiki";
+import type { Page } from "rww/mediawiki";
 import type { ReportVenue } from "rww/mediawiki/report/ReportVenue";
 import { RWUIDialog, RWUIDialogProperties } from "rww/ui/elements/RWUIDialog";
 
 export interface RWUIReportingDialogProps extends RWUIDialogProperties {
-    target?: User | Page;
+    target?: Page;
     venue: ReportVenue;
 }
 

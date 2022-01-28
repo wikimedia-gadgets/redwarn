@@ -263,8 +263,10 @@
 
         "target": {
             "label": "Target",
-            "user": "Pick a user",
-            "page": "Pick a page"
+            "label_user": "User",
+            "label_page": "Page",
+            "helperText": "Enter a page",
+            "helperText_user": "Enter a username"
         },
         "reason": {
             "label": "Reason",

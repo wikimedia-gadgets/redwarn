@@ -241,7 +241,6 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                     this.mwdReason?.MWDReason?.warningLevel != null
             }
         ];
-        console.log(this.mwdReason?.MWDReason?.warning); // debug
         // Find all tests that failed.
         const testResults = validationTests.filter((test) => {
             return !test.condition;

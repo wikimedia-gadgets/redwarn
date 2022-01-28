@@ -339,7 +339,7 @@ export class UserAccount extends User {
 
         const identifier = user.getIdentifier();
 
-        const userInfoRequest = await MediaWikiAPI.get({
+        const userInfoRequestPromise = MediaWikiAPI.get({
             action: "query",
             format: "json",
             list: ["users"],
@@ -347,7 +347,11 @@ export class UserAccount extends User {
             [typeof identifier === "string"
                 ? "ususers"
                 : "ususerids"]: identifier
-        });
+        }).then((v: JQueryXHR) => v);
+        const [userInfoRequest] = await Promise.all([
+            userInfoRequestPromise,
+            await super.populate(user)
+        ]);
 
         const userData = userInfoRequest["query"]["users"][0];
 
@@ -379,9 +383,6 @@ export class UserAccount extends User {
                 creationBlocked: !!userData["blocknocreate"]
             };
         else if (!user.blocked) user.blocked = false;
-
-        // Get latest edit
-        super.populate(user);
 
         return user;
     }

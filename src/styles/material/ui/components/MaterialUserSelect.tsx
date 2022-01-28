@@ -22,6 +22,7 @@ import { WarningIcons } from "rww/styles/material/data/WarningIcons";
 import MaterialAlertDialog from "rww/styles/material/ui/MaterialAlertDialog";
 import Log from "rww/data/RedWarnLog";
 import Group from "rww/mediawiki/core/Group";
+import "../../css/userSelect.css";
 
 interface OverlayContentLoading {
     type: "loading";
@@ -45,7 +46,7 @@ function MaterialUserSelectCardAccountGroups({
     const user: UserAccount = parent.user;
 
     return (
-        <div class={"rw-mdc-warnDialog-user--groups"}>
+        <div class={"rw-mdc-userSelect--groups"}>
             {/* TODO: i18n (slightly complicated) */}
             <b>Groups:</b>{" "}
             {user.groups
@@ -77,7 +78,7 @@ function MaterialUserSelectCardAccountInfo({
 }): JSX.Element {
     if (!(parent.user instanceof UserAccount))
         return (
-            <div class={"rw-mdc-warnDialog-user--overview"}>
+            <div class={"rw-mdc-userSelect--overview"}>
                 {/* TODO Eventually replace with per-wiki page */}
                 <a href={"/wiki/w:en:IP_address"} target="_blank">
                     {i18next.t<string>("mediawiki:ip")}
@@ -88,7 +89,7 @@ function MaterialUserSelectCardAccountInfo({
     const user: UserAccount = parent.user;
 
     return (
-        <div class={"rw-mdc-warnDialog-user--overview"}>
+        <div class={"rw-mdc-userSelect--overview"}>
             <a
                 onClick={() => {
                     showPlainMediaWikiIFrameDialog(
@@ -150,8 +151,8 @@ function MaterialUserSelectCard({
         <table>
             <tr>
                 <td rowSpan={2}>
-                    <div class={"rw-mdc-warnDialog-user--main"}>
-                        <div class={"rw-mdc-warnDialog-user--username"}>
+                    <div class={"rw-mdc-userSelect--main"}>
+                        <div class={"rw-mdc-userSelect--username"}>
                             <a
                                 onClick={() => {
                                     parent.clearUser();
@@ -262,7 +263,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
     get active(): boolean {
         if (!!this.elementSet.root) {
             this.elementSet.root.classList.toggle(
-                "rw-mdc-warnDialog-user--active",
+                "rw-mdc-userSelect--active",
                 this._active
             );
         }
@@ -271,7 +272,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
     set active(value: boolean) {
         if (!!this.elementSet.root) {
             this.elementSet.root.classList.toggle(
-                "rw-mdc-warnDialog-user--active",
+                "rw-mdc-userSelect--active",
                 value
             );
         }
@@ -321,9 +322,9 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
         switch (overlayInfo.type) {
             case "loading":
                 return (
-                    <div class="rw-mdc-warnDialog-user--loading">
+                    <div class="rw-mdc-userSelect--loading">
                         <div
-                            class={"rw-mdc-warnDialog-user--username"}
+                            class={"rw-mdc-userSelect--username"}
                             onClick={() => {
                                 if (!this.updating) this.updateUser(this.user);
                                 else
@@ -374,7 +375,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                         }
                     });
                 return (
-                    <div class={"rw-mdc-warnDialog-user--input"}>
+                    <div class={"rw-mdc-userSelect--input"}>
                         {textInput}
                         <MaterialIconButton
                             icon={"send"}
@@ -408,7 +409,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
 
     renderOverlay(): JSX.Element {
         this.elementSet.overlay = (
-            <div class={"rw-mdc-warnDialog-user--overlay"}>
+            <div class={"rw-mdc-userSelect--overlay"}>
                 {this.renderOverlayContent()}
             </div>
         );
@@ -417,7 +418,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
 
     renderMain(): JSX.Element {
         this.elementSet.main = (
-            <div class={"rw-mdc-warnDialog-user--main"}>
+            <div class={"rw-mdc-userSelect--main"}>
                 {
                     // Do not use `this.active` - this will require two refreshes.
                     !!this.user &&
@@ -510,7 +511,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                 await this.user.getWarningAnalysis();
             }
 
-            this.onPostUserChange(this.user);
+            await this.onPostUserChange(this.user);
         }
 
         // All done. Show!
@@ -526,12 +527,12 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
      * Refreshes the content of the root element.
      */
     refresh(): void {
-        const rootId = `rwMdcWarnDialogUser__${this.props.id}`;
+        const rootId = `rwMdcUserSelect__${this.props.id}`;
         // Oh, how I miss setState()...
         const root = (
             <div
                 id={rootId}
-                class={"rw-mdc-warnDialog-user mdc-card mdc-card--outlined"}
+                class={"rw-mdc-userSelect mdc-card mdc-card--outlined"}
             >
                 {this.renderMain()}
                 {this.renderOverlay()}
@@ -593,7 +594,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
             if (
                 // Is active
                 this.elementSet.root.classList.contains(
-                    "rw-mdc-warnDialog-user--active"
+                    "rw-mdc-userSelect--active"
                 ) &&
                 // No children in main element
                 this.elementSet.main.children.length == 0

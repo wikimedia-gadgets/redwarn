@@ -112,6 +112,12 @@ interface WikiConfigurationBase {
          * searching.
          */
         warnings: Record<string, SerializedWarning> | Record<string, Warning>;
+        /**
+         * A list of user group IDs which require an additional confirmation before
+         * warning. This is to prevent users from warning administrators or other
+         * tenured editors that are defined in the array.
+         */
+        restrictedGroups?: string[];
     };
     /**
      * Revert options determine the options show to a user when viewing a diff page.

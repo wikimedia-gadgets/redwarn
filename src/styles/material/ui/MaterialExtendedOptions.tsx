@@ -61,7 +61,7 @@ export default class MaterialExtendedOptions extends RWUIExtendedOptions {
             >
                 <MaterialDialogTitle tabIndex={0}>
                     <span style={toCSS({ fontWeight: "bold" })}>
-                        {i18next.t("ui:extendedOptions.title").toString()}
+                        {i18next.t<string>("ui:extendedOptions.title")}
                     </span>
                 </MaterialDialogTitle>
                 <MaterialDialogContent>

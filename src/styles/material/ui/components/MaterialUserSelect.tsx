@@ -427,7 +427,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                     // Do not use `this.active` - this will require two refreshes.
                     !!this.user &&
                     this.user.isPopulated() &&
-                    !!this.user.warningAnalysis ? (
+                    !!this.user?.warningAnalysis ? (
                         <MaterialUserSelectCard parent={this} />
                     ) : (
                         ""
@@ -476,7 +476,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
 
             await this.onUserChange(this.user);
 
-            if (!this.user.warningAnalysis) {
+            if (!this.user?.warningAnalysis) {
                 // Set to updating in order to hoist loading screen.
                 this.updating = true;
                 this.refresh();

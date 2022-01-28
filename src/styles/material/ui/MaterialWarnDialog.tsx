@@ -55,7 +55,7 @@ function MaterialWarnDialogErrors(props: {
     tests: true | MaterialWarnDialogValidationTest[];
 }): JSX.Element {
     if (props.tests === true)
-        return <div>{i18next.t("ui:warn.validation.pass").toString()}</div>;
+        return <div>{i18next.t<string>("ui:warn.validation.pass")}</div>;
 
     // Get the failing tests with their test IDs.
     const failingIds = props.tests.map((v) => v.id);
@@ -321,15 +321,13 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                     },
                     "aria-modal": true,
                     "aria-labelledby":
-                        this.props.title ??
-                        i18next.t("ui:warn.title").toString()
+                        this.props.title ?? i18next.t<string>("ui:warn.title")
                 }}
                 id={this.id}
             >
                 <MaterialDialogTitle tabIndex={0}>
                     <span style={{ float: "left" }}>
-                        {this.props.title ??
-                            i18next.t("ui:warn.title").toString()}
+                        {this.props.title ?? i18next.t<string>("ui:warn.title")}
                     </span>
                 </MaterialDialogTitle>
                 <br />

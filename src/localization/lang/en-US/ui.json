@@ -155,8 +155,8 @@
         },
 
         "risky": {
-            "title": "Risky revert",
-            "content": "You are about to warn an administrator. Are you sure about this?"
+            "title": "Risky warning",
+            "content": "You are about to warn {{group, en-handle-an}} {{group}}. Are you sure about this?"
         },
 
         "ok": "Warn User"

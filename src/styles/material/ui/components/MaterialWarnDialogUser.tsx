@@ -7,6 +7,7 @@ import {
 import MaterialAlertDialog from "rww/styles/material/ui/MaterialAlertDialog";
 import i18next from "i18next";
 import { h } from "tsx-dom";
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 
 export class MaterialWarnDialogUser extends MaterialUserSelect {
     constructor(
@@ -22,15 +23,23 @@ export class MaterialWarnDialogUser extends MaterialUserSelect {
 
     async onUserChange(user: User): Promise<void> {
         // Whether or not we populated already.
-        if (user instanceof UserAccount && user.groups.includesGroup("sysop")) {
+        if (user instanceof UserAccount) {
+            const restrictedGroupMatch = user.groups.groupMatch(
+                RedWarnWikiConfiguration.c.warnings.restrictedGroups ?? []
+            );
+
+            if (restrictedGroupMatch == null) return;
+
             if (
                 (await new MaterialAlertDialog({
                     // TODO i18n
-                    title: i18next.t("ui:warn.risky.title").toString(),
+                    title: i18next.t<string>("ui:warn.risky.title"),
                     content: (
-                        <div class={"rw-mdc-riskyRevert"}>
+                        <div class={"rw-mdc-riskyWarning"}>
                             <b>
-                                {i18next.t("ui:warn.risky.content").toString()}
+                                {i18next.t<string>("ui:warn.risky.content", {
+                                    group: restrictedGroupMatch.displayName
+                                })}
                             </b>
                         </div>
                     ),
@@ -51,9 +60,13 @@ export class MaterialWarnDialogUser extends MaterialUserSelect {
     }
 
     onPostUserChange(user: User): void {
-        // Update default warning level of the reason component.
-        this.props.warnDialog.mwdReason.MWDReason.defaultLevel =
-            user.warningAnalysis.level > 3 ? 4 : user.warningAnalysis.level + 1;
+        if (user.warningAnalysis != null) {
+            // Update default warning level of the reason component.
+            this.props.warnDialog.mwdReason.MWDReason.defaultLevel =
+                user.warningAnalysis.level > 3
+                    ? 4
+                    : user.warningAnalysis.level + 1;
+        }
 
         // Validate
         this.props.warnDialog.uiValidate();

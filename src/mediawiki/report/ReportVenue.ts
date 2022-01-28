@@ -32,7 +32,20 @@ interface BaseReportVenue {
     color?: string;
     allowedNamespaces: number[];
     display: ReportVenueDisplayLocations;
-    mode: ReportVenueMode;
+}
+
+interface UserReportVenueMode {
+    mode: ReportVenueMode.User;
+    /**
+     * A list of user group IDs which require an additional confirmation before
+     * warning. This is to prevent users from warning administrators or other
+     * tenured editors that are defined in the array.
+     */
+    restrictedGroups?: string[];
+}
+
+interface PageReportVenueMode {
+    mode: ReportVenueMode.Page;
 }
 
 export type PageReportVenueTemplate = Record<"user" | "anon", string>;
@@ -51,7 +64,8 @@ export interface MediaWikiEmailReportVenue extends BaseReportVenue {
     user: string;
 }
 
-export type ReportVenue = PageReportVenue | MediaWikiEmailReportVenue;
+export type ReportVenue = (PageReportVenueMode | UserReportVenueMode) &
+    (PageReportVenue | MediaWikiEmailReportVenue);
 
 export type SerializableReportVenue = Omit<
     ReportVenue,

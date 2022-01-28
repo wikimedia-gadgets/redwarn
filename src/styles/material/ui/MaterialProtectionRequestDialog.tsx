@@ -61,7 +61,7 @@ function MaterialProtectionRequestDialogErrors(props: {
     if (props.tests === true)
         return (
             <div>
-                {i18next.t("ui:protectionRequest.validation.pass").toString()}
+                {i18next.t<string>("ui:protectionRequest.validation.pass")}
             </div>
         );
 
@@ -420,14 +420,14 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                     "aria-modal": true,
                     "aria-labelledby":
                         this.props.title ??
-                        i18next.t("ui:protectionRequest.title").toString()
+                        i18next.t<string>("ui:protectionRequest.title")
                 }}
                 id={this.id}
             >
                 <MaterialDialogTitle tabIndex={0}>
                     <span style={{ float: "left" }}>
                         {this.props.title ??
-                            i18next.t("ui:protectionRequest.title").toString()}
+                            i18next.t<string>("ui:protectionRequest.title")}
                     </span>
                 </MaterialDialogTitle>
                 <MaterialDialogContent

@@ -143,7 +143,7 @@
 }
 
 /* Revert confirmation dialog */
-.rw-mdc-riskyRevert {
+.rw-mdc-riskyWarning {
     color: #f33;
 }
 

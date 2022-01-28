@@ -19,7 +19,6 @@ import MaterialMenu, { openMenu } from "./MaterialMenu";
 import showPlainMediaWikiIFrameDialog from "rww/styles/material/util/showPlainMediaWikiIFrameDialog";
 import { MaterialWarnDialogChild } from "./MaterialWarnDialogChild";
 import { WarningIcons } from "rww/styles/material/data/WarningIcons";
-import MaterialAlertDialog from "rww/styles/material/ui/MaterialAlertDialog";
 import Log from "rww/data/RedWarnLog";
 import Group from "rww/mediawiki/core/Group";
 import "../../css/userSelect.css";
@@ -103,10 +102,10 @@ function MaterialUserSelectCardAccountInfo({
                     );
                 }}
                 data-rw-mdc-tooltip={i18next.t(
-                    "ui:warn.user.show.contributions"
+                    "ui:userSelect.show.contributions"
                 )}
             >
-                {i18next.t<string>("ui:warn.user.edits", {
+                {i18next.t<string>("ui:userSelect.edits", {
                     edits: user.editCount.toLocaleString()
                 })}
             </a>
@@ -118,9 +117,9 @@ function MaterialUserSelectCardAccountInfo({
                         safeMode: true
                     });
                 }}
-                data-rw-mdc-tooltip={i18next.t("ui:warn.user.show.userpage")}
+                data-rw-mdc-tooltip={i18next.t("ui:userSelect.show.userpage")}
             >
-                {i18next.t<string>("ui:warn.user.age", {
+                {i18next.t<string>("ui:userSelect.age", {
                     localeAge: formatAge(user.registered)
                 })}
             </a>
@@ -158,7 +157,7 @@ function MaterialUserSelectCard({
                                     parent.clearUser();
                                 }}
                                 data-rw-mdc-tooltip={i18next.t(
-                                    "ui:warn.user.change"
+                                    "ui:userSelect.change"
                                 )}
                             >
                                 {user.username}
@@ -171,8 +170,8 @@ function MaterialUserSelectCard({
                 <td>
                     <MaterialIconButton
                         {...warningIcon}
-                        label={i18next.t("ui:warn.user.highestLevel")}
-                        tooltip={i18next.t<string>(`ui:warn.user.levelInfo`, {
+                        label={i18next.t("ui:userSelect.highestLevel")}
+                        tooltip={i18next.t<string>(`ui:userSelect.levelInfo`, {
                             context: `${WarningLevel[
                                 user.warningAnalysis.level
                             ].toLowerCase()}`
@@ -194,7 +193,9 @@ function MaterialUserSelectCard({
                 <td>
                     <MaterialIconButton
                         icon={"assignment_ind"}
-                        tooltip={i18next.t("ui:warn.user.talk.main").toString()}
+                        tooltip={i18next
+                            .t("ui:userSelect.talk.main")
+                            .toString()}
                         onClick={() => {
                             openMenu(`menu__${cardId}`);
                         }}
@@ -205,32 +206,34 @@ function MaterialUserSelectCard({
                         items={[
                             {
                                 label: i18next
-                                    .t("ui:warn.user.talk.month")
+                                    .t("ui:userSelect.talk.month")
                                     .toString(),
                                 action(): void {
                                     showPlainMediaWikiIFrameDialog(
                                         user.talkPage,
                                         {
                                             disableRedWarn: true,
+                                            redirect: false,
                                             fragment: mw.util.wikiUrlencode(
                                                 getMonthHeader()
                                             ),
                                             customStyle: `#${mw.util.wikiUrlencode(
                                                 getMonthHeader()
-                                            )} { background-color: #fd0; }`
+                                            )}{background-color:#fd0;}`
                                         }
                                     );
                                 }
                             },
                             {
                                 label: i18next
-                                    .t("ui:warn.user.talk.whole")
+                                    .t("ui:userSelect.talk.whole")
                                     .toString(),
                                 action(): void {
                                     showPlainMediaWikiIFrameDialog(
                                         user.talkPage,
                                         {
-                                            disableRedWarn: true
+                                            disableRedWarn: true,
+                                            redirect: false
                                         }
                                     );
                                 }
@@ -287,7 +290,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
     }
     set user(value: User) {
         this._user = value;
-        this.onUserChange(value);
+        this.onPreUserChange(value);
     }
 
     private updating: boolean;
@@ -298,6 +301,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
         this.user = props.originalUser;
     }
 
+    abstract onPreUserChange(user: User): PromiseOrNot<void>;
     abstract onUserChange(user: User): PromiseOrNot<void>;
     abstract onPostUserChange(user: User): PromiseOrNot<void>;
 
@@ -330,21 +334,21 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                                 else
                                     RedWarnUI.Toast.quickShow({
                                         content: i18next.t(
-                                            "ui:warn.user.load_wait"
+                                            "ui:userSelect.load_wait"
                                         )
                                     });
                             }}
                         >
                             {this.user.username}
                         </div>
-                        <div>{i18next.t<string>("ui:warn.user.loading")}</div>
+                        <div>{i18next.t<string>("ui:userSelect.loading")}</div>
                     </div>
                 );
             case "input":
                 const textInput = (
                     <MaterialTextInput
                         width={"100%"}
-                        label={i18next.t("ui:warn.user.input")}
+                        label={i18next.t("ui:userSelect.input")}
                         defaultText={this.lastUser?.username ?? ""}
                         autofocus
                     />
@@ -380,7 +384,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                         <MaterialIconButton
                             icon={"send"}
                             tooltip={i18next
-                                .t("ui:warn.user.confirm")
+                                .t("ui:userSelect.confirm")
                                 .toString()}
                             onClick={() => {
                                 updateName();
@@ -470,38 +474,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                 await this.user.populate();
             }
 
-            // Whether or not we populated already.
-            if (
-                this.user instanceof UserAccount &&
-                this.user.groups.includesGroup("sysop")
-            ) {
-                if (
-                    (await new MaterialAlertDialog({
-                        // TODO i18n
-                        title: i18next.t("ui:warn.risky.title").toString(),
-                        content: (
-                            <div class={"rw-mdc-riskyRevert"}>
-                                <b>
-                                    {i18next
-                                        .t("ui:warn.risky.content")
-                                        .toString()}
-                                </b>
-                            </div>
-                        ),
-                        actions: [
-                            {
-                                data: "cancel"
-                            },
-                            {
-                                data: "proceed"
-                            }
-                        ]
-                    }).show()) !== "proceed"
-                ) {
-                    await this.clearUser(this.lastUser);
-                    return;
-                }
-            }
+            await this.onUserChange(this.user);
 
             if (!this.user.warningAnalysis) {
                 // Set to updating in order to hoist loading screen.

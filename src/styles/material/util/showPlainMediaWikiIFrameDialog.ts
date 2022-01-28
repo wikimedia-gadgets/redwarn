@@ -8,6 +8,7 @@ const plainCSS: string = require("../plain/plainMediaWiki.css.txt");
 
 interface PlainMediaWikiIFrameDialogShowOptions {
     safeMode?: boolean;
+    redirect?: boolean;
 }
 
 export default function (
@@ -17,9 +18,11 @@ export default function (
 ): Promise<any> {
     const frameOptions: RWUIIFrameDialogProps = Object.assign(
         {
-            src: additionalProps.safeMode
-                ? url(page.url, { safemode: "true" })
-                : page.url,
+            src: url(page.url, {
+                safemode: additionalProps.safeMode ? "true" : "false",
+                // Also redirects by default.
+                redirect: additionalProps.redirect === false ? "no" : "yes"
+            }),
             width: "calc(100vw - 176px)",
             height: "90vh"
         },

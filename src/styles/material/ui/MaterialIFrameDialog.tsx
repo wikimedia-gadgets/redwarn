@@ -98,8 +98,8 @@ export default class MaterialIFrameDialog extends RWUIIFrameDialog {
                                   onClick={() => {
                                       navigator.clipboard
                                           .writeText(
-                                              iframe.contentDocument.location
-                                                  .href
+                                              iframe.contentDocument?.location
+                                                  ?.href ?? iframe.src
                                           )
                                           .then(() => {
                                               RedWarnUI.Toast.quickShow({

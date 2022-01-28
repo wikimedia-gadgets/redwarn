@@ -131,9 +131,10 @@ export async function upgradeMaterialDialog<T>(
 
     if (options?.onPostInit) await options.onPostInit(mdcDialog);
 
-    return Object.assign(mdcDialog, {
+    dialog.dialog = Object.assign(mdcDialog, {
         wait: () => closePromise
     });
+    return dialog.dialog;
 }
 
 export function registerMaterialDialog(dialog: RWUIDialog<any>): void {

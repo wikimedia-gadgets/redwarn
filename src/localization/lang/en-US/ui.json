@@ -13,10 +13,7 @@
         "latestRevision": "Latest Revision",
         "moreOptions": "More Options",
         "vandalismStatistics": "Vandalism statistics",
-        "reportAIV": "Report to AIV",
-        "reportUAA": "Report to UAA",
-        "reportOversight": "Report user to Oversight",
-        "reportTAS": "Report user to Wikimedia Trust & Safety",
+        "report": "Report to {{name}}",
         "preferences": "Preferences",
         "rwTalk": "RedWarn talk page"
     },
@@ -259,5 +256,33 @@
             "decrease": "Decrease"
         },
         "done": "Request filed."
+    },
+    "reporting": {
+        "title": "Report to {{venue}}",
+        "ok": "Report",
+
+        "target": {
+            "label": "Target",
+            "user": "Pick a user",
+            "page": "Pick a page"
+        },
+        "reason": {
+            "label": "Reason",
+            "placeholder": "Select a reason"
+        },
+        "info": {
+            "label": "Additional information",
+            "placeholder": "Optionally provide additional details about your request."
+        },
+        "validation": {
+            "fail": "An unknown issue ocurred.",
+
+            "fail_self": "You are not allowed to warn yourself.",
+            "fail_noReason": "You did not provide a valid reason for the report.",
+            "fail_noContent": "Your report does not contain any information."
+        },
+
+        "done_page": "Report filed.",
+        "done_email": "Report emailed."
     }
 }

@@ -15,7 +15,6 @@ import MaterialTextInput, {
     MaterialTextInputUpgrade
 } from "rww/styles/material/ui/components/MaterialTextInput";
 import { regexEscape } from "rww/util";
-import { MDCDialog } from "@material/dialog";
 import i18next from "i18next";
 import MaterialWarnSearchDialogCard from "rww/styles/material/ui/components/MaterialWarnSearchDialogCard";
 
@@ -244,7 +243,6 @@ export default class MaterialWarnSearchDialog extends RWUIDialog<Warning> {
         this.props.width = props.width ?? "80vw";
     }
 
-    dialog: MDCDialog;
     selectedWarning: Warning;
     private actions: JSX.Element; // For updating.
 

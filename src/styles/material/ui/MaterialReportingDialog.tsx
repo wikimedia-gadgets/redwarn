@@ -7,10 +7,22 @@ import MaterialDialog, {
     MaterialDialogContent,
     MaterialDialogTitle
 } from "rww/styles/material/ui/MaterialDialog";
-import { RWUIReportingDialog } from "rww/ui/elements/RWUIReportingDialog";
+import {
+    RWUIReportingDialog,
+    RWUIReportingDialogProps
+} from "rww/ui/elements/RWUIReportingDialog";
 import toCSS from "rww/styles/material/util/toCSS";
 
 export default class MaterialReportingDialog extends RWUIReportingDialog {
+    constructor(props: RWUIReportingDialogProps) {
+        super(props);
+
+        if (!this.props.title)
+            this.props.title = i18next.t("ui:reporting.title", {
+                venue: props.venue.name
+            });
+    }
+
     show(): Promise<any> {
         return upgradeMaterialDialog(this, {
             onClose: (event) => {
@@ -24,25 +36,25 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
     }
 
     render(): HTMLDialogElement {
-        return (
+        return (this.element = (
             <MaterialDialog id={this.id}>
                 {this.props.title && (
                     <MaterialDialogTitle>
                         {this.props.title}
                     </MaterialDialogTitle>
                 )}
-                <MaterialDialogContent
-                    style={toCSS({ width: "100%" })}
-                ></MaterialDialogContent>
+                <MaterialDialogContent style={toCSS({ width: "100%" })}>
+                    teststs
+                </MaterialDialogContent>
                 <MaterialDialogActions>
                     <MaterialButton dialogAction="cancel">
                         {i18next.t<string>("ui:okCancel.cancel")}
                     </MaterialButton>
-                    <MaterialButton dialogAction="confirm">
-                        {i18next.t<string>("ui:okCancel.ok")}
+                    <MaterialButton dialogAction="confirm" raised>
+                        {i18next.t<string>("ui:reporting.ok")}
                     </MaterialButton>
                 </MaterialDialogActions>
             </MaterialDialog>
-        ) as HTMLDialogElement;
+        ) as HTMLDialogElement);
     }
 }

@@ -78,6 +78,14 @@ export default class RedWarnStore {
             mw.util.wikiUrlencode(target)
         );
     }
+
+    static isUserspacePage() {
+        return Page.isUserspacePage(RedWarnStore.currentPage) !== false;
+    }
+
+    static isSpecialPage() {
+        return Page.isSpecialPage(RedWarnStore.currentPage) !== false;
+    }
 }
 
 // We're exposing the RedWarn storage for the ones who want to tinker with

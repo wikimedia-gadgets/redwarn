@@ -508,6 +508,9 @@ class MaterialWarnDialogUser extends MaterialWarnDialogChild {
                 this.user.warningAnalysis.level > 3
                     ? 4
                     : this.user.warningAnalysis.level + 1;
+
+            // Validate
+            this.props.warnDialog.uiValidate();
         }
 
         // All done. Show!

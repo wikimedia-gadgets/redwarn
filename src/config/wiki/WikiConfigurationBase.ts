@@ -10,6 +10,7 @@ import type {
 import { WarningCategory } from "rww/mediawiki";
 import type { SerializableRevertOption } from "rww/mediawiki/revert/RevertOptions";
 import { RevertOption } from "rww/mediawiki/revert/RevertOptions";
+import { ReportVenue } from "rww/mediawiki/report/ReportVenue";
 
 /**
  * This is a configuration file used by RedWarn to provide wiki-specific
@@ -163,6 +164,12 @@ interface WikiConfigurationBase {
          */
         reasons?: string[] | Record<string, string[]>;
     };
+    /**
+     * Possible reporting venues on a given wiki. This can support noticeboard venues
+     * (such as Project-namespace pages which can be seen by the public) or user
+     * email venues (such as role accounts which forward emails to a private list).
+     */
+    reporting: ReportVenue[];
 }
 
 export default WikiConfigurationBase;

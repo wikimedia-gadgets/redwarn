@@ -25,7 +25,7 @@ export default class MaterialExtendedOptions extends RWUIExtendedOptions {
     renderOptions(): JSX.Element[] {
         const items: JSX.Element[] = [];
 
-        PageIcons.forEach((icon) => {
+        PageIcons().forEach((icon) => {
             if (
                 !(
                     Configuration.UI.pageIcons.value?.[icon.id]?.enabled ??
@@ -39,7 +39,7 @@ export default class MaterialExtendedOptions extends RWUIExtendedOptions {
                         color={icon.color ?? "black"}
                         onClick={icon.action}
                     >
-                        {`${i18next.t(`ui:pageIcons.${icon.id}`)}`}
+                        {`${icon.name ?? i18next.t(`ui:pageIcons.${icon.id}`)}`}
                     </MaterialListItem>
                 );
             }

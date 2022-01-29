@@ -395,9 +395,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                             this.lastUser && (
                                 <MaterialIconButton
                                     icon={"close"}
-                                    tooltip={i18next
-                                        .t("ui:okCancel.cancel")
-                                        .toString()}
+                                    tooltip={i18next.t("ui:cancel").toString()}
                                     onClick={() => {
                                         (overlayInfo as OverlayContentInput).onFinish(
                                             this.lastUser.username

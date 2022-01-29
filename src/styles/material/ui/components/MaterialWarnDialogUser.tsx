@@ -32,7 +32,6 @@ export class MaterialWarnDialogUser extends MaterialUserSelect {
 
             if (
                 (await new MaterialAlertDialog({
-                    // TODO i18n
                     title: i18next.t<string>("ui:warn.risky.title"),
                     content: (
                         <div class={"rw-mdc-riskyWarning"}>
@@ -45,9 +44,11 @@ export class MaterialWarnDialogUser extends MaterialUserSelect {
                     ),
                     actions: [
                         {
+                            // TODO i18n
                             data: "cancel"
                         },
                         {
+                            // TODO i18n
                             data: "proceed"
                         }
                     ]

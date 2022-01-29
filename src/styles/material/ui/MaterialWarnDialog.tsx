@@ -391,9 +391,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                                         ),
                                         actions: [
                                             {
-                                                data: i18next.t(
-                                                    "ui:okCancel.ok"
-                                                )
+                                                data: i18next.t("ui:ok")
                                             }
                                         ]
                                     });
@@ -410,7 +408,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                             />
                         ))}
                     <MaterialButton dialogAction="cancel">
-                        {i18next.t<string>("ui:okCancel.cancel")}
+                        {i18next.t<string>("ui:cancel")}
                     </MaterialButton>
                     {
                         (this.dialogConfirmButton = (

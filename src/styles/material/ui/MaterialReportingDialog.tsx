@@ -72,7 +72,7 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
                 </MaterialDialogContent>
                 <MaterialDialogActions>
                     <MaterialButton dialogAction="cancel">
-                        {i18next.t<string>("ui:okCancel.cancel")}
+                        {i18next.t<string>("ui:cancel")}
                     </MaterialButton>
                     <MaterialButton dialogAction="confirm" raised>
                         {i18next.t<string>("ui:reporting.ok")}

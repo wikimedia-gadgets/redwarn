@@ -1,6 +1,9 @@
 {
     "unfinished": "Hmm, looks like we haven't implemented this feature yet. Check back later!",
 
+    "ok": "OK",
+    "cancel": "Cancel",
+
     "extendedOptions": {
         "title": "More Options"
     },
@@ -30,10 +33,6 @@
         "actions": {
             "ok": "Rollback"
         }
-    },
-    "okCancel": {
-        "ok": "OK",
-        "cancel": "Cancel"
     },
     "copyURL": {
         "button": "Copy URL",
@@ -177,7 +176,7 @@
         "content": "Your RedWarn configuration could not be loaded correctly and has been reset. If this issue persists, please contact the RedWarn team.",
         "actions": [
             {
-                "data": "$t(ui:okCancel.ok)"
+                "data": "$t(ui:ok)"
             }
         ]
     },
@@ -186,7 +185,7 @@
             "title": "Style Missing",
             "content": "The style set in your RedWarn configuration cannot be found. It has been set to the default style for now.",
             "actions": [
-                { "data": "$t(ui:okCancel.ok)" }
+                { "data": "$t(ui:ok)" }
             ]
         }
     },

@@ -25,16 +25,18 @@ export enum ReportVenueMode {
 }
 
 interface BaseReportVenue {
-    type: string;
     name: string;
     shortName?: string;
     icon: string;
     color?: string;
     allowedNamespaces: number[];
     display: ReportVenueDisplayLocations;
+
+    mode: ReportVenueMode;
+    type: string;
 }
 
-interface UserReportVenueMode {
+interface UserReportVenueMode extends BaseReportVenue {
     mode: ReportVenueMode.User;
     /**
      * A list of user group IDs which require an additional confirmation before
@@ -44,15 +46,19 @@ interface UserReportVenueMode {
     restrictedGroups?: string[];
 }
 
-export function isUserModeReportVenue(obj: any): obj is UserReportVenueMode {
+export function isUserModeReportVenue(
+    obj: BaseReportVenue
+): obj is UserReportVenueMode {
     return obj.mode === ReportVenueMode.User;
 }
 
-interface PageReportVenueMode {
+interface PageReportVenueMode extends BaseReportVenue {
     mode: ReportVenueMode.Page;
 }
 
-export function isPageModeReportVenue(obj: any): obj is PageReportVenueMode {
+export function isPageModeReportVenue(
+    obj: BaseReportVenue
+): obj is PageReportVenueMode {
     return obj.mode === ReportVenueMode.Page;
 }
 
@@ -67,9 +73,22 @@ export interface PageReportVenue extends BaseReportVenue {
     defaultReasons?: string[];
 }
 
+export function isPageReportVenue(
+    obj: BaseReportVenue
+): obj is PageReportVenue {
+    return obj.type === "page";
+}
+
 export interface MediaWikiEmailReportVenue extends BaseReportVenue {
     type: "email";
     user: string;
+    prefill?: string;
+}
+
+export function isEmailReportVenue(
+    obj: BaseReportVenue
+): obj is MediaWikiEmailReportVenue {
+    return obj.type === "email";
 }
 
 export type ModalReportVenue = PageReportVenueMode | UserReportVenueMode;

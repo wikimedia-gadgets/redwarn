@@ -14,8 +14,12 @@ import {
 } from "rww/ui/elements/RWUIReportingDialog";
 import toCSS from "rww/styles/material/util/toCSS";
 import MaterialReportingDialogUser from "./components/MaterialReportingDialogUser";
-import { isUserModeReportVenue } from "rww/mediawiki/report/ReportVenue";
+import {
+    isPageReportVenue,
+    isUserModeReportVenue
+} from "rww/mediawiki/report/ReportVenue";
 import { Page, User } from "rww/mediawiki";
+import MaterialReportingDialogReason from "rww/styles/material/ui/components/MaterialReportingDialogReason";
 
 export default class MaterialReportingDialog extends RWUIReportingDialog {
     target: User | Page;
@@ -23,6 +27,7 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
     mrdTarget:
         | ReturnType<typeof MaterialReportingDialogPage>
         | ReturnType<typeof MaterialReportingDialogUser>;
+    mrdInfo: ReturnType<typeof MaterialReportingDialogReason>;
 
     constructor(props: RWUIReportingDialogProps) {
         super(props);
@@ -63,6 +68,21 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
         }
     }
 
+    renderInfo(): JSX.Element {
+        if (isPageReportVenue(this.props.venue)) {
+            return (this.mrdInfo = (
+                <MaterialReportingDialogReason reportingDialog={this} />
+            ) as ReturnType<typeof MaterialReportingDialogReason>);
+        } else {
+            // return (this.mrdTarget = (
+            //     <MaterialReportingDialogPage
+            //         reportingDialog={this}
+            //         originalTarget={this.props.target as Page}
+            //     />
+            // ) as ReturnType<typeof MaterialReportingDialogPage>);
+        }
+    }
+
     refresh(): void {
         this.mrdTarget.MRDTarget.refresh();
     }
@@ -99,8 +119,4 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
 
         return this.element;
     }
-}
-
-export interface MaterialReportingDialogChildProps {
-    reportingDialog: MaterialReportingDialog;
 }

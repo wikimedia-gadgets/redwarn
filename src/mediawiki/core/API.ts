@@ -1,6 +1,6 @@
 import i18next from "i18next";
 import Group from "rww/mediawiki/core/Group";
-import { ClientUser } from "rww/mediawiki";
+import { ClientUser, Page } from "rww/mediawiki";
 import RedWarnLocalDB from "rww/data/database/RedWarnLocalDB";
 import Log from "rww/data/RedWarnLog";
 import {
@@ -188,15 +188,13 @@ export class MediaWikiAPI {
                 if (!groups.has(groupName))
                     groups.set(groupName, {
                         name: groupName,
-                        page: message["content"].replace(
-                            /{{ns:project}}/gi,
-                            "Project:"
+                        page: Page.fromTitle(
+                            message["content"].replace(/{{ns:(.+?)}}/gi, "$1:")
                         )
                     });
                 else
-                    groups.get(groupName).page = message["content"].replace(
-                        /{{ns:project}}/gi,
-                        "Project:"
+                    groups.get(groupName).page = Page.fromTitle(
+                        message["content"].replace(/{{ns:(.+?)}}/gi, "$1:")
                     );
             }
 

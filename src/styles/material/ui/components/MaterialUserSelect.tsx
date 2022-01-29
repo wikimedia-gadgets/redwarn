@@ -51,6 +51,7 @@ function MaterialUserSelectCardAccountGroups({
             {user.groups
                 .map<JSX.Element>(
                     (group: Group): JSX.Element => {
+                        console.log(group);
                         return (
                             <a
                                 target={group.page && "_blank"}

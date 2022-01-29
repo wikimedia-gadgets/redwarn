@@ -16,6 +16,12 @@ class MaterialReportingDialogUser extends MaterialUserSelect {
             MaterialReportingDialogChildProps
     ) {
         super(props);
+
+        if (this.props.originalUser == null) {
+            const relevantUser = mw.config.get("wgRelevantUserName");
+            if (relevantUser != null)
+                this.props.originalUser = User.fromUsername(relevantUser);
+        }
     }
 
     onPreUserChange(user: User): void {

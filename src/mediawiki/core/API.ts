@@ -6,13 +6,14 @@ import Log from "rww/data/RedWarnLog";
 import {
     GenericAPIError,
     GenericAPIErrorData,
+    PageMissingError,
     SpecializedMediaWikiErrors
 } from "rww/errors/MediaWikiErrors";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import { ApiQueryAllMessagesParams } from "types-mediawiki/api_params";
+import { RWAggregateError } from "rww/errors/RWError";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
-import { RWAggregateError } from "rww/errors/RWError";
 
 export class MediaWikiAPI {
     static groups: Map<string, Group>;
@@ -124,9 +125,14 @@ export class MediaWikiAPI {
 
         // Preload configurations
         await Promise.all([
-            ClientUser.i.redwarnConfigPage.getLatestRevision({
-                forceRefresh: false
-            }),
+            ClientUser.i.redwarnConfigPage
+                .getLatestRevision({
+                    forceRefresh: false
+                })
+                .catch((e) => {
+                    if (!(e instanceof PageMissingError)) throw e;
+                    return null;
+                }),
             RedWarnWikiConfiguration.preloadWikiConfiguration()
         ]);
 

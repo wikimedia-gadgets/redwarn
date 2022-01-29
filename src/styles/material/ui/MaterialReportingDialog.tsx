@@ -2,7 +2,7 @@ import i18next from "i18next";
 import { h } from "tsx-dom";
 import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import MaterialButton from "rww/styles/material/ui/components/MaterialButton";
-import MaterialReportingDialogTarget from "rww/styles/material/ui/components//MaterialReportingDialogTarget";
+import MaterialReportingDialogPage from "rww/styles/material/ui/components//MaterialReportingDialogPage";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
@@ -13,12 +13,16 @@ import {
     RWUIReportingDialogProps
 } from "rww/ui/elements/RWUIReportingDialog";
 import toCSS from "rww/styles/material/util/toCSS";
-import type { Page } from "rww/mediawiki";
+import MaterialReportingDialogUser from "./components/MaterialReportingDialogUser";
+import { isUserModeReportVenue } from "rww/mediawiki/report/ReportVenue";
+import { Page, User } from "rww/mediawiki";
 
 export default class MaterialReportingDialog extends RWUIReportingDialog {
-    target: Page;
+    target: User | Page;
 
-    mrdTarget: ReturnType<typeof MaterialReportingDialogTarget>;
+    mrdTarget:
+        | ReturnType<typeof MaterialReportingDialogPage>
+        | ReturnType<typeof MaterialReportingDialogUser>;
 
     constructor(props: RWUIReportingDialogProps) {
         super(props);
@@ -42,12 +46,21 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
     }
 
     renderTarget(): JSX.Element {
-        return (this.mrdTarget = (
-            <MaterialReportingDialogTarget
-                reportingDialog={this}
-                originalTarget={this.props.target}
-            />
-        ) as ReturnType<typeof MaterialReportingDialogTarget>);
+        if (isUserModeReportVenue(this.props.venue)) {
+            return (this.mrdTarget = (
+                <MaterialReportingDialogUser
+                    reportingDialog={this}
+                    originalTarget={this.props.target as User}
+                />
+            ) as ReturnType<typeof MaterialReportingDialogUser>);
+        } else {
+            return (this.mrdTarget = (
+                <MaterialReportingDialogPage
+                    reportingDialog={this}
+                    originalTarget={this.props.target as Page}
+                />
+            ) as ReturnType<typeof MaterialReportingDialogPage>);
+        }
     }
 
     refresh(): void {

@@ -199,6 +199,19 @@ export class Page implements SectionContainer {
     }
 
     /**
+     * Returns true if the page exists.
+     * @param page The page to check.
+     */
+    static async exists(page: Page): Promise<boolean> {
+        try {
+            return (await Page.getLatestRevision(page)) != null;
+        } catch (e) {
+            if (e instanceof PageMissingError) return false;
+            throw e;
+        }
+    }
+
+    /**
      * Get a page's latest revision.
      * @param page The page to get the latest revision of.
      * @param options Extra options or restrictions for getting the latest revision.
@@ -219,18 +232,19 @@ export class Page implements SectionContainer {
             rvexcludeuser: options?.excludeUser?.username ?? undefined
         });
 
-        if (revisionInfoRequest["query"]["pages"]["-1"]) {
-            if (!!revisionInfoRequest["query"]["pages"]["-1"]["missing"])
+        if (revisionInfoRequest["query"]["pages"][0]) {
+            if (!!revisionInfoRequest["query"]["pages"][0]["missing"])
                 throw new PageMissingError({ page });
-            if (!!revisionInfoRequest["query"]["pages"]["-1"]["invalid"])
+            if (!!revisionInfoRequest["query"]["pages"][0]["invalid"])
                 throw new PageInvalidError({
                     page,
                     reason:
-                        revisionInfoRequest["query"]["pages"]["-1"][
+                        revisionInfoRequest["query"]["pages"][0][
                             "invalidreason"
                         ]
                 });
-
+        }
+        if (revisionInfoRequest["query"]["pages"][-1]) {
             throw new Error("Invalid page ID or title.");
         }
 
@@ -256,6 +270,7 @@ export class Page implements SectionContainer {
     isNamed(): this is NamedPage {
         return this.title != null;
     }
+
     /**
      * Grabs either the page's title or ID. Returns the title if both exist as long as
      * `favorTitle` is set to true.
@@ -280,6 +295,10 @@ export class Page implements SectionContainer {
                 ? "pageids"
                 : "titles"]: `${identifier}`
         };
+    }
+
+    async exists(): Promise<boolean> {
+        return Page.exists(this);
     }
 
     /**

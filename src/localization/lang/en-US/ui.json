@@ -264,7 +264,8 @@
             "label_user": "User",
             "label_page": "Page",
             "helperText": "Enter a page",
-            "helperText_user": "Enter a username"
+            "helperText_user": "Enter a username",
+            "nonexistent_page": "The page you entered does not exist."
         },
         "reason": {
             "label": "Reason",

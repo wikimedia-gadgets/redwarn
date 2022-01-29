@@ -44,8 +44,16 @@ interface UserReportVenueMode {
     restrictedGroups?: string[];
 }
 
+export function isUserModeReportVenue(obj: any): obj is UserReportVenueMode {
+    return obj.mode === ReportVenueMode.User;
+}
+
 interface PageReportVenueMode {
     mode: ReportVenueMode.Page;
+}
+
+export function isPageModeReportVenue(obj: any): obj is PageReportVenueMode {
+    return obj.mode === ReportVenueMode.Page;
 }
 
 export type PageReportVenueTemplate = Record<"user" | "anon", string>;
@@ -64,8 +72,9 @@ export interface MediaWikiEmailReportVenue extends BaseReportVenue {
     user: string;
 }
 
-export type ReportVenue = (PageReportVenueMode | UserReportVenueMode) &
-    (PageReportVenue | MediaWikiEmailReportVenue);
+export type ModalReportVenue = PageReportVenueMode | UserReportVenueMode;
+export type TypedReportVenue = PageReportVenue | MediaWikiEmailReportVenue;
+export type ReportVenue = ModalReportVenue & TypedReportVenue;
 
 export type SerializableReportVenue = Omit<
     ReportVenue,

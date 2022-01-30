@@ -15,19 +15,26 @@ import {
 import toCSS from "rww/styles/material/util/toCSS";
 import MaterialReportingDialogUser from "./components/MaterialReportingDialogUser";
 import {
-    isPageReportVenue,
-    isUserModeReportVenue
+    isUserModeReportVenue,
+    ReportVenue
 } from "rww/mediawiki/report/ReportVenue";
 import { Page, User } from "rww/mediawiki";
-import MaterialReportingDialogReason from "rww/styles/material/ui/components/MaterialReportingDialogReason";
+import MaterialReportingDialogInfo from "rww/styles/material/ui/components/MaterialReportingDialogInfo";
+import "../css/reportingDialog.css";
 
 export default class MaterialReportingDialog extends RWUIReportingDialog {
     target: User | Page;
+    reason?: string;
+    comments?: string;
 
     mrdTarget:
         | ReturnType<typeof MaterialReportingDialogPage>
         | ReturnType<typeof MaterialReportingDialogUser>;
-    mrdInfo: ReturnType<typeof MaterialReportingDialogReason>;
+    mrdInfo: ReturnType<typeof MaterialReportingDialogInfo>;
+
+    get venue(): ReportVenue {
+        return this.props.venue;
+    }
 
     constructor(props: RWUIReportingDialogProps) {
         super(props);
@@ -69,18 +76,9 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
     }
 
     renderInfo(): JSX.Element {
-        if (isPageReportVenue(this.props.venue)) {
-            return (this.mrdInfo = (
-                <MaterialReportingDialogReason reportingDialog={this} />
-            ) as ReturnType<typeof MaterialReportingDialogReason>);
-        } else {
-            // return (this.mrdTarget = (
-            //     <MaterialReportingDialogPage
-            //         reportingDialog={this}
-            //         originalTarget={this.props.target as Page}
-            //     />
-            // ) as ReturnType<typeof MaterialReportingDialogPage>);
-        }
+        return (this.mrdInfo = (
+            <MaterialReportingDialogInfo reportingDialog={this} />
+        ) as ReturnType<typeof MaterialReportingDialogInfo>);
     }
 
     refresh(): void {
@@ -92,7 +90,8 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
             <MaterialDialog
                 id={this.id}
                 surfaceProperties={{
-                    style: toCSS({ width: "600px" })
+                    class: "rw-mdc-reportingDialog",
+                    style: toCSS({ minWidth: "700px" })
                 }}
             >
                 {this.props.title && (
@@ -102,6 +101,7 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
                 )}
                 <MaterialDialogContent style={toCSS({ width: "100%" })}>
                     {this.renderTarget()}
+                    {this.renderInfo()}
                 </MaterialDialogContent>
                 <MaterialDialogActions>
                     <MaterialButton dialogAction="cancel">

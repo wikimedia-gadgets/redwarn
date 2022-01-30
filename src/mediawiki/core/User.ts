@@ -289,6 +289,10 @@ export class User {
  * Represents a MediaWiki user.
  */
 export class UserAccount extends User {
+    static current: UserAccount = UserAccount.fromUsername(
+        mw.config.get("wgUserName")
+    );
+
     /** The user id of this user. */
     id?: number;
     /** The edit count of this user. */
@@ -301,6 +305,14 @@ export class UserAccount extends User {
     gender?: Gender;
     /** The user's block information (if they are blocked) */
     blocked?: BlockInfo | false;
+
+    private _sandbox: Page;
+    get sandbox(): Page {
+        return (
+            this._sandbox ??
+            (this._sandbox = Page.fromTitle(`User:${this.username}/sandbox`))
+        );
+    }
 
     /**
      * Creates a new user from their username.

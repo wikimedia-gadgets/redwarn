@@ -4,8 +4,8 @@ import {
     MaterialUserSelectProps
 } from "rww/styles/material/ui/components/MaterialUserSelect";
 import { h } from "tsx-dom";
-import { MaterialReportingDialogChildProps } from "rww/styles/material/ui/MaterialReportingDialog";
 import {
+    MaterialReportingDialogChildProps,
     MaterialReportingDialogTarget,
     MaterialReportingDialogTargetProps
 } from "rww/styles/material/ui/components/MaterialReportingDialogChild";

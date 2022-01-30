@@ -267,13 +267,16 @@
             "helperText_user": "Enter a username",
             "nonexistent_page": "The page you entered does not exist."
         },
-        "reason": {
-            "label": "Reason",
-            "placeholder": "Select a reason"
-        },
         "info": {
-            "label": "Additional information",
-            "placeholder": "Optionally provide additional details about your request."
+            "reason": {
+                "label": "Reason",
+                "other": "Other reason",
+                "default": "Default reasons"
+            },
+            "comments": {
+                "label": "Additional information",
+                "placeholder": "Provide additional details about your request."
+            }
         },
         "validation": {
             "fail": "An unknown issue ocurred.",

@@ -1,10 +1,10 @@
 import {
     MaterialReportingDialogChild,
+    MaterialReportingDialogChildProps,
     MaterialReportingDialogTarget,
     MaterialReportingDialogTargetProps
 } from "rww/styles/material/ui/components/MaterialReportingDialogChild";
 import { Page } from "rww/mediawiki";
-import { MaterialReportingDialogChildProps } from "rww/styles/material/ui/MaterialReportingDialog";
 import MaterialTextInput, {
     MaterialTextInputComponents,
     MaterialTextInputUpgrade

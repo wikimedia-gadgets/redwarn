@@ -150,7 +150,7 @@ export class Revert {
         targetRevision: Revision,
         reason?: string,
         diffIcons?: RWUIDiffIcons
-    ): Promise<void> {
+    ): Promise<any> {
         if (Revert.revertInProgress)
             return RedWarnUI.Toast.quickShow({
                 // TODO i18n
@@ -166,7 +166,7 @@ export class Revert {
             diffIcons.onRestoreStageChange(RestoreStage.Preparing);
         }
 
-        if (!targetRevision.isPopulated()) targetRevision.populate();
+        if (!targetRevision.isPopulated()) await targetRevision.populate();
 
         if (diffIcons) diffIcons.onRestoreStageChange(RestoreStage.Details);
         const latestRevision = await targetRevision.page.getLatestRevision({
@@ -201,6 +201,7 @@ export class Revert {
         if (diffIcons) diffIcons.onRestoreStageChange(RestoreStage.Finished);
 
         document.removeEventListener("keydown", Revert.revertCancelListener);
+        return result;
     }
 
     /**

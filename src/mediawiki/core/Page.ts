@@ -402,7 +402,7 @@ export class Page implements SectionContainer {
      * @param content The new page content.
      * @param options Page editing options.
      */
-    async edit(content: string, options: PageEditOptions): Promise<void> {
+    async edit(content: string, options: PageEditOptions): Promise<any> {
         const pageIdentifier = this.getIdentifier();
 
         // Handle the section
@@ -469,7 +469,7 @@ export class Page implements SectionContainer {
                 break;
         }
 
-        await MediaWikiAPI.postWithEditToken({
+        return MediaWikiAPI.postWithEditToken({
             action: "edit",
             format: "json",
 
@@ -518,9 +518,9 @@ export class Page implements SectionContainer {
     async appendContent(
         text: string,
         options?: Omit<PageEditOptions, "mode">
-    ): Promise<void> {
+    ): Promise<any> {
         // Force using append mode.
-        await this.edit(
+        return this.edit(
             text,
             Object.assign({ mode: <const>"append" }, options)
         );
@@ -535,9 +535,9 @@ export class Page implements SectionContainer {
     async prependContent(
         text: string,
         options?: Omit<PageEditOptions, "mode">
-    ): Promise<void> {
+    ): Promise<any> {
         // Force using prepend mode.
-        await this.edit(
+        return this.edit(
             text,
             Object.assign({ mode: <const>"prepend" }, options)
         );

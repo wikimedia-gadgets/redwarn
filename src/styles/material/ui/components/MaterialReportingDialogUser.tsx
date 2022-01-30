@@ -1,4 +1,4 @@
-import { User } from "rww/mediawiki";
+import { User, UserAccount } from "rww/mediawiki";
 import {
     MaterialUserSelect,
     MaterialUserSelectProps
@@ -9,6 +9,9 @@ import {
     MaterialReportingDialogTarget,
     MaterialReportingDialogTargetProps
 } from "rww/styles/material/ui/components/MaterialReportingDialogChild";
+import MaterialAlertDialog from "rww/styles/material/ui/MaterialAlertDialog";
+import i18next from "i18next";
+import { isUserModeReportVenue } from "rww/mediawiki/report/ReportVenue";
 
 class MaterialReportingDialogUser extends MaterialUserSelect {
     constructor(
@@ -25,41 +28,51 @@ class MaterialReportingDialogUser extends MaterialUserSelect {
     }
 
     onPreUserChange(user: User): void {
-        // this.props.warnDialog.user = user;
-        // this.props.warnDialog.updatePreview();
+        this.props.reportingDialog.target = user;
     }
 
     async onUserChange(user: User): Promise<void> {
         // Whether or not we populated already.
-        // if (user instanceof UserAccount && user.groups.includesGroup("sysop")) {
-        //     if (
-        //         (await new MaterialAlertDialog({
-        //             // TODO i18n
-        //             title: i18next.t<string>("ui:warn.risky.title"),
-        //             content: (
-        //                 <div class={"rw-mdc-riskyWarning"}>
-        //                     <b>
-        //                         {i18next.t<string>("ui:warn.risky.content")}
-        //                     </b>
-        //                 </div>
-        //             ),
-        //             actions: [
-        //                 {
-        //                     data: "cancel"
-        //                 },
-        //                 {
-        //                     data: "proceed"
-        //                 }
-        //             ]
-        //         }).show()) !== "proceed"
-        //     ) {
-        //         await this.clearUser(this.lastUser);
-        //         return;
-        //     }
-        // }
+        let group;
+        if (
+            user instanceof UserAccount &&
+            isUserModeReportVenue(this.props.reportingDialog.venue) &&
+            (group = user.groups.groupMatch(
+                this.props.reportingDialog.venue.restrictedGroups
+            ))
+        ) {
+            if (
+                (await new MaterialAlertDialog({
+                    title: i18next.t<string>("ui:reporting.restricted.title"),
+                    content: (
+                        <div class={"rw-mdc-riskyWarning"}>
+                            <b>
+                                {i18next.t<string>(
+                                    "ui:reporting.restricted.text",
+                                    {
+                                        group: group.displayName
+                                    }
+                                )}
+                            </b>
+                        </div>
+                    ),
+                    actions: [
+                        {
+                            data: "cancel"
+                        },
+                        {
+                            data: "proceed"
+                        }
+                    ]
+                }).show()) !== "proceed"
+            ) {
+                await this.clearUser(this.lastUser);
+                return;
+            }
+        }
     }
 
-    onPostUserChange(user: User): void {
+    onPostUserChange(): void {
         // Validate
         // this.props.reportingDialog.uiValidate();
     }

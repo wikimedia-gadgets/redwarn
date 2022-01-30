@@ -5,6 +5,7 @@ import {
     Page,
     PageEditOptions,
     PageLatestRevisionOptions,
+    Revert,
     User
 } from "rww/mediawiki";
 import redirect from "rww/util/redirect";
@@ -128,6 +129,25 @@ export class Revision implements SectionContainer {
             size: revisionData["size"],
             content: revisionData["slots"]?.["main"]?.["content"]
         }));
+    }
+
+    /**
+     * Create a `Revision` object from the response of a MediaWiki API edit.
+     * @param editResponse The returned JSON response.
+     */
+    static fromEditReponse({
+        edit: editResponse
+    }: {
+        edit: Record<string, any>;
+    }): Revision {
+        return new Revision({
+            revisionID: editResponse["newrevid"],
+            parentID: editResponse["oldrevid"],
+            page: Page.fromIDAndTitle(
+                editResponse["pageid"],
+                editResponse["title"]
+            )
+        });
     }
 
     /**
@@ -265,6 +285,13 @@ export class Revision implements SectionContainer {
      */
     navigate(): void {
         redirect(MediaWikiURL.getDiffUrl(this.revisionID));
+    }
+
+    /**
+     * Restores the page to this revision.
+     */
+    restore(reason?: string): Promise<any> {
+        return Revert.restore(this, reason);
     }
 
     /**

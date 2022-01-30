@@ -23,7 +23,7 @@ import MaterialReportingDialogInfo from "rww/styles/material/ui/components/Mater
 import "../css/reportingDialog.css";
 
 export default class MaterialReportingDialog extends RWUIReportingDialog {
-    target: User | Page;
+    target: User | Page = null;
     reason?: string = null;
     comments?: string = null;
 

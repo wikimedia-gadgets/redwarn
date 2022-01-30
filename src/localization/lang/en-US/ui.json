@@ -3,6 +3,8 @@
 
     "ok": "OK",
     "cancel": "Cancel",
+    "undo": "Undo",
+    "redo": "Redo",
 
     "extendedOptions": {
         "title": "More Options"
@@ -40,6 +42,7 @@
         "failure": "Failed to copy URL. Have you given the browser proper permissions?"
     },
     "toasts": {
+        "undone": "Action undone.",
         "viewAction": "View",
         "pleaseWait": "Please wait...",
         "restoreError": "Sorry, there was an error, likely an edit conflict. This edit has not been restored.",
@@ -285,8 +288,12 @@
             "fail_noReason": "You did not provide a valid reason for the report.",
             "fail_noContent": "Your report does not contain any information."
         },
+        "restricted": {
+            "title": "Risky report",
+            "text": "You are about to report {{group, en-handle-an}} {{group}}. Are you sure about this?"
+        },
 
-        "done_page": "Report filed.",
+        "done": "Report filed.",
         "done_email": "Report emailed."
     }
 }

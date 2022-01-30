@@ -306,8 +306,8 @@ export default class Section {
     async setContent(
         text: string,
         options: Omit<PageEditOptions, "mode" | "baseRevision" | "section"> = {}
-    ): Promise<void> {
-        this.revision.page.edit(
+    ): Promise<any> {
+        return this.revision.page.edit(
             text,
             Object.assign(
                 {
@@ -329,8 +329,8 @@ export default class Section {
     async appendContent(
         text: string,
         options: Omit<PageEditOptions, "mode" | "baseRevision" | "section"> = {}
-    ): Promise<void> {
-        this.revision.page.edit(
+    ): Promise<any> {
+        return this.revision.page.edit(
             text,
             Object.assign(
                 {
@@ -359,16 +359,16 @@ export default class Section {
              */
             belowHeader?: boolean;
         } = {}
-    ): Promise<void> {
+    ): Promise<any> {
         if (options?.belowHeader ?? false) {
             const content = this.getContent(false).split("\n");
 
-            this.setContent(
+            return this.setContent(
                 content[0] + "\n" + text + content.slice(1).join("\n"),
                 options
             );
         } else {
-            this.revision.page.edit(
+            return this.revision.page.edit(
                 text,
                 Object.assign(
                     {

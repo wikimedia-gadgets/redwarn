@@ -6,6 +6,8 @@ import RedWarnStore from "rww/data/RedWarnStore";
 import Log from "rww/data/RedWarnLog";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import { capitalize } from "rww/util";
+import { Page } from "rww/mediawiki";
+import { submitReport } from "rww/mediawiki/report/Report";
 
 /**
  * Display locations for a ReportVenue. This uses a bit map, meaning each
@@ -52,6 +54,7 @@ export function isUserModeReportVenue(obj: any): obj is UserReportVenueMode {
 
 interface PageReportVenueMode extends BaseReportVenue {
     mode: ReportVenueMode.Page;
+    template: never;
 }
 
 export function isPageModeReportVenue(obj: any): obj is PageReportVenueMode {
@@ -62,7 +65,7 @@ export type PageReportVenueTemplate = Record<"user" | "anon", string>;
 
 export interface PageReportVenue extends BaseReportVenue {
     type: "page";
-    page: string;
+    page: Page;
     template: string | PageReportVenueTemplate;
     section?: number | string;
     location?: "prepend" | "append";
@@ -76,6 +79,7 @@ export function isPageReportVenue(obj: any): obj is PageReportVenue {
 export interface MediaWikiEmailReportVenue extends BaseReportVenue {
     type: "email";
     user: string;
+    subject?: string;
     prefill?: string;
 }
 
@@ -142,7 +146,9 @@ export function deserializeReportVenue(
 
     if (venue.mode == null) throw new Error("Venue mode must be a valid mode.");
 
-    // Forced conversion due to union type issues.
+    // Forced conversions due to union type issues.
+    if ((venue as any).page)
+        (venue as any).page = Page.fromTitle((venue as any).page);
     return (Object.assign(venue, {
         display: displayBitmap,
         allowedNamespaces: namespaces,
@@ -169,9 +175,11 @@ export function getReportVenueIcons(): PageIcon[] {
                     RedWarnStore.currentNamespaceID
                 ) ??
                     true),
-            action(): void {
-                Log.info("venue", venue);
-                new RedWarnUI.ReportingDialog({ venue }).show();
+            async action(): Promise<void> {
+                const report = await new RedWarnUI.ReportingDialog({
+                    venue
+                }).show();
+                await submitReport(report);
             }
         };
     });

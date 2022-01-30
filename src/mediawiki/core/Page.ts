@@ -323,6 +323,26 @@ export class Page implements SectionContainer {
         return Section.getSections(this);
     }
 
+    async firstSection(): Promise<Section> {
+        return Section.getSections(this).then((s) => s[0]);
+    }
+
+    async lastSection(): Promise<Section> {
+        return Section.getSections(this).then((s) => s[s.length]);
+    }
+
+    async findSection(identifier: number | string): Promise<Section | null> {
+        return Section.getSections(this).then((sections) => {
+            return (
+                sections.find((section) =>
+                    typeof identifier === "string"
+                        ? section.title === identifier
+                        : section.index === identifier
+                ) ?? null
+            );
+        });
+    }
+
     /**
      * Checks if the page's latest revision has been cached.
      */

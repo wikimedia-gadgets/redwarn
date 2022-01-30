@@ -24,8 +24,8 @@ import "../css/reportingDialog.css";
 
 export default class MaterialReportingDialog extends RWUIReportingDialog {
     target: User | Page;
-    reason?: string;
-    comments?: string;
+    reason?: string = null;
+    comments?: string = null;
 
     mrdTarget:
         | ReturnType<typeof MaterialReportingDialogPage>
@@ -49,7 +49,12 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
         return upgradeMaterialDialog(this, {
             onClose: (event) => {
                 if (event.detail.action === "confirm") {
-                    return "Confirmed!";
+                    return {
+                        target: this.target,
+                        reason: this.reason,
+                        comments: this.comments,
+                        venue: this.props.venue
+                    };
                 } else if (event.detail.action === "cancel") {
                     return null;
                 }

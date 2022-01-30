@@ -3,6 +3,7 @@ import { User } from "rww/mediawiki";
 import type { ReportVenue } from "rww/mediawiki/report/ReportVenue";
 import { ReportVenueMode } from "rww/mediawiki/report/ReportVenue";
 import { RWUIDialog, RWUIDialogProperties } from "rww/ui/elements/RWUIDialog";
+import { Report } from "rww/mediawiki/report/Report";
 
 export type RWUIReportingDialogTargetType<
     T extends ReportVenue
@@ -12,8 +13,8 @@ export interface RWUIReportingDialogProps extends RWUIDialogProperties {
     target?: User | Page;
 }
 
-export class RWUIReportingDialog extends RWUIDialog<null> {
-    show(): Promise<null> {
+export class RWUIReportingDialog extends RWUIDialog<Report> {
+    show(): Promise<Report> {
         throw new Error("Attempted to call abstract method");
     }
     render(): HTMLDialogElement {

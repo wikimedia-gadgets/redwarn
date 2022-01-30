@@ -186,11 +186,19 @@ export default class Section {
                 sectionsRequest["parse"]["revid"],
                 sectionsRequest["parse"]["wikitext"]
             );
+            context.latestCachedRevision.page = Object.assign(context, {
+                title: context.title
+            });
         } else {
             // Fill in blank values from the page if available.
-            if (!context.page.title)
+            if (!context.page)
+                context.page = Page.fromIDAndTitle(
+                    sectionsRequest["parse"]["pageid"],
+                    sectionsRequest["parse"]["title"]
+                );
+            else if (!context.page.title)
                 context.page.title = sectionsRequest["parse"]["title"];
-            if (!context.page.pageID)
+            else if (!context.page.pageID)
                 context.page.pageID = sectionsRequest["parse"]["pageid"];
 
             if (!context.content)
@@ -297,7 +305,7 @@ export default class Section {
      */
     async setContent(
         text: string,
-        options: Omit<PageEditOptions, "mode" | "baseRevision" | "section">
+        options: Omit<PageEditOptions, "mode" | "baseRevision" | "section"> = {}
     ): Promise<void> {
         this.revision.page.edit(
             text,
@@ -320,7 +328,7 @@ export default class Section {
      */
     async appendContent(
         text: string,
-        options: Omit<PageEditOptions, "mode" | "baseRevision" | "section">
+        options: Omit<PageEditOptions, "mode" | "baseRevision" | "section"> = {}
     ): Promise<void> {
         this.revision.page.edit(
             text,
@@ -343,19 +351,35 @@ export default class Section {
      */
     async prependContent(
         text: string,
-        options: Omit<PageEditOptions, "mode" | "baseRevision" | "section">
+        options: Omit<PageEditOptions, "mode" | "baseRevision" | "section"> & {
+            /**
+             * Whether or not to prepend the text below the header. Settings this
+             * to true will require two requests: one to get the section text and
+             * another to save the text.
+             */
+            belowHeader?: boolean;
+        } = {}
     ): Promise<void> {
-        this.revision.page.edit(
-            text,
-            Object.assign(
-                {
-                    mode: <const>"prepend",
-                    baseRevision: this.revision,
-                    section: this
-                },
+        if (options?.belowHeader ?? false) {
+            const content = this.getContent(false).split("\n");
+
+            this.setContent(
+                content[0] + "\n" + text + content.slice(1).join("\n"),
                 options
-            )
-        );
+            );
+        } else {
+            this.revision.page.edit(
+                text,
+                Object.assign(
+                    {
+                        mode: <const>"prepend",
+                        baseRevision: this.revision,
+                        section: this
+                    },
+                    options
+                )
+            );
+        }
     }
 }
 

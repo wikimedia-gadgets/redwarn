@@ -1,6 +1,11 @@
 {
     "unfinished": "Hmm, looks like we haven't implemented this feature yet. Check back later!",
 
+    "ok": "OK",
+    "cancel": "Cancel",
+    "undo": "Undo",
+    "redo": "Redo",
+
     "extendedOptions": {
         "title": "More Options"
     },
@@ -13,10 +18,7 @@
         "latestRevision": "Latest Revision",
         "moreOptions": "More Options",
         "vandalismStatistics": "Vandalism statistics",
-        "reportAIV": "Report to AIV",
-        "reportUAA": "Report to UAA",
-        "reportOversight": "Report user to Oversight",
-        "reportTAS": "Report user to Wikimedia Trust & Safety",
+        "report": "Report to {{name}}",
         "preferences": "Preferences",
         "rwTalk": "RedWarn talk page"
     },
@@ -34,23 +36,23 @@
             "ok": "Rollback"
         }
     },
-    "okCancel": {
-        "ok": "OK",
-        "cancel": "Cancel"
-    },
     "copyURL": {
         "button": "Copy URL",
         "success": "URL copied.",
         "failure": "Failed to copy URL. Have you given the browser proper permissions?"
     },
     "toasts": {
+        "undone": "Action undone.",
+        "viewAction": "View",
         "pleaseWait": "Please wait...",
         "restoreError": "Sorry, there was an error, likely an edit conflict. This edit has not been restored.",
         "rollbackError": "Sorry, there was an error performing a rollback.",
         "newerRev": "A newer revision was detected. Your rollback has not been applied.",
         "userUndefined": "Sorry, the target user does not exist, cannot be found, or is hidden from the public. Your action has not been completed.",
         "userWarned": "User warned.",
-        "userWarnFailed": "Sorry, there was an error. Please verify if the user has been warned before issuing another warning."
+        "userWarnFailed": "There was a problem warning the user. Please verify if the user has been warned before issuing another warning.",
+        "protectionRequested": "Protection requested.",
+        "protectionRequestFailed": "There was a problem requesting protection. Please verify if the request has been made before requesting again."
     },
     "watch": {
         "denied": "Permission to show notifications denied.",
@@ -76,42 +78,56 @@
         "header": "Attention!",
         "warningContent": "You are currently using RedWarn in a way that is strongly discouraged under guidelines set at <a href=\"https://en.wikipedia.org/wiki/Wikipedia:RW/A\" title=\"Wikipedia:RW/A\">Wikipedia:RedWarn/Abuse</a>. This will be permanently recorded and will prevent you from running legitimate installations of RedWarn. Please contact a RedWarn team developer for assistance."
     },
+    "userSelect": {
+        "change": "Change the target user",
+        "confirm": "Target this user",
+
+        "load_wait": "Please be patient while the user information is being loaded.",
+        "loading": "Loading user information...",
+        "input": "Target User",
+
+        "highestLevel": "Highest warning level",
+
+        "levelInfo": "The user's highest warning level",
+        "levelInfo_none": "User has not received any warnings this month",
+        "levelInfo_notice": "User has received a level 1 notice this month",
+        "levelInfo_caution": "User has received a level 2 notice this month",
+        "levelInfo_warning": "User has received a level 3 warning this month",
+        "levelInfo_final": "User has received a level 4 final warning this month. $t(ui:warn.user.report)",
+        "levelInfo_immediate": "User has received an immediate level 4 final warning this month. $t(ui:warn.user.report)",
+
+        "report": "Click to report to AIV.",
+        "edits": "{{edits}} edits",
+        "age": "Joined {{localeAge}}",
+
+        "talk": {
+            "main": "User talk page",
+            "month": "Notices for this month",
+            "whole": "Entire talk page"
+        },
+
+        "show": {
+            "userpage": "Show user page",
+            "contributions": "Show user contributions"
+        },
+
+        "missing": "User does not exist.",
+        "invalid": "The username provided is not valid.",
+        "fail": "Failed to load user information. Try again in a bit."
+    },
+    "validation": {
+        "dialog": {
+            "title": "Issue found",
+            "title_plural": "Issues found",
+            "intro": "The following issues are preventing you from continuing:"
+        },
+        "tooltip": {
+            "fail": "There are issues which are preventing you from continuing. Click here for more information.",
+            "pass": "No issues were found."
+        }
+    },
     "warn": {
         "title": "Warn User",
-
-        "user": {
-            "change": "Change the target user",
-            "confirm": "Target this user",
-
-            "load_wait": "Please be patient while the user information is being loaded.",
-            "loading": "Loading user information...",
-            "input": "Target User",
-
-            "highestLevel": "Highest warning level",
-
-            "levelInfo": "The user's highest warning level",
-            "levelInfo_none": "User has not received any warnings this month",
-            "levelInfo_notice": "User has received a level 1 notice this month",
-            "levelInfo_caution": "User has received a level 2 notice this month",
-            "levelInfo_warning": "User has received a level 3 warning this month",
-            "levelInfo_final": "User has received a level 4 final warning this month. $t(ui:warn.user.report)",
-            "levelInfo_immediate": "User has received an immediate level 4 final warning this month. $t(ui:warn.user.report)",
-
-            "report": "Click to report to AIV.",
-            "edits": "{{edits}} edits",
-            "age": "Joined {{localeAge}}",
-
-            "talk": {
-                "main": "User talk page",
-                "month": "Notices for this month",
-                "whole": "Entire talk page"
-            },
-
-            "show": {
-                "userpage": "Show user page",
-                "contributions": "Show user contributions"
-            }
-        },
 
         "reason": {
             "page": "Related page",
@@ -134,12 +150,6 @@
         },
 
         "validation": {
-            "validationFailedIconTooltip": "There are issues which are preventing you from sending this warning. Click here for more information.",
-
-            "validationDialogTitle": "Issue found",
-            "validationDialogTitle_plural": "Issues found",
-            "validationDialogIntro": "The following issues are preventing you from sending a warning:",
-
             "fail": "An unknown issue ocurred.",
             "fail_template": "You don't have a warning template selected.",
             "fail_level": "You haven't selected a warning level.",
@@ -156,8 +166,8 @@
         },
 
         "risky": {
-            "title": "Risky revert",
-            "content": "You are about to warn an administrator. Are you sure about this?"
+            "title": "Risky warning",
+            "content": "You are about to warn {{group, en-handle-an}} {{group}}. Are you sure about this?"
         },
 
         "ok": "Warn User"
@@ -178,7 +188,7 @@
         "content": "Your RedWarn configuration could not be loaded correctly and has been reset. If this issue persists, please contact the RedWarn team.",
         "actions": [
             {
-                "data": "$t(ui:okCancel.ok)"
+                "data": "$t(ui:ok)"
             }
         ]
     },
@@ -187,7 +197,7 @@
             "title": "Style Missing",
             "content": "The style set in your RedWarn configuration cannot be found. It has been set to the default style for now.",
             "actions": [
-                { "data": "$t(ui:okCancel.ok)" }
+                { "data": "$t(ui:ok)" }
             ]
         }
     },
@@ -219,7 +229,10 @@
             "fallback": "{{type}} protected against non-{{level}} users until {{date}}{{note}}",
             "fallback_indefinite": "Indefinitely {{type}} against for non-{{level}} users{{note}}"
         },
-        "reasons": "Reason",
+        "reasons": {
+            "label": "Reason",
+            "other": "Other reason"
+        },
         "additionalInformation": "Additional information",
         "duration": {
             "label": "Duration",
@@ -228,12 +241,6 @@
         },
         "notice": "You should not consider requesting page protection as a method for continuing an argument from elsewhere nor as a venue for starting a new discussion regarding article content. If a request contains excessive argument, appears to be intended to resolve a content dispute, includes personal attacks or uncivil comments, or has any other unrelated discussion, it will be removed and no action will be taken.",
         "validation" : {
-            "validationFailedIconTooltip" : "There are issues which are preventing you from requesting protection on this page. Click here for more information.",
-
-            "validationDialogTitle": "Issue found",
-            "validationDialogTitle_plural": "Issues found",
-            "validationDialogIntro": "The following issues are preventing you from sending requesting protection on this page:",
-
             "fail": "An unknown issue ocurred.",
             "fail_noLevel" : "You don't have a protection level selected.",
             "fail_noDuration" : "You don't have a protection duration selected.",
@@ -246,9 +253,7 @@
             "failDetailed_noDuration": "$t(ui:protectionRequest.validation.fail_noDuration) Select either \"Temporary\" or \"Indefinite\" from the provided options.",
             "failDetailed_levelEqual": "$t(ui:protectionRequest.validation.fail_levelEqual) Please select a protection level or duration different from the current protection level/duration.",
             "failDetailed_noReason": "$t(ui:protectionRequest.validation.fail_noReason) A reason must be provided for protection requests.",
-            "failDetailed_noAdditionalReason": "$t(ui:protectionRequest.validation.fail_noAdditionalReason) Please provide an additional reason, or switch to a provided reason using the dropdown.",
-
-            "pass": "No issues were found."
+            "failDetailed_noAdditionalReason": "$t(ui:protectionRequest.validation.fail_noAdditionalReason) Please provide an additional reason, or switch to a provided reason using the dropdown."
         },
         "retarget": {
             "text": "RedWarn cannot determine if this is an increase or decrease in protection level. This is likely due to a problem in the RedWarn per-wiki configuration. Please indicate whether or not this request in an increase or decrease in protection level.",
@@ -256,5 +261,53 @@
             "decrease": "Decrease"
         },
         "done": "Request filed."
+    },
+    "reporting": {
+        "title": "Report to {{venue}}",
+        "ok": "Report",
+
+        "target": {
+            "label": "Target",
+            "label_user": "User",
+            "label_page": "Page",
+            "helperText": "Enter a page",
+            "helperText_user": "Enter a username",
+            "nonexistent_page": "The page you entered does not exist."
+        },
+        "info": {
+            "reason": {
+                "label": "Reason",
+                "other": "Other reason",
+                "default": "Default reasons"
+            },
+            "comments": {
+                "label": "Additional information",
+                "placeholder": "Provide additional details about your request."
+            }
+        },
+        "validation": {
+            "fail": "An unknown issue ocurred.",
+
+            "fail_target": "There is no target to be reported.",
+            "fail_targetMissing": "The page to be reported does not exist.",
+            "fail_self": "You are not allowed to report yourself.",
+            "fail_reason": "You did not provide a reason for the report.",
+            "fail_short": "Your report is believed to be too short to contain substantial information.",
+
+            "failDetailed": "An unknown issue ocurred. Please try again.",
+
+            "failDetailed_target": "There is no target to be reported. Please make sure that you've selected a valid page or user.",
+            "failDetailed_targetMissing": "The page to be reported does not exist. Please make sure that the page you are attempting to report exists.",
+            "failDetailed_self": "You are not allowed to report yourself, even for testing situations.",
+            "failDetailed_reason": "You did not provide a reason for the report. Please choose a prefilled reason or write your own.",
+            "failDetailed_short": "Your report is believed to be too short to contain substantial information. Please make sure that your report contains enough detailed information to be useful."
+        },
+        "restricted": {
+            "title": "Risky report",
+            "text": "You are about to report {{group, en-handle-an}} {{group}}. Are you sure about this?"
+        },
+
+        "done": "Report filed.",
+        "done_email": "Report emailed."
     }
 }

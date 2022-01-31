@@ -198,7 +198,7 @@ export class Configuration {
      */
     static map(configurationSetToMap: ConfigurationSet): Record<string, any> {
         /**
-         * Keys that will be saved anyways, regardless of default status.
+         * Keys that will be saved anyway, regardless of default status.
          */
         const forceInclude = [
             Configuration.Core.configVersion.id,

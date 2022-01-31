@@ -69,6 +69,7 @@ export default class MaterialToast extends RWUIToast {
                             <button
                                 type="button"
                                 class="mdc-button mdc-snackbar__action"
+                                onClick={this.props.action.callback}
                             >
                                 <div class="mdc-button__ripple" />
                                 <span class="mdc-button__label">

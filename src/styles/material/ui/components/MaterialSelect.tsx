@@ -38,6 +38,7 @@ export interface MaterialSelectProps<T> {
     onKeyDown?: (event: KeyboardEvent) => void;
     required?: boolean;
     class?: string;
+    editable?: boolean;
 }
 
 export type MaterialSelectElement<T> = JSX.Element & {
@@ -89,6 +90,7 @@ export default function <T>(
                     <div
                         id={`${selectId}text`}
                         class="mdc-select__selected-text"
+                        contentEditable={props.editable ?? false}
                     />
                 </span>
                 {icon}

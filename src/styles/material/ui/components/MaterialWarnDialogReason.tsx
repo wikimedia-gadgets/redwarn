@@ -225,18 +225,14 @@ function MaterialWarnDialogReasonLevel({
     // TODO i18n
     else
         selectorElement = (
-            <span>
-                {i18next.t("ui:warn.reason.noWarningSelected").toString()}
-            </span>
+            <span>{i18next.t<string>("ui:warn.reason.noWarningSelected")}</span>
         );
 
     return Object.assign(
         <div class="rw-mdc-warnDialog-reason--levels">
             <table>
                 <tr>
-                    <td>
-                        {i18next.t("ui:warn.reason.warningLevel").toString()}
-                    </td>
+                    <td>{i18next.t<string>("ui:warn.reason.warningLevel")}</td>
                     <td>{selectorElement}</td>
                 </tr>
             </table>

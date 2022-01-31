@@ -1,4 +1,3 @@
-import MessageHandler from "rww/event/MessageHandler";
 import { StyleStorage } from "rww/styles/Style";
 import { Dependency } from "rww/data/Dependencies";
 import { NamedPage, Page } from "rww/mediawiki";
@@ -31,14 +30,6 @@ export default class RedWarnStore {
         }
     ];
 
-    // Wiki automated config
-
-    /**
-     * @deprecated Only for backwards compatibility
-     * !!! DO NOT USE FOR NEW FEATURES !!!
-     */
-    public static messageHandler: MessageHandler;
-
     // //en.wikipedia.org
     public static wikiBase: string;
     // /wiki/$1
@@ -57,13 +48,20 @@ export default class RedWarnStore {
     public static windowFocused = false;
 
     public static currentPage: Page & NamedPage;
+    public static get currentNamespaceID(): number {
+        return RedWarnStore.currentPage.namespace;
+    }
+    public static get currentNamespace(): string {
+        return RedWarnStore.currentPage.title
+            .getNamespacePrefix()
+            .replace(/:$/, "");
+    }
 
     public static registerDependency(dependency: Dependency): void {
         RedWarnStore.dependencies.push(dependency);
     }
 
     public static initializeStore(): void {
-        RedWarnStore.messageHandler = new MessageHandler();
         RedWarnStore.wikiArticlePath = mw.config.get("wgArticlePath") as string;
         RedWarnStore.wikiBase = mw.config.get("wgServer") as string;
         RedWarnStore.wikiIndex =
@@ -87,6 +85,20 @@ export default class RedWarnStore {
             /\$1/g,
             mw.util.wikiUrlencode(target)
         );
+    }
+
+    static getNamespaceId(namespace: string): number | null {
+        return mw.config.get("wgNamespaceIds")[
+            namespace.replace(/\s/g, "_").toLowerCase()
+        ];
+    }
+
+    static isUserspacePage(): boolean {
+        return Page.isUserspacePage(RedWarnStore.currentPage) !== false;
+    }
+
+    static isSpecialPage(): boolean {
+        return Page.isSpecialPage(RedWarnStore.currentPage) !== false;
     }
 }
 

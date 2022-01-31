@@ -1,21 +1,13 @@
 import { h } from "tsx-dom";
 import i18next from "i18next";
-
 import { RWUIWarnDialog } from "rww/ui/elements/RWUIWarnDialog";
-
-import {
-    registerMaterialDialog,
-    upgradeMaterialDialog
-} from "rww/styles/material/Material";
-
-import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
+import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
     MaterialDialogTitle
 } from "./MaterialDialog";
-
 import MaterialWarnDialogUser, {
     MaterialWarnDialogUserController
 } from "./components/MaterialWarnDialogUser";
@@ -32,13 +24,14 @@ import {
 import { isIPAddress, normalize } from "rww/util";
 
 import { RW_SIGNATURE } from "rww/data/RedWarnConstants";
-import MaterialIconButton from "./components/MaterialIconButton";
-import RedWarnUI from "rww/ui/RedWarnUI";
 
 import "../css/warnDialog.css";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import { warningSuffix } from "rww/mediawiki/warn/WarningUtils";
 import toCSS from "rww/styles/material/util/toCSS";
+import MaterialDialogValidator, {
+    ValidationCheck
+} from "./components/MaterialDialogValidator";
 
 /**
  * A specific test performed to validate the values of a {@link MaterialWarnDialog}.
@@ -63,7 +56,7 @@ function MaterialWarnDialogErrors(props: {
     tests: true | MaterialWarnDialogValidationTest[];
 }): JSX.Element {
     if (props.tests === true)
-        return <div>{i18next.t("ui:warn.validation.pass").toString()}</div>;
+        return <div>{i18next.t<string>("ui:warn.validation.pass")}</div>;
 
     // Get the failing tests with their test IDs.
     const failingIds = props.tests.map((v) => v.id);
@@ -116,6 +109,35 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         if (this._helperText) this._helperText.style.color = value;
     }
 
+    get validationChecks(): ValidationCheck[] {
+        return [
+            {
+                // Prevent self-warning
+                id: "self",
+                test: () => this.user?.username !== ClientUser.i.username
+            },
+            {
+                // Asserts user
+                id: "user",
+                test: () => this.user != null
+            },
+            {
+                // Asserts warning template
+                id: "template",
+                test: () => this.mwdReason?.MWDReason?.warning != null
+            },
+            {
+                // Asserts warning level is set (given it is a tiered warning)
+                id: "level",
+                test: () =>
+                    (this.mwdReason?.MWDReason?.warning != null &&
+                        this.mwdReason?.MWDReason?.warning.type !=
+                            WarningType.Tiered) ||
+                    this.mwdReason?.MWDReason?.warningLevel != null
+            }
+        ];
+    }
+
     /** Additional text at the bottom of the dialog. */
     private dialogConfirmButton: JSX.Element;
     /** The MaterialWarnDialogUser component for this dialog. */
@@ -129,7 +151,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
     /** The MaterialWarnDialog preview panel for this dialog. */
     private mwdXray: JSX.Element;
     /** The MaterialWarnDialog errors button for this dialog. */
-    private mwdErrors: JSX.Element;
+    private mwdErrors: ReturnType<typeof MaterialDialogValidator>;
 
     /**
      * Get the warning as wikitext.
@@ -216,138 +238,43 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
     }
 
     /**
-     * Checks the values of the dialog against mutliple tests to determine whether
-     * it can be sent or not.
-     *
-     * @returns `true` if valid, an array of {@link MaterialWarnDialogValidationTest}s otherwise.
-     */
-    validate(): true | MaterialWarnDialogValidationTest[] {
-        // Validates the content of a warning dialog
-        const validationTests: MaterialWarnDialogValidationTest[] = [
-            {
-                // Prevent self-warning
-                id: "self",
-                condition: this.user?.username !== ClientUser.i.username
-            },
-            {
-                // Asserts user
-                id: "user",
-                condition: this.user != null
-            },
-            {
-                // Asserts warning template
-                id: "template",
-                condition: this.mwdReason?.MWDReason?.warning != null
-            },
-            {
-                // Asserts warning level is set (given it is a tiered warning)
-                id: "level",
-                condition:
-                    (this.mwdReason?.MWDReason?.warning != null &&
-                        this.mwdReason?.MWDReason?.warning.type !=
-                            WarningType.Tiered) ||
-                    this.mwdReason?.MWDReason?.warningLevel != null
-            }
-        ];
-        console.log(this.mwdReason?.MWDReason?.warning); // debug
-        // Find all tests that failed.
-        const testResults = validationTests.filter((test) => {
-            return !test.condition;
-        });
-
-        // Return true if no validation tests failed.
-        return testResults.length == 0 ? true : testResults;
-    }
-
-    /**
      * Contrary to {@link MaterialWarnDialog.validate}, this will update
      * the UI parts as well.
      */
     uiValidate(): void {
-        const valid = this.validate();
-
-        // TODO: Disable this when Ed changes his mind.
-        this.mwdErrors.style.display = valid === true ? "none" : "";
-        this.dialogConfirmButton.toggleAttribute("disabled", valid !== true);
-
-        if (valid !== true) {
-            this.helperText = i18next.t("ui:warn.validation.fail", {
-                context: valid[0].id
-            });
-            this.helperTextColor = "var(--mdc-theme-error)";
-
-            this.mwdErrors.toggleAttribute("data-valid", false);
-            this.mwdErrors.innerText = "error";
-        } else {
-            this.helperText = "";
-            this.mwdErrors.toggleAttribute("data-valid", true);
-            this.mwdErrors.innerText = "check_circle";
-        }
+        const checks = this.mwdErrors.validator.update();
+        this.dialogConfirmButton.toggleAttribute("disabled", checks !== true);
     }
 
     /**
      * Shows the dialog.
      */
     show(): Promise<WarningOptions> {
-        const styleStorage = getMaterialStorage();
-        registerMaterialDialog(this);
-        const dialog = upgradeMaterialDialog(
-            this,
-            new Map([["autoStackButtons", false]])
-        );
+        return upgradeMaterialDialog(this, {
+            onPostInit: (dialog) => {
+                dialog.autoStackButtons = false;
 
-        // Automatically grab user information if we're already on a user talk page.
-        if (this.user == null && mw.config.get("wgRelevantUserName")) {
-            this.mwdUser.MWDUser.updateUser(
-                User.fromUsername(mw.config.get("wgRelevantUserName"))
-            );
-            this.uiValidate();
-        }
-
-        return new Promise((resolve) => {
-            dialog.listen(
-                "MDCDialog:closed",
-                async (event: Event & { detail: { action: string } }) => {
-                    console.log(event.detail.action);
-                    if (event.detail.action === "confirm") {
-                        this._result = {
-                            warningText: this.warningWikitext,
-                            targetUser: this.user,
-                            additionalText: this.mwdReason.MWDReason
-                                .additionalText,
-                            relatedPage: this.mwdReason.MWDReason.relatedPage,
-                            warnLevel: this.mwdReason.MWDReason.warningLevel,
-                            warning: this.mwdReason.MWDReason.warning
-                        };
-                    } else this._result = null;
-
-                    if (!!this._result && this.props.autoWarn) {
-                        User.warn(this._result)
-                            .then(() => {
-                                RedWarnUI.Toast.quickShow({
-                                    content: i18next.t("ui:toasts.userWarned")
-                                });
-                            })
-                            .catch(() => {
-                                RedWarnUI.Toast.quickShow({
-                                    content: i18next.t(
-                                        "ui:toasts.userWarnFailed"
-                                    ),
-                                    action: {
-                                        text: "Verify",
-                                        callback: () => {
-                                            this.user.talkPage.navigate();
-                                        }
-                                    }
-                                });
-                            });
-                    }
-
-                    styleStorage.dialogTracker.delete(this.id);
-                    resolve(this._result);
+                // Automatically grab user information if we're already on a user talk page.
+                if (this.user == null && mw.config.get("wgRelevantUserName")) {
+                    this.mwdUser.MWDUser.updateUser(
+                        User.fromUsername(mw.config.get("wgRelevantUserName"))
+                    );
+                    this.uiValidate();
                 }
-            );
-        });
+            },
+            onClose: async (event) => {
+                if (event.detail.action === "confirm") {
+                    return {
+                        warningText: this.warningWikitext,
+                        targetUser: this.user,
+                        additionalText: this.mwdReason.MWDReason.additionalText,
+                        relatedPage: this.mwdReason.MWDReason.relatedPage,
+                        warnLevel: this.mwdReason.MWDReason.warningLevel,
+                        warning: this.mwdReason.MWDReason.warning
+                    };
+                } else return null;
+            }
+        }).then((v) => v.wait());
     }
 
     /**
@@ -364,15 +291,13 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                     },
                     "aria-modal": true,
                     "aria-labelledby":
-                        this.props.title ??
-                        i18next.t("ui:warn.title").toString()
+                        this.props.title ?? i18next.t<string>("ui:warn.title")
                 }}
                 id={this.id}
             >
                 <MaterialDialogTitle tabIndex={0}>
                     <span style={{ float: "left" }}>
-                        {this.props.title ??
-                            i18next.t("ui:warn.title").toString()}
+                        {this.props.title ?? i18next.t<string>("ui:warn.title")}
                     </span>
                 </MaterialDialogTitle>
                 <br />
@@ -415,53 +340,23 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                 <MaterialDialogActions>
                     {this.mwdErrors ??
                         (this.mwdErrors = (
-                            <MaterialIconButton
-                                class={"rw-mdc-warnDialog-validation"}
-                                icon={"error"}
-                                tooltip={i18next
-                                    .t(
-                                        "ui:warn.validation.validationFailedIconTooltip"
-                                    )
-                                    .toString()}
-                                onClick={() => {
-                                    // Show failed validation tests
-                                    const dialog = new RedWarnUI.Dialog({
-                                        title: i18next.t(
-                                            "ui:warn.validation.validationDialogTitle"
-                                        ),
-                                        content: (
-                                            <MaterialWarnDialogErrors
-                                                tests={this.validate()}
-                                            />
-                                        ),
-                                        actions: [
-                                            {
-                                                data: i18next.t(
-                                                    "ui:okCancel.ok"
-                                                )
-                                            }
-                                        ]
-                                    });
-                                    dialog.show();
-                                }}
-                            />
-                        ))}
-                    {this._helperText ??
-                        (this._helperText = (
-                            <div
-                                class={
-                                    "rw-mdc-dialog-helperText rw-mdc-warnDialog-helperTextHider"
+                            <MaterialDialogValidator
+                                languageKey={"ui:warn.validation.fail"}
+                                detailedLanguageKey={
+                                    "ui:warn.validation.failDetailed"
                                 }
+                                validators={this.validationChecks}
                             />
-                        ))}
+                        ) as ReturnType<typeof MaterialDialogValidator>)}
                     <MaterialButton dialogAction="cancel">
-                        {i18next.t<string>("ui:okCancel.cancel")}
+                        {i18next.t<string>("ui:cancel")}
                     </MaterialButton>
                     {
                         (this.dialogConfirmButton = (
                             <MaterialButton
                                 dialogAction="confirm"
                                 action
+                                raised
                                 disabled
                             >
                                 {i18next.t<string>("ui:warn.ok")}

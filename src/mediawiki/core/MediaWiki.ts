@@ -40,7 +40,12 @@ export class MediaWiki {
      * Load in every MediaWiki dependency RedWarn needs.
      */
     static async loadDependencies() {
-        await mw.loader.using("mediawiki.language.months");
+        await mw.loader.using([
+            "mediawiki.api",
+            "mediawiki.util",
+            "mediawiki.Title",
+            "mediawiki.language.months"
+        ]);
     }
 
     /**

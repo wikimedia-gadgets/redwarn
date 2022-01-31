@@ -19,6 +19,8 @@ import "./css/globals.css";
 import MaterialPageIcons from "rww/styles/material/ui/MaterialPageIcons";
 import MaterialExtendedOptions from "rww/styles/material/ui/MaterialExtendedOptions";
 import MaterialProtectionRequestDialog from "rww/styles/material/ui/MaterialProtectionRequestDialog";
+import MaterialReportingDialog from "rww/styles/material/ui/MaterialReportingDialog";
+import promiseSplit from "rww/util/promiseSplit";
 
 const MaterialStyle: Style = {
     name: "material",
@@ -48,16 +50,6 @@ const MaterialStyle: Style = {
                 duration: 1209600000 // 14 days
             }
         },
-        // {
-        //     type: "style",
-        //     id: "mdc-styles-tooltips",
-        //     src:
-        //         "https://redwarn-web.wmcloud.org/static/styles/material-components-web@12.0.0.tooltip.min.css",
-        //     cache: {
-        //         delayedReload: true,
-        //         duration: 1209600000, // 14 days
-        //     },
-        // },
         {
             type: "style",
             id: "roboto",
@@ -82,7 +74,8 @@ const MaterialStyle: Style = {
         rwToast: MaterialToast,
         rwDiffIcons: MaterialDiffIcons,
         rwPageIcons: MaterialPageIcons,
-        rwExtendedOptions: MaterialExtendedOptions
+        rwExtendedOptions: MaterialExtendedOptions,
+        rwReportingDialog: MaterialReportingDialog
     },
 
     hooks: {
@@ -98,30 +91,50 @@ export function upgradeMaterialDialogButtons(dialog: RWUIDialog<any>): void {
         .forEach((el) => new MDCRipple(el).initialize());
 }
 
-type WritableKeys<T> = {
-    [P in keyof T]-?: (<U>() => U extends { [Q in P]: T[P] } ? 1 : 2) extends <
-        U
-    >() => U extends { -readonly [Q in P]: T[P] } ? 1 : 2
-        ? P
-        : never;
-}[keyof T]; // https://stackoverflow.com/a/49579497/12573645
+export interface MaterialDialogInitializationOptions<T> {
+    onPostInit?: (mdcDialog: MDCDialog) => PromiseOrNot<void>;
+    onClose?: (
+        event: Event & { detail: { action: string } }
+    ) => PromiseOrNot<T>;
+}
 
-export function upgradeMaterialDialog(
+export type UpgradedMaterialDialog<T> = MDCDialog & {
+    wait: () => Promise<T>;
+};
+
+export async function upgradeMaterialDialog<T>(
     dialog: RWUIDialog<any>,
-    options?: Map<WritableKeys<MDCDialog>, any>
-): MDCDialog {
+    options?: MaterialDialogInitializationOptions<T>
+): Promise<UpgradedMaterialDialog<T>> {
+    const styleStorage = getMaterialStorage();
+    registerMaterialDialog(dialog);
+
     upgradeMaterialDialogButtons(dialog);
 
     const mdcDialog = new MDCDialog(dialog.element);
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    options?.forEach((v, k) => (mdcDialog[k] = v));
+    const [closePromise, closePromiseResolver] = promiseSplit<
+        typeof dialog.result
+    >();
+    mdcDialog.listen(
+        "MDCDialog:closed",
+        async (event: Event & { detail: { action: string } }) => {
+            if (options?.onClose) dialog.result = await options.onClose(event);
+
+            styleStorage.dialogTracker.delete(this.id);
+            closePromiseResolver(dialog.result ?? null);
+        }
+    );
 
     mdcDialog.initialize();
     mdcDialog.open();
 
-    return mdcDialog;
+    if (options?.onPostInit) await options.onPostInit(mdcDialog);
+
+    dialog.dialog = Object.assign(mdcDialog, {
+        wait: () => closePromise
+    });
+    return dialog.dialog;
 }
 
 export function registerMaterialDialog(dialog: RWUIDialog<any>): void {

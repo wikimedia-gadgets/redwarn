@@ -55,8 +55,8 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                     "rw-mdc-full-width",
                     "mdc-text-field",
                     props.outlined
-                        ? " mdc-text-field--outlined"
-                        : " mdc-text-field--filled",
+                        ? "mdc-text-field--outlined"
+                        : "mdc-text-field--filled",
                     props.leadingIcon && "mdc-text-field--with-leading-icon",
                     props.trailingIcon && "mdc-text-field--with-trailing-icon",
                     props.area && "mdc-text-field--textarea"
@@ -219,6 +219,8 @@ export function MaterialTextInputUpgrade(
     };
     components.textField.initialize();
 
+    const textInputId = element.getAttribute("data-mdc-textinput");
+
     components.characterCounter =
         props.maxCharacterCount &&
         new MDCTextFieldCharacterCounter(
@@ -228,12 +230,14 @@ export function MaterialTextInputUpgrade(
 
     components.leadingIcon =
         props.leadingIcon &&
-        new MDCTextFieldIcon(element.querySelector(`#${element.id}_leadIcon`));
+        new MDCTextFieldIcon(element.querySelector(`#${textInputId}_leadIcon`));
     components.leadingIcon?.initialize();
 
     components.trailingIcon =
         props.trailingIcon &&
-        new MDCTextFieldIcon(element.querySelector(`#${element.id}_trailIcon`));
+        new MDCTextFieldIcon(
+            element.querySelector(`#${textInputId}_trailIcon`)
+        );
     components.trailingIcon?.initialize();
 
     components.helperText =

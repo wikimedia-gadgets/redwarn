@@ -1,10 +1,6 @@
 import { h } from "tsx-dom";
 import { RWUISelectionDialog } from "rww/ui/elements/RWUISelectionDialog";
-import {
-    registerMaterialDialog,
-    upgradeMaterialDialog
-} from "rww/styles/material/Material";
-import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
+import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogContent,
@@ -13,33 +9,21 @@ import MaterialDialog, {
 
 export default class MaterialSelectionDialog extends RWUISelectionDialog {
     show(): Promise<any> {
-        const styleStorage = getMaterialStorage();
-        registerMaterialDialog(this);
-        const dialog = upgradeMaterialDialog(
-            this,
-            new Map([["autoStackButtons", false]])
-        );
-
-        return new Promise((resolve) => {
-            dialog.listen(
-                "MDCDialog:closed",
-                async (event: Event & { detail: { action: string } }) => {
-                    const actionSelected = this.props.items.find(
-                        (item) => item.data === event.detail?.action
-                    ).action;
-                    if (actionSelected != null) {
-                        this._result =
-                            (await actionSelected(event)) ??
-                            event.detail.action;
-                    } else {
-                        this._result = event.detail.action;
-                    }
-
-                    styleStorage.dialogTracker.delete(this.id);
-                    resolve(this._result);
+        return upgradeMaterialDialog(this, {
+            onPostInit: (dialog) => {
+                dialog.autoStackButtons = false;
+            },
+            onClose: async (event) => {
+                const actionSelected = this.props.items.find(
+                    (item) => item.data === event.detail?.action
+                ).action;
+                if (actionSelected != null) {
+                    return (await actionSelected(event)) ?? event.detail.action;
+                } else {
+                    return event.detail.action;
                 }
-            );
-        });
+            }
+        }).then((v) => v.wait());
     }
     render(): HTMLDialogElement {
         const buttons = this.props.items.flatMap((item) => [

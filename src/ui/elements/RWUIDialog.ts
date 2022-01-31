@@ -1,5 +1,6 @@
 import random from "rww/util/random";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
+import { UpgradedMaterialDialog } from "rww/styles/material/Material";
 
 export enum RWUIDialogActionType {
     /**
@@ -75,13 +76,15 @@ export abstract class RWUIDialog<T> extends RWUIElement {
      */
     element?: HTMLDialogElement;
 
-    protected _result: T;
+    /**
+     * The {@link UpgradedMaterialDialog} that handles this dialog.
+     */
+    dialog?: UpgradedMaterialDialog<T>;
+
     /**
      * The result of the dialog.
      */
-    get result(): T {
-        return this._result;
-    }
+    public result: T;
 
     protected constructor(readonly props: RWUIDialogProperties = {}) {
         super();

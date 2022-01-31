@@ -18,7 +18,7 @@ export default class MaterialPageIcons extends RWUIPageIcons {
     renderIcons(): JSX.Element[] {
         const icons: JSX.Element[] = [];
 
-        PageIcons.forEach((icon) => {
+        PageIcons().forEach((icon) => {
             if (
                 ((Configuration.UI.pageIcons.value?.[icon.id]?.enabled ??
                     icon.default) &&
@@ -30,7 +30,9 @@ export default class MaterialPageIcons extends RWUIPageIcons {
                         class="rw-mdc-pageIcons-icon"
                         icon={icon.icon}
                         iconColor={icon.color ?? "black"}
-                        tooltip={`${i18next.t(`ui:pageIcons.${icon.id}`)}`}
+                        tooltip={`${
+                            icon.name ?? i18next.t(`ui:pageIcons.${icon.id}`)
+                        }`}
                         onClick={icon.action}
                     />
                 );

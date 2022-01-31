@@ -271,7 +271,14 @@ export class ProtectionManager {
         );
     }
 
-    static async requestProtection(request: ProtectionRequest) {
+    /**
+     * @returns {Promise<Page|false>} The page where the request was made. `false` if no protection requested.
+     */
+    static async requestProtection(
+        request: ProtectionRequest
+    ): Promise<Page | false> {
+        if (request == null) return false;
+        let targetPage: Page;
         if (
             isProtectionRequestTarget(
                 RedWarnWikiConfiguration.c.protection?.requests
@@ -279,7 +286,7 @@ export class ProtectionManager {
         ) {
             // Single-target page.
             const target = RedWarnWikiConfiguration.c.protection.requests;
-            const targetPage = Page.fromTitle(target.page);
+            targetPage = Page.fromTitle(target.page);
             targetPage.edit(ProtectionManager.buildRequest(request, target), {
                 section: target.section ?? undefined,
                 mode: target.method ?? "append",
@@ -364,7 +371,7 @@ export class ProtectionManager {
             const target = isIncrease
                 ? RedWarnWikiConfiguration.c.protection.requests.increase
                 : RedWarnWikiConfiguration.c.protection.requests.decrease;
-            const targetPage = Page.fromTitle(target.page);
+            targetPage = Page.fromTitle(target.page);
 
             targetPage.edit(ProtectionManager.buildRequest(request, target), {
                 section: target.section ?? undefined,
@@ -374,5 +381,6 @@ export class ProtectionManager {
                 })
             });
         }
+        return targetPage;
     }
 }

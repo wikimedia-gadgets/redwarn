@@ -12,6 +12,7 @@ import WikiConfigurationDeserializers from "rww/config/wiki/WikiConfigurationDes
 import i18next from "i18next";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import MediaWikiNotificationContent from "rww/ui/MediaWikiNotificationContent";
+import { PageMissingError } from "rww/errors/MediaWikiErrors";
 
 /**
  * This class handles every single contact with the RedWarn per-wiki
@@ -31,9 +32,12 @@ export default class RedWarnWikiConfiguration {
         try {
             RedWarnWikiConfiguration.preloadedData = JSON.parse(
                 (
-                    await Page.fromTitle(
-                        RW_WIKI_CONFIGURATION
-                    ).getLatestRevision({ forceRefresh: false })
+                    await Page.fromTitle(RW_WIKI_CONFIGURATION)
+                        .getLatestRevision({ forceRefresh: false })
+                        .catch((e) => {
+                            if (!(e instanceof PageMissingError)) throw e;
+                            return null;
+                        })
                 ).content
             );
         } catch (e) {

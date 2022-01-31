@@ -199,6 +199,19 @@ export class Page implements SectionContainer {
     }
 
     /**
+     * Returns true if the page exists.
+     * @param page The page to check.
+     */
+    static async exists(page: Page): Promise<boolean> {
+        try {
+            return (await Page.getLatestRevision(page)) != null;
+        } catch (e) {
+            if (e instanceof PageMissingError) return false;
+            throw e;
+        }
+    }
+
+    /**
      * Get a page's latest revision.
      * @param page The page to get the latest revision of.
      * @param options Extra options or restrictions for getting the latest revision.
@@ -219,18 +232,19 @@ export class Page implements SectionContainer {
             rvexcludeuser: options?.excludeUser?.username ?? undefined
         });
 
-        if (revisionInfoRequest["query"]["pages"]["-1"]) {
-            if (!!revisionInfoRequest["query"]["pages"]["-1"]["missing"])
+        if (revisionInfoRequest["query"]["pages"][0]) {
+            if (!!revisionInfoRequest["query"]["pages"][0]["missing"])
                 throw new PageMissingError({ page });
-            if (!!revisionInfoRequest["query"]["pages"]["-1"]["invalid"])
+            if (!!revisionInfoRequest["query"]["pages"][0]["invalid"])
                 throw new PageInvalidError({
                     page,
                     reason:
-                        revisionInfoRequest["query"]["pages"]["-1"][
+                        revisionInfoRequest["query"]["pages"][0][
                             "invalidreason"
                         ]
                 });
-
+        }
+        if (revisionInfoRequest["query"]["pages"][-1]) {
             throw new Error("Invalid page ID or title.");
         }
 
@@ -256,6 +270,7 @@ export class Page implements SectionContainer {
     isNamed(): this is NamedPage {
         return this.title != null;
     }
+
     /**
      * Grabs either the page's title or ID. Returns the title if both exist as long as
      * `favorTitle` is set to true.
@@ -282,6 +297,10 @@ export class Page implements SectionContainer {
         };
     }
 
+    async exists(): Promise<boolean> {
+        return Page.exists(this);
+    }
+
     /**
      * Get a page's latest revision.
      */
@@ -302,6 +321,26 @@ export class Page implements SectionContainer {
      */
     async getSections(): Promise<Section[]> {
         return Section.getSections(this);
+    }
+
+    async firstSection(): Promise<Section> {
+        return Section.getSections(this).then((s) => s[0]);
+    }
+
+    async lastSection(): Promise<Section> {
+        return Section.getSections(this).then((s) => s[s.length]);
+    }
+
+    async findSection(identifier: number | string): Promise<Section | null> {
+        return Section.getSections(this).then((sections) => {
+            return (
+                sections.find((section) =>
+                    typeof identifier === "string"
+                        ? section.title === identifier
+                        : section.index === identifier
+                ) ?? null
+            );
+        });
     }
 
     /**
@@ -363,7 +402,7 @@ export class Page implements SectionContainer {
      * @param content The new page content.
      * @param options Page editing options.
      */
-    async edit(content: string, options: PageEditOptions): Promise<void> {
+    async edit(content: string, options: PageEditOptions): Promise<any> {
         const pageIdentifier = this.getIdentifier();
 
         // Handle the section
@@ -430,7 +469,7 @@ export class Page implements SectionContainer {
                 break;
         }
 
-        await MediaWikiAPI.postWithEditToken({
+        return MediaWikiAPI.postWithEditToken({
             action: "edit",
             format: "json",
 
@@ -479,9 +518,9 @@ export class Page implements SectionContainer {
     async appendContent(
         text: string,
         options?: Omit<PageEditOptions, "mode">
-    ): Promise<void> {
+    ): Promise<any> {
         // Force using append mode.
-        await this.edit(
+        return this.edit(
             text,
             Object.assign({ mode: <const>"append" }, options)
         );
@@ -496,9 +535,9 @@ export class Page implements SectionContainer {
     async prependContent(
         text: string,
         options?: Omit<PageEditOptions, "mode">
-    ): Promise<void> {
+    ): Promise<any> {
         // Force using prepend mode.
-        await this.edit(
+        return this.edit(
             text,
             Object.assign({ mode: <const>"prepend" }, options)
         );

@@ -2,10 +2,6 @@ import RedWarnIDBError from "rww/data/database/RedWarnIDBError";
 import RedWarnIDBObjectStore from "rww/data/database/RedWarnIDBObjectStore";
 import Log from "rww/data/RedWarnLog";
 
-// The `idb` directory is for the IndexedDB wrapper. You might be
-// looking for `database` instead, which contains RedWarn-specialized
-// objects.
-
 export type RedWarnIDBUpgradeHandler = (
     openRequest: IDBOpenDBRequest
 ) => Promise<void> | void;

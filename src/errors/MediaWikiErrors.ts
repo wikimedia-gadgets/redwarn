@@ -1,5 +1,5 @@
 import { Page } from "rww/mediawiki/core/Page";
-import { Revision } from "rww/mediawiki";
+import { Revision, User } from "rww/mediawiki";
 import RWErrorBase, { RWErrors, RWFormattedError } from "./RWError";
 
 export class PageMissingError extends RWFormattedError<{ page: Page }> {
@@ -36,6 +36,16 @@ export class RevisionNotLatestError extends RWFormattedError<{
     readonly code = RWErrors.RevisionNotLatest;
     static readonly message =
         "Target revision {{revision.revisionID}} is not the latest revision.";
+}
+
+export class UserMissingError extends RWFormattedError<{ user: User }> {
+    readonly code = RWErrors.UserMissing;
+    static readonly message = "The user {{user.username}} could not be found.";
+}
+
+export class UserInvalidError extends RWFormattedError<{ user: User }> {
+    readonly code = RWErrors.UserInvalid;
+    static readonly message = "The username {{user.username}} is invalid.";
 }
 
 export class GenericAPIError extends RWErrorBase {

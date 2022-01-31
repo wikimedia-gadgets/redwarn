@@ -4,21 +4,6 @@
     width: 55vw;
 }
 
-.mdc-dialog[data-invalid]
-    .rw-mdc-protectionRequestDialog
-    .rw-mdc-prd-validation,
-.mdc-dialog[data-invalid]
-    .rw-mdc-protectionRequestDialog
-    .rw-mdc-dialog-helperText {
-    display: inline-block;
-}
-
-.rw-mdc-protectionRequestDialog .rw-mdc-prd-validation,
-.rw-mdc-protectionRequestDialog .rw-mdc-dialog-helperText {
-    color: var(--mdc-theme-error);
-    display: none;
-}
-
 .rw-mdc-protectionRequestDialog .mdc-dialog__content {
     padding-top: 24px !important;
 }

@@ -16,7 +16,11 @@ import {
     WarningType
 } from "rww/mediawiki";
 import i18next from "i18next";
-import { PageMissingError } from "rww/errors/MediaWikiErrors";
+import {
+    PageMissingError,
+    UserInvalidError,
+    UserMissingError
+} from "rww/errors/MediaWikiErrors";
 import { isIPAddress } from "rww/util";
 
 import Section from "rww/mediawiki/core/Section";
@@ -263,7 +267,8 @@ export class User {
      * Warn a user.
      * @param options Warning options
      */
-    static async warn(options: WarningOptions): Promise<void> {
+    static async warn(options: WarningOptions): Promise<boolean> {
+        if (options == null) return false;
         const level = {
             [WarningType.Tiered]: options.warnLevel,
             [WarningType.PolicyViolation]: 5,
@@ -280,6 +285,7 @@ export class User {
                 section: getMonthHeader()
             }
         );
+        return true;
     }
 }
 
@@ -287,6 +293,10 @@ export class User {
  * Represents a MediaWiki user.
  */
 export class UserAccount extends User {
+    static current: UserAccount = UserAccount.fromUsername(
+        mw.config.get("wgUserName")
+    );
+
     /** The user id of this user. */
     id?: number;
     /** The edit count of this user. */
@@ -299,6 +309,14 @@ export class UserAccount extends User {
     gender?: Gender;
     /** The user's block information (if they are blocked) */
     blocked?: BlockInfo | false;
+
+    private _sandbox: Page;
+    get sandbox(): Page {
+        return (
+            this._sandbox ??
+            (this._sandbox = Page.fromTitle(`User:${this.username}/sandbox`))
+        );
+    }
 
     /**
      * Creates a new user from their username.
@@ -337,7 +355,7 @@ export class UserAccount extends User {
 
         const identifier = user.getIdentifier();
 
-        const userInfoRequest = await MediaWikiAPI.get({
+        const userInfoRequestPromise = MediaWikiAPI.get({
             action: "query",
             format: "json",
             list: ["users"],
@@ -345,14 +363,18 @@ export class UserAccount extends User {
             [typeof identifier === "string"
                 ? "ususers"
                 : "ususerids"]: identifier
-        });
+        }).then((v: JQueryXHR) => v);
+        const [userInfoRequest] = await Promise.all([
+            userInfoRequestPromise,
+            await super.populate(user)
+        ]);
 
         const userData = userInfoRequest["query"]["users"][0];
 
         if (userData.missing != null)
-            throw new Error("This user does not exist.");
+            throw new UserMissingError({ user: user });
         if (userData.invalid != null)
-            throw new Error("The provided username is invalid.");
+            throw new UserInvalidError({ user: user });
 
         if (!user.id) user.id = userData["userid"];
         if (!user.editCount) user.editCount = userData["editcount"];
@@ -377,9 +399,6 @@ export class UserAccount extends User {
                 creationBlocked: !!userData["blocknocreate"]
             };
         else if (!user.blocked) user.blocked = false;
-
-        // Get latest edit
-        super.populate(user);
 
         return user;
     }

@@ -30,6 +30,8 @@ export const enum RWErrors {
     RevisionMissing = "RW4003",
     SectionIndexMissing = "RW4004",
     RevisionNotLatest = "RW4005",
+    UserMissing = "RW4006",
+    UserInvalid = "RW4007",
     StyleMissing = "RW7000",
     AggregateError = "RW9000",
 }
@@ -50,7 +52,7 @@ export default abstract class RWErrorBase {
 }
 
 /**
- * RedWarn error. Set message to a i18next compatible format string. Params are passed in as objects.
+ * RedWarn error. Set message to an i18next-compatible format string. Params are passed in as objects.
  *
  * How this works: we make an instance of i18next then leverage the interpolation function of i18next
  * then pass the parameters and the format string that we found using a super scuffed javascript

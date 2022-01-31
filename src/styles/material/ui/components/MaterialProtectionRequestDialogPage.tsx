@@ -153,9 +153,9 @@ export class MaterialProtectionRequestDialogPage extends MaterialInputCard {
                         lock_open
                     </span>
                     <span class={"rw-mdc-protectionLevels--name"}>
-                        {`${i18next.t(
+                        {i18next.t<string>(
                             "ui:protectionRequest.info.unprotected"
-                        )}`}
+                        )}
                     </span>
                 </div>
             );

@@ -4,8 +4,6 @@ import ProtectionRequest from "rww/mediawiki/protection/ProtectionRequest";
 
 export interface RWUIProtectionRequestDialogProps extends RWUIDialogProperties {
     relatedPage?: Page;
-    /** Whether or not the request will be made directly after the dialog closes. */
-    autoRequest?: boolean;
 }
 
 export class RWUIProtectionRequestDialog extends RWUIDialog<ProtectionRequest> {

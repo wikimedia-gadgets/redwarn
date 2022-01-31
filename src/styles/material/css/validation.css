@@ -1,0 +1,27 @@
+.rw-mdc-validation {
+    margin-right: auto;
+}
+
+.rw-mdc-validation[data-valid] {
+    color: var(--green-80, #006504);
+}
+
+.rw-mdc-validation:not([data-valid]) {
+    color: var(--mdc-theme-error, #b00020);
+}
+
+.rw-mdc-validation .mdc-icon-button {
+    vertical-align: middle;
+}
+
+.rw-mdc-validation .rw-mdc-dialog-helperText {
+    display: inline-block;
+}
+
+/* Hide helper text if dialog is too small - TODO: @media is entire screen - we'd need to turn this
+    into JS to detect dialog width for resizable dialogs                                            */
+@media (max-width: 1165px) {
+    .rw-mdc-validation .rw-mdc-dialog-helperText {
+        display: none;
+    }
+}

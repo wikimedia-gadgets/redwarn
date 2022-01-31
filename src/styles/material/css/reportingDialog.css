@@ -1,0 +1,9 @@
+.rw-mdc-reportingDialog .mdc-select,
+.rw-mdc-reportingDialog [data-mdc-textinput] {
+    width: 100%;
+    margin: 12px 0;
+}
+
+.rw-mdc-reportingDialog [data-mdc-textinput] textarea {
+    min-height: 150px;
+}

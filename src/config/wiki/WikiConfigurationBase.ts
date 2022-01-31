@@ -10,6 +10,7 @@ import type {
 import { WarningCategory } from "rww/mediawiki";
 import type { SerializableRevertOption } from "rww/mediawiki/revert/RevertOptions";
 import { RevertOption } from "rww/mediawiki/revert/RevertOptions";
+import { ReportVenue } from "rww/mediawiki/report/ReportVenue";
 
 /**
  * This is a configuration file used by RedWarn to provide wiki-specific
@@ -111,6 +112,12 @@ interface WikiConfigurationBase {
          * searching.
          */
         warnings: Record<string, SerializedWarning> | Record<string, Warning>;
+        /**
+         * A list of user group IDs which require an additional confirmation before
+         * warning. This is to prevent users from warning administrators or other
+         * tenured editors that are defined in the array.
+         */
+        restrictedGroups?: string[];
     };
     /**
      * Revert options determine the options show to a user when viewing a diff page.
@@ -163,6 +170,12 @@ interface WikiConfigurationBase {
          */
         reasons?: string[] | Record<string, string[]>;
     };
+    /**
+     * Possible reporting venues on a given wiki. This can support noticeboard venues
+     * (such as Project-namespace pages which can be seen by the public) or user
+     * email venues (such as role accounts which forward emails to a private list).
+     */
+    reporting: ReportVenue[];
 }
 
 export default WikiConfigurationBase;

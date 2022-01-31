@@ -51,7 +51,39 @@ export default class Localization {
             debug: process.env.NODE_ENV !== "production",
             returnObjects: true,
             interpolation: {
-                escapeValue: false
+                escapeValue: false,
+                format: function (value, format, lang) {
+                    const getVariationOfAOrAn = function (
+                        value: string,
+                        capitalize: boolean
+                    ) {
+                        const letters = ["a", "e", "i", "o", "u", "h"];
+                        const firstLetter = value.substring(0, 1);
+                        let correctWordForm: string;
+                        if (
+                            letters.find(function (l) {
+                                return firstLetter === l;
+                            })
+                        ) {
+                            correctWordForm = capitalize ? "An" : "an";
+                        } else {
+                            correctWordForm = capitalize ? "A" : "a";
+                        }
+
+                        return correctWordForm;
+                    };
+
+                    if (format === "en-handle-an")
+                        return !lang || lang.startsWith("en")
+                            ? getVariationOfAOrAn(value, false)
+                            : "";
+                    if (format === "en-handle-an-capitalized")
+                        return !lang || lang.startsWith("en")
+                            ? getVariationOfAOrAn(value, true)
+                            : "";
+
+                    return value;
+                }
             }
         });
 

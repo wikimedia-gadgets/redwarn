@@ -1,9 +1,5 @@
 import { RWUIExtendedOptions } from "rww/ui/elements/RWUIExtendedOptions";
-import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
-import {
-    registerMaterialDialog,
-    upgradeMaterialDialog
-} from "rww/styles/material/Material";
+import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
@@ -23,22 +19,13 @@ import { Configuration } from "rww/config/user/Configuration";
 
 export default class MaterialExtendedOptions extends RWUIExtendedOptions {
     show(): Promise<void> {
-        const styleStorage = getMaterialStorage();
-        registerMaterialDialog(this);
-        const dialog = upgradeMaterialDialog(this);
-
-        return new Promise((resolve) => {
-            dialog.listen("MDCDialog:closed", async () => {
-                styleStorage.dialogTracker.delete(this.id);
-                resolve();
-            });
-        });
+        return upgradeMaterialDialog<void>(this).then((v) => v.wait());
     }
 
     renderOptions(): JSX.Element[] {
         const items: JSX.Element[] = [];
 
-        PageIcons.forEach((icon) => {
+        PageIcons().forEach((icon) => {
             if (
                 !(
                     Configuration.UI.pageIcons.value?.[icon.id]?.enabled ??
@@ -52,7 +39,7 @@ export default class MaterialExtendedOptions extends RWUIExtendedOptions {
                         color={icon.color ?? "black"}
                         onClick={icon.action}
                     >
-                        {`${i18next.t(`ui:pageIcons.${icon.id}`)}`}
+                        {`${icon.name ?? i18next.t(`ui:pageIcons.${icon.id}`)}`}
                     </MaterialListItem>
                 );
             }
@@ -74,7 +61,7 @@ export default class MaterialExtendedOptions extends RWUIExtendedOptions {
             >
                 <MaterialDialogTitle tabIndex={0}>
                     <span style={toCSS({ fontWeight: "bold" })}>
-                        {i18next.t("ui:extendedOptions.title").toString()}
+                        {i18next.t<string>("ui:extendedOptions.title")}
                     </span>
                 </MaterialDialogTitle>
                 <MaterialDialogContent>

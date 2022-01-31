@@ -2,13 +2,9 @@ import { RWUIProtectionRequestDialog } from "rww/ui/elements/RWUIProtectionReque
 import ProtectionRequest, {
     ProtectionDuration
 } from "rww/mediawiki/protection/ProtectionRequest";
-import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorage";
-import {
-    registerMaterialDialog,
-    upgradeMaterialDialog
-} from "rww/styles/material/Material";
+import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import RedWarnStore from "rww/data/RedWarnStore";
-import { Page, ProtectionLevel, ProtectionManager } from "rww/mediawiki";
+import { Page, ProtectionLevel } from "rww/mediawiki";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
@@ -37,68 +33,9 @@ import MaterialSelect, {
 } from "rww/styles/material/ui/components/MaterialSelect";
 import { MaterialRadioProps } from "rww/styles/material/ui/components/MaterialRadio";
 import MaterialIcon from "./components/MaterialIcon";
-import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
-import RedWarnUI from "rww/ui/RedWarnUI";
-
-/**
- * A specific test performed to validate the values of a {@link MaterialWarnDialog}.
- */
-interface MaterialProtectionRequestDialogValidationTest {
-    /** The name of this condition. */
-    id: string;
-    /**
-     * Whether or not this specific validation test passes.
-     *
-     * If the test fails, the condition should be false.
-     */
-    condition: boolean;
-}
-
-/**
- * Displays the content of a MaterialWarnDialog error popup.
- * @param props Properties of the error dialog.
- * @constructor
- */
-function MaterialProtectionRequestDialogErrors(props: {
-    tests: true | MaterialProtectionRequestDialogValidationTest[];
-}): JSX.Element {
-    if (props.tests === true)
-        return (
-            <div>
-                {i18next.t("ui:protectionRequest.validation.pass").toString()}
-            </div>
-        );
-
-    // Get the failing tests with their test IDs.
-    const failingIds = props.tests.map((v) => v.id);
-
-    return (
-        <div>
-            {i18next
-                .t("ui:protectionRequest.validation.validationDialogIntro", {
-                    count: failingIds.length
-                })
-                .toString()}
-            <ul>
-                {failingIds.reduce((items: JSX.Element[], id: string) => {
-                    items.push(
-                        <li>
-                            {i18next
-                                .t(
-                                    "ui:protectionRequest.validation.failDetailed",
-                                    {
-                                        context: id
-                                    }
-                                )
-                                .toString()}
-                        </li>
-                    );
-                    return items;
-                }, [])}
-            </ul>
-        </div>
-    );
-}
+import MaterialDialogValidator, {
+    ValidationCheck
+} from "rww/styles/material/ui/components/MaterialDialogValidator";
 
 export default class MaterialProtectionRequestDialog extends RWUIProtectionRequestDialog {
     page: Page = RedWarnStore.currentPage;
@@ -195,11 +132,69 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
             ?.value;
     }
 
-    get helperText(): string {
-        return this.elementSet.errorText.innerText;
-    }
-    set helperText(text: string) {
-        this.elementSet.errorText.innerText = text;
+    get validationChecks(): ValidationCheck[] {
+        return [
+            {
+                id: "noLevel",
+                test: () => this.level != null
+            },
+            {
+                id: "noDuration",
+                test: () =>
+                    this.level &&
+                    (this.level.id == null || this.duration != null)
+            },
+            {
+                id: "levelEqual",
+                test: () =>
+                    this.level != null &&
+                    (this.level.id
+                        ? // Protection level selected existing protection with matching duration.
+                          this.protectionInformation.find(
+                              // Looking for a null match, so the criteria below must match
+                              // the selected protection parameters.
+                              (v) =>
+                                  // Edit protection of the correct level and duration applied
+                                  // directly to this page.
+                                  (v.type === "edit" &&
+                                      v.source == null &&
+                                      v.level === this.level.id &&
+                                      this.duration ===
+                                          (v.expiry === "infinity"
+                                              ? ProtectionDuration.Indefinite
+                                              : ProtectionDuration.Temporary)) ||
+                                  // FlaggedRevs protection applied to this page.
+                                  (v.type === "_flaggedrevs" &&
+                                      v.level === this.level.id &&
+                                      this.duration ===
+                                          (v.expiry === "infinity"
+                                              ? ProtectionDuration.Indefinite
+                                              : ProtectionDuration.Temporary))
+                          ) == null
+                        : // "No protection" selected and no existing protection.
+                          this.protectionInformation.find(
+                              // Looking for a match, so the criteria below must match at least
+                              // one protection entry.
+                              (v) =>
+                                  // Edit protection applied directly to this page.
+                                  (v.type === "edit" && v.source == null) ||
+                                  // FlaggedRevs protection applied to this page.
+                                  v.type === "_flaggedrevs"
+                          ) != null)
+            },
+            {
+                id: "noReason",
+                test: () => this.reason != null
+            },
+            {
+                id: "noAdditionalReason",
+                test: () =>
+                    this.reason != null &&
+                    (this.reason.length > 0 ||
+                        (this.reason.length === 0 &&
+                            this.additionalInformation.length !== 0))
+            }
+        ];
     }
 
     elementSet: Partial<{
@@ -212,46 +207,23 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
             components: MaterialTextInputComponents;
         };
         duration: MaterialRadioFieldElement<boolean>;
-        errorButton: JSX.Element;
-        errorText: JSX.Element;
+        validation: ReturnType<typeof MaterialDialogValidator>;
     }> = {};
 
     show(): Promise<ProtectionRequest> {
-        const styleStorage = getMaterialStorage();
-        registerMaterialDialog(this);
-        const dialog = upgradeMaterialDialog(this);
-
-        return new Promise((resolve) => {
-            dialog.listen(
-                "MDCDialog:closed",
-                async (event: Event & { detail: { action: string } }) => {
-                    if (event.detail.action === "confirm") {
-                        this._result = {
-                            page: this.page,
-                            level: this.level,
-                            reason: this.reason,
-                            additionalInformation: this.additionalInformation,
-                            duration: this.duration
-                        };
-                    } else this._result = null;
-
-                    if (!!this._result && this.props.autoRequest) {
-                        ProtectionManager.requestProtection(this._result).then(
-                            () => {
-                                RedWarnUI.Toast.quickShow({
-                                    content: i18next.t(
-                                        "ui:protectionRequest.done"
-                                    )
-                                });
-                            }
-                        );
-                    }
-
-                    styleStorage.dialogTracker.delete(this.id);
-                    resolve(this._result);
-                }
-            );
-        });
+        return upgradeMaterialDialog(this, {
+            onClose: async (event) => {
+                if (event.detail.action === "confirm") {
+                    return {
+                        page: this.page,
+                        level: this.level,
+                        reason: this.reason,
+                        additionalInformation: this.additionalInformation,
+                        duration: this.duration
+                    };
+                } else return null;
+            }
+        }).then((v) => v.wait());
     }
 
     renderLevels(): MaterialRadioFieldElement<ProtectionLevel> {
@@ -342,7 +314,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
 
         // Blank (other reason)
         items.push({
-            label: "Other reason",
+            label: i18next.t("ui:protectionRequest.reasons.other"),
             value: "",
             type: "action"
         });
@@ -366,7 +338,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
 
         const el: MaterialSelectElement<string> = (
             <MaterialSelect<string>
-                label={i18next.t("ui:protectionRequest.reasons")}
+                label={i18next.t("ui:protectionRequest.reasons.label")}
                 items={items}
                 required
                 onChange={(i, v) => {
@@ -446,14 +418,14 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                     "aria-modal": true,
                     "aria-labelledby":
                         this.props.title ??
-                        i18next.t("ui:protectionRequest.title").toString()
+                        i18next.t<string>("ui:protectionRequest.title")
                 }}
                 id={this.id}
             >
                 <MaterialDialogTitle tabIndex={0}>
                     <span style={{ float: "left" }}>
                         {this.props.title ??
-                            i18next.t("ui:protectionRequest.title").toString()}
+                            i18next.t<string>("ui:protectionRequest.title")}
                     </span>
                 </MaterialDialogTitle>
                 <MaterialDialogContent
@@ -494,9 +466,9 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                                     (this.elementSet.duration = this.renderDuration())
                                 }
                                 <p class={"rw-mdc-prd-notice"}>
-                                    {`${i18next.t(
+                                    {i18next.t<string>(
                                         "ui:protectionRequest.notice"
-                                    )}`}
+                                    )}
                                 </p>
                             </div>
                         </div>
@@ -504,46 +476,20 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                 </MaterialDialogContent>
                 <MaterialDialogActions>
                     {
-                        (this.elementSet.errorButton = (
-                            <MaterialIconButton
-                                class={"rw-mdc-prd-validation"}
-                                icon={"error"}
-                                tooltip={i18next
-                                    .t(
-                                        "ui:protectionRequest.validation.validationFailedIconTooltip"
-                                    )
-                                    .toString()}
-                                onClick={() => {
-                                    // Show failed validation tests
-                                    const dialog = new RedWarnUI.Dialog({
-                                        title: i18next.t(
-                                            "ui:protectionRequest.validation.validationDialogTitle"
-                                        ),
-                                        content: (
-                                            <MaterialProtectionRequestDialogErrors
-                                                tests={this.validate()}
-                                            />
-                                        ),
-                                        actions: [
-                                            {
-                                                data: i18next.t(
-                                                    "ui:okCancel.ok"
-                                                )
-                                            }
-                                        ]
-                                    });
-                                    dialog.show();
-                                }}
+                        (this.elementSet.validation = (
+                            <MaterialDialogValidator
+                                validators={this.validationChecks}
+                                languageKey={
+                                    "ui:protectionRequest.validation.fail"
+                                }
+                                detailedLanguageKey={
+                                    "ui:protectionRequest.validation.failDetailed"
+                                }
                             />
-                        ))
-                    }
-                    {
-                        (this.elementSet.errorText = (
-                            <div class={"rw-mdc-dialog-helperText"} />
-                        ))
+                        ) as ReturnType<typeof MaterialDialogValidator>)
                     }
                     <MaterialButton dialogAction="cancel">
-                        {i18next.t<string>("ui:okCancel.cancel")}
+                        {i18next.t<string>("ui:cancel")}
                     </MaterialButton>
                     {
                         (this.elementSet.dialogConfirmButton = (
@@ -564,78 +510,10 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
     }
 
     uiValidate(): void {
-        const validationResults = this.validate();
+        const validationResults = this.elementSet.validation.validator.update();
         this.elementSet.dialogConfirmButton.toggleAttribute(
             "disabled",
             validationResults !== true
         );
-        this.element.toggleAttribute(
-            "data-invalid",
-            validationResults !== true
-        );
-        if (validationResults !== true) {
-            this.helperText = i18next.t(
-                "ui:protectionRequest.validation.fail",
-                {
-                    context: validationResults[0].id
-                }
-            );
-        } else {
-            this.helperText = i18next.t("ui:protectionRequest.validation.pass");
-        }
-    }
-
-    /**
-     * Determines whether or not this dialog is ready for confirmation.
-     */
-    validate(): true | MaterialProtectionRequestDialogValidationTest[] {
-        const tests: MaterialProtectionRequestDialogValidationTest[] = [
-            {
-                id: "noLevel",
-                condition: this.level == null
-            },
-            {
-                id: "noDuration",
-                condition: this.level?.id !== null && this.duration == null
-            },
-            {
-                id: "levelEqual",
-                condition:
-                    // No protection
-                    (this.level?.id === null &&
-                        this.protectionInformation.filter(
-                            (v) =>
-                                (v.type === "edit" && v.source == null) ||
-                                v.type === "_flaggedrevs"
-                        ).length === 0) ||
-                    // Has protection
-                    this.protectionInformation?.some(
-                        (v) =>
-                            ((v.type === "edit" && v.source == null) ||
-                                v.type === "_flaggedrevs") &&
-                            v.expiry === "infinity" &&
-                            this.duration === ProtectionDuration.Indefinite
-                    )
-            },
-            {
-                id: "noReason",
-                condition: this.reason == null
-            },
-            {
-                id: "noAdditionalReason",
-                condition:
-                    this.reason != null &&
-                    this.reason.length === 0 &&
-                    this.additionalInformation.length === 0
-            }
-        ];
-
-        const fails = tests.filter((v) => v.condition);
-
-        if (fails.length > 0) {
-            return fails;
-        } else {
-            return true;
-        }
     }
 }

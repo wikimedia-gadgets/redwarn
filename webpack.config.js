@@ -9,7 +9,7 @@
  */
 const RW_WEBPACK_CHUNKED = process.env.NODE_ENV === "production" ?
     ((process.env.RW_WEBPACK_CHUNKED || "true") === "true") : false;
-const RW_WEBPACK_ANALYZE = false;
+const RW_WEBPACK_ANALYZE = process.env.RW_WEBPACK_ANALYZE === "true" || false;
 
 // Dependencies
 const fs = require("fs");

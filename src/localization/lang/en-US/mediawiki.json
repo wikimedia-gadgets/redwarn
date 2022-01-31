@@ -10,7 +10,9 @@
         "warn_3": "Warning: {{reason}}",
         "warn_4": "Final Warning: {{reason}}",
         "warn_5": "ONLY Warning: {{reason}}",
-        "protection": "Requesting page protection for {{title}}"
+        "protection": "Requesting page protection for {{title}}",
+        "reporting": "Reporting {{target}}",
+        "report_undo": "Undoing report of {{target}}"
     },
     "ip": "Anonymous IP editor",
     "error": {

@@ -1,5 +1,4 @@
 import {
-    MaterialReportingDialogChild,
     MaterialReportingDialogChildProps,
     MaterialReportingDialogTarget,
     MaterialReportingDialogTargetProps
@@ -13,7 +12,7 @@ import { h } from "tsx-dom";
 import i18next from "i18next";
 import { ReportVenue, ReportVenueMode } from "rww/mediawiki/report/ReportVenue";
 
-class MaterialReportingDialogPage extends MaterialReportingDialogChild {
+class MaterialReportingDialogPage {
     get venue(): ReportVenue {
         return this.props.reportingDialog.props.venue;
     }
@@ -32,12 +31,7 @@ class MaterialReportingDialogPage extends MaterialReportingDialogChild {
             originalTarget?: Page;
         }
     ) {
-        super();
         this.target = props.originalTarget;
-    }
-
-    refresh(): void {
-        //
     }
 
     render(): JSX.Element {
@@ -63,6 +57,7 @@ class MaterialReportingDialogPage extends MaterialReportingDialogChild {
                         this.elements.input.textField.value
                     );
                     this.props.reportingDialog.target = currentTarget;
+                    this.props.reportingDialog.uiValidate();
 
                     currentTarget.exists().then((exists) => {
                         if (
@@ -104,6 +99,7 @@ export default function generator(
 ): MaterialReportingDialogTarget {
     const mrdPageTarget = new MaterialReportingDialogPage(props);
     return Object.assign(mrdPageTarget.render(), {
-        MRDTarget: mrdPageTarget
+        MRDTarget: mrdPageTarget,
+        valid: () => mrdPageTarget.elements.input.textField.valid
     });
 }

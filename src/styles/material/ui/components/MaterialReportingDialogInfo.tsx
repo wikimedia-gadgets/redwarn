@@ -79,6 +79,7 @@ class MaterialReportingDialogInfo extends RWUIElement {
                         this.elements.comments.textField.required =
                             value === null;
                         this.reason = value;
+                        this.props.reportingDialog.uiValidate();
                     }}
                     required
                 />
@@ -104,6 +105,7 @@ class MaterialReportingDialogInfo extends RWUIElement {
 
         this.elements.comments.textField.listen("input", () => {
             this.comments = this.elements.comments.textField.value;
+            this.props.reportingDialog.uiValidate();
         });
 
         return this.elements.comments.element;

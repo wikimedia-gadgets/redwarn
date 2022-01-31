@@ -16,7 +16,11 @@ import {
     WarningType
 } from "rww/mediawiki";
 import i18next from "i18next";
-import { PageMissingError } from "rww/errors/MediaWikiErrors";
+import {
+    PageMissingError,
+    UserInvalidError,
+    UserMissingError
+} from "rww/errors/MediaWikiErrors";
 import { isIPAddress } from "rww/util";
 
 import Section from "rww/mediawiki/core/Section";
@@ -368,9 +372,9 @@ export class UserAccount extends User {
         const userData = userInfoRequest["query"]["users"][0];
 
         if (userData.missing != null)
-            throw new Error("This user does not exist.");
+            throw new UserMissingError({ user: user });
         if (userData.invalid != null)
-            throw new Error("The provided username is invalid.");
+            throw new UserInvalidError({ user: user });
 
         if (!user.id) user.id = userData["userid"];
         if (!user.editCount) user.editCount = userData["editcount"];

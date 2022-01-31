@@ -5,7 +5,6 @@ import {
 } from "rww/styles/material/ui/components/MaterialUserSelect";
 import { h } from "tsx-dom";
 import {
-    MaterialReportingDialogChildProps,
     MaterialReportingDialogTarget,
     MaterialReportingDialogTargetProps
 } from "rww/styles/material/ui/components/MaterialReportingDialogChild";
@@ -16,10 +15,11 @@ import { isUserModeReportVenue } from "rww/mediawiki/report/ReportVenue";
 class MaterialReportingDialogUser extends MaterialUserSelect {
     constructor(
         readonly props: MaterialUserSelectProps &
-            MaterialReportingDialogChildProps
+            MaterialReportingDialogTargetProps<User>
     ) {
         super(props);
 
+        this.props.originalUser = this.props.originalTarget;
         if (this.props.originalUser == null) {
             const relevantUser = mw.config.get("wgRelevantUserName");
             if (relevantUser != null)
@@ -29,6 +29,7 @@ class MaterialReportingDialogUser extends MaterialUserSelect {
 
     onPreUserChange(user: User): void {
         this.props.reportingDialog.target = user;
+        this.props.reportingDialog.uiValidate();
     }
 
     async onUserChange(user: User): Promise<void> {
@@ -84,6 +85,7 @@ export default function generator(
 ): MaterialReportingDialogTarget {
     const mrdUserTarget = new MaterialReportingDialogUser(props);
     return Object.assign(mrdUserTarget.render(), {
-        MRDTarget: mrdUserTarget
+        MRDTarget: mrdUserTarget,
+        valid: () => mrdUserTarget.user != null
     });
 }

@@ -15,12 +15,17 @@ import {
 import toCSS from "rww/styles/material/util/toCSS";
 import MaterialReportingDialogUser from "./components/MaterialReportingDialogUser";
 import {
+    isEmailReportVenue,
+    isPageReportVenue,
     isUserModeReportVenue,
     ReportVenue
 } from "rww/mediawiki/report/ReportVenue";
-import { Page, User } from "rww/mediawiki";
+import { Page, User, UserAccount } from "rww/mediawiki";
 import MaterialReportingDialogInfo from "rww/styles/material/ui/components/MaterialReportingDialogInfo";
 import "../css/reportingDialog.css";
+import MaterialDialogValidator, {
+    ValidationCheck
+} from "rww/styles/material/ui/components/MaterialDialogValidator";
 
 export default class MaterialReportingDialog extends RWUIReportingDialog {
     target: User | Page = null;
@@ -31,9 +36,47 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
         | ReturnType<typeof MaterialReportingDialogPage>
         | ReturnType<typeof MaterialReportingDialogUser>;
     mrdInfo: ReturnType<typeof MaterialReportingDialogInfo>;
+    mrdValidator: ReturnType<typeof MaterialDialogValidator>;
+    mrdConfirm: JSX.Element;
 
     get venue(): ReportVenue {
         return this.props.venue;
+    }
+
+    get validationChecks(): ValidationCheck[] {
+        return [
+            {
+                id: "target",
+                test: () => this.target != null
+            },
+            {
+                id: "targetMissing",
+                test: () => this.mrdTarget.valid()
+            },
+            {
+                id: "self",
+                test: () =>
+                    !isUserModeReportVenue(this.props.venue) ||
+                    (this.target instanceof User &&
+                        this.target.username !== UserAccount.current.username)
+            },
+            {
+                id: "reason",
+                test: () =>
+                    !isPageReportVenue(this.props.venue) ||
+                    (this.reason != null && this.reason.length > 0) ||
+                    (this.comments != null && this.comments.length > 0)
+            },
+            {
+                id: "short",
+                test: () =>
+                    !isEmailReportVenue(this.props.venue) ||
+                    (this.comments != null &&
+                        this.comments
+                            // Strip repeating characters (likely spam).
+                            .replace(/([a-z])\1{2,}/gi, "").length > 30)
+            }
+        ];
     }
 
     constructor(props: RWUIReportingDialogProps) {
@@ -86,10 +129,6 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
         ) as ReturnType<typeof MaterialReportingDialogInfo>);
     }
 
-    refresh(): void {
-        this.mrdTarget.MRDTarget.refresh();
-    }
-
     render(): HTMLDialogElement {
         this.element = (
             <MaterialDialog
@@ -109,19 +148,40 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
                     {this.renderInfo()}
                 </MaterialDialogContent>
                 <MaterialDialogActions>
+                    {
+                        (this.mrdValidator = (
+                            <MaterialDialogValidator
+                                validators={this.validationChecks}
+                                languageKey={"ui:reporting.validation.fail"}
+                                detailedLanguageKey={
+                                    "ui:reporting.validation.failDetailed"
+                                }
+                            />
+                        ) as ReturnType<typeof MaterialDialogValidator>)
+                    }
                     <MaterialButton dialogAction="cancel">
                         {i18next.t<string>("ui:cancel")}
                     </MaterialButton>
-                    <MaterialButton dialogAction="confirm" raised>
-                        {i18next.t<string>("ui:reporting.ok")}
-                    </MaterialButton>
+                    {
+                        (this.mrdConfirm = (
+                            <MaterialButton dialogAction="confirm" raised>
+                                {i18next.t<string>("ui:reporting.ok")}
+                            </MaterialButton>
+                        ))
+                    }
                 </MaterialDialogActions>
             </MaterialDialog>
         ) as HTMLDialogElement;
 
-        if (this.props.target) {
-        }
-
         return this.element;
+    }
+
+    uiValidate(): void {
+        // Race condition might have this function called before the dialog is rendered.
+        // In this case, just silently fail.
+        if (this.mrdValidator) {
+            const validation = this.mrdValidator.validator.update();
+            this.mrdConfirm.toggleAttribute("disabled", validation !== true);
+        }
     }
 }

@@ -22,6 +22,7 @@ import { WarningIcons } from "rww/styles/material/data/WarningIcons";
 import Log from "rww/data/RedWarnLog";
 import Group from "rww/mediawiki/core/Group";
 import "../../css/userSelect.css";
+import { UserMissingError } from "rww/errors/MediaWikiErrors";
 
 interface OverlayContentLoading {
     type: "loading";
@@ -470,7 +471,25 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                 this.updating = true;
                 this.refresh();
 
-                await this.user.populate();
+                try {
+                    await this.user.populate();
+                } catch (e) {
+                    if (e instanceof UserMissingError) {
+                        RedWarnUI.Toast.quickShow({
+                            content: i18next.t("ui:userSelect.missing")
+                        });
+                    } else if (e instanceof UserMissingError) {
+                        RedWarnUI.Toast.quickShow({
+                            content: i18next.t("ui:userSelect.invalid")
+                        });
+                    } else {
+                        RedWarnUI.Toast.quickShow({
+                            content: i18next.t("ui:userSelect.fail")
+                        });
+                    }
+                    this.clearUser();
+                    return;
+                }
             }
 
             await this.onUserChange(this.user);

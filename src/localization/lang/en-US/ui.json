@@ -111,6 +111,15 @@
             "contributions": "Show user contributions"
         }
     },
+    "validation": {
+        "validationFailedIconTooltip": "There are issues which are preventing you from continuing. Click here for more information.",
+
+        "validationDialogTitle": "Issue found",
+        "validationDialogTitle_plural": "Issues found",
+        "validationDialogIntro": "The following issues are preventing you from continuing:",
+
+        "pass": "No issues were found."
+    },
     "warn": {
         "title": "Warn User",
 
@@ -135,12 +144,6 @@
         },
 
         "validation": {
-            "validationFailedIconTooltip": "There are issues which are preventing you from sending this warning. Click here for more information.",
-
-            "validationDialogTitle": "Issue found",
-            "validationDialogTitle_plural": "Issues found",
-            "validationDialogIntro": "The following issues are preventing you from sending a warning:",
-
             "fail": "An unknown issue ocurred.",
             "fail_template": "You don't have a warning template selected.",
             "fail_level": "You haven't selected a warning level.",

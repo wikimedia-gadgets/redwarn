@@ -22,7 +22,7 @@
     },
     "devDependencies": {
         "@types/chance": "^1.1.0",
-        "@types/jest": "^26.0.14",
+        "@types/jest": "^26.0.24",
         "@types/jquery": "^3.5.1",
         "@types/jsdom": "^16.2.4",
         "@types/node": "^14.11.1",
@@ -57,7 +57,7 @@
         "webpack": "^5.51.1",
         "webpack-bundle-analyzer": "^4.4.2",
         "webpack-cli": "^4.8.0",
-        "webpack-dev-server": "^4.0.0",
+        "webpack-dev-server": "^4.7.1",
         "webpack-plugin-buildinfo": "^0.3.0",
         "wrapper-webpack-plugin": "git+https://github.com/redwarnwp/wrapper-webpack-plugin.git"
     },

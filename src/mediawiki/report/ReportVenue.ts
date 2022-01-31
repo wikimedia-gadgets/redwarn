@@ -179,7 +179,7 @@ export function getReportVenueIcons(): PageIcon[] {
                 const report = await new RedWarnUI.ReportingDialog({
                     venue
                 }).show();
-                await submitReport(report);
+                if (report != null) await submitReport(report);
             }
         };
     });

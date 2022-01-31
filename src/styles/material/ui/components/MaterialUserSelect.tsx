@@ -296,7 +296,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
 
     private updating: boolean;
 
-    constructor(readonly props: MaterialUserSelectProps) {
+    protected constructor(readonly props: MaterialUserSelectProps) {
         super();
         if (this.props.id == null) this.props.id = generateId();
         this.user = props.originalUser;
@@ -475,7 +475,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
 
             await this.onUserChange(this.user);
 
-            if (!this.user?.warningAnalysis) {
+            if (this.user && !this.user.warningAnalysis) {
                 // Set to updating in order to hoist loading screen.
                 this.updating = true;
                 this.refresh();

@@ -112,13 +112,15 @@
         }
     },
     "validation": {
-        "validationFailedIconTooltip": "There are issues which are preventing you from continuing. Click here for more information.",
-
-        "validationDialogTitle": "Issue found",
-        "validationDialogTitle_plural": "Issues found",
-        "validationDialogIntro": "The following issues are preventing you from continuing:",
-
-        "pass": "No issues were found."
+        "dialog": {
+            "title": "Issue found",
+            "title_plural": "Issues found",
+            "intro": "The following issues are preventing you from continuing:"
+        },
+        "tooltip": {
+            "fail": "There are issues which are preventing you from continuing. Click here for more information.",
+            "pass": "No issues were found."
+        }
     },
     "warn": {
         "title": "Warn User",
@@ -223,7 +225,10 @@
             "fallback": "{{type}} protected against non-{{level}} users until {{date}}{{note}}",
             "fallback_indefinite": "Indefinitely {{type}} against for non-{{level}} users{{note}}"
         },
-        "reasons": "Reason",
+        "reasons": {
+            "label": "Reason",
+            "other": "Other reason"
+        },
         "additionalInformation": "Additional information",
         "duration": {
             "label": "Duration",
@@ -232,12 +237,6 @@
         },
         "notice": "You should not consider requesting page protection as a method for continuing an argument from elsewhere nor as a venue for starting a new discussion regarding article content. If a request contains excessive argument, appears to be intended to resolve a content dispute, includes personal attacks or uncivil comments, or has any other unrelated discussion, it will be removed and no action will be taken.",
         "validation" : {
-            "validationFailedIconTooltip" : "There are issues which are preventing you from requesting protection on this page. Click here for more information.",
-
-            "validationDialogTitle": "Issue found",
-            "validationDialogTitle_plural": "Issues found",
-            "validationDialogIntro": "The following issues are preventing you from sending requesting protection on this page:",
-
             "fail": "An unknown issue ocurred.",
             "fail_noLevel" : "You don't have a protection level selected.",
             "fail_noDuration" : "You don't have a protection duration selected.",
@@ -250,9 +249,7 @@
             "failDetailed_noDuration": "$t(ui:protectionRequest.validation.fail_noDuration) Select either \"Temporary\" or \"Indefinite\" from the provided options.",
             "failDetailed_levelEqual": "$t(ui:protectionRequest.validation.fail_levelEqual) Please select a protection level or duration different from the current protection level/duration.",
             "failDetailed_noReason": "$t(ui:protectionRequest.validation.fail_noReason) A reason must be provided for protection requests.",
-            "failDetailed_noAdditionalReason": "$t(ui:protectionRequest.validation.fail_noAdditionalReason) Please provide an additional reason, or switch to a provided reason using the dropdown.",
-
-            "pass": "No issues were found."
+            "failDetailed_noAdditionalReason": "$t(ui:protectionRequest.validation.fail_noAdditionalReason) Please provide an additional reason, or switch to a provided reason using the dropdown."
         },
         "retarget": {
             "text": "RedWarn cannot determine if this is an increase or decrease in protection level. This is likely due to a problem in the RedWarn per-wiki configuration. Please indicate whether or not this request in an increase or decrease in protection level.",

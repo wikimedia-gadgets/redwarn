@@ -62,7 +62,7 @@ export class MaterialDialogValidatorDialog extends RWUIDialog<void> {
         return (
             <div>
                 {i18next
-                    .t("ui:validation.validationDialogIntro", {
+                    .t("ui:validation.dialog.intro", {
                         count: failingIds.length
                     })
                     .toString()}
@@ -88,7 +88,7 @@ export class MaterialDialogValidatorDialog extends RWUIDialog<void> {
             <MaterialDialog id={generateId()}>
                 <MaterialDialogTitle>
                     {this.props.title ??
-                        i18next.t<string>("ui:validation.title")}
+                        i18next.t<string>("ui:validation.dialog.title")}
                 </MaterialDialogTitle>
                 <MaterialDialogContent>
                     {this.renderContent()}
@@ -158,8 +158,8 @@ class MaterialDialogValidator extends RWUIElement {
                         tooltip={i18next
                             .t(
                                 this.visibleValidationResults !== true
-                                    ? "ui:validation.validationFailedIconTooltip"
-                                    : "ui:validation.pass"
+                                    ? "ui:validation.tooltip.fail"
+                                    : "ui:validation.tooltip.pass"
                             )
                             .toString()}
                         onClick={

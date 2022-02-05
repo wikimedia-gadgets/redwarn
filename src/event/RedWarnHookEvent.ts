@@ -1,4 +1,5 @@
 export type RedWarnHookEvent =
+    | RedWarnLoadEvent
     | RedWarnPreInitializationEvent
     | RedWarnInitializationEvent
     | RedWarnPostInitializationEvent
@@ -8,6 +9,11 @@ export type RedWarnHookEvent =
 interface RedWarnHookEventBase {
     type: string;
     payload?: Record<string, any>;
+}
+
+export interface RedWarnLoadEvent extends RedWarnHookEventBase {
+    type: "load";
+    payload: undefined;
 }
 
 export interface RedWarnPreInitializationEvent extends RedWarnHookEventBase {

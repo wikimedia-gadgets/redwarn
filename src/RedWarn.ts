@@ -127,6 +127,9 @@ export default class RedWarn {
             return;
         }
 
+        // Tell all scripts that RedWarn is running.
+        RedWarnHooks.executeHooks("load");
+
         Log.info(`Starting RedWarn ${RW_VERSION}...`);
         const startTime = Date.now();
 
@@ -148,11 +151,11 @@ export default class RedWarn {
         // Load in languages first.
         await Localization.init();
 
-        // Load in MediaWiki dependencies
-        await MediaWiki.loadDependencies();
-
         // Verify our MediaWiki installation.
         if (!MediaWiki.mwCheck()) return;
+
+        // Load in MediaWiki dependencies
+        await MediaWiki.loadDependencies();
 
         // Static dependency initialization.
         await Promise.all([

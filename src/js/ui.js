@@ -432,9 +432,37 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
         if (rw.config.rwDisableRightClickUser != "disable") {
             rw.visuals.contextMenuPromise.then(() => {
                 $(() => {
+                    $('a[href*="User_talk:"], a[href*="User:"], a[href*="Special:Contributions/"]').each((_, e) => {
+                        // CALLBACK
+                        let hrefOfSelection = $(e).attr("href"); // href of userpage or contribs
+                        let url = new URL(hrefOfSelection, window.location.href);
+                        let pageTitle = (url.searchParams.get("title") || url.pathname
+                            .replace(/^\/wiki\//, "")
+                            .replace(/\/$/, ""))
+                            .replace(/_/g, " "); // Get page title from URL
+                        let targetUsername;
+
+                        if (pageTitle.startsWith("User:") || pageTitle.startsWith("User talk:")) {
+                            if (/^User(?: talk)?:.+\/.+/g.test(pageTitle)) {
+                                //subpage
+                                return;
+                            }
+                            targetUsername = pageTitle.replace(/^User(?: talk)?:([^\/]+)/g, "$1");
+                        } else {
+                            // Avoid popping up if clicking contribs link on contribs page
+                            // Might avoid someone from using the normal context menu
+                            if (mw.config.get('wgPageName').startsWith("Special:Contributions/")) {
+                                return;
+                            }
+
+                            // Contribs link, go split at last slash
+                            targetUsername = pageTitle.replace(/^Special:Contributions\/(.+)/g, "$1");
+                        }
+                        $(e).attr("data-rw-username", targetUsername);
+                    });
                     // REV15 - only trigger on shift+right-click unless if set in settings - If config is set to "Opt2", to open on right-click set in preferences, set below in trigger
                     if (rw.config.rwDisableRightClickUser != "Opt2") {
-                        $('a[href*="/wiki/User_talk:"], a[href*="/wiki/User:"], a[href*="/wiki/Special:Contributions/"]').on('contextmenu', e => {
+                        $('a[data-rw-username]').on('contextmenu', e => {
 
                             // if shift key not down, don't show the context menu.
                             if (!e.shiftKey) return;
@@ -445,30 +473,10 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
 
                     $.contextMenu({
                         trigger: (rw.config.rwDisableRightClickUser === "Opt2" ? undefined : 'none'), // if set in options, activate as usual
-                        selector: 'a[href*="/wiki/User_talk:"], a[href*="/wiki/User:"], a[href*="/wiki/Special:Contributions/"]', // Select all appropriate user links
+                        selector: 'a[data-rw-username]', // Select all appropriate user links
                         callback: (act, info) => {
                             // CALLBACK
-                            let hrefOfSelection = $(info.$trigger[0]).attr("href"); // href of userpage or contribs
-                            let targetUsername = "";
-                            if (hrefOfSelection.includes("/wiki/User_talk:") || hrefOfSelection.includes("/wiki/User:")) {
-                                // This is easy because w should just be ablt to spit at last :
-                                // We run a regex (rev8 ipv6 fix)
-                                /*
-                                    Find "User_talk"
-                                    OR "User"
-                                    Then ":"
-                                    Or "/"
-                                    Anything but "/"
-                                    OR line break
-                                */
-                                let matches = (hrefOfSelection + "\n").match(/(?:(?:(?:User_talk))|(?:(?:User)(?:\:))|(?:(?:\/)(?:[^\/]*)(?:(?:\n)|(?:\r\n))))/g);
-                                // result /User_talk:user, so we removed everything up to the first colon
-                                let unURL = matches[0];
-                                targetUsername = unURL.replace(unURL.match(/(?:[^\:]*)(?:\:)/g)[0], ""); // Regex first group of colon and remove
-                            } else {
-                                // Contribs link, go split at last slash
-                                targetUsername = (a => { return a[a.length - 1] })(hrefOfSelection.split("/"));
-                            }
+                            let targetUsername = $(info.$trigger[0]).attr("data-rw-username"); // href of userpage or contribs
 
                             // Do the action for each action now.
                             ({

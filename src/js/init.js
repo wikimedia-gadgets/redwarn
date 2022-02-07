@@ -717,8 +717,11 @@ function initRW() {
             }
 
             if ($("table.diff").length > 0) { // DETECT DIFF HERE - if diff table is present
-                // Diff page
-                rw.rollback.loadIcons(); // load rollback icons
+                // Attach to wikipage.diff to absorb diff updates.
+                mw.hook( "wikipage.diff" ).add (() => {
+                    // load rollback icons
+                    rw.rollback.loadIcons();
+                });
             } else if (
                 document.getElementsByClassName("mw-revision")[0]
                 && location.search.includes("oldid=")

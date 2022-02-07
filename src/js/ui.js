@@ -104,9 +104,9 @@ rw.ui = {
         addMessageHandler("adminR", () => rw.ui.adminReportSelector(un));
 
         // Add toggle advanced mode handler (RW16.1)
-        addMessageHandler("advancedToggle", ()=>{
+        addMessageHandler("advancedToggle", () => {
             // Close and reopen with same args but toggle advancedMode
-            dialogEngine.closeDialog(()=>rw.ui.beginWarn(ignoreWarnings, un, pg, customCallback, callback, hideUserInfo, autoSelectReasonIndex, (advancedMode === true ? false : true)));
+            dialogEngine.closeDialog(() => rw.ui.beginWarn(ignoreWarnings, un, pg, customCallback, callback, hideUserInfo, autoSelectReasonIndex, (advancedMode === true ? false : true)));
         });
 
         // Add recent page handelr
@@ -221,10 +221,10 @@ rw.ui = {
                 dialogEngine.create(mdlContainers.generateContainer(`[[[[include warnUserDialog.html]]]]`, 500, 630)).showModal(); // 500x630 dialog, see warnUserDialog.html for code
             } else {
                 // This isn't called immediately, collapse and see below
-                const continueFunc = ()=>{ // split to allow for the intro dialog
+                const continueFunc = () => { // split to allow for the intro dialog
                     // Check we're not warning ourselves
                     if (rw.info.getUsername() == rw.info.targetUsername(un)) {
-                        rw.ui.confirmDialog(`You cannot warn yourself.`, "OKAY", ()=>dialogEngine.closeDialog(), "", ()=>{}, 0);
+                        rw.ui.confirmDialog(`You cannot warn yourself.`, "OKAY", () => dialogEngine.closeDialog(), "", () => { }, 0);
                         return; // stop here
                     }
 
@@ -234,15 +234,14 @@ rw.ui = {
                     `, true);
 
                     // Get warning info
-                    rw.info.warningInfo(rw.info.targetUsername(un), warningInfo=>{
+                    rw.info.warningInfo(rw.info.targetUsername(un), warningInfo => {
                         // Generate our list
                         let finalWarningHistoryHTML = ``;
-                        warningInfo.forEach((warning,i) => { //todo
+                        warningInfo.forEach((warning, i) => { //todo
                             finalWarningHistoryHTML += `
                             <hr/>
                             <!-- Warning level -->
-                            ${
-                                [ // Return HTML for last warning level.
+                            ${[ // Return HTML for last warning level.
                                     // Reminder
                                     `
                                     <span class="material-icons" id="WarningHistoryIndicator${i}" style="cursor:help;position: relative;top: 5px;font-size:20px;color:BlueViolet;">error_outline</span>
@@ -251,9 +250,9 @@ rw.ui = {
                                         Recieved a reminder/policy violation notice
                                         </span>
                                     </div>
-                                    <span style="font-size:11px;"><b>${warning.from}</b> gave ${rw.info.targetUsername(un)} a reminder or policy violation warning for:</span> 
+                                    <span style="font-size:11px;"><b>${warning.from}</b> gave ${rw.info.targetUsername(un)} a reminder or policy violation warning for:</span>
                                     `,
-                    
+
                                     // NOTICE
                                     `
                                     <span class="material-icons" id="WarningHistoryIndicator${i}" style="cursor:help;position: relative;top: 5px;font-size:20px;color:blue;">info</span>
@@ -284,7 +283,7 @@ rw.ui = {
                                     </div>
                                     <span style="font-size:11px;"><b>${warning.from}</b> gave ${rw.info.targetUsername(un)} level 3 warning for:</span>
                                     `,
-                    
+
                                     // Final Warning (dark red)
                                     `
                                     <span class="material-icons" id="WarningHistoryIndicator${i}" style="cursor:pointer;position: relative;top: 5px;font-size:20px;color:#a20000;" onclick="window.parent.postMessage('adminR');">report</span>
@@ -317,11 +316,11 @@ rw.ui = {
                                         Unknown warning
                                         </span>
                                     </div>
-                                    <span style="font-size:11px;"><b>${warning.from}</b> gave ${rw.info.targetUsername(un)} an unknown warning</span> 
+                                    <span style="font-size:11px;"><b>${warning.from}</b> gave ${rw.info.targetUsername(un)} an unknown warning</span>
                                     `
                                 ][warning.level]
 
-                            }
+                                }
                             <br/> <!-- warning rule and timestamp and reuse button to reinput into existing form  -->
                             ${warning.rule.name}<br/>
                             <span style="
@@ -331,9 +330,9 @@ rw.ui = {
                             color: #505050;
                             ">${new Date(warning.timestamp).toUTCString()} ${
                                 // Only show extra buttons if it's recognised, else there will be an error
-                                ( warning.rule.key != "" ?
-                                `- <a href="#" onclick="autoSelect('${warning.rule.key}', ${warning.level});">REUSE</a>`
-                                : ``)}
+                                (warning.rule.key != "" ?
+                                    `- <a href="#" onclick="autoSelect('${warning.rule.key}', ${warning.level});">REUSE</a>`
+                                    : ``)}
                             </span><br/>
                             `;
                         });
@@ -353,21 +352,21 @@ rw.ui = {
 <h5>Advanced Mode</h5>
 Welcome to advanced warning mode! This feature looks through the past 50 user talk page revisions, allowing you to find and restore older warnings, and is useful for problematic editors who may have hidden warnings in the page history.<br/><br/>
 <b>Important:</b> Please be aware that this can take a while to process on longer pages with larger changes, so if the progress bar freezes, please be paitent as RedWarn is still processing in the background.
-                    `, 
-                    "Got it, thanks",
-                    ()=>dialogEngine.closeDialog(continueFunc), // continue on close
+                    `,
+                        "Got it, thanks",
+                        () => dialogEngine.closeDialog(continueFunc), // continue on close
 
-                    "Don't show again", ()=>{
-                        // write into config that this is the case
-                        dialogEngine.closeDialog();
-                        rw.config.rwWarnUserAdvancedNoteDismissed = true;
-                        rw.info.writeConfig(true, ()=>{}); // save
-                        continueFunc(); // continue
-                    }, 200);
+                        "Don't show again", () => {
+                            // write into config that this is the case
+                            dialogEngine.closeDialog();
+                            rw.config.rwWarnUserAdvancedNoteDismissed = true;
+                            rw.info.writeConfig(true, () => { }); // save
+                            continueFunc(); // continue
+                        }, 200);
                 } else continueFunc(); // continue if dismissed
             }
 
-            
+
         });
 
     }, // end beginWarn
@@ -430,126 +429,130 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
         // More docs at https://swisnl.github.io/jQuery-contextMenu/demo/trigger-custom.html
 
         // USER TALK ACTIONS - check if not disabled then continue
-        if (rw.config.rwDisableRightClickUser != "disable") $(() => {
-            // REV15 - only trigger on shift+right-click unless if set in settings - If config is set to "Opt2", to open on right-click set in preferences, set below in trigger
-            if (rw.config.rwDisableRightClickUser != "Opt2") {
-                $('a[href*="/wiki/User_talk:"], a[href*="/wiki/User:"], a[href*="/wiki/Special:Contributions/"]').on('contextmenu', e => {
+        if (rw.config.rwDisableRightClickUser != "disable") {
+            rw.visuals.contextMenuPromise.then(() => {
+                $(() => {
+                    // REV15 - only trigger on shift+right-click unless if set in settings - If config is set to "Opt2", to open on right-click set in preferences, set below in trigger
+                    if (rw.config.rwDisableRightClickUser != "Opt2") {
+                        $('a[href*="/wiki/User_talk:"], a[href*="/wiki/User:"], a[href*="/wiki/Special:Contributions/"]').on('contextmenu', e => {
 
-                    // if shift key not down, don't show the context menu.
-                    if (!e.shiftKey) return;
-                    e.preventDefault();
-                    $(e.currentTarget).contextMenu();
+                            // if shift key not down, don't show the context menu.
+                            if (!e.shiftKey) return;
+                            e.preventDefault();
+                            $(e.currentTarget).contextMenu();
+                        });
+                    }
+
+                    $.contextMenu({
+                        trigger: (rw.config.rwDisableRightClickUser === "Opt2" ? undefined : 'none'), // if set in options, activate as usual
+                        selector: 'a[href*="/wiki/User_talk:"], a[href*="/wiki/User:"], a[href*="/wiki/Special:Contributions/"]', // Select all appropriate user links
+                        callback: (act, info) => {
+                            // CALLBACK
+                            let hrefOfSelection = $(info.$trigger[0]).attr("href"); // href of userpage or contribs
+                            let targetUsername = "";
+                            if (hrefOfSelection.includes("/wiki/User_talk:") || hrefOfSelection.includes("/wiki/User:")) {
+                                // This is easy because w should just be ablt to spit at last :
+                                // We run a regex (rev8 ipv6 fix)
+                                /*
+                                    Find "User_talk"
+                                    OR "User"
+                                    Then ":"
+                                    Or "/"
+                                    Anything but "/"
+                                    OR line break
+                                */
+                                let matches = (hrefOfSelection + "\n").match(/(?:(?:(?:User_talk))|(?:(?:User)(?:\:))|(?:(?:\/)(?:[^\/]*)(?:(?:\n)|(?:\r\n))))/g);
+                                // result /User_talk:user, so we removed everything up to the first colon
+                                let unURL = matches[0];
+                                targetUsername = unURL.replace(unURL.match(/(?:[^\:]*)(?:\:)/g)[0], ""); // Regex first group of colon and remove
+                            } else {
+                                // Contribs link, go split at last slash
+                                targetUsername = (a => { return a[a.length - 1] })(hrefOfSelection.split("/"));
+                            }
+
+                            // Do the action for each action now.
+                            ({
+                                "usrPg": un => redirect(rw.wikiBase + "/wiki/User:" + encodeURIComponent(un), true),  // Open user page in new tab
+
+                                "tlkPg": un => redirect(rw.wikiBase + "/wiki/User_talk:" + encodeURIComponent(un), true),  // Open talk page in new tab
+
+                                "contribs": un => redirect(rw.wikiBase + "/wiki/Special:Contributions/" + encodeURIComponent(un), true),  // Redirect to contribs page in new tab
+
+                                "accInfo": un => redirect(rw.wikiBase + "/wiki/Special:CentralAuth?target=" + encodeURIComponent(un), true),  // Redirect to Special:CentralAuth page in new tab
+
+                                "sendMsg": un => rw.ui.newMsg(un), // show new msg dialog
+
+                                "quickWel": un => rw.quickTemplate.openSelectPack(un), // Submit Quick Template
+
+                                "newNotice": un => rw.ui.beginWarn(false, un), // show new warning dialog
+
+                                "adminReport": un => rw.ui.adminReportSelector(un),
+
+                                "usrPronouns": un => { // Show a tost with this users prefered pronouns
+                                    rw.info.getUserPronouns(un, p => {
+                                        rw.visuals.toast.show(un + "'s pronouns are " + p, false, false, 3000);
+                                    });
+                                },
+
+                                "usrEditCount": un => { // Show a tost with this users prefered pronouns
+                                    rw.info.getUserEditCount(un, count => {
+                                        if (count == null) count = "an unknown number of"; // stop undefined message
+                                        rw.visuals.toast.show(un + " has made " + count + " edits.", false, false, 3000);
+                                    });
+                                },
+
+                                "usrStanding": un => {
+                                    // Show toast with last warning level
+                                    rw.info.lastWarningLevel(un, level => {
+                                        rw.visuals.toast.show(un + " has recieved " + [
+                                            "no warnings",
+                                            "a level 1 notice",
+                                            "a level 2 caution",
+                                            "a level 3 warning",
+                                            "a level 4 final or ONLY warning"
+                                        ][level] + " this month.", false, false, 4000);
+                                    });
+                                },
+
+                                "filterLog": un => redirect("https://en.wikipedia.org/w/index.php?title=Special:AbuseLog&wpSearchUser=" + encodeURIComponent(un), true),  // Redirect to filter log page in new tab
+
+                                "blockLog": un => redirect("https://en.wikipedia.org/w/index.php?title=Special:Log/block&page=User:" + encodeURIComponent(un), true),  // Redirect to block log page in new tab
+
+                                "allLog": un => redirect("https://en.wikipedia.org/wiki/Special:Log/" + encodeURIComponent(un), true)  // Redirect to filter log page in new tab
+
+                            })[act](targetUsername.trim());
+
+                        },
+                        items: { // TODO: add extra options like logs ext. ext.
+                            "usrPg": { name: "User Page" },
+                            "tlkPg": { name: "Talk Page" },
+                            "aAsubmenu": {
+                                "name": "Quick Actions",
+                                "items": {
+                                    "sendMsg": { name: "New Message" },
+                                    "newNotice": { name: "Warn User" },
+                                    "quickWel": { name: "Quick Template" },
+                                    "adminReport": { name: "Report to Admin" }
+                                }
+                            },
+                            "aIsubmenu": {
+                                "name": "Account info",
+                                "items": {
+                                    "contribs": { name: "Contributions" },
+                                    "accInfo": { name: "Central Auth" },
+                                    "usrPronouns": { "name": "Pronouns" },
+                                    "usrEditCount": { "name": "Edit Count" },
+                                    "usrStanding": { "name": "Highest Warning" },
+                                    "filterLog": { name: "Edit Filter Log" },
+                                    "blockLog": { name: "Block Log" },
+                                    "allLog": { name: "All Logs" }
+                                }
+                            }
+                        }
+                    });
                 });
-            }
-
-            $.contextMenu({
-                trigger: (rw.config.rwDisableRightClickUser == "Opt2" ? undefined : 'none'), // if set in options, activate as usual
-                selector: 'a[href*="/wiki/User_talk:"], a[href*="/wiki/User:"], a[href*="/wiki/Special:Contributions/"]', // Select all appropriate user links
-                callback: (act, info) => {
-                    // CALLBACK
-                    let hrefOfSelection = $(info.$trigger[0]).attr("href"); // href of userpage or contribs
-                    let targetUsername = "";
-                    if (hrefOfSelection.includes("/wiki/User_talk:") || hrefOfSelection.includes("/wiki/User:")) {
-                        // This is easy because w should just be ablt to spit at last :
-                        // We run a regex (rev8 ipv6 fix)
-                        /*
-                            Find "User_talk"
-                            OR "User"
-                            Then ":"
-                            Or "/"
-                            Anything but "/"
-                            OR line break
-                        */
-                        let matches = (hrefOfSelection + "\n").match(/(?:(?:(?:User_talk))|(?:(?:User)(?:\:))|(?:(?:\/)(?:[^\/]*)(?:(?:\n)|(?:\r\n))))/g);
-                        // result /User_talk:user, so we removed everything up to the first colon
-                        let unURL = matches[0];
-                        targetUsername = unURL.replace(unURL.match(/(?:[^\:]*)(?:\:)/g)[0], ""); // Regex first group of colon and remove
-                    } else {
-                        // Contribs link, go split at last slash
-                        targetUsername = (a => { return a[a.length - 1] })(hrefOfSelection.split("/"));
-                    }
-
-                    // Do the action for each action now.
-                    ({
-                        "usrPg": un => redirect(rw.wikiBase + "/wiki/User:" + encodeURIComponent(un), true),  // Open user page in new tab
-
-                        "tlkPg": un => redirect(rw.wikiBase + "/wiki/User_talk:" + encodeURIComponent(un), true),  // Open talk page in new tab
-
-                        "contribs": un => redirect(rw.wikiBase + "/wiki/Special:Contributions/" + encodeURIComponent(un), true),  // Redirect to contribs page in new tab
-
-                        "accInfo": un => redirect(rw.wikiBase + "/wiki/Special:CentralAuth?target=" + encodeURIComponent(un), true),  // Redirect to Special:CentralAuth page in new tab
-
-                        "sendMsg": un => rw.ui.newMsg(un), // show new msg dialog
-
-                        "quickWel": un => rw.quickTemplate.openSelectPack(un), // Submit Quick Template
-
-                        "newNotice": un => rw.ui.beginWarn(false, un), // show new warning dialog
-
-                        "adminReport": un => rw.ui.adminReportSelector(un),
-
-                        "usrPronouns": un => { // Show a tost with this users prefered pronouns
-                            rw.info.getUserPronouns(un, p => {
-                                rw.visuals.toast.show(un + "'s pronouns are " + p, false, false, 3000);
-                            });
-                        },
-
-                        "usrEditCount": un => { // Show a tost with this users prefered pronouns
-                            rw.info.getUserEditCount(un, count => {
-                                if (count == null) count = "an unknown number of"; // stop undefined message
-                                rw.visuals.toast.show(un + " has made " + count + " edits.", false, false, 3000);
-                            });
-                        },
-
-                        "usrStanding": un => {
-                            // Show toast with last warning level
-                            rw.info.lastWarningLevel(un, level => {
-                                rw.visuals.toast.show(un + " has recieved " + [
-                                    "no warnings",
-                                    "a level 1 notice",
-                                    "a level 2 caution",
-                                    "a level 3 warning",
-                                    "a level 4 final or ONLY warning"
-                                ][level] + " this month.", false, false, 4000);
-                            });
-                        },
-
-                        "filterLog": un => redirect("https://en.wikipedia.org/w/index.php?title=Special:AbuseLog&wpSearchUser=" + encodeURIComponent(un), true),  // Redirect to filter log page in new tab
-
-                        "blockLog": un => redirect("https://en.wikipedia.org/w/index.php?title=Special:Log/block&page=User:" + encodeURIComponent(un), true),  // Redirect to block log page in new tab
-
-                        "allLog": un => redirect("https://en.wikipedia.org/wiki/Special:Log/" + encodeURIComponent(un), true)  // Redirect to filter log page in new tab
-
-                    })[act](targetUsername.trim());
-
-                },
-                items: { // TODO: add extra options like logs ext. ext.
-                    "usrPg": { name: "User Page" },
-                    "tlkPg": { name: "Talk Page" },
-                    "aAsubmenu": {
-                        "name": "Quick Actions",
-                        "items": {
-                            "sendMsg": { name: "New Message" },
-                            "newNotice": { name: "Warn User" },
-                            "quickWel": { name: "Quick Template" },
-                            "adminReport": { name: "Report to Admin" }
-                        }
-                    },
-                    "aIsubmenu": {
-                        "name": "Account info",
-                        "items": {
-                            "contribs": { name: "Contributions" },
-                            "accInfo": { name: "Central Auth" },
-                            "usrPronouns": { "name": "Pronouns" },
-                            "usrEditCount": { "name": "Edit Count" },
-                            "usrStanding": { "name": "Highest Warning" },
-                            "filterLog": { name: "Edit Filter Log" },
-                            "blockLog": { name: "Block Log" },
-                            "allLog": { name: "All Logs" }
-                        }
-                    }
-                }
-            });
-        }); // END USER ACTIONS CONTEXT MENU
+            })
+        } // END USER ACTIONS CONTEXT MENU
 
         // TODO: add more, like Quick Template options ext.. and right-click on article link to begin rollback ext.
 
@@ -637,9 +640,9 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
 
         addMessageHandler("resyncWarnings", rs => {
             // Resync warning database
-            dialogEngine.closeDialog(()=>{
+            dialogEngine.closeDialog(() => {
                 rw.ui.loadDialog.show("Syncing warning database...");
-                rw.rulesFunc.resync(()=>{
+                rw.rulesFunc.resync(() => {
                     rw.ui.loadDialog.close();
                     rw.ui.openPreferences();
                 });
@@ -993,7 +996,7 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
     },
 
     // For things that send details to the RedWarn team - NOT USED OR SET UP ATM, for later use.
-    "acceptLegalPolicyDialog" : callback=>{
+    "acceptLegalPolicyDialog": callback => {
         const legalPol = `[[[[include legalPolicy.html]]]]`;
 
         rw.ui.confirmDialog(`
@@ -1001,7 +1004,7 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
         <div style="height:360px; overflow:auto;">
         ${legalPol}
         </div>
-        `, "ACCEPT", ()=>{}, "DECLINE", ()=>dialogEngine.closeDialog(), 400);
+        `, "ACCEPT", () => { }, "DECLINE", () => dialogEngine.closeDialog(), 400);
     },
 
     // CLASSES from here

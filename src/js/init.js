@@ -203,6 +203,7 @@ var rw = {
                 return style;
             }
         },
+        "contextMenuPromise": null,
         /**
          * Adds RedWarn's styles, libaries and other elements to the current page and waits for them to load, then excecutes the callback function
          *
@@ -221,7 +222,7 @@ var rw = {
 
             // Load script files
             // Load MDL and everything needed, then callback when all loaded
-            mw.loader.getScript("https://redwarn.toolforge.org/cdn/js/jquery-contextmenu.js");
+            rw.visuals.contextMenuPromise = mw.loader.getScript("https://redwarn.toolforge.org/cdn/js/jquery-contextmenu.js");
             mw.loader.getScript("https://redwarn.toolforge.org/cdn/js/jquery-ui-position.js");
             // Dialog polyfill for Firefox browsers
             mw.loader.getScript("https://redwarn.toolforge.org/cdn/js/dialogPolyfill.js");
@@ -237,7 +238,7 @@ var rw = {
             mw.loader.load("https://redwarn.toolforge.org/cdn/css/materialicons.css", "text/css");
             mw.loader.load("https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese", "text/css");
             mw.loader.load("https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese", "text/css");
-            
+
             // MDL and context menu styles
             mw.loader.addStyleTag(`
                 /* Context menus */

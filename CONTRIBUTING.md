@@ -40,10 +40,6 @@ When pushing submissions to this repo we require that you make a separate fork f
 
 RedWarn is built through [Webpack](https://webpack.js.org), a module bundler that allows us to easily build frontend code. Aside from that, RedWarn uses [tsx-dom](https://github.com/Lusito/tsx-dom) in order to build the interface. Contrary to React, tsx-dom generates usable HTMLElements directly from JSX. This keeps our total file size low and build times even lower. Aside from that, we can modify the DOM with JSX like we would normally do if we were using `document.createElement`.
 
-### For development
-
-After installing dependencies using `npm install`, be sure to run `npm run prepare` in order to enable husky's precommit hooks, which will test and lint the code. Committing to the git repository will automatically lint all the files you have changed, so feel free to use any coding style as you develop.
-
 ### For production
 
 1. Install the required dependencies with `npm`.

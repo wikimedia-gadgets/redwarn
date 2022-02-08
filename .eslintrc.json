@@ -25,7 +25,6 @@
         }
     },
     "rules": {
-
         // ====================================================================
         // TypeScript Rules
         // ====================================================================
@@ -62,10 +61,13 @@
             }
         ],
         // Prevent `this` in static usages. Use the class name instead for clarity.
-        "no-restricted-syntax": ["error", {
-            "selector": "MethodDefinition[static = true] ThisExpression",
-            "message": "`this` is being used in a static context."
-        }],
+        "no-restricted-syntax": [
+            "error",
+            {
+                "selector": "MethodDefinition[static = true] ThisExpression",
+                "message": "`this` is being used in a static context."
+            }
+        ],
 
         // ====================================================================
         // Spacing
@@ -78,12 +80,16 @@
         // TODO: Conflicts with Prettier
         // "object-curly-spacing": ["warn", "always"],
         // Enforces spaces after commas.
-        "comma-spacing": ["error", {
-            "before": false,
-            "after": true
-        }],
+        "comma-spacing": [
+            "error",
+            {
+                "before": false,
+                "after": true
+            }
+        ]
         // Prevents dangling commas at the end of arrays and objects.
-        "comma-dangle": ["warn", "never"]
+        // 2022-02-08: conflicts with Prettier, disabled
+        //"comma-dangle": ["warn", "never"]
     },
     "settings": {
         "import/parsers": { "@typescript-eslint/parser": [".ts", ".tsx"] }

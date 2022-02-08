@@ -6,7 +6,7 @@ type IDBStoreKeyType =
     | Date
     | ArrayBufferView
     | ArrayBuffer
-    | IDBArrayKey;
+    | IDBValidKey;
 
 export default class RedWarnIDBObjectStore<T> {
     constructor(private database: RedWarnIDB, private storeName: string) {}

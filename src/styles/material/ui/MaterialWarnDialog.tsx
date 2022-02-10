@@ -1,37 +1,23 @@
-import { h } from "tsx-dom";
+import {h} from "tsx-dom";
 import i18next from "i18next";
-import { RWUIWarnDialog } from "rww/ui/elements/RWUIWarnDialog";
-import { upgradeMaterialDialog } from "rww/styles/material/Material";
+import {RWUIWarnDialog} from "rww/ui/elements/RWUIWarnDialog";
+import {upgradeMaterialDialog} from "rww/styles/material/Material";
 import MaterialButton from "./components/MaterialButton";
-import MaterialDialog, {
-    MaterialDialogActions,
-    MaterialDialogContent,
-    MaterialDialogTitle
-} from "./MaterialDialog";
-import MaterialWarnDialogUser, {
-    MaterialWarnDialogUserController
-} from "./components/MaterialWarnDialogUser";
+import MaterialDialog, {MaterialDialogActions, MaterialDialogContent, MaterialDialogTitle} from "./MaterialDialog";
+import MaterialWarnDialogUser, {MaterialWarnDialogUserController} from "./components/MaterialWarnDialogUser";
 import MaterialWarnDialogReason, {
     MaterialWarnDialogReasonController
 } from "rww/styles/material/ui/components/MaterialWarnDialogReason";
-import {
-    ClientUser,
-    MediaWikiAPI,
-    User,
-    WarningOptions,
-    WarningType
-} from "rww/mediawiki";
-import { isIPAddress, normalize } from "rww/util";
+import {ClientUser, MediaWikiAPI, User, WarningOptions, WarningType} from "rww/mediawiki";
+import {isIPAddress, normalize} from "rww/util";
 
-import { RW_SIGNATURE } from "rww/data/RedWarnConstants";
+import {RW_SIGNATURE} from "rww/data/RedWarnConstants";
 
 import "../css/warnDialog.css";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
-import { warningSuffix } from "rww/mediawiki/warn/WarningUtils";
+import {warningSuffix} from "rww/mediawiki/warn/WarningUtils";
 import toCSS from "rww/styles/material/util/toCSS";
-import MaterialDialogValidator, {
-    ValidationCheck
-} from "./components/MaterialDialogValidator";
+import MaterialDialogValidator, {ValidationCheck} from "./components/MaterialDialogValidator";
 
 /**
  * A specific test performed to validate the values of a {@link MaterialWarnDialog}.
@@ -180,7 +166,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
         }}} ${RW_SIGNATURE}${
             isIPAddress(this.mwdUser.MWDUser.user.username) &&
             RedWarnWikiConfiguration.c.warnings?.ipAdvice != null
-                ? RedWarnWikiConfiguration.c.warnings.ipAdvice
+                ? "\n" + RedWarnWikiConfiguration.c.warnings.ipAdvice
                 : ""
         }`;
     }

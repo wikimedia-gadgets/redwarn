@@ -13,7 +13,7 @@
 
 import i18next from "i18next";
 import * as RedWarnConstants from "./data/RedWarnConstants";
-import { RW_VERSION } from "./data/RedWarnConstants";
+import {RW_VERSION} from "./data/RedWarnConstants";
 import * as Utilities from "./util";
 import Dependencies from "./data/Dependencies";
 import Localization from "./localization/Localization";
@@ -29,16 +29,10 @@ import StyleManager from "./styles/StyleManager";
 import TamperProtection from "./tamper/TamperProtection";
 import UIInjectors from "rww/ui/injectors/UIInjectors";
 import * as MediaWikiClasses from "./mediawiki";
-import {
-    ClientUser,
-    MediaWiki,
-    MediaWikiAPI,
-    RevertSpeedup,
-    WarningManager,
-    Watch
-} from "./mediawiki";
-import { Configuration } from "./config/user/Configuration";
+import {ClientUser, MediaWiki, MediaWikiAPI, RevertSpeedup, WarningManager, Watch} from "./mediawiki";
+import {Configuration} from "./config/user/Configuration";
 import LoadErrorTranslations from "rww/errors/LoadErrorTranslations";
+import {RecentPages} from "rww/mediawiki/util/RecentPages";
 
 declare global {
     interface Window {
@@ -106,6 +100,9 @@ export default class RedWarn {
     }
     static get Watch(): typeof Watch {
         return Watch;
+    }
+    static get RecentPages(): typeof RecentPages {
+        return RecentPages;
     }
     static get MediaWiki(): typeof MediaWiki {
         return MediaWiki;
@@ -188,8 +185,6 @@ export default class RedWarn {
         // Load in the configuration file (preloads need to be finished by this point).
         await Configuration.refresh();
 
-        // Only do hook calls after style has been set to configuration preference!
-
         /**
          * Extensions and styles can push their own dependencies here.
          */
@@ -227,7 +222,8 @@ export default class RedWarn {
 
         await Promise.all([
             RedWarnHooks.executeHooks("postUIInject"),
-            Watch.init()
+            Watch.init(),
+            RecentPages.init()
         ]);
 
         Log.debug(`Done loading (UI): ${Date.now() - startTime}ms.`);

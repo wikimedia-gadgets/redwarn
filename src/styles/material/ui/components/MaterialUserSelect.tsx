@@ -1,5 +1,5 @@
-import { h } from "tsx-dom";
-import { Page, User, UserAccount, WarningLevel } from "rww/mediawiki";
+import {h} from "tsx-dom";
+import {Page, User, UserAccount, WarningLevel} from "rww/mediawiki";
 import MaterialTextInput, {
     MaterialTextInputComponents,
     MaterialTextInputUpgrade
@@ -8,21 +8,15 @@ import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconBu
 import RedWarnUI from "rww/ui/RedWarnUI";
 import i18next from "i18next";
 import Bullet from "./Bullet";
-import {
-    capitalize,
-    formatAge,
-    generateId,
-    getMonthHeader,
-    normalize
-} from "rww/util";
-import MaterialMenu, { openMenu } from "./MaterialMenu";
+import {capitalize, formatAge, generateId, getMonthHeader} from "rww/util";
+import MaterialMenu, {openMenu} from "./MaterialMenu";
 import showPlainMediaWikiIFrameDialog from "rww/styles/material/util/showPlainMediaWikiIFrameDialog";
-import { MaterialWarnDialogChild } from "./MaterialWarnDialogChild";
-import { WarningIcons } from "rww/styles/material/data/WarningIcons";
+import {MaterialWarnDialogChild} from "./MaterialWarnDialogChild";
+import {WarningIcons} from "rww/styles/material/data/WarningIcons";
 import Log from "rww/data/RedWarnLog";
 import Group from "rww/mediawiki/core/Group";
 import "../../css/userSelect.css";
-import { UserMissingError } from "rww/errors/MediaWikiErrors";
+import {UserMissingError} from "rww/errors/MediaWikiErrors";
 
 interface OverlayContentLoading {
     type: "loading";
@@ -365,7 +359,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                     const content = this.elementSet.targetUserInput.components.textField.value.trim();
                     if (content.length > 0)
                         (overlayInfo as OverlayContentInput).onFinish(
-                            normalize(content)
+                            (new mw.Title(content)).getMainText()
                         );
                 };
 

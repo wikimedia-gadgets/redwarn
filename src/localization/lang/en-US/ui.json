@@ -3,6 +3,7 @@
 
     "ok": "OK",
     "cancel": "Cancel",
+    "confirm": "Confirm",
     "undo": "Undo",
     "redo": "Redo",
 
@@ -50,6 +51,7 @@
         "newerRev": "A newer revision was detected. Your rollback has not been applied.",
         "userUndefined": "Sorry, the target user does not exist, cannot be found, or is hidden from the public. Your action has not been completed.",
         "userWarned": "User warned.",
+        "userWarnedAction": "View",
         "userWarnFailed": "There was a problem warning the user. Please verify if the user has been warned before issuing another warning.",
         "protectionRequested": "Protection requested.",
         "protectionRequestFailed": "There was a problem requesting protection. Please verify if the request has been made before requesting again."
@@ -131,6 +133,7 @@
 
         "reason": {
             "page": "Related page",
+            "recentPageOpenerTooltip": "Recent pages",
             "additionalText": "Additional text",
             "levelSelectionLevelNotPresent": "There is no level {{level}} ({{levelReadable}}) template available.",
             "levelSelectionLevel": "Level {{level}} {{levelReadable}}: {{levelDescription}}",
@@ -147,6 +150,10 @@
             "searchBoxLabel": "Search for a warning...",
             "instantSelect": "Press ENTER to use this template",
             "tip": "Tip: Double-click a warning to quickly select it, or press ENTER to select the top result."
+        },
+
+        "recentPagesDialog": {
+            "dialogTitle": "Recent Pages"
         },
 
         "validation": {

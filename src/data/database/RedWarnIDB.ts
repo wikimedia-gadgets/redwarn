@@ -158,6 +158,9 @@ export default class RedWarnIDB {
                 });
             } catch (error) {
                 Log.error(error);
+                if (error instanceof DOMException && error.name === "NotFoundError") {
+                    Log.warn("Upgraded database might have been accessed on an old version of RedWarn, or database schema changes were made without deleting the browser IndexedDB.");
+                }
                 // Reject promise
                 reject(
                     new RedWarnIDBError(

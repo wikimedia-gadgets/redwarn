@@ -39,6 +39,7 @@ import i18next from "i18next";
 
 import MaterialWarnSearchDialog from "rww/styles/material/ui/MaterialWarnSearchDialog";
 import MaterialWarnDialogRecentPages from "rww/styles/material/ui/components/MaterialWarnDialogRecentPages";
+import classMix from "rww/styles/material/util/classMix";
 
 function MaterialWarnDialogReasonDropdown({
     parent
@@ -374,80 +375,46 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
                         update?: (level: WarningLevel) => void;
                     })
                 }
-                <div class={"rw-mdc-warnDialog-page"}>
-                    {this.elementSet.page?.element ??
-                        ((): JSX.Element => {
-                            const textInput = (
-                                <MaterialTextInput
-                                    class={"rw-mdc-warnDialog-page--textField"}
-                                    label={i18next.t("ui:warn.reason.page")}
-                                    defaultText={
-                                        this.props.relatedPage?.title?.toString() ??
-                                        ""
-                                    }
-                                    autofocus
-                                    {...(this.warning != null
-                                        ? {
-                                            [getWarningFieldVisibility(
-                                                this.warning.relatedPage
-                                            )]: true
-                                        }
-                                        : {})}
-                                />
-                            );
-                            const components = MaterialTextInputUpgrade(textInput);
-                            this.elementSet.page = {
-                                element: textInput,
-                                components: components
-                            };
-                            components.textField.listen(
-                                "focusout",
-                                keyListener(textInput),
-                                true
-                            );
-                            components.textField.listen(
-                                "keydown",
-                                keyListener(textInput)
-                            );
-                            return textInput;
-                        })()}
-                    {this.elementSet.recentPagesButton?. element ??
-                        ((): JSX.Element => {
-                            return <MaterialIconButton
-                                class={"rw-mdc-warnDialog-page--recent"}
-                                icon={"today"}
-                                label={i18next
-                                    .t("ui:warn:reason:recentPageOpenerTooltip")
-                                    .toString()}
-                                onClick={async () => {
-                                    const newPage = await new MaterialWarnDialogRecentPages().show();
-                                    if (newPage)
-                                        this.relatedPage = newPage;
-                                }}
-                            />;
-                        })()
-                    }
-                </div>
-                {this.elementSet.additionalText?.element ??
-                    ((): JSX.Element => {
+                {this.warning?.note && (
+                    <div class="rw-mdc-warnDialog-reason-note">
+                        {this.warning.note}
+                    </div>
+                )}
+                <div class={classMix(
+                    "rw-mdc-warnDialog-page",
+                    typeof this.warning?.relatedPage === "object"
+                        && this.warning.relatedPage?.recentPages === false
+                        && "rw-warnDialog-hideRecentPages"
+                )}>
+                    {((): JSX.Element => {
+                        // Do not use a null coalescing operator to reuse the related page,
+                        // this must be rebuilt every time.
+                        let label = typeof this.warning?.relatedPage === "object" ?
+                            this.warning.relatedPage?.label : null;
+                        if (label == null)
+                            label = i18next.t<string>("ui:warn.reason.page");
+
                         const textInput = (
                             <MaterialTextInput
-                                width={"100%"}
-                                label={i18next.t(
-                                    "ui:warn.reason.additionalText"
-                                )}
+                                class={"rw-mdc-warnDialog-page--textField"}
+                                label={label}
+                                defaultText={
+                                    this.elementSet?.page?.components?.textField?.value ??
+                                    this.props.relatedPage?.title?.toString() ??
+                                    ""
+                                }
                                 autofocus
                                 {...(this.warning != null
                                     ? {
-                                          [getWarningFieldVisibility(
-                                              this.warning.additionalText
-                                          )]: true
-                                      }
+                                        [getWarningFieldVisibility(
+                                            this.warning.relatedPage
+                                        )]: true
+                                    }
                                     : {})}
                             />
                         );
                         const components = MaterialTextInputUpgrade(textInput);
-                        this.elementSet.additionalText = {
+                        this.elementSet.page = {
                             element: textInput,
                             components: components
                         };
@@ -462,6 +429,65 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
                         );
                         return textInput;
                     })()}
+                    {this.elementSet.recentPagesButton?.element ??
+                        ((): JSX.Element => {
+                            return <MaterialIconButton
+                                class={"rw-mdc-warnDialog-page--recent"}
+                                icon={"today"}
+                                label={i18next
+                                    .t("ui:warn.reason.recentPageOpenerTooltip")
+                                    .toString()}
+                                onClick={async () => {
+                                    const newPage = await new MaterialWarnDialogRecentPages().show();
+                                    if (newPage)
+                                        this.relatedPage = newPage;
+                                }}
+                            />;
+                        })()
+                    }
+                </div>
+                {((): JSX.Element => {
+                    // Do not use a null coalescing operator to reuse the related page,
+                    // this must be rebuilt every time.
+                    let label = typeof this.warning?.additionalText === "object" ?
+                        this.warning.additionalText?.label : null;
+                    if (label == null)
+                        label = i18next.t<string>("ui:warn.reason.additionalText");
+
+                    const textInput = (
+                        <MaterialTextInput
+                            width={"100%"}
+                            label={label}
+                            defaultText={
+                                this.elementSet?.additionalText?.components?.textField?.value ??
+                                ""
+                            }
+                            autofocus
+                            {...(this.warning != null
+                                ? {
+                                      [getWarningFieldVisibility(
+                                          this.warning.additionalText
+                                      )]: true
+                                  }
+                                : {})}
+                        />
+                    );
+                    const components = MaterialTextInputUpgrade(textInput);
+                    this.elementSet.additionalText = {
+                        element: textInput,
+                        components: components
+                    };
+                    components.textField.listen(
+                        "focusout",
+                        keyListener(textInput),
+                        true
+                    );
+                    components.textField.listen(
+                        "keydown",
+                        keyListener(textInput)
+                    );
+                    return textInput;
+                })()}
             </div>
         );
 

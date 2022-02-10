@@ -1,5 +1,5 @@
-import { WarningLevel } from "./WarningLevel";
-import type { User } from "rww/mediawiki/core/User";
+import {WarningLevel} from "./WarningLevel";
+import type {User} from "rww/mediawiki/core/User";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 
 // TODO Move this to wiki-specific definition files.
@@ -49,6 +49,7 @@ interface WarningBase {
         | {
               visibility?: WarningFieldVisibility;
               label?: string;
+              recentPages?: boolean;
           };
     additionalText?:
         | WarningFieldVisibility

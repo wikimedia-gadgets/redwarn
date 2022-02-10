@@ -8,7 +8,7 @@ import MaterialWarnDialogUser, {MaterialWarnDialogUserController} from "./compon
 import MaterialWarnDialogReason, {
     MaterialWarnDialogReasonController
 } from "rww/styles/material/ui/components/MaterialWarnDialogReason";
-import {ClientUser, MediaWikiAPI, User, WarningOptions, WarningType} from "rww/mediawiki";
+import {ClientUser, getWarningFieldVisibility, MediaWikiAPI, User, WarningOptions, WarningType} from "rww/mediawiki";
 import {isIPAddress, normalize} from "rww/util";
 
 import {RW_SIGNATURE} from "rww/data/RedWarnConstants";
@@ -120,6 +120,14 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         this.mwdReason?.MWDReason?.warning.type !=
                             WarningType.Tiered) ||
                     this.mwdReason?.MWDReason?.warningLevel != null
+            },
+            {
+                id: "required",
+                test: () =>
+                    (getWarningFieldVisibility(this.mwdReason?.MWDReason?.warning?.relatedPage) === "required"
+                        ? !!this.mwdReason?.MWDReason?.relatedPage : true)
+                    && (getWarningFieldVisibility(this.mwdReason?.MWDReason?.warning?.additionalText) === "required"
+                        ? !!this.mwdReason?.MWDReason?.additionalText : true)
             }
         ];
     }

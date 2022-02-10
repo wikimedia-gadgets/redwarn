@@ -162,12 +162,14 @@
             "fail_level": "You haven't selected a warning level.",
             "fail_user": "You haven't selected a target user.",
             "fail_self": "You are not allowed to warn yourself.",
+            "fail_required": "Some required fields have not been filled in.",
 
             "failDetailed": "$t(ui:warn.validation.fail) If this problem persists, inform the developers.",
             "failDetailed_template": "$t(ui:warn.validation.fail_template) Select one from the dropdown or search tool.",
             "failDetailed_level": "$t(ui:warn.validation.fail_level) Please select an appropriate level.",
             "failDetailed_user": "$t(ui:warn.validation.fail_user) Please enter a username in the target user box.",
             "failDetailed_self": "$t(ui:warn.validation.fail_self) If you want to test, please use a sandbox user.",
+            "failDetailed_required": "Some required fields have not been filled in. Please fill in the required text fields (denoted by an asterisk) found below the warning to be issued.",
 
             "pass": "No issues were found."
         },

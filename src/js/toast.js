@@ -17,7 +17,8 @@ rw.visuals.toast = {
 
     "init" : function(){
         if (!rw.visuals.toast.active) { // If init already done, no need
-            $('body').append(`
+            var body = $('body');
+            body.append(`
                 <div id="rw-toast" class="mdl-js-snackbar mdl-snackbar">
                 <div class="mdl-snackbar__text"></div>
                 <button class="mdl-snackbar__action" type="button"></button>
@@ -32,6 +33,7 @@ rw.visuals.toast = {
                 // create function
                 rw.visuals.toast.show = (text, buttonTxt, btnClick, tOut) => {
                     'use strict';
+                    body.addClass("toast-active");
                     if (buttonTxt) {
                         // Show with action and button
                         toast.MaterialSnackbar.showSnackbar({message: text, actionHandler: btnClick, actionText: buttonTxt, timeout: tOut}); 
@@ -39,6 +41,9 @@ rw.visuals.toast = {
                         // Show just message
                         toast.MaterialSnackbar.showSnackbar({message: text, timeout: tOut});
                     }
+                    setTimeout(() => {
+                        body.removeClass("toast-active");
+                    }, tOut);
                 };
                 }());
 

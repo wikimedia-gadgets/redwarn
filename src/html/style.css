@@ -138,6 +138,14 @@
         visibility: visible;
     }
 }
+
+body > #dialogEngineContainer {
+    color: black;
+}
+body:not(.toast-active) #rw-toast {
+    display: none;
+}
+
 .mdl-snackbar {
     position: fixed;
     bottom: 0;

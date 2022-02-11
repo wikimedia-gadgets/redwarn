@@ -39,6 +39,7 @@
         ],
         // TypeScript handles unresolved import issues.
         "import/no-unresolved": "off",
+        "import/no-named-as-default": "off",
 
         // ====================================================================
         // Style choices

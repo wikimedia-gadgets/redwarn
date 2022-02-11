@@ -18,59 +18,7 @@ import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import {warningSuffix} from "rww/mediawiki/warn/WarningUtils";
 import toCSS from "rww/styles/material/util/toCSS";
 import MaterialDialogValidator, {ValidationCheck} from "./components/MaterialDialogValidator";
-
-/**
- * A specific test performed to validate the values of a {@link MaterialWarnDialog}.
- */
-interface MaterialWarnDialogValidationTest {
-    /** The name of this condition. */
-    id: string;
-    /**
-     * Whether or not this specific validation test passes.
-     *
-     * If the test fails, the condition should be false.
-     */
-    condition: boolean;
-}
-
-/**
- * Displays the content of a MaterialWarnDialog error popup.
- * @param props Properties of the error dialog.
- * @constructor
- */
-function MaterialWarnDialogErrors(props: {
-    tests: true | MaterialWarnDialogValidationTest[];
-}): JSX.Element {
-    if (props.tests === true)
-        return <div>{i18next.t<string>("ui:warn.validation.pass")}</div>;
-
-    // Get the failing tests with their test IDs.
-    const failingIds = props.tests.map((v) => v.id);
-
-    return (
-        <div>
-            {i18next
-                .t("ui:warn.validation.validationDialogIntro", {
-                    count: failingIds.length
-                })
-                .toString()}
-            <ul>
-                {failingIds.reduce((items: JSX.Element[], id: string) => {
-                    items.push(
-                        <li>
-                            {i18next
-                                .t("ui:warn.validation.failDetailed", {
-                                    context: id
-                                })
-                                .toString()}
-                        </li>
-                    );
-                    return items;
-                }, [])}
-            </ul>
-        </div>
-    );
-}
+import WikiTemplate from "rww/mediawiki/wikitext/WikiTemplate";
 
 export default class MaterialWarnDialog extends RWUIWarnDialog {
     /** The target user of the warning. */
@@ -159,19 +107,14 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
             return null;
 
         // Don't worry about transclusion: The entire script output is nowiki'd.
-        return `{{subst:${
+        return `${new WikiTemplate(
             this.mwdReason.MWDReason.warning.template
-        }${warningSuffix(this.mwdReason.MWDReason.warningLevel)}${
-            this.mwdReason.MWDReason.relatedPage
-                ? `|${normalize(this.mwdReason.MWDReason.relatedPage)}`
-                : ""
-        }${
-            this.mwdReason.MWDReason.additionalText
-                ? `${this.mwdReason.MWDReason.relatedPage ? "|" : "||"}''${
-                      this.mwdReason.MWDReason.additionalText
-                  }''`
-                : ""
-        }}} ${RW_SIGNATURE}${
+                + warningSuffix(this.mwdReason.MWDReason.warningLevel),
+            [
+                normalize(this.mwdReason.MWDReason.relatedPage),
+                this.mwdReason.MWDReason.additionalText
+            ]
+        ).build({ subst: true })} ${RW_SIGNATURE}${
             isIPAddress(this.mwdUser.MWDUser.user.username) &&
             RedWarnWikiConfiguration.c.warnings?.ipAdvice != null
                 ? "\n" + RedWarnWikiConfiguration.c.warnings.ipAdvice
@@ -182,9 +125,9 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
     /** The timestamp at which the preview was last updated.  */
     private lastUpdateCall: number;
     /** Updates the preview (x-ray) panel of the dialog. */
-    async updatePreview(): Promise<void> {
+    async updatePreview(force = false): Promise<void> {
         // Makes a request to update the preview section
-        if (Date.now() - this.lastUpdateCall < 1000) return;
+        if (Date.now() - this.lastUpdateCall < 1000 && !force) return;
 
         this.lastUpdateCall = Date.now();
         const warningText = this.warningWikitext;

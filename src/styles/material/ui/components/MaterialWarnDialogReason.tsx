@@ -297,12 +297,12 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
             }
 
             // No warning level found. The only available level must be higher up.
-            // Defer to lowest level provided by warning.
+            // Defer to the lowest level provided by warning.
             this.warningLevel = value.levels[0];
         } else {
             this.warningLevel = null;
         }
-        this.props.warnDialog.updatePreview();
+        this.props.warnDialog.updatePreview(true);
         this.refresh();
     }
     private _warningLevel: null | WarningLevel;
@@ -314,7 +314,7 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
         if (this.elementSet.levels?.update)
             this.elementSet.levels.update(value);
 
-        this.props.warnDialog.updatePreview();
+        this.props.warnDialog.updatePreview(true);
     }
     get relatedPage(): string {
         return this.elementSet.page?.components?.textField?.value ?? null;
@@ -322,6 +322,7 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
     set relatedPage(value: string) {
         if (this.elementSet.page)
             this.elementSet.page.components.textField.value = value;
+        this.props.warnDialog.updatePreview(true);
     }
     get additionalText(): string {
         return (
@@ -331,6 +332,7 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
     set additionalText(value: string) {
         if (this.elementSet.additionalText)
             this.elementSet.additionalText.components.textField.value = value;
+        this.props.warnDialog.updatePreview(true);
     }
 
     defaultLevel: WarningLevel;

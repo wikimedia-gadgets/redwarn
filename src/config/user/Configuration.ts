@@ -1,7 +1,7 @@
 import {
     RW_CONFIG_VERSION,
     RW_NOWIKI_CLOSE,
-    RW_NOWIKI_OPEN
+    RW_NOWIKI_OPEN,
 } from "rww/data/RedWarnConstants";
 import { ClientUser } from "rww/mediawiki";
 import { Setting } from "./Setting";
@@ -31,7 +31,7 @@ export class Configuration {
             core: Configuration.Core,
             ui: Configuration.UI,
             revert: Configuration.Revert,
-            accessibility: Configuration.Accessibility
+            accessibility: Configuration.Accessibility,
         };
     }
 
@@ -55,7 +55,8 @@ export class Configuration {
             saveNow = false;
 
         try {
-            const configLatestRev = await ClientUser.i.redwarnConfigPage.getLatestRevision();
+            const configLatestRev =
+                await ClientUser.i.redwarnConfigPage.getLatestRevision();
             if (configLatestRev == null) {
                 // Configuration does not exist. Create one.
                 redwarnConfig = {};
@@ -181,7 +182,7 @@ export class Configuration {
                 Configuration.mappedConfigurationSets
             ),
             {
-                comment: "Updating configuration"
+                comment: "Updating configuration",
             }
         );
 
@@ -202,7 +203,7 @@ export class Configuration {
          */
         const forceInclude = [
             Configuration.Core.configVersion.id,
-            Configuration.Core.latestVersion.id
+            Configuration.Core.latestVersion.id,
         ];
 
         return Array.from(
@@ -216,7 +217,7 @@ export class Configuration {
 
             return {
                 ...main,
-                [setting.id]: setting.value
+                [setting.id]: setting.value,
             };
         }, {});
     }

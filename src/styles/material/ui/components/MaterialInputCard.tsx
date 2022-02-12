@@ -3,7 +3,7 @@ import classMix from "rww/styles/material/util/classMix";
 import i18next from "i18next";
 import MaterialTextInput, {
     MaterialTextInputComponents,
-    MaterialTextInputUpgrade
+    MaterialTextInputUpgrade,
 } from "rww/styles/material/ui/components/MaterialTextInput";
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
 
@@ -123,14 +123,14 @@ export default abstract class MaterialInputCard {
 
         this.elementSet.inputBox = {
             element: inputElement,
-            components: MaterialTextInputUpgrade(inputElement)
+            components: MaterialTextInputUpgrade(inputElement),
         };
 
         this.elementSet.inputBox.components.textField.listen(
             "keypress",
             (e) => {
-                const value = this.elementSet.inputBox.components.textField
-                    .value;
+                const value =
+                    this.elementSet.inputBox.components.textField.value;
                 const empty = value.length === 0;
                 if (!empty && e.key === "Enter") {
                     this.change(value);
@@ -252,7 +252,7 @@ export default abstract class MaterialInputCard {
                 .catch((e) => {
                     this.beginInput();
                     RedWarnUI.Toast.quickShow({
-                        content: i18next.t("mediawiki:error.apiError")
+                        content: i18next.t("mediawiki:error.apiError"),
                     });
                     Log.error("Failed to run `renderMain`.", e);
                 });

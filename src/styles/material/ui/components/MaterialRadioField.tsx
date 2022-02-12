@@ -1,7 +1,7 @@
 import { h } from "tsx-dom";
 import type {
     MaterialRadioElement,
-    MaterialRadioProps
+    MaterialRadioProps,
 } from "rww/styles/material/ui/components/MaterialRadio";
 import MaterialRadio from "rww/styles/material/ui/components/MaterialRadio";
 import { generateId } from "rww/util";
@@ -32,7 +32,7 @@ export default function <T>(
             <MaterialRadio<T>
                 {...Object.assign(radio, {
                     name: props.name ?? radioFieldId,
-                    disabled: props.disabled ?? false
+                    disabled: props.disabled ?? false,
                 })}
             >
                 {radio.children ?? `${radio.value}`}
@@ -77,6 +77,6 @@ export default function <T>(
         },
         disable() {
             radios.forEach((v) => v.disable());
-        }
+        },
     });
 }

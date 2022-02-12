@@ -1,7 +1,7 @@
 import { h } from "tsx-dom";
 import MaterialProtectionRequestDialog from "rww/styles/material/ui/MaterialProtectionRequestDialog";
 import MaterialInputCard, {
-    MaterialInputCardProps
+    MaterialInputCardProps,
 } from "rww/styles/material/ui/components/MaterialInputCard";
 import { Page, ProtectionManager } from "rww/mediawiki";
 import i18next from "i18next";
@@ -23,7 +23,7 @@ export class MaterialProtectionRequestDialogPage extends MaterialInputCard {
         this.parent = props.parent;
         this.props.outlined = true;
         this.props.i18n = i18next.t("ui:protectionRequest.page", {
-            returnObjects: true
+            returnObjects: true,
         });
     }
 
@@ -33,12 +33,10 @@ export class MaterialProtectionRequestDialogPage extends MaterialInputCard {
         // Disable controls
         this.parent.protectionInformation = null;
         // Grab page protection information.
-        this.parent.protectionInformation = await ProtectionManager.getProtectionInformation(
-            this.parent.page
-        );
-        this.parent.protectionReasons = await ProtectionManager.getProtectionReasons(
-            this.parent.page
-        );
+        this.parent.protectionInformation =
+            await ProtectionManager.getProtectionInformation(this.parent.page);
+        this.parent.protectionReasons =
+            await ProtectionManager.getProtectionReasons(this.parent.page);
 
         // Turn information into elements.
         const protectionEntryElements: JSX.Element[] = [];
@@ -66,7 +64,7 @@ export class MaterialProtectionRequestDialogPage extends MaterialInputCard {
             protectionEntryElements.push(
                 <div
                     style={toCSS({
-                        display: "block"
+                        display: "block",
                     })}
                     class={"rw-mdc-prd-protectionLevel"}
                 >
@@ -76,7 +74,7 @@ export class MaterialProtectionRequestDialogPage extends MaterialInputCard {
                         <span
                             class="material-icons"
                             style={toCSS({
-                                color: level?.color ?? "black"
+                                color: level?.color ?? "black",
                             })}
                         >
                             lock
@@ -91,20 +89,20 @@ export class MaterialProtectionRequestDialogPage extends MaterialInputCard {
                                           statusName: level.statusName,
                                           ...(entry.expiry === "infinity"
                                               ? {
-                                                    context: "indefinite"
+                                                    context: "indefinite",
                                                 }
                                               : {
-                                                    date: entry.expiry.toLocaleString()
+                                                    date: entry.expiry.toLocaleString(),
                                                 }),
                                           note:
                                               note.length > 0
                                                   ? i18next.t(
                                                         "ui:protectionRequest.info.note",
                                                         {
-                                                            detail: note
+                                                            detail: note,
                                                         }
                                                     )
-                                                  : ""
+                                                  : "",
                                       }
                                   )
                                 : i18next.t(
@@ -114,20 +112,20 @@ export class MaterialProtectionRequestDialogPage extends MaterialInputCard {
                                           level: entry.level,
                                           ...(entry.expiry === "infinity"
                                               ? {
-                                                    context: "indefinite"
+                                                    context: "indefinite",
                                                 }
                                               : {
-                                                    date: entry.expiry.toLocaleString()
+                                                    date: entry.expiry.toLocaleString(),
                                                 }),
                                           note:
                                               note.length > 0
                                                   ? i18next.t(
                                                         "ui:protectionRequest.info.note",
                                                         {
-                                                            detail: note
+                                                            detail: note,
                                                         }
                                                     )
-                                                  : ""
+                                                  : "",
                                       }
                                   )
                         )}`}
@@ -140,14 +138,14 @@ export class MaterialProtectionRequestDialogPage extends MaterialInputCard {
             protectionEntryElements.push(
                 <div
                     style={toCSS({
-                        display: "inline-block"
+                        display: "inline-block",
                     })}
                     class={"rw-mdc-prd-protectionLevel"}
                 >
                     <span
                         class="material-icons"
                         style={toCSS({
-                            color: "black"
+                            color: "black",
                         })}
                     >
                         lock_open
@@ -188,6 +186,6 @@ export default function generator(
 ): JSX.Element & { MPRDTitle: MaterialProtectionRequestDialogPage } {
     const mprdTitle = new MaterialProtectionRequestDialogPage(props);
     return Object.assign(mprdTitle.render(), {
-        MPRDTitle: mprdTitle
+        MPRDTitle: mprdTitle,
     });
 }

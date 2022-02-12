@@ -66,7 +66,7 @@ export default class RedWarnHooks {
                         Log.error(`Hook failed for style: ${hookType}`, {
                             type: hookType,
                             hook: hook,
-                            paylod: payload
+                            paylod: payload,
                         });
                     }
                 }
@@ -81,7 +81,7 @@ export default class RedWarnHooks {
                     Log.error(`Internal hook failed: ${hookType}`, {
                         type: hookType,
                         hook: hook,
-                        paylod: payload
+                        paylod: payload,
                     });
                 }
             }

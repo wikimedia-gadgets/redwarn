@@ -2,7 +2,7 @@ import { MDCMenu } from "@material/menu";
 import { BaseProps, h } from "tsx-dom";
 import {
     MaterialList,
-    MaterialListItem
+    MaterialListItem,
 } from "rww/styles/material/ui/components/MaterialList";
 
 /* Specificity is key */

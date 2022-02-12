@@ -1,16 +1,16 @@
 import RedWarnIDB, {
-    RedWarnIDBUpgradeHandler
+    RedWarnIDBUpgradeHandler,
 } from "rww/data/database/RedWarnIDB";
 import {
     RW_DATABASE_NAME,
-    RW_DATABASE_VERSION
+    RW_DATABASE_VERSION,
 } from "rww/data/RedWarnConstants";
 import RedWarnIDBObjectStore from "rww/data/database/RedWarnIDBObjectStore";
 import {
     CachedDependency,
     CacheTracker,
     LogItem,
-    WatchedPage
+    WatchedPage,
 } from "rww/data/database/RWDBObjectStoreDefinitions";
 import Group from "rww/mediawiki/core/Group";
 import Log from "rww/data/RedWarnLog";
@@ -28,16 +28,16 @@ const databaseUpdaters: { [key: number]: RedWarnIDBUpgradeHandler } = {
 
         // Creates the dependency cache
         RedWarnIDB.createObjectStore(database, "cacheTracker", "id", [
-            "timestamp"
+            "timestamp",
         ]);
         RedWarnIDB.createObjectStore(database, "dependencyCache", "id", [
             "lastCache",
             "etag",
-            "data"
+            "data",
         ]);
         RedWarnIDB.createObjectStore(database, "groupCache", "name", [
             "page",
-            "displayName"
+            "displayName",
         ]);
         RedWarnIDB.createObjectStore(database, "watchedPages", "title", []);
 
@@ -45,7 +45,7 @@ const databaseUpdaters: { [key: number]: RedWarnIDBUpgradeHandler } = {
         RedWarnIDB.createObjectStore(database, "errorLog", "id", [
             "timestamp",
             "code",
-            "data"
+            "data",
         ]);
         // TODO only on debug mode
         /* RedWarnIDB.createObjectStore(database, "combinedLog", "id", [
@@ -53,7 +53,7 @@ const databaseUpdaters: { [key: number]: RedWarnIDBUpgradeHandler } = {
             "code",
             "data",
         ]); */
-    }
+    },
 };
 
 export default class RedWarnLocalDB {
@@ -101,9 +101,8 @@ export default class RedWarnLocalDB {
 
         // Apply all database definitions
         this.cacheTracker = this.idb.store<CacheTracker>("cacheTracker");
-        this.dependencyCache = this.idb.store<CachedDependency>(
-            "dependencyCache"
-        );
+        this.dependencyCache =
+            this.idb.store<CachedDependency>("dependencyCache");
         this.groupCache = this.idb.store<Group>("groupCache");
         this.watchedPages = this.idb.store<WatchedPage>("watchedPages");
 

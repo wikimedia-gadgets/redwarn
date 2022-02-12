@@ -14,15 +14,15 @@ const AccessibilitySettings = {
         title: i18next.t("prefs:accessibility.raiseActionButtons.title"),
         description: i18next.t(
             "prefs:accessibility.raiseActionButtons.description"
-        )
+        ),
     }),
 
     // To enable/disable high contrast mode
     highContrast: new Setting("highContrast", false, {
         uiInputType: UIInputType.Switch,
         title: i18next.t("prefs:accessibility.highContrast.title"),
-        description: i18next.t("prefs:accessibility.highContrast.description")
-    })
+        description: i18next.t("prefs:accessibility.highContrast.description"),
+    }),
 };
 
 export default AccessibilitySettings;

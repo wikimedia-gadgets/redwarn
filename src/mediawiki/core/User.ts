@@ -13,13 +13,13 @@ import {
     WarningAnalysis,
     WarningLevel,
     WarningOptions,
-    WarningType
+    WarningType,
 } from "rww/mediawiki";
 import i18next from "i18next";
 import {
     PageMissingError,
     UserInvalidError,
-    UserMissingError
+    UserMissingError,
 } from "rww/errors/MediaWikiErrors";
 import { isIPAddress } from "rww/util";
 
@@ -81,9 +81,8 @@ export class User {
      * @param username The username of the user.
      */
     static async fromUsernameToPopulated(username: string): Promise<User> {
-        const user = (isIPAddress(username)
-            ? UserIP
-            : UserAccount
+        const user = (
+            isIPAddress(username) ? UserIP : UserAccount
         ).fromUsername(username);
         return await user.populate();
     }
@@ -98,7 +97,7 @@ export class User {
             format: "json",
             list: ["usercontribs"],
             uclimit: 1,
-            ucuser: user.username
+            ucuser: user.username,
         });
 
         const userLatestEdit = userInfoRequest["query"]["usercontribs"][0];
@@ -113,7 +112,7 @@ export class User {
                 parentID: userLatestEdit["pageid"],
                 time: new Date(userLatestEdit["timestamp"]),
                 comment: userLatestEdit["comment"],
-                size: userLatestEdit["size"]
+                size: userLatestEdit["size"],
             });
         } else user.latestEdit = null;
 
@@ -150,7 +149,7 @@ export class User {
                     this.warningAnalysis = {
                         level: WarningLevel.None,
                         notices: null,
-                        page: talkPage
+                        page: talkPage,
                     };
                 } else {
                     const currentMonthSection = talkPageSections.filter(
@@ -160,7 +159,7 @@ export class User {
                         this.warningAnalysis = {
                             level: WarningLevel.None,
                             notices: null,
-                            page: talkPage
+                            page: talkPage,
                         };
                     else {
                         const content = currentMonthSection.getContent();
@@ -168,7 +167,7 @@ export class User {
                         this.warningAnalysis = {
                             level: highestWarningLevel(content),
                             notices: content,
-                            page: talkPage
+                            page: talkPage,
                         };
                     }
                 }
@@ -177,7 +176,7 @@ export class User {
                     this.warningAnalysis = {
                         level: WarningLevel.None,
                         notices: null,
-                        page: talkPage
+                        page: talkPage,
                     };
                 } else throw e;
             }
@@ -207,7 +206,7 @@ export class User {
             `${this.username}`.toLowerCase() == "undefined"
         ) {
             RedWarnUI.Toast.quickShow({
-                content: i18next.t("ui:toasts.userUndefined")
+                content: i18next.t("ui:toasts.userUndefined"),
             });
             return;
         }
@@ -228,7 +227,7 @@ export class User {
             if (revision.content.includes(options.blacklist.target)) {
                 // Don't continue and show toast
                 RedWarnUI.Toast.quickShow({
-                    content: options.blacklist.message
+                    content: options.blacklist.message,
                 });
                 return;
             }
@@ -257,9 +256,8 @@ export class User {
     getUserTalkSubpage(subpage: string): Page {
         return (
             this._userTalkSubpages[subpage] ??
-            (this._userTalkSubpages[subpage] = this.talkPage.getSubpage(
-                subpage
-            ))
+            (this._userTalkSubpages[subpage] =
+                this.talkPage.getSubpage(subpage))
         );
     }
 
@@ -272,7 +270,7 @@ export class User {
         const level = {
             [WarningType.Tiered]: options.warnLevel,
             [WarningType.PolicyViolation]: 5,
-            [WarningType.SingleIssue]: 0
+            [WarningType.SingleIssue]: 0,
         }[options.warning.type];
         await options.targetUser.appendToUserTalk(
             // Adds in one empty line.
@@ -280,9 +278,9 @@ export class User {
             {
                 comment: i18next.t("mediawiki:summaries.warn", {
                     context: level,
-                    reason: options.warning.name
+                    reason: options.warning.name,
                 }),
-                section: getMonthHeader()
+                section: getMonthHeader(),
             }
         );
         return true;
@@ -360,13 +358,12 @@ export class UserAccount extends User {
             format: "json",
             list: ["users"],
             usprop: toPopulate,
-            [typeof identifier === "string"
-                ? "ususers"
-                : "ususerids"]: identifier
+            [typeof identifier === "string" ? "ususers" : "ususerids"]:
+                identifier,
         }).then((v: JQueryXHR) => v);
         const [userInfoRequest] = await Promise.all([
             userInfoRequestPromise,
-            await super.populate(user)
+            await super.populate(user),
         ]);
 
         const userData = userInfoRequest["query"]["users"][0];
@@ -396,7 +393,7 @@ export class UserAccount extends User {
                         ? false
                         : new Date(userData["blockexpiry"]),
                 partial: !!userData["blockpartial"],
-                creationBlocked: !!userData["blocknocreate"]
+                creationBlocked: !!userData["blocknocreate"],
             };
         else if (!user.blocked) user.blocked = false;
 

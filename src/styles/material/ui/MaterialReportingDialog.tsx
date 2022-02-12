@@ -6,11 +6,11 @@ import MaterialReportingDialogPage from "rww/styles/material/ui/components//Mate
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
-    MaterialDialogTitle
+    MaterialDialogTitle,
 } from "rww/styles/material/ui/MaterialDialog";
 import {
     RWUIReportingDialog,
-    RWUIReportingDialogProps
+    RWUIReportingDialogProps,
 } from "rww/ui/elements/RWUIReportingDialog";
 import toCSS from "rww/styles/material/util/toCSS";
 import MaterialReportingDialogUser from "./components/MaterialReportingDialogUser";
@@ -18,13 +18,13 @@ import {
     isEmailReportVenue,
     isPageReportVenue,
     isUserModeReportVenue,
-    ReportVenue
+    ReportVenue,
 } from "rww/mediawiki/report/ReportVenue";
 import { Page, User, UserAccount } from "rww/mediawiki";
 import MaterialReportingDialogInfo from "rww/styles/material/ui/components/MaterialReportingDialogInfo";
 import "../css/reportingDialog.css";
 import MaterialDialogValidator, {
-    ValidationCheck
+    ValidationCheck,
 } from "rww/styles/material/ui/components/MaterialDialogValidator";
 
 export default class MaterialReportingDialog extends RWUIReportingDialog {
@@ -47,25 +47,25 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
         return [
             {
                 id: "target",
-                test: () => this.target != null
+                test: () => this.target != null,
             },
             {
                 id: "targetMissing",
-                test: () => this.mrdTarget.valid()
+                test: () => this.mrdTarget.valid(),
             },
             {
                 id: "self",
                 test: () =>
                     !isUserModeReportVenue(this.props.venue) ||
                     (this.target instanceof User &&
-                        this.target.username !== UserAccount.current.username)
+                        this.target.username !== UserAccount.current.username),
             },
             {
                 id: "reason",
                 test: () =>
                     !isPageReportVenue(this.props.venue) ||
                     (this.reason != null && this.reason.length > 0) ||
-                    (this.comments != null && this.comments.length > 0)
+                    (this.comments != null && this.comments.length > 0),
             },
             {
                 id: "short",
@@ -74,8 +74,8 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
                     (this.comments != null &&
                         this.comments
                             // Strip repeating characters (likely spam).
-                            .replace(/([a-z])\1{2,}/gi, "").length > 30)
-            }
+                            .replace(/([a-z])\1{2,}/gi, "").length > 30),
+            },
         ];
     }
 
@@ -84,7 +84,7 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
 
         if (!this.props.title)
             this.props.title = i18next.t("ui:reporting.title", {
-                venue: props.venue.name
+                venue: props.venue.name,
             });
     }
 
@@ -96,12 +96,12 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
                         target: this.target,
                         reason: this.reason,
                         comments: this.comments,
-                        venue: this.props.venue
+                        venue: this.props.venue,
                     };
                 } else if (event.detail.action === "cancel") {
                     return null;
                 }
-            }
+            },
         }).then((v) => v.wait());
     }
 
@@ -135,7 +135,7 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
                 id={this.id}
                 surfaceProperties={{
                     class: "rw-mdc-reportingDialog",
-                    style: toCSS({ minWidth: "700px" })
+                    style: toCSS({ minWidth: "700px" }),
                 }}
             >
                 {this.props.title && (

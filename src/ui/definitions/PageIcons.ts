@@ -30,9 +30,9 @@ export const PageIcons = (): PageIcon[] => {
             visible: RedWarnStore.isUserspacePage,
             action() {
                 RedWarnUI.Toast.quickShow({
-                    content: i18next.t("ui:unfinished")
+                    content: i18next.t("ui:unfinished"),
                 });
-            }
+            },
         },
         {
             id: "quickTemplate",
@@ -41,9 +41,9 @@ export const PageIcons = (): PageIcon[] => {
             visible: RedWarnStore.isUserspacePage,
             action() {
                 RedWarnUI.Toast.quickShow({
-                    content: i18next.t("ui:unfinished")
+                    content: i18next.t("ui:unfinished"),
                 });
-            }
+            },
         },
         {
             id: "warn",
@@ -56,7 +56,7 @@ export const PageIcons = (): PageIcon[] => {
                 const options = await new RedWarnUI.WarnDialog({
                     targetUser:
                         mw.config.get("wgRelevantUserName") &&
-                        User.fromUsername(mw.config.get("wgRelevantUserName"))
+                        User.fromUsername(mw.config.get("wgRelevantUserName")),
                 }).show();
                 User.warn(options)
                     .then((v) => {
@@ -69,20 +69,20 @@ export const PageIcons = (): PageIcon[] => {
                                     ),
                                     callback: () => {
                                         options.targetUser.talkPage.navigate();
-                                    }
-                                }
+                                    },
+                                },
                             });
                         }
                     })
                     .catch((e) => {
                         // TODO: Provide more details.
                         RedWarnUI.Toast.quickShow({
-                            content: i18next.t("ui:toasts.userWarnFailed")
+                            content: i18next.t("ui:toasts.userWarnFailed"),
                         });
                         Log.error(e);
                     });
-            }
-        }
+            },
+        },
     ];
 
     const defaultIcons = [
@@ -97,7 +97,8 @@ export const PageIcons = (): PageIcon[] => {
                 RedWarnWikiConfiguration.c.protection?.duration?.indefinite !=
                     null,
             async action() {
-                const options = await new RedWarnUI.ProtectionRequestDialog().show();
+                const options =
+                    await new RedWarnUI.ProtectionRequestDialog().show();
                 ProtectionManager.requestProtection(options)
                     .then((v) => {
                         if (v) {
@@ -109,8 +110,8 @@ export const PageIcons = (): PageIcon[] => {
                                     text: i18next.t("ui:toasts.viewAction"),
                                     callback: () => {
                                         v.navigate();
-                                    }
-                                }
+                                    },
+                                },
                             });
                         }
                     })
@@ -119,11 +120,11 @@ export const PageIcons = (): PageIcon[] => {
                         RedWarnUI.Toast.quickShow({
                             content: i18next.t(
                                 "ui:toasts.protectionRequestFailed"
-                            )
+                            ),
                         });
                         Log.error(e);
                     });
-            }
+            },
         },
         {
             id: "alertOnChange",
@@ -133,7 +134,7 @@ export const PageIcons = (): PageIcon[] => {
             visible: () => !RedWarnStore.isSpecialPage(),
             action() {
                 Watch.toggle();
-            }
+            },
         },
         {
             id: "latestRevision",
@@ -142,8 +143,8 @@ export const PageIcons = (): PageIcon[] => {
             visible: () => !RedWarnStore.isSpecialPage(),
             action() {
                 RedWarnStore.currentPage.navigateToLatestRevision();
-            }
-        }
+            },
+        },
     ];
 
     const nondefaultIcons = [
@@ -154,10 +155,10 @@ export const PageIcons = (): PageIcon[] => {
             action() {
                 new RedWarnUI.IFrameDialog({
                     src: "https://redwarn.toolforge.org/tools/rpm/",
-                    width: "90vw"
+                    width: "90vw",
                 }).show();
-            }
-        }
+            },
+        },
     ];
 
     const footerIcons = [
@@ -167,9 +168,9 @@ export const PageIcons = (): PageIcon[] => {
             visible: () => true,
             action() {
                 RedWarnUI.Toast.quickShow({
-                    content: i18next.t("ui:unfinished")
+                    content: i18next.t("ui:unfinished"),
                 });
-            }
+            },
         },
         {
             id: "rwTalk",
@@ -177,8 +178,8 @@ export const PageIcons = (): PageIcon[] => {
             visible: () => true,
             action() {
                 redirect("https://w.wiki/s6j", true);
-            }
-        }
+            },
+        },
     ];
 
     return [
@@ -196,8 +197,8 @@ export const PageIcons = (): PageIcon[] => {
             visible: () => !RedWarnStore.isSpecialPage(),
             action() {
                 new RedWarnUI.ExtendedOptions().show();
-            }
-        }
+            },
+        },
     ];
 };
 

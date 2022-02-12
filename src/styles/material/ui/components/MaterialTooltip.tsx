@@ -10,7 +10,7 @@ export interface MaterialTooltipProps extends BaseProps {
 export default function ({
     id,
     target,
-    children
+    children,
 }: MaterialTooltipProps): JSX.Element {
     if (target && typeof target === "string") {
         target = document.querySelector(target);

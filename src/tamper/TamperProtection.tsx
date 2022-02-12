@@ -41,7 +41,7 @@ export default class TamperProtection {
         const d = new RedWarnUI.Dialog({
             actions: [],
             content,
-            title: i18next.t("ui:tamperProtection.header")
+            title: i18next.t("ui:tamperProtection.header"),
         });
         await d.show();
         Configuration.Core.neopolitan.value =

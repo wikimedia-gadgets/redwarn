@@ -3,7 +3,7 @@ import {
     isEmailReportVenue,
     isPageReportVenue,
     isUserModeReportVenue,
-    ReportVenue
+    ReportVenue,
 } from "rww/mediawiki/report/ReportVenue";
 import i18next from "i18next";
 import RedWarnUI from "rww/ui/RedWarnUI";
@@ -52,7 +52,7 @@ export async function submitReport(report: Report): Promise<void> {
             .replace(/{{{comments}}}\.?/g, report.comments ?? "");
 
         const comment = i18next.t("mediawiki:summaries.reporting", {
-            target: targetString
+            target: targetString,
         });
 
         let oldRevision: Revision;
@@ -65,7 +65,7 @@ export async function submitReport(report: Report): Promise<void> {
                 oldRevision = Revision.fromEditReponse(
                     await section.prependContent(`${text}\n`, {
                         comment,
-                        belowHeader: true
+                        belowHeader: true,
                     })
                 );
             else
@@ -88,13 +88,13 @@ export async function submitReport(report: Report): Promise<void> {
             callback: async () => {
                 await oldRevision.restore(
                     i18next.t("mediawiki:summaries.report_undo", {
-                        target: targetString
+                        target: targetString,
                     })
                 );
                 RedWarnUI.Toast.quickShow({
-                    content: i18next.t("ui:toasts.undone")
+                    content: i18next.t("ui:toasts.undone"),
                 });
-            }
+            },
         };
     } else if (isEmailReportVenue(report.venue)) {
         await MediaWikiAPI.postWithEditToken({
@@ -104,14 +104,14 @@ export async function submitReport(report: Report): Promise<void> {
                 ? report.venue.subject.replace(/{{{target}}}/g, targetString)
                 : undefined,
             text: report.comments,
-            ccme: true
+            ccme: true,
         });
     }
 
     RedWarnUI.Toast.quickShow({
         content: i18next.t("ui:reporting.done", {
-            context: report.venue.type
+            context: report.venue.type,
         }),
-        action: undoAction
+        action: undoAction,
     });
 }

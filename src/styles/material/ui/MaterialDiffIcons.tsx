@@ -1,18 +1,18 @@
 import { BaseProps, h } from "tsx-dom";
 import {
     RWUIDiffIcons,
-    RWUIDiffIconsProperties
+    RWUIDiffIconsProperties,
 } from "rww/ui/elements/RWUIDiffIcons";
 import {
     DiffIconRevertContext,
     RestoreStage,
     Revert,
     RevertContextBase,
-    RevertStage
+    RevertStage,
 } from "rww/mediawiki";
 import RevertOptions, {
     ActionSeverity,
-    RevertOption
+    RevertOption,
 } from "rww/mediawiki/revert/RevertOptions";
 import { MDCLinearProgress } from "@material/linear-progress/component";
 
@@ -42,7 +42,7 @@ function getRollbackOptionClickHandler(
                 diffIcons.selectedReason = option;
                 Revert.revert(
                     Object.assign(context, {
-                        reason: option
+                        reason: option,
                     }) as DiffIconRevertContext
                 );
             };
@@ -55,7 +55,7 @@ function getRollbackOptionClickHandler(
                         : context.oldRevision,
                     {
                         diffIcons: context.diffIcons,
-                        defaultText: option.defaultSummary
+                        defaultText: option.defaultSummary,
                     }
                 );
             };
@@ -70,7 +70,7 @@ const MaterialRevertProgress: Record<RevertStage | RestoreStage, number> = {
     [RevertStage.Revert]: 2 / 3,
     [RestoreStage.Restore]: 2 / 3,
     [RevertStage.Finished]: 1,
-    [RestoreStage.Finished]: 1
+    [RestoreStage.Finished]: 1,
 };
 
 // Default severity colors.
@@ -81,21 +81,19 @@ const MaterialActionSeverityColors: Record<ActionSeverity, string> = {
     [ActionSeverity.Mild]: "blue",
     [ActionSeverity.Moderate]: "gold",
     [ActionSeverity.Severe]: "orange",
-    [ActionSeverity.Critical]: "red"
+    [ActionSeverity.Critical]: "red",
 };
 
-const MaterialHighContrastActionSeverityColors: Record<
-    ActionSeverity,
-    string
-> = {
-    // High contrast
-    [ActionSeverity.Neutral]: "black",
-    [ActionSeverity.GoodFaith]: "blue",
-    [ActionSeverity.Mild]: "blue",
-    [ActionSeverity.Moderate]: "red",
-    [ActionSeverity.Severe]: "red",
-    [ActionSeverity.Critical]: "red"
-};
+const MaterialHighContrastActionSeverityColors: Record<ActionSeverity, string> =
+    {
+        // High contrast
+        [ActionSeverity.Neutral]: "black",
+        [ActionSeverity.GoodFaith]: "blue",
+        [ActionSeverity.Mild]: "blue",
+        [ActionSeverity.Moderate]: "red",
+        [ActionSeverity.Severe]: "red",
+        [ActionSeverity.Critical]: "red",
+    };
 
 export default class MaterialDiffIcons extends RWUIDiffIcons {
     _context: RevertContextBase &
@@ -109,7 +107,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
             newRevision: this.newRevision,
             oldRevision: this.oldRevision,
             side: this.side,
-            diffIcons: this
+            diffIcons: this,
         };
         return this._context;
     }
@@ -219,7 +217,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
             element: element,
             progress: new MDCLinearProgress(progressElement),
             progressElement: progressElement,
-            progressLabel: progressLabel
+            progressLabel: progressLabel,
         };
 
         return element;
@@ -238,7 +236,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
                         onClick={() =>
                             option.action(
                                 Object.assign(this.context, {
-                                    reason: this.selectedReason
+                                    reason: this.selectedReason,
                                 })
                             )
                         }
@@ -295,9 +293,9 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
                         Configuration.Revert.revertMethod.value ===
                         RevertMethod.Rollback
                             ? "rollback"
-                            : undefined
+                            : undefined,
                 }),
-                [RevertStage.Finished]: i18next.t("ui:diff.progress.prepare")
+                [RevertStage.Finished]: i18next.t("ui:diff.progress.prepare"),
             };
             this.progressBar.progressLabel.innerText =
                 MaterialRevertProgressLabel[stage];
@@ -326,7 +324,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
                 [RestoreStage.Preparing]: i18next.t("ui:diff.progress.prepare"),
                 [RestoreStage.Details]: i18next.t("ui:diff.progress.details"),
                 [RestoreStage.Restore]: i18next.t("ui:diff.progress.restore"),
-                [RestoreStage.Finished]: i18next.t("ui:diff.progress.prepare")
+                [RestoreStage.Finished]: i18next.t("ui:diff.progress.prepare"),
             };
             this.progressBar.progressLabel.innerText =
                 MaterialRestoreProgressLabel[stage];

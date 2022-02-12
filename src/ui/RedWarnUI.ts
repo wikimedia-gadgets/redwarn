@@ -75,5 +75,5 @@ export const RWUIElements = {
     [RWUIDiffIcons.elementName]: RWUIDiffIcons,
     [RWUIPageIcons.elementName]: RWUIPageIcons,
     [RWUIExtendedOptions.elementName]: RWUIExtendedOptions,
-    [RWUIReportingDialog.elementName]: RWUIReportingDialog
+    [RWUIReportingDialog.elementName]: RWUIReportingDialog,
 };

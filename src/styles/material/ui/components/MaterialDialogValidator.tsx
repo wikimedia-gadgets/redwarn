@@ -7,7 +7,7 @@ import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
-    MaterialDialogTitle
+    MaterialDialogTitle,
 } from "rww/styles/material/ui/MaterialDialog";
 import { generateId } from "rww/util";
 import MaterialButton from "rww/styles/material/ui/components/MaterialButton";
@@ -63,7 +63,7 @@ export class MaterialDialogValidatorDialog extends RWUIDialog<void> {
             <div>
                 {i18next
                     .t("ui:validation.dialog.intro", {
-                        count: failingIds.length
+                        count: failingIds.length,
                     })
                     .toString()}
                 <ul>
@@ -115,7 +115,7 @@ class MaterialDialogValidator extends RWUIElement {
         // Test all validators.
         const results = this.props.validators.map((check) => ({
             check,
-            result: check.test()
+            result: check.test(),
         }));
         // Return true if all passing, the failed validation checks if not.
         return results.reduce((p, n) => p && n.result, true)
@@ -166,14 +166,14 @@ class MaterialDialogValidator extends RWUIElement {
                             this.visibleValidationResults !== true
                                 ? () => {
                                       // Show failed validation tests with detailed information.
-                                      const dialog = new MaterialDialogValidatorDialog(
-                                          {
-                                              detailedLanguageKey: this.props
-                                                  .detailedLanguageKey,
+                                      const dialog =
+                                          new MaterialDialogValidatorDialog({
+                                              detailedLanguageKey:
+                                                  this.props
+                                                      .detailedLanguageKey,
                                               tests: this
-                                                  .visibleValidationResults
-                                          }
-                                      );
+                                                  .visibleValidationResults,
+                                          });
                                       dialog.show();
                                   }
                                 : () => {
@@ -185,7 +185,7 @@ class MaterialDialogValidator extends RWUIElement {
                 {this.visibleValidationResults !== true && (
                     <div class="rw-mdc-dialog-helperText">
                         {i18next.t<string>(this.props.languageKey, {
-                            context: this.visibleValidationResults[0].id
+                            context: this.visibleValidationResults[0].id,
                         })}
                     </div>
                 )}
@@ -200,6 +200,6 @@ export default function generator(
 ): JSX.Element & { validator: MaterialDialogValidator } {
     const validator = new MaterialDialogValidator(props);
     return Object.assign(validator.render(), {
-        validator: validator
+        validator: validator,
     });
 }

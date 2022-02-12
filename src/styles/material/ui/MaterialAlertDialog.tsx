@@ -6,7 +6,7 @@ import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
-    MaterialDialogTitle
+    MaterialDialogTitle,
 } from "./MaterialDialog";
 
 /**
@@ -34,7 +34,7 @@ export default class MaterialAlertDialog extends RWUIAlertDialog {
                 } else {
                     return event.detail.action;
                 }
-            }
+            },
         }).then((v) => v.wait());
     }
 
@@ -52,7 +52,7 @@ export default class MaterialAlertDialog extends RWUIAlertDialog {
                             ? action.data
                             : {
                                   data: action.data,
-                                  text: action.text
+                                  text: action.text,
                               }
                     }
                 >
@@ -76,7 +76,7 @@ export default class MaterialAlertDialog extends RWUIAlertDialog {
                 surfaceProperties={{
                     "style": `width: ${this.props.width ?? "30vw"};`,
                     "aria-modal": true,
-                    "aria-labelledby": this.props.title ?? "RedWarn dialog"
+                    "aria-labelledby": this.props.title ?? "RedWarn dialog",
                 }}
                 id={this.id}
             >

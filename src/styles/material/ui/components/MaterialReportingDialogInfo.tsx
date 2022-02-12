@@ -4,17 +4,17 @@ import { MaterialReportingDialogChildProps } from "rww/styles/material/ui/compon
 import RWUIElement from "rww/ui/elements/RWUIElement";
 import MaterialSelect, {
     MaterialSelectElement,
-    MaterialSelectItem
+    MaterialSelectItem,
 } from "rww/styles/material/ui/components/MaterialSelect";
 import {
     isEmailReportVenue,
     isPageReportVenue,
-    ReportVenue
+    ReportVenue,
 } from "rww/mediawiki/report/ReportVenue";
 import i18next from "i18next";
 import MaterialTextInput, {
     MaterialTextInputComponents,
-    MaterialTextInputUpgrade
+    MaterialTextInputUpgrade,
 } from "rww/styles/material/ui/components/MaterialTextInput";
 
 class MaterialReportingDialogInfo extends RWUIElement {
@@ -60,19 +60,19 @@ class MaterialReportingDialogInfo extends RWUIElement {
                                 label: i18next.t(
                                     "ui:reporting.info.reason.other"
                                 ),
-                                value: null
+                                value: null,
                             },
                             {
                                 type: "header",
                                 label: i18next.t(
                                     "ui:reporting.info.reason.default"
-                                )
+                                ),
                             },
                             ...this.venue.defaultReasons.map((reason) => ({
                                 type: "action",
                                 label: reason,
-                                value: reason
-                            }))
+                                value: reason,
+                            })),
                         ] as MaterialSelectItem<string>[]
                     }
                     onChange={(_, value) => {
@@ -129,6 +129,6 @@ export default function generator(
 ): JSX.Element & { MRDInfo: MaterialReportingDialogInfo } {
     const mrdReasonInfo = new MaterialReportingDialogInfo(props);
     return Object.assign(mrdReasonInfo.render(), {
-        MRDInfo: mrdReasonInfo
+        MRDInfo: mrdReasonInfo,
     });
 }

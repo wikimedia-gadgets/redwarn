@@ -5,7 +5,7 @@ import type {
     SerializedWarningCategories,
     Warning,
     WarningLevel,
-    WarningLevelSignature
+    WarningLevelSignature,
 } from "rww/mediawiki";
 import { WarningCategory } from "rww/mediawiki";
 import type { SerializableRevertOption } from "rww/mediawiki/revert/RevertOptions";

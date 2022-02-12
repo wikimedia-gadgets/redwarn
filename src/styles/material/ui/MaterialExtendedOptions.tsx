@@ -3,14 +3,14 @@ import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
-    MaterialDialogTitle
+    MaterialDialogTitle,
 } from "rww/styles/material/ui/MaterialDialog";
 import { h } from "tsx-dom";
 import i18next from "i18next";
 import MaterialButton from "rww/styles/material/ui/components/MaterialButton";
 import {
     MaterialList,
-    MaterialListItem
+    MaterialListItem,
 } from "rww/styles/material/ui/components/MaterialList";
 import PageIcons from "rww/ui/definitions/PageIcons";
 import "../css/extendedOptions.css";
@@ -53,10 +53,10 @@ export default class MaterialExtendedOptions extends RWUIExtendedOptions {
             <MaterialDialog
                 id={this.id}
                 surfaceProperties={{
-                    style: "min-width: 35vw;"
+                    style: "min-width: 35vw;",
                 }}
                 containerProperties={{
-                    class: "rw-mdc-extendedOptions"
+                    class: "rw-mdc-extendedOptions",
                 }}
             >
                 <MaterialDialogTitle tabIndex={0}>

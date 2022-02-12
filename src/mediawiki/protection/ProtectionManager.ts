@@ -4,10 +4,10 @@ import { MediaWikiAPI } from "../core/API";
 import {
     isProtectionRequestTarget,
     Page,
-    ProtectionRequestTarget
+    ProtectionRequestTarget,
 } from "rww/mediawiki";
 import ProtectionRequest, {
-    ProtectionDuration
+    ProtectionDuration,
 } from "rww/mediawiki/protection/ProtectionRequest";
 import i18next from "i18next";
 import RedWarnUI from "rww/ui/RedWarnUI";
@@ -32,7 +32,7 @@ export class ProtectionManager {
         fromCache = false
     ): Promise<ProtectionEntry[]> {
         const cacheKey = Object.assign(page, {
-            flaggedRevs: _flaggedRevs !== false
+            flaggedRevs: _flaggedRevs !== false,
         });
 
         if (fromCache && ProtectionManager.protectionEntryCache.has(cacheKey))
@@ -51,7 +51,7 @@ export class ProtectionManager {
                     action: "query",
                     prop: "info",
                     ...page.getAPIIdentifier(),
-                    inprop: "protection"
+                    inprop: "protection",
                 });
             })(),
             (async () => {
@@ -67,9 +67,9 @@ export class ProtectionManager {
                         letitle: page.title.getPrefixedText(),
                         // Get as much stable config changes in case this page has magically been
                         // moved 500 times.
-                        lelimit: 500
+                        lelimit: 500,
                     });
-            })()
+            })(),
         ]);
 
         // Get page protection information from MediaWiki.
@@ -93,7 +93,7 @@ export class ProtectionManager {
                         expiry:
                             entry.expiry === "infinity"
                                 ? entry.expiry
-                                : new Date(entry.expiry)
+                                : new Date(entry.expiry),
                     })
                 );
             }
@@ -132,7 +132,7 @@ export class ProtectionManager {
                             expiry:
                                 expiry === "infinity"
                                     ? expiry
-                                    : new Date(expiry)
+                                    : new Date(expiry),
                         });
                     break;
                 } else if (event.action === "config") {
@@ -163,7 +163,7 @@ export class ProtectionManager {
                             expiry:
                                 expiry === "infinity"
                                     ? expiry
-                                    : new Date(expiry)
+                                    : new Date(expiry),
                         });
                     break;
                 }
@@ -200,7 +200,7 @@ export class ProtectionManager {
                 ["Protect-dropdown"],
                 {
                     amenableparser: true,
-                    amtitle: page?.title.getPrefixedText() ?? undefined
+                    amtitle: page?.title.getPrefixedText() ?? undefined,
                 }
             );
 
@@ -291,18 +291,19 @@ export class ProtectionManager {
                 section: target.section ?? undefined,
                 mode: target.method ?? "append",
                 comment: i18next.t("mediawiki:summaries.protection", {
-                    title: request.page.title.getPrefixedText()
-                })
+                    title: request.page.title.getPrefixedText(),
+                }),
             });
         } else {
             // Identify if increase/decrease in level.
             let sourceKey: number, targetKey: number;
             let sourceDuration: ProtectionDuration;
-            const currentLevel = await ProtectionManager.getProtectionInformation(
-                request.page,
-                true,
-                true
-            );
+            const currentLevel =
+                await ProtectionManager.getProtectionInformation(
+                    request.page,
+                    true,
+                    true
+                );
             const currentEditLevel = currentLevel.filter(
                 (v) =>
                     (v.type === "edit" && v.source == null) ||
@@ -351,15 +352,15 @@ export class ProtectionManager {
                                 data: "decrease",
                                 text: i18next.t(
                                     "ui:protectionRequest.retarget.decrease"
-                                )
+                                ),
                             },
                             {
                                 data: "increase",
                                 text: i18next.t(
                                     "ui:protectionRequest.retarget.increase"
-                                )
-                            }
-                        ]
+                                ),
+                            },
+                        ],
                     }).show();
                     if (dialogResult == null)
                         // Cancel.
@@ -377,8 +378,8 @@ export class ProtectionManager {
                 section: target.section ?? undefined,
                 mode: target.method ?? "append",
                 comment: i18next.t("mediawiki:summaries.protection", {
-                    title: request.page.title.getPrefixedText()
-                })
+                    title: request.page.title.getPrefixedText(),
+                }),
             });
         }
         return targetPage;

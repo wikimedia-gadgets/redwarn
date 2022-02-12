@@ -59,6 +59,6 @@ export default function <T>(
         },
         disable() {
             radio.disabled = true;
-        }
+        },
     });
 }

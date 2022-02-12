@@ -6,15 +6,15 @@ import {
     SerializedWarning,
     SerializedWarningCategories,
     Warning,
-    WarningCategory
+    WarningCategory,
 } from "rww/mediawiki";
 import {
     deserializeRevertOption,
-    RevertOption
+    RevertOption,
 } from "rww/mediawiki/revert/RevertOptions";
 import {
     deserializeReportVenue,
-    SerializableReportVenue
+    SerializableReportVenue,
 } from "rww/mediawiki/report/ReportVenue";
 
 // T - Type of root data (original raw configuration as parsed JSON)
@@ -24,17 +24,15 @@ import {
 // X - Type of the target object (WikiConfiguration) (recursive)
 
 type Deserializer<T, U, W, X> = (data: W, root: T, current: U) => X;
-type DeserializerChunk<T, U, V, W extends V, X extends V> = Partial<
-    {
-        [P in keyof V]: W[P] extends Record<string, any>
-            ?
-                  | (DeserializerChunk<T, U, V[P], W[P], X[P]> & {
-                        _self?: Deserializer<T, U, W[P], X[P]>;
-                    })
-                  | Deserializer<T, U, W[P], X[P]>
-            : Deserializer<T, U, W[P], X[P]>;
-    }
->;
+type DeserializerChunk<T, U, V, W extends V, X extends V> = Partial<{
+    [P in keyof V]: W[P] extends Record<string, any>
+        ?
+              | (DeserializerChunk<T, U, V[P], W[P], X[P]> & {
+                    _self?: Deserializer<T, U, W[P], X[P]>;
+                })
+              | Deserializer<T, U, W[P], X[P]>
+        : Deserializer<T, U, W[P], X[P]>;
+}>;
 type WikiConfigurationDeserializer = DeserializerChunk<
     WikiConfigurationRaw,
     WikiConfigurationBase,
@@ -64,7 +62,7 @@ const WikiConfigurationDeserializers: WikiConfigurationDeserializer = {
             for (const [id, fields] of Object.entries(data)) {
                 categoryArray.push({
                     id: id,
-                    ...fields
+                    ...fields,
                 });
             }
             return categoryArray;
@@ -92,7 +90,7 @@ const WikiConfigurationDeserializers: WikiConfigurationDeserializer = {
             current
         ): Warning => {
             return <Warning>current.warnings.warnings[data];
-        }
+        },
     },
     revertOptions: (data) => {
         const deserializedOptions: Record<string, RevertOption> = {};
@@ -107,7 +105,7 @@ const WikiConfigurationDeserializers: WikiConfigurationDeserializer = {
         return data.map((venue: SerializableReportVenue) =>
             deserializeReportVenue(venue)
         );
-    }
+    },
 };
 
 export default WikiConfigurationDeserializers;

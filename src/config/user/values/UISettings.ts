@@ -25,13 +25,13 @@ const UISettings = {
         validOptions: [
             {
                 name: i18next.t("prefs:ui.noticeOrder.options.title"),
-                value: "title"
+                value: "title",
             },
             {
                 name: i18next.t("prefs:ui.noticeOrder.options.template"),
-                value: "template"
-            }
-        ]
+                value: "template",
+            },
+        ],
     }),
 
     /** Visible page icons */
@@ -39,7 +39,7 @@ const UISettings = {
         uiInputType: UIInputType.Style,
 
         title: i18next.t("prefs:ui.pageIcons.title"),
-        description: i18next.t("prefs:ui.pageIcons.description")
+        description: i18next.t("prefs:ui.pageIcons.description"),
     }),
 
     /** UI style */
@@ -47,11 +47,11 @@ const UISettings = {
         uiInputType: UIInputType.Style,
 
         title: i18next.t("prefs:ui.style.title"),
-        description: i18next.t("prefs:ui.style.description")
+        description: i18next.t("prefs:ui.style.description"),
     }),
 
     /** Array of viewed campaigns */
-    campaigns: new Setting<string[]>("campaigns", [])
+    campaigns: new Setting<string[]>("campaigns", []),
 };
 
 export default UISettings;

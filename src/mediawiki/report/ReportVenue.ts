@@ -125,9 +125,9 @@ export function deserializeReportVenue(
             if (location === "none" || typeof location === "number") continue;
 
             if (displayLocation === location.toLowerCase()) {
-                displayBitmap |= (ReportVenueDisplayLocations[
+                displayBitmap |= ReportVenueDisplayLocations[
                     location
-                ] as unknown) as number;
+                ] as unknown as number;
             }
         }
     }
@@ -149,14 +149,13 @@ export function deserializeReportVenue(
     // Forced conversions due to union type issues.
     if ((venue as any).page)
         (venue as any).page = Page.fromTitle((venue as any).page);
-    return (Object.assign(venue, {
+    return Object.assign(venue, {
         display: displayBitmap,
         allowedNamespaces: namespaces,
-        mode:
-            ReportVenueMode[
-                capitalize(venue.mode) as keyof typeof ReportVenueMode
-            ]
-    }) as unknown) as ReportVenue;
+        mode: ReportVenueMode[
+            capitalize(venue.mode) as keyof typeof ReportVenueMode
+        ],
+    }) as unknown as ReportVenue;
 }
 
 export function getReportVenueIcons(): PageIcon[] {
@@ -164,7 +163,7 @@ export function getReportVenueIcons(): PageIcon[] {
         return {
             id: "report_" + venue.shortName.replace(/[^A-Z0-9]/gi, "-"),
             name: i18next.t("ui:pageIcons.report", {
-                name: venue.name.includes(" ") ? venue.shortName : venue.name
+                name: venue.name.includes(" ") ? venue.shortName : venue.name,
             }),
             icon: venue.icon,
             color: venue.color,
@@ -177,10 +176,10 @@ export function getReportVenueIcons(): PageIcon[] {
                     true),
             async action(): Promise<void> {
                 const report = await new RedWarnUI.ReportingDialog({
-                    venue
+                    venue,
                 }).show();
                 if (report != null) await submitReport(report);
-            }
+            },
         };
     });
 }

@@ -6,20 +6,20 @@ import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
-    MaterialDialogTitle
+    MaterialDialogTitle,
 } from "./MaterialDialog";
 import MaterialWarnDialogUser, {
-    MaterialWarnDialogUserController
+    MaterialWarnDialogUserController,
 } from "./components/MaterialWarnDialogUser";
 import MaterialWarnDialogReason, {
-    MaterialWarnDialogReasonController
+    MaterialWarnDialogReasonController,
 } from "rww/styles/material/ui/components/MaterialWarnDialogReason";
 import {
     ClientUser,
     MediaWikiAPI,
     User,
     WarningOptions,
-    WarningType
+    WarningType,
 } from "rww/mediawiki";
 import { isIPAddress, normalize } from "rww/util";
 
@@ -30,7 +30,7 @@ import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import { warningSuffix } from "rww/mediawiki/warn/WarningUtils";
 import toCSS from "rww/styles/material/util/toCSS";
 import MaterialDialogValidator, {
-    ValidationCheck
+    ValidationCheck,
 } from "./components/MaterialDialogValidator";
 
 /**
@@ -65,7 +65,7 @@ function MaterialWarnDialogErrors(props: {
         <div>
             {i18next
                 .t("ui:warn.validation.validationDialogIntro", {
-                    count: failingIds.length
+                    count: failingIds.length,
                 })
                 .toString()}
             <ul>
@@ -74,7 +74,7 @@ function MaterialWarnDialogErrors(props: {
                         <li>
                             {i18next
                                 .t("ui:warn.validation.failDetailed", {
-                                    context: id
+                                    context: id,
                                 })
                                 .toString()}
                         </li>
@@ -114,17 +114,17 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
             {
                 // Prevent self-warning
                 id: "self",
-                test: () => this.user?.username !== ClientUser.i.username
+                test: () => this.user?.username !== ClientUser.i.username,
             },
             {
                 // Asserts user
                 id: "user",
-                test: () => this.user != null
+                test: () => this.user != null,
             },
             {
                 // Asserts warning template
                 id: "template",
-                test: () => this.mwdReason?.MWDReason?.warning != null
+                test: () => this.mwdReason?.MWDReason?.warning != null,
             },
             {
                 // Asserts warning level is set (given it is a tiered warning)
@@ -133,8 +133,8 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                     (this.mwdReason?.MWDReason?.warning != null &&
                         this.mwdReason?.MWDReason?.warning.type !=
                             WarningType.Tiered) ||
-                    this.mwdReason?.MWDReason?.warningLevel != null
-            }
+                    this.mwdReason?.MWDReason?.warningLevel != null,
+            },
         ];
     }
 
@@ -212,7 +212,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
             prop: "text",
             pst: true,
             assert: "user",
-            disablelimitreport: true
+            disablelimitreport: true,
         });
 
         if (+this.mwdXray.getAttribute("data-last-update") > requestTime)
@@ -270,10 +270,10 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                         additionalText: this.mwdReason.MWDReason.additionalText,
                         relatedPage: this.mwdReason.MWDReason.relatedPage,
                         warnLevel: this.mwdReason.MWDReason.warningLevel,
-                        warning: this.mwdReason.MWDReason.warning
+                        warning: this.mwdReason.MWDReason.warning,
                     };
                 } else return null;
-            }
+            },
         }).then((v) => v.wait());
     }
 
@@ -287,11 +287,11 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                     "class": "rw-mdc-warnDialog mdc-dialog__surface",
                     "style": {
                         width: this.props.width ?? "50vw",
-                        height: "95vh"
+                        height: "95vh",
                     },
                     "aria-modal": true,
                     "aria-labelledby":
-                        this.props.title ?? i18next.t<string>("ui:warn.title")
+                        this.props.title ?? i18next.t<string>("ui:warn.title"),
                 }}
                 id={this.id}
             >
@@ -304,7 +304,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                 <MaterialDialogContent
                     style={toCSS({
                         overflowY: "auto",
-                        overflowX: "hidden"
+                        overflowX: "hidden",
                     })}
                 >
                     {this.mwdUser ??

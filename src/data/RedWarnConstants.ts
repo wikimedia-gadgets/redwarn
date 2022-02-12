@@ -42,7 +42,7 @@ export const RW_WIKIS_SPEEDUP = ["enwiki"];
 export const RW_FALLBACK_WIKI = {
     indexPath: "https://en.wikipedia.org/w/index.php",
     apiPath: "https://en.wikipedia.org/w/api.php",
-    configuration: RW_WIKI_CONFIGURATION
+    configuration: RW_WIKI_CONFIGURATION,
 };
 
 export const RW_FALLBACK_CONFIG =

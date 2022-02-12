@@ -1,12 +1,12 @@
 import { User, UserAccount } from "rww/mediawiki";
 import {
     MaterialUserSelect,
-    MaterialUserSelectProps
+    MaterialUserSelectProps,
 } from "rww/styles/material/ui/components/MaterialUserSelect";
 import { h } from "tsx-dom";
 import {
     MaterialReportingDialogTarget,
-    MaterialReportingDialogTargetProps
+    MaterialReportingDialogTargetProps,
 } from "rww/styles/material/ui/components/MaterialReportingDialogChild";
 import MaterialAlertDialog from "rww/styles/material/ui/MaterialAlertDialog";
 import i18next from "i18next";
@@ -51,7 +51,7 @@ class MaterialReportingDialogUser extends MaterialUserSelect {
                                 {i18next.t<string>(
                                     "ui:reporting.restricted.text",
                                     {
-                                        group: group.displayName
+                                        group: group.displayName,
                                     }
                                 )}
                             </b>
@@ -59,12 +59,12 @@ class MaterialReportingDialogUser extends MaterialUserSelect {
                     ),
                     actions: [
                         {
-                            data: "cancel"
+                            data: "cancel",
                         },
                         {
-                            data: "proceed"
-                        }
-                    ]
+                            data: "proceed",
+                        },
+                    ],
                 }).show()) !== "proceed"
             ) {
                 await this.clearUser(this.lastUser);
@@ -86,6 +86,6 @@ export default function generator(
     const mrdUserTarget = new MaterialReportingDialogUser(props);
     return Object.assign(mrdUserTarget.render(), {
         MRDTarget: mrdUserTarget,
-        valid: () => mrdUserTarget.user != null
+        valid: () => mrdUserTarget.user != null,
     });
 }

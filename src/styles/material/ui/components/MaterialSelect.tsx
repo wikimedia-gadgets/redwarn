@@ -5,7 +5,7 @@ import {
     MaterialList,
     MaterialListDivider,
     MaterialListItem,
-    MaterialListSubheader
+    MaterialListSubheader,
 } from "rww/styles/material/ui/components/MaterialList";
 import classMix from "rww/styles/material/util/classMix";
 
@@ -159,9 +159,11 @@ export default function <T>(
                 ([, _item]) => _item === item
             );
             if (targetValue)
-                (element.querySelector(
-                    `li[data-value="${targetValue[0]}"]`
-                ) as HTMLElement).click();
-        }
+                (
+                    element.querySelector(
+                        `li[data-value="${targetValue[0]}"]`
+                    ) as HTMLElement
+                ).click();
+        },
     });
 }

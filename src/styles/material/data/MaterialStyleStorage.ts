@@ -34,10 +34,8 @@ export class MaterialDialogTrackMap extends Map<RWUIDialogID, RWUIDialog<any>> {
 
 export class MaterialStyleStorage extends StyleStorage {
     // Caches
-    dialogTracker: Map<
-        RWUIDialogID,
-        RWUIDialog<any>
-    > = new MaterialDialogTrackMap();
+    dialogTracker: Map<RWUIDialogID, RWUIDialog<any>> =
+        new MaterialDialogTrackMap();
     toastQueue: MaterialToast[] = [];
 }
 

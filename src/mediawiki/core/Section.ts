@@ -111,7 +111,7 @@ export default class Section {
     constructor(source: Revision & SectionContainer, properties: APISection) {
         this.toc = {
             level: properties.toclevel,
-            number: properties.number
+            number: properties.number,
         };
         this.level = properties.level;
         this.index = +properties.index;
@@ -140,10 +140,10 @@ export default class Section {
             format: "json",
             ...(context instanceof Page
                 ? {
-                      page: `${context.title}`
+                      page: `${context.title}`,
                   }
                 : {
-                      oldid: context.revisionID
+                      oldid: context.revisionID,
                   }),
             prop: [
                 "sections",
@@ -151,8 +151,8 @@ export default class Section {
                 // Don't grab wikitext if we already have it.
                 ...(context instanceof Revision && context.content
                     ? []
-                    : ["wikitext"])
-            ]
+                    : ["wikitext"]),
+            ],
         }).catch((e) => {
             let data;
             if (context instanceof Page) {
@@ -187,7 +187,7 @@ export default class Section {
                 sectionsRequest["parse"]["wikitext"]
             );
             context.latestCachedRevision.page = Object.assign(context, {
-                title: context.title
+                title: context.title,
             });
         } else {
             // Fill in blank values from the page if available.
@@ -222,9 +222,9 @@ export default class Section {
                             ? context.page.title
                             : context.title,
                     byteoffset: 0,
-                    anchor: "top"
+                    anchor: "top",
                 }
-            )
+            ),
         ];
         for (const sectionRequestEntry of sectionsRequest["parse"][
             "sections"
@@ -313,7 +313,7 @@ export default class Section {
                 {
                     mode: <const>"replace",
                     baseRevision: this.revision,
-                    section: this
+                    section: this,
                 },
                 options
             )
@@ -336,7 +336,7 @@ export default class Section {
                 {
                     mode: <const>"append",
                     baseRevision: this.revision,
-                    section: this
+                    section: this,
                 },
                 options
             )
@@ -374,7 +374,7 @@ export default class Section {
                     {
                         mode: <const>"prepend",
                         baseRevision: this.revision,
-                        section: this
+                        section: this,
                     },
                     options
                 )

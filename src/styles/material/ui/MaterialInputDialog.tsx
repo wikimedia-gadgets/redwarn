@@ -11,10 +11,10 @@ import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
-    MaterialDialogTitle
+    MaterialDialogTitle,
 } from "./MaterialDialog";
 import MaterialTextInput, {
-    MaterialTextInputUpgrade
+    MaterialTextInputUpgrade,
 } from "rww/styles/material/ui/components/MaterialTextInput";
 
 /**
@@ -53,7 +53,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                 } else if (event.detail.action === "cancel") {
                     return null;
                 }
-            }
+            },
         }).then((v) => v.wait());
     }
 
@@ -90,7 +90,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                 surfaceProperties={{
                     "style": `width: ${this.props.width ?? "30vw"};`,
                     "aria-modal": true,
-                    "aria-labelledby": this.props.title ?? "RedWarn dialog"
+                    "aria-labelledby": this.props.title ?? "RedWarn dialog",
                 }}
                 id={this.id}
             >

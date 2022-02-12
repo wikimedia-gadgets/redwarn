@@ -60,18 +60,18 @@ export default class Log {
                     return {
                         stack: v.stack,
                         message: v.message,
-                        name: v.name
+                        name: v.name,
                     };
                 else return v;
             }),
-            stack: level > LogLevel.Info ? new Error().stack : undefined
+            stack: level > LogLevel.Info ? new Error().stack : undefined,
         });
     }
 
     static dump(): LogDump {
         return {
             startTime: Log.startTime,
-            entries: Log.entries
+            entries: Log.entries,
         };
     }
 

@@ -46,7 +46,7 @@ export class Watch {
         // Handle both post-request denials and already denied cases.
         if (Notification.permission === "denied") {
             RedWarnUI.Toast.quickShow({
-                content: `${i18next.t("ui:watch.denied")}`
+                content: `${i18next.t("ui:watch.denied")}`,
             });
             return;
         }
@@ -62,8 +62,8 @@ export class Watch {
         );
         RedWarnUI.Toast.quickShow({
             content: `${i18next.t("ui:watch.watching", {
-                page: Watch.page.title.getPrefixedText()
-            })}`
+                page: Watch.page.title.getPrefixedText(),
+            })}`,
         });
 
         Watch.lastRevId = mw.config.get("wgCurRevisionId");
@@ -83,8 +83,8 @@ export class Watch {
         );
         RedWarnUI.Toast.quickShow({
             content: `${i18next.t("ui:watch.stoppedWatching", {
-                page: Watch.page.title.getPrefixedText()
-            })}`
+                page: Watch.page.title.getPrefixedText(),
+            })}`,
         });
 
         window.clearTimeout(Watch.timeout);
@@ -108,16 +108,17 @@ export class Watch {
             ...(RedWarnStore.wikiLogo == null
                 ? {
                       // Get logo URL if not yet set.
-                      meta: "siteinfo"
+                      meta: "siteinfo",
                   }
-                : {})
+                : {}),
         });
 
         const revisions: Record<string, any>[] = (
-            (Object.values(newRevisionsRequest["query"]["pages"])[0] as Record<
-                string,
-                any
-            >)["revisions"] ?? []
+            (
+                Object.values(
+                    newRevisionsRequest["query"]["pages"]
+                )[0] as Record<string, any>
+            )["revisions"] ?? []
         ).filter((v: any) => v.revid !== Watch.lastRevId);
 
         if (RedWarnStore.wikiLogo == null)
@@ -138,7 +139,7 @@ export class Watch {
                 const notification = new Notification(
                     `${i18next.t("ui:watch.notification.title", {
                         count: revisions.length,
-                        page: Watch.page.title.getPrefixedText()
+                        page: Watch.page.title.getPrefixedText(),
                     })}`,
                     {
                         body: `${i18next.t(
@@ -146,9 +147,9 @@ export class Watch {
                         )}\n\n${i18next.t("ui:watch.notification.diff", {
                             author: revisions[0].user,
                             since: formatAge(new Date(revisions[0].timestamp)),
-                            comment: revisions[0].comment
+                            comment: revisions[0].comment,
                         })}`,
-                        icon: RedWarnStore.wikiLogo.toString()
+                        icon: RedWarnStore.wikiLogo.toString(),
                     }
                 );
                 document.addEventListener("focus", () => {

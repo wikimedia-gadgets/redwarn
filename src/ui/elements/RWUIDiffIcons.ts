@@ -3,7 +3,7 @@ import {
     DiffIconRevertContext,
     RestoreStage,
     RevertStage,
-    Revision
+    Revision,
 } from "rww/mediawiki";
 import { BaseProps } from "tsx-dom";
 import RWErrorBase from "rww/errors/RWError";
@@ -23,7 +23,8 @@ export type RWUIDiffIconsProperties = Pick<
  */
 export class RWUIDiffIcons
     extends RWUIElement
-    implements RWUIDiffIconsProperties {
+    implements RWUIDiffIconsProperties
+{
     public static readonly elementName = "rwDiffIcons";
 
     oldRevision: Revision;

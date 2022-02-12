@@ -2,7 +2,7 @@ import {
     OKCancelActions,
     RWIconButton,
     RWUIDialog,
-    RWUIDialogProperties
+    RWUIDialogProperties,
 } from "rww/ui/elements/RWUIDialog";
 
 export interface RWUIInputDialogProps extends RWUIDialogProperties {

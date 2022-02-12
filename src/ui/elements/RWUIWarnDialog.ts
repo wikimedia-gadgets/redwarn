@@ -3,7 +3,7 @@ import {
     RevertContext,
     User,
     Warning,
-    WarningOptions
+    WarningOptions,
 } from "rww/mediawiki";
 import { RWUIDialog, RWUIDialogProperties } from "rww/ui/elements/RWUIDialog";
 

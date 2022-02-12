@@ -69,5 +69,5 @@ export type GenericAPIErrorData = { page: Page } | { revision: Revision };
 
 export const SpecializedMediaWikiErrors: Record<string, any> = {
     missingtitle: PageMissingError,
-    nosuchrevid: RevisionMissingError
+    nosuchrevid: RevisionMissingError,
 };

@@ -82,7 +82,7 @@ const configurationUpdaters: { [key: number]: ConfigurationUpdater } = {
 
         config.configVersion = 1;
         return config;
-    }
+    },
 };
 
 /**
@@ -98,9 +98,10 @@ export default function (oldConfig: Record<string, any>): Record<string, any> {
         if (configurationUpdaters[modifiedConfig.configVersion ?? 0] == null)
             throw `No updater for configuration version: ${modifiedConfig.configVersion}`;
 
-        modifiedConfig = configurationUpdaters[
-            modifiedConfig.configVersion ?? 0
-        ](modifiedConfig);
+        modifiedConfig =
+            configurationUpdaters[modifiedConfig.configVersion ?? 0](
+                modifiedConfig
+            );
     }
 
     return modifiedConfig;

@@ -2,7 +2,7 @@ import { MaterialWarnDialogChildProps } from "rww/styles/material/ui/MaterialWar
 import { User, UserAccount } from "rww/mediawiki";
 import {
     MaterialUserSelect,
-    MaterialUserSelectProps
+    MaterialUserSelectProps,
 } from "rww/styles/material/ui/components/MaterialUserSelect";
 import MaterialAlertDialog from "rww/styles/material/ui/MaterialAlertDialog";
 import i18next from "i18next";
@@ -37,7 +37,7 @@ export class MaterialWarnDialogUser extends MaterialUserSelect {
                         <div class={"rw-mdc-riskyWarning"}>
                             <b>
                                 {i18next.t<string>("ui:warn.risky.content", {
-                                    group: restrictedGroupMatch.displayName
+                                    group: restrictedGroupMatch.displayName,
                                 })}
                             </b>
                         </div>
@@ -45,13 +45,13 @@ export class MaterialWarnDialogUser extends MaterialUserSelect {
                     actions: [
                         {
                             // TODO i18n
-                            data: "cancel"
+                            data: "cancel",
                         },
                         {
                             // TODO i18n
-                            data: "proceed"
-                        }
-                    ]
+                            data: "proceed",
+                        },
+                    ],
                 }).show()) !== "proceed"
             ) {
                 await this.clearUser(this.lastUser);
@@ -80,6 +80,6 @@ export default function generator(
 ): JSX.Element & { MWDUser: MaterialWarnDialogUser } {
     const mwdUser = new MaterialWarnDialogUser(props);
     return Object.assign(mwdUser.render(), {
-        MWDUser: mwdUser
+        MWDUser: mwdUser,
     });
 }

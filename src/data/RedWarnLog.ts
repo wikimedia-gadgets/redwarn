@@ -1,5 +1,11 @@
 import { RW_LOG_SIGNATURE } from "rww/data/RedWarnConstants";
 
+declare global {
+    interface Window {
+        rw_debug: boolean;
+    }
+}
+
 export enum LogLevel {
     Trace,
     Debug,
@@ -26,7 +32,9 @@ export default class Log {
     private static readonly startTime = Date.now();
     static entries: LogEntry[] = [];
     static logLevel =
-        process.env.NODE_ENV === "production" ? LogLevel.Warn : LogLevel.Trace;
+        process.env.NODE_ENV === "production"
+            ? (window.rw_debug ? LogLevel.Trace : LogLevel.Warn)
+            : LogLevel.Trace;
 
     private static log(level: LogLevel, message: string, ...data: any[]) {
         const tOffset = Date.now() - Log.startTime;

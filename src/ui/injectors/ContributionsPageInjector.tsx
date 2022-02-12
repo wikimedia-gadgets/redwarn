@@ -3,18 +3,19 @@ import i18next from "i18next";
 import { Revert, Revision } from "rww/mediawiki";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import Log from "rww/data/RedWarnLog";
+import { Injector } from "./Injector";
 
-export default class ContributionsPageInjector {
+export default class ContributionsPageInjector implements Injector {
     /**
      * Initialize the injector. If the page is a diff page, this injector
      * will trigger.
      */
-    static async init(): Promise<void> {
+    async init(): Promise<void> {
         if (mw.config.get("wgPageName").startsWith("Special:Contributions"))
-            ContributionsPageInjector.display();
+            this.display();
     }
 
-    static display(): void {
+    display(): void {
         Log.info("Loading contributions page buttons...");
         document
             .querySelectorAll(
@@ -27,7 +28,7 @@ export default class ContributionsPageInjector {
 
                 const context = {
                     newRevision: revision,
-                    latestRevision: revision
+                    latestRevision: revision,
                 };
 
                 const previewLink = (
@@ -50,7 +51,7 @@ export default class ContributionsPageInjector {
                                 Object.assign(context, {
                                     prefilledReason:
                                         RedWarnWikiConfiguration.c.warnings
-                                            .vandalismWarning.name
+                                            .vandalismWarning.name,
                                 })
                             )
                         }
@@ -68,10 +69,11 @@ export default class ContributionsPageInjector {
                         onClick={async () => {
                             Revert.revert(
                                 Object.assign(context, {
-                                    prefilledReason: await Revert.promptRollbackReason(
-                                        context,
-                                        ""
-                                    )
+                                    prefilledReason:
+                                        await Revert.promptRollbackReason(
+                                            context,
+                                            ""
+                                        ),
                                 })
                             );
                         }}

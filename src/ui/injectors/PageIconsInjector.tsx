@@ -2,13 +2,14 @@ import { h } from "tsx-dom";
 import RedWarnUI from "rww/ui/RedWarnUI";
 
 import "../css/pageIcons.css";
+import { Injector } from "./Injector";
 
-export default class PageIconsInjector {
+export default class PageIconsInjector implements Injector {
     /**
      * Initialize the injector. If the page is a diff page, this injector
      * will trigger.
      */
-    static async init(): Promise<void> {
+    async init(): Promise<void> {
         const diffIcons = new RedWarnUI.PageIcons();
         const icons = <div id={"rwPageIcons"}>{diffIcons.render()}</div>;
 

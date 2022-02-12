@@ -1,8 +1,14 @@
 import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
 import ContributionsPageInjector from "rww/ui/injectors/ContributionsPageInjector";
 import PageIconsInjector from "rww/ui/injectors/PageIconsInjector";
+import PreferencesInjector from "./PreferencesInjector";
 
 export default class UIInjectors {
+    diffViewerInjector: DiffViewerInjector = new DiffViewerInjector();
+    contributionsPageInjector: ContributionsPageInjector =
+        new ContributionsPageInjector();
+    pageIconsInjector: PageIconsInjector = new PageIconsInjector();
+    preferencesInjector: PreferencesInjector = new PreferencesInjector();
     /**
      * Run all injectors.
      *
@@ -10,11 +16,12 @@ export default class UIInjectors {
      * for non-invasive DOM procedures, and allows a separation between UI and DOM-
      * modifying code from actual API functionality.
      */
-    static async inject(): Promise<any> {
+    async inject(): Promise<any> {
         return Promise.all([
-            DiffViewerInjector.init(),
-            ContributionsPageInjector.init(),
-            PageIconsInjector.init()
+            this.diffViewerInjector.init(),
+            this.contributionsPageInjector.init(),
+            this.pageIconsInjector.init(),
+            this.preferencesInjector.init(),
         ]);
     }
 }

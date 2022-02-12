@@ -35,7 +35,7 @@ import {
     MediaWikiAPI,
     RevertSpeedup,
     WarningManager,
-    Watch
+    Watch,
 } from "./mediawiki";
 import { Configuration } from "./config/user/Configuration";
 import LoadErrorTranslations from "rww/errors/LoadErrorTranslations";
@@ -166,7 +166,7 @@ export default class RedWarn {
             (async () => {
                 RedWarnStore.initializeStore();
             })(),
-            StyleManager.initialize()
+            StyleManager.initialize(),
         ]);
 
         try {
@@ -177,7 +177,7 @@ export default class RedWarn {
             mw.notify(
                 MediaWikiNotificationContent(
                     i18next.t(`mediawiki:error.wikiConfigBad`, {
-                        wikiIndex: RedWarnStore.wikiIndex
+                        wikiIndex: RedWarnStore.wikiIndex,
                     })
                 ),
                 { type: "error" }
@@ -196,7 +196,7 @@ export default class RedWarn {
         await Promise.all([
             RedWarnHooks.executeHooks("preInit"),
             Dependencies.resolve([StyleManager.activeStyle.dependencies]),
-            Dependencies.resolve([RedWarnStore.dependencies])
+            Dependencies.resolve([RedWarnStore.dependencies]),
         ]);
 
         /**
@@ -223,11 +223,11 @@ export default class RedWarn {
         // Inject all UI elements
         await RedWarnHooks.executeHooks("preUIInject");
 
-        await UIInjectors.inject();
+        await new UIInjectors().inject();
 
         await Promise.all([
             RedWarnHooks.executeHooks("postUIInject"),
-            Watch.init()
+            Watch.init(),
         ]);
 
         Log.debug(`Done loading (UI): ${Date.now() - startTime}ms.`);

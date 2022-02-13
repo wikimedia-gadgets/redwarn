@@ -62,6 +62,17 @@ interface DisplayInformationBase {
 }
 
 /**
+ * Certain {@link UIInputType}s, contrary to {@link DisplayInformationRestricted},
+ * allow any user-provided value. These are represented here.
+ */
+interface DisplayInformationPermissive extends DisplayInformationBase {
+    /**
+     * The display type for this specific setting.
+     */
+    uiInputType: Exclude<UIInputType, DisplayInformationRestricted["uiInputType"]>;
+}
+
+/**
  * Certain {@link UIInputType}s restrict the valid options provided. These
  * are represented here in order to force integration.
  */
@@ -80,7 +91,7 @@ interface DisplayInformationRestricted extends DisplayInformationBase {
 }
 
 export type DisplayInformation =
-    | DisplayInformationBase
+    | DisplayInformationPermissive
     | DisplayInformationRestricted;
 
 export class Setting<T> implements PrimitiveSetting<T> {

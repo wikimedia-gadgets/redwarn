@@ -1,6 +1,7 @@
-import { BaseProps, h } from "tsx-dom";
-import { generateId } from "rww/util";
-import { MDCRadio } from "@material/radio/component";
+import {BaseProps, h} from "tsx-dom";
+import {generateId} from "rww/util";
+import {MDCRadio} from "@material/radio/component";
+import classMix from "rww/styles/material/util/classMix";
 
 export interface MaterialRadioProps<T> extends BaseProps {
     value: T;
@@ -23,9 +24,11 @@ export default function <T>(
     const id = `rwMdcRadio__${generateId()}`;
     const radioElement = (
         <div
-            class={`mdc-radio ${props.checked ? "mdc-radio--checked" : ""} ${
-                props.disabled ? "mdc-radio--disabled" : ""
-            }`}
+            class={classMix(
+                "mdc-radio",
+                props.checked && "mdc-radio--checked",
+                props.disabled && "mdc-radio--disabled"
+            )}
         >
             <input
                 class="mdc-radio__native-control"

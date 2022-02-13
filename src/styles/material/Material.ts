@@ -1,12 +1,9 @@
-import { MDCDialog } from "@material/dialog";
-import { MDCRipple } from "@material/ripple";
-import { RWUIDialog } from "rww/ui/elements/RWUIDialog";
+import {MDCDialog} from "@material/dialog";
+import {MDCRipple} from "@material/ripple";
+import {RWUIDialog} from "rww/ui/elements/RWUIDialog";
 import Style from "rww/styles/Style";
 import MaterialPreInitializationHooks from "./hooks/MaterialPreInitializationHooks";
-import {
-    getMaterialStorage,
-    MaterialStyleStorage
-} from "./data/MaterialStyleStorage";
+import {getMaterialStorage, MaterialStyleStorage} from "./data/MaterialStyleStorage";
 import MaterialAlertDialog from "./ui/MaterialAlertDialog";
 import MaterialInputDialog from "./ui/MaterialInputDialog";
 import MaterialSelectionDialog from "./ui/MaterialSelectionDialog";
@@ -106,6 +103,7 @@ export async function upgradeMaterialDialog<T>(
     dialog: RWUIDialog<any>,
     options?: MaterialDialogInitializationOptions<T>
 ): Promise<UpgradedMaterialDialog<T>> {
+
     const styleStorage = getMaterialStorage();
     registerMaterialDialog(dialog);
 

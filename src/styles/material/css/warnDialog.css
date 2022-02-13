@@ -74,6 +74,29 @@
     opacity: 0;
 }
 
+.rw-mdc-warnDialog-page {
+    display: flex;
+    align-items: center;
+}
+
+.rw-mdc-warnDialog-page .rw-mdc-warnDialog-page--textField {
+    flex: 1;
+}
+
+.rw-mdc-warnDialog-page .rw-mdc-warnDialog-page--recent {
+    margin-left: 8px;
+    flex: initial;
+}
+
+.rw-mdc-warnDialog-page.rw-warnDialog-hideRecentPages .rw-mdc-warnDialog-page--recent {
+    display: none;
+}
+
+.rw-mdc-warnDialog-reason-note {
+    letter-spacing: initial;
+    padding: 0 1em 0.5em;
+}
+
 .rw-mdc-warnDialog-xray {
     border-radius: 8px;
     border: 1px solid #aaa;

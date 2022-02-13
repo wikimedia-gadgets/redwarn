@@ -1,14 +1,14 @@
-import {Setting} from "rww/config/user/Setting";
-import RWUIElement, {RWUIElementProperties} from "./RWUIElement";
+import { Setting } from "rww/config/user/Setting";
+import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 
-export interface RWUIPreferencesItemProperties<T> extends RWUIElementProperties {
+export interface RWUIPreferencesItemProperties extends RWUIElementProperties {
     name: string;
-    setting: Setting<T>;
+    setting: Setting<any>;
 }
 
 export type RWUIPreferencesItemID = string;
 
-export class RWUIPreferencesItem<T> extends RWUIElement {
+export class RWUIPreferencesItem extends RWUIElement {
     public static readonly elementName = "rwPreferencesItem";
 
     /**
@@ -21,7 +21,7 @@ export class RWUIPreferencesItem<T> extends RWUIElement {
      */
     public result: any;
 
-    protected constructor(readonly props: RWUIPreferencesItemProperties<T>) {
+    protected constructor(readonly props: RWUIPreferencesItemProperties) {
         super();
         this.props = props;
     }

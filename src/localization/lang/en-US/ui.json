@@ -5,6 +5,7 @@
     "cancel": "Cancel",
     "undo": "Undo",
     "redo": "Redo",
+    "toggleSwitch": "off/on",
 
     "extendedOptions": {
         "title": "More Options"

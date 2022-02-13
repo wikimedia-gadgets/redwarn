@@ -304,7 +304,8 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
 
         // RESTORE THIS VERSION ICONS. DO NOT FORGET TO CHANGE BOTH FOR LEFT AND RIGHT
 
-        let twinkleLoadedBeforeUs = $('div[id^="tw-revert"]').length;
+        let twinklePastRevIcon = $('div[id^="tw-revert-to"]');
+        let twinkleLatestRevIcon = $('div[id="tw-revert"]');
 
         // On left side
         // DO NOT FORGET TO CHANGE BOTH!!
@@ -318,8 +319,8 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             Restore this version
         </div>
         `;
-        if (twinkleLoadedBeforeUs) {
-            $('.diff-otitle > div[id^="tw-revert"]').after(left);
+        if (twinklePastRevIcon.length) {
+            twinklePastRevIcon.after(left);
         } else {
             $('.diff-otitle').prepend(left);
         }
@@ -335,8 +336,8 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             Restore this version
         </div>
         `; // if the latest rev, show the accurate revs, else, don't
-        if (twinkleLoadedBeforeUs) {
-            $('.diff-ntitle > div[id^="tw-revert"]').after(right);
+        if (twinkleLatestRevIcon.length) {
+            twinkleLatestRevIcon.after(right);
         } else {
             $('.diff-ntitle').prepend(right);
         }

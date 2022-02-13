@@ -6,7 +6,7 @@ export interface RWUIPreferencesProperties extends RWUIElementProperties {
 }
 
 export class RWUIPreferences extends RWUIElement {
-    public static readonly elementName = "rwPreferencesTab";
+    public static readonly elementName = "rwPreferences";
 
     /**
      * The HTMLDivElement which contains the tab.

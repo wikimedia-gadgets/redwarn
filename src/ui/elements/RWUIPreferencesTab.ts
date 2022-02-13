@@ -1,8 +1,9 @@
+import { Setting } from "rww/config/user/Setting";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 
 export interface RWUIPreferencesTabProperties extends RWUIElementProperties {
     title: string;
-    items: RWUIPreferencesItem[];
+    items: Setting<any>[];
 }
 
 export class RWUIPreferencesTab extends RWUIElement {

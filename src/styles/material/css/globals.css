@@ -1,3 +1,8 @@
+body {
+    --mdc-theme-primary: #6200ee;
+    --mdc-theme-secondary: #414e7e;
+}
+
 .rw-mdc-full-width {
     width: 100%;
 }

@@ -335,8 +335,9 @@ rw.rollback = { // Rollback features - this is where the business happens, peopl
             Restore this version
         </div>
         `; // if the latest rev, show the accurate revs, else, don't
-        if (twinkleLoadedBeforeUs) {
-            $('.diff-ntitle > div[id^="tw-revert"]').after(right);
+        const twinkleNtitleLinks = $('.diff-ntitle > div[id^="tw-revert"]');
+        if (twinkleLoadedBeforeUs && twinkleNtitleLinks.length) {
+            $(twinkleNtitleLinks).after(right);
         } else {
             $('.diff-ntitle').prepend(right);
         }

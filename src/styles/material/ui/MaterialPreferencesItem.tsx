@@ -3,6 +3,7 @@ import {RWUIPreferencesItem} from "rww/ui/elements/RWUIPreferencesItem";
 import {h} from "tsx-dom";
 import MaterialRadioField from "rww/styles/material/ui/components/MaterialRadioField";
 import MaterialSelect from "rww/styles/material/ui/components/MaterialSelect";
+import MaterialTextInput from "rww/styles/material/ui/components/MaterialTextInput";
 
 /**
  * The MaterialPreferencesItem is a handling class used for different items in the preferences page.
@@ -45,10 +46,21 @@ export default class MaterialPreferencesItem<T> extends RWUIPreferencesItem<T> {
                 />;
                 break;
             case UIInputType.Textbox:
-                // TODO: Implement textbox
+                this.input = <MaterialTextInput
+                    label={this.props.setting.displayInfo.title}
+                    onInput={(value) => {
+                        this.result = value;
+                    }}
+                />;
                 break;
             case UIInputType.Number:
-                // TODO: Implement number
+                this.input = <MaterialTextInput
+                    type="number"
+                    label={this.props.setting.displayInfo.title}
+                    onInput={(value) => {
+                        this.result = value;
+                    }}
+                />;
                 break;
             case UIInputType.ColorPicker:
                 // TODO: Implement color picker

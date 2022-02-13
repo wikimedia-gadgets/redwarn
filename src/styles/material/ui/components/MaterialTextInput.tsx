@@ -1,16 +1,17 @@
-import { BaseProps, h } from "tsx-dom";
-import { RWIconButton } from "rww/ui/elements/RWUIDialog";
-import { generateId } from "rww/util";
-import { MDCTextField } from "@material/textfield";
-import { MDCTextFieldCharacterCounter } from "@material/textfield/character-counter";
-import { MDCTextFieldIcon } from "@material/textfield/icon";
-import { MDCTextFieldHelperText } from "@material/textfield/helper-text";
+import {BaseProps, h} from "tsx-dom";
+import {RWIconButton} from "rww/ui/elements/RWUIDialog";
+import {generateId} from "rww/util";
+import {MDCTextField} from "@material/textfield";
+import {MDCTextFieldCharacterCounter} from "@material/textfield/character-counter";
+import {MDCTextFieldIcon} from "@material/textfield/icon";
+import {MDCTextFieldHelperText} from "@material/textfield/helper-text";
 import toCSS from "rww/styles/material/util/toCSS";
 import classMix from "rww/styles/material/util/classMix";
 
 interface MaterialTextInputProps extends BaseProps {
     id?: string;
     class?: string;
+    type?: string;
     label: string;
     defaultText?: string;
     leadingIcon?: RWIconButton;
@@ -24,6 +25,7 @@ interface MaterialTextInputProps extends BaseProps {
     area?: boolean;
     autofocus?: boolean;
     required?: boolean;
+    onInput?: (text: string, event: Event) => void;
 }
 
 // Private storage variable. No need to put it into {@link MaterialStyleStorage}.
@@ -120,7 +122,7 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                     />
                 ) : (
                     <input
-                        type="text"
+                        type={props.type ?? "text"}
                         class="mdc-text-field__input"
                         id={`${id}_input`}
                         {...(props.helperText && {
@@ -246,6 +248,11 @@ export function MaterialTextInputUpgrade(
             element.querySelector(".mdc-text-field-helper-text")
         );
     components.helperText?.initialize();
+
+    if (props.onInput)
+        components.textField.listen("input", (event) => {
+            props.onInput(components.textField.value, event);
+        });
 
     trackingObject["components"] = components;
 

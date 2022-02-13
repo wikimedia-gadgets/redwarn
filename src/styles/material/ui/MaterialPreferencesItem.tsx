@@ -4,6 +4,8 @@ import {h} from "tsx-dom";
 import MaterialRadioField from "rww/styles/material/ui/components/MaterialRadioField";
 import MaterialSelect from "rww/styles/material/ui/components/MaterialSelect";
 import MaterialTextInput from "rww/styles/material/ui/components/MaterialTextInput";
+import StyleManager from "rww/styles/StyleManager";
+import i18next from "i18next";
 
 /**
  * The MaterialPreferencesItem is a handling class used for different items in the preferences page.
@@ -24,7 +26,8 @@ export default class MaterialPreferencesItem<T> extends RWUIPreferencesItem<T> {
                 this.input = <MaterialRadioField<DisplayInformationOption>
                     radios={this.props.setting.displayInfo.validOptions.map(options => ({
                         value: options.value,
-                        children: <span>{options.name ?? options.value}</span>
+                        children: <span>{options.name ?? options.value}</span>,
+                        checked: options.value === this.props.setting.value
                     }))}
                     direction={"vertical"}
                     onChange={(value) => {
@@ -37,7 +40,8 @@ export default class MaterialPreferencesItem<T> extends RWUIPreferencesItem<T> {
                     items={this.props.setting.displayInfo.validOptions.map(options => ({
                         type: "action",
                         label: options.name,
-                        value: options
+                        value: options,
+                        selected: options.value === this.props.setting.value
                     }))}
                     label={this.props.setting.displayInfo.title}
                     onChange={(value) => {
@@ -48,6 +52,9 @@ export default class MaterialPreferencesItem<T> extends RWUIPreferencesItem<T> {
             case UIInputType.Textbox:
                 this.input = <MaterialTextInput
                     label={this.props.setting.displayInfo.title}
+                    // If the value wasn't actually a string, blame whoever made the setting
+                    // for using the Textbox UIInputType for a string value.
+                    defaultText={`${this.props.setting.value}`}
                     onInput={(value) => {
                         this.result = value;
                     }}
@@ -57,6 +64,9 @@ export default class MaterialPreferencesItem<T> extends RWUIPreferencesItem<T> {
                 this.input = <MaterialTextInput
                     type="number"
                     label={this.props.setting.displayInfo.title}
+                    // If the value wasn't actually a number, blame whoever made the setting
+                    // for using the Textbox UIInputType for a number value.
+                    defaultText={`${this.props.setting.value}`}
                     onInput={(value) => {
                         this.result = value;
                     }}
@@ -66,7 +76,17 @@ export default class MaterialPreferencesItem<T> extends RWUIPreferencesItem<T> {
                 // TODO: Implement color picker
                 break;
             case UIInputType.Style:
-                // TODO: Implement style
+                this.input = <MaterialSelect<string>
+                    items={StyleManager.styles.map(style => ({
+                        type: "action",
+                        label: style.meta[i18next.language ?? "en-US"].displayName,
+                        value: style.name
+                    }))}
+                    label={this.props.setting.displayInfo.title}
+                    onChange={(value) => {
+                        this.result = value;
+                    }}
+                />;
                 break;
             case UIInputType.RevertOptions:
                 // TODO: Implement revert options

@@ -4,10 +4,10 @@ import { getMaterialStorage } from "rww/styles/material/data/MaterialStyleStorag
 import { MDCSnackbar } from "@material/snackbar";
 
 /**
- * The MaterialToast is a handling class used to show dialogs on the screen. This will
- * automatically handle dialog actions, content, etc.
+ * The MaterialToast is a handling class used to show toasts on the screen. This will
+ * automatically handle toasts action, content, etc.
  *
- * To show a dialog on the DOM, use {@link MaterialToast.show}.
+ * To show a toast on the DOM, use {@link MaterialToast.show}.
  */
 export default class MaterialToast extends RWUIToast {
     private showPromise: {

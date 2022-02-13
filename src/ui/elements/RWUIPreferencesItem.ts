@@ -1,20 +1,14 @@
-import { DisplayInformation } from "rww/config/user/Setting";
-import random from "rww/util/random";
-import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
+import {Setting} from "rww/config/user/Setting";
+import RWUIElement, {RWUIElementProperties} from "./RWUIElement";
 
-export interface RWUIPreferencesItemProperties extends RWUIElementProperties {
+export interface RWUIPreferencesItemProperties<T> extends RWUIElementProperties {
     name: string;
-    /**
-     * Used to track preferences items.
-     * @internal
-     */
-    key?: string;
-    displayInfo: DisplayInformation;
+    setting: Setting<T>;
 }
 
 export type RWUIPreferencesItemID = string;
 
-export class RWUIPreferencesItem extends RWUIElement {
+export class RWUIPreferencesItem<T> extends RWUIElement {
     public static readonly elementName = "rwPreferencesItem";
 
     /**
@@ -23,18 +17,12 @@ export class RWUIPreferencesItem extends RWUIElement {
     element?: HTMLDivElement;
 
     /**
-     * A unique identifier for this dialog, to allow multiple active dialogs.
-     */
-    key: string;
-
-    /**
      * The result of the item.
      */
     public result: any;
 
-    protected constructor(readonly props: RWUIPreferencesItemProperties) {
+    protected constructor(readonly props: RWUIPreferencesItemProperties<T>) {
         super();
-        this.key = `preferencesItem_${props.key ?? random(16)}`;
         this.props = props;
     }
 

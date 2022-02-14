@@ -88,7 +88,7 @@ function MaterialWarnDialogReasonDropdown({
                     const lastPress = (key.target as HTMLElement).getAttribute(
                         "data-last-keydown"
                     );
-                    if (lastPress && +lastPress + 500 > Date.now()) return;
+                    if (lastPress && Date.now() < (+lastPress + 500)) return;
                     (key.target as HTMLElement).setAttribute(
                         "data-last-keydown",
                         `${Date.now()}`

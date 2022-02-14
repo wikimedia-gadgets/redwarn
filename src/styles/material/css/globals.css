@@ -1,6 +1,7 @@
 body {
     --mdc-theme-primary: #6200ee;
     --mdc-theme-secondary: #414e7e;
+    --mdc-dialog-z-index: 100;
 }
 
 .rw-mdc-full-width {

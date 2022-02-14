@@ -457,7 +457,6 @@ export class Revert {
      * @param context
      */
     static async revert(context: RevertContext): Promise<void> {
-        const { newRevision } = context;
         const diffIcons = isDiffIconContext(context) ? context.diffIcons : null;
 
         if (Revert.revertInProgress)

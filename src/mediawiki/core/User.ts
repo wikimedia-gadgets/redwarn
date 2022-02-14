@@ -21,6 +21,7 @@ import {isIPAddress} from "rww/util";
 
 import Section from "rww/mediawiki/core/Section";
 import {highestWarningLevel} from "rww/mediawiki/warn/WarningUtils";
+import {RWErrors} from "rww/errors/RWError";
 
 /**
  * The User represents a MediaWiki editor, be it a registered user or an IP address.
@@ -215,7 +216,6 @@ export class User {
             revision = this.talkPage.latestCachedRevision;
         } catch (e) {
             if (e instanceof PageMissingError) {
-                debugger;
                 // Page does not exist. We're making a new page.
             } else throw e;
         }
@@ -231,7 +231,7 @@ export class User {
             }
         }
 
-        this.talkPage.appendContent(text, options);
+        return this.talkPage.appendContent(text, options);
     }
 
     /**
@@ -271,17 +271,32 @@ export class User {
             [WarningType.PolicyViolation]: 5,
             [WarningType.SingleIssue]: 0
         }[options.warning.type];
-        await options.targetUser.appendToUserTalk(
-            // Adds in one empty line.
-            `\r\n\r\n${options.warningText}`,
-            {
-                comment: i18next.t("mediawiki:summaries.warn", {
-                    context: level,
-                    reason: options.warning.name
-                }),
-                section: getMonthHeader()
-            }
-        );
+        try {
+            await options.targetUser.appendToUserTalk(
+                // Adds in one empty line.
+                `\r\n\r\n${options.warningText}`,
+                {
+                    comment: i18next.t("mediawiki:summaries.warn", {
+                        context: level,
+                        reason: options.warning.name
+                    }),
+                    section: getMonthHeader()
+                }
+            );
+        } catch (e) {
+            if (e?.code === RWErrors.PageMissing)
+                await options.targetUser.talkPage.edit(
+                    // Adds in one empty line.
+                    `== ${getMonthHeader()} ==\r\n${options.warningText}`,
+                    {
+                        comment: i18next.t("mediawiki:summaries.warn", {
+                            context: level,
+                            reason: options.warning.name
+                        })
+                    }
+                );
+            throw e;
+        }
         return true;
     }
 }

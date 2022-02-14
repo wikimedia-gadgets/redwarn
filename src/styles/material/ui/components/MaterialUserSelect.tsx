@@ -17,6 +17,8 @@ import Log from "rww/data/RedWarnLog";
 import Group from "rww/mediawiki/core/Group";
 import "../../css/userSelect.css";
 import {UserMissingError} from "rww/errors/MediaWikiErrors";
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
+import {submitReport} from "rww/mediawiki/report/Report";
 
 interface OverlayContentLoading {
     type: "loading";
@@ -172,16 +174,22 @@ function MaterialUserSelectCard({
                                 user.warningAnalysis.level
                             ].toLowerCase()}`
                         })}
-                        {...(user.warningAnalysis.level > 3
-                            ? {
-                                  onClick: () => {
-                                      // TODO AIV thing
-                                      RedWarnUI.Toast.quickShow({
-                                          content: i18next.t("ui:unfinished")
-                                      });
-                                  }
-                              }
-                            : {})}
+                        {...(user.warningAnalysis.level > 2
+                            ? {onClick: async () => {
+                                submitReport(
+                                    await new RedWarnUI.ReportingDialog({
+                                        venue: RedWarnWikiConfiguration.c.reporting
+                                            .find(v =>
+                                                v.shortName.toLowerCase() ===
+                                                RedWarnWikiConfiguration.c.warnings.reportVenue.toLowerCase()
+                                            ),
+                                        target: user
+                                    }).show()
+                              );
+                            }}
+                            : {
+                                ripple: false
+                            })}
                     />
                 </td>
             </tr>

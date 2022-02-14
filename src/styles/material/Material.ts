@@ -103,7 +103,6 @@ export async function upgradeMaterialDialog<T>(
     dialog: RWUIDialog<any>,
     options?: MaterialDialogInitializationOptions<T>
 ): Promise<UpgradedMaterialDialog<T>> {
-
     const styleStorage = getMaterialStorage();
     registerMaterialDialog(dialog);
 
@@ -119,7 +118,7 @@ export async function upgradeMaterialDialog<T>(
         async (event: Event & { detail: { action: string } }) => {
             if (options?.onClose) dialog.result = await options.onClose(event);
 
-            styleStorage.dialogTracker.delete(this.id);
+            styleStorage.dialogTracker.delete(dialog.id);
             closePromiseResolver(dialog.result ?? null);
         }
     );

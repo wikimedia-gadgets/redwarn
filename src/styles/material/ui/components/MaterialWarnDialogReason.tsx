@@ -63,7 +63,8 @@ function MaterialWarnDialogReasonDropdown({
             finalSelectItems.push({
                 type: "action",
                 label: warning.name,
-                value: warning
+                value: warning,
+                selected: parent.props.defaultReason === warning
             });
         }
     }
@@ -402,7 +403,7 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
                                 label={label}
                                 defaultText={
                                     this.elementSet?.page?.components?.textField?.value ??
-                                    this.props.relatedPage?.title?.toString() ??
+                                    this.props.relatedPage?.title?.getPrefixedText() ??
                                     ""
                                 }
                                 autofocus

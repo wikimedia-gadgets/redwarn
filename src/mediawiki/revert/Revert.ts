@@ -1,24 +1,16 @@
 import i18next from "i18next";
-import { RW_VERSION_TAG, RW_WIKIS_SPEEDUP } from "rww/data/RedWarnConstants";
+import {RW_VERSION_TAG, RW_WIKIS_SPEEDUP} from "rww/data/RedWarnConstants";
 import RedWarnStore from "rww/data/RedWarnStore";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import redirect from "rww/util/redirect";
-import {
-    ClientUser,
-    MediaWikiAPI,
-    MediaWikiURL,
-    RestoreStage,
-    RevertStage,
-    Revision,
-    Warning
-} from "rww/mediawiki";
+import {ClientUser, MediaWikiAPI, MediaWikiURL, RestoreStage, RevertStage, Revision, Warning} from "rww/mediawiki";
 import Log from "rww/data/RedWarnLog";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
-import type { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
-import { RevertOption } from "rww/mediawiki/revert/RevertOptions";
-import { RevertMethod } from "rww/config/user/ConfigurationEnums";
-import { Configuration } from "rww/config/user/Configuration";
-import { RevisionNotLatestError } from "rww/errors/MediaWikiErrors";
+import type {RWUIDiffIcons} from "rww/ui/elements/RWUIDiffIcons";
+import {RevertOption} from "rww/mediawiki/revert/RevertOptions";
+import {RevertMethod} from "rww/config/user/ConfigurationEnums";
+import {Configuration} from "rww/config/user/Configuration";
+import {RevisionNotLatestError} from "rww/errors/MediaWikiErrors";
 
 /**
  * The context of a revert being performed. When used alone (not through
@@ -76,12 +68,12 @@ export type RevertContext = DiffIconRevertContext | HeadlessRevertContext;
 export function isHeadlessRevertContext(
     context: RevertContext
 ): context is HeadlessRevertContext {
-    return (context as Record<string, any>)["prefilledReason"] !== null;
+    return (context as Record<string, any>)["prefilledReason"] != null;
 }
 export function isDiffIconContext(
     context: RevertContext
 ): context is DiffIconRevertContext {
-    return (context as Record<string, any>)["reason"] !== null;
+    return (context as Record<string, any>)["reason"] != null;
 }
 
 /**
@@ -221,7 +213,7 @@ export class Revert {
         if (targetRevision.page == null) await targetRevision.populate();
 
         const latestRevision = await targetRevision.getLatestRevision({
-            forceRefresh: false
+            forceRefresh: true
         });
         if (latestRevision.revisionID !== targetRevision.revisionID) {
             if (
@@ -272,7 +264,7 @@ export class Revert {
 
         // Same page, so use the latestRevision. Higher chance of being populated than newRevision.
         const targetRevision = await latestRevision.page.getLatestRevisionNotByUser(
-            latestRevision.user.username
+            latestRevision.user
         );
 
         if (targetRevision == null) {
@@ -344,8 +336,8 @@ export class Revert {
         if (!newRevision.isPopulated()) newRevision.populate();
 
         if (diffIcons) diffIcons.onRevertStageChange(RevertStage.Details);
-        const latestCleanRevision = await newRevision.page.getLatestRevisionNotByUser(
-            newRevision.user.username
+        const latestCleanRevision: Revision = await newRevision.page.getLatestRevisionNotByUser(
+            newRevision.user
         );
 
         // Bump the latest revision.
@@ -421,6 +413,8 @@ export class Revert {
         // Get target revision information.
         if (!newRevision.isPopulated()) newRevision.populate();
 
+        await Revert.latestRevertTargetCheck(newRevision);
+
         const summary = i18next.t("mediawiki:summaries.rollback", {
             username: newRevision.user.username,
             reason: Revert.extractReasonFromContext(context),
@@ -484,8 +478,6 @@ export class Revert {
             diffIcons.onRevertStageChange(RevertStage.Preparing);
         }
 
-        await Revert.latestRevertTargetCheck(newRevision);
-
         try {
             if (ClientUser.i.inGroup("rollbacker")) {
                 const revert = async (): Promise<void> => {
@@ -518,6 +510,7 @@ export class Revert {
 
         document.removeEventListener("keydown", Revert.revertCancelListener);
         if (diffIcons) diffIcons.onRevertStageChange(RevertStage.Finished);
+        Revert.revertInProgress = false;
     }
 
     /**

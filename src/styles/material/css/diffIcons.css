@@ -1,3 +1,8 @@
+.rwDiffIcons {
+    display: block;
+    margin-bottom: 16px;
+}
+
 .rw-mdc-diffIcons {
     position: relative;
     min-height: 36px;

@@ -16,15 +16,11 @@ import {
     WarningType
 } from "rww/mediawiki";
 import i18next from "i18next";
-import {
-    PageMissingError,
-    UserInvalidError,
-    UserMissingError
-} from "rww/errors/MediaWikiErrors";
-import { isIPAddress } from "rww/util";
+import {PageMissingError, UserInvalidError, UserMissingError} from "rww/errors/MediaWikiErrors";
+import {isIPAddress} from "rww/util";
 
 import Section from "rww/mediawiki/core/Section";
-import { highestWarningLevel } from "rww/mediawiki/warn/WarningUtils";
+import {highestWarningLevel} from "rww/mediawiki/warn/WarningUtils";
 
 /**
  * The User represents a MediaWiki editor, be it a registered user or an IP address.
@@ -219,8 +215,9 @@ export class User {
             revision = this.talkPage.latestCachedRevision;
         } catch (e) {
             if (e instanceof PageMissingError) {
+                debugger;
                 // Page does not exist. We're making a new page.
-            }
+            } else throw e;
         }
 
         // Check if this talk page should be messaged.

@@ -198,6 +198,7 @@ export default class MaterialWarnDialog extends RWUIWarnDialog {
                     );
                     this.uiValidate();
                 }
+                this.updatePreview();
             },
             onClose: async (event) => {
                 if (event.detail.action === "confirm") {

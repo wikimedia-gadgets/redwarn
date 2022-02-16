@@ -3,7 +3,7 @@
 /**
  * RedWarn English Wikipedia Deployment Script
  * ------------------------------------------------------------------------------
- * 
+ *
  * Copyright 2021 The RedWarn Development Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * ------------------------------------------------------------------------------
  */
 (async () => {
@@ -32,7 +32,7 @@
     const signatureWaitTime = 300;
 
     const axiosCookieJarSupport = require("axios-cookiejar-support").default;
-    const {CookieJar} = require("tough-cookie");
+    const { CookieJar } = require("tough-cookie");
     const fs = require("fs");
     const git = {
         log: require("gitlog").default,
@@ -52,11 +52,9 @@
 
     console.log("============================================================");
     console.log("  RedWarn Continuous Integration for the English Wikipedia  ");
-    console.log(`${
-        " ".repeat(30 - Math.floor(CI_DEPLOYSCRIPT_VERSION.length / 2))
-    }${
-        CI_DEPLOYSCRIPT_VERSION
-    }`);
+    console.log(`${" ".repeat(30 - Math.floor(CI_DEPLOYSCRIPT_VERSION.length / 2))
+        }${CI_DEPLOYSCRIPT_VERSION
+        }`);
     console.log("============================================================");
     if (process.env["DRY_RUN"] === "1")
         console.warn("Performing a dry run! No changes will be saved!");
@@ -64,8 +62,8 @@
 
     /**
      * Prints error details and terminates.
-     * 
-     * @param {Error} error 
+     *
+     * @param {Error} error
      */
     function crashAndBurn(error) {
         console.error("Fatal error occurred.");
@@ -114,12 +112,10 @@
 
     // Ensure user agent and configuration
     axios.interceptors.request.use(function (config) {
-        config.headers["User-Agent"] = `RedWarnCI/${
-            CI_DEPLOYSCRIPT_VERSION
-        } (https://gitlab.com/redwarn/redwarn-web; https://w.wiki/s6j) axios/${
-            packageLock.dependencies["axios"].version
-        }`;
-    
+        config.headers["User-Agent"] = `RedWarnCI/${CI_DEPLOYSCRIPT_VERSION
+            } (https://gitlab.com/redwarn/redwarn-web; https://w.wiki/s6j) axios/${packageLock.dependencies["axios"].version
+            }`;
+
         return config;
     });
 
@@ -131,8 +127,8 @@
 
     /**
      * Get a token from MediaWiki.
-     * 
-     * @param {"login"|"csrf"} tokenType 
+     *
+     * @param {"login"|"csrf"} tokenType
      * @returns {string} The login token.
      */
     async function grabToken(tokenType) {
@@ -152,7 +148,7 @@
 
     /**
      * Remaps API:Query page objects from page ID keys to page title keys.
-     * @param {Object} pagesObject 
+     * @param {Object} pagesObject
      */
     function remapPages(pagesObject) {
         const finalObject = {};
@@ -223,14 +219,21 @@
     });
 
     console.log(":: loginToken received...");
-    
+
     // At this point, login credentials are now stored in cookies.
 
     console.log(loginRequest.data);
     const username = loginRequest.data["login"]["lgusername"];
+    // e.g. "RedWarn@RedWarnCI" -> "RedWarn"
+    const expectedUsername = process.env.ENWIKI_CI_USERNAME.match(/^(.*)@/)[1];
+
+    if (!username || username !== expectedUsername) {
+        console.error(`Login failed. Expected username "${expectedUsername}", got "${username}".`);
+        process.exit(401);
+    }
 
     console.log(`:: User: ${username}`);
-    
+
     console.log("Getting deployment metadata...");
     // Get details of the latest metadata files.
     let deployMetadata;
@@ -275,18 +278,18 @@
     } else {
         latestData = JSON.parse(
             deployMetadataPages
-                [`User:${username}/Commit Approval/latest.json`]
-                ["revisions"][0]["slots"]["main"]["content"]
+            [`User:${username}/Commit Approval/latest.json`]
+            ["revisions"][0]["slots"]["main"]["content"]
         )["details"];
     }
-            
+
     if (deployMetadataPages[`User:${username}/Commit Approval`] == null) {
         approvalPageRevision = null;
         console.log(":: Approval page not found.");
     } else {
         approvalPageRevision = deployMetadataPages
-            [`User:${username}/Commit Approval`]
-            ["revisions"][0];
+        [`User:${username}/Commit Approval`]
+        ["revisions"][0];
         console.log(`:: Approval page current revision: ${approvalPageRevision.revid}`);
     }
 
@@ -336,33 +339,27 @@
             action: "edit",
             format: "json",
             title: `User:${username}/Commit Approval`,
-            text: `${
-                fs.readFileSync(path.join(__dirname, "msg_verify_head.wikitext"))
-                    .toString()
-                    .replace(/\{\{\{env:([^}]+)\}\}\}/g, (_, env) => process.env[env])
-            }\n${
-                fs.readFileSync(path.join(__dirname, "msg_verify_first.wikitext"))
+            text: `${fs.readFileSync(path.join(__dirname, "msg_verify_head.wikitext"))
+                .toString()
+                .replace(/\{\{\{env:([^}]+)\}\}\}/g, (_, env) => process.env[env])
+                }\n${fs.readFileSync(path.join(__dirname, "msg_verify_first.wikitext"))
                     .toString()
                     .replace(/\{\{\{commits\}\}\}/g, commitTemplate)
-            }\n${
-                fs.readFileSync(path.join(__dirname, "msg_verify_tail.wikitext"))
+                }\n${fs.readFileSync(path.join(__dirname, "msg_verify_tail.wikitext"))
                     .toString()
-                    .replace(/\{\{\{users\}\}\}/g, 
+                    .replace(/\{\{\{users\}\}\}/g,
                         authorizedUsers
-                        .map((v, i) => `${
-                            authorizedUsers.length > 1 &&
-                            i == authorizedUsers.length - 1 ?
+                            .map((v, i) => `${authorizedUsers.length > 1 &&
+                                i == authorizedUsers.length - 1 ?
                                 " or " : ""
-                        }{{u|${v}}}`)
-                        .join(authorizedUsers.length > 2 ? ", " : "")
-                        .replace(/\s+/g, " ")
+                                }{{u|${v}}}`)
+                            .join(authorizedUsers.length > 2 ? ", " : "")
+                            .replace(/\s+/g, " ")
                     )
-            }`,
-            summary: `Preparing verification page for [[User:${
-                username
-            }/.js]] [[WP:RW/CD|update]] to commit ${
-                headCommit.shortHash
-            } ([[WP:BOT|bot]])`,
+                }`,
+            summary: `Preparing verification page for [[User:${username
+                }/.js]] [[WP:RW/CD|update]] to commit ${headCommit.shortHash
+                } ([[WP:BOT|bot]])`,
             bot: true,
             token: await grabToken("csrf")
         }))).data);
@@ -406,33 +403,27 @@
             format: "json",
             formatversion: 2,
             title: `User:${username}/Commit Approval`,
-            text: `${
-                fs.readFileSync(path.join(__dirname, "msg_verify_head.wikitext"))
-                    .toString()
-                    .replace(/\{\{\{env:([^}]+)\}\}\}/g, (_, env) => process.env[env])
-            }\n${
-                fs.readFileSync(path.join(__dirname, "msg_verify.wikitext"))
+            text: `${fs.readFileSync(path.join(__dirname, "msg_verify_head.wikitext"))
+                .toString()
+                .replace(/\{\{\{env:([^}]+)\}\}\}/g, (_, env) => process.env[env])
+                }\n${fs.readFileSync(path.join(__dirname, "msg_verify.wikitext"))
                     .toString()
                     .replace(/\{\{\{commits\}\}\}/g, commitTemplates.join("\n"))
-            }\n${
-                fs.readFileSync(path.join(__dirname, "msg_verify_tail.wikitext"))
+                }\n${fs.readFileSync(path.join(__dirname, "msg_verify_tail.wikitext"))
                     .toString()
-                    .replace(/\{\{\{users\}\}\}/g, 
+                    .replace(/\{\{\{users\}\}\}/g,
                         authorizedUsers
-                        .map((v, i) => `${
-                            authorizedUsers.length > 1 &&
-                            i == authorizedUsers.length - 1 ?
+                            .map((v, i) => `${authorizedUsers.length > 1 &&
+                                i == authorizedUsers.length - 1 ?
                                 " or " : ""
-                        }{{u|${v}}}`)
-                        .join(authorizedUsers.length > 2 ? ", " : "")
-                        .replace(/\s+/g, " ")
+                                }{{u|${v}}}`)
+                            .join(authorizedUsers.length > 2 ? ", " : "")
+                            .replace(/\s+/g, " ")
                     )
-            }`,
-            summary: `Preparing verification page for [[User:${
-                username
-            }/.js]] [[WP:RW/CD|update]] to commit ${
-                headCommit.shortHash
-            } ([[WP:BOT|bot]])`,
+                }`,
+            summary: `Preparing verification page for [[User:${username
+                }/.js]] [[WP:RW/CD|update]] to commit ${headCommit.shortHash
+                } ([[WP:BOT|bot]])`,
             bot: true,
             token: await grabToken("csrf")
         }))).data);
@@ -449,9 +440,8 @@
 
     let signingDone = false;
     const interval = setInterval(async () => {
-        console.log(`Checking for revisions (${
-            Math.round(((verifyStartTime + signatureWaitTime * 1000) - Date.now()) / 1000)
-        }s left)...`);
+        console.log(`Checking for revisions (${Math.round(((verifyStartTime + signatureWaitTime * 1000) - Date.now()) / 1000)
+            }s left)...`);
 
         // Grab revisions since last check. Bottom is newest.
         const revisionsSince = await axios.get(apiEndpoint, {
@@ -481,9 +471,8 @@
                 continue;
 
             if (!authorizedUsers.includes(revision["user"])) {
-                console.log(`:: ${
-                    revision["user"]
-                } edited the page but is not part of the authorized users list. Disregarding...`);
+                console.log(`:: ${revision["user"]
+                    } edited the page but is not part of the authorized users list. Disregarding...`);
                 continue;
             }
 
@@ -496,15 +485,14 @@
                 formatversion: 2,
                 title: `User:${username}/Commit Approval`,
                 text: (await axios.get(
-                    `https://signatures.toolforge.org/api/v1/check/en.wikipedia.org/${
-                        encodeURIComponent(revision["user"])
+                    `https://signatures.toolforge.org/api/v1/check/en.wikipedia.org/${encodeURIComponent(revision["user"])
                     }`
                 )).data.signature,
                 prop: "text",
                 onlypst: 1,
                 contentmodel: "wikitext"
             }))).data["parse"]["text"];
-            
+
             console.log(`:: Expecting signature: ${signature}`);
 
             const signatureRegexEscaped = signature
@@ -513,13 +501,12 @@
             const content = revision["slots"]["main"]["content"];
 
             if (!signingDone) {
-                const signatureRegex = new RegExp(`<span id="rwci-a1">\\s*(${
-                    signatureRegexEscaped
-                }) (\\d{2}:.+\\(UTC\\))\\s*<\\/span>`);
+                const signatureRegex = new RegExp(`<span id="rwci-a1">\\s*(${signatureRegexEscaped
+                    }) (\\d{2}:.+\\(UTC\\))\\s*<\\/span>`);
                 const a1Regex = signatureRegex.exec(content);
 
                 console.log(`:: Built RegExp: /${signatureRegex.source}/${signatureRegex.flags}`);
-                
+
                 if (a1Regex != null && a1Regex[1] && a1Regex[2]) {
                     signingInfo = {
                         user: revision.user,
@@ -527,15 +514,13 @@
                         signature: a1Regex[1],
                         date: a1Regex[2]
                     };
-                    console.log(`:: ${
-                        revision["user"]
-                    } has verified themselves at ${signingInfo["date"]}`);
+                    console.log(`:: ${revision["user"]
+                        } has verified themselves at ${signingInfo["date"]}`);
 
                     signingDone = true;
                 } else {
-                    console.log(`:: Failed to verify user ${
-                        revision["user"]
-                    }'s approval.`);
+                    console.log(`:: Failed to verify user ${revision["user"]
+                        }'s approval.`);
                     console.log(a1Regex);
                 }
             }
@@ -579,24 +564,18 @@
             action: "edit",
             format: "json",
             title: `User:${username}/.js`,
-            text: 
+            text:
                 fs.readFileSync(path.resolve(root, "public", "redwarn.js"))
                     .toString(),
-            summary: `[[WP:RW/CD|Updating script]] to commit as of ${
-                headCommit.shortHash
-            }: "${
-                headCommit.message
+            summary: `[[WP:RW/CD|Updating script]] to commit as of ${headCommit.shortHash
+                }: "${headCommit.message
                     .split("\n")[0]
                     .substr(0, 50)
-            }" by ${
-                headCommit.author
-            } ([[WP:BOT|bot]], triggered by [[User:${
-                signingInfo.user
-            }|${
-                signingInfo.user
-            }]] ([[Special:Diff/${
-                signingInfo.revision
-            }|approval]]))`,
+                }" by ${headCommit.author
+                } ([[WP:BOT|bot]], triggered by [[User:${signingInfo.user
+                }|${signingInfo.user
+                }]] ([[Special:Diff/${signingInfo.revision
+                }|approval]]))`,
             bot: true,
             token: await grabToken("csrf")
         }))).data);
@@ -617,21 +596,15 @@
                 }
             }
             ),
-            summary: `[[WP:RW/CD|Updating latest commit tracking file]] to commit as of ${
-                headCommit.shortHash
-            }: "${
-                headCommit.message
+            summary: `[[WP:RW/CD|Updating latest commit tracking file]] to commit as of ${headCommit.shortHash
+                }: "${headCommit.message
                     .split("\n")[0]
                     .substr(0, 50)
-            }" by ${
-                headCommit.author
-            } ([[WP:BOT|bot]], triggered by [[User:${
-                signingInfo.user
-            }|${
-                signingInfo.user
-            }]] ([[Special:Diff/${
-                signingInfo.revision
-            }|approval]]))`,
+                }" by ${headCommit.author
+                } ([[WP:BOT|bot]], triggered by [[User:${signingInfo.user
+                }|${signingInfo.user
+                }]] ([[Special:Diff/${signingInfo.revision
+                }|approval]]))`,
             bot: true,
             token: await grabToken("csrf")
         }))).data);
@@ -645,7 +618,7 @@
         action: "edit",
         format: "json",
         title: `User:${username}/Commit Approval`,
-        text: 
+        text:
             fs.readFileSync(path.join(__dirname, "msg_verify_done.wikitext"))
                 .toString(),
         summary: `[[WP:RW/CD|Cleaning up...]] ([[WP:BOT|bot]])`,

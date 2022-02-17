@@ -18,7 +18,7 @@ export interface LogItem {
      * Unix epoch
      */
     timestamp: number;
-    code: RWErrors;
+    code?: RWErrors;
     data: Record<string, any>;
 }
 

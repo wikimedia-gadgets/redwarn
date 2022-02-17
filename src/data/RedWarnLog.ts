@@ -1,4 +1,6 @@
-import { RW_LOG_SIGNATURE } from "rww/data/RedWarnConstants";
+import {RW_LOG_SIGNATURE} from "rww/data/RedWarnConstants";
+import RedWarnLocalDB from "rww/data/database/RedWarnLocalDB";
+import {RWFormattedError} from "rww/errors/RWError";
 
 declare global {
     interface Window {
@@ -52,14 +54,14 @@ export default class Log {
                     ? "error"
                     : level == LogLevel.Warn
                     ? "warn"
-                    : "log"
+                    : (level === LogLevel.Info ? "info" : "log")
             ](
                 ...(data.length > 0
                     ? [parts.join(""), ...data]
                     : [parts.join("")])
             );
 
-        Log.entries.push({
+        const logData = {
             tOffset: tOffset,
             level,
             message,
@@ -73,7 +75,20 @@ export default class Log {
                 else return v;
             }),
             stack: level > LogLevel.Info ? new Error().stack : undefined
-        });
+        };
+        Log.entries.push(logData);
+
+        if (logData.level > LogLevel.Warn) {
+            Log.info("If you would like to report this to the developers, please run \"btoa(JSON.stringify(rw.Log.dump()))\" in this console.");
+
+            const now = Date.now();
+            RedWarnLocalDB.i.errorLog.add({
+                id: `${now}`,
+                timestamp: now / 1000,
+                code: data.filter((v) => v instanceof RWFormattedError)[0].code ?? 0,
+                data: logData
+            });
+        }
     }
 
     static dump(): LogDump {

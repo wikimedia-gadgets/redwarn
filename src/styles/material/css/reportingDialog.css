@@ -7,3 +7,11 @@
 .rw-mdc-reportingDialog [data-mdc-textinput] textarea {
     min-height: 150px;
 }
+
+.rw-mdc-reportingDialog--notice {
+    display: inline-block;
+    font-size: 16px;
+    height: 30px;
+    font-weight: 500;
+    letter-spacing: normal;
+}

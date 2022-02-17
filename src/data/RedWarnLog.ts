@@ -98,27 +98,27 @@ export default class Log {
         };
     }
 
-    static trace(message: string | any, data?: Record<string, any>) {
+    static trace(message: string, data?: Record<string, any>) {
         Log.log(LogLevel.Trace, message, data);
     }
 
-    static debug(message: string | any, data?: Record<string, any>) {
+    static debug(message: string, data?: Record<string, any>) {
         Log.log(LogLevel.Debug, message, data);
     }
 
-    static info(message: string | any, data?: Record<string, any>) {
+    static info(message: string, data?: Record<string, any>) {
         Log.log(LogLevel.Info, message, data);
     }
 
-    static warn(message: string | any, data?: Record<string, any>) {
+    static warn(message: string, data?: Record<string, any>) {
         Log.log(LogLevel.Warn, message, data);
     }
 
-    static error(message: string | any, data?: Record<string, any>) {
+    static error(message: string, data?: Record<string, any>) {
         Log.log(LogLevel.Error, message, data);
     }
 
-    static fatal(message: string | any, data?: Record<string, any>) {
+    static fatal(message: string, data?: Record<string, any>) {
         Log.log(LogLevel.Fatal, message, data);
     }
 }

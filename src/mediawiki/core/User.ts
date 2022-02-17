@@ -295,7 +295,8 @@ export class User {
                         })
                     }
                 );
-            throw e;
+            else
+                throw e;
         }
         return true;
     }

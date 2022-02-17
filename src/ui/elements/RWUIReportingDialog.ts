@@ -5,11 +5,11 @@ import { ReportVenueMode } from "rww/mediawiki/report/ReportVenue";
 import { RWUIDialog, RWUIDialogProperties } from "rww/ui/elements/RWUIDialog";
 import { Report } from "rww/mediawiki/report/Report";
 
-export type RWUIReportingDialogTargetType<
-    T extends ReportVenue
-> = T["mode"] extends ReportVenueMode.User ? User : Page;
+export type RWUIReportingDialogTargetType<T extends ReportVenue> =
+    T["mode"] extends ReportVenueMode.User ? User : Page;
 export interface RWUIReportingDialogProps extends RWUIDialogProperties {
     venue: ReportVenue;
+    notice?: string;
     target?: User | Page;
 }
 

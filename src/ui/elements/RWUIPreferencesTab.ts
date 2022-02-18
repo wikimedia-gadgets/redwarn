@@ -1,9 +1,12 @@
-import { Setting } from "rww/config/user/Setting";
+import { ConfigurationSet } from "rww/config/user/Configuration";
+import { PrimitiveSetting } from "rww/config/user/Setting";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 
 export interface RWUIPreferencesTabProperties extends RWUIElementProperties {
     title: string;
-    items: Setting<any>[];
+    items: PrimitiveSetting<any>[];
+    active: boolean;
+    onChange: (setting: PrimitiveSetting<any>) => void;
 }
 
 export class RWUIPreferencesTab extends RWUIElement {
@@ -14,6 +17,11 @@ export class RWUIPreferencesTab extends RWUIElement {
      */
     element?: HTMLDivElement;
 
+    /**
+     * The HTMLButtonElement which contains the tab bar item.
+     */
+    tabBarElement?: HTMLButtonElement;
+
     constructor(readonly props: RWUIPreferencesTabProperties) {
         super();
     }
@@ -22,6 +30,20 @@ export class RWUIPreferencesTab extends RWUIElement {
      * Renders the preferences tab.
      */
     render(): HTMLDivElement {
+        throw new Error("Attempted to call abstract method");
+    }
+
+    /**
+     * Renders the preferences tab bar item.
+     */
+    renderTabBarItem(): HTMLButtonElement {
+        throw new Error("Attempted to call abstract method");
+    }
+
+    /**
+     * Activates the tab.
+     */
+    activate(): void {
         throw new Error("Attempted to call abstract method");
     }
 }

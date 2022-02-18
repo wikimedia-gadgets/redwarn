@@ -11,6 +11,8 @@ import { RWUIExtendedOptions } from "rww/ui/elements/RWUIExtendedOptions";
 import { RWUIProtectionRequestDialog } from "rww/ui/elements/RWUIProtectionRequestDialog";
 import { RWUIReportingDialog } from "rww/ui/elements/RWUIReportingDialog";
 import { RWUIPreferencesTab } from "rww/ui/elements/RWUIPreferencesTab";
+import { RWUIPreferencesItem } from "./elements/RWUIPreferencesItem";
+import { RWUIPreferences } from "./elements/RWUIPreferences";
 
 /**
  * Redirect class for easy access. UI elements of RedWarn are also created here.
@@ -81,5 +83,7 @@ export const RWUIElements = {
     [RWUIPageIcons.elementName]: RWUIPageIcons,
     [RWUIExtendedOptions.elementName]: RWUIExtendedOptions,
     [RWUIReportingDialog.elementName]: RWUIReportingDialog,
+    [RWUIPreferences.elementName]: RWUIPreferences,
     [RWUIPreferencesTab.elementName]: RWUIPreferencesTab,
+    [RWUIPreferencesItem.elementName]: RWUIPreferencesItem,
 };

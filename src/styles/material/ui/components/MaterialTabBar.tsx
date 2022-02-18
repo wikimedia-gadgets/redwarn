@@ -19,7 +19,7 @@ export default function ({
 }: MaterialTabBarProps): JSX.Element {
     const _id = !id ? `rwTabBar__${generateId(8)}` : id;
 
-    const tooltipElement = (
+    const tabBarElement = (
         <div class="mdc-tab-bar" role="tablist" id={_id}>
             <div class="mdc-tab-scroller">
                 <div class="mdc-tab-scroller__scroll-area">
@@ -31,7 +31,7 @@ export default function ({
         </div>
     );
 
-    const tabBar = new MDCTabBar(tooltipElement);
+    const tabBar = new MDCTabBar(tabBarElement);
     tabBar.focusOnActivate = focusOnActivate;
     tabBar.useAutomaticActivation = useAutomaticActivation;
     tabBar.activateTab(activeTabIndex);
@@ -45,5 +45,5 @@ export default function ({
         }
     });
 
-    return tooltipElement;
+    return tabBarElement;
 }

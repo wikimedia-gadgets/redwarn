@@ -48,10 +48,10 @@ const configurationUpdaters: { [key: number]: ConfigurationUpdater } = {
                                 RevertDoneOption.QuickTemplate;
                             break;
                         case "RWRBDONEwarnUsr":
-                            config.revertDoneOption = "warnUser";
+                            config.revertDoneOption = RevertDoneOption.WarnUser;
                             break;
                         case "RWRBDONEreportUsr":
-                            config.revertDoneOption = "reportUser";
+                            config.revertDoneOption = RevertDoneOption.WarnUser;
                             break;
                         default:
                             Log.error("Unknown rwRollbackDoneOption:", value);

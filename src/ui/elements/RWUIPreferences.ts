@@ -1,8 +1,8 @@
+import { Configuration } from "rww/config/user/Configuration";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
-import { RWUIPreferencesTab } from "./RWUIPreferencesTab";
 
 export interface RWUIPreferencesProperties extends RWUIElementProperties {
-    tabs: RWUIPreferencesTab[];
+    excludeTabs?: string[];
 }
 
 export class RWUIPreferences extends RWUIElement {

@@ -21,6 +21,9 @@ import MaterialExtendedOptions from "rww/styles/material/ui/MaterialExtendedOpti
 import MaterialProtectionRequestDialog from "rww/styles/material/ui/MaterialProtectionRequestDialog";
 import MaterialReportingDialog from "rww/styles/material/ui/MaterialReportingDialog";
 import promiseSplit from "rww/util/promiseSplit";
+import MaterialPreferences from "./ui/MaterialPreferences";
+import MaterialPreferencesTab from "./ui/MaterialPreferencesTab";
+import MaterialPreferencesItem from "./ui/MaterialPreferencesItem";
 
 const MaterialStyle: Style = {
     name: "material",
@@ -32,6 +35,7 @@ const MaterialStyle: Style = {
             author: ["The RedWarn Development Team", "Google, Inc."],
             // \u2014 is an emdash
             description:
+                // TODO: change this to something like "classic but improved/better"
                 "RedWarn's classic look-and-feel \u2014 an implementation of Google's Material Design.",
 
             homepage: "https://en.wikipedia.org/wiki/WP:RW",
@@ -74,6 +78,9 @@ const MaterialStyle: Style = {
         rwPageIcons: MaterialPageIcons,
         rwExtendedOptions: MaterialExtendedOptions,
         rwReportingDialog: MaterialReportingDialog,
+        rwPreferences: MaterialPreferences,
+        rwPreferencesTab: MaterialPreferencesTab,
+        rwPreferencesItem: MaterialPreferencesItem,
     },
 
     hooks: {

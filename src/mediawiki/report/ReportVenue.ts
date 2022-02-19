@@ -18,8 +18,9 @@ import { submitReport } from "rww/mediawiki/report/Report";
  */
 export enum ReportVenueDisplayLocations {
     None,
-    PageOptions = 1 << 0,
+    PageIcons = 1 << 0,
     ExtendedOptions = 1 << 1,
+    RevertDoneOption = 1 << 2,
 }
 
 export enum ReportVenueMode {
@@ -161,27 +162,40 @@ export function deserializeReportVenue(
 }
 
 export function getReportVenueIcons(): PageIcon[] {
-    return RedWarnWikiConfiguration.c.reporting.map((venue) => {
-        return {
-            id: "report_" + venue.shortName.replace(/[^A-Z0-9]/gi, "-"),
-            name: i18next.t("ui:pageIcons.report", {
-                name: venue.name.includes(" ") ? venue.shortName : venue.name,
-            }),
-            icon: venue.icon,
-            color: venue.color,
-            // Allow all allowed namespaces (all namespaces by default) except special pages.
-            visible: () =>
-                !RedWarnStore.isSpecialPage() &&
-                (venue.allowedNamespaces?.includes(
-                    RedWarnStore.currentNamespaceID
-                ) ??
-                    true),
-            async action(): Promise<void> {
-                const report = await new RedWarnUI.ReportingDialog({
-                    venue,
-                }).show();
-                if (report != null) await submitReport(report);
-            },
-        };
-    });
+    return RedWarnWikiConfiguration.c.reporting
+        .filter(
+            (venue) =>
+                (venue.display &
+                    ReportVenueDisplayLocations.ExtendedOptions) !==
+                    0 ||
+                (venue.display & ReportVenueDisplayLocations.PageIcons) !== 0
+        )
+        .map((venue) => {
+            return {
+                id: "report_" + venue.shortName.replace(/[^A-Z0-9]/gi, "-"),
+                name: i18next.t("ui:pageIcons.report", {
+                    name: venue.name.includes(" ")
+                        ? venue.shortName
+                        : venue.name,
+                }),
+                icon: venue.icon,
+                color: venue.color,
+                default:
+                    (venue.display & ReportVenueDisplayLocations.PageIcons) !==
+                    0,
+                // Allow all allowed namespaces (all namespaces by default) except special pages.
+                visible: () =>
+                    !RedWarnStore.isSpecialPage() &&
+                    (venue.allowedNamespaces?.includes(
+                        RedWarnStore.currentNamespaceID
+                    ) ??
+                        true),
+                async action(): Promise<void> {
+                    const report = await new RedWarnUI.ReportingDialog({
+                        venue,
+                    }).show();
+                    if (report != null) await submitReport(report);
+                },
+            };
+        });
 }

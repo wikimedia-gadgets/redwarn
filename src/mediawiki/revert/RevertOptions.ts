@@ -183,10 +183,7 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             actionType: "custom",
             name: i18next.t("revert:rollbackOptions.more-options.name"),
             action: () => {
-                // TODO: Preferences
-                RedWarnUI.Toast.quickShow({
-                    content: "This feature has not been implemented yet.",
-                });
+                new RedWarnUI.ExtendedOptions({ showDiffIcons: true }).show();
             },
             severity: ActionSeverity.Neutral,
             icon: "more_vert",

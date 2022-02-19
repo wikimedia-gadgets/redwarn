@@ -8,7 +8,8 @@
     "redo": "Redo",
 
     "extendedOptions": {
-        "title": "More Options"
+        "title": "More Options",
+        "extraRevertOptions": "Additional revert options"
     },
     "pageIcons": {
         "message": "New Message",
@@ -46,10 +47,10 @@
         "undone": "Action undone.",
         "viewAction": "View",
         "pleaseWait": "Please wait...",
-        "restoreError": "Sorry, there was an error, likely an edit conflict. This edit has not been restored.",
+        "restoreError": "Sorry, there was an error, likely an edit conflict. This edit was not restored.",
         "rollbackError": "Sorry, there was an error performing a rollback.",
-        "newerRev": "A newer revision was detected. Your rollback has not been applied.",
-        "userUndefined": "Sorry, the target user does not exist, cannot be found, or is hidden from the public. Your action has not been completed.",
+        "newerRev": "A newer revision was detected. Your revert was not applied.",
+        "userUndefined": "Sorry, the target user does not exist, cannot be found, or is hidden from the public. Your action was not completed.",
         "userWarned": "User warned.",
         "userWarnedAction": "View",
         "userWarnFailed": "There was a problem warning the user. Please verify if the user has been warned before issuing another warning.",
@@ -98,7 +99,7 @@
         "levelInfo_final": "User has received a level 4 final warning this month. $t(ui:userSelect.report)",
         "levelInfo_immediate": "User has received an immediate level 4 final warning this month. $t(ui:userSelect.report)",
 
-        "report": "Click to report to AIV.",
+        "report": "Click to report.",
         "edits": "{{edits}} edits",
         "age": "Joined {{localeAge}}",
 

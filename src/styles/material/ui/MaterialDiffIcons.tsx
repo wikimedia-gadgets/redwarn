@@ -82,8 +82,9 @@ const MaterialRevertProgress: Record<RevertStage | RestoreStage, number> = {
     [RestoreStage.Finished]: 1,
 };
 
+// TODO: Remove in favor of color customization.
 // Default severity colors.
-const MaterialActionSeverityColors: Record<ActionSeverity, string> = {
+export const MaterialActionSeverityColors: Record<ActionSeverity, string> = {
     // Default
     [ActionSeverity.Neutral]: "black",
     [ActionSeverity.GoodFaith]: "green",
@@ -93,16 +94,19 @@ const MaterialActionSeverityColors: Record<ActionSeverity, string> = {
     [ActionSeverity.Critical]: "red",
 };
 
-const MaterialHighContrastActionSeverityColors: Record<ActionSeverity, string> =
-    {
-        // High contrast
-        [ActionSeverity.Neutral]: "black",
-        [ActionSeverity.GoodFaith]: "blue",
-        [ActionSeverity.Mild]: "blue",
-        [ActionSeverity.Moderate]: "red",
-        [ActionSeverity.Severe]: "red",
-        [ActionSeverity.Critical]: "red",
-    };
+// TODO: Remove in favor of color customization.
+export const MaterialHighContrastActionSeverityColors: Record<
+    ActionSeverity,
+    string
+> = {
+    // High contrast
+    [ActionSeverity.Neutral]: "black",
+    [ActionSeverity.GoodFaith]: "blue",
+    [ActionSeverity.Mild]: "blue",
+    [ActionSeverity.Moderate]: "red",
+    [ActionSeverity.Severe]: "red",
+    [ActionSeverity.Critical]: "red",
+};
 
 export default class MaterialDiffIcons extends RWUIDiffIcons {
     _context: RevertContextBase &
@@ -235,7 +239,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
     renderRevertDoneOptions(): JSX.Element {
         const options: JSX.Element[] = [];
 
-        for (const option of Object.values(RevertDoneOptions())) {
+        for (const option of RevertDoneOptions()) {
             if (this.latestIcons || (!this.latestIcons && option.showOnRestore))
                 options.push(
                     <MaterialIconButton

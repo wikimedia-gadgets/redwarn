@@ -5,7 +5,7 @@
         },
         "agf": {
             "name": "Assume good faith and rollback",
-            "summary": "Reverting [[WP:AGF|good faith]] edits"
+            "summary": "Reverting [[WP:AGF|good faith]] edits: "
         },
         "preview": {
             "name": "Preview Rollback"
@@ -22,7 +22,7 @@
         "message": "Send this user a message",
         "template": "Template this user",
         "warn": "Warn this user",
-        "report": "Report this user",
+        "report": "Report to {{venue}}",
         "mat": "Multiple Action Tool",
         "options": "Open the \"More Options\" panel"
     }

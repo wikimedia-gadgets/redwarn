@@ -3,19 +3,26 @@ import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
-    MaterialDialogTitle
+    MaterialDialogTitle,
 } from "rww/styles/material/ui/MaterialDialog";
 import { h } from "tsx-dom";
 import i18next from "i18next";
 import MaterialButton from "rww/styles/material/ui/components/MaterialButton";
 import {
     MaterialList,
-    MaterialListItem
+    MaterialListDivider,
+    MaterialListItem,
+    MaterialListSubheader,
 } from "rww/styles/material/ui/components/MaterialList";
 import PageIcons from "rww/ui/definitions/PageIcons";
 import "../css/extendedOptions.css";
 import toCSS from "rww/styles/material/util/toCSS";
 import { Configuration } from "rww/config/user/Configuration";
+import RevertOptions from "rww/mediawiki/revert/RevertOptions";
+import {
+    MaterialActionSeverityColors,
+    MaterialHighContrastActionSeverityColors,
+} from "rww/styles/material/ui/MaterialDiffIcons";
 
 export default class MaterialExtendedOptions extends RWUIExtendedOptions {
     show(): Promise<void> {
@@ -24,6 +31,37 @@ export default class MaterialExtendedOptions extends RWUIExtendedOptions {
 
     renderOptions(): JSX.Element[] {
         const items: JSX.Element[] = [];
+
+        if (this.props.showDiffIcons) {
+            items.push(
+                <MaterialListSubheader>
+                    {i18next.t<string>("ui:extendedOptions.extraRevertOptions")}
+                </MaterialListSubheader>
+            );
+            for (const diffIcon of Object.values(RevertOptions.loaded)) {
+                if (diffIcon.enabled) continue;
+
+                const color =
+                    (diffIcon.color ??
+                    Configuration.Accessibility.highContrast.value
+                        ? MaterialHighContrastActionSeverityColors[
+                              diffIcon.severity
+                          ]
+                        : MaterialActionSeverityColors[diffIcon.severity]) ||
+                    "black";
+                items.push(
+                    <MaterialListItem
+                        icon={diffIcon.icon}
+                        color={color}
+                        iconColor={color}
+                        data-rw-revert-option={diffIcon.id}
+                    >
+                        {diffIcon.name}
+                    </MaterialListItem>
+                );
+            }
+            items.push(<MaterialListDivider />);
+        }
 
         PageIcons().forEach((icon) => {
             if (
@@ -53,10 +91,10 @@ export default class MaterialExtendedOptions extends RWUIExtendedOptions {
             <MaterialDialog
                 id={this.id}
                 surfaceProperties={{
-                    style: "min-width: 35vw;"
+                    style: "min-width: 35vw;",
                 }}
                 containerProperties={{
-                    class: "rw-mdc-extendedOptions"
+                    class: "rw-mdc-extendedOptions",
                 }}
             >
                 <MaterialDialogTitle tabIndex={0}>

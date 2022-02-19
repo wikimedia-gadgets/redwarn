@@ -7,10 +7,9 @@ import {
     GenericAPIError,
     GenericAPIErrorData,
     PageMissingError,
-    SpecializedMediaWikiErrors
+    SpecializedMediaWikiErrors,
 } from "rww/errors/MediaWikiErrors";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
-import { ApiQueryAllMessagesParams } from "types-mediawiki/api_params";
 import { RWAggregateError } from "rww/errors/RWError";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
@@ -26,7 +25,7 @@ export class MediaWikiAPI {
         const finalParameters = Object.assign(
             {
                 format: "json",
-                formatversion: 2
+                formatversion: 2,
             },
             parameters
         );
@@ -84,7 +83,7 @@ export class MediaWikiAPI {
 
     static async getMessage(
         messages: string[],
-        ajaxOptions?: ApiQueryAllMessagesParams
+        ajaxOptions?: Record<string, any>
     ): Promise<Record<string, any>> {
         try {
             return await MediaWikiAPI.api.getMessages(messages, ajaxOptions);
@@ -112,35 +111,35 @@ export class MediaWikiAPI {
                 formatversion: 2,
                 // The format of the "errors" field.
                 // https://www.mediawiki.org/wiki/API:Errors_and_warnings#Error_formats
-                errorformat: "plaintext"
+                errorformat: "plaintext",
             },
             ajax: {
                 headers: {
                     // Set a RedWarn user agent for RedWarn requests.
                     // https://www.mediawiki.org/wiki/API:Etiquette#The_User-Agent_header
-                    "Api-User-Agent": i18next.t("common:redwarn.userAgent")
-                }
-            }
+                    "Api-User-Agent": i18next.t("common:redwarn.userAgent"),
+                },
+            },
         });
 
         // Preload configurations
         await Promise.all([
             ClientUser.i.redwarnConfigPage
                 .getLatestRevision({
-                    forceRefresh: false
+                    forceRefresh: false,
                 })
                 .catch((e) => {
                     if (!(e instanceof PageMissingError)) throw e;
                     return null;
                 }),
-            RedWarnWikiConfiguration.preloadWikiConfiguration()
+            RedWarnWikiConfiguration.preloadWikiConfiguration(),
         ]);
 
         await Promise.all([
             // Initialize the current user.
             ClientUser.i.init(),
             RedWarnWikiConfiguration.loadWikiConfiguration(),
-            MediaWikiAPI.loadGroupNames()
+            MediaWikiAPI.loadGroupNames(),
         ]);
     }
 
@@ -153,7 +152,7 @@ export class MediaWikiAPI {
                 amenableparser: 1,
                 amincludelocal: 1,
                 amfilter: "-member",
-                amprefix: "group-"
+                amprefix: "group-",
             });
             const userGroupPages = await MediaWikiAPI.get({
                 action: "query",
@@ -161,7 +160,7 @@ export class MediaWikiAPI {
                 meta: "allmessages",
                 amenableparser: 1,
                 amincludelocal: 1,
-                amprefix: "grouppage-"
+                amprefix: "grouppage-",
             });
 
             const groups = new Map<string, Group>();
@@ -176,7 +175,7 @@ export class MediaWikiAPI {
                 if (!groups.has(groupName))
                     groups.set(groupName, {
                         name: groupName,
-                        displayName: message["content"]
+                        displayName: message["content"],
                     });
                 else groups.get(groupName).displayName = message["content"];
             }
@@ -190,7 +189,7 @@ export class MediaWikiAPI {
                         name: groupName,
                         page: Page.fromTitle(
                             message["content"].replace(/{{ns:(.+?)}}/gi, "$1:")
-                        )
+                        ),
                     });
                 else
                     groups.get(groupName).page = Page.fromTitle(
@@ -209,7 +208,7 @@ export class MediaWikiAPI {
                 );
                 RedWarnLocalDB.i.cacheTracker.put({
                     id: "groupCache",
-                    timestamp: Date.now()
+                    timestamp: Date.now(),
                 });
             } catch (e) {
                 Log.error("Failed to save to group cache. Skipping...", e);

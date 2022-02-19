@@ -2,18 +2,22 @@ import { DiffIconRevertContext } from "rww/mediawiki/revert/Revert";
 import i18next from "i18next";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import { User, WarningManager } from "rww/mediawiki";
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
+import {
+    isPageModeReportVenue,
+    ReportVenueDisplayLocations,
+} from "rww/mediawiki/report/ReportVenue";
 
 export enum RevertDoneOption {
     LatestRevision,
     NewMessage,
     QuickTemplate,
     WarnUser,
-    Report,
     MultipleActionTool,
     MoreOptions,
 }
 
-export interface RollbackDoneOptionDetails {
+export interface RevertDoneOptionDetails {
     name: string;
     /**
      * TODO: Move to per-style icon map.
@@ -22,40 +26,64 @@ export interface RollbackDoneOptionDetails {
     showOnRestore: boolean;
     action: (context: DiffIconRevertContext) => any;
 }
+
+export function ReportingRevertDoneOptions(): RevertDoneOptionDetails[] {
+    const options: RevertDoneOptionDetails[] = [];
+
+    for (const venue of RedWarnWikiConfiguration.c.reporting) {
+        if (venue.display & ReportVenueDisplayLocations.RevertDoneOption) {
+            options.push({
+                name: i18next.t("revert:rollbackDoneOptions.report", {
+                    venue: venue.shortName,
+                }),
+                icon: venue.icon,
+                showOnRestore: false,
+                action: (context): void => {
+                    new RedWarnUI.ReportingDialog({
+                        venue: venue,
+                        target: isPageModeReportVenue(venue)
+                            ? context.newRevision.page
+                            : context.newRevision.user,
+                    }).show();
+                },
+            });
+        }
+    }
+
+    return options;
+}
+
 /* Implemented as a function in order to parse internationalization strings at runtime. */
-export function RevertDoneOptions(): Record<
-    RevertDoneOption,
-    RollbackDoneOptionDetails
-> {
-    return {
-        [RevertDoneOption.LatestRevision]: {
+export function RevertDoneOptions(): RevertDoneOptionDetails[] {
+    return [
+        {
             name: i18next.t("prefs:revert.revertDoneOption.options.latest"),
             icon: "watch_later",
             showOnRestore: true,
             action: async (context): Promise<void> =>
-                context.newRevision.page.navigateToLatestRevision()
+                context.newRevision.page.navigateToLatestRevision(),
         },
-        [RevertDoneOption.NewMessage]: {
+        {
             name: i18next.t("revert:rollbackDoneOptions.message"),
             icon: "send",
             showOnRestore: false,
             action: (): void => {
                 RedWarnUI.Toast.quickShow({
-                    content: "This feature has not been implemented yet."
+                    content: "This feature has not been implemented yet.",
                 });
-            }
+            },
         },
-        [RevertDoneOption.QuickTemplate]: {
+        {
             name: i18next.t("revert:rollbackDoneOptions.template"),
             icon: "library_add",
             showOnRestore: false,
             action: (): void => {
                 RedWarnUI.Toast.quickShow({
-                    content: "This feature has not been implemented yet."
+                    content: "This feature has not been implemented yet.",
                 });
-            }
+            },
         },
-        [RevertDoneOption.WarnUser]: {
+        {
             name: i18next.t("revert:rollbackDoneOptions.warn"),
             icon: "report",
             showOnRestore: false,
@@ -68,42 +96,30 @@ export function RevertDoneOptions(): Record<
                             : context.reason.actionType === "revert"
                             ? WarningManager.warnings[context.reason.warning]
                             : undefined,
-                    relatedPage: context.newRevision.page
+                    relatedPage: context.newRevision.page,
                 }).show();
                 await User.warn(warningOptions);
-            }
+            },
         },
-        [RevertDoneOption.Report]: {
-            name: i18next.t("revert:rollbackDoneOptions.report"),
-            icon: "gavel",
-            showOnRestore: false,
-            action: (): void => {
-                RedWarnUI.Toast.quickShow({
-                    content: "This feature has not been implemented yet."
-                });
-            }
-        },
-        [RevertDoneOption.MultipleActionTool]: {
+        ...ReportingRevertDoneOptions(),
+        {
             name: i18next.t("revert:rollbackDoneOptions.mat"),
             icon: "auto_fix_high",
             showOnRestore: true,
             action: (): void => {
                 // TODO: Multiple Action Tool
                 RedWarnUI.Toast.quickShow({
-                    content: "This feature has not been implemented yet."
+                    content: "This feature has not been implemented yet.",
                 });
-            }
+            },
         },
-        [RevertDoneOption.MoreOptions]: {
+        {
             name: i18next.t("revert:rollbackDoneOptions.options"),
             icon: "more_vert",
             showOnRestore: true,
             action: (): void => {
-                // TODO: Preferences
-                RedWarnUI.Toast.quickShow({
-                    content: "This feature has not been implemented yet."
-                });
-            }
-        }
-    };
+                new RedWarnUI.ExtendedOptions().show();
+            },
+        },
+    ];
 }

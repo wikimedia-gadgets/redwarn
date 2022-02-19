@@ -1,5 +1,9 @@
 import { RWUIDialog, RWUIDialogProperties } from "rww/ui/elements/RWUIDialog";
 
+export interface RWUIExtendedOptionsProperties extends RWUIDialogProperties {
+    showDiffIcons?: boolean;
+}
+
 export class RWUIExtendedOptions extends RWUIDialog<void> {
     show(): Promise<void> {
         throw new Error("Attempted to call abstract method");
@@ -10,7 +14,7 @@ export class RWUIExtendedOptions extends RWUIDialog<void> {
 
     public static readonly elementName = "rwExtendedOptions";
 
-    constructor(readonly props: RWUIDialogProperties = {}) {
+    constructor(readonly props: RWUIExtendedOptionsProperties = {}) {
         super(props);
     }
 }

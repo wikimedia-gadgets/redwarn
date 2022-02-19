@@ -1,7 +1,7 @@
 import { RW_CONFIG_VERSION } from "rww/data/RedWarnConstants";
 import { RevertMethod } from "rww/config/user/ConfigurationEnums";
-import { RevertDoneOption } from "rww/mediawiki/revert/RevertDoneOptions";
 import Log from "rww/data/RedWarnLog";
+import { RevertDoneOption } from "rww/mediawiki/revert/RevertDoneOptions";
 
 type ConfigurationUpdater = (
     oldConfig: Record<string, unknown>
@@ -48,12 +48,10 @@ const configurationUpdaters: { [key: number]: ConfigurationUpdater } = {
                                 RevertDoneOption.QuickTemplate;
                             break;
                         case "RWRBDONEwarnUsr":
-                            config.revertDoneOption = "warnUser";
-                            break;
-                        case "RWRBDONEreportUsr":
-                            config.revertDoneOption = "reportUser";
+                            config.revertDoneOption = RevertDoneOption.WarnUser;
                             break;
                         default:
+                            // Discarding RWRBDONEreportUsr. Bad option, policy-wise.
                             Log.error("Unknown rwRollbackDoneOption:", value);
                     }
                     delete config.rwRollbackDoneOption;
@@ -82,7 +80,7 @@ const configurationUpdaters: { [key: number]: ConfigurationUpdater } = {
 
         config.configVersion = 1;
         return config;
-    }
+    },
 };
 
 /**
@@ -98,9 +96,10 @@ export default function (oldConfig: Record<string, any>): Record<string, any> {
         if (configurationUpdaters[modifiedConfig.configVersion ?? 0] == null)
             throw `No updater for configuration version: ${modifiedConfig.configVersion}`;
 
-        modifiedConfig = configurationUpdaters[
-            modifiedConfig.configVersion ?? 0
-        ](modifiedConfig);
+        modifiedConfig =
+            configurationUpdaters[modifiedConfig.configVersion ?? 0](
+                modifiedConfig
+            );
     }
 
     return modifiedConfig;

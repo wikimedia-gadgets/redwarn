@@ -62,9 +62,17 @@ export default class RedWarnUI {
     static get ReportingDialog(): typeof RWUIReportingDialog {
         return StyleManager.activeStyle.classMap.rwReportingDialog;
     }
+    /** Alias of {@link StyleManager.activeStyle.classMap.rwPreferences} */
+    static get Preferences(): typeof RWUIPreferences {
+        return StyleManager.activeStyle.classMap.rwPreferences;
+    }
     /** Alias of {@link StyleManager.activeStyle.classMap.rwPreferencesTab} */
     static get PreferencesTab(): typeof RWUIPreferencesTab {
         return StyleManager.activeStyle.classMap.rwPreferencesTab;
+    }
+    /** Alias of {@link StyleManager.activeStyle.classMap.rwPreferencesItem} */
+    static get PreferencesItem(): typeof RWUIPreferencesItem {
+        return StyleManager.activeStyle.classMap.rwPreferencesItem;
     }
 }
 

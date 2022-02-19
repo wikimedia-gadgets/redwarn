@@ -4,6 +4,7 @@ import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 export interface RWUIPreferencesItemProperties extends RWUIElementProperties {
     name: string;
     setting: Setting<any>;
+    onChange?: (value: any) => void;
 }
 
 export type RWUIPreferencesItemID = string;
@@ -21,7 +22,7 @@ export class RWUIPreferencesItem extends RWUIElement {
      */
     public result: any;
 
-    protected constructor(readonly props: RWUIPreferencesItemProperties) {
+    constructor(readonly props: RWUIPreferencesItemProperties) {
         super();
         this.props = props;
     }

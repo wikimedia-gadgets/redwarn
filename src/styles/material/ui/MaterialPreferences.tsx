@@ -1,9 +1,8 @@
 import { Configuration } from "rww/config/user/Configuration";
-import { PrimitiveSetting } from "rww/config/user/Setting";
+import { PrimitiveSetting, Setting } from "rww/config/user/Setting";
 import { RWUIPreferences } from "rww/ui/elements/RWUIPreferences";
 import { h } from "tsx-dom";
 import MaterialTabBar from "./components/MaterialTabBar";
-import MaterialTabBarItem from "./components/MaterialTabBarItem";
 import MaterialPreferencesTab from "./MaterialPreferencesTab";
 
 /**
@@ -51,16 +50,12 @@ export default class MaterialPreferences extends RWUIPreferences {
     }
 
     render(): HTMLDivElement {
-        const config: [key: string, set: PrimitiveSetting<any>[]][] =
-            Object.entries(Configuration.configurationSets).map(
-                ([key, set]) => [
-                    key,
-                    Object.entries(set).map(([id, setting]) => ({
-                        id,
-                        value: setting.value,
-                    })),
-                ]
-            );
+        const config: [key: string, set: Setting<any>[]][] = Object.entries(
+            Configuration.configurationSets
+        ).map(([key, set]) => [
+            key,
+            Object.entries(set).map(([_, setting]) => setting),
+        ]);
         const tabs = config.map(
             ([key, value], index) =>
                 new MaterialPreferencesTab({

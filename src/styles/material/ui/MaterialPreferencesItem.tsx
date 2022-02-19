@@ -19,15 +19,24 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
     /** Input element */
     private input: HTMLElement;
 
+    /**
+     * Handles onChange event of the input element.
+     */
+    handleInputChange(value: any): void {
+        this.result = value;
+        // check for onChange function
+        if (this.props.onChange) {
+            this.props.onChange(value);
+        }
+    }
+
     renderInputElement(): HTMLElement {
         switch (this.props.setting.displayInfo.uiInputType) {
             case UIInputType.Switch:
                 this.input = (
                     <MaterialSwitch
                         default={(this.props.setting as Setting<boolean>).value}
-                        onChange={(value) => {
-                            this.result = value;
-                        }}
+                        onChange={this.handleInputChange}
                     />
                 );
                 break;
@@ -48,9 +57,7 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                             })
                         )}
                         direction={"vertical"}
-                        onChange={(value) => {
-                            this.result = value;
-                        }}
+                        onChange={this.handleInputChange}
                     />
                 );
                 break;
@@ -67,9 +74,7 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                             })
                         )}
                         label={this.props.setting.displayInfo.title}
-                        onChange={(value) => {
-                            this.result = value;
-                        }}
+                        onChange={this.handleInputChange}
                     />
                 );
                 break;
@@ -80,9 +85,7 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                         // If the value wasn't actually a string, blame whoever made the setting
                         // for using the Textbox UIInputType for a string value.
                         defaultText={`${this.props.setting.value}`}
-                        onInput={(value) => {
-                            this.result = value;
-                        }}
+                        onInput={this.handleInputChange}
                     />
                 );
                 break;
@@ -94,9 +97,7 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                         // If the value wasn't actually a number, blame whoever made the setting
                         // for using the Textbox UIInputType for a number value.
                         defaultText={`${this.props.setting.value}`}
-                        onInput={(value) => {
-                            this.result = value;
-                        }}
+                        onInput={this.handleInputChange}
                     />
                 );
                 break;
@@ -113,9 +114,7 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                             value: style.name,
                         }))}
                         label={this.props.setting.displayInfo.title}
-                        onChange={(value) => {
-                            this.result = value;
-                        }}
+                        onChange={this.handleInputChange}
                     />
                 );
                 break;
@@ -127,7 +126,9 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                 break;
         }
         return (this.input = this.input ?? (
-            <span>This setting is currently unsupported.</span>
+            <span>
+                This setting ({this.props.name}) is currently unsupported.
+            </span>
         ));
     }
 

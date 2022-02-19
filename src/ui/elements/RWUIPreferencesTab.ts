@@ -1,10 +1,9 @@
-import { ConfigurationSet } from "rww/config/user/Configuration";
-import { PrimitiveSetting } from "rww/config/user/Setting";
+import { PrimitiveSetting, Setting } from "rww/config/user/Setting";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 
 export interface RWUIPreferencesTabProperties extends RWUIElementProperties {
     title: string;
-    items: PrimitiveSetting<any>[];
+    items: Setting<any>[];
     active: boolean;
     onChange: (setting: PrimitiveSetting<any>) => void;
 }

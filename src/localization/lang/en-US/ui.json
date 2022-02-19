@@ -315,7 +315,7 @@
         },
         "restricted": {
             "title": "Risky report",
-            "text": "You are about to report {{group, en-handle-an}} {{group}}. Are you sure about this?"
+            "text": "You are about to report {{group, en-handle-an}} {{group}}. This may be the incorrect venue for such a report. Are you sure about this?"
         },
 
         "done": "Report filed.",

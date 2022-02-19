@@ -27,7 +27,7 @@ export default class ContributionsPageInjector {
 
                 const context = {
                     newRevision: revision,
-                    latestRevision: revision
+                    latestRevision: revision,
                 };
 
                 const previewLink = (
@@ -50,7 +50,7 @@ export default class ContributionsPageInjector {
                                 Object.assign(context, {
                                     prefilledReason:
                                         RedWarnWikiConfiguration.c.warnings
-                                            .vandalismWarning.name
+                                            .vandalismWarning.name,
                                 })
                             )
                         }
@@ -68,10 +68,11 @@ export default class ContributionsPageInjector {
                         onClick={async () => {
                             Revert.revert(
                                 Object.assign(context, {
-                                    prefilledReason: await Revert.promptRollbackReason(
-                                        context,
-                                        ""
-                                    )
+                                    prefilledReason:
+                                        await Revert.promptRollbackReason(
+                                            "",
+                                            context
+                                        ),
                                 })
                             );
                         }}

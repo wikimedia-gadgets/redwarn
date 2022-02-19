@@ -35,7 +35,7 @@ interface ActionRevert {
  * An action with a revert summary which requires input from the user.
  */
 interface ActionPromptedRevert {
-    actionType: "promptedRevert";
+    actionType: "promptedRevert" | "promptedRestore";
     /**
      * The prefilled summary for this revert reason in wikitext.
      */
@@ -114,7 +114,7 @@ export function deserializeRevertOption(
     ) as keyof typeof ActionSeverity;
     return Object.assign(option, {
         id,
-        severity: ActionSeverity[option.severity]
+        severity: ActionSeverity[option.severity],
     });
 }
 
@@ -128,7 +128,7 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             name: i18next.t("revert:rollbackOptions.rollback.name"),
             actionType: "promptedRevert",
             severity: ActionSeverity.Mild,
-            icon: "replay"
+            icon: "replay",
         },
         goodFaithRollback: {
             id: "goodFaithRollback",
@@ -138,7 +138,7 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             actionType: "promptedRevert",
             defaultSummary: i18next.t("revert:rollbackOptions.agf.summary"),
             severity: ActionSeverity.GoodFaith,
-            icon: "thumb_up"
+            icon: "thumb_up",
         },
         preview: {
             id: "preview",
@@ -149,17 +149,17 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             action: async (rollbackContext: RevertContext) => {
                 // TODO: Toast on reload.
                 RedWarnUI.Toast.quickShow({
-                    content: "Redirecting to preview..."
+                    content: "Redirecting to preview...",
                 });
                 redirect(
                     url(RedWarnStore.wikiIndex, {
                         diff: rollbackContext.oldRevision.revisionID,
-                        oldid: rollbackContext.newRevision.revisionID
+                        oldid: rollbackContext.newRevision.revisionID,
                     })
                 );
             },
             severity: ActionSeverity.Neutral,
-            icon: "compare_arrows"
+            icon: "compare_arrows",
         },
         quickTemplate: {
             id: "quickTemplate",
@@ -170,11 +170,11 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             action: () => async () => {
                 // TODO: Quick Template
                 RedWarnUI.Toast.quickShow({
-                    content: "This feature has not been implemented yet."
+                    content: "This feature has not been implemented yet.",
                 });
             },
             severity: ActionSeverity.Neutral,
-            icon: "library_add"
+            icon: "library_add",
         },
         moreOptions: {
             id: "moreOptions",
@@ -185,12 +185,12 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             action: () => {
                 // TODO: Preferences
                 RedWarnUI.Toast.quickShow({
-                    content: "This feature has not been implemented yet."
+                    content: "This feature has not been implemented yet.",
                 });
             },
             severity: ActionSeverity.Neutral,
-            icon: "more_vert"
-        }
+            icon: "more_vert",
+        },
     };
 }
 
@@ -221,7 +221,7 @@ export default class RevertOptions {
     public static get allArray(): RevertOption[] {
         return [
             ...Object.values(RevertOptions.loaded),
-            ...Object.values(RequiredRevertOptions())
+            ...Object.values(RequiredRevertOptions()),
         ];
     }
 }

@@ -1,16 +1,24 @@
 import i18next from "i18next";
-import {RW_VERSION_TAG, RW_WIKIS_SPEEDUP} from "rww/data/RedWarnConstants";
+import { RW_VERSION_TAG, RW_WIKIS_SPEEDUP } from "rww/data/RedWarnConstants";
 import RedWarnStore from "rww/data/RedWarnStore";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import redirect from "rww/util/redirect";
-import {ClientUser, MediaWikiAPI, MediaWikiURL, RestoreStage, RevertStage, Revision, Warning} from "rww/mediawiki";
+import {
+    ClientUser,
+    MediaWikiAPI,
+    MediaWikiURL,
+    RestoreStage,
+    RevertStage,
+    Revision,
+    Warning,
+} from "rww/mediawiki";
 import Log from "rww/data/RedWarnLog";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
-import type {RWUIDiffIcons} from "rww/ui/elements/RWUIDiffIcons";
-import {RevertOption} from "rww/mediawiki/revert/RevertOptions";
-import {RevertMethod} from "rww/config/user/ConfigurationEnums";
-import {Configuration} from "rww/config/user/Configuration";
-import {RevisionNotLatestError} from "rww/errors/MediaWikiErrors";
+import type { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
+import { RevertOption } from "rww/mediawiki/revert/RevertOptions";
+import { RevertMethod } from "rww/config/user/ConfigurationEnums";
+import { Configuration } from "rww/config/user/Configuration";
+import { RevisionNotLatestError } from "rww/errors/MediaWikiErrors";
 
 /**
  * The context of a revert being performed. When used alone (not through
@@ -121,11 +129,29 @@ export class Revert {
     ): Promise<void> {
         const dialog = new RedWarnUI.InputDialog({
             ...i18next.t("ui:restore"),
-            defaultText: options?.defaultText
+            defaultText: options?.defaultText,
         });
         const reason = await dialog.show();
         if (reason !== null) {
             Revert.restore(targetRevision, reason, options?.diffIcons);
+        }
+    }
+
+    static async promptRollback(
+        context: RevertContextBase,
+        options?: {
+            diffIcons?: RWUIDiffIcons;
+            defaultText?: string;
+        }
+    ): Promise<void> {
+        const reason = await Revert.promptRollbackReason(options.defaultText);
+        if (reason !== null) {
+            Revert.revert(
+                Object.assign({}, context, {
+                    diffIcons: options.diffIcons,
+                    reason: reason,
+                })
+            );
         }
     }
 
@@ -135,19 +161,19 @@ export class Revert {
      * content of the target revision.
      *
      * @param targetRevision The revision to restore to.
-     * @param reason The reason for restoring.,
+     * @param reason The reason for restoring.
      * @param diffIcons The {@link RWUIDiffIcons} that triggered this restore.
      */
     static async restore(
         targetRevision: Revision,
-        reason?: string,
+        reason?: string | { isSummary: true; text: string },
         diffIcons?: RWUIDiffIcons
     ): Promise<any> {
         if (Revert.revertInProgress)
             return RedWarnUI.Toast.quickShow({
                 // TODO i18n
                 content:
-                    "You cannot click on another icon while a revert or restore is ongoing."
+                    "You cannot click on another icon while a revert or restore is ongoing.",
             });
 
         document.addEventListener("keydown", Revert.revertCancelListener);
@@ -158,25 +184,42 @@ export class Revert {
             diffIcons.onRestoreStageChange(RestoreStage.Preparing);
         }
 
-        if (!targetRevision.isPopulated()) await targetRevision.populate();
+        if (targetRevision.page == null) {
+            // There's no other option but to do a blocking populate here, since
+            // the target revision page is required to get data on the latest page
+            // revision.
+            await targetRevision.populate();
+        }
 
         if (diffIcons) diffIcons.onRestoreStageChange(RestoreStage.Details);
-        const latestRevision = await targetRevision.page.getLatestRevision({
-            forceRefresh: false
-        });
+        const [, latestRevision] = await Promise.all([
+            targetRevision.isPopulated()
+                ? targetRevision.populate()
+                : Promise.resolve(true),
+            targetRevision.page.getLatestRevision({
+                forceRefresh: false,
+            }),
+        ]);
 
         if (diffIcons) diffIcons.onRestoreStageChange(RestoreStage.Restore);
         const result = await MediaWikiAPI.postWithEditToken({
             action: "edit",
             pageid: targetRevision.page.pageID,
-            summary: i18next.t("mediawiki:summaries.restore", {
-                revID: targetRevision.revisionID,
-                revUser: targetRevision.user.username,
-                reason
-            }),
+            summary:
+                typeof reason === "string" || !reason.isSummary
+                    ? i18next.t("mediawiki:summaries.restore", {
+                          revID: targetRevision.revisionID,
+                          revUser: targetRevision.user.username,
+                          reason:
+                              typeof reason === "string" ? reason : reason.text,
+                      })
+                    : reason.text,
             undo: latestRevision.revisionID,
-            undoafter: targetRevision.revisionID,
-            tags: RedWarnWikiConfiguration.c.meta.tag
+            undoafter:
+                targetRevision.revisionID === latestRevision.revisionID
+                    ? undefined
+                    : targetRevision.revisionID,
+            tags: RedWarnWikiConfiguration.c.meta.tag,
         });
 
         if (!result.edit) {
@@ -184,11 +227,11 @@ export class Revert {
 
             Log.error("Failed to restore revision.", error);
             RedWarnUI.Toast.quickShow({
-                content: i18next.t("ui:toasts.restoreError")
+                content: i18next.t("ui:toasts.restoreError"),
             });
             if (diffIcons) diffIcons.onRestoreFailure(error);
         } else {
-            if (diffIcons) diffIcons.onEndRestore();
+            if (diffIcons) diffIcons.onEndRestore(result);
         }
         if (diffIcons) diffIcons.onRestoreStageChange(RestoreStage.Finished);
 
@@ -213,7 +256,7 @@ export class Revert {
         if (targetRevision.page == null) await targetRevision.populate();
 
         const latestRevision = await targetRevision.getLatestRevision({
-            forceRefresh: true
+            forceRefresh: true,
         });
         if (latestRevision.revisionID !== targetRevision.revisionID) {
             if (
@@ -237,7 +280,7 @@ export class Revert {
                 return null;
             } else {
                 RedWarnUI.Toast.quickShow({
-                    content: i18next.t("ui:toasts.newerRev")
+                    content: i18next.t("ui:toasts.newerRev"),
                 });
                 return null;
             }
@@ -263,14 +306,15 @@ export class Revert {
         if (!latestRevision) return;
 
         // Same page, so use the latestRevision. Higher chance of being populated than newRevision.
-        const targetRevision = await latestRevision.page.getLatestRevisionNotByUser(
-            latestRevision.user
-        );
+        const targetRevision =
+            await latestRevision.page.getLatestRevisionNotByUser(
+                latestRevision.user
+            );
 
         if (targetRevision == null) {
             // TODO: i18n
             RedWarnUI.Toast.quickShow({
-                content: "Can't find an earlier revision to revert to."
+                content: "Can't find an earlier revision to revert to.",
             });
             return;
         }
@@ -286,24 +330,22 @@ export class Revert {
     /**
      * Ask the user to provide a revert reason and then revert the
      * given page to the target revision with that reason.
-     * @param context The revert context.
      * @param defaultReason The default reason to use.
+     * @param context The revert context.
      * @returns reason The rollback reason.
      */
     static async promptRollbackReason(
-        context: RevertContextBase,
-        defaultReason: string
+        defaultReason: string,
+        context?: RevertContextBase
     ): Promise<string> {
-        await Revert.latestRevertTargetCheck(context.newRevision);
+        if (context?.newRevision)
+            await Revert.latestRevertTargetCheck(context.newRevision);
+
         const dialog = new RedWarnUI.InputDialog({
-            width: "40vw",
             ...i18next.t("ui:rollback"),
-            defaultText: defaultReason
+            defaultText: defaultReason || "",
         });
         return await dialog.show();
-
-        // TODO: Move this to the RevertOption native
-        // if (reason != null) return Revert.revert(context);
     }
 
     /**
@@ -336,9 +378,8 @@ export class Revert {
         if (!newRevision.isPopulated()) newRevision.populate();
 
         if (diffIcons) diffIcons.onRevertStageChange(RevertStage.Details);
-        const latestCleanRevision: Revision = await newRevision.page.getLatestRevisionNotByUser(
-            newRevision.user
-        );
+        const latestCleanRevision: Revision =
+            await newRevision.page.getLatestRevisionNotByUser(newRevision.user);
 
         // Bump the latest revision.
         context.latestRevision = await Revert.latestRevertTargetCheck(
@@ -353,7 +394,7 @@ export class Revert {
             if (diffIcons)
                 diffIcons.onRevertFailure(
                     new RevisionNotLatestError({
-                        revision: context.newRevision
+                        revision: context.newRevision,
                     })
                 );
             return;
@@ -364,7 +405,7 @@ export class Revert {
             targetRevisionId: latestCleanRevision.revisionID,
             targetRevisionEditor: latestCleanRevision.user.username,
             version: RW_VERSION_TAG,
-            reason: Revert.extractReasonFromContext(context)
+            reason: Revert.extractReasonFromContext(context),
         });
 
         if (!Revert.revertInProgress) {
@@ -380,7 +421,7 @@ export class Revert {
             summary,
             undo: newRevision.revisionID, // current
             undoafter: latestCleanRevision.revisionID, // restore version
-            tags: RedWarnWikiConfiguration.c.meta.tag
+            tags: RedWarnWikiConfiguration.c.meta.tag,
         });
 
         if (!res["edit"]) {
@@ -392,7 +433,7 @@ export class Revert {
 
             if (diffIcons) diffIcons.onRevertFailure(MediaWikiAPI.error(res));
             RedWarnUI.Toast.quickShow({
-                content: i18next.t("ui:toasts.rollbackError")
+                content: i18next.t("ui:toasts.rollbackError"),
             });
         } else {
             if (diffIcons) diffIcons.onEndRevert();
@@ -418,7 +459,7 @@ export class Revert {
         const summary = i18next.t("mediawiki:summaries.rollback", {
             username: newRevision.user.username,
             reason: Revert.extractReasonFromContext(context),
-            version: RW_VERSION_TAG
+            version: RW_VERSION_TAG,
         });
 
         if (!Revert.revertInProgress) {
@@ -433,7 +474,7 @@ export class Revert {
             newRevision.user.username,
             {
                 summary,
-                tags: RedWarnWikiConfiguration.c.meta.tag
+                tags: RedWarnWikiConfiguration.c.meta.tag,
             }
         );
 
@@ -443,7 +484,7 @@ export class Revert {
 
             if (diffIcons) diffIcons.onRevertFailure(MediaWikiAPI.error(res));
             RedWarnUI.Toast.quickShow({
-                content: i18next.t("ui:toasts.rollbackError")
+                content: i18next.t("ui:toasts.rollbackError"),
             });
         } else {
             if (diffIcons) diffIcons.onEndRevert();
@@ -463,7 +504,7 @@ export class Revert {
             return RedWarnUI.Toast.quickShow({
                 // TODO i18n
                 content:
-                    "You cannot click on another icon while a revert or restore is ongoing."
+                    "You cannot click on another icon while a revert or restore is ongoing.",
             });
 
         document.addEventListener("keydown", Revert.revertCancelListener);
@@ -503,7 +544,7 @@ export class Revert {
         } catch (e) {
             Log.error("Failed to revert.", e);
             RedWarnUI.Toast.quickShow({
-                content: i18next.t("ui:toasts.rollbackError")
+                content: i18next.t("ui:toasts.rollbackError"),
             });
         }
 
@@ -524,18 +565,18 @@ export class Revert {
                             data: "Rollback",
                             text: i18next.t(
                                 "ui:rollbackAvailableDialog.actions.rollback"
-                            )
+                            ),
                         },
                         {
                             data: "Undo",
                             text: i18next.t(
                                 "ui:rollbackAvailableDialog.actions.revert"
-                            )
-                        }
+                            ),
+                        },
                     ],
                     content: `${i18next.t(
                         "ui:rollbackAvailableDialog.content"
-                    )}`
+                    )}`,
                 }).show()) as "Rollback" | "Undo" | null
             ] ?? RevertMethod.Rollback;
 

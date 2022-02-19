@@ -1,24 +1,24 @@
-import {h} from "tsx-dom";
-import {Page, User, UserAccount, WarningLevel} from "rww/mediawiki";
+import { h } from "tsx-dom";
+import { Page, User, UserAccount, WarningLevel } from "rww/mediawiki";
 import MaterialTextInput, {
     MaterialTextInputComponents,
-    MaterialTextInputUpgrade
+    MaterialTextInputUpgrade,
 } from "rww/styles/material/ui/components/MaterialTextInput";
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import i18next from "i18next";
 import Bullet from "./Bullet";
-import {capitalize, formatAge, generateId, getMonthHeader} from "rww/util";
-import MaterialMenu, {openMenu} from "./MaterialMenu";
+import { capitalize, formatAge, generateId, getMonthHeader } from "rww/util";
+import MaterialMenu, { openMenu } from "./MaterialMenu";
 import showPlainMediaWikiIFrameDialog from "rww/styles/material/util/showPlainMediaWikiIFrameDialog";
-import {MaterialWarnDialogChild} from "./MaterialWarnDialogChild";
-import {WarningIcons} from "rww/styles/material/data/WarningIcons";
+import { MaterialWarnDialogChild } from "./MaterialWarnDialogChild";
+import { WarningIcons } from "rww/styles/material/data/WarningIcons";
 import Log from "rww/data/RedWarnLog";
 import Group from "rww/mediawiki/core/Group";
 import "../../css/userSelect.css";
-import {UserMissingError} from "rww/errors/MediaWikiErrors";
+import { UserMissingError } from "rww/errors/MediaWikiErrors";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
-import {submitReport} from "rww/mediawiki/report/Report";
+import { submitReport } from "rww/mediawiki/report/Report";
 
 interface OverlayContentLoading {
     type: "loading";
@@ -33,7 +33,7 @@ interface OverlayContentInput {
 type OverlayContent = OverlayContentInput | OverlayContentLoading;
 
 function MaterialUserSelectCardAccountGroups({
-    parent
+    parent,
 }: {
     parent: MaterialUserSelect;
 }): JSX.Element {
@@ -46,19 +46,16 @@ function MaterialUserSelectCardAccountGroups({
             {/* TODO: i18n (slightly complicated) */}
             <b>Groups:</b>{" "}
             {user.groups
-                .map<JSX.Element>(
-                    (group: Group): JSX.Element => {
-                        console.log(group);
-                        return (
-                            <a
-                                target={group.page && "_blank"}
-                                href={group.page.url}
-                            >
-                                {capitalize(group.displayName)}
-                            </a>
-                        );
-                    }
-                )
+                .map<JSX.Element>((group: Group): JSX.Element => {
+                    return (
+                        <a
+                            target={group.page && "_blank"}
+                            href={group.page.url}
+                        >
+                            {capitalize(group.displayName)}
+                        </a>
+                    );
+                })
                 .reduce((p, n, index, array) => {
                     return index === array.length - 1
                         ? p.concat(n)
@@ -69,7 +66,7 @@ function MaterialUserSelectCardAccountGroups({
 }
 
 function MaterialUserSelectCardAccountInfo({
-    parent
+    parent,
 }: {
     parent: MaterialUserSelect;
 }): JSX.Element {
@@ -95,7 +92,7 @@ function MaterialUserSelectCardAccountInfo({
                         ),
                         {
                             disableRedWarn: true,
-                            safeMode: true
+                            safeMode: true,
                         }
                     );
                 }}
@@ -104,7 +101,7 @@ function MaterialUserSelectCardAccountInfo({
                 )}
             >
                 {i18next.t<string>("ui:userSelect.edits", {
-                    edits: user.editCount.toLocaleString()
+                    edits: user.editCount.toLocaleString(),
                 })}
             </a>
             <Bullet />
@@ -112,13 +109,13 @@ function MaterialUserSelectCardAccountInfo({
                 onClick={() => {
                     showPlainMediaWikiIFrameDialog(user.userPage, {
                         disableRedWarn: true,
-                        safeMode: true
+                        safeMode: true,
                     });
                 }}
                 data-rw-mdc-tooltip={i18next.t("ui:userSelect.show.userpage")}
             >
                 {i18next.t<string>("ui:userSelect.age", {
-                    localeAge: formatAge(user.registered)
+                    localeAge: formatAge(user.registered),
                 })}
             </a>
         </div>
@@ -129,7 +126,7 @@ function MaterialUserSelectCardAccountInfo({
  * The actual user card. Used when the user is loaded.
  */
 function MaterialUserSelectCard({
-    parent
+    parent,
 }: {
     parent: MaterialUserSelect;
 }): JSX.Element {
@@ -172,24 +169,26 @@ function MaterialUserSelectCard({
                         tooltip={i18next.t<string>(`ui:userSelect.levelInfo`, {
                             context: `${WarningLevel[
                                 user.warningAnalysis.level
-                            ].toLowerCase()}`
+                            ].toLowerCase()}`,
                         })}
                         {...(user.warningAnalysis.level > 2
-                            ? {onClick: async () => {
-                                submitReport(
-                                    await new RedWarnUI.ReportingDialog({
-                                        venue: RedWarnWikiConfiguration.c.reporting
-                                            .find(v =>
-                                                v.shortName.toLowerCase() ===
-                                                RedWarnWikiConfiguration.c.warnings.reportVenue.toLowerCase()
-                                            ),
-                                        target: user
-                                    }).show()
-                              );
-                            }}
+                            ? {
+                                  onClick: async () => {
+                                      submitReport(
+                                          await new RedWarnUI.ReportingDialog({
+                                              venue: RedWarnWikiConfiguration.c.reporting.find(
+                                                  (v) =>
+                                                      v.shortName.toLowerCase() ===
+                                                      RedWarnWikiConfiguration.c.warnings.reportVenue.toLowerCase()
+                                              ),
+                                              target: user,
+                                          }).show()
+                                      );
+                                  },
+                              }
                             : {
-                                ripple: false
-                            })}
+                                  ripple: false,
+                              })}
                     />
                 </td>
             </tr>
@@ -223,10 +222,10 @@ function MaterialUserSelectCard({
                                             ),
                                             customStyle: `#${mw.util.wikiUrlencode(
                                                 getMonthHeader()
-                                            )}{background-color:#fd0;}`
+                                            )}{background-color:#fd0;}`,
                                         }
                                     );
-                                }
+                                },
                             },
                             {
                                 label: i18next
@@ -237,11 +236,11 @@ function MaterialUserSelectCard({
                                         user.talkPage,
                                         {
                                             disableRedWarn: true,
-                                            redirect: false
+                                            redirect: false,
                                         }
                                     );
-                                }
-                            }
+                                },
+                            },
                         ]}
                     />
                 </td>
@@ -314,13 +313,13 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
             overlayInfo = !!this.user
                 ? {
                       type: "loading",
-                      user: this.user
+                      user: this.user,
                   }
                 : {
                       type: "input",
                       onFinish: (newName) => {
                           this.updateUser(User.fromUsername(newName));
-                      }
+                      },
                   };
         }
 
@@ -339,7 +338,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                                     RedWarnUI.Toast.quickShow({
                                         content: i18next.t(
                                             "ui:userSelect.load_wait"
-                                        )
+                                        ),
                                     });
                             }}
                         >
@@ -359,15 +358,16 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                 );
                 this.elementSet.targetUserInput = {
                     element: textInput,
-                    components: MaterialTextInputUpgrade(textInput)
+                    components: MaterialTextInputUpgrade(textInput),
                 };
 
                 const updateName = () => {
                     // MediaWiki trims the start and end of article names. Might as well.
-                    const content = this.elementSet.targetUserInput.components.textField.value.trim();
+                    const content =
+                        this.elementSet.targetUserInput.components.textField.value.trim();
                     if (content.length > 0)
                         (overlayInfo as OverlayContentInput).onFinish(
-                            (new mw.Title(content)).getMainText()
+                            new mw.Title(content).getMainText()
                         );
                 };
 
@@ -378,7 +378,8 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                         if (event.key === "Enter") {
                             updateName();
                         } else if (event.key === "Escape") {
-                            this.elementSet.targetUserInput.components.textField.value = this.lastUser.username;
+                            this.elementSet.targetUserInput.components.textField.value =
+                                this.lastUser.username;
                             updateName();
                         }
                     });
@@ -401,9 +402,9 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                                     icon={"close"}
                                     tooltip={i18next.t("ui:cancel").toString()}
                                     onClick={() => {
-                                        (overlayInfo as OverlayContentInput).onFinish(
-                                            this.lastUser.username
-                                        );
+                                        (
+                                            overlayInfo as OverlayContentInput
+                                        ).onFinish(this.lastUser.username);
                                     }}
                                 />
                             )
@@ -478,15 +479,15 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                 } catch (e) {
                     if (e instanceof UserMissingError) {
                         RedWarnUI.Toast.quickShow({
-                            content: i18next.t("ui:userSelect.missing")
+                            content: i18next.t("ui:userSelect.missing"),
                         });
                     } else if (e instanceof UserMissingError) {
                         RedWarnUI.Toast.quickShow({
-                            content: i18next.t("ui:userSelect.invalid")
+                            content: i18next.t("ui:userSelect.invalid"),
                         });
                     } else {
                         RedWarnUI.Toast.quickShow({
-                            content: i18next.t("ui:userSelect.fail")
+                            content: i18next.t("ui:userSelect.fail"),
                         });
                     }
                     this.clearUser();
@@ -600,7 +601,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                         statePostUpdate: this._active,
                         updating: this.updating,
                         user: this.user,
-                        lastUser: this.lastUser
+                        lastUser: this.lastUser,
                     }
                 );
                 this.refresh();

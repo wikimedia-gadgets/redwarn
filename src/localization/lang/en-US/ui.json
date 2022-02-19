@@ -24,14 +24,14 @@
         "rwTalk": "RedWarn talk page"
     },
     "restore": {
-        "label": "Restore Reason",
+        "label": "Restore reason",
         "helperText": "Enter a reason for this restore",
         "actions": {
             "ok": "Restore"
         }
     },
     "rollback": {
-        "label": "Rollback Reason",
+        "label": "Rollback reason",
         "helperText": "Enter a reason for this rollback",
         "actions": {
             "ok": "Rollback"
@@ -188,7 +188,8 @@
             "revert": "Reverting...",
             "revert_rollback": "Rolling back...",
             "restore": "Restoring revision...",
-            "finish": "Finished."
+            "finish": "Revert completed.",
+            "finish_nochange": "Revert requested but no changes were made. A revert must have already been applied."
         }
     },
     "close": "Close",

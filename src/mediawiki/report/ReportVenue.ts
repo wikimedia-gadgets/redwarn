@@ -1,4 +1,3 @@
-// Bit flags
 import { PageIcon } from "rww/ui/definitions/PageIcons";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import i18next from "i18next";
@@ -14,6 +13,8 @@ import { submitReport } from "rww/mediawiki/report/Report";
  * enum member must occupy a different bit of a number. This puts the
  * theoretical limit of the allowed number of display locations at 64, but
  * not all of it will be used.
+ *
+ * This enum consists of bit flags.
  */
 export enum ReportVenueDisplayLocations {
     None,

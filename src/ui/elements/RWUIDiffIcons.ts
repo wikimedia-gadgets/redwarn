@@ -3,7 +3,7 @@ import {
     DiffIconRevertContext,
     RestoreStage,
     RevertStage,
-    Revision
+    Revision,
 } from "rww/mediawiki";
 import { BaseProps } from "tsx-dom";
 import RWErrorBase from "rww/errors/RWError";
@@ -23,7 +23,8 @@ export type RWUIDiffIconsProperties = Pick<
  */
 export class RWUIDiffIcons
     extends RWUIElement
-    implements RWUIDiffIconsProperties {
+    implements RWUIDiffIconsProperties
+{
     public static readonly elementName = "rwDiffIcons";
 
     oldRevision: Revision;
@@ -90,24 +91,36 @@ export class RWUIDiffIcons
         return undefined;
     }
 
-    // TODO: documentation
+    /**
+     * Called on the beginning of a revert/restore. Informs the element of the
+     * target revision to revert to.
+     * @param targetRevision The revision being reverted to.
+     */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onStartRestore(targetRevision: Revision): void {
         return undefined;
     }
 
-    // TODO: documentation
+    /**
+     * Called when the stage of a revert/restore has advanced.
+     * @param stage The {@link RestoreStage} of the revert/restore.
+     */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onRestoreStageChange(stage: RestoreStage): void {
         return undefined;
     }
 
-    // TODO: documentation
-    onEndRestore(): void {
+    /**
+     * Called when a revert/restore has ended with no issues.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onEndRestore(editResponse: { edit: Record<string, any> }): void {
         return undefined;
     }
 
-    // TODO: documentation
+    /**
+     * Called when an error occurrs during a revert/restore.
+     */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onRestoreFailure(error: RWErrorBase): void {
         return undefined;

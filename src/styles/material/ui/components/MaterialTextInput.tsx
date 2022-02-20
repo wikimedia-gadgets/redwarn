@@ -1,30 +1,14 @@
-import {BaseProps, h} from "tsx-dom";
-import {RWIconButton} from "rww/ui/elements/RWUIDialog";
-import {generateId} from "rww/util";
-import {MDCTextField} from "@material/textfield";
-import {MDCTextFieldCharacterCounter} from "@material/textfield/character-counter";
-import {MDCTextFieldIcon} from "@material/textfield/icon";
-import {MDCTextFieldHelperText} from "@material/textfield/helper-text";
+import { h } from "tsx-dom";
+import { generateId } from "rww/util";
+import { MDCTextField } from "@material/textfield";
+import { MDCTextFieldCharacterCounter } from "@material/textfield/character-counter";
+import { MDCTextFieldIcon } from "@material/textfield/icon";
+import { MDCTextFieldHelperText } from "@material/textfield/helper-text";
 import toCSS from "rww/styles/material/util/toCSS";
 import classMix from "rww/styles/material/util/classMix";
+import { RWUITextInputProperties } from "rww/ui/elements/RWUITextInput";
 
-interface MaterialTextInputProps extends BaseProps {
-    id?: string;
-    class?: string;
-    label: string;
-    defaultText?: string;
-    leadingIcon?: RWIconButton;
-    trailingIcon?: RWIconButton;
-    helperText?: string;
-    maxCharacterCount?: number;
-    prefix?: string;
-    suffix?: string;
-    width?: string;
-    outlined?: boolean;
-    area?: boolean;
-    autofocus?: boolean;
-    required?: boolean;
-}
+type MaterialTextInputProps = RWUITextInputProperties;
 
 // Private storage variable. No need to put it into {@link MaterialStyleStorage}.
 const MaterialTextInputTrack = new Map<
@@ -49,7 +33,7 @@ export default function (props: MaterialTextInputProps): JSX.Element {
         <span data-mdc-textinput={id} class={props.class}>
             <label
                 style={toCSS({
-                    width: props.width ?? "100%"
+                    width: props.width ?? "100%",
                 })}
                 class={classMix(
                     props.width === "100%" ? "rw-mdc-full-width" : null,
@@ -91,7 +75,7 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                         {...(props.leadingIcon.action && {
                             tabIndex: 0,
                             role: "button",
-                            onClick: props.leadingIcon.action
+                            onClick: props.leadingIcon.action,
                         })}
                     >
                         {props.leadingIcon.icon}
@@ -103,21 +87,25 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                         id={`${id}_input`}
                         {...(props.helperText && {
                             "aria-controls": `${id}_helper`,
-                            "aria-describedby": `${id}_helper`
-                        })}
-                        {...(props.defaultText && {
-                            value: props.defaultText
+                            "aria-describedby": `${id}_helper`,
                         })}
                         {...(props.maxCharacterCount && {
-                            maxLength: props.maxCharacterCount
+                            maxLength: props.maxCharacterCount,
                         })}
                         {...(props.autofocus && {
-                            autofocus: true
+                            autofocus: true,
                         })}
                         {...(props.required && {
-                            required: true
+                            required: true,
                         })}
-                    />
+                        style={toCSS(
+                            Object.assign(props.style ?? {}, {
+                                height: props.height,
+                            })
+                        )}
+                    >
+                        {props.defaultText || ""}
+                    </textarea>
                 ) : (
                     <input
                         type="text"
@@ -125,19 +113,19 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                         id={`${id}_input`}
                         {...(props.helperText && {
                             "aria-controls": `${id}_helper`,
-                            "aria-describedby": `${id}_helper`
+                            "aria-describedby": `${id}_helper`,
                         })}
                         {...(props.defaultText && {
-                            value: props.defaultText
+                            value: props.defaultText,
                         })}
                         {...(props.maxCharacterCount && {
-                            maxLength: props.maxCharacterCount
+                            maxLength: props.maxCharacterCount,
                         })}
                         {...(props.autofocus && {
-                            autofocus: true
+                            autofocus: true,
                         })}
                         {...(props.required && {
-                            required: true
+                            required: true,
                         })}
                     />
                 )}
@@ -148,7 +136,7 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                         {...(props.trailingIcon.action && {
                             tabIndex: 0,
                             role: "button",
-                            onClick: props.trailingIcon.action
+                            onClick: props.trailingIcon.action,
                         })}
                     >
                         {props.trailingIcon.icon}
@@ -185,7 +173,7 @@ export default function (props: MaterialTextInputProps): JSX.Element {
     MaterialTextInputTrack.set(id, {
         element: element,
         props: props,
-        components: null
+        components: null,
     });
     return element;
 }
@@ -215,7 +203,7 @@ export function MaterialTextInputUpgrade(
     const { props } = trackingObject;
     const components: MaterialTextInputComponents = {
         element,
-        textField: new MDCTextField(element.querySelector(".mdc-text-field"))
+        textField: new MDCTextField(element.querySelector(".mdc-text-field")),
     };
     components.textField.initialize();
 

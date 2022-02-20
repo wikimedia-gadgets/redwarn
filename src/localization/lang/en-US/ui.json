@@ -322,5 +322,13 @@
 
         "done": "Report filed.",
         "done_email": "Report emailed."
+    },
+    "newMessage": {
+        "label": "New Message",
+
+        "doing": "Sending message...",
+        "done": "Message sent.",
+        "doneAction": "View",
+        "fail": "Failed to send the message."
     }
 }

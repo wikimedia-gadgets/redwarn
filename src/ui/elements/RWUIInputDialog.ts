@@ -1,24 +1,21 @@
 import {
     OKCancelActions,
-    RWIconButton,
     RWUIDialog,
     RWUIDialogProperties,
 } from "rww/ui/elements/RWUIDialog";
+import { RWUITextInputProperties } from "rww/ui/elements/RWUITextInput";
 
-export interface RWUIInputDialogProps extends RWUIDialogProperties {
-    label: string;
-    textarea?: boolean;
-    defaultText?: string;
-    leadingIcon?: RWIconButton;
-    trailingIcon?: RWIconButton;
-    helperText?: string;
-    maxCharacterCount?: number;
-    prefix?: string;
-    suffix?: string;
+export interface RWUIInputDialogProps
+    extends RWUIDialogProperties,
+        RWUITextInputProperties {
     /**
      * The actions of the dialog. These go at the bottom of the dialog.
      */
     actions?: OKCancelActions;
+    /**
+     * Set to `true` if the OK button should be emphasized.
+     */
+    progressive?: boolean;
 }
 
 export class RWUIInputDialog extends RWUIDialog<string> {

@@ -130,7 +130,9 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                 break;
         }
         return (this.input = this.input ?? (
-            <span>This setting is currently unsupported.</span>
+            <span style="font-weight: bold">
+                This setting is currently unsupported.
+            </span>
         ));
     }
 

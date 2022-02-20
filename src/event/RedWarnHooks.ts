@@ -1,4 +1,4 @@
-import { RedWarnHook, RedWarnHookEventTypes } from "./RedWarnHookEvent";
+import {RedWarnHook, RedWarnHookEventTypes} from "./RedWarnHookEvent";
 import StyleManager from "rww/styles/StyleManager";
 import Log from "rww/data/RedWarnLog";
 
@@ -54,7 +54,7 @@ export default class RedWarnHooks {
         Log.debug(`Executing hook: ${hookType}`);
         RedWarnHooks.assertHookType(hookType);
 
-        if (StyleManager.activeStyle.hooks[hookType])
+        if (StyleManager.activeStyle?.hooks?.[hookType])
             for (const hook of StyleManager.activeStyle.hooks[
                 hookType
             ] as RedWarnHook[]) {

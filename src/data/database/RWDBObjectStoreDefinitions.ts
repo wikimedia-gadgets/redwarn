@@ -1,4 +1,4 @@
-import { RWErrors } from "rww/errors/RWError";
+import {RWErrors} from "rww/errors/RWError";
 
 export interface CacheTracker {
     id?: string;
@@ -18,10 +18,15 @@ export interface LogItem {
      * Unix epoch
      */
     timestamp: number;
-    code: RWErrors;
+    code?: RWErrors;
     data: Record<string, any>;
 }
 
 export interface WatchedPage {
     title?: string;
+}
+
+export interface RecentPage {
+    title?: string;
+    lastVisit: number;
 }

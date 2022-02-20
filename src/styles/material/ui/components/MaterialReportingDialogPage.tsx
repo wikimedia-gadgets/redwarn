@@ -10,7 +10,11 @@ import MaterialTextInput, {
 } from "rww/styles/material/ui/components/MaterialTextInput";
 import { h } from "tsx-dom";
 import i18next from "i18next";
-import { ReportVenue, ReportVenueMode } from "rww/mediawiki/report/ReportVenue";
+import {
+    isPageReportVenue,
+    ReportVenue,
+    ReportVenueMode,
+} from "rww/mediawiki/report/ReportVenue";
 
 class MaterialReportingDialogPage {
     get venue(): ReportVenue {
@@ -59,6 +63,8 @@ class MaterialReportingDialogPage {
                     this.props.reportingDialog.target = currentTarget;
                     this.props.reportingDialog.uiValidate();
 
+                    if (isPageReportVenue(this.props.reportingDialog.venue))
+                        this.props.reportingDialog.venue.page.getLatestRevision();
                     currentTarget.exists().then((exists) => {
                         if (
                             new mw.Title(

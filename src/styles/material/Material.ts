@@ -1,6 +1,6 @@
-import { MDCDialog } from "@material/dialog";
-import { MDCRipple } from "@material/ripple";
-import { RWUIDialog } from "rww/ui/elements/RWUIDialog";
+import {MDCDialog} from "@material/dialog";
+import {MDCRipple} from "@material/ripple";
+import {RWUIDialog} from "rww/ui/elements/RWUIDialog";
 import Style from "rww/styles/Style";
 import MaterialPreInitializationHooks from "./hooks/MaterialPreInitializationHooks";
 import {
@@ -125,7 +125,7 @@ export async function upgradeMaterialDialog<T>(
         async (event: Event & { detail: { action: string } }) => {
             if (options?.onClose) dialog.result = await options.onClose(event);
 
-            styleStorage.dialogTracker.delete(this.id);
+            styleStorage.dialogTracker.delete(dialog.id);
             closePromiseResolver(dialog.result ?? null);
         }
     );

@@ -1,4 +1,4 @@
-import { MediaWikiAPI, Revision, User } from "rww/mediawiki";
+import {MediaWikiAPI, Revision, User} from "rww/mediawiki";
 import RedWarnStore from "rww/data/RedWarnStore";
 import i18next from "i18next";
 import {
@@ -8,7 +8,7 @@ import {
 } from "rww/errors/MediaWikiErrors";
 import { url as buildURL } from "rww/util";
 import redirect from "rww/util/redirect";
-import Section, { SectionContainer } from "rww/mediawiki/core/Section";
+import Section, {SectionContainer} from "rww/mediawiki/core/Section";
 import url from "rww/util/url";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 
@@ -306,11 +306,20 @@ export class Page implements SectionContainer {
     async getLatestRevision(
         options: PageLatestRevisionOptions = {}
     ): Promise<Revision> {
-        if (options.forceRefresh || this.latestCachedRevision == null)
-            this.latestCachedRevision = await Page.getLatestRevision(
-                this,
-                options
-            );
+        const clean = Object.keys(options).filter(k => k !== "forceRefresh").length === 0;
+        if (options.forceRefresh || this.latestCachedRevision == null || !clean) {
+            if (clean) {
+                this.latestCachedRevision = await Page.getLatestRevision(
+                    this,
+                    options
+                );
+            } else {
+                return Page.getLatestRevision(
+                    this,
+                    options
+                );
+            }
+        }
 
         return this.latestCachedRevision;
     }
@@ -351,11 +360,11 @@ export class Page implements SectionContainer {
 
     /**
      * Gets the latest revision of the page which was not by a given user.
-     * @param username The user.
+     * @param user The user.
      */
-    async getLatestRevisionNotByUser(username: string): Promise<Revision> {
+    async getLatestRevisionNotByUser(user: User): Promise<Revision> {
         return this.getLatestRevision({
-            excludeUser: User.fromUsername(username),
+            excludeUser: user
         });
     }
 
@@ -449,7 +458,7 @@ export class Page implements SectionContainer {
 
                     // Section not found. It will be appended to the end of the user talk page.
                     // Remove leading whitespace to avoid extra spaces.
-                    if (existingSection == null) content = content.trimLeft();
+                    if (existingSection == null) content = content.trimStart();
                 }
             }
         }

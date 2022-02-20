@@ -35,7 +35,7 @@ interface ActionRevert {
  * An action with a revert summary which requires input from the user.
  */
 interface ActionPromptedRevert {
-    actionType: "promptedRevert";
+    actionType: "promptedRevert" | "promptedRestore";
     /**
      * The prefilled summary for this revert reason in wikitext.
      */
@@ -183,10 +183,7 @@ export function RequiredRevertOptions(): Record<string, RevertOption> {
             actionType: "custom",
             name: i18next.t("revert:rollbackOptions.more-options.name"),
             action: () => {
-                // TODO: Preferences
-                RedWarnUI.Toast.quickShow({
-                    content: "This feature has not been implemented yet.",
-                });
+                new RedWarnUI.ExtendedOptions({ showDiffIcons: true }).show();
             },
             severity: ActionSeverity.Neutral,
             icon: "more_vert",

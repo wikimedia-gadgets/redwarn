@@ -9,6 +9,7 @@ export type RWUIReportingDialogTargetType<T extends ReportVenue> =
     T["mode"] extends ReportVenueMode.User ? User : Page;
 export interface RWUIReportingDialogProps extends RWUIDialogProperties {
     venue: ReportVenue;
+    notice?: string;
     target?: User | Page;
 }
 

@@ -25,6 +25,7 @@ import Log from "rww/data/RedWarnLog";
 import { Configuration } from "rww/config/user/Configuration";
 import { RevertMethod } from "rww/config/user/ConfigurationEnums";
 
+// TODO: Convert to enum.
 function getRollbackOptionClickHandler(
     diffIcons: MaterialDiffIcons,
     option: RevertOption
@@ -49,6 +50,14 @@ function getRollbackOptionClickHandler(
         case "promptedRevert":
             return () => {
                 Log.trace("promptedRevert RevertOption selected.", option);
+                Revert.promptRollback(context, {
+                    diffIcons: context.diffIcons,
+                    defaultText: option.defaultSummary,
+                });
+            };
+        case "promptedRestore":
+            return () => {
+                Log.trace("promptedRestore RevertOption selected.", option);
                 Revert.promptRestore(
                     context.side === "new"
                         ? context.newRevision
@@ -73,8 +82,9 @@ const MaterialRevertProgress: Record<RevertStage | RestoreStage, number> = {
     [RestoreStage.Finished]: 1,
 };
 
+// TODO: Remove in favor of color customization.
 // Default severity colors.
-const MaterialActionSeverityColors: Record<ActionSeverity, string> = {
+export const MaterialActionSeverityColors: Record<ActionSeverity, string> = {
     // Default
     [ActionSeverity.Neutral]: "black",
     [ActionSeverity.GoodFaith]: "green",
@@ -84,16 +94,19 @@ const MaterialActionSeverityColors: Record<ActionSeverity, string> = {
     [ActionSeverity.Critical]: "red",
 };
 
-const MaterialHighContrastActionSeverityColors: Record<ActionSeverity, string> =
-    {
-        // High contrast
-        [ActionSeverity.Neutral]: "black",
-        [ActionSeverity.GoodFaith]: "blue",
-        [ActionSeverity.Mild]: "blue",
-        [ActionSeverity.Moderate]: "red",
-        [ActionSeverity.Severe]: "red",
-        [ActionSeverity.Critical]: "red",
-    };
+// TODO: Remove in favor of color customization.
+export const MaterialHighContrastActionSeverityColors: Record<
+    ActionSeverity,
+    string
+> = {
+    // High contrast
+    [ActionSeverity.Neutral]: "black",
+    [ActionSeverity.GoodFaith]: "blue",
+    [ActionSeverity.Mild]: "blue",
+    [ActionSeverity.Moderate]: "red",
+    [ActionSeverity.Severe]: "red",
+    [ActionSeverity.Critical]: "red",
+};
 
 export default class MaterialDiffIcons extends RWUIDiffIcons {
     _context: RevertContextBase &
@@ -118,6 +131,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
         progressElement: JSX.Element;
         progressLabel: JSX.Element;
     };
+    finishMessageElement: HTMLElement;
 
     selectedReason: RevertOption;
     readonly latestIcons;
@@ -160,7 +174,6 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
 
         for (const option of Object.values(RevertOptions.all)) {
             if (!option.enabled && !option.system) continue;
-            console.log(option.severity, MaterialActionSeverityColors);
             options.push(
                 <MaterialIconButton
                     label={option.name}
@@ -226,7 +239,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
     renderRevertDoneOptions(): JSX.Element {
         const options: JSX.Element[] = [];
 
-        for (const option of Object.values(RevertDoneOptions())) {
+        for (const option of RevertDoneOptions()) {
             if (this.latestIcons || (!this.latestIcons && option.showOnRestore))
                 options.push(
                     <MaterialIconButton
@@ -247,7 +260,13 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
         return (
             <div class={"rw-mdc-diffIcons-doneOptions"}>
                 <div>{options}</div>
-                <div>Revert completed.</div>
+                {
+                    (this.finishMessageElement = (
+                        <div>
+                            {i18next.t<string>("ui:diff.progress.finish")}
+                        </div>
+                    ))
+                }
             </div>
         );
     }
@@ -331,9 +350,16 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
         }
     }
 
-    onEndRestore(): void {
+    onEndRestore(editResponse: { edit: Record<string, any> }): void {
         this.self.classList.toggle("rw-mdc-diffIcons--reverting", false);
         this.self.classList.toggle("rw-mdc-diffIcons--finished", true);
+
+        this.finishMessageElement.innerText = i18next.t<string>(
+            "ui:diff.progress.finish",
+            {
+                context: editResponse.edit.nochange ? "nochange" : undefined,
+            }
+        );
     }
 
     onRestoreFailure(): void {

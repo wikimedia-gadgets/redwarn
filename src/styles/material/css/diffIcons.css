@@ -1,3 +1,7 @@
+.rwDiffIcons {
+    display: block;
+}
+
 .rw-mdc-diffIcons {
     position: relative;
     min-height: 36px;
@@ -69,10 +73,16 @@
     justify-content: center;
 }
 
+.rw-mdc-diffIcons-doneOptions > div:last-child {
+    margin-bottom: 16px;
+}
+
 .rw-mdc-diffIcons-options .mdc-icon-button,
 .rw-mdc-diffIcons-doneOptions .mdc-icon-button {
-    width: 40px;
-    height: 40px;
-    padding: 6px;
+    /* Must be equal to height. */
+    width: 36px;
+    height: 36px;
+    padding: 4px;
+    /* calc(width or height - padding * 2) */
     font-size: 28px;
 }

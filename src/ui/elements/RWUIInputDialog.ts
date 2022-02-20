@@ -7,6 +7,7 @@ import {
 
 export interface RWUIInputDialogProps extends RWUIDialogProperties {
     label: string;
+    textarea?: boolean;
     defaultText?: string;
     leadingIcon?: RWIconButton;
     trailingIcon?: RWIconButton;

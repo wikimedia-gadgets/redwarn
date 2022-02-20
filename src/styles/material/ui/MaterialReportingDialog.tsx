@@ -61,6 +61,25 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
                         this.target.username !== UserAccount.current.username),
             },
             {
+                id: "exists",
+                test: () =>
+                    !isPageReportVenue(this.props.venue) ||
+                    this.props.venue.existCheck == null ||
+                    !this.props.venue.page.latestCachedRevision ||
+                    this.props.venue.page.latestCachedRevision.content ==
+                        null ||
+                    new RegExp(
+                        this.props.venue.existCheck.source.replace(
+                            /\\k<target>/g,
+                            (this.target instanceof User
+                                ? this.target.username
+                                : this.target.title.getPrefixedText()
+                            ).replace(/[_ ]/g, "[_ ]")
+                        ),
+                        this.props.venue.existCheck.flags
+                    ).test(this.props.venue.page.latestCachedRevision.content),
+            },
+            {
                 id: "reason",
                 test: () =>
                     !isPageReportVenue(this.props.venue) ||
@@ -90,6 +109,13 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
 
     show(): Promise<any> {
         return upgradeMaterialDialog(this, {
+            onPostInit: () => {
+                if (isPageReportVenue(this.props.venue)) {
+                    this.props.venue.page.getLatestRevision().then(() => {
+                        this.uiValidate();
+                    });
+                }
+            },
             onClose: (event) => {
                 if (event.detail.action === "confirm") {
                     return {
@@ -144,6 +170,11 @@ export default class MaterialReportingDialog extends RWUIReportingDialog {
                     </MaterialDialogTitle>
                 )}
                 <MaterialDialogContent style={toCSS({ width: "100%" })}>
+                    {this.venue.notice && (
+                        <span class="rw-mdc-reportingDialog--notice">
+                            {this.venue.notice}
+                        </span>
+                    )}
                     {this.renderTarget()}
                     {this.renderInfo()}
                 </MaterialDialogContent>

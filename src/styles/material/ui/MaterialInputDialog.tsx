@@ -91,6 +91,7 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                     "style": `width: ${this.props.width ?? "30vw"};`,
                     "aria-modal": true,
                     "aria-labelledby": this.props.title ?? "RedWarn dialog",
+                    "max-width": "unset",
                 }}
                 id={this.id}
             >

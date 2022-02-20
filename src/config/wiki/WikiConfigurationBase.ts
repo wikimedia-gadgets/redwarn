@@ -7,10 +7,10 @@ import type {
     WarningLevel,
     WarningLevelSignature,
 } from "rww/mediawiki";
-import { WarningCategory } from "rww/mediawiki";
-import type { SerializableRevertOption } from "rww/mediawiki/revert/RevertOptions";
-import { RevertOption } from "rww/mediawiki/revert/RevertOptions";
-import { ReportVenue } from "rww/mediawiki/report/ReportVenue";
+import {WarningCategory} from "rww/mediawiki";
+import type {SerializableRevertOption} from "rww/mediawiki/revert/RevertOptions";
+import {RevertOption} from "rww/mediawiki/revert/RevertOptions";
+import {ReportVenue} from "rww/mediawiki/report/ReportVenue";
 
 /**
  * This is a configuration file used by RedWarn to provide wiki-specific
@@ -70,6 +70,13 @@ interface WikiConfigurationBase {
      * properly.
      */
     warnings?: {
+        /**
+         * The short name of the report venue to use, as defined in the "reporting"
+         * section of the configuration file. This is case insensitive.
+         *
+         * @example "AIV"
+         */
+        reportVenue?: string;
         /**
          * A template used to inform anonymous editors that the warning received
          * may not be for them. This is appended on a new line after the actual

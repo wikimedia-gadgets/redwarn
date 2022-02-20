@@ -10,22 +10,23 @@ You can help! If you find any bugs or would like new features, you can fix these
 
 RedWarn is primarily maintained and developed by the RedWarn contributors.
 
--   **[@ed_e](https://gitlab.com/ed_e)** ([\[\[User:Ed6767\]\]](https://en.wikipedia.org/wiki/User:Ed6767)) - lead developer, designer, and chief maintainer
--   **[@pr0mpted](https://gitlab.com/pr0mpted)** - ([\[\[User:Prompt0259\]\]](https://en.wikipedia.org/wiki/User:Prompt0259)) - additional development and design
--   **[@ChlodAlejandro](https://gitlab.com/ChlodAlejandro)** - ([\[\[User:Chlod\]\]](https://en.wikipedia.org/wiki/User:Chlod)) - additional development and design
--   **[@leijurv](https://gitlab.com/leijurv)** - ([\[\[User:Leijurv\]\]](https://en.wikipedia.org/wiki/User:Leijurv)) - additional development and design
--   **[@sportshead](https://gitlab.com/sportshead)** - ([\[\[User:Sportzpikachu\]\]](https://en.wikipedia.org/wiki/User:Sportzpikachu)) - additional development and design
--   **[@Rexogamer](https://gitlab.com/Rexogamer)** - ([\[\[User:Remagoxer\]\]](https://en.wikipedia.org/wiki/User:Remagoxer)) - additional development
--   **[@Asartea](https://gitlab.com/Asartea)** - ([\[\[User:Asartea\]\]](https://en.wikipedia.org/wiki/User:Asartea)) - documentation and copyediting
--   **[@Berrely](https://gitlab.com/Berrely)** - ([\[\[User:Berrely\]\]](https://en.wikipedia.org/wiki/User:Berrely)) - documentation
--   **[and everyone else on the RedWarn development team](https://en.wikipedia.org/wiki/Wikipedia:RedWarn/Team)**
--   **[with some additional development from Wikipedia editors](https://en.wikipedia.org/wiki/WP:RW#Credits)**
--   **[and other contributors.](https://gitlab.com/redwarn/redwarn-web/-/graphs/master)**
+- **[@ChlodAlejandro](https://gitlab.com/ChlodAlejandro)** - ([\[\[User:Chlod\]\]](https://en.wikipedia.org/wiki/User:Chlod)) - project lead, development
+- **[@sportshead](https://gitlab.com/sportshead)** - ([\[\[User:Sportzpikachu\]\]](https://en.wikipedia.org/wiki/User:Sportzpikachu)) - assistant project lead, development
+- **[@pr0mpted](https://gitlab.com/pr0mpted)** - ([\[\[User:Prompt0259\]\]](https://en.wikipedia.org/wiki/User:Prompt0259)) - development
+- **[@leijurv](https://gitlab.com/leijurv)** - ([\[\[User:Leijurv\]\]](https://en.wikipedia.org/wiki/User:Leijurv)) - development and advice
+- **[@Rexogamer](https://gitlab.com/Rexogamer)** - ([\[\[User:Remagoxer\]\]](https://en.wikipedia.org/wiki/User:Remagoxer)) - development
+- **[@Asartea](https://gitlab.com/Asartea)** - ([\[\[User:Asartea\]\]](https://en.wikipedia.org/wiki/User:Asartea)) - documentation
+- **[@Berrely](https://gitlab.com/Berrely)** - ([\[\[User:Berrely\]\]](https://en.wikipedia.org/wiki/User:Berrely)) - documentation
+- **[@Sennecaster](https://gitlab.com/Sennecaster)** - ([\[\[User:Sennecaster\]\]](https://en.wikipedia.org/wiki/User:Sennecaster)) - documentation
+- **[@ed_e](https://gitlab.com/ed_e)** ([\[\[User:Ed6767\]\]](https://en.wikipedia.org/wiki/User:Ed6767)) - original creator
+- **[and everyone else on the RedWarn development team](https://en.wikipedia.org/wiki/Wikipedia:RedWarn/Team)**
+- **[with some additional development from Wikipedia editors](https://en.wikipedia.org/wiki/WP:RW#Credits)**
+- **[and other contributors.](https://gitlab.com/redwarn/redwarn-web/-/graphs/master)**
 
 ## Development
 
-If you wish to contribute in the development of RedWarn, follow the instructions on the [CONTRIBUTING.md](/CONTRIBUTING.md) file.
+If you wish to contribute in the development of RedWarn, follow the instructions on our [development wiki](https://redwarn.toolforge.org/wiki/Development) file.
 
 ## License
 
-Copyright © 2020–2021 The RedWarn Contributors. Released under the Apache License 2.0. Versions on Wikimedia Foundation wikis are also released under the Creative Commons Attribution-ShareAlike 3.0 Unported License, and GNU Free Documentation License 1.3. See [LICENSE](/LICENSE) for more information.
+Copyright © 2020–2021 The RedWarn Contributors. Released under the Apache License 2.0. Transpiled versions on Wikimedia Foundation wikis are sublicensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License, and GNU Free Documentation License 1.3. See [LICENSE](/LICENSE) for more information.

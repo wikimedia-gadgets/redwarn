@@ -71,8 +71,8 @@ export default class ContributionsPageInjector implements Injector {
                                 Object.assign(context, {
                                     prefilledReason:
                                         await Revert.promptRollbackReason(
-                                            context,
-                                            ""
+                                            "",
+                                            context
                                         ),
                                 })
                             );

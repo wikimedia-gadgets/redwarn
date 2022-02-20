@@ -76,12 +76,12 @@ export type RevertContext = DiffIconRevertContext | HeadlessRevertContext;
 export function isHeadlessRevertContext(
     context: RevertContext
 ): context is HeadlessRevertContext {
-    return (context as Record<string, any>)["prefilledReason"] !== null;
+    return (context as Record<string, any>)["prefilledReason"] != null;
 }
 export function isDiffIconContext(
     context: RevertContext
 ): context is DiffIconRevertContext {
-    return (context as Record<string, any>)["reason"] !== null;
+    return (context as Record<string, any>)["reason"] != null;
 }
 
 /**
@@ -137,18 +137,36 @@ export class Revert {
         }
     }
 
+    static async promptRollback(
+        context: RevertContextBase,
+        options?: {
+            diffIcons?: RWUIDiffIcons;
+            defaultText?: string;
+        }
+    ): Promise<void> {
+        const reason = await Revert.promptRollbackReason(options.defaultText);
+        if (reason !== null) {
+            Revert.revert(
+                Object.assign({}, context, {
+                    diffIcons: options.diffIcons,
+                    reason: reason,
+                })
+            );
+        }
+    }
+
     /**
      * Restore a previous page version. This will undo all edits made after
      * the target revision and replace the page's latest content with the
      * content of the target revision.
      *
      * @param targetRevision The revision to restore to.
-     * @param reason The reason for restoring.,
+     * @param reason The reason for restoring.
      * @param diffIcons The {@link RWUIDiffIcons} that triggered this restore.
      */
     static async restore(
         targetRevision: Revision,
-        reason?: string,
+        reason?: string | { isSummary: true; text: string },
         diffIcons?: RWUIDiffIcons
     ): Promise<any> {
         if (Revert.revertInProgress)
@@ -166,24 +184,41 @@ export class Revert {
             diffIcons.onRestoreStageChange(RestoreStage.Preparing);
         }
 
-        if (!targetRevision.isPopulated()) await targetRevision.populate();
+        if (targetRevision.page == null) {
+            // There's no other option but to do a blocking populate here, since
+            // the target revision page is required to get data on the latest page
+            // revision.
+            await targetRevision.populate();
+        }
 
         if (diffIcons) diffIcons.onRestoreStageChange(RestoreStage.Details);
-        const latestRevision = await targetRevision.page.getLatestRevision({
-            forceRefresh: false,
-        });
+        const [, latestRevision] = await Promise.all([
+            targetRevision.isPopulated()
+                ? targetRevision.populate()
+                : Promise.resolve(true),
+            targetRevision.page.getLatestRevision({
+                forceRefresh: false,
+            }),
+        ]);
 
         if (diffIcons) diffIcons.onRestoreStageChange(RestoreStage.Restore);
         const result = await MediaWikiAPI.postWithEditToken({
             action: "edit",
             pageid: targetRevision.page.pageID,
-            summary: i18next.t("mediawiki:summaries.restore", {
-                revID: targetRevision.revisionID,
-                revUser: targetRevision.user.username,
-                reason,
-            }),
+            summary:
+                typeof reason === "string" || !reason.isSummary
+                    ? i18next.t("mediawiki:summaries.restore", {
+                          revID: targetRevision.revisionID,
+                          revUser: targetRevision.user.username,
+                          reason:
+                              typeof reason === "string" ? reason : reason.text,
+                      })
+                    : reason.text,
             undo: latestRevision.revisionID,
-            undoafter: targetRevision.revisionID,
+            undoafter:
+                targetRevision.revisionID === latestRevision.revisionID
+                    ? undefined
+                    : targetRevision.revisionID,
             tags: RedWarnWikiConfiguration.c.meta.tag,
         });
 
@@ -196,7 +231,7 @@ export class Revert {
             });
             if (diffIcons) diffIcons.onRestoreFailure(error);
         } else {
-            if (diffIcons) diffIcons.onEndRestore();
+            if (diffIcons) diffIcons.onEndRestore(result);
         }
         if (diffIcons) diffIcons.onRestoreStageChange(RestoreStage.Finished);
 
@@ -221,7 +256,7 @@ export class Revert {
         if (targetRevision.page == null) await targetRevision.populate();
 
         const latestRevision = await targetRevision.getLatestRevision({
-            forceRefresh: false,
+            forceRefresh: true,
         });
         if (latestRevision.revisionID !== targetRevision.revisionID) {
             if (
@@ -273,7 +308,7 @@ export class Revert {
         // Same page, so use the latestRevision. Higher chance of being populated than newRevision.
         const targetRevision =
             await latestRevision.page.getLatestRevisionNotByUser(
-                latestRevision.user.username
+                latestRevision.user
             );
 
         if (targetRevision == null) {
@@ -295,24 +330,22 @@ export class Revert {
     /**
      * Ask the user to provide a revert reason and then revert the
      * given page to the target revision with that reason.
-     * @param context The revert context.
      * @param defaultReason The default reason to use.
+     * @param context The revert context.
      * @returns reason The rollback reason.
      */
     static async promptRollbackReason(
-        context: RevertContextBase,
-        defaultReason: string
+        defaultReason: string,
+        context?: RevertContextBase
     ): Promise<string> {
-        await Revert.latestRevertTargetCheck(context.newRevision);
+        if (context?.newRevision)
+            await Revert.latestRevertTargetCheck(context.newRevision);
+
         const dialog = new RedWarnUI.InputDialog({
-            width: "40vw",
             ...i18next.t("ui:rollback"),
-            defaultText: defaultReason,
+            defaultText: defaultReason ?? "",
         });
         return await dialog.show();
-
-        // TODO: Move this to the RevertOption native
-        // if (reason != null) return Revert.revert(context);
     }
 
     /**
@@ -345,10 +378,8 @@ export class Revert {
         if (!newRevision.isPopulated()) newRevision.populate();
 
         if (diffIcons) diffIcons.onRevertStageChange(RevertStage.Details);
-        const latestCleanRevision =
-            await newRevision.page.getLatestRevisionNotByUser(
-                newRevision.user.username
-            );
+        const latestCleanRevision: Revision =
+            await newRevision.page.getLatestRevisionNotByUser(newRevision.user);
 
         // Bump the latest revision.
         context.latestRevision = await Revert.latestRevertTargetCheck(
@@ -423,6 +454,8 @@ export class Revert {
         // Get target revision information.
         if (!newRevision.isPopulated()) newRevision.populate();
 
+        await Revert.latestRevertTargetCheck(newRevision);
+
         const summary = i18next.t("mediawiki:summaries.rollback", {
             username: newRevision.user.username,
             reason: Revert.extractReasonFromContext(context),
@@ -465,7 +498,6 @@ export class Revert {
      * @param context
      */
     static async revert(context: RevertContext): Promise<void> {
-        const { newRevision } = context;
         const diffIcons = isDiffIconContext(context) ? context.diffIcons : null;
 
         if (Revert.revertInProgress)
@@ -485,8 +517,6 @@ export class Revert {
             diffIcons.onStartRevert(context);
             diffIcons.onRevertStageChange(RevertStage.Preparing);
         }
-
-        await Revert.latestRevertTargetCheck(newRevision);
 
         try {
             if (ClientUser.i.inGroup("rollbacker")) {
@@ -520,6 +550,7 @@ export class Revert {
 
         document.removeEventListener("keydown", Revert.revertCancelListener);
         if (diffIcons) diffIcons.onRevertStageChange(RevertStage.Finished);
+        Revert.revertInProgress = false;
     }
 
     /**
@@ -528,7 +559,7 @@ export class Revert {
     static async requestRevertMethod(): Promise<RevertMethod> {
         const method =
             RevertMethod[
-                (await new RedWarnUI.Dialog({
+                (await new RedWarnUI.AlertDialog({
                     actions: [
                         {
                             data: "Rollback",

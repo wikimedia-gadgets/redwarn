@@ -1,6 +1,16 @@
+.rw-mdc-extendedOptions .mdc-dialog__title {
+    margin-bottom: 0 !important;
+}
+
 .rw-mdc-extendedOptions .mdc-dialog__content {
+    padding-top: 0 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
+}
+
+.rw-mdc-extendedOptions .mdc-list {
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .rw-mdc-extendedOptions .mdc-list-item {
@@ -14,4 +24,14 @@
 
 .rw-mdc-extendedOptions .mdc-deprecated-list-item__graphic {
     margin-right: 16px;
+}
+
+.rw-mdc-extendedOptions .mdc-list .mdc-list-group__subheader {
+    background-color: #eee;
+    font-weight: normal;
+    text-transform: uppercase;
+    color: #444;
+    font-size: 0.8rem;
+    line-height: 1.2em;
+    height: 1.2em;
 }

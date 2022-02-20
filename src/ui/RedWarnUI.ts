@@ -19,7 +19,7 @@ import { RWUIPreferences } from "./elements/RWUIPreferences";
  */
 export default class RedWarnUI {
     /** Alias of {@link StyleManager.activeStyle.classMap.rwAlertDialog} */
-    static get Dialog(): typeof RWUIAlertDialog {
+    static get AlertDialog(): typeof RWUIAlertDialog {
         return StyleManager.activeStyle.classMap.rwAlertDialog;
     }
     /** Alias of {@link StyleManager.activeStyle.classMap.rwInputDialog} */

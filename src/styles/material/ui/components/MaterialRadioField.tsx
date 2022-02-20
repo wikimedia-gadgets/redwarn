@@ -4,7 +4,7 @@ import type {
     MaterialRadioProps,
 } from "rww/styles/material/ui/components/MaterialRadio";
 import MaterialRadio from "rww/styles/material/ui/components/MaterialRadio";
-import { generateId } from "rww/util";
+import {generateId} from "rww/util";
 
 export interface MaterialRadioFieldProps<T> {
     radios: Omit<MaterialRadioProps<T>, "name">[];
@@ -30,9 +30,9 @@ export default function <T>(
     const radios: MaterialRadioElement<T>[] = props.radios.map((radio) => {
         return (
             <MaterialRadio<T>
-                {...Object.assign(radio, {
+                {...Object.assign({}, radio, {
                     name: props.name ?? radioFieldId,
-                    disabled: props.disabled ?? false,
+                    disabled: props.disabled ?? radio.disabled ?? false
                 })}
             >
                 {radio.children ?? `${radio.value}`}

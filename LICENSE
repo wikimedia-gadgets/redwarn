@@ -24,7 +24,7 @@ LICENSES
         https://www.apache.org/licenses/LICENSE-2.0.txt
 
     To comply with the copyright of Wikimedia Foundation wikis, we are also
-    required to license the _transpiled files_ under the Creative Commons
+    required to sublicense the _transpiled files_ under the Creative Commons
     Attribution-ShareAlike 3.0 Unported License and the GNU Free Documentation
     License. The terms of these are available on the Internet
     under the following URLs, respectively.
@@ -56,16 +56,12 @@ SUMMARY
 
     In summary, ALL CONTRIBUTIONS TO THIS REPOSITORY MUST BE LICENSED UNDER
     THE Apache License 2.0. Transpiled versions of the code available on
-    Wikimedia Foundation wikis are also licensed under the GFDL and CC BY-SA 3.0
+    Wikimedia Foundation wikis are sublicensed under the GFDL and CC BY-SA 3.0
     licenses.
 
     This will provide RedWarn with enough protection as an open-source code
     project while still allowing anyone to contribute, modify, redistribute,
     and republish the code.
-
-    You are allowed to take the Wikipedia versions of the userscript (which
-    are multi-licensed under all three aforementioned licenses) and use it
-    with any CC BY-SA 3.0-compatible wiki.
 
 DISCLAIMER
 

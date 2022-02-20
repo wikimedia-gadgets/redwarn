@@ -8,13 +8,7 @@ import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconBu
 import RedWarnUI from "rww/ui/RedWarnUI";
 import i18next from "i18next";
 import Bullet from "./Bullet";
-import {
-    capitalize,
-    formatAge,
-    generateId,
-    getMonthHeader,
-    normalize,
-} from "rww/util";
+import { capitalize, formatAge, generateId, getMonthHeader } from "rww/util";
 import MaterialMenu, { openMenu } from "./MaterialMenu";
 import showPlainMediaWikiIFrameDialog from "rww/styles/material/util/showPlainMediaWikiIFrameDialog";
 import { MaterialWarnDialogChild } from "./MaterialWarnDialogChild";
@@ -23,6 +17,8 @@ import Log from "rww/data/RedWarnLog";
 import Group from "rww/mediawiki/core/Group";
 import "../../css/userSelect.css";
 import { UserMissingError } from "rww/errors/MediaWikiErrors";
+import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
+import { submitReport } from "rww/mediawiki/report/Report";
 
 interface OverlayContentLoading {
     type: "loading";
@@ -51,7 +47,6 @@ function MaterialUserSelectCardAccountGroups({
             <b>Groups:</b>{" "}
             {user.groups
                 .map<JSX.Element>((group: Group): JSX.Element => {
-                    console.log(group);
                     return (
                         <a
                             target={group.page && "_blank"}
@@ -176,16 +171,24 @@ function MaterialUserSelectCard({
                                 user.warningAnalysis.level
                             ].toLowerCase()}`,
                         })}
-                        {...(user.warningAnalysis.level > 3
+                        {...(user.warningAnalysis.level > 2
                             ? {
-                                  onClick: () => {
-                                      // TODO AIV thing
-                                      RedWarnUI.Toast.quickShow({
-                                          content: i18next.t("ui:unfinished"),
-                                      });
+                                  onClick: async () => {
+                                      submitReport(
+                                          await new RedWarnUI.ReportingDialog({
+                                              venue: RedWarnWikiConfiguration.c.reporting.find(
+                                                  (v) =>
+                                                      v.shortName.toLowerCase() ===
+                                                      RedWarnWikiConfiguration.c.warnings.reportVenue.toLowerCase()
+                                              ),
+                                              target: user,
+                                          }).show()
+                                      );
                                   },
                               }
-                            : {})}
+                            : {
+                                  ripple: false,
+                              })}
                     />
                 </td>
             </tr>
@@ -364,7 +367,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                         this.elementSet.targetUserInput.components.textField.value.trim();
                     if (content.length > 0)
                         (overlayInfo as OverlayContentInput).onFinish(
-                            normalize(content)
+                            new mw.Title(content).getMainText()
                         );
                 };
 
@@ -590,7 +593,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                 // No children in main element
                 this.elementSet.main.children.length == 0
             ) {
-                Log.warn(
+                Log.error(
                     "Invalid MaterialUserSelect state detected! Please investigate in the future.",
                     {
                         elementSet: this.elementSet,

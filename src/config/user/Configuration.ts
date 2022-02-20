@@ -74,7 +74,7 @@ export class Configuration {
             // Fallback style
             StyleManager.setStyle(StyleManager.defaultStyle);
             // Show error message
-            const dialog = new RedWarnUI.Dialog(
+            const dialog = new RedWarnUI.AlertDialog(
                 i18next.t("ui:configErrorDialog")
             );
             dialog.show();
@@ -113,7 +113,7 @@ export class Configuration {
         } catch (e) {
             if (e instanceof StyleMissingError) {
                 StyleManager.setStyle(StyleManager.defaultStyle);
-                const dialog = new RedWarnUI.Dialog(
+                const dialog = new RedWarnUI.AlertDialog(
                     i18next.t("ui:styleError.missing")
                 );
                 dialog.show();

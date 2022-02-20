@@ -24,7 +24,8 @@
         "./src/**/*.js",
         "./src/**/*.jsx",
         "./src/**/*.ts",
-        "./src/**/*.tsx"
+        "./src/**/*.tsx",
+        "./node_modules/types-mediawiki/**/*"
     ],
     "exclude": [
         "./**/node_modules",

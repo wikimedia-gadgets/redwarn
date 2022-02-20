@@ -46,4 +46,4 @@ export const RW_FALLBACK_WIKI = {
 };
 
 export const RW_FALLBACK_CONFIG =
-    "https://redwarn-web.wmcloud.org/static/default-config.json";
+    "https://en.wikipedia.org/wiki/Wikipedia:RedWarn/configuration.json?action=raw&ctype=application/json";

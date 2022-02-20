@@ -335,7 +335,6 @@ export class ProtectionManager {
                     }
                 );
 
-                console.log(currentEditLevel);
                 if (sourceKey != null && targetKey != null) {
                     isIncrease =
                         sourceKey < targetKey ||
@@ -343,7 +342,7 @@ export class ProtectionManager {
                             sourceDuration < request.duration);
                 } else {
                     // Cannot determine if increase or decrease. Request user input.
-                    const dialogResult = await new RedWarnUI.Dialog({
+                    const dialogResult = await new RedWarnUI.AlertDialog({
                         content: `${i18next.t(
                             "ui:protectionRequest.retarget.text"
                         )}`,

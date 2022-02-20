@@ -1,7 +1,7 @@
 import { RW_CONFIG_VERSION } from "rww/data/RedWarnConstants";
 import { RevertMethod } from "rww/config/user/ConfigurationEnums";
-import { RevertDoneOption } from "rww/mediawiki/revert/RevertDoneOptions";
 import Log from "rww/data/RedWarnLog";
+import { RevertDoneOption } from "rww/mediawiki/revert/RevertDoneOptions";
 
 type ConfigurationUpdater = (
     oldConfig: Record<string, unknown>
@@ -50,10 +50,8 @@ const configurationUpdaters: { [key: number]: ConfigurationUpdater } = {
                         case "RWRBDONEwarnUsr":
                             config.revertDoneOption = RevertDoneOption.WarnUser;
                             break;
-                        case "RWRBDONEreportUsr":
-                            config.revertDoneOption = RevertDoneOption.WarnUser;
-                            break;
                         default:
+                            // Discarding RWRBDONEreportUsr. Bad option, policy-wise.
                             Log.error("Unknown rwRollbackDoneOption:", value);
                     }
                     delete config.rwRollbackDoneOption;

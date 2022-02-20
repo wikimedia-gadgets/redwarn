@@ -54,7 +54,7 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                     width: props.width ?? "100%",
                 })}
                 class={classMix(
-                    "rw-mdc-full-width",
+                    props.width === "100%" ? "rw-mdc-full-width" : null,
                     "mdc-text-field",
                     props.outlined
                         ? "mdc-text-field--outlined"

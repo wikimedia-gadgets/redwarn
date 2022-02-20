@@ -10,7 +10,6 @@ import {
     SpecializedMediaWikiErrors,
 } from "rww/errors/MediaWikiErrors";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
-import { ApiQueryAllMessagesParams } from "types-mediawiki/api_params";
 import { RWAggregateError } from "rww/errors/RWError";
 import AjaxSettings = JQuery.AjaxSettings;
 import Api = mw.Api;
@@ -84,7 +83,7 @@ export class MediaWikiAPI {
 
     static async getMessage(
         messages: string[],
-        ajaxOptions?: ApiQueryAllMessagesParams
+        ajaxOptions?: Record<string, any>
     ): Promise<Record<string, any>> {
         try {
             return await MediaWikiAPI.api.getMessages(messages, ajaxOptions);

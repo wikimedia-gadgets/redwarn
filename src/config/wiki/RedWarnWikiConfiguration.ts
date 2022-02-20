@@ -48,7 +48,7 @@ export default class RedWarnWikiConfiguration {
                 ).then((req) => req.json());
             } catch (e) {
                 if (e.message.includes("NetworkError")) {
-                    new RedWarnUI.Dialog({
+                    new RedWarnUI.AlertDialog({
                         content: MediaWikiNotificationContent(
                             i18next.t("mediawiki:error.wikiConfigBlocked")
                         ),

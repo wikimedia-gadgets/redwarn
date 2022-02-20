@@ -1,3 +1,13 @@
+body {
+    --mdc-theme-primary: #6200ee;
+    --mdc-theme-secondary: #414e7e;
+    --mdc-dialog-z-index: 100;
+}
+
+.mdc-menu.mdc-menu-surface {
+    z-index: 101;
+}
+
 .rw-mdc-full-width {
     width: 100%;
 }

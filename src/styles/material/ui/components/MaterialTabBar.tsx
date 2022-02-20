@@ -1,6 +1,7 @@
 import { BaseProps, h } from "tsx-dom";
 import { generateId } from "rww/util";
 import { MDCTabBar, MDCTabBarActivatedEvent } from "@material/tab-bar";
+import Log from "rww/data/RedWarnLog";
 
 export interface MaterialTabBarProps extends BaseProps {
     focusOnActivate?: boolean;
@@ -16,6 +17,7 @@ export default function ({
     focusOnActivate = true,
     useAutomaticActivation = true,
     activeTabIndex = 0,
+    onActivate,
 }: MaterialTabBarProps): JSX.Element {
     const _id = !id ? `rwTabBar__${generateId(8)}` : id;
 
@@ -38,9 +40,12 @@ export default function ({
 
     // listen for activated
     tabBar.listen("MDCTabBar:activated", (event: MDCTabBarActivatedEvent) => {
+        Log.debug("tab bar activate", { index: event.detail.index });
+
         if (event.detail.index !== activeTabIndex) {
-            if (typeof this.props.onActivate === "function") {
-                this.props.onActivate(event);
+            if (typeof onActivate === "function") {
+                Log.trace("tab bar running onActivate", { onActivate });
+                onActivate(event);
             }
         }
     });

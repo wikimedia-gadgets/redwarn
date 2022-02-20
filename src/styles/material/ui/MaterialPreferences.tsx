@@ -4,6 +4,9 @@ import { RWUIPreferences } from "rww/ui/elements/RWUIPreferences";
 import { h } from "tsx-dom";
 import MaterialTabBar from "./components/MaterialTabBar";
 import MaterialPreferencesTab from "./MaterialPreferencesTab";
+import "../css/preferences.css";
+import Log from "rww/data/RedWarnLog";
+import MaterialButton from "./components/MaterialButton";
 
 /**
  * The MaterialPreferences is a handling class used for the preferences page.
@@ -19,6 +22,7 @@ export default class MaterialPreferences extends RWUIPreferences {
      */
     onChange(setting: PrimitiveSetting<any>): void {
         // if exists in unsaved preferences, remove it
+        Log.info("MaterialPreferences onChange called", { setting });
         const index = this.unsavedPreferences.findIndex(
             (pref) => pref.id === setting.id
         );
@@ -32,47 +36,87 @@ export default class MaterialPreferences extends RWUIPreferences {
      * Saves the unsaved preferences.
      */
     save(): void {
+        Log.info("MaterialPreferences saving", {
+            unsavedPreferences: this.unsavedPreferences,
+        });
         this.unsavedPreferences.forEach((setting) => {
             // find the setting in the configuration
-            const set = Object.entries(Configuration.configurationSets).find(
-                ([_, value]) => {
-                    return Object.entries(value).find(([_, setting]) => {
-                        return setting.id === setting.id;
-                    });
+            Log.debug("MaterialPreferences looking for setting", { setting });
+            const configurationSet = Object.values(
+                Configuration.configurationSets
+            ).find((set) => {
+                return (
+                    Object.values(set).find((s) => s.id === setting.id) != null
+                );
+            });
+            if (configurationSet) {
+                Log.debug("MaterialPreferences config set found", {
+                    configurationSet,
+                });
+                const settingToSave = configurationSet[setting.id];
+                if (settingToSave) {
+                    settingToSave.value = setting.value;
+                } else {
+                    throw "Setting not found in configuration";
                 }
-            );
-            if (set) {
-                // set the value
-                set[1][setting.id].value = setting.value;
             }
         });
         this.unsavedPreferences = [];
+        Log.debug("MaterialPreferences set config items");
+        Configuration.save();
+        Log.info("MateriaLPreference saved");
     }
 
     render(): HTMLDivElement {
-        const config: [key: string, set: Setting<any>[]][] = Object.entries(
+        let config: [key: string, set: Setting<any>[]][] = Object.entries(
             Configuration.configurationSets
         ).map(([key, set]) => [
             key,
-            Object.entries(set).map(([_, setting]) => setting),
+            Object.entries(set)
+                .map(([_, setting]) => setting)
+                .filter((setting) => setting.displayInfo != null),
         ]);
+        config = config.filter(([, set]) => set.length > 0);
+        if (this.props.excludeTabs) {
+            config = config.filter(
+                ([key]) => !this.props.excludeTabs.includes(key)
+            );
+        }
         const tabs = config.map(
             ([key, value], index) =>
                 new MaterialPreferencesTab({
                     active: index === 0,
                     title: key,
                     items: value,
-                    onChange: this.onChange,
+                    onChange: this.onChange.bind(this),
                 })
         );
-        this.unsavedPreferences = config.flatMap(([_, value]) => value);
 
         return (this.element = (
             <div id="rw-preferences">
-                <MaterialTabBar id="rw-preferences-tab-bar" activeTabIndex={0}>
+                <MaterialTabBar
+                    id="rw-preferences-tab-bar"
+                    activeTabIndex={0}
+                    onActivate={(event) =>
+                        tabs.forEach((tab, index) =>
+                            index === event.detail.index
+                                ? tab.activate()
+                                : tab.deactivate()
+                        )
+                    }
+                >
                     {tabs.map((tab) => tab.renderTabBarItem())}
                 </MaterialTabBar>
                 {tabs.map((tab) => tab.render())}
+                <br />
+                <MaterialButton
+                    action={true}
+                    raised={true}
+                    dialogAction={"save"}
+                    onClick={() => this.save()}
+                >
+                    Save
+                </MaterialButton>
             </div>
         ) as HTMLDivElement);
     }

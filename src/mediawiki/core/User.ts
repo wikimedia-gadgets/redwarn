@@ -24,8 +24,8 @@ import {
 import { isIPAddress } from "rww/util";
 
 import Section from "rww/mediawiki/core/Section";
-import {highestWarningLevel} from "rww/mediawiki/warn/WarningUtils";
-import {RWErrors} from "rww/errors/RWError";
+import { highestWarningLevel } from "rww/mediawiki/warn/WarningUtils";
+import { RWErrors } from "rww/errors/RWError";
 
 /**
  * The User represents a MediaWiki editor, be it a registered user or an IP address.
@@ -280,9 +280,9 @@ export class User {
                 {
                     comment: i18next.t("mediawiki:summaries.warn", {
                         context: level,
-                        reason: options.warning.name
+                        reason: options.warning.name,
                     }),
-                    section: getMonthHeader()
+                    section: getMonthHeader(),
                 }
             );
         } catch (e) {
@@ -293,12 +293,11 @@ export class User {
                     {
                         comment: i18next.t("mediawiki:summaries.warn", {
                             context: level,
-                            reason: options.warning.name
-                        })
+                            reason: options.warning.name,
+                        }),
                     }
                 );
-            else
-                throw e;
+            else throw e;
         }
         return true;
     }

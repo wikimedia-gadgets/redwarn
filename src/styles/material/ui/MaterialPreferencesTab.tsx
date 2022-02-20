@@ -30,14 +30,14 @@ export default class MaterialPreferencesTab extends RWUIPreferencesTab {
     render(): HTMLDivElement {
         const items = this.props.items
             .filter((item) => item.displayInfo != null)
-            .map((item) => {
+            .flatMap((item) => {
                 const preferencesItem = new MaterialPreferencesItem({
                     name: item.displayInfo.title,
                     setting: item,
                     onChange: (value) =>
                         this.props.onChange({ id: item.id, value }),
                 });
-                return preferencesItem.render();
+                return [preferencesItem.render(), <br />];
             });
         return (this.element = (
             <div

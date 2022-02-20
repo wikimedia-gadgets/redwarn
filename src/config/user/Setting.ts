@@ -69,7 +69,10 @@ interface DisplayInformationPermissive extends DisplayInformationBase {
     /**
      * The display type for this specific setting.
      */
-    uiInputType: Exclude<UIInputType, DisplayInformationRestricted["uiInputType"]>;
+    uiInputType: Exclude<
+        UIInputType,
+        DisplayInformationRestricted["uiInputType"]
+    >;
 }
 
 /**

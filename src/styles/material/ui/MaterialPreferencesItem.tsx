@@ -11,6 +11,7 @@ import MaterialTextInput from "rww/styles/material/ui/components/MaterialTextInp
 import StyleManager from "rww/styles/StyleManager";
 import i18next from "i18next";
 import MaterialSwitch from "./components/MaterialSwitch";
+import Log from "rww/data/RedWarnLog";
 
 /**
  * The MaterialPreferencesItem is a handling class used for different items in the preferences page.
@@ -18,6 +19,7 @@ import MaterialSwitch from "./components/MaterialSwitch";
 export default class MaterialPreferencesItem extends RWUIPreferencesItem {
     /** Input element */
     private input: HTMLElement;
+    private hasLabel = false;
 
     /**
      * Handles onChange event of the input element.
@@ -36,7 +38,7 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                 this.input = (
                     <MaterialSwitch
                         default={(this.props.setting as Setting<boolean>).value}
-                        onChange={this.handleInputChange}
+                        onChange={(value) => this.handleInputChange(value)}
                     />
                 );
                 break;
@@ -57,7 +59,7 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                             })
                         )}
                         direction={"vertical"}
-                        onChange={this.handleInputChange}
+                        onChange={(value) => this.handleInputChange(value)}
                     />
                 );
                 break;
@@ -74,9 +76,10 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                             })
                         )}
                         label={this.props.setting.displayInfo.title}
-                        onChange={this.handleInputChange}
+                        onChange={(value) => this.handleInputChange(value)}
                     />
                 );
+                this.hasLabel = true;
                 break;
             case UIInputType.Textbox:
                 this.input = (
@@ -85,9 +88,10 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                         // If the value wasn't actually a string, blame whoever made the setting
                         // for using the Textbox UIInputType for a string value.
                         defaultText={`${this.props.setting.value}`}
-                        onInput={this.handleInputChange}
+                        onInput={(value) => this.handleInputChange(value)}
                     />
                 );
+                this.hasLabel = true;
                 break;
             case UIInputType.Number:
                 this.input = (
@@ -97,9 +101,10 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                         // If the value wasn't actually a number, blame whoever made the setting
                         // for using the Textbox UIInputType for a number value.
                         defaultText={`${this.props.setting.value}`}
-                        onInput={this.handleInputChange}
+                        onInput={(value) => this.handleInputChange(value)}
                     />
                 );
+                this.hasLabel = true;
                 break;
             case UIInputType.ColorPicker:
                 // TODO: Implement color picker
@@ -114,9 +119,14 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                             value: style.name,
                         }))}
                         label={this.props.setting.displayInfo.title}
-                        onChange={this.handleInputChange}
+                        onChange={(value) =>
+                            this.handleInputChange(
+                                StyleManager.styles[value].name
+                            )
+                        }
                     />
                 );
+                this.hasLabel = true;
                 break;
             case UIInputType.RevertOptions:
                 // TODO: Implement revert options
@@ -126,13 +136,12 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                 break;
         }
         return (this.input = this.input ?? (
-            <span>
-                This setting ({this.props.name}) is currently unsupported.
-            </span>
+            <span>This setting is currently unsupported.</span>
         ));
     }
 
     render(): HTMLDivElement {
+        Log.debug("Rendering MaterialPreferencesItem", { props: this.props });
         this.renderInputElement();
         return (this.element = (
             <div class={`mdc-form-field`}>{this.input}</div>

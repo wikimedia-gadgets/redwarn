@@ -1,4 +1,4 @@
-import {RedWarnHook, RedWarnHookEventTypes} from "./RedWarnHookEvent";
+import { RedWarnHook, RedWarnHookEventTypes } from "./RedWarnHookEvent";
 import StyleManager from "rww/styles/StyleManager";
 import Log from "rww/data/RedWarnLog";
 

@@ -1,4 +1,4 @@
-import {MediaWikiAPI, Revision, User} from "rww/mediawiki";
+import { MediaWikiAPI, Revision, User } from "rww/mediawiki";
 import RedWarnStore from "rww/data/RedWarnStore";
 import i18next from "i18next";
 import {
@@ -8,7 +8,7 @@ import {
 } from "rww/errors/MediaWikiErrors";
 import { url as buildURL } from "rww/util";
 import redirect from "rww/util/redirect";
-import Section, {SectionContainer} from "rww/mediawiki/core/Section";
+import Section, { SectionContainer } from "rww/mediawiki/core/Section";
 import url from "rww/util/url";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 
@@ -113,7 +113,7 @@ export class Page implements SectionContainer {
             typeof pageTitle == "string" ? new mw.Title(pageTitle) : pageTitle;
         return (
             Page.pageIndex[`${mwTitle}`] ??
-            (Page.pageIndex[`${mwTitle}`] = <Page & NamedPage> new Page({
+            (Page.pageIndex[`${mwTitle}`] = <Page & NamedPage>new Page({
                 title: mwTitle,
                 namespace: mwTitle.namespace,
             }))
@@ -140,7 +140,7 @@ export class Page implements SectionContainer {
 
         return (
             <Page & PopulatedPage>Page.pageIndex[`${mwTitle}`] ??
-            (Page.pageIndex[`${mwTitle}`] = <Page & PopulatedPage> new Page({
+            (Page.pageIndex[`${mwTitle}`] = <Page & PopulatedPage>new Page({
                 pageID: pageID,
                 title: mwTitle,
                 namespace: mwTitle.namespace,
@@ -306,18 +306,21 @@ export class Page implements SectionContainer {
     async getLatestRevision(
         options: PageLatestRevisionOptions = {}
     ): Promise<Revision> {
-        const clean = Object.keys(options).filter(k => k !== "forceRefresh").length === 0;
-        if (options.forceRefresh || this.latestCachedRevision == null || !clean) {
+        const clean =
+            Object.keys(options).filter((k) => k !== "forceRefresh").length ===
+            0;
+        if (
+            options.forceRefresh ||
+            this.latestCachedRevision == null ||
+            !clean
+        ) {
             if (clean) {
                 this.latestCachedRevision = await Page.getLatestRevision(
                     this,
                     options
                 );
             } else {
-                return Page.getLatestRevision(
-                    this,
-                    options
-                );
+                return Page.getLatestRevision(this, options);
             }
         }
 
@@ -364,7 +367,7 @@ export class Page implements SectionContainer {
      */
     async getLatestRevisionNotByUser(user: User): Promise<Revision> {
         return this.getLatestRevision({
-            excludeUser: user
+            excludeUser: user,
         });
     }
 

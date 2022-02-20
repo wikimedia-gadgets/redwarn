@@ -38,7 +38,7 @@ export default function initUISettings(): ConfigurationSet {
 
         /** Visible page icons */
         pageIcons: new Setting<PageIconOverrides>("pageIcons", null, {
-            uiInputType: UIInputType.Style,
+            uiInputType: UIInputType.PageIcons,
 
             title: i18next.t("prefs:ui.pageIcons.title"),
             description: i18next.t("prefs:ui.pageIcons.description"),

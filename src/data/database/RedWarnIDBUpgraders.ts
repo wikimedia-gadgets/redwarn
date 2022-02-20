@@ -1,4 +1,6 @@
-import RedWarnIDB, {RedWarnIDBUpgradeHandler} from "rww/data/database/RedWarnIDB";
+import RedWarnIDB, {
+    RedWarnIDBUpgradeHandler,
+} from "rww/data/database/RedWarnIDB";
 
 /**
  * A set of functions responsible for setting up the RedWarn IndexedDB
@@ -13,16 +15,16 @@ export default <{ [key: number]: RedWarnIDBUpgradeHandler }>{
 
         // Creates the dependency cache
         RedWarnIDB.createObjectStore(database, "cacheTracker", "id", [
-            "timestamp"
+            "timestamp",
         ]);
         RedWarnIDB.createObjectStore(database, "dependencyCache", "id", [
             "lastCache",
             "etag",
-            "data"
+            "data",
         ]);
         RedWarnIDB.createObjectStore(database, "groupCache", "name", [
             "page",
-            "displayName"
+            "displayName",
         ]);
         RedWarnIDB.createObjectStore(database, "watchedPages", "title", []);
         RedWarnIDB.createObjectStore(database, "recentPages", "title", []);
@@ -31,7 +33,7 @@ export default <{ [key: number]: RedWarnIDBUpgradeHandler }>{
         RedWarnIDB.createObjectStore(database, "errorLog", "id", [
             "timestamp",
             "code",
-            "data"
+            "data",
         ]);
         // TODO only on debug mode
         /* RedWarnIDB.createObjectStore(database, "combinedLog", "id", [
@@ -39,5 +41,5 @@ export default <{ [key: number]: RedWarnIDBUpgradeHandler }>{
             "code",
             "data",
         ]); */
-    }
+    },
 };

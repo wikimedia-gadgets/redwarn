@@ -13,7 +13,7 @@
 
 import i18next from "i18next";
 import * as RedWarnConstants from "./data/RedWarnConstants";
-import {RW_VERSION} from "./data/RedWarnConstants";
+import { RW_VERSION } from "./data/RedWarnConstants";
 import * as Utilities from "./util";
 import Dependencies from "./data/Dependencies";
 import Localization from "./localization/Localization";
@@ -39,7 +39,7 @@ import {
 } from "./mediawiki";
 import { Configuration } from "./config/user/Configuration";
 import LoadErrorTranslations from "rww/errors/LoadErrorTranslations";
-import {RecentPages} from "rww/mediawiki/util/RecentPages";
+import { RecentPages } from "rww/mediawiki/util/RecentPages";
 
 declare global {
     interface Window {
@@ -230,7 +230,7 @@ export default class RedWarn {
         await Promise.all([
             RedWarnHooks.executeHooks("postUIInject"),
             Watch.init(),
-            RecentPages.init()
+            RecentPages.init(),
         ]);
 
         Log.debug(`Done loading (UI): ${Date.now() - startTime}ms.`);

@@ -1,11 +1,11 @@
 import RedWarnStore from "rww/data/RedWarnStore";
 import i18next from "i18next";
 import RedWarnUI from "rww/ui/RedWarnUI";
-import {ProtectionManager, User, Watch} from "rww/mediawiki";
-import {redirect} from "rww/util";
+import { ProtectionManager, User, Watch } from "rww/mediawiki";
+import { redirect } from "rww/util";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 import Log from "rww/data/RedWarnLog";
-import {getReportVenueIcons} from "rww/mediawiki/report/ReportVenue";
+import { getReportVenueIcons } from "rww/mediawiki/report/ReportVenue";
 
 interface PageIconBase {
     icon: string;

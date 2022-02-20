@@ -37,7 +37,7 @@ export default class MaterialPreferencesTab extends RWUIPreferencesTab {
                     onChange: (value) =>
                         this.props.onChange({ id: item.id, value }),
                 });
-                return [preferencesItem.render(), <br />];
+                return [preferencesItem.render(), <br />, <br />];
             });
         return (this.element = (
             <div

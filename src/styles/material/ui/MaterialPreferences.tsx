@@ -107,7 +107,10 @@ export default class MaterialPreferences extends RWUIPreferences {
                 >
                     {tabs.map((tab) => tab.renderTabBarItem())}
                 </MaterialTabBar>
+                <br />
                 {tabs.map((tab) => tab.render())}
+                <br />
+                <hr />
                 <br />
                 <MaterialButton
                     action={true}

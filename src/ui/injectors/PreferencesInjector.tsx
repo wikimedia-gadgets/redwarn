@@ -10,7 +10,9 @@ export default class PreferencesInjector implements Injector {
             mw.config.get("wgPageName") === "Wikipedia:RedWarn/Preferences" &&
             mw.config.get("wgAction") === "view"
         ) {
-            const preferences = new RedWarnUI.Preferences({});
+            const preferences = new RedWarnUI.Preferences({
+                excludeTabs: ["core"],
+            });
             const preferencesElement = preferences.render();
 
             const target = document.querySelector("#mw-content-text");

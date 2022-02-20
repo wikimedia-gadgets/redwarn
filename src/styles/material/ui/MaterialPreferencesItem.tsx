@@ -144,7 +144,16 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
         Log.debug("Rendering MaterialPreferencesItem", { props: this.props });
         this.renderInputElement();
         return (this.element = (
-            <div class={`mdc-form-field`}>{this.input}</div>
+            this.hasLabel ? (
+                this.input
+            ) : (
+                <div class={`mdc-form-field`}>
+                    {this.input}
+                    <label for={this.input.id}>
+                        {this.props.setting.displayInfo.title}
+                    </label>
+                </div>
+            )
         ) as HTMLDivElement);
     }
 }

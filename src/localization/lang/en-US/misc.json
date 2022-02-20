@@ -20,5 +20,8 @@
 
     "parser": {
         "wikiTxtParseError": "Sorry, but we can't show a preview for this. Check the wikitext for errors and try again."
+    },
+    "idb": {
+        "forceDeleted": "The RedWarn cache stored on your browser was deleted due to a critical error. This will be rebuilt on the next page load."
     }
 }

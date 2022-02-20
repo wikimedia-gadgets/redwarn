@@ -1,6 +1,7 @@
 import RedWarnIDBError from "rww/data/database/RedWarnIDBError";
 import RedWarnIDBObjectStore from "rww/data/database/RedWarnIDBObjectStore";
 import Log from "rww/data/RedWarnLog";
+import i18next from "i18next";
 
 export type RedWarnIDBUpgradeHandler = (
     openRequest: IDBOpenDBRequest
@@ -33,36 +34,34 @@ export default class RedWarnIDB {
         private _version: number,
         private _upgradeProcedures: { [key: number]: RedWarnIDBUpgradeHandler }
     ) {
-        this.request = indexedDB.open(_databaseName, _version);
-        this.request.addEventListener("upgradeneeded", async (event) => {
-            Log.debug(
-                `Upgrade needed. Going from version ${event.oldVersion} to ${event.newVersion}`
-            );
-            for (
-                let currentVersion = event.oldVersion;
-                currentVersion < event.newVersion;
-                currentVersion++
-            ) {
-                _upgradeProcedures[event.oldVersion](this.request);
-            }
-        });
+        this.setup();
     }
 
-    static createObjectStore(
-        database: IDBDatabase,
-        store: string,
-        keyPath: string,
-        columns: (string | RWIDBColumn)[]
-    ) {
-        const objectStore = database.createObjectStore(store, {
-            keyPath: keyPath
+    async setup(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.request = indexedDB.open(this._databaseName, this._version);
+            this.request.addEventListener("upgradeneeded", async (event) => {
+                Log.debug(
+                    `Upgrade needed. Going from version ${event.oldVersion} to ${event.newVersion}`
+                );
+                for (
+                    let currentVersion = event.oldVersion;
+                    currentVersion < event.newVersion;
+                    currentVersion++
+                ) {
+                    this._upgradeProcedures[event.oldVersion](this.request);
+                }
+            });
+            this.request.addEventListener("success", () => resolve());
+            this.request.addEventListener("error", () =>
+                reject(
+                    new RedWarnIDBError(
+                        "Failed to open database connection.",
+                        this.database
+                    )
+                )
+            );
         });
-
-        for (const column of Object.values(columns)) {
-            if (typeof column === "string")
-                objectStore.createIndex(column, column);
-            else objectStore.createIndex(column.name, column.name, column);
-        }
     }
 
     async connect(): Promise<IDBDatabase> {
@@ -78,6 +77,39 @@ export default class RedWarnIDB {
         return (this.database = this.request.result);
     }
 
+    static createObjectStore(
+        database: IDBDatabase,
+        store: string,
+        keyPath: string,
+        columns: (string | RWIDBColumn)[]
+    ) {
+        const objectStore = database.createObjectStore(store, {
+            keyPath: keyPath,
+        });
+
+        for (const column of Object.values(columns)) {
+            if (typeof column === "string")
+                objectStore.createIndex(column, column);
+            else objectStore.createIndex(column.name, column.name, column);
+        }
+    }
+
+    /**
+     * Destroyes the IndexedDB database. THIS WILL DELETE CACHES AND PAGE
+     * VIEW HISTORY!
+     */
+    async deleteDatabase(): Promise<void> {
+        indexedDB.deleteDatabase(this._databaseName);
+        await new Promise((resolve, reject) => {
+            this.request.addEventListener("error", (event) => {
+                reject(event);
+            });
+            this.request.addEventListener("success", (event) => {
+                resolve(event);
+            });
+        });
+    }
+
     async transaction(
         store: string | string[],
         mode: IDBTransactionMode,
@@ -88,9 +120,7 @@ export default class RedWarnIDB {
             return database.transaction(store, mode);
         } catch (error) {
             Log.error(error);
-            return new Promise(async (r, rj) =>
-                rj("Error occured before transaction attempt, see log.")
-            );
+            return Promise.reject(error);
         }
     }
 
@@ -131,17 +161,28 @@ export default class RedWarnIDB {
         });
     }
 
+    /**
+     * Provides a {@link IDBRequest} object for a databsae transaction. This will
+     * attempt to retry as many times as it needs to.
+     *
+     * @param store
+     * @param mode
+     * @param callback
+     * @param noRetry
+     */
     async runRequest<T>(
         store: string,
         mode: IDBTransactionMode,
-        callback: (objectStore: IDBObjectStore) => IDBRequest<T>
+        callback: (objectStore: IDBObjectStore) => IDBRequest<T>,
+        noRetry = false
     ): Promise<T> {
         // Safari bug fix needed
         return new Promise(async (resolve, reject) => {
-            const transaction = await this.transaction(store, mode);
-            const objectStore = transaction.objectStore(store);
-
+            let transaction: IDBTransaction;
             try {
+                transaction = await this.transaction(store, mode);
+                const objectStore = transaction.objectStore(store);
+
                 const request = callback(objectStore);
                 request.addEventListener("success", () => {
                     resolve(request.result);
@@ -157,9 +198,27 @@ export default class RedWarnIDB {
                     );
                 });
             } catch (error) {
-                Log.error(error);
-                if (error instanceof DOMException && error.name === "NotFoundError") {
-                    Log.warn("Upgraded database might have been accessed on an old version of RedWarn, or database schema changes were made without deleting the browser IndexedDB.");
+                Log.error("Database error.", error);
+                if (
+                    error instanceof DOMException &&
+                    error.name === "NotFoundError"
+                ) {
+                    Log.warn(
+                        "Upgraded database might have been accessed on an old " +
+                            "version of RedWarn, or database schema changes were made without " +
+                            "deleting the browser IndexedDB. In either case, this database " +
+                            "is likely no longer usable."
+                    );
+                    Log.warn("Deleting IndexedDB database for a fix...");
+                    await this.deleteDatabase();
+                    mw.notify(i18next.t<string>("misc:idb.forceDeleted"));
+
+                    if (!noRetry) {
+                        this.setup();
+                        await this.connect();
+                        // Set noRetry to true and avoid infinite loops.
+                        return this.runRequest(store, mode, callback, true);
+                    }
                 }
                 // Reject promise
                 reject(
@@ -170,6 +229,7 @@ export default class RedWarnIDB {
                         null
                     )
                 );
+                throw error;
             }
         });
     }

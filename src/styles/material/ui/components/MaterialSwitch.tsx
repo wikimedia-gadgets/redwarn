@@ -2,6 +2,7 @@ import { BaseProps, h } from "tsx-dom";
 import { generateId } from "rww/util";
 import { MDCSwitch } from "@material/switch";
 import i18next from "i18next";
+import classMix from "rww/styles/material/util/classMix";
 
 interface MaterialSwitchProps extends BaseProps {
     id?: string;
@@ -30,23 +31,24 @@ export const MaterialSwitchTrack = new Map<
 export default function (props: MaterialSwitchProps): JSX.Element {
     const id = props.id ?? generateId(8);
     const element = (
-        <div>
+        <span>
             <button
                 id={id}
-                class={`mdc-switch mdc-switch--${
-                    !props.default ? "un" : ""
-                }selected`}
+                class={classMix(
+                    "mdc-switch",
+                    `mdc-switch--${!props.default ? "un" : ""}selected`
+                )}
                 type="button"
                 role="switch"
                 aria-checked={props.default ? "true" : "false"}
             >
-                <div class="mdc-switch__track"></div>
+                <div class="mdc-switch__track" />
                 <div class="mdc-switch__handle-track">
                     <div class="mdc-switch__handle">
                         <div class="mdc-switch__shadow">
-                            <div class="mdc-elevation-overlay"></div>
+                            <div class="mdc-elevation-overlay" />
                         </div>
-                        <div class="mdc-switch__ripple"></div>
+                        <div class="mdc-switch__ripple" />
                         <div class="mdc-switch__icons">
                             <svg
                                 class="mdc-switch__icon mdc-switch__icon--on"
@@ -65,7 +67,7 @@ export default function (props: MaterialSwitchProps): JSX.Element {
                 </div>
             </button>
             <label for={id}>{i18next.t<string>("ui:toggleSwitch")}</label>
-        </div>
+        </span>
     );
     const component = MaterialSwitchUpgrade(element);
     if (props.disabled) {

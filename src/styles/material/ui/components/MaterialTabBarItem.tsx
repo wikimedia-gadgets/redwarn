@@ -55,10 +55,10 @@ export default function ({
                     active ? "mdc-tab-indicator--active" : ""
                 )}
             >
-                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline" />
             </span>
-            <span class="mdc-tab__ripple"></span>
-            <div class="mdc-tab__focus-ring"></div>
+            <span class="mdc-tab__ripple" />
+            <div class="mdc-tab__focus-ring" />
         </button>
     );
 

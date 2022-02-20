@@ -2,6 +2,7 @@ import { BaseProps, h } from "tsx-dom";
 import { generateId } from "rww/util";
 import { MDCTabBar, MDCTabBarActivatedEvent } from "@material/tab-bar";
 import Log from "rww/data/RedWarnLog";
+import RWUIElement from "rww/ui/elements/RWUIElement";
 
 export interface MaterialTabBarProps extends BaseProps {
     focusOnActivate?: boolean;
@@ -11,44 +12,60 @@ export interface MaterialTabBarProps extends BaseProps {
     id?: string;
 }
 
-export default function ({
-    id,
-    children,
-    focusOnActivate = true,
-    useAutomaticActivation = true,
-    activeTabIndex = 0,
-    onActivate,
-}: MaterialTabBarProps): JSX.Element {
-    const _id = !id ? `rwTabBar__${generateId(8)}` : id;
+class MaterialTabBar extends RWUIElement {
+    id: string;
 
-    const tabBarElement = (
-        <div class="mdc-tab-bar" role="tablist" id={_id}>
-            <div class="mdc-tab-scroller">
-                <div class="mdc-tab-scroller__scroll-area">
-                    <div class="mdc-tab-scroller__scroll-content">
-                        {children}
+    constructor(private props: MaterialTabBarProps) {
+        super();
+        this.id = !this.props.id ? `rwTabBar__${generateId(8)}` : this.props.id;
+    }
+
+    render(): JSX.Element {
+        const tabBarElement = (
+            <div class="mdc-tab-bar" role="tablist" id={this.id}>
+                <div class="mdc-tab-scroller">
+                    <div class="mdc-tab-scroller__scroll-area">
+                        <div class="mdc-tab-scroller__scroll-content">
+                            {this.props.children}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    );
+        );
 
-    const tabBar = new MDCTabBar(tabBarElement);
-    tabBar.focusOnActivate = focusOnActivate;
-    tabBar.useAutomaticActivation = useAutomaticActivation;
-    tabBar.activateTab(activeTabIndex);
+        const tabBar = new MDCTabBar(tabBarElement);
+        tabBar.focusOnActivate = this.props.focusOnActivate;
+        tabBar.useAutomaticActivation = this.props.useAutomaticActivation;
+        tabBar.activateTab(this.props.activeTabIndex);
 
-    // listen for activated
-    tabBar.listen("MDCTabBar:activated", (event: MDCTabBarActivatedEvent) => {
-        Log.debug("tab bar activate", { index: event.detail.index });
+        // listen for activated
+        tabBar.listen(
+            "MDCTabBar:activated",
+            (event: MDCTabBarActivatedEvent) => {
+                Log.debug("tab bar activate", { index: event.detail.index });
 
-        if (event.detail.index !== activeTabIndex) {
-            if (typeof onActivate === "function") {
-                Log.trace("tab bar running onActivate", { onActivate });
-                onActivate(event);
+                if (event.detail.index !== this.props.activeTabIndex) {
+                    if (typeof this.props.onActivate === "function") {
+                        Log.trace("tab bar running onActivate", {
+                            onActivate: this.props.onActivate,
+                        });
+                        this.props.onActivate(event);
+                        this.props.activeTabIndex = event.detail.index;
+                    }
+                }
             }
-        }
-    });
+        );
 
-    return tabBarElement;
+        return tabBarElement;
+    }
+}
+
+export { MaterialTabBar as MaterialTabBarController };
+export default function generator(
+    props: MaterialTabBarProps
+): JSX.Element & { TabBar: MaterialTabBar } {
+    const tabBar = new MaterialTabBar(props);
+    return Object.assign(tabBar.render(), {
+        TabBar: tabBar,
+    });
 }

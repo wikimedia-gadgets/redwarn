@@ -593,7 +593,7 @@ export abstract class MaterialUserSelect extends MaterialWarnDialogChild {
                 // No children in main element
                 this.elementSet.main.children.length == 0
             ) {
-                Log.warn(
+                Log.error(
                     "Invalid MaterialUserSelect state detected! Please investigate in the future.",
                     {
                         elementSet: this.elementSet,

@@ -1,16 +1,19 @@
 import { User, UserAccount } from "rww/mediawiki";
 import {
     MaterialUserSelect,
-    MaterialUserSelectProps
+    MaterialUserSelectProps,
 } from "rww/styles/material/ui/components/MaterialUserSelect";
 import { h } from "tsx-dom";
 import {
     MaterialReportingDialogTarget,
-    MaterialReportingDialogTargetProps
+    MaterialReportingDialogTargetProps,
 } from "rww/styles/material/ui/components/MaterialReportingDialogChild";
 import MaterialAlertDialog from "rww/styles/material/ui/MaterialAlertDialog";
 import i18next from "i18next";
-import { isUserModeReportVenue } from "rww/mediawiki/report/ReportVenue";
+import {
+    isPageReportVenue,
+    isUserModeReportVenue,
+} from "rww/mediawiki/report/ReportVenue";
 
 class MaterialReportingDialogUser extends MaterialUserSelect {
     constructor(
@@ -22,7 +25,10 @@ class MaterialReportingDialogUser extends MaterialUserSelect {
         this.props.originalUser = this.props.originalTarget;
         if (this.props.originalUser == null) {
             const relevantUser = mw.config.get("wgRelevantUserName");
-            if (relevantUser != null)
+            if (
+                relevantUser != null &&
+                relevantUser !== UserAccount.current.username
+            )
                 this.props.originalUser = User.fromUsername(relevantUser);
         }
     }
@@ -30,6 +36,8 @@ class MaterialReportingDialogUser extends MaterialUserSelect {
     onPreUserChange(user: User): void {
         this.props.reportingDialog.target = user;
         this.props.reportingDialog.uiValidate();
+        if (isPageReportVenue(this.props.reportingDialog.venue))
+            this.props.reportingDialog.venue.page.getLatestRevision();
     }
 
     async onUserChange(user: User): Promise<void> {
@@ -51,7 +59,7 @@ class MaterialReportingDialogUser extends MaterialUserSelect {
                                 {i18next.t<string>(
                                     "ui:reporting.restricted.text",
                                     {
-                                        group: group.displayName
+                                        group: group.displayName,
                                     }
                                 )}
                             </b>
@@ -59,12 +67,12 @@ class MaterialReportingDialogUser extends MaterialUserSelect {
                     ),
                     actions: [
                         {
-                            data: "cancel"
+                            data: "cancel",
                         },
                         {
-                            data: "proceed"
-                        }
-                    ]
+                            data: "proceed",
+                        },
+                    ],
                 }).show()) !== "proceed"
             ) {
                 await this.clearUser(this.lastUser);
@@ -86,6 +94,6 @@ export default function generator(
     const mrdUserTarget = new MaterialReportingDialogUser(props);
     return Object.assign(mrdUserTarget.render(), {
         MRDTarget: mrdUserTarget,
-        valid: () => mrdUserTarget.user != null
+        valid: () => mrdUserTarget.user != null,
     });
 }

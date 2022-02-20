@@ -72,6 +72,7 @@ export interface PageReportVenue extends BaseReportVenue {
     template: string | PageReportVenueTemplate;
     section?: number | string;
     location?: "prepend" | "append";
+    existCheck?: { source: string; flags?: string };
     defaultReasons?: string[];
 }
 

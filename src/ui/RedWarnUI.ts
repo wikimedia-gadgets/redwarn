@@ -16,7 +16,7 @@ import { RWUIReportingDialog } from "rww/ui/elements/RWUIReportingDialog";
  */
 export default class RedWarnUI {
     /** Alias of {@link StyleManager.activeStyle.classMap.rwAlertDialog} */
-    static get Dialog(): typeof RWUIAlertDialog {
+    static get AlertDialog(): typeof RWUIAlertDialog {
         return StyleManager.activeStyle.classMap.rwAlertDialog;
     }
     /** Alias of {@link StyleManager.activeStyle.classMap.rwInputDialog} */
@@ -75,5 +75,5 @@ export const RWUIElements = {
     [RWUIDiffIcons.elementName]: RWUIDiffIcons,
     [RWUIPageIcons.elementName]: RWUIPageIcons,
     [RWUIExtendedOptions.elementName]: RWUIExtendedOptions,
-    [RWUIReportingDialog.elementName]: RWUIReportingDialog
+    [RWUIReportingDialog.elementName]: RWUIReportingDialog,
 };

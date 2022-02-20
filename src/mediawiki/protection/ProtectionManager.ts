@@ -342,7 +342,7 @@ export class ProtectionManager {
                             sourceDuration < request.duration);
                 } else {
                     // Cannot determine if increase or decrease. Request user input.
-                    const dialogResult = await new RedWarnUI.Dialog({
+                    const dialogResult = await new RedWarnUI.AlertDialog({
                         content: `${i18next.t(
                             "ui:protectionRequest.retarget.text"
                         )}`,

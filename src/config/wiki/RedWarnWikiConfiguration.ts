@@ -2,7 +2,7 @@ import { Page, WarningManager } from "rww/mediawiki";
 import {
     RW_FALLBACK_CONFIG,
     RW_WIKI_CONFIGURATION,
-    RW_WIKI_CONFIGURATION_VERSION
+    RW_WIKI_CONFIGURATION_VERSION,
 } from "rww/data/RedWarnConstants";
 import Log from "rww/data/RedWarnLog";
 import WikiConfiguration from "./WikiConfiguration";
@@ -48,11 +48,11 @@ export default class RedWarnWikiConfiguration {
                 ).then((req) => req.json());
             } catch (e) {
                 if (e.message.includes("NetworkError")) {
-                    new RedWarnUI.Dialog({
+                    new RedWarnUI.AlertDialog({
                         content: MediaWikiNotificationContent(
                             i18next.t("mediawiki:error.wikiConfigBlocked")
                         ),
-                        actions: [{ data: `${i18next.t("ui:close")}` }]
+                        actions: [{ data: `${i18next.t("ui:close")}` }],
                     });
                 }
                 // TODO: Proper errors
@@ -106,9 +106,8 @@ export default class RedWarnWikiConfiguration {
             // TODO: Suggest saving the upgraded config file to the user (if it's the same wiki).
         }
 
-        RedWarnWikiConfiguration._loadedConfiguration = RedWarnWikiConfiguration.deserializeWikiConfiguration(
-            config
-        );
+        RedWarnWikiConfiguration._loadedConfiguration =
+            RedWarnWikiConfiguration.deserializeWikiConfiguration(config);
 
         // Refresh whatever needs refreshing.
         WarningManager.refresh();

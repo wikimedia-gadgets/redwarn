@@ -304,6 +304,7 @@
             "fail_self": "You are not allowed to report yourself.",
             "fail_reason": "You did not provide a reason for the report.",
             "fail_short": "Your report is believed to be too short to contain substantial information.",
+            "fail_exists": "The target has already been reported.",
 
             "failDetailed": "An unknown issue ocurred. Please try again.",
 
@@ -311,7 +312,8 @@
             "failDetailed_targetMissing": "The page to be reported does not exist. Please make sure that the page you are attempting to report exists.",
             "failDetailed_self": "You are not allowed to report yourself, even for testing situations.",
             "failDetailed_reason": "You did not provide a reason for the report. Please choose a prefilled reason or write your own.",
-            "failDetailed_short": "Your report is believed to be too short to contain substantial information. Please make sure that your report contains enough detailed information to be useful."
+            "failDetailed_short": "Your report is believed to be too short to contain substantial information. Please make sure that your report contains enough detailed information to be useful.",
+            "failDetailed_exists": "The target has already been reported. You do not need to file this report anymore."
         },
         "restricted": {
             "title": "Risky report",

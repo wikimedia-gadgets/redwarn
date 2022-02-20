@@ -1,16 +1,20 @@
 import {
     MaterialReportingDialogChildProps,
     MaterialReportingDialogTarget,
-    MaterialReportingDialogTargetProps
+    MaterialReportingDialogTargetProps,
 } from "rww/styles/material/ui/components/MaterialReportingDialogChild";
 import { Page } from "rww/mediawiki";
 import MaterialTextInput, {
     MaterialTextInputComponents,
-    MaterialTextInputUpgrade
+    MaterialTextInputUpgrade,
 } from "rww/styles/material/ui/components/MaterialTextInput";
 import { h } from "tsx-dom";
 import i18next from "i18next";
-import { ReportVenue, ReportVenueMode } from "rww/mediawiki/report/ReportVenue";
+import {
+    isPageReportVenue,
+    ReportVenue,
+    ReportVenueMode,
+} from "rww/mediawiki/report/ReportVenue";
 
 class MaterialReportingDialogPage {
     get venue(): ReportVenue {
@@ -38,13 +42,13 @@ class MaterialReportingDialogPage {
         this.elements.input = MaterialTextInputUpgrade(
             <MaterialTextInput
                 label={i18next.t("ui:reporting.target.label", {
-                    context: ReportVenueMode[this.venue.mode].toLowerCase()
+                    context: ReportVenueMode[this.venue.mode].toLowerCase(),
                 })}
                 helperText={i18next.t("ui:reporting.target.helperText", {
-                    context: ReportVenueMode[this.venue.mode].toLowerCase()
+                    context: ReportVenueMode[this.venue.mode].toLowerCase(),
                 })}
                 leadingIcon={{
-                    icon: "description"
+                    icon: "description",
                 }}
             />
         );
@@ -59,6 +63,8 @@ class MaterialReportingDialogPage {
                     this.props.reportingDialog.target = currentTarget;
                     this.props.reportingDialog.uiValidate();
 
+                    if (isPageReportVenue(this.props.reportingDialog.venue))
+                        this.props.reportingDialog.venue.page.getLatestRevision();
                     currentTarget.exists().then((exists) => {
                         if (
                             new mw.Title(
@@ -69,8 +75,9 @@ class MaterialReportingDialogPage {
                             return;
                         }
                         this.elements.input.textField.valid = exists;
-                        (this.elements.input.helperText
-                            .root as HTMLElement).innerText = i18next.t(
+                        (
+                            this.elements.input.helperText.root as HTMLElement
+                        ).innerText = i18next.t(
                             exists
                                 ? "ui:reporting.target.helperText"
                                 : "ui:reporting.target.nonexistent_page"
@@ -80,10 +87,8 @@ class MaterialReportingDialogPage {
                     this.elements.input.textField.valid = false;
                 }
             } else {
-                (this.elements.input.helperText
-                    .root as HTMLElement).innerText = i18next.t(
-                    "ui:reporting.target.helperText"
-                );
+                (this.elements.input.helperText.root as HTMLElement).innerText =
+                    i18next.t("ui:reporting.target.helperText");
                 this.elements.input.textField.valid = false;
             }
         });
@@ -100,6 +105,6 @@ export default function generator(
     const mrdPageTarget = new MaterialReportingDialogPage(props);
     return Object.assign(mrdPageTarget.render(), {
         MRDTarget: mrdPageTarget,
-        valid: () => mrdPageTarget.elements.input.textField.valid
+        valid: () => mrdPageTarget.elements.input.textField.valid,
     });
 }

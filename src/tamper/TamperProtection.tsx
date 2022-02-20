@@ -38,10 +38,10 @@ export default class TamperProtection {
     static async exec(): Promise<void> {
         const content = [<span />];
         content[0].innerHTML = i18next.t("ui:tamperProtection.warningContent");
-        const d = new RedWarnUI.Dialog({
+        const d = new RedWarnUI.AlertDialog({
             actions: [],
             content,
-            title: i18next.t("ui:tamperProtection.header")
+            title: i18next.t("ui:tamperProtection.header"),
         });
         await d.show();
         Configuration.Core.neopolitan.value =

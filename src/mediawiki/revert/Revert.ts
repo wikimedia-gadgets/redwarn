@@ -559,7 +559,7 @@ export class Revert {
     static async requestRevertMethod(): Promise<RevertMethod> {
         const method =
             RevertMethod[
-                (await new RedWarnUI.Dialog({
+                (await new RedWarnUI.AlertDialog({
                     actions: [
                         {
                             data: "Rollback",

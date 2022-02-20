@@ -19,7 +19,6 @@ import Log from "rww/data/RedWarnLog";
 export default class MaterialPreferencesItem extends RWUIPreferencesItem {
     /** Input element */
     private input: HTMLElement;
-    private hasLabel = false;
 
     /**
      * Handles onChange event of the input element.
@@ -79,7 +78,6 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                         onChange={(value) => this.handleInputChange(value)}
                     />
                 );
-                this.hasLabel = true;
                 break;
             case UIInputType.Textbox:
                 this.input = (
@@ -91,7 +89,6 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                         onInput={(value) => this.handleInputChange(value)}
                     />
                 );
-                this.hasLabel = true;
                 break;
             case UIInputType.Number:
                 this.input = (
@@ -104,7 +101,6 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                         onInput={(value) => this.handleInputChange(value)}
                     />
                 );
-                this.hasLabel = true;
                 break;
             case UIInputType.ColorPicker:
                 // TODO: Implement color picker
@@ -126,7 +122,6 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                         }
                     />
                 );
-                this.hasLabel = true;
                 break;
             case UIInputType.RevertOptions:
                 // TODO: Implement revert options
@@ -144,16 +139,13 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
         Log.debug("Rendering MaterialPreferencesItem", { props: this.props });
         this.renderInputElement();
         return (this.element = (
-            this.hasLabel ? (
-                this.input
-            ) : (
-                <div class={`mdc-form-field`}>
-                    {this.input}
-                    <label for={this.input.id}>
-                        {this.props.setting.displayInfo.title}
-                    </label>
-                </div>
-            )
+            <div class={"rw-mdc-preference"}>
+                <label htmlFor={this.input.id}>
+                    <h2>{this.props.setting.displayInfo.title}</h2>
+                    <p>{this.props.setting.displayInfo.description}</p>
+                </label>
+                <div class={`mdc-form-field`}>{this.input}</div>
+            </div>
         ) as HTMLDivElement);
     }
 }

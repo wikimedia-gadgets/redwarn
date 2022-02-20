@@ -97,6 +97,5 @@ export default function (props: MaterialSwitchProps): JSX.Element {
  */
 export function MaterialSwitchUpgrade(element: JSX.Element): MDCSwitch {
     element.classList.add("rw-mdc--upgraded");
-    const mdcSwitch = new MDCSwitch(element.querySelector(`.mdc-switch`));
-    return mdcSwitch;
+    return new MDCSwitch(element.querySelector(".mdc-switch"));
 }

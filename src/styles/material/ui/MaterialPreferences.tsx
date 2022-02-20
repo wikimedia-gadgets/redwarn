@@ -7,6 +7,7 @@ import MaterialPreferencesTab from "./MaterialPreferencesTab";
 import "../css/preferences.css";
 import Log from "rww/data/RedWarnLog";
 import MaterialButton from "./components/MaterialButton";
+import toCSS from "rww/styles/material/util/toCSS";
 
 /**
  * The MaterialPreferences is a handling class used for the preferences page.
@@ -73,7 +74,7 @@ export default class MaterialPreferences extends RWUIPreferences {
         ).map(([key, set]) => [
             key,
             Object.entries(set)
-                .map(([_, setting]) => setting)
+                .map(([, setting]) => setting)
                 .filter((setting) => setting.displayInfo != null),
         ]);
         config = config.filter(([, set]) => set.length > 0);
@@ -107,11 +108,8 @@ export default class MaterialPreferences extends RWUIPreferences {
                 >
                     {tabs.map((tab) => tab.renderTabBarItem())}
                 </MaterialTabBar>
-                <br />
                 {tabs.map((tab) => tab.render())}
-                <br />
-                <hr />
-                <br />
+                <hr style={toCSS({ margin: "1.5em 0" })} />
                 <MaterialButton
                     action={true}
                     raised={true}

@@ -17,10 +17,12 @@ export default class PreferencesInjector implements Injector {
 
             const target = document.querySelector("#mw-content-text");
             if (!target) {
-                // how did we get here??? crash and die
+                // Not a valid MediaWiki page.
                 throw "Could not find mw-content-text";
             }
             target.innerHTML = "";
+            target.removeAttribute("id");
+            target.removeAttribute("class");
             target.appendChild(preferencesElement);
         }
     }

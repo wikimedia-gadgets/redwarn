@@ -38,30 +38,20 @@ export default class RedWarnIDB {
     }
 
     async setup(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this.request = indexedDB.open(this._databaseName, this._version);
-            this.request.addEventListener("upgradeneeded", async (event) => {
-                Log.debug(
-                    `Upgrade needed. Going from version ${event.oldVersion} to ${event.newVersion}`
-                );
-                for (
-                    let currentVersion = event.oldVersion;
-                    currentVersion < event.newVersion;
-                    currentVersion++
-                ) {
-                    this._upgradeProcedures[event.oldVersion](this.request);
-                }
-            });
-            this.request.addEventListener("success", () => resolve());
-            this.request.addEventListener("error", () =>
-                reject(
-                    new RedWarnIDBError(
-                        "Failed to open database connection.",
-                        this.database
-                    )
-                )
+        this.request = indexedDB.open(this._databaseName, this._version);
+        this.request.addEventListener("upgradeneeded", async (event) => {
+            Log.debug(
+                `Upgrade needed. Going from version ${event.oldVersion} to ${event.newVersion}`
             );
+            for (
+                let currentVersion = event.oldVersion;
+                currentVersion < event.newVersion;
+                currentVersion++
+            ) {
+                this._upgradeProcedures[event.oldVersion](this.request);
+            }
         });
+        await this.connect();
     }
 
     async connect(): Promise<IDBDatabase> {
@@ -69,7 +59,14 @@ export default class RedWarnIDB {
         if (this.request.readyState !== "done")
             await new Promise((resolve, reject) => {
                 this.request.addEventListener("success", resolve);
-                this.request.addEventListener("error", reject);
+                this.request.addEventListener("error", () =>
+                    reject(
+                        new RedWarnIDBError(
+                            "Failed to open database connection.",
+                            this.database
+                        )
+                    )
+                );
                 setInterval(() => {
                     if (this.request.readyState === "done") resolve(null);
                 }, 5);
@@ -126,7 +123,7 @@ export default class RedWarnIDB {
 
     /**
      * This is used for operations which involve lots of writing. This avoids
-     * having to create more transactions that needed.
+     * having to create more transactions than needed.
      */
     async runTransaction(
         store: string | string[],

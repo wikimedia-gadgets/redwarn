@@ -4,6 +4,10 @@ body {
     --mdc-dialog-z-index: 100;
 }
 
+.mdc-snackbar {
+    z-index: 102;
+}
+
 .mdc-menu.mdc-menu-surface {
     z-index: 101;
 }

@@ -89,8 +89,16 @@ export default class Log {
 
             const now = Date.now();
 
-            // This protects us from potential infinite loops.
-            if (!logData.stack.includes("RedWarnLog"))
+            const logErrorRegex = /(log|error)@/g;
+            // This protects the user from potential infinite loops.
+            if (
+                !logErrorRegex.test(logData.stack) ||
+                data.reduce((p, n) => {
+                    return (
+                        p || (n instanceof Error && logErrorRegex.test(n.stack))
+                    );
+                }, false)
+            )
                 RedWarnLocalDB.i.errorLog.add({
                     id: `${now}`,
                     timestamp: now / 1000,

@@ -92,18 +92,20 @@ export default class RedWarnIDB {
     }
 
     /**
-     * Destroyes the IndexedDB database. THIS WILL DELETE CACHES AND PAGE
-     * VIEW HISTORY!
+     * Destroyes the IndexedDB database.
+     *
+     * <b>WARNING: This will delete caches and visited pages history!</b>
      */
     async deleteDatabase(): Promise<void> {
-        indexedDB.deleteDatabase(this._databaseName);
-        await new Promise((resolve, reject) => {
-            this.request.addEventListener("error", (event) => {
-                reject(event);
+        return new Promise<void>((resolve, reject) => {
+            const deleteRequest = indexedDB.deleteDatabase(this._databaseName);
+            deleteRequest.addEventListener("error", () => {
+                reject();
             });
-            this.request.addEventListener("success", (event) => {
-                resolve(event);
+            deleteRequest.addEventListener("success", () => {
+                resolve();
             });
+            if (deleteRequest.readyState === "done") resolve();
         });
     }
 
@@ -160,12 +162,12 @@ export default class RedWarnIDB {
 
     /**
      * Provides a {@link IDBRequest} object for a databsae transaction. This will
-     * attempt to retry as many times as it needs to.
+     * attempt to retry if `noRetry` is set to true.
      *
-     * @param store
-     * @param mode
-     * @param callback
-     * @param noRetry
+     * @param store The store to access.
+     * @param mode The IDB transaction mode.
+     * @param callback A callback containing the object store.
+     * @param noRetry Whether to retry on errors.
      */
     async runRequest<T>(
         store: string,
@@ -211,14 +213,15 @@ export default class RedWarnIDB {
                     mw.notify(i18next.t<string>("misc:idb.forceDeleted"));
 
                     if (!noRetry) {
-                        this.setup();
-                        await this.connect();
+                        await this.setup();
                         // Set noRetry to true and avoid infinite loops.
-                        return this.runRequest(store, mode, callback, true);
+                        return resolve(
+                            await this.runRequest(store, mode, callback, true)
+                        );
                     }
                 }
                 // Reject promise
-                reject(
+                throw reject(
                     new RedWarnIDBError(
                         "A general error occured during IDB load",
                         this.database,
@@ -226,7 +229,6 @@ export default class RedWarnIDB {
                         null
                     )
                 );
-                throw error;
             }
         });
     }

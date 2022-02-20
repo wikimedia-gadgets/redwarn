@@ -68,7 +68,10 @@ export default class MaterialInputDialog extends RWUIInputDialog {
                     {this.props.actions?.cancel ??
                         i18next.t<string>("ui:cancel")}
                 </MaterialButton>
-                <MaterialButton dialogAction="confirm">
+                <MaterialButton
+                    dialogAction="confirm"
+                    raised={this.props.progressive ?? false}
+                >
                     {this.props.actions?.ok ?? i18next.t<string>("ui:ok")}
                 </MaterialButton>
             </MaterialDialogActions>
@@ -88,7 +91,6 @@ export default class MaterialInputDialog extends RWUIInputDialog {
         this.element = (
             <MaterialDialog
                 surfaceProperties={{
-                    "style": `width: ${this.props.width ?? "30vw"};`,
                     "aria-modal": true,
                     "aria-labelledby": this.props.title ?? "RedWarn dialog",
                     "max-width": "unset",

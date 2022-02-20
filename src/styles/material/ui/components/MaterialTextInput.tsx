@@ -1,5 +1,4 @@
-import { BaseProps, h } from "tsx-dom";
-import { RWIconButton } from "rww/ui/elements/RWUIDialog";
+import { h } from "tsx-dom";
 import { generateId } from "rww/util";
 import { MDCTextField } from "@material/textfield";
 import { MDCTextFieldCharacterCounter } from "@material/textfield/character-counter";
@@ -7,26 +6,9 @@ import { MDCTextFieldIcon } from "@material/textfield/icon";
 import { MDCTextFieldHelperText } from "@material/textfield/helper-text";
 import toCSS from "rww/styles/material/util/toCSS";
 import classMix from "rww/styles/material/util/classMix";
+import { RWUITextInputProperties } from "rww/ui/elements/RWUITextInput";
 
-interface MaterialTextInputProps extends BaseProps {
-    id?: string;
-    class?: string;
-    type?: string;
-    label: string;
-    defaultText?: string;
-    leadingIcon?: RWIconButton;
-    trailingIcon?: RWIconButton;
-    helperText?: string;
-    maxCharacterCount?: number;
-    prefix?: string;
-    suffix?: string;
-    width?: string;
-    outlined?: boolean;
-    area?: boolean;
-    autofocus?: boolean;
-    required?: boolean;
-    onInput?: (text: string, event: Event) => void;
-}
+type MaterialTextInputProps = RWUITextInputProperties;
 
 // Private storage variable. No need to put it into {@link MaterialStyleStorage}.
 const MaterialTextInputTrack = new Map<
@@ -107,9 +89,6 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                             "aria-controls": `${id}_helper`,
                             "aria-describedby": `${id}_helper`,
                         })}
-                        {...(props.defaultText && {
-                            value: props.defaultText,
-                        })}
                         {...(props.maxCharacterCount && {
                             maxLength: props.maxCharacterCount,
                         })}
@@ -119,7 +98,14 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                         {...(props.required && {
                             required: true,
                         })}
-                    />
+                        style={toCSS(
+                            Object.assign(props.style ?? {}, {
+                                height: props.height,
+                            })
+                        )}
+                    >
+                        {props.defaultText || ""}
+                    </textarea>
                 ) : (
                     <input
                         type={props.type ?? "text"}

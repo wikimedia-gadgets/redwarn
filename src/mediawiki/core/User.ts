@@ -26,12 +26,19 @@ import { isIPAddress } from "rww/util";
 import Section from "rww/mediawiki/core/Section";
 import { highestWarningLevel } from "rww/mediawiki/warn/WarningUtils";
 import { RWErrors } from "rww/errors/RWError";
+import Log from "rww/data/RedWarnLog";
 
 /**
  * The User represents a MediaWiki editor, be it a registered user or an IP address.
  * In the MediaWiki database, this is commonly called an "actor".
  */
 export class User {
+    static get relevantUser(): User {
+        return mw.config.get("wgRelevantUserName") == null
+            ? null
+            : User.fromUsername(mw.config.get("wgRelevantUserName"));
+    }
+
     /** The user's latest edit. `null` if they have never made an edit. */
     latestEdit?: Revision | null;
 
@@ -189,14 +196,12 @@ export class User {
      * Appends text to the user's talk page.
      * @param text The text to add.
      * @param options Additional insertion options.
-     * @param options.summary The summary of the edit.
      * @param options.section The section to append the text to.
      * @param options.blacklist Prevent appending if this wikitext was found on the page.
      */
     async appendToUserTalk(
         text: string,
         options: PageEditOptions & {
-            summary?: string;
             section?: string | number | Section;
             blacklist?: { target: string; message: string };
         }
@@ -232,6 +237,9 @@ export class User {
                 });
                 return;
             }
+        }
+
+        if (options.comment == null) {
         }
 
         return this.talkPage.appendContent(text, options);
@@ -300,6 +308,53 @@ export class User {
             else throw e;
         }
         return true;
+    }
+
+    /**
+     * Opens a dialog which allows a user to send a message to another user.
+     */
+    async openMessageDialog(): Promise<void> {
+        const defaultText = i18next.t("mediawiki:newMessage", {
+            user: this.username,
+        });
+        const text = await new RedWarnUI.InputDialog({
+            area: true,
+            label: i18next.t("ui:newMessage.label"),
+            width: "500px",
+            height: "200px",
+            class: "mw-editfont-monospace",
+            style: {
+                fontFamily: "inherit",
+            },
+            defaultText: `== ${defaultText} ==\n`,
+            progressive: true,
+        }).show();
+
+        if (text != null) {
+            RedWarnUI.Toast.quickShow({
+                content: i18next.t("ui:newMessage.doing"),
+            });
+            this.appendToUserTalk("\n\n" + text, {
+                comment: defaultText,
+            })
+                .then(() => {
+                    RedWarnUI.Toast.quickShow({
+                        content: i18next.t("ui:newMessage.done"),
+                        action: {
+                            text: i18next.t("ui:newMessage.doneAction"),
+                            callback: () => {
+                                this.talkPage.navigateToLatestRevision();
+                            },
+                        },
+                    });
+                })
+                .catch((e) => {
+                    Log.error("Failed to post message.", e);
+                    RedWarnUI.Toast.quickShow({
+                        content: i18next.t("ui:newMessage.fail"),
+                    });
+                });
+        }
     }
 }
 

@@ -29,9 +29,7 @@ export const PageIcons = (): PageIcon[] => {
             default: true,
             visible: RedWarnStore.isUserspacePage,
             action() {
-                RedWarnUI.Toast.quickShow({
-                    content: i18next.t("ui:unfinished"),
-                });
+                User.relevantUser.openMessageDialog();
             },
         },
         {

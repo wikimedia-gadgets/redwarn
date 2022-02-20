@@ -83,20 +83,31 @@ export default class Log {
         Log.entries.push(logData);
 
         if (logData.level > LogLevel.Warn) {
-            // TODO i18n
             Log.info(
                 'If you would like to report this to the developers, please run "btoa(JSON.stringify(rw.Log.dump()))" in this console.'
             );
 
             const now = Date.now();
-            RedWarnLocalDB.i.errorLog.add({
-                id: `${now}`,
-                timestamp: now / 1000,
-                code:
-                    data.filter((v) => v instanceof RWFormattedError)[0].code ??
-                    0,
-                data: logData,
-            });
+
+            const logErrorRegex = /(log|error)@/g;
+            // This protects the user from potential infinite loops.
+            if (
+                !logErrorRegex.test(logData.stack) ||
+                data.reduce((p, n) => {
+                    return (
+                        p || (n instanceof Error && logErrorRegex.test(n.stack))
+                    );
+                }, false)
+            )
+                RedWarnLocalDB.i.errorLog.add({
+                    id: `${now}`,
+                    timestamp: now / 1000,
+                    code:
+                        data.filter((v) => v instanceof RWFormattedError)[0]
+                            ?.code ?? 0,
+                    // Running this through a JSON re-parse removes all non-native/function data.
+                    data: JSON.parse(JSON.stringify(logData)),
+                });
         }
     }
 

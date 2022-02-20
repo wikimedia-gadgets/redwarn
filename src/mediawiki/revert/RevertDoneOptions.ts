@@ -67,10 +67,8 @@ export function RevertDoneOptions(): RevertDoneOptionDetails[] {
             name: i18next.t("revert:rollbackDoneOptions.message"),
             icon: "send",
             showOnRestore: false,
-            action: (): void => {
-                RedWarnUI.Toast.quickShow({
-                    content: "This feature has not been implemented yet.",
-                });
+            action: (context): void => {
+                context.newRevision.user.openMessageDialog();
             },
         },
         {
@@ -79,7 +77,7 @@ export function RevertDoneOptions(): RevertDoneOptionDetails[] {
             showOnRestore: false,
             action: (): void => {
                 RedWarnUI.Toast.quickShow({
-                    content: "This feature has not been implemented yet.",
+                    content: i18next.t("ui:unfinished"),
                 });
             },
         },
@@ -109,7 +107,7 @@ export function RevertDoneOptions(): RevertDoneOptionDetails[] {
             action: (): void => {
                 // TODO: Multiple Action Tool
                 RedWarnUI.Toast.quickShow({
-                    content: "This feature has not been implemented yet.",
+                    content: i18next.t("ui:unfinished"),
                 });
             },
         },

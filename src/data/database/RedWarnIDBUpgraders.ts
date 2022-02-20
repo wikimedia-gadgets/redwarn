@@ -35,11 +35,5 @@ export default <{ [key: number]: RedWarnIDBUpgradeHandler }>{
             "code",
             "data",
         ]);
-        // TODO only on debug mode
-        /* RedWarnIDB.createObjectStore(database, "combinedLog", "id", [
-            "timestamp",
-            "code",
-            "data",
-        ]); */
     },
 };

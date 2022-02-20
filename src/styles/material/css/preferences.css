@@ -9,15 +9,31 @@
     margin-top: 0;
 }
 
-#rw-preferences .mdc-radio {
+#rwPreferences {
+    border: 1px solid var(--mdc-theme-primary);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#rwPreferences .mdc-tab-bar {
+    background-color: #ddd;
+}
+
+#rwPreferences .mdc-tab--active {
+    background-color: #fefefe;
+    overflow: hidden;
+}
+
+#rwPreferences .mdc-radio {
     padding: 5px 10px;
 }
 
-#rw-preferences .mdc-radio > input {
+#rwPreferences .mdc-radio > input {
     /** Must be 20px + (padding height (see above rule) * 2) */
     height: 30px;
 }
 
-#rw-preferences .mdc-tab-bar {
-    margin-bottom: 8px;
+#rwPreferences .rw-preferences-content,
+#rwPreferences .rw-preferences-save {
+    padding: 1.5em;
 }

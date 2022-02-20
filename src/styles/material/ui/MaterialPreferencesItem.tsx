@@ -9,9 +9,9 @@ import MaterialRadioField from "rww/styles/material/ui/components/MaterialRadioF
 import MaterialSelect from "rww/styles/material/ui/components/MaterialSelect";
 import MaterialTextInput from "rww/styles/material/ui/components/MaterialTextInput";
 import StyleManager from "rww/styles/StyleManager";
-import i18next from "i18next";
 import MaterialSwitch from "./components/MaterialSwitch";
 import Log from "rww/data/RedWarnLog";
+import { getStyleMeta } from "rww/styles/Style";
 
 /**
  * The MaterialPreferencesItem is a handling class used for different items in the preferences page.
@@ -110,8 +110,7 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                     <MaterialSelect<string>
                         items={StyleManager.styles.map((style) => ({
                             type: "action",
-                            label: style.meta[i18next.language ?? "en-US"]
-                                .displayName,
+                            label: getStyleMeta(style).displayName,
                             value: style.name,
                         }))}
                         label={this.props.setting.displayInfo.title}

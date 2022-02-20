@@ -11,20 +11,49 @@ import StyleManager from "rww/styles/StyleManager";
 import { StyleMissingError } from "rww/errors/RedWarnStyleError";
 import Log from "rww/data/RedWarnLog";
 
-import CoreSettings from "rww/config/user/values/CoreSettings";
-import UISettings from "rww/config/user/values/UISettings";
-import RevertSettings from "rww/config/user/values/RevertSettings";
-import AccessibilitySettings from "rww/config/user/values/AccessibilitySettings";
+import initCoreSettings from "rww/config/user/values/CoreSettings";
+import initUISettings from "rww/config/user/values/UISettings";
+import initRevertSettings from "rww/config/user/values/RevertSettings";
+import initAccessibilitySettings from "rww/config/user/values/AccessibilitySettings";
 import { isEmptyObject } from "rww/util";
 import updateConfiguration from "./updateConfiguration";
 
 export type ConfigurationSet = Record<string, Setting<any>>;
 
 export class Configuration {
-    public static readonly Core = CoreSettings;
-    public static readonly UI = UISettings;
-    public static readonly Revert = RevertSettings;
-    public static readonly Accessibility = AccessibilitySettings;
+    private static initialized = false;
+    private static _Core: ConfigurationSet;
+    private static _UI: ConfigurationSet;
+    private static _Revert: ConfigurationSet;
+    private static _Accessibility: ConfigurationSet;
+
+    static get Core(): ConfigurationSet {
+        if (!Configuration.initialized) {
+            Configuration.init();
+        }
+        return Configuration._Core;
+    }
+
+    static get UI(): ConfigurationSet {
+        if (!Configuration.initialized) {
+            Configuration.init();
+        }
+        return Configuration._UI;
+    }
+
+    static get Revert(): ConfigurationSet {
+        if (!Configuration.initialized) {
+            Configuration.init();
+        }
+        return Configuration._Revert;
+    }
+
+    static get Accessibility(): ConfigurationSet {
+        if (!Configuration.initialized) {
+            Configuration.init();
+        }
+        return Configuration._Accessibility;
+    }
 
     static get configurationSets(): Record<string, ConfigurationSet> {
         return {
@@ -237,5 +266,14 @@ export class Configuration {
             .replace(/--nowikiOpen/g, RW_NOWIKI_OPEN)
             .replace(/--nowikiClose/g, RW_NOWIKI_CLOSE)
             .replace(/--configuration/g, JSON.stringify(configurationValues));
+    }
+
+    static init() {
+        Configuration.initialized = true;
+
+        Configuration._Core = initCoreSettings();
+        Configuration._UI = initUISettings();
+        Configuration._Revert = initRevertSettings();
+        Configuration._Accessibility = initAccessibilitySettings();
     }
 }

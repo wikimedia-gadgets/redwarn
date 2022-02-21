@@ -70,7 +70,7 @@
         "start": "cross-env NODE_ENV=development webpack serve --config webpack.config.js",
         "profile": "webpack --profile",
         "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
-        "lint": "eslint --cache --fix",
+        "lint": "eslint --cache --fix src/ tests/",
         "coverage": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage --collectCoverageFrom=src/**/*.{js,jsx,ts,tsx}",
         "prepare": "husky install"
     },

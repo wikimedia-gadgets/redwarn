@@ -73,8 +73,8 @@
             "description": "You can change which revert options to show and in which order do they appear. You can also add your own custom revert options aside from those found in the per-wiki configuration."
         },
         "style": {
-            "title": "UI Style",
-            "description": "You can change the style of RedWarn's UI."
+            "title": "UI style",
+            "description": "You can change the style of RedWarn's UI. The default style for all RedWarn users is Material."
         }
     }
 }

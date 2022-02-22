@@ -227,6 +227,16 @@ export default class RedWarn {
 
         await new UIInjectors().inject();
 
+        // Show Ultraviolet-only visuals.
+        document
+            .querySelectorAll(".uv-show")
+            .forEach((e) => ((e as HTMLElement).style.display = ""));
+
+        // Hide Anti-Ultraviolet visuals
+        document
+            .querySelectorAll(".uv-hide")
+            .forEach((e) => ((e as HTMLElement).style.display = "none"));
+
         await Promise.all([
             RedWarnHooks.executeHooks("postUIInject"),
             Watch.init(),

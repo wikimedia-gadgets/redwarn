@@ -6,7 +6,7 @@ import {
     PageEditOptions,
     PageLatestRevisionOptions,
     Revert,
-    User
+    User,
 } from "rww/mediawiki";
 import redirect from "rww/util/redirect";
 import Log from "rww/data/RedWarnLog";
@@ -69,7 +69,7 @@ export class Revision implements SectionContainer {
             Revision.revisionIndex[revisionID] ??
             (Revision.revisionIndex[revisionID] = new Revision({
                 revisionID: revisionID,
-                ...(additionalProperties ?? {})
+                ...(additionalProperties ?? {}),
             }))
         );
     }
@@ -83,7 +83,7 @@ export class Revision implements SectionContainer {
         return await Revision.populate(
             Revision.revisionIndex[revisionID] ??
                 (Revision.revisionIndex[revisionID] = new Revision({
-                    revisionID: revisionID
+                    revisionID: revisionID,
                 }))
         );
     }
@@ -98,7 +98,7 @@ export class Revision implements SectionContainer {
         const revision =
             Revision.revisionIndex[revisionID] ??
             (Revision.revisionIndex[revisionID] = new Revision({
-                revisionID: revisionID
+                revisionID: revisionID,
             }));
         revision.content = wikitext;
         return revision;
@@ -127,7 +127,7 @@ export class Revision implements SectionContainer {
             user: User.fromUsername(revisionData["user"]),
             time: new Date(revisionData["timestamp"]),
             size: revisionData["size"],
-            content: revisionData["slots"]?.["main"]?.["content"]
+            content: revisionData["slots"]?.["main"]?.["content"],
         }));
     }
 
@@ -136,7 +136,7 @@ export class Revision implements SectionContainer {
      * @param editResponse The returned JSON response.
      */
     static fromEditReponse({
-        edit: editResponse
+        edit: editResponse,
     }: {
         edit: Record<string, any>;
     }): Revision {
@@ -146,7 +146,7 @@ export class Revision implements SectionContainer {
             page: Page.fromIDAndTitle(
                 editResponse["pageid"],
                 editResponse["title"]
-            )
+            ),
         });
     }
 
@@ -169,7 +169,7 @@ export class Revision implements SectionContainer {
                 prop: "revisions",
                 revids: `${revision.revisionID}`,
                 rvprop: toPopulate,
-                rvslots: "main"
+                rvslots: "main",
             });
 
             if (revisionInfoRequest["query"]["badrevids"]) {
@@ -214,7 +214,7 @@ export class Revision implements SectionContainer {
             prop: "revisions",
             revids: `${this.revisionID}`,
             rvprop: "content",
-            rvslots: "main"
+            rvslots: "main",
         });
 
         const pageData: Record<string, any> = Object.values(
@@ -265,7 +265,7 @@ export class Revision implements SectionContainer {
         if (!this.page) {
             // Big oh noes. We'll have to send an additional request just to get the page name.
             Log.warn("Page of revision was not set. This is inefficient!", {
-                stack: new Error("Inefficient latest revision get.")
+                stack: new Error("Inefficient latest revision get."),
             });
             await this.populate();
         }
@@ -301,7 +301,7 @@ export class Revision implements SectionContainer {
         redirect(
             url(RedWarnStore.wikiIndex, {
                 diff: 0,
-                title: `${this.page.title}`
+                title: `${this.page.title}`,
             })
         );
     }
@@ -319,7 +319,7 @@ export class Revision implements SectionContainer {
         if (!this.page) {
             // Big oh noes. We'll have to send an additional request just to get the page name.
             Log.warn("Page of revision was not set. This is inefficient!", {
-                stack: new Error("Inefficient revision content append.")
+                stack: new Error("Inefficient revision content append."),
             });
             await this.populate();
         }
@@ -329,7 +329,7 @@ export class Revision implements SectionContainer {
             Object.assign(
                 {
                     mode: "append",
-                    baseRevision: this
+                    baseRevision: this,
                 },
                 options
             )

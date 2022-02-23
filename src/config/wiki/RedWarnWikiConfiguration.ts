@@ -1,7 +1,7 @@
 import { Page, WarningManager } from "rww/mediawiki";
 import {
     RW_FALLBACK_CONFIG,
-    RW_WIKI_CONFIGURATION,
+    RW_WIKI_CONFIGURATION_PAGES,
     RW_WIKI_CONFIGURATION_VERSION,
 } from "rww/data/RedWarnConstants";
 import Log from "rww/data/RedWarnLog";
@@ -12,14 +12,13 @@ import WikiConfigurationDeserializers from "rww/config/wiki/WikiConfigurationDes
 import i18next from "i18next";
 import RedWarnUI from "rww/ui/RedWarnUI";
 import MediaWikiNotificationContent from "rww/ui/MediaWikiNotificationContent";
-import { PageMissingError } from "rww/errors/MediaWikiErrors";
 
 /**
  * This class handles every single contact with the RedWarn per-wiki
  * configuration file, usually found at `Project:RedWarn/configuration.json`.
  *
  * The path of the configuration file is modified with the constant
- * {@link RW_WIKI_CONFIGURATION}.
+ * {@link RW_WIKI_CONFIGURATION_PAGES}.
  */
 export default class RedWarnWikiConfiguration {
     private static _loadedConfiguration: WikiConfiguration;
@@ -30,17 +29,25 @@ export default class RedWarnWikiConfiguration {
     private static preloadedData: Record<string, any>;
     static async preloadWikiConfiguration(): Promise<Record<string, any>> {
         try {
+            const configurationPages = RW_WIKI_CONFIGURATION_PAGES.map((t) =>
+                Page.fromTitle(t)
+            );
+            await Page.getLatestRevisions(configurationPages, {
+                followRedirects: true,
+                throwIfMissing: false,
+            });
+            const primaryConfiguration = configurationPages.find(
+                (p) => p.latestCachedRevision != null
+            );
+            Log.debug(
+                `Using configuration from ${primaryConfiguration.title.getPrefixedDb()}`
+            );
+
             RedWarnWikiConfiguration.preloadedData = JSON.parse(
-                (
-                    await Page.fromTitle(RW_WIKI_CONFIGURATION)
-                        .getLatestRevision({ forceRefresh: false })
-                        .catch((e) => {
-                            if (!(e instanceof PageMissingError)) throw e;
-                            return null;
-                        })
-                ).content
+                primaryConfiguration.latestCachedRevision.content
             );
         } catch (e) {
+            Log.error(e);
             try {
                 // Use the API to get the fallback configuration.
                 RedWarnWikiConfiguration.preloadedData = await fetch(

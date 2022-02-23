@@ -1,10 +1,14 @@
-import {MediaWikiAPI, Revision, User} from "rww/mediawiki";
+import { MediaWikiAPI, Revision, User } from "rww/mediawiki";
 import RedWarnStore from "rww/data/RedWarnStore";
 import i18next from "i18next";
-import {PageInvalidError, PageMissingError, SectionIndexMissingError} from "rww/errors/MediaWikiErrors";
-import {url as buildURL} from "rww/util";
+import {
+    PageInvalidError,
+    PageMissingError,
+    SectionIndexMissingError,
+} from "rww/errors/MediaWikiErrors";
+import { url as buildURL } from "rww/util";
 import redirect from "rww/util/redirect";
-import Section, {SectionContainer} from "rww/mediawiki/core/Section";
+import Section, { SectionContainer } from "rww/mediawiki/core/Section";
 import url from "rww/util/url";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 
@@ -68,6 +72,112 @@ export class Page implements SectionContainer {
     sections: Section[];
 
     /**
+     * Get the latest revisions of a set of pages, and returns them all.
+     *
+     * <b>NOTE:</b> The order of the returned revisions may not reflect the order of the input pages.
+     * @param pages The pages to get the latest revision of.
+     * @param options Extra options or restrictions for getting the latest revision.
+     * @param requestOptions Additional request options passed directly to the request.
+     * @returns For each page with a valid revision, a {@link Revision}.
+     */
+    static async getLatestRevisions(
+        pages: Page[],
+        options?: {
+            excludeUser?: User;
+            throwIfMissing?: boolean;
+            followRedirects?: boolean;
+        },
+        requestOptions: Record<string, any> = {}
+    ): Promise<Revision[]> {
+        const identifiers: Partial<Record<"pageids" | "titles", string>> = {};
+        if (pages.every((p) => p.pageID)) {
+            identifiers.pageids = pages.map((p) => p.pageID).join("|");
+        } else if (pages.every((p) => p.title)) {
+            identifiers.titles = pages
+                .map((p) => p.title.getPrefixedDb())
+                .join("|");
+        } else {
+            // No choice but to split this into two requests.
+            return [
+                ...(await Page.getLatestRevisions(
+                    pages.filter((p) => p.pageID),
+                    options,
+                    requestOptions
+                )),
+                ...(await Page.getLatestRevisions(
+                    pages.filter((p) => p.title),
+                    options,
+                    requestOptions
+                )),
+            ];
+        }
+
+        const apiRevisions = await MediaWikiAPI.get({
+            action: "query",
+            format: "json",
+            prop: "revisions",
+            ...identifiers,
+            ...{ redirects: options?.followRedirects ? 1 : undefined },
+            rvprop: ["ids", "comment", "user", "timestamp", "size", "content"],
+            rvslots: "main",
+            rvlimit: 1,
+            rvexcludeuser: options?.excludeUser?.username ?? undefined,
+            ...requestOptions,
+        });
+
+        const revisions: Revision[] = [];
+        for (const page of pages) {
+            // The title serialization function used here must always match the one used
+            // in the identifier call at the start of this function.
+            let realTitle = page.title.getPrefixedDb();
+
+            // `normalized` will only be present if the page was requested with a title.
+            // In such a case, `page.title` will also be present.
+            if (apiRevisions.query.normalized) {
+                const normalized = apiRevisions.query.normalized.find(
+                    (v: { from: string; to: string }) =>
+                        //
+                        v.from === realTitle
+                );
+                if (normalized) realTitle = normalized.to;
+            }
+            if (options.followRedirects && apiRevisions.query.redirects) {
+                // Check if the page redirected to another.
+                const redirect = apiRevisions.query.redirects.find(
+                    (v: { from: string; to: string }) =>
+                        // `v.from` will always be the normalized title.
+                        v.from === realTitle
+                );
+                if (redirect) realTitle = redirect.to;
+            }
+
+            const identifier = page.getIdentifier();
+            const apiPage = apiRevisions.query.pages.find((v: any) =>
+                identifier instanceof mw.Title
+                    ? v.title === realTitle
+                    : (v.pageid = page.pageID)
+            );
+
+            if (apiPage.missing) {
+                if (options?.throwIfMissing ?? true)
+                    throw new PageMissingError({ page });
+                else continue;
+            } else if (apiPage.special) {
+                throw new PageInvalidError({ page, reason: "Special page." });
+            }
+
+            const pageLatestRevision = apiPage.revisions[0];
+            page.latestCachedRevision = Revision.fromPageLatestRevision(
+                pageLatestRevision.revid,
+                { query: { pages: [apiPage] } }
+            );
+            revisions.push(page.latestCachedRevision);
+        }
+
+        return revisions;
+    }
+
+    /**
      * Returns the URL of the page.
      */
     get url(): string {
@@ -109,9 +219,9 @@ export class Page implements SectionContainer {
             typeof pageTitle == "string" ? new mw.Title(pageTitle) : pageTitle;
         return (
             Page.pageIndex[`${mwTitle}`] ??
-            (Page.pageIndex[`${mwTitle}`] = <Page & NamedPage> new Page({
+            (Page.pageIndex[`${mwTitle}`] = <Page & NamedPage>new Page({
                 title: mwTitle,
-                namespace: mwTitle.namespace
+                namespace: mwTitle.namespace,
             }))
         );
     }
@@ -136,10 +246,10 @@ export class Page implements SectionContainer {
 
         return (
             <Page & PopulatedPage>Page.pageIndex[`${mwTitle}`] ??
-            (Page.pageIndex[`${mwTitle}`] = <Page & PopulatedPage> new Page({
+            (Page.pageIndex[`${mwTitle}`] = <Page & PopulatedPage>new Page({
                 pageID: pageID,
                 title: mwTitle,
-                namespace: mwTitle.namespace
+                namespace: mwTitle.namespace,
             }))
         );
     }
@@ -211,11 +321,13 @@ export class Page implements SectionContainer {
      * Get a page's latest revision.
      * @param page The page to get the latest revision of.
      * @param options Extra options or restrictions for getting the latest revision.
+     * @param requestOptions Additional request options passed directly to the request.
      * @returns `null` if no matching revisions were found. A {@link Revision} otherwise.
      */
     static async getLatestRevision(
         page: Page,
-        options?: { excludeUser?: User }
+        options?: { excludeUser?: User },
+        requestOptions: Record<string, any> = {}
     ): Promise<Revision> {
         // Returns one revision from one page (the given page).
         const revisionInfoRequest = await MediaWikiAPI.get({
@@ -225,7 +337,8 @@ export class Page implements SectionContainer {
             ...page.getAPIIdentifier(),
             rvprop: ["ids", "comment", "user", "timestamp", "size", "content"],
             rvslots: "main",
-            rvexcludeuser: options?.excludeUser?.username ?? undefined
+            rvexcludeuser: options?.excludeUser?.username ?? undefined,
+            ...requestOptions,
         });
 
         if (revisionInfoRequest["query"]["pages"][0]) {
@@ -234,10 +347,9 @@ export class Page implements SectionContainer {
             if (!!revisionInfoRequest["query"]["pages"][0]["invalid"])
                 throw new PageInvalidError({
                     page,
-                    reason:
-                        revisionInfoRequest["query"]["pages"][0][
-                            "invalidreason"
-                        ]
+                    reason: revisionInfoRequest["query"]["pages"][0][
+                        "invalidreason"
+                    ],
                 });
         }
         if (revisionInfoRequest["query"]["pages"][-1]) {
@@ -289,7 +401,7 @@ export class Page implements SectionContainer {
         return {
             [typeof identifier === "number"
                 ? "pageids"
-                : "titles"]: `${identifier}`
+                : "titles"]: `${identifier}`,
         };
     }
 
@@ -303,18 +415,21 @@ export class Page implements SectionContainer {
     async getLatestRevision(
         options: PageLatestRevisionOptions = {}
     ): Promise<Revision> {
-        const clean = Object.keys(options).filter(k => k !== "forceRefresh").length === 0;
-        if (options.forceRefresh || this.latestCachedRevision == null || !clean) {
+        const clean =
+            Object.keys(options).filter((k) => k !== "forceRefresh").length ===
+            0;
+        if (
+            options.forceRefresh ||
+            this.latestCachedRevision == null ||
+            !clean
+        ) {
             if (clean) {
                 this.latestCachedRevision = await Page.getLatestRevision(
                     this,
                     options
                 );
             } else {
-                return Page.getLatestRevision(
-                    this,
-                    options
-                );
+                return Page.getLatestRevision(this, options);
             }
         }
 
@@ -361,7 +476,7 @@ export class Page implements SectionContainer {
      */
     async getLatestRevisionNotByUser(user: User): Promise<Revision> {
         return this.getLatestRevision({
-            excludeUser: user
+            excludeUser: user,
         });
     }
 
@@ -379,7 +494,7 @@ export class Page implements SectionContainer {
         redirect(
             url(RedWarnStore.wikiIndex, {
                 diff: 0,
-                title: this.title
+                title: this.title,
             })
         );
     }
@@ -446,7 +561,7 @@ export class Page implements SectionContainer {
                     if (existingSection == null)
                         throw new SectionIndexMissingError({
                             sectionId: options.section,
-                            revision
+                            revision,
                         });
                 } else {
                     existingSection = revisionSections.filter(
@@ -494,7 +609,7 @@ export class Page implements SectionContainer {
             // Base revision ID
             ...(options.baseRevision
                 ? {
-                      baserevid: options.baseRevision.revisionID
+                      baserevid: options.baseRevision.revisionID,
                   }
                 : {}),
 
@@ -502,15 +617,15 @@ export class Page implements SectionContainer {
             ...(options.section
                 ? existingSection
                     ? {
-                          section: existingSection.index
+                          section: existingSection.index,
                       }
                     : {
                           section: "new",
-                          sectiontitle: options.section
+                          sectiontitle: options.section,
                       }
                 : {}),
 
-            ...textArgument
+            ...textArgument,
         });
     }
 

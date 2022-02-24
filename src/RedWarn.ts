@@ -230,7 +230,9 @@ export default class RedWarn {
         // Show Ultraviolet-only visuals.
         document
             .querySelectorAll(".uv-show")
-            .forEach((e) => ((e as HTMLElement).style.display = ""));
+            .forEach(
+                (e) => ((e as HTMLElement).style.display = "unset !important")
+            );
 
         // Hide Anti-Ultraviolet visuals
         document

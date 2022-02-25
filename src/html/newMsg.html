@@ -11,7 +11,7 @@
 <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">New Talk Page Message</h2>
 <form id="newMsgForm">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
-        <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="`+ rw.info.targetUsername(un) +`" readonly>
+        <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox" value="${rw.info.targetUsername(un).replace(/"/g, "&quot;")}" readonly>
         <label class="mdl-textfield__label" for="trgtUsrVisualBox">Target</label>
         <div class="mdl-tooltip" for="trgtUsrVisualBox">
             To target a different user, please visit their userpage.

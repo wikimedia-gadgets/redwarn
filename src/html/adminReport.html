@@ -25,9 +25,9 @@ ${doNotShowDialog !== true ? `
         <ul for="reasonInput" class="mdl-menu mdl-menu--bottom-left mdl-js-menu" style="height: 100px; overflow:auto;">
             <li class="mdl-menu__item" data-val="">Vandalism after final warning</li>
             <li class="mdl-menu__item" data-val="">Vandalism within 1 day of being unblocked</li>
-            <li class="mdl-menu__item" data-val="">${rw.info.isUserAnon(rw.info.targetUsername(un).replace(/_/g, ' ')) ? `Evidently only vandalising pages` : `Evidently a vandalism-only account`}</li>
-            <li class="mdl-menu__item" data-val="">${rw.info.isUserAnon(rw.info.targetUsername(un).replace(/_/g, ' ')) ? `Evidently only making promotional edits` : `Account is a promotion-only account`}</li>
-            <li class="mdl-menu__item" data-val="">${rw.info.isUserAnon(rw.info.targetUsername(un).replace(/_/g, ' ')) ? `Evidently a spambot or other unauthorised bot` : `Account is evidently a spambot or a compromised account`}</li>
+            <li class="mdl-menu__item" data-val="">${rw.info.isUserAnon(rw.info.targetUsername(un).replace(/_/g, ' ')).replace(/"/g, "&quot;") ? `Evidently only vandalising pages` : `Evidently a vandalism-only account`}</li>
+            <li class="mdl-menu__item" data-val="">${rw.info.isUserAnon(rw.info.targetUsername(un).replace(/_/g, ' ')).replace(/"/g, "&quot;") ? `Evidently only making promotional edits` : `Account is a promotion-only account`}</li>
+            <li class="mdl-menu__item" data-val="">${rw.info.isUserAnon(rw.info.targetUsername(un).replace(/_/g, ' ')).replace(/"/g, "&quot;") ? `Evidently a spambot or other unauthorised bot` : `Account is evidently a spambot or a compromised account`}</li>
             <li class="mdl-menu__item" data-val="">Other (please enter in comment)</li> <!-- Must detect and RM this -->
         </ul>
     </div>

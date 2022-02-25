@@ -8,7 +8,7 @@ ${(htmlOnly != true ? `<h2 style="font-weight: 200;font-size:45px;line-height: 4
 <form id="UAAreportForm">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
         <input class="mdl-textfield__input" type="text" id="trgtUsrVisualBox"
-            value="`+ rw.info.targetUsername(un).replace(/_/g, ' ') +`" name="target" readonly>
+            value="`+ rw.info.targetUsername(un).replace(/_/g, ' ').replace(/"/g, "&quot;")} +`" name="target" readonly>
         <label class="mdl-textfield__label" for="trgtUsrVisualBox">Target</label>
         <div class="mdl-tooltip" for="trgtUsrVisualBox">
             To target a different user, please visit their userpage.

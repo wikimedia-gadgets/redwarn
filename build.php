@@ -326,7 +326,7 @@ function processIncludedFiles($fileContents) {
                 array_push($warnings, "Failed to include \"" . $file . "\". File does not exist.");
                 return "";
             } else {
-                if (!isset($included[$file])) {
+                if (!isset($included[$file]) && !DEBUG_MODE) {
                     if (endsWith($file, "html")) {
                         // $included[$file] = "`" . minify_html(file_get_contents($filePath)) . "`";
                         $included[$file] = "`" . file_get_contents($filePath) . "`";
@@ -337,10 +337,18 @@ function processIncludedFiles($fileContents) {
                     }
                 }
                 
-                if (endsWith($file, "html")) {
-                    return "eval(rw_includes[\"" . $file . "\"])";
+                if (DEBUG_MODE) {
+                    if (endsWith($file, "html")) {
+                        return "`" . file_get_contents($filePath) . "`";
+                    } else {
+                        return "`" . file_get_contents($filePath) . "`";
+                    }
                 } else {
-                    return "rw_includes[\"" . $file . "\"]";
+                    if (endsWith($file, "html")) {
+                        return "eval(rw_includes[\"" . $file . "\"])";
+                    } else {
+                        return "rw_includes[\"" . $file . "\"]";
+                    }
                 }
             }
         },

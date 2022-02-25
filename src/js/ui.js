@@ -965,13 +965,13 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
             let adminReportContent = `[[[[include genericError.html]]]]`; // placeholder
             try {
                 adminReportContent = rw.ui.openAdminReport(null, true); // this sets up our handlers and generates the appropraite HTML
-            } catch (e) { adminReportContent += `<hr><pre>${e.stack}</pre>`; }
+            } catch (e) { console.log(e); adminReportContent += `<hr><pre>${e}</pre>`; }
 
             // UAA report
             let uaaReportContent = `[[[[include genericError.html]]]]`; // placeholder
             try {
                 uaaReportContent = rw.ui.beginUAAReport(rw.info.targetUsername(), true); // this sets up our handlers and generates the appropraite HTML
-            } catch (e) { uaaReportContent += `<hr><pre>${e.stack}</pre>`; }
+            } catch (e) { console.log(e); uaaReportContent += `<hr><pre>${e}</pre>`; }
 
             // Event handlers
             addMessageHandler("redwarnPref", () => dialogEngine.closeDialog(() => rw.ui.openPreferences())); // open preferences for button press

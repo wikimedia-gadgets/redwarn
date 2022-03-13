@@ -37,32 +37,32 @@ describe("URL generation tests", () => {
                         .replace(/%7E/g, "~")
                         .replace(/%3A/g, ":")
                 );
-            }
-        }
+            },
+        },
     };
 
     const pairs: { [key: string]: [string, string] } = {
         histStandard: [
             "https://en.wikipedia.org/w/index.php?title=Wikipedia:Sandbox&action=history",
-            MediaWikiURL.getHistoryUrl("Wikipedia:Sandbox")
+            MediaWikiURL.getHistoryUrl("Wikipedia:Sandbox"),
         ],
         histWhitespace: [
             "https://en.wikipedia.org/w/index.php?title=Wikipedia:Sandbox_1&action=history",
-            MediaWikiURL.getHistoryUrl("Wikipedia:Sandbox 1")
+            MediaWikiURL.getHistoryUrl("Wikipedia:Sandbox 1"),
         ],
         histSubpage: [
             "https://en.wikipedia.org/w/index.php?title=Wikipedia:Sandbox/1&action=history",
-            MediaWikiURL.getHistoryUrl("Wikipedia:Sandbox/1")
+            MediaWikiURL.getHistoryUrl("Wikipedia:Sandbox/1"),
         ],
 
         diffStandalone: [
             "https://en.wikipedia.org/w/index.php?diff=12345&diffmode=source",
-            MediaWikiURL.getDiffUrl("12345")
+            MediaWikiURL.getDiffUrl("12345"),
         ],
         diffWithOld: [
             "https://en.wikipedia.org/w/index.php?diff=12345&oldid=67890&diffmode=source",
-            MediaWikiURL.getDiffUrl("12345", "67890")
-        ]
+            MediaWikiURL.getDiffUrl("12345", "67890"),
+        ],
     };
 
     for (const testName of Object.keys(pairs)) {

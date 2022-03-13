@@ -112,6 +112,7 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
                             type: "action",
                             label: getStyleMeta(style).displayName,
                             value: style.name,
+                            selected: style.name === this.props.setting.value,
                         }))}
                         label={this.props.setting.displayInfo.title}
                         onChange={(value) =>

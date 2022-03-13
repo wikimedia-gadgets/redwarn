@@ -3,6 +3,7 @@ import { generateId } from "rww/util";
 import { MDCSwitch } from "@material/switch";
 import i18next from "i18next";
 import classMix from "rww/styles/material/util/classMix";
+import Log from "rww/data/RedWarnLog";
 
 interface MaterialSwitchProps extends BaseProps {
     id?: string;
@@ -36,7 +37,8 @@ export default function (props: MaterialSwitchProps): JSX.Element {
                 id={id}
                 class={classMix(
                     "mdc-switch",
-                    `mdc-switch--${!props.default ? "un" : ""}selected`
+                    `mdc-switch--${!props.default ? "un" : ""}selected`,
+                    props.class
                 )}
                 type="button"
                 role="switch"
@@ -70,6 +72,10 @@ export default function (props: MaterialSwitchProps): JSX.Element {
         </span>
     );
     const component = MaterialSwitchUpgrade(element);
+    component.initialize();
+    component.initialSyncWithDOM();
+
+    Log.info("MaterialSwitch", { props, element, component });
     if (props.disabled) {
         component.disabled = true;
     }
@@ -77,7 +83,8 @@ export default function (props: MaterialSwitchProps): JSX.Element {
         component.selected = true;
     }
 
-    component.listen("change", (event: Event) => {
+    element.querySelector("button").addEventListener("click", (event) => {
+        Log.info("MaterialSwitch change", { event });
         if (props.onChange) {
             props.onChange(component.selected, event);
         }
@@ -96,6 +103,7 @@ export default function (props: MaterialSwitchProps): JSX.Element {
  * @param element
  */
 export function MaterialSwitchUpgrade(element: JSX.Element): MDCSwitch {
-    element.classList.add("rw-mdc--upgraded");
-    return new MDCSwitch(element.querySelector(".mdc-switch"));
+    const target = element.querySelector("button.mdc-switch");
+    target.classList.add("rw-mdc--upgraded");
+    return new MDCSwitch(target as HTMLButtonElement);
 }

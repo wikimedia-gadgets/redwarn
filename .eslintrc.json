@@ -11,7 +11,7 @@
         "plugin:import/errors",
         "plugin:import/warnings",
         "plugin:import/typescript",
-        "prettier"
+        "plugin:prettier/recommended"
     ],
     "globals": {
         "Atomics": "readonly",
@@ -42,15 +42,6 @@
         "import/no-named-as-default": "off",
 
         // ====================================================================
-        // Style choices
-        // ====================================================================
-
-        // Always require semicolons.
-        "semi": ["error", "always"],
-        // Prefer camelCase for variable names. Use quotes to bypass this.
-        "camelcase": ["warn"],
-
-        // ====================================================================
         // Semantics
         // ====================================================================
         // Prefer constants instead of `var` or `let` when not reassigned.
@@ -67,29 +58,7 @@
                 "selector": "MethodDefinition[static = true] ThisExpression",
                 "message": "`this` is being used in a static context."
             }
-        ],
-
-        // ====================================================================
-        // Spacing
-        // ====================================================================
-        // Enforce spacing between keys and values in objects.
-        "key-spacing": "warn",
-        // Enforce spacing between keywords.
-        "keyword-spacing": "warn",
-        // Enforce spacing inside of curly brackets.
-        // TODO: Conflicts with Prettier
-        // "object-curly-spacing": ["warn", "always"],
-        // Enforces spaces after commas.
-        "comma-spacing": [
-            "error",
-            {
-                "before": false,
-                "after": true
-            }
         ]
-        // Prevents dangling commas at the end of arrays and objects.
-        // 2022-02-08: conflicts with Prettier, disabled
-        //"comma-dangle": ["warn", "never"]
     },
     "settings": {
         "import/parsers": { "@typescript-eslint/parser": [".ts", ".tsx"] }

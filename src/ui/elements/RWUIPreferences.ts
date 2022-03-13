@@ -1,4 +1,3 @@
-import { Configuration } from "rww/config/user/Configuration";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 
 export interface RWUIPreferencesProperties extends RWUIElementProperties {

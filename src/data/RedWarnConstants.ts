@@ -28,7 +28,12 @@ export const RW_LOG_SIGNATURE = `RedWarn ${RW_VERSION_TAG}`;
 
 export const RW_SIGNATURE = "~~~~";
 
-export const RW_WIKI_CONFIGURATION = "Project:RedWarn/configuration.json";
+export const RW_WIKI_CONFIGURATION_PAGES = [
+    "MediaWiki:Ultraviolet-configuration.json",
+    "Project:Ultraviolet/configuration.json",
+    // To be removed in a future version.
+    "Project:RedWarn/configuration.json",
+];
 export const RW_WIKI_CONFIGURATION_VERSION = 1;
 
 export const RW_NOWIKI_OPEN = atob("PG5vd2lraT4=");
@@ -42,7 +47,6 @@ export const RW_WIKIS_SPEEDUP = ["enwiki"];
 export const RW_FALLBACK_WIKI = {
     indexPath: "https://en.wikipedia.org/w/index.php",
     apiPath: "https://en.wikipedia.org/w/api.php",
-    configuration: RW_WIKI_CONFIGURATION,
 };
 
 export const RW_FALLBACK_CONFIG =

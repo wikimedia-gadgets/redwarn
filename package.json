@@ -4,6 +4,7 @@
     "description": "Wikipedia patrol and counter-vandalism tool.",
     "main": "src/RedWarn.ts",
     "dependencies": {
+        "@material/checkbox": "^12.0.0",
         "@material/dialog": "12.0.0",
         "@material/form-field": "12.0.0",
         "@material/linear-progress": "12.0.0",

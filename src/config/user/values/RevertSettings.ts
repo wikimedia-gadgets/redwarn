@@ -114,7 +114,7 @@ export default function initRevertSettings(): ConfigurationSet {
                 description: i18next.t(
                     "prefs:revert.redirectIfNotLatest.description"
                 ),
-                uiInputType: UIInputType.Switch,
+                uiInputType: UIInputType.Checkbox,
             }
         ),
 

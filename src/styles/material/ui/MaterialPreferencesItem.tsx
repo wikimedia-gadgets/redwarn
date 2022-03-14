@@ -12,6 +12,7 @@ import StyleManager from "rww/styles/StyleManager";
 import MaterialSwitch from "./components/MaterialSwitch";
 import Log from "rww/data/RedWarnLog";
 import { getStyleMeta } from "rww/styles/Style";
+import MaterialCheckbox from "./components/MaterialCheckbox";
 
 /**
  * The MaterialPreferencesItem is a handling class used for different items in the preferences page.
@@ -36,6 +37,14 @@ export default class MaterialPreferencesItem extends RWUIPreferencesItem {
             case UIInputType.Switch:
                 this.input = (
                     <MaterialSwitch
+                        default={(this.props.setting as Setting<boolean>).value}
+                        onChange={(value) => this.handleInputChange(value)}
+                    />
+                );
+                break;
+            case UIInputType.Checkbox:
+                this.input = (
+                    <MaterialCheckbox
                         default={(this.props.setting as Setting<boolean>).value}
                         onChange={(value) => this.handleInputChange(value)}
                     />

@@ -1,5 +1,5 @@
 {
-    "unfinished": "Message shown when a features is marked ad ",
+    "unfinished": "Message shown when a feature is marked as unfinished.",
 
     "restore": {
         "label": "The title of the dialog prompting users for a reason to restore.",

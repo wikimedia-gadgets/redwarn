@@ -6,7 +6,8 @@
     "confirm": "Confirm",
     "undo": "Undo",
     "redo": "Redo",
-    "toggleSwitch": "off/on",
+    "toggleSwitch": "Off/On",
+    "toggleCheckbox": "Off/On",
 
     "extendedOptions": {
         "title": "More Options",

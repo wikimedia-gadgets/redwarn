@@ -7,6 +7,8 @@
 export enum UIInputType {
     /** A simple switch that provides a boolean value. */
     Switch,
+    /** A single checkbox which returns a boolean. */
+    Checkbox,
     /** A set of checkboxes which returns an array containing the value of all checked options. */
     Checkboxes,
     /** A set of radio buttons which returns the value of the selected option. */

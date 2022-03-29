@@ -39,7 +39,7 @@ export default function (props: MaterialIconButtonProperties): JSX.Element {
             }
             onClick={onClick}
             style={toCSS({
-                color: iconColor
+                color: iconColor,
             })}
             {...expandDataAttributes(props)}
             data-mdc-ripple-is-unbounded={true}

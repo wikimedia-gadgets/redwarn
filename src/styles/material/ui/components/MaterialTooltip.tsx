@@ -3,6 +3,7 @@ import { generateId } from "rww/util";
 import { MDCTooltip } from "@material/tooltip";
 
 export interface MaterialTooltipProps extends BaseProps {
+    /** Element of the target or querySelector of the target */
     target?: Element | string;
     id?: string;
 }
@@ -10,7 +11,7 @@ export interface MaterialTooltipProps extends BaseProps {
 export default function ({
     id,
     target,
-    children
+    children,
 }: MaterialTooltipProps): JSX.Element {
     if (target && typeof target === "string") {
         target = document.querySelector(target);
@@ -26,9 +27,14 @@ export default function ({
         </div>
     );
 
-    if (target && target instanceof HTMLElement) {
-        target.setAttribute("data-tooltip-id", _id);
-        target.setAttribute("aria-describedby", _id);
+    if (target) {
+        if (typeof target === "string") {
+            target = document.querySelector(target);
+        }
+        if (target instanceof HTMLElement) {
+            target.setAttribute("data-tooltip-id", _id);
+            target.setAttribute("aria-describedby", _id);
+        }
     }
 
     const tooltip = new MDCTooltip(tooltipElement);

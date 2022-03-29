@@ -6,13 +6,13 @@ import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
-    MaterialDialogTitle
+    MaterialDialogTitle,
 } from "./MaterialDialog";
 
 import "../css/warnDialog.css";
 import { Warning, WarningManager } from "rww/mediawiki";
 import MaterialTextInput, {
-    MaterialTextInputUpgrade
+    MaterialTextInputUpgrade,
 } from "rww/styles/material/ui/components/MaterialTextInput";
 import { regexEscape } from "rww/util";
 import i18next from "i18next";
@@ -251,7 +251,7 @@ export default class MaterialWarnSearchDialog extends RWUIDialog<Warning> {
         change: [] as ((event: Event & { value: string }) => void | boolean)[],
         select: [] as ((
             event: MouseEvent & { warningId: string }
-        ) => void | boolean)[]
+        ) => void | boolean)[],
     };
     addChangeListener(
         listener: (event: Event & { value: string }) => void
@@ -302,7 +302,7 @@ export default class MaterialWarnSearchDialog extends RWUIDialog<Warning> {
      */
     show(): Promise<Warning> {
         return upgradeMaterialDialog(this, {
-            onClose: () => this.selectedWarning
+            onClose: () => this.selectedWarning,
         }).then((v) => v.wait());
     }
 
@@ -318,7 +318,7 @@ export default class MaterialWarnSearchDialog extends RWUIDialog<Warning> {
                 disabled={this.selectedWarning == null}
             >
                 Select
-            </MaterialButton>
+            </MaterialButton>,
         ];
     }
 
@@ -335,7 +335,7 @@ export default class MaterialWarnSearchDialog extends RWUIDialog<Warning> {
                     "class": "mdc-dialog__surface rw-mdc-warnSearchDialog",
                     "style": `width:${this.props.width ?? "70vw"};height:90vh;`,
                     "aria-modal": true,
-                    "aria-labelledby": this.props.title ?? "RedWarn dialog"
+                    "aria-labelledby": this.props.title ?? "RedWarn dialog",
                 }}
                 id={this.id}
             >
@@ -355,7 +355,7 @@ export default class MaterialWarnSearchDialog extends RWUIDialog<Warning> {
                                 this.selectedWarning =
                                     WarningManager.warnings[warningId];
                                 this.dialog.close("submit");
-                            }
+                            },
                         }}
                         defaultText={this.props.startingText}
                     />
@@ -383,7 +383,7 @@ export default class MaterialWarnSearchDialog extends RWUIDialog<Warning> {
         // Immediately trigger necessary changes.
         this.performChange(
             Object.assign(new Event("dummy"), {
-                value: this.props.startingText
+                value: this.props.startingText,
             })
         );
 

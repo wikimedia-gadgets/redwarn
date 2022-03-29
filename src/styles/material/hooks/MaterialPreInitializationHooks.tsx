@@ -34,9 +34,8 @@ export default function (): void {
                 element.classList.add("data-rw-mdc-dialog-draggable__upgraded");
 
                 // Disable scrim
-                const scrim: HTMLElement = element.querySelector(
-                    ".mdc-dialog__scrim"
-                );
+                const scrim: HTMLElement =
+                    element.querySelector(".mdc-dialog__scrim");
                 scrim.style.pointerEvents = "none";
                 scrim.style.opacity = "0.5";
 
@@ -48,9 +47,8 @@ export default function (): void {
                 surface.style.pointerEvents = "all";
 
                 // Allow dragging
-                const title: HTMLElement = element.querySelector(
-                    ".mdc-dialog__title"
-                );
+                const title: HTMLElement =
+                    element.querySelector(".mdc-dialog__title");
                 title.style.userSelect = "none";
                 surface.style.position = "relative";
                 surface.style.top = "var(--rw-mdc-dialog-draggable--top)";
@@ -64,7 +62,7 @@ export default function (): void {
                             "--rw-mdc-dialog-draggable--top":
                                 -element.getAttribute("data-y") + "px",
                             "--rw-mdc-dialog-draggable--left":
-                                -element.getAttribute("data-x") + "px"
+                                -element.getAttribute("data-x") + "px",
                         })
                     );
                 };
@@ -104,7 +102,7 @@ export default function (): void {
             });
     }).observe(document.body, {
         childList: true,
-        subtree: true
+        subtree: true,
     });
     Log.debug("MutationObserver stared.");
 

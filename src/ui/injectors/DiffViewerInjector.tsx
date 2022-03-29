@@ -3,25 +3,24 @@ import { h } from "tsx-dom";
 import Log from "rww/data/RedWarnLog";
 import { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
 import RedWarnUI from "rww/ui/RedWarnUI";
+import { Injector } from "./Injector";
 
-export default class DiffViewerInjector {
+export default class DiffViewerInjector implements Injector {
     /**
      * Initialize the injector. If the page is a diff page, this injector
      * will trigger.
      */
-    static async init(): Promise<void> {
+    async init(): Promise<void> {
         if (Revert.isDiffPage()) {
             Log.debug("Diff page detected!");
-            await DiffViewerInjector.loadOptions(
-                await DiffViewerInjector.getContext()
-            );
+            await this.loadOptions(await this.getContext());
         }
     }
 
     /**
      * Get the context surrounding the current diff view.
      */
-    static async getContext(options?: {
+    async getContext(options?: {
         diffIcons?: RWUIDiffIcons;
         baseContext?: RevertContextBase;
     }): Promise<RevertContextBase> {
@@ -31,7 +30,7 @@ export default class DiffViewerInjector {
         const newRevision: Revision =
             options?.baseContext?.newRevision ??
             Revision.fromID(newRevId, {
-                page: Page.fromTitle(mw.config.get("wgRelevantPageName"))
+                page: Page.fromTitle(mw.config.get("wgRelevantPageName")),
             });
 
         if (!newRevision.isPopulated()) await newRevision.populate();
@@ -44,10 +43,10 @@ export default class DiffViewerInjector {
                       Revision.fromID(oldRevId, {
                           page: Page.fromTitle(
                               mw.config.get("wgRelevantPageName")
-                          )
+                          ),
                       })
                     : undefined,
-            latestRevision: Revision.fromID(+mw.config.get("wgCurRevisionId"))
+            latestRevision: Revision.fromID(+mw.config.get("wgCurRevisionId")),
         };
     }
 
@@ -57,7 +56,7 @@ export default class DiffViewerInjector {
      * @param context The context surrounding the current revert.
      * @param checkIfEditable Check if the page is editable before injecting.
      */
-    static loadOptions(
+    loadOptions(
         context: RevertContextBase,
         checkIfEditable = true
     ): Promise<void> {
@@ -73,7 +72,7 @@ export default class DiffViewerInjector {
                     ...context,
                     side: host.classList.contains("diff-ntitle")
                         ? "new"
-                        : "old"
+                        : "old",
                 });
 
                 const icons = (
@@ -81,9 +80,8 @@ export default class DiffViewerInjector {
                 );
 
                 // Always show below the Twinkle buttons.
-                const twinkleRevertButtons = host.querySelector(
-                    '[id^="tw-revert"]'
-                );
+                const twinkleRevertButtons =
+                    host.querySelector('[id^="tw-revert"]');
 
                 if (twinkleRevertButtons) twinkleRevertButtons.after(icons);
                 else {

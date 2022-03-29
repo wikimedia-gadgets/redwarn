@@ -5,7 +5,7 @@ body {
 }
 
 .mdc-snackbar {
-    z-index: 102;
+    z-index: 102 !important;
 }
 
 .mdc-menu.mdc-menu-surface {
@@ -39,8 +39,12 @@ body {
     animation: dummy 0s;
 }
 
+.mdc-radio {
+    vertical-align: middle;
+}
+
 .mdc-radio + label {
-    vertical-align: top;
+    vertical-align: baseline;
     display: inline-block;
     height: 100%;
 }

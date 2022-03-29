@@ -1,12 +1,15 @@
 import RedWarnIDB from "rww/data/database/RedWarnIDB";
-import {RW_DATABASE_NAME, RW_DATABASE_VERSION} from "rww/data/RedWarnConstants";
+import {
+    RW_DATABASE_NAME,
+    RW_DATABASE_VERSION,
+} from "rww/data/RedWarnConstants";
 import RedWarnIDBObjectStore from "rww/data/database/RedWarnIDBObjectStore";
 import {
     CachedDependency,
     CacheTracker,
     LogItem,
     RecentPage,
-    WatchedPage
+    WatchedPage,
 } from "rww/data/database/RWDBObjectStoreDefinitions";
 import Group from "rww/mediawiki/core/Group";
 import Log from "rww/data/RedWarnLog";
@@ -58,9 +61,8 @@ export default class RedWarnLocalDB {
 
         // Apply all database definitions
         this.cacheTracker = this.idb.store<CacheTracker>("cacheTracker");
-        this.dependencyCache = this.idb.store<CachedDependency>(
-            "dependencyCache"
-        );
+        this.dependencyCache =
+            this.idb.store<CachedDependency>("dependencyCache");
         this.groupCache = this.idb.store<Group>("groupCache");
         this.watchedPages = this.idb.store<WatchedPage>("watchedPages");
         this.recentPages = this.idb.store<RecentPage>("recentPages");

@@ -21,10 +21,10 @@ export default function (
             src: url(page.url, {
                 safemode: additionalProps.safeMode ? "true" : "false",
                 // Also redirects by default.
-                redirect: additionalProps.redirect === false ? "no" : "yes"
+                redirect: additionalProps.redirect === false ? "no" : "yes",
             }),
             width: "calc(100vw - 176px)",
-            height: "90vh"
+            height: "90vh",
         },
         additionalProps
     );

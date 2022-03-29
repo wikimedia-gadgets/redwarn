@@ -1,6 +1,6 @@
 import { RWUIProtectionRequestDialog } from "rww/ui/elements/RWUIProtectionRequestDialog";
 import ProtectionRequest, {
-    ProtectionDuration
+    ProtectionDuration,
 } from "rww/mediawiki/protection/ProtectionRequest";
 import { upgradeMaterialDialog } from "rww/styles/material/Material";
 import RedWarnStore from "rww/data/RedWarnStore";
@@ -8,7 +8,7 @@ import { Page, ProtectionLevel } from "rww/mediawiki";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
-    MaterialDialogTitle
+    MaterialDialogTitle,
 } from "rww/styles/material/ui/MaterialDialog";
 import { h } from "tsx-dom";
 import i18next from "i18next";
@@ -16,7 +16,7 @@ import MaterialButton from "rww/styles/material/ui/components/MaterialButton";
 import toCSS from "rww/styles/material/util/toCSS";
 import MaterialRadioField, {
     MaterialRadioFieldElement,
-    MaterialRadioFieldProps
+    MaterialRadioFieldProps,
 } from "rww/styles/material/ui/components/MaterialRadioField";
 import "../css/protectionRequestDialog.css";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
@@ -25,16 +25,16 @@ import MaterialProtectionRequestDialogPage from "rww/styles/material/ui/componen
 import ProtectionEntry from "rww/mediawiki/protection/ProtectionEntry";
 import MaterialTextInput, {
     MaterialTextInputComponents,
-    MaterialTextInputUpgrade
+    MaterialTextInputUpgrade,
 } from "rww/styles/material/ui/components/MaterialTextInput";
 import MaterialSelect, {
     MaterialSelectElement,
-    MaterialSelectItem
+    MaterialSelectItem,
 } from "rww/styles/material/ui/components/MaterialSelect";
 import { MaterialRadioProps } from "rww/styles/material/ui/components/MaterialRadio";
 import MaterialIcon from "./components/MaterialIcon";
 import MaterialDialogValidator, {
-    ValidationCheck
+    ValidationCheck,
 } from "rww/styles/material/ui/components/MaterialDialogValidator";
 
 export default class MaterialProtectionRequestDialog extends RWUIProtectionRequestDialog {
@@ -136,13 +136,13 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
         return [
             {
                 id: "noLevel",
-                test: () => this.level != null
+                test: () => this.level != null,
             },
             {
                 id: "noDuration",
                 test: () =>
                     this.level &&
-                    (this.level.id == null || this.duration != null)
+                    (this.level.id == null || this.duration != null),
             },
             {
                 id: "levelEqual",
@@ -180,11 +180,11 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                                   (v.type === "edit" && v.source == null) ||
                                   // FlaggedRevs protection applied to this page.
                                   v.type === "_flaggedrevs"
-                          ) != null)
+                          ) != null),
             },
             {
                 id: "noReason",
-                test: () => this.reason != null
+                test: () => this.reason != null,
             },
             {
                 id: "noAdditionalReason",
@@ -192,8 +192,8 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                     this.reason != null &&
                     (this.reason.length > 0 ||
                         (this.reason.length === 0 &&
-                            this.additionalInformation.length !== 0))
-            }
+                            this.additionalInformation.length !== 0)),
+            },
         ];
     }
 
@@ -219,23 +219,22 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                         level: this.level,
                         reason: this.reason,
                         additionalInformation: this.additionalInformation,
-                        duration: this.duration
+                        duration: this.duration,
                     };
                 } else return null;
-            }
+            },
         }).then((v) => v.wait());
     }
 
     renderLevels(): MaterialRadioFieldElement<ProtectionLevel> {
-        const radioButtons: MaterialRadioFieldProps<
-            ProtectionLevel
-        >["radios"] = [];
+        const radioButtons: MaterialRadioFieldProps<ProtectionLevel>["radios"] =
+            [];
 
         for (const level of [
             Object.assign(RedWarnWikiConfiguration.c.protection.unprotect, {
-                id: null
+                id: null,
             }),
-            ...RedWarnWikiConfiguration.c.protection.levels
+            ...RedWarnWikiConfiguration.c.protection.levels,
         ]) {
             if (level.requestable === false) continue;
 
@@ -243,7 +242,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                 children: (
                     <div
                         style={toCSS({
-                            display: "inline-block"
+                            display: "inline-block",
                         })}
                         class={"rw-mdc-prd-protectionLevel"}
                     >
@@ -253,7 +252,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                             <span
                                 class="material-icons"
                                 style={toCSS({
-                                    color: level.color ?? "black"
+                                    color: level.color ?? "black",
                                 })}
                             >
                                 {level.id === null ? "lock_open" : "lock"}
@@ -264,7 +263,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                         </span>
                     </div>
                 ),
-                value: level
+                value: level,
             });
         }
 
@@ -316,7 +315,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
         items.push({
             label: i18next.t("ui:protectionRequest.reasons.other"),
             value: "",
-            type: "action"
+            type: "action",
         });
         if (this._protectionReasons) {
             for (const [key, entries] of Object.entries(
@@ -324,13 +323,13 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
             )) {
                 items.push({
                     type: "header",
-                    label: key
+                    label: key,
                 });
                 for (const entry of entries) {
                     items.push({
                         label: entry,
                         value: entry,
-                        type: "action"
+                        type: "action",
                     });
                 }
             }
@@ -342,8 +341,9 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                 items={items}
                 required
                 onChange={(i, v) => {
-                    const field = this.elementSet.additionalInformation
-                        ?.components?.textField;
+                    const field =
+                        this.elementSet.additionalInformation?.components
+                            ?.textField;
                     if (field) field.required = v.length === 0;
 
                     this.uiValidate();
@@ -367,7 +367,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
 
         this.elementSet.additionalInformation = {
             element: el,
-            components: components
+            components: components,
         };
         components.textField.listen("keydown", () => {
             this.uiValidate();
@@ -383,13 +383,13 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
             {
                 value: false,
                 children: <MaterialIcon icon={"timer"} />,
-                tooltip: i18next.t("ui:protectionRequest.duration.temporary")
+                tooltip: i18next.t("ui:protectionRequest.duration.temporary"),
             },
             {
                 value: true,
                 children: <MaterialIcon icon={"all_inclusive"} />,
-                tooltip: i18next.t("ui:protectionRequest.duration.indefinite")
-            }
+                tooltip: i18next.t("ui:protectionRequest.duration.indefinite"),
+            },
         ];
 
         return (
@@ -418,7 +418,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                     "aria-modal": true,
                     "aria-labelledby":
                         this.props.title ??
-                        i18next.t<string>("ui:protectionRequest.title")
+                        i18next.t<string>("ui:protectionRequest.title"),
                 }}
                 id={this.id}
             >
@@ -431,7 +431,7 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                 <MaterialDialogContent
                     style={toCSS({
                         overflowY: "auto",
-                        overflowX: "hidden"
+                        overflowX: "hidden",
                     })}
                 >
                     {
@@ -450,7 +450,8 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                     <div class={"rw-mdc-prd-options"}>
                         <div class={"rw-mdc-prd-reason"}>
                             {
-                                (this.elementSet.reason = this.renderReasonDropdown())
+                                (this.elementSet.reason =
+                                    this.renderReasonDropdown())
                             }
                         </div>
                         <div class={"rw-mdc-prd-levels"}>
@@ -463,7 +464,8 @@ export default class MaterialProtectionRequestDialog extends RWUIProtectionReque
                                     Duration
                                 </span>
                                 {
-                                    (this.elementSet.duration = this.renderDuration())
+                                    (this.elementSet.duration =
+                                        this.renderDuration())
                                 }
                                 <p class={"rw-mdc-prd-notice"}>
                                     {i18next.t<string>(

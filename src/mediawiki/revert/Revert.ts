@@ -343,7 +343,7 @@ export class Revert {
 
         const dialog = new RedWarnUI.InputDialog({
             ...i18next.t("ui:rollback"),
-            defaultText: defaultReason || "",
+            defaultText: defaultReason ?? "",
         });
         return await dialog.show();
     }

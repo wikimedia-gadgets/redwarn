@@ -108,7 +108,7 @@ export default function (props: MaterialTextInputProps): JSX.Element {
                     </textarea>
                 ) : (
                     <input
-                        type="text"
+                        type={props.type ?? "text"}
                         class="mdc-text-field__input"
                         id={`${id}_input`}
                         {...(props.helperText && {
@@ -234,6 +234,11 @@ export function MaterialTextInputUpgrade(
             element.querySelector(".mdc-text-field-helper-text")
         );
     components.helperText?.initialize();
+
+    if (props.onInput)
+        components.textField.listen("input", (event) => {
+            props.onInput(components.textField.value, event);
+        });
 
     trackingObject["components"] = components;
 

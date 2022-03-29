@@ -1,4 +1,4 @@
-import {MaterialWarnDialogChildProps} from "rww/styles/material/ui/MaterialWarnDialog";
+import { MaterialWarnDialogChildProps } from "rww/styles/material/ui/MaterialWarnDialog";
 
 import {
     getWarningFieldVisibility,
@@ -8,31 +8,33 @@ import {
     WarningLevel,
     WarningLevelComments,
     WarningManager,
-    WarningType
+    WarningType,
 } from "rww/mediawiki";
 
-import {h} from "tsx-dom";
+import { h } from "tsx-dom";
 
 import MaterialSelect, {
     MaterialSelectElement,
-    MaterialSelectItem
+    MaterialSelectItem,
 } from "rww/styles/material/ui/components/MaterialSelect";
 
-import {MaterialWarnDialogChild} from "rww/styles/material/ui/components/MaterialWarnDialogChild";
+import { MaterialWarnDialogChild } from "rww/styles/material/ui/components/MaterialWarnDialogChild";
 
 import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
 
-import MaterialRadioField, {MaterialRadioFieldElement} from "rww/styles/material/ui/components/MaterialRadioField";
+import MaterialRadioField, {
+    MaterialRadioFieldElement,
+} from "rww/styles/material/ui/components/MaterialRadioField";
 
-import {MaterialRadioProps} from "rww/styles/material/ui/components/MaterialRadio";
+import { MaterialRadioProps } from "rww/styles/material/ui/components/MaterialRadio";
 
 import MaterialIcon from "./MaterialIcon";
 
-import {WarningIcons} from "rww/styles/material/data/WarningIcons";
+import { WarningIcons } from "rww/styles/material/data/WarningIcons";
 
 import MaterialTextInput, {
     MaterialTextInputComponents,
-    MaterialTextInputUpgrade
+    MaterialTextInputUpgrade,
 } from "rww/styles/material/ui/components/MaterialTextInput";
 
 import i18next from "i18next";
@@ -42,7 +44,7 @@ import MaterialWarnDialogRecentPages from "rww/styles/material/ui/components/Mat
 import classMix from "rww/styles/material/util/classMix";
 
 function MaterialWarnDialogReasonDropdown({
-    parent
+    parent,
 }: {
     parent: MaterialWarnDialogReason;
 }): JSX.Element {
@@ -52,11 +54,11 @@ function MaterialWarnDialogReasonDropdown({
     )) {
         if (finalSelectItems.length !== 0)
             finalSelectItems.push({
-                type: "divider"
+                type: "divider",
             });
         finalSelectItems.push({
             type: "header",
-            label: WarningManager.warningCategoriesMap[category].label
+            label: WarningManager.warningCategoriesMap[category].label,
         });
 
         for (const warning of warningSet) {
@@ -64,7 +66,7 @@ function MaterialWarnDialogReasonDropdown({
                 type: "action",
                 label: warning.name,
                 value: warning,
-                selected: parent.props.defaultReason === warning
+                selected: parent.props.defaultReason === warning,
             });
         }
     }
@@ -89,7 +91,7 @@ function MaterialWarnDialogReasonDropdown({
                     const lastPress = (key.target as HTMLElement).getAttribute(
                         "data-last-keydown"
                     );
-                    if (lastPress && Date.now() < (+lastPress + 500)) return;
+                    if (lastPress && Date.now() < +lastPress + 500) return;
                     (key.target as HTMLElement).setAttribute(
                         "data-last-keydown",
                         `${Date.now()}`
@@ -99,11 +101,10 @@ function MaterialWarnDialogReasonDropdown({
                         // Open search dialog
                         isSearchOpen = true;
                         const newWarning = await new MaterialWarnSearchDialog({
-                            startingText: key.key
+                            startingText: key.key,
                         }).show();
-                        const select: MaterialSelectElement<Warning> = element.querySelector(
-                            ".mdc-select"
-                        );
+                        const select: MaterialSelectElement<Warning> =
+                            element.querySelector(".mdc-select");
                         select.setItem(newWarning);
                         isSearchOpen = false;
                     }
@@ -117,11 +118,10 @@ function MaterialWarnDialogReasonDropdown({
                     .toString()}
                 onClick={async () => {
                     const newWarning = await new MaterialWarnSearchDialog({
-                        selectedWarning: parent.warning
+                        selectedWarning: parent.warning,
                     }).show();
-                    const select: MaterialSelectElement<Warning> = element.querySelector(
-                        ".mdc-select"
-                    );
+                    const select: MaterialSelectElement<Warning> =
+                        element.querySelector(".mdc-select");
                     select.setItem(newWarning);
                 }}
             />
@@ -132,7 +132,7 @@ function MaterialWarnDialogReasonDropdown({
 }
 
 function MaterialWarnDialogReasonLevel({
-    parent
+    parent,
 }: {
     parent: MaterialWarnDialogReason;
 }): JSX.Element & { update?: (level: WarningLevel) => void } {
@@ -160,12 +160,12 @@ function MaterialWarnDialogReasonLevel({
                                     levelReadable: (
                                         comments.summary ?? WarningLevel[level]
                                     ).toLocaleLowerCase(),
-                                    levelDescription: comments.description
+                                    levelDescription: comments.description,
                                 }
                             ),
                             children: (
                                 <MaterialIcon icon={WarningIcons[level].icon} />
-                            )
+                            ),
                         });
                     } else {
                         radios.push({
@@ -176,7 +176,7 @@ function MaterialWarnDialogReasonLevel({
                                     level: comments.alternative ?? level,
                                     levelReadable: (
                                         comments.summary ?? WarningLevel[level]
-                                    ).toLocaleLowerCase()
+                                    ).toLocaleLowerCase(),
                                 }
                             ),
                             disabled: true,
@@ -185,7 +185,7 @@ function MaterialWarnDialogReasonLevel({
                                     icon={WarningIcons[level].icon}
                                     iconColor={"gray"}
                                 />
-                            )
+                            ),
                         });
                     }
                 }
@@ -244,7 +244,7 @@ function MaterialWarnDialogReasonLevel({
             </table>
         </div>,
         {
-            update: updater
+            update: updater,
         }
     );
 }
@@ -270,7 +270,7 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
         };
         recentPagesButton?: {
             element: JSX.Element;
-        }
+        };
     } = {};
 
     get user(): User {
@@ -383,17 +383,21 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
                         {this.warning.note}
                     </div>
                 )}
-                <div class={classMix(
-                    "rw-mdc-warnDialog-page",
-                    typeof this.warning?.relatedPage === "object"
-                        && this.warning.relatedPage?.recentPages === false
-                        && "rw-warnDialog-hideRecentPages"
-                )}>
+                <div
+                    class={classMix(
+                        "rw-mdc-warnDialog-page",
+                        typeof this.warning?.relatedPage === "object" &&
+                            this.warning.relatedPage?.recentPages === false &&
+                            "rw-warnDialog-hideRecentPages"
+                    )}
+                >
                     {((): JSX.Element => {
                         // Do not use a null coalescing operator to reuse the related page,
                         // this must be rebuilt every time.
-                        let label = typeof this.warning?.relatedPage === "object" ?
-                            this.warning.relatedPage?.label : null;
+                        let label =
+                            typeof this.warning?.relatedPage === "object"
+                                ? this.warning.relatedPage?.label
+                                : null;
                         if (label == null)
                             label = i18next.t<string>("ui:warn.reason.page");
 
@@ -402,24 +406,25 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
                                 class={"rw-mdc-warnDialog-page--textField"}
                                 label={label}
                                 defaultText={
-                                    this.elementSet?.page?.components?.textField?.value ??
+                                    this.elementSet?.page?.components?.textField
+                                        ?.value ??
                                     this.props.relatedPage?.title?.getPrefixedText() ??
                                     ""
                                 }
                                 autofocus
                                 {...(this.warning != null
                                     ? {
-                                        [getWarningFieldVisibility(
-                                            this.warning.relatedPage
-                                        )]: true
-                                    }
+                                          [getWarningFieldVisibility(
+                                              this.warning.relatedPage
+                                          )]: true,
+                                      }
                                     : {})}
                             />
                         );
                         const components = MaterialTextInputUpgrade(textInput);
                         this.elementSet.page = {
                             element: textInput,
-                            components: components
+                            components: components,
                         };
                         components.textField.listen(
                             "focusout",
@@ -434,43 +439,50 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
                     })()}
                     {this.elementSet.recentPagesButton?.element ??
                         ((): JSX.Element => {
-                            return <MaterialIconButton
-                                class={"rw-mdc-warnDialog-page--recent"}
-                                icon={"today"}
-                                label={i18next
-                                    .t("ui:warn.reason.recentPageOpenerTooltip")
-                                    .toString()}
-                                onClick={async () => {
-                                    const newPage = await new MaterialWarnDialogRecentPages().show();
-                                    if (newPage)
-                                        this.relatedPage = newPage;
-                                }}
-                            />;
-                        })()
-                    }
+                            return (
+                                <MaterialIconButton
+                                    class={"rw-mdc-warnDialog-page--recent"}
+                                    icon={"today"}
+                                    label={i18next
+                                        .t(
+                                            "ui:warn.reason.recentPageOpenerTooltip"
+                                        )
+                                        .toString()}
+                                    onClick={async () => {
+                                        const newPage =
+                                            await new MaterialWarnDialogRecentPages().show();
+                                        if (newPage) this.relatedPage = newPage;
+                                    }}
+                                />
+                            );
+                        })()}
                 </div>
                 {((): JSX.Element => {
                     // Do not use a null coalescing operator to reuse the related page,
                     // this must be rebuilt every time.
-                    let label = typeof this.warning?.additionalText === "object" ?
-                        this.warning.additionalText?.label : null;
+                    let label =
+                        typeof this.warning?.additionalText === "object"
+                            ? this.warning.additionalText?.label
+                            : null;
                     if (label == null)
-                        label = i18next.t<string>("ui:warn.reason.additionalText");
+                        label = i18next.t<string>(
+                            "ui:warn.reason.additionalText"
+                        );
 
                     const textInput = (
                         <MaterialTextInput
                             width={"100%"}
                             label={label}
                             defaultText={
-                                this.elementSet?.additionalText?.components?.textField?.value ??
-                                ""
+                                this.elementSet?.additionalText?.components
+                                    ?.textField?.value ?? ""
                             }
                             autofocus
                             {...(this.warning != null
                                 ? {
                                       [getWarningFieldVisibility(
                                           this.warning.additionalText
-                                      )]: true
+                                      )]: true,
                                   }
                                 : {})}
                         />
@@ -478,7 +490,7 @@ class MaterialWarnDialogReason extends MaterialWarnDialogChild {
                     const components = MaterialTextInputUpgrade(textInput);
                     this.elementSet.additionalText = {
                         element: textInput,
-                        components: components
+                        components: components,
                     };
                     components.textField.listen(
                         "focusout",
@@ -515,6 +527,6 @@ export default function generator(
 ): JSX.Element & { MWDReason: MaterialWarnDialogReason } {
     const mwdReason = new MaterialWarnDialogReason(props);
     return Object.assign(mwdReason.render(), {
-        MWDReason: mwdReason
+        MWDReason: mwdReason,
     });
 }

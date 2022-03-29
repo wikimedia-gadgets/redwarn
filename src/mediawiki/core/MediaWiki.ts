@@ -12,7 +12,7 @@ const mwChecks = {
     skin: () => {
         // Minerva is unsupported as of now. Disable.
         return mw.config.get("skin") !== "minerva";
-    }
+    },
 };
 
 type MediaWikiCheck = keyof typeof mwChecks;
@@ -44,7 +44,7 @@ export class MediaWiki {
             "mediawiki.api",
             "mediawiki.util",
             "mediawiki.Title",
-            "mediawiki.language.months"
+            "mediawiki.language.months",
         ]);
     }
 

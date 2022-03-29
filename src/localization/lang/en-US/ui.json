@@ -6,6 +6,8 @@
     "confirm": "Confirm",
     "undo": "Undo",
     "redo": "Redo",
+    "toggleSwitch": "Off/On",
+    "toggleCheckbox": "Off/On",
 
     "extendedOptions": {
         "title": "More Options",
@@ -207,9 +209,7 @@
         "missing": {
             "title": "Style Missing",
             "content": "The style set in your RedWarn configuration cannot be found. It has been set to the default style for now.",
-            "actions": [
-                { "data": "$t(ui:ok)" }
-            ]
+            "actions": [{ "data": "$t(ui:ok)" }]
         }
     },
     "contribs": {
@@ -251,10 +251,10 @@
             "indefinite": "Indefinite"
         },
         "notice": "You should not consider requesting page protection as a method for continuing an argument from elsewhere nor as a venue for starting a new discussion regarding article content. If a request contains excessive argument, appears to be intended to resolve a content dispute, includes personal attacks or uncivil comments, or has any other unrelated discussion, it will be removed and no action will be taken.",
-        "validation" : {
+        "validation": {
             "fail": "An unknown issue ocurred.",
-            "fail_noLevel" : "You don't have a protection level selected.",
-            "fail_noDuration" : "You don't have a protection duration selected.",
+            "fail_noLevel": "You don't have a protection level selected.",
+            "fail_noDuration": "You don't have a protection duration selected.",
             "fail_levelEqual": "The level and duration requested is already applied.",
             "fail_noReason": "No reason was provided.",
             "fail_noAdditionalReason": "No additional reason was provided.",

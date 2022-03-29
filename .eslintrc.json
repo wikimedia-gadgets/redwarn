@@ -58,7 +58,8 @@
                 "selector": "MethodDefinition[static = true] ThisExpression",
                 "message": "`this` is being used in a static context."
             }
-        ]
+        ],
+        "prettier/prettier": ["error", { "endOfLine": "auto" }]
     },
     "settings": {
         "import/parsers": { "@typescript-eslint/parser": [".ts", ".tsx"] }

@@ -6,6 +6,6 @@ export default function <T>(): [Promise<T>, (result: T) => void, () => any] {
             _rej = rej;
         }),
         _res,
-        _rej
+        _rej,
     ];
 }

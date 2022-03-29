@@ -4,6 +4,7 @@ import toCSS from "rww/styles/material/util/toCSS";
 import { Configuration } from "rww/config/user/Configuration";
 
 export interface MaterialButtonProperties extends BaseProps {
+    class?: string;
     action?: boolean; // whether or not this button is an action button, such as "ok", "submit", etc. used for accessibility
     dialogAction?: string | { data: string; text: string };
     icon?: string;
@@ -25,9 +26,9 @@ export default function (props: MaterialButtonProperties): JSX.Element {
         iconColor,
         style,
         disabled,
-        raised
+        raised,
     } = props;
-    const classes = ["mdc-button"];
+    const classes = ["mdc-button", ...(props.class ?? [])];
 
     if (dialogAction) classes.push("mdc-dialog__button");
 

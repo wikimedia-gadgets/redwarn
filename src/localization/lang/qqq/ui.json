@@ -1,5 +1,5 @@
 {
-    "unfinished" : "Message shown when a features is marked ad ",
+    "unfinished": "Message shown when a feature is marked as unfinished.",
 
     "restore": {
         "label": "The title of the dialog prompting users for a reason to restore.",
@@ -83,28 +83,28 @@
             "levelSelectionLevel": "Selector for the template level - use the {{level}}, {{levelReadable}} and {{levelDescription}} params as appropriate",
             "searchDialogOpenerTooltip": "Tooltip for the opener for the warning search dialog",
             "warningSelectionDropdownTitle": "Name for warning templates (eg \"Warning\")",
-            "singleIssueTemplate" : "Name for single issue templates (eg \"Reminder\")",
-            "policyViolationTemplate" : "Name for warnings related to policy violations (eg \"Policy Violation Warning\")",
-            "warningLevel" : "Text for specifying the warning level",
-            "noWarningSelected" : "Message shown when no warnings have been selected"
+            "singleIssueTemplate": "Name for single issue templates (eg \"Reminder\")",
+            "policyViolationTemplate": "Name for warnings related to policy violations (eg \"Policy Violation Warning\")",
+            "warningLevel": "Text for specifying the warning level",
+            "noWarningSelected": "Message shown when no warnings have been selected"
         },
 
-        "templateSearchDialog" : {
+        "templateSearchDialog": {
             "dialogTitle": "Title for the dialog",
-            "searchBoxLabel" : "Label for the search box",
-            "instantSelect" : "Message telling the user to press ENTER to select the warnin",
-            "tip" : "Tip explaining that you can double click to select a specific warning, or that you can press ENTER to select the top warning"
+            "searchBoxLabel": "Label for the search box",
+            "instantSelect": "Message telling the user to press ENTER to select the warnin",
+            "tip": "Tip explaining that you can double click to select a specific warning, or that you can press ENTER to select the top warning"
         },
 
-        "validation" : {
-            "validationFailedIconTooltip" : "Message informing the user that there is an issue preventing them from sending the warning",
+        "validation": {
+            "validationFailedIconTooltip": "Message informing the user that there is an issue preventing them from sending the warning",
 
             "validationDialogTitle": "Message when a single issue has been found",
             "validationDialogTitle_plural": "Message when multiple issues have been foung",
             "validationDialogIntro": "Text preceeding the list of issues (eg \"The following issues are preventing this:\")",
-            
+
             "fail": "Message when an unknown issue has occurred",
-            "fail_template" : "Message when the user has not selected a template",
+            "fail_template": "Message when the user has not selected a template",
             "fail_level": "Message when the user has not selected a warning level",
             "fail_user": "Message when the user has not selected a target user",
             "fail_self": "Message when the user is trying to warn themselves",
@@ -150,7 +150,9 @@
             "title": "Title for the dialog used to inform the user that the style set in their configuration file could not be found.",
             "content": "Body text for the dialog used to inform the user that style set in their configuration file could not be found. Inform the user that it has been reset to the default style.",
             "actions": [
-                { "data": "This should be kept the same as the English one, since it uses the default OK text." }
+                {
+                    "data": "This should be kept the same as the English one, since it uses the default OK text."
+                }
             ]
         }
     },

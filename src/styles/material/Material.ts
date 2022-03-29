@@ -1,9 +1,12 @@
-import {MDCDialog} from "@material/dialog";
-import {MDCRipple} from "@material/ripple";
-import {RWUIDialog} from "rww/ui/elements/RWUIDialog";
+import { MDCDialog } from "@material/dialog";
+import { MDCRipple } from "@material/ripple";
+import { RWUIDialog } from "rww/ui/elements/RWUIDialog";
 import Style from "rww/styles/Style";
 import MaterialPreInitializationHooks from "./hooks/MaterialPreInitializationHooks";
-import {getMaterialStorage, MaterialStyleStorage} from "./data/MaterialStyleStorage";
+import {
+    getMaterialStorage,
+    MaterialStyleStorage,
+} from "./data/MaterialStyleStorage";
 import MaterialAlertDialog from "./ui/MaterialAlertDialog";
 import MaterialInputDialog from "./ui/MaterialInputDialog";
 import MaterialSelectionDialog from "./ui/MaterialSelectionDialog";
@@ -18,6 +21,9 @@ import MaterialExtendedOptions from "rww/styles/material/ui/MaterialExtendedOpti
 import MaterialProtectionRequestDialog from "rww/styles/material/ui/MaterialProtectionRequestDialog";
 import MaterialReportingDialog from "rww/styles/material/ui/MaterialReportingDialog";
 import promiseSplit from "rww/util/promiseSplit";
+import MaterialPreferences from "./ui/MaterialPreferences";
+import MaterialPreferencesTab from "./ui/MaterialPreferencesTab";
+import MaterialPreferencesItem from "./ui/MaterialPreferencesItem";
 
 const MaterialStyle: Style = {
     name: "material",
@@ -29,34 +35,33 @@ const MaterialStyle: Style = {
             author: ["The RedWarn Development Team", "Google, Inc."],
             // \u2014 is an emdash
             description:
+                // TODO: change this to something like "classic but improved/better"
                 "RedWarn's classic look-and-feel \u2014 an implementation of Google's Material Design.",
 
             homepage: "https://en.wikipedia.org/wiki/WP:RW",
             repository: "https://gitlab.com/redwarn/redwarn-web",
-            issues: "https://gitlab.com/redwarn/redwarn-web/-/issues"
-        }
+            issues: "https://gitlab.com/redwarn/redwarn-web/-/issues",
+        },
     },
     dependencies: [
         {
             type: "style",
             id: "mdc-styles",
-            src:
-                "https://tools-static.wmflabs.org/cdnjs/ajax/libs/material-components-web/12.0.0/material-components-web.min.css",
+            src: "https://tools-static.wmflabs.org/cdnjs/ajax/libs/material-components-web/12.0.0/material-components-web.min.css",
             cache: {
                 delayedReload: true,
-                duration: 1209600000 // 14 days
-            }
+                duration: 1209600000, // 14 days
+            },
         },
         {
             type: "style",
             id: "roboto",
-            src:
-                "https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese",
+            src: "https://tools-static.wmflabs.org/fontcdn/css?family=Roboto:100,100italic,300,300italic,400,400italic,500,500italic,700,700italic,900,900italic&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin,latin-ext,vietnamese",
             cache: {
                 delayedReload: true,
-                duration: 1209600000 // 14 days
-            }
-        }
+                duration: 1209600000, // 14 days
+            },
+        },
     ],
 
     storage: new MaterialStyleStorage(),
@@ -72,12 +77,15 @@ const MaterialStyle: Style = {
         rwDiffIcons: MaterialDiffIcons,
         rwPageIcons: MaterialPageIcons,
         rwExtendedOptions: MaterialExtendedOptions,
-        rwReportingDialog: MaterialReportingDialog
+        rwReportingDialog: MaterialReportingDialog,
+        rwPreferences: MaterialPreferences,
+        rwPreferencesTab: MaterialPreferencesTab,
+        rwPreferencesItem: MaterialPreferencesItem,
     },
 
     hooks: {
-        preInit: [MaterialPreInitializationHooks]
-    }
+        preInit: [MaterialPreInitializationHooks],
+    },
 };
 
 export default MaterialStyle;
@@ -110,9 +118,8 @@ export async function upgradeMaterialDialog<T>(
 
     const mdcDialog = new MDCDialog(dialog.element);
 
-    const [closePromise, closePromiseResolver] = promiseSplit<
-        typeof dialog.result
-    >();
+    const [closePromise, closePromiseResolver] =
+        promiseSplit<typeof dialog.result>();
     mdcDialog.listen(
         "MDCDialog:closed",
         async (event: Event & { detail: { action: string } }) => {
@@ -129,7 +136,7 @@ export async function upgradeMaterialDialog<T>(
     if (options?.onPostInit) await options.onPostInit(mdcDialog);
 
     dialog.dialog = Object.assign(mdcDialog, {
-        wait: () => closePromise
+        wait: () => closePromise,
     });
     return dialog.dialog;
 }

@@ -51,7 +51,7 @@ export function MaterialListItem(
                     class="mdc-deprecated-list-item__graphic material-icons"
                     aria-hidden="true"
                     style={toCSS({
-                        color: props.iconColor ?? props.color ?? undefined
+                        color: props.iconColor ?? props.color ?? undefined,
                     })}
                 >
                     {props.icon}
@@ -60,7 +60,7 @@ export function MaterialListItem(
             <span
                 class="mdc-list-item__text"
                 style={toCSS({
-                    color: props.color ?? undefined
+                    color: props.color ?? undefined,
                 })}
             >
                 {props.children}

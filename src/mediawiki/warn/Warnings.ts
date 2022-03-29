@@ -1,5 +1,5 @@
-import {WarningLevel} from "./WarningLevel";
-import type {User} from "rww/mediawiki/core/User";
+import { WarningLevel } from "./WarningLevel";
+import type { User } from "rww/mediawiki/core/User";
 import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
 
 // TODO Move this to wiki-specific definition files.
@@ -97,7 +97,7 @@ export const SerializedWarningType: Record<
 > = {
     tiered: WarningType.Tiered,
     single: WarningType.SingleIssue,
-    policy: WarningType.PolicyViolation
+    policy: WarningType.PolicyViolation,
 };
 
 export interface SerializedTieredWarning extends WarningBase {
@@ -165,7 +165,7 @@ export function deserializeWarning(
                     ? WarningType.Tiered
                     : warning.type === "single"
                     ? WarningType.SingleIssue
-                    : WarningType.PolicyViolation
+                    : WarningType.PolicyViolation,
         },
         warning.type === "tiered" ? { levels: warning.levels } : {}
     );
@@ -198,13 +198,14 @@ export class WarningManager {
     public static get warningCategoriesMap(): Record<string, WarningCategory> {
         return (
             WarningManager._warningCategoriesMap ??
-            (WarningManager._warningCategoriesMap = RedWarnWikiConfiguration.c.warnings.categories.reduce(
-                (obj, next) => {
-                    obj[next.id] = next;
-                    return obj;
-                },
-                <Record<string, WarningCategory>>{}
-            ))
+            (WarningManager._warningCategoriesMap =
+                RedWarnWikiConfiguration.c.warnings.categories.reduce(
+                    (obj, next) => {
+                        obj[next.id] = next;
+                        return obj;
+                    },
+                    <Record<string, WarningCategory>>{}
+                ))
         );
     }
     public static get warningsByCategories(): Record<
@@ -240,6 +241,11 @@ export class WarningManager {
     }
 
     public static refresh() {
-        WarningManager._warnings = WarningManager._warningCategories = WarningManager._warningCategoriesMap = WarningManager._warningsByCategories = WarningManager._warningArrayByCategories = null;
+        WarningManager._warnings =
+            WarningManager._warningCategories =
+            WarningManager._warningCategoriesMap =
+            WarningManager._warningsByCategories =
+            WarningManager._warningArrayByCategories =
+                null;
     }
 }

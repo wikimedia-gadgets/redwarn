@@ -7,6 +7,8 @@
 export enum UIInputType {
     /** A simple switch that provides a boolean value. */
     Switch,
+    /** A single checkbox which returns a boolean. */
+    Checkbox,
     /** A set of checkboxes which returns an array containing the value of all checked options. */
     Checkboxes,
     /** A set of radio buttons which returns the value of the selected option. */
@@ -62,6 +64,20 @@ interface DisplayInformationBase {
 }
 
 /**
+ * Certain {@link UIInputType}s, contrary to {@link DisplayInformationRestricted},
+ * allow any user-provided value. These are represented here.
+ */
+interface DisplayInformationPermissive extends DisplayInformationBase {
+    /**
+     * The display type for this specific setting.
+     */
+    uiInputType: Exclude<
+        UIInputType,
+        DisplayInformationRestricted["uiInputType"]
+    >;
+}
+
+/**
  * Certain {@link UIInputType}s restrict the valid options provided. These
  * are represented here in order to force integration.
  */
@@ -80,7 +96,7 @@ interface DisplayInformationRestricted extends DisplayInformationBase {
 }
 
 export type DisplayInformation =
-    | DisplayInformationBase
+    | DisplayInformationPermissive
     | DisplayInformationRestricted;
 
 export class Setting<T> implements PrimitiveSetting<T> {

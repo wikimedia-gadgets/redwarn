@@ -15,9 +15,9 @@
                 "4": "Fast and furious (0ms)"
             }
         },
-        "highContrast" : {
-            "title" : "High Contrast",
-            "description" : "Where supported, make icons less coloured and favour higher contrast. This will override only default colours, and not those you have customised."
+        "highContrast": {
+            "title": "High Contrast",
+            "description": "Where supported, make icons less coloured and favour higher contrast. This will override only default colours, and not those you have customized."
         }
     },
     "revert": {
@@ -71,6 +71,10 @@
         "revertOptions": {
             "title": "Revert options",
             "description": "You can change which revert options to show and in which order do they appear. You can also add your own custom revert options aside from those found in the per-wiki configuration."
+        },
+        "style": {
+            "title": "UI style",
+            "description": "You can change the style of RedWarn's UI. The default style for all RedWarn users is Material."
         }
     }
 }

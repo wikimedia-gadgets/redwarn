@@ -83,8 +83,8 @@ export default class Localization {
                             : "";
 
                     return value;
-                }
-            }
+                },
+            },
         });
 
         // Register all namespaces from all languages.

@@ -1,4 +1,4 @@
-import {RWErrors} from "rww/errors/RWError";
+import { RWErrors } from "rww/errors/RWError";
 
 export interface CacheTracker {
     id?: string;

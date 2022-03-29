@@ -1,4 +1,4 @@
-import {RedWarnHook, RedWarnHookEventTypes} from "./RedWarnHookEvent";
+import { RedWarnHook, RedWarnHookEventTypes } from "./RedWarnHookEvent";
 import StyleManager from "rww/styles/StyleManager";
 import Log from "rww/data/RedWarnLog";
 
@@ -66,7 +66,7 @@ export default class RedWarnHooks {
                         Log.error(`Hook failed for style: ${hookType}`, {
                             type: hookType,
                             hook: hook,
-                            paylod: payload
+                            paylod: payload,
                         });
                     }
                 }
@@ -81,7 +81,7 @@ export default class RedWarnHooks {
                     Log.error(`Internal hook failed: ${hookType}`, {
                         type: hookType,
                         hook: hook,
-                        paylod: payload
+                        paylod: payload,
                     });
                 }
             }

@@ -19,6 +19,10 @@ export interface RWUITextInputProperties extends RWUIElementProperties {
      */
     defaultText?: string;
     /**
+     * The type of the input box.
+     */
+    type?: string;
+    /**
      * Leading icon for the input field. Can also have an action.
      */
     leadingIcon?: RWIconButton;
@@ -70,4 +74,8 @@ export interface RWUITextInputProperties extends RWUIElementProperties {
      * Whether the contents of this input is required.
      */
     required?: boolean;
+    /**
+     * Action to perform on click.
+     */
+    onInput?: (text: string, event: Event) => void;
 }

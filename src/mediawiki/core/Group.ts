@@ -25,7 +25,7 @@ export function GroupsFromNames(groupNames: string[]): GroupArray {
             groups.push(MediaWikiAPI.groups.get(name));
         } else {
             groups.push({
-                name: name
+                name: name,
             });
         }
     }

@@ -13,7 +13,7 @@
 
 import i18next from "i18next";
 import * as RedWarnConstants from "./data/RedWarnConstants";
-import {RW_VERSION} from "./data/RedWarnConstants";
+import { RW_VERSION } from "./data/RedWarnConstants";
 import * as Utilities from "./util";
 import Dependencies from "./data/Dependencies";
 import Localization from "./localization/Localization";
@@ -29,10 +29,17 @@ import StyleManager from "./styles/StyleManager";
 import TamperProtection from "./tamper/TamperProtection";
 import UIInjectors from "rww/ui/injectors/UIInjectors";
 import * as MediaWikiClasses from "./mediawiki";
-import {ClientUser, MediaWiki, MediaWikiAPI, RevertSpeedup, WarningManager, Watch} from "./mediawiki";
-import {Configuration} from "./config/user/Configuration";
+import {
+    ClientUser,
+    MediaWiki,
+    MediaWikiAPI,
+    RevertSpeedup,
+    WarningManager,
+    Watch,
+} from "./mediawiki";
+import { Configuration } from "./config/user/Configuration";
 import LoadErrorTranslations from "rww/errors/LoadErrorTranslations";
-import {RecentPages} from "rww/mediawiki/util/RecentPages";
+import { RecentPages } from "rww/mediawiki/util/RecentPages";
 
 declare global {
     interface Window {
@@ -163,7 +170,7 @@ export default class RedWarn {
             (async () => {
                 RedWarnStore.initializeStore();
             })(),
-            StyleManager.initialize()
+            StyleManager.initialize(),
         ]);
 
         try {
@@ -174,7 +181,7 @@ export default class RedWarn {
             mw.notify(
                 MediaWikiNotificationContent(
                     i18next.t(`mediawiki:error.wikiConfigBad`, {
-                        wikiIndex: RedWarnStore.wikiIndex
+                        wikiIndex: RedWarnStore.wikiIndex,
                     })
                 ),
                 { type: "error" }
@@ -191,7 +198,7 @@ export default class RedWarn {
         await Promise.all([
             RedWarnHooks.executeHooks("preInit"),
             Dependencies.resolve([StyleManager.activeStyle.dependencies]),
-            Dependencies.resolve([RedWarnStore.dependencies])
+            Dependencies.resolve([RedWarnStore.dependencies]),
         ]);
 
         /**
@@ -218,12 +225,24 @@ export default class RedWarn {
         // Inject all UI elements
         await RedWarnHooks.executeHooks("preUIInject");
 
-        await UIInjectors.inject();
+        await new UIInjectors().inject();
+
+        // Show Ultraviolet-only visuals.
+        document
+            .querySelectorAll(".uv-show")
+            .forEach(
+                (e) => ((e as HTMLElement).style.display = "unset !important")
+            );
+
+        // Hide Anti-Ultraviolet visuals
+        document
+            .querySelectorAll(".uv-hide")
+            .forEach((e) => ((e as HTMLElement).style.display = "none"));
 
         await Promise.all([
             RedWarnHooks.executeHooks("postUIInject"),
             Watch.init(),
-            RecentPages.init()
+            RecentPages.init(),
         ]);
 
         Log.debug(`Done loading (UI): ${Date.now() - startTime}ms.`);

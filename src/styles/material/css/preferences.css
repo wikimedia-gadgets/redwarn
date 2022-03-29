@@ -1,0 +1,39 @@
+.rw-preferences-tab--inactive {
+    display: none;
+}
+
+/**
+ * Vector compatibility.
+ */
+.vector-body h2 {
+    margin-top: 0;
+}
+
+#rwPreferences {
+    border: 1px solid var(--mdc-theme-primary);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+#rwPreferences .mdc-tab-bar {
+    background-color: #ddd;
+}
+
+#rwPreferences .mdc-tab--active {
+    background-color: #fefefe;
+    overflow: hidden;
+}
+
+#rwPreferences .mdc-radio {
+    padding: 5px 10px;
+}
+
+#rwPreferences .mdc-radio > input {
+    /** Must be 20px + (padding height (see above rule) * 2) */
+    height: 30px;
+}
+
+#rwPreferences .rw-preferences-content,
+#rwPreferences .rw-preferences-save {
+    padding: 1.5em;
+}

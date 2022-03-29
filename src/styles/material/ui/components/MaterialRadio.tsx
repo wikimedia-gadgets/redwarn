@@ -1,6 +1,6 @@
-import {BaseProps, h} from "tsx-dom";
-import {generateId} from "rww/util";
-import {MDCRadio} from "@material/radio/component";
+import { BaseProps, h } from "tsx-dom";
+import { generateId } from "rww/util";
+import { MDCRadio } from "@material/radio/component";
 import classMix from "rww/styles/material/util/classMix";
 
 export interface MaterialRadioProps<T> extends BaseProps {
@@ -62,6 +62,6 @@ export default function <T>(
         },
         disable() {
             radio.disabled = true;
-        }
+        },
     });
 }

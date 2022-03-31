@@ -2,9 +2,9 @@ import { h } from "tsx-dom";
 import type {
     MaterialRadioElement,
     MaterialRadioProps,
-} from "rww/styles/material/ui/components/MaterialRadio";
-import MaterialRadio from "rww/styles/material/ui/components/MaterialRadio";
-import { generateId } from "rww/util";
+} from "app/styles/material/ui/components/MaterialRadio";
+import MaterialRadio from "app/styles/material/ui/components/MaterialRadio";
+import { generateId } from "app/util";
 
 export interface MaterialRadioFieldProps<T> {
     radios: Omit<MaterialRadioProps<T>, "name">[];

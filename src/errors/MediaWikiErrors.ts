@@ -1,5 +1,5 @@
-import { Page } from "rww/mediawiki/core/Page";
-import { Revision, User } from "rww/mediawiki";
+import { Page } from "app/mediawiki/core/Page";
+import { Revision, User } from "app/mediawiki";
 import RWErrorBase, { RWErrors, RWFormattedError } from "./RWError";
 
 export class PageMissingError extends RWFormattedError<{ page: Page }> {

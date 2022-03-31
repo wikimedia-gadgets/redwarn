@@ -1,17 +1,17 @@
-import ProtectionEntry from "rww/mediawiki/protection/ProtectionEntry";
-import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
+import ProtectionEntry from "app/mediawiki/protection/ProtectionEntry";
+import RedWarnWikiConfiguration from "app/config/wiki/RedWarnWikiConfiguration";
 import { MediaWikiAPI } from "../core/API";
 import {
     isProtectionRequestTarget,
     Page,
     ProtectionRequestTarget,
-} from "rww/mediawiki";
+} from "app/mediawiki";
 import ProtectionRequest, {
     ProtectionDuration,
-} from "rww/mediawiki/protection/ProtectionRequest";
+} from "app/mediawiki/protection/ProtectionRequest";
 import i18next from "i18next";
-import RedWarnUI from "rww/ui/RedWarnUI";
-import { capitalize } from "rww/util";
+import RedWarnUI from "app/ui/RedWarnUI";
+import { capitalize } from "app/util";
 
 export class ProtectionManager {
     private static protectionEntryCache: Map<

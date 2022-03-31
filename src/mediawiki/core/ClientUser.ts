@@ -1,5 +1,5 @@
-import { Page, UserAccount } from "rww/mediawiki";
-import Log from "rww/data/RedWarnLog";
+import { Page, UserAccount } from "app/mediawiki";
+import Log from "app/data/RedWarnLog";
 
 interface ClientUserCache {
     groups?: string[];

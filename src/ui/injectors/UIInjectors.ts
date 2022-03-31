@@ -1,6 +1,6 @@
-import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
-import ContributionsPageInjector from "rww/ui/injectors/ContributionsPageInjector";
-import PageIconsInjector from "rww/ui/injectors/PageIconsInjector";
+import DiffViewerInjector from "app/ui/injectors/DiffViewerInjector";
+import ContributionsPageInjector from "app/ui/injectors/ContributionsPageInjector";
+import PageIconsInjector from "app/ui/injectors/PageIconsInjector";
 import PreferencesInjector from "./PreferencesInjector";
 
 export default class UIInjectors {

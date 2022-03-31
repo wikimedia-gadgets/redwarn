@@ -1,6 +1,6 @@
-import RedWarnIDBError from "rww/data/database/RedWarnIDBError";
-import RedWarnIDBObjectStore from "rww/data/database/RedWarnIDBObjectStore";
-import Log from "rww/data/RedWarnLog";
+import RedWarnIDBError from "app/data/database/RedWarnIDBError";
+import RedWarnIDBObjectStore from "app/data/database/RedWarnIDBObjectStore";
+import Log from "app/data/RedWarnLog";
 import i18next from "i18next";
 
 export type RedWarnIDBUpgradeHandler = (

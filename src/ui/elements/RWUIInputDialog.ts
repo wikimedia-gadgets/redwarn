@@ -2,8 +2,8 @@ import {
     OKCancelActions,
     RWUIDialog,
     RWUIDialogProperties,
-} from "rww/ui/elements/RWUIDialog";
-import { RWUITextInputProperties } from "rww/ui/elements/RWUITextInput";
+} from "app/ui/elements/RWUIDialog";
+import { RWUITextInputProperties } from "app/ui/elements/RWUITextInput";
 
 export interface RWUIInputDialogProps
     extends RWUIDialogProperties,

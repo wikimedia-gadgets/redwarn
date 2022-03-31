@@ -34,9 +34,9 @@ export default <Record<string, string[]>>{
             '"Objekt kopieren" wählen, um ihn schneller zu kopieren.',
     ],
     en: [
-        "RedWarn failed to load.",
-        "If the problem persists, please contact the RedWarn developers. Additional debug information is provided below.",
-        "If requested by a RedWarn team member, please provide the text through a private channel (email, IRC, etc.).",
+        "Ultraviolet failed to load.",
+        "If the problem persists, please contact Ultraviolet's developers. Additional debug information is provided below.",
+        "If requested by an Ultraviolet team member, please provide the text through a private channel (email, IRC, etc.).",
         'You can right click the text and select "Copy Object" to copy faster.',
     ],
     es: [

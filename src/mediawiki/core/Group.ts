@@ -1,4 +1,4 @@
-import { MediaWikiAPI, Page } from "rww/mediawiki";
+import { MediaWikiAPI, Page } from "app/mediawiki";
 
 // User groups handle permissions for a User. An example would be the Administators group on most wikis.
 interface Group {

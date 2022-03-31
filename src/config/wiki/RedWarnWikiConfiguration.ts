@@ -1,17 +1,17 @@
-import { Page, WarningManager } from "rww/mediawiki";
+import { Page, WarningManager } from "app/mediawiki";
 import {
     RW_FALLBACK_CONFIG,
     RW_WIKI_CONFIGURATION_PAGES,
     RW_WIKI_CONFIGURATION_VERSION,
-} from "rww/data/RedWarnConstants";
-import Log from "rww/data/RedWarnLog";
+} from "app/data/RedWarnConstants";
+import Log from "app/data/RedWarnLog";
 import WikiConfiguration from "./WikiConfiguration";
 import WikiConfigurationRaw from "./WikiConfigurationRaw";
-import updateWikiConfiguration from "rww/config/wiki/updateWikiConfiguration";
-import WikiConfigurationDeserializers from "rww/config/wiki/WikiConfigurationDeserializers";
+import updateWikiConfiguration from "app/config/wiki/updateWikiConfiguration";
+import WikiConfigurationDeserializers from "app/config/wiki/WikiConfigurationDeserializers";
 import i18next from "i18next";
-import RedWarnUI from "rww/ui/RedWarnUI";
-import MediaWikiNotificationContent from "rww/ui/MediaWikiNotificationContent";
+import RedWarnUI from "app/ui/RedWarnUI";
+import MediaWikiNotificationContent from "app/ui/MediaWikiNotificationContent";
 
 /**
  * This class handles every single contact with the RedWarn per-wiki

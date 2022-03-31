@@ -1,7 +1,7 @@
 import { BaseProps, h } from "tsx-dom";
 import { MDCRipple } from "@material/ripple";
 import { MDCList } from "@material/list/component";
-import toCSS from "rww/styles/material/util/toCSS";
+import toCSS from "app/styles/material/util/toCSS";
 
 export function MaterialList(
     props: BaseProps & JSX.HTMLAttributes & { initialized?: boolean }

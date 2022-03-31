@@ -1,6 +1,6 @@
-import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
-import { Warning, WarningLevel, WarningType } from "rww/mediawiki";
-import RedWarnStore from "rww/data/RedWarnStore";
+import MaterialIconButton from "app/styles/material/ui/components/MaterialIconButton";
+import { Warning, WarningLevel, WarningType } from "app/mediawiki";
+import RedWarnStore from "app/data/RedWarnStore";
 import { BaseProps, h } from "tsx-dom";
 
 interface MaterialWarnSearchDialogCard {

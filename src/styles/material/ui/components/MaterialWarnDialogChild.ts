@@ -1,4 +1,4 @@
-import RWUIElement from "rww/ui/elements/RWUIElement";
+import RWUIElement from "app/ui/elements/RWUIElement";
 
 export abstract class MaterialWarnDialogChild extends RWUIElement {
     /**

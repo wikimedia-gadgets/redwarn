@@ -1,10 +1,10 @@
-import RedWarnStore from "rww/data/RedWarnStore";
+import RedWarnStore from "app/data/RedWarnStore";
 
-import { MaterialStyleStorage } from "rww/styles/material/data/MaterialStyleStorage";
+import { MaterialStyleStorage } from "app/styles/material/data/MaterialStyleStorage";
 import { h } from "tsx-dom";
-import Log from "rww/data/RedWarnLog";
-import MaterialTooltip from "rww/styles/material/ui/components/MaterialTooltip";
-import toCSS from "rww/styles/material/util/toCSS";
+import Log from "app/data/RedWarnLog";
+import MaterialTooltip from "app/styles/material/ui/components/MaterialTooltip";
+import toCSS from "app/styles/material/util/toCSS";
 
 export default function (): void {
     RedWarnStore.styleStorage = new MaterialStyleStorage();

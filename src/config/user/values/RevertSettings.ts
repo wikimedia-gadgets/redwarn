@@ -4,8 +4,8 @@
 
 import { Setting, UIInputType } from "../Setting";
 import i18next from "i18next";
-import { RevertDoneOption } from "rww/mediawiki/revert/RevertDoneOptions";
-import { RevertMethod } from "rww/config/user/ConfigurationEnums";
+import { RevertDoneOption } from "app/mediawiki/revert/RevertDoneOptions";
+import { RevertMethod } from "app/config/user/ConfigurationEnums";
 import { ConfigurationSet } from "../Configuration";
 
 type RevertOptionOverrides = Record<

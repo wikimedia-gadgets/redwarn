@@ -21,7 +21,7 @@ module.exports = {
     ],
     moduleFileExtensions: ["ts", "tsx", "js"],
     moduleNameMapper: {
-        "^rww(.*)$": "<rootDir>/src$1",
+        "^app(.*)$": "<rootDir>/src$1",
         "\\.(css)$": "<rootDir>/tests/__mocks__/style.js",
         "buildinfo\.js$": "<rootDir>/tests/__mocks__/buildinfo.js"
     }

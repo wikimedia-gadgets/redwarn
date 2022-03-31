@@ -1,6 +1,6 @@
-import { RedWarnHook, RedWarnHookEventTypes } from "rww/event/RedWarnHookEvent";
-import { Dependency } from "rww/data/Dependencies";
-import { RWUIElements } from "rww/ui/RedWarnUI";
+import { RedWarnHook, RedWarnHookEventTypes } from "app/event/RedWarnHookEvent";
+import { Dependency } from "app/data/Dependencies";
+import { RWUIElements } from "app/ui/RedWarnUI";
 import i18next from "i18next";
 
 type URLString = string;

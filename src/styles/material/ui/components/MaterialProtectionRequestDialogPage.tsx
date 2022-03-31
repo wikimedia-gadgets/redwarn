@@ -1,14 +1,14 @@
 import { h } from "tsx-dom";
-import MaterialProtectionRequestDialog from "rww/styles/material/ui/MaterialProtectionRequestDialog";
+import MaterialProtectionRequestDialog from "app/styles/material/ui/MaterialProtectionRequestDialog";
 import MaterialInputCard, {
     MaterialInputCardProps,
-} from "rww/styles/material/ui/components/MaterialInputCard";
-import { Page, ProtectionManager } from "rww/mediawiki";
+} from "app/styles/material/ui/components/MaterialInputCard";
+import { Page, ProtectionManager } from "app/mediawiki";
 import i18next from "i18next";
-import toCSS from "rww/styles/material/util/toCSS";
-import { capitalize } from "rww/util";
-import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
-import { isFlaggedRevsProtectionEntry } from "rww/mediawiki/protection/ProtectionEntry";
+import toCSS from "app/styles/material/util/toCSS";
+import { capitalize } from "app/util";
+import RedWarnWikiConfiguration from "app/config/wiki/RedWarnWikiConfiguration";
+import { isFlaggedRevsProtectionEntry } from "app/mediawiki/protection/ProtectionEntry";
 
 interface MaterialProtectionRequestDialogPageProps
     extends MaterialInputCardProps {

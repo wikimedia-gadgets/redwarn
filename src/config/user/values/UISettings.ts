@@ -2,7 +2,7 @@
  * UI and display settings.
  */
 
-import { DefaultRedWarnStyle } from "rww/styles/StyleConstants";
+import { DefaultRedWarnStyle } from "app/styles/StyleConstants";
 import { Setting, UIInputType } from "../Setting";
 import i18next from "i18next";
 import { ConfigurationSet } from "../Configuration";

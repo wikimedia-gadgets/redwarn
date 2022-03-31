@@ -1,15 +1,15 @@
 import { BaseProps, h } from "tsx-dom";
-import classMix from "rww/styles/material/util/classMix";
+import classMix from "app/styles/material/util/classMix";
 import i18next from "i18next";
 import MaterialTextInput, {
     MaterialTextInputComponents,
     MaterialTextInputUpgrade,
-} from "rww/styles/material/ui/components/MaterialTextInput";
-import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
+} from "app/styles/material/ui/components/MaterialTextInput";
+import MaterialIconButton from "app/styles/material/ui/components/MaterialIconButton";
 
 import "../../css/materialInputCard.css";
-import RedWarnUI from "rww/ui/RedWarnUI";
-import Log from "rww/data/RedWarnLog";
+import RedWarnUI from "app/ui/RedWarnUI";
+import Log from "app/data/RedWarnLog";
 
 export enum MaterialInputCardState {
     Blank,

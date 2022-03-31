@@ -1,21 +1,21 @@
-import { MaterialUserSelectProps } from "rww/styles/material/ui/components/MaterialUserSelect";
+import { MaterialUserSelectProps } from "app/styles/material/ui/components/MaterialUserSelect";
 import { h } from "tsx-dom";
-import { MaterialReportingDialogChildProps } from "rww/styles/material/ui/components/MaterialReportingDialogChild";
-import RWUIElement from "rww/ui/elements/RWUIElement";
+import { MaterialReportingDialogChildProps } from "app/styles/material/ui/components/MaterialReportingDialogChild";
+import RWUIElement from "app/ui/elements/RWUIElement";
 import MaterialSelect, {
     MaterialSelectElement,
     MaterialSelectItem,
-} from "rww/styles/material/ui/components/MaterialSelect";
+} from "app/styles/material/ui/components/MaterialSelect";
 import {
     isEmailReportVenue,
     isPageReportVenue,
     ReportVenue,
-} from "rww/mediawiki/report/ReportVenue";
+} from "app/mediawiki/report/ReportVenue";
 import i18next from "i18next";
 import MaterialTextInput, {
     MaterialTextInputComponents,
     MaterialTextInputUpgrade,
-} from "rww/styles/material/ui/components/MaterialTextInput";
+} from "app/styles/material/ui/components/MaterialTextInput";
 
 class MaterialReportingDialogInfo extends RWUIElement {
     get venue(): ReportVenue {

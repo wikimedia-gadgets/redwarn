@@ -1,5 +1,5 @@
-import { RWIconButton } from "rww/ui/elements/RWUIDialog";
-import { RWUIElementProperties } from "rww/ui/elements/RWUIElement";
+import { RWIconButton } from "app/ui/elements/RWUIDialog";
+import { RWUIElementProperties } from "app/ui/elements/RWUIElement";
 
 export interface RWUITextInputProperties extends RWUIElementProperties {
     /**

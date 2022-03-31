@@ -1,8 +1,8 @@
 import { BaseProps, h } from "tsx-dom";
-import { generateId } from "rww/util";
+import { generateId } from "app/util";
 import { MDCTabBar, MDCTabBarActivatedEvent } from "@material/tab-bar";
-import Log from "rww/data/RedWarnLog";
-import RWUIElement from "rww/ui/elements/RWUIElement";
+import Log from "app/data/RedWarnLog";
+import RWUIElement from "app/ui/elements/RWUIElement";
 
 export interface MaterialTabBarProps extends BaseProps {
     focusOnActivate?: boolean;

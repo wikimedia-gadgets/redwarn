@@ -1,4 +1,4 @@
-import { WarningLevel } from "rww/mediawiki";
+import { WarningLevel } from "app/mediawiki";
 
 export const WarningIcons: {
     [key in WarningLevel]: { icon: string; iconColor: string };

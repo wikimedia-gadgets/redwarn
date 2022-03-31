@@ -175,8 +175,8 @@ module.exports = {
     resolve: {
         extensions: [".js", ".ts", ".tsx", ".json"],
         alias: {
-            // Define rww/ in ES6 imports as RedWarn
-            rww: path.resolve(__dirname, "src")
+            // Define app/ in ES6 imports as RedWarn
+            app: path.resolve(__dirname, "src")
         }
     },
     // Development server options

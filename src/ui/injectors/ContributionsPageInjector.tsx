@@ -1,8 +1,8 @@
 import { h } from "tsx-dom";
 import i18next from "i18next";
-import { Revert, Revision } from "rww/mediawiki";
-import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
-import Log from "rww/data/RedWarnLog";
+import { Revert, Revision } from "app/mediawiki";
+import RedWarnWikiConfiguration from "app/config/wiki/RedWarnWikiConfiguration";
+import Log from "app/data/RedWarnLog";
 import { Injector } from "./Injector";
 
 export default class ContributionsPageInjector implements Injector {

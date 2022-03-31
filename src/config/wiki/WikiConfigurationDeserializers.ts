@@ -1,21 +1,21 @@
-import WikiConfigurationRaw from "rww/config/wiki/WikiConfigurationRaw";
-import WikiConfigurationBase from "rww/config/wiki/WikiConfigurationBase";
-import WikiConfiguration from "rww/config/wiki/WikiConfiguration";
+import WikiConfigurationRaw from "app/config/wiki/WikiConfigurationRaw";
+import WikiConfigurationBase from "app/config/wiki/WikiConfigurationBase";
+import WikiConfiguration from "app/config/wiki/WikiConfiguration";
 import {
     deserializeWarning,
     SerializedWarning,
     SerializedWarningCategories,
     Warning,
     WarningCategory,
-} from "rww/mediawiki";
+} from "app/mediawiki";
 import {
     deserializeRevertOption,
     RevertOption,
-} from "rww/mediawiki/revert/RevertOptions";
+} from "app/mediawiki/revert/RevertOptions";
 import {
     deserializeReportVenue,
     SerializableReportVenue,
-} from "rww/mediawiki/report/ReportVenue";
+} from "app/mediawiki/report/ReportVenue";
 
 // T - Type of root data (original raw configuration as parsed JSON)
 // U - Type of the interface which V and W extend from.

@@ -2,16 +2,16 @@ import {
     DisplayInformationOption,
     Setting,
     UIInputType,
-} from "rww/config/user/Setting";
-import { RWUIPreferencesItem } from "rww/ui/elements/RWUIPreferencesItem";
+} from "app/config/user/Setting";
+import { RWUIPreferencesItem } from "app/ui/elements/RWUIPreferencesItem";
 import { h } from "tsx-dom";
-import MaterialRadioField from "rww/styles/material/ui/components/MaterialRadioField";
-import MaterialSelect from "rww/styles/material/ui/components/MaterialSelect";
-import MaterialTextInput from "rww/styles/material/ui/components/MaterialTextInput";
-import StyleManager from "rww/styles/StyleManager";
+import MaterialRadioField from "app/styles/material/ui/components/MaterialRadioField";
+import MaterialSelect from "app/styles/material/ui/components/MaterialSelect";
+import MaterialTextInput from "app/styles/material/ui/components/MaterialTextInput";
+import StyleManager from "app/styles/StyleManager";
 import MaterialSwitch from "./components/MaterialSwitch";
-import Log from "rww/data/RedWarnLog";
-import { getStyleMeta } from "rww/styles/Style";
+import Log from "app/data/RedWarnLog";
+import { getStyleMeta } from "app/styles/Style";
 import MaterialCheckbox from "./components/MaterialCheckbox";
 
 /**

@@ -1,7 +1,7 @@
 // Overrides WikiConfigurationBase with RedWarn-usable types.
-import WikiConfigurationBase from "rww/config/wiki/WikiConfigurationBase";
-import { Warning, WarningCategory } from "rww/mediawiki";
-import { RevertOption } from "rww/mediawiki/revert/RevertOptions";
+import WikiConfigurationBase from "app/config/wiki/WikiConfigurationBase";
+import { Warning, WarningCategory } from "app/mediawiki";
+import { RevertOption } from "app/mediawiki/revert/RevertOptions";
 
 type WikiConfiguration = WikiConfigurationBase & {
     warnings?: {

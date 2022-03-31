@@ -1,4 +1,4 @@
-import { RWUIPreferencesTab } from "rww/ui/elements/RWUIPreferencesTab";
+import { RWUIPreferencesTab } from "app/ui/elements/RWUIPreferencesTab";
 import { h } from "tsx-dom";
 import MaterialTabBarItem, {
     getMaterialTabBarItemComponent,

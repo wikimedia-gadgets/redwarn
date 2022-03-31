@@ -1,31 +1,31 @@
 import i18next from "i18next";
 import { h } from "tsx-dom";
-import { upgradeMaterialDialog } from "rww/styles/material/Material";
-import MaterialButton from "rww/styles/material/ui/components/MaterialButton";
-import MaterialReportingDialogPage from "rww/styles/material/ui/components//MaterialReportingDialogPage";
+import { upgradeMaterialDialog } from "app/styles/material/Material";
+import MaterialButton from "app/styles/material/ui/components/MaterialButton";
+import MaterialReportingDialogPage from "app/styles/material/ui/components//MaterialReportingDialogPage";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
     MaterialDialogTitle,
-} from "rww/styles/material/ui/MaterialDialog";
+} from "app/styles/material/ui/MaterialDialog";
 import {
     RWUIReportingDialog,
     RWUIReportingDialogProps,
-} from "rww/ui/elements/RWUIReportingDialog";
-import toCSS from "rww/styles/material/util/toCSS";
+} from "app/ui/elements/RWUIReportingDialog";
+import toCSS from "app/styles/material/util/toCSS";
 import MaterialReportingDialogUser from "./components/MaterialReportingDialogUser";
 import {
     isEmailReportVenue,
     isPageReportVenue,
     isUserModeReportVenue,
     ReportVenue,
-} from "rww/mediawiki/report/ReportVenue";
-import { Page, User, UserAccount } from "rww/mediawiki";
-import MaterialReportingDialogInfo from "rww/styles/material/ui/components/MaterialReportingDialogInfo";
+} from "app/mediawiki/report/ReportVenue";
+import { Page, User, UserAccount } from "app/mediawiki";
+import MaterialReportingDialogInfo from "app/styles/material/ui/components/MaterialReportingDialogInfo";
 import "../css/reportingDialog.css";
 import MaterialDialogValidator, {
     ValidationCheck,
-} from "rww/styles/material/ui/components/MaterialDialogValidator";
+} from "app/styles/material/ui/components/MaterialDialogValidator";
 
 export default class MaterialReportingDialog extends RWUIReportingDialog {
     target: User | Page = null;

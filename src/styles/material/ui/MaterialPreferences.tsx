@@ -1,11 +1,11 @@
-import { Configuration } from "rww/config/user/Configuration";
-import { PrimitiveSetting, Setting } from "rww/config/user/Setting";
-import { RWUIPreferences } from "rww/ui/elements/RWUIPreferences";
+import { Configuration } from "app/config/user/Configuration";
+import { PrimitiveSetting, Setting } from "app/config/user/Setting";
+import { RWUIPreferences } from "app/ui/elements/RWUIPreferences";
 import { h } from "tsx-dom";
 import MaterialTabBar from "./components/MaterialTabBar";
 import MaterialPreferencesTab from "./MaterialPreferencesTab";
 import "../css/preferences.css";
-import Log from "rww/data/RedWarnLog";
+import Log from "app/data/RedWarnLog";
 import MaterialButton from "./components/MaterialButton";
 
 /**

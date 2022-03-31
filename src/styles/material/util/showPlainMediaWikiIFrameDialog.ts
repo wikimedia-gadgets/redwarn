@@ -1,7 +1,7 @@
-import { Page } from "rww/mediawiki";
-import RedWarnUI from "rww/ui/RedWarnUI";
-import { RWUIIFrameDialogProps } from "rww/ui/elements/RWUIIFrameDialog";
-import { url } from "rww/util";
+import { Page } from "app/mediawiki";
+import RedWarnUI from "app/ui/RedWarnUI";
+import { RWUIIFrameDialogProps } from "app/ui/elements/RWUIIFrameDialog";
+import { url } from "app/util";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const plainCSS: string = require("../plain/plainMediaWiki.css.txt");

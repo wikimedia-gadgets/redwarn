@@ -1,7 +1,7 @@
 import { BaseProps, h } from "tsx-dom";
-import { generateId } from "rww/util";
+import { generateId } from "app/util";
 import { MDCRadio } from "@material/radio/component";
-import classMix from "rww/styles/material/util/classMix";
+import classMix from "app/styles/material/util/classMix";
 
 export interface MaterialRadioProps<T> extends BaseProps {
     value: T;

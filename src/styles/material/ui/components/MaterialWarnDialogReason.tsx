@@ -1,4 +1,4 @@
-import { MaterialWarnDialogChildProps } from "rww/styles/material/ui/MaterialWarnDialog";
+import { MaterialWarnDialogChildProps } from "app/styles/material/ui/MaterialWarnDialog";
 
 import {
     getWarningFieldVisibility,
@@ -9,39 +9,39 @@ import {
     WarningLevelComments,
     WarningManager,
     WarningType,
-} from "rww/mediawiki";
+} from "app/mediawiki";
 
 import { h } from "tsx-dom";
 
 import MaterialSelect, {
     MaterialSelectElement,
     MaterialSelectItem,
-} from "rww/styles/material/ui/components/MaterialSelect";
+} from "app/styles/material/ui/components/MaterialSelect";
 
-import { MaterialWarnDialogChild } from "rww/styles/material/ui/components/MaterialWarnDialogChild";
+import { MaterialWarnDialogChild } from "app/styles/material/ui/components/MaterialWarnDialogChild";
 
-import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
+import MaterialIconButton from "app/styles/material/ui/components/MaterialIconButton";
 
 import MaterialRadioField, {
     MaterialRadioFieldElement,
-} from "rww/styles/material/ui/components/MaterialRadioField";
+} from "app/styles/material/ui/components/MaterialRadioField";
 
-import { MaterialRadioProps } from "rww/styles/material/ui/components/MaterialRadio";
+import { MaterialRadioProps } from "app/styles/material/ui/components/MaterialRadio";
 
 import MaterialIcon from "./MaterialIcon";
 
-import { WarningIcons } from "rww/styles/material/data/WarningIcons";
+import { WarningIcons } from "app/styles/material/data/WarningIcons";
 
 import MaterialTextInput, {
     MaterialTextInputComponents,
     MaterialTextInputUpgrade,
-} from "rww/styles/material/ui/components/MaterialTextInput";
+} from "app/styles/material/ui/components/MaterialTextInput";
 
 import i18next from "i18next";
 
-import MaterialWarnSearchDialog from "rww/styles/material/ui/MaterialWarnSearchDialog";
-import MaterialWarnDialogRecentPages from "rww/styles/material/ui/components/MaterialWarnDialogRecentPages";
-import classMix from "rww/styles/material/util/classMix";
+import MaterialWarnSearchDialog from "app/styles/material/ui/MaterialWarnSearchDialog";
+import MaterialWarnDialogRecentPages from "app/styles/material/ui/components/MaterialWarnDialogRecentPages";
+import classMix from "app/styles/material/util/classMix";
 
 function MaterialWarnDialogReasonDropdown({
     parent,

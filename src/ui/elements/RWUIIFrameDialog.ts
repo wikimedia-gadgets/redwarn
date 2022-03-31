@@ -1,9 +1,9 @@
-import { Dependency } from "rww/data/Dependencies";
+import { Dependency } from "app/data/Dependencies";
 import {
     RWUIDialog,
     RWUIDialogAction,
     RWUIDialogProperties,
-} from "rww/ui/elements/RWUIDialog";
+} from "app/ui/elements/RWUIDialog";
 
 export interface RWUIIFrameDialogProps extends RWUIDialogProperties {
     /**

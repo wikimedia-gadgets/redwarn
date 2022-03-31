@@ -1,4 +1,4 @@
-import { Setting } from "rww/config/user/Setting";
+import { Setting } from "app/config/user/Setting";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 
 export interface RWUIPreferencesItemProperties extends RWUIElementProperties {

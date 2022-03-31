@@ -2,8 +2,8 @@
     "configVersion": 1,
     "wiki": "enwiki",
     "meta": {
-        "tag": "RedWarn",
-        "link": "[[w:en:WP:RW|RedWarn]]"
+        "tag": "Ultraviolet",
+        "link": "[[w:en:WP:UV|Ultraviolet]]"
     },
     "warnings": {
         "ipAdvice": "{{subst:Shared IP advice}}",

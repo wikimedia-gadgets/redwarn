@@ -1,8 +1,8 @@
 // Overrides WikiConfigurationBase with JSON-serializable types.
-import WikiConfigurationBase from "rww/config/wiki/WikiConfigurationBase";
-import { SerializedWarning, SerializedWarningCategories } from "rww/mediawiki";
-import { SerializableRevertOption } from "rww/mediawiki/revert/RevertOptions";
-import { SerializableReportVenue } from "rww/mediawiki/report/ReportVenue";
+import WikiConfigurationBase from "app/config/wiki/WikiConfigurationBase";
+import { SerializedWarning, SerializedWarningCategories } from "app/mediawiki";
+import { SerializableRevertOption } from "app/mediawiki/revert/RevertOptions";
+import { SerializableReportVenue } from "app/mediawiki/report/ReportVenue";
 
 type WikiConfigurationRaw = WikiConfigurationBase & {
     warnings?: {

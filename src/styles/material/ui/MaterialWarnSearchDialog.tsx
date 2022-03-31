@@ -1,7 +1,7 @@
 import { ComponentChild, h } from "tsx-dom";
 
-import { RWUIDialog, RWUIDialogProperties } from "rww/ui/elements/RWUIDialog";
-import { upgradeMaterialDialog } from "rww/styles/material/Material";
+import { RWUIDialog, RWUIDialogProperties } from "app/ui/elements/RWUIDialog";
+import { upgradeMaterialDialog } from "app/styles/material/Material";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
@@ -10,13 +10,13 @@ import MaterialDialog, {
 } from "./MaterialDialog";
 
 import "../css/warnDialog.css";
-import { Warning, WarningManager } from "rww/mediawiki";
+import { Warning, WarningManager } from "app/mediawiki";
 import MaterialTextInput, {
     MaterialTextInputUpgrade,
-} from "rww/styles/material/ui/components/MaterialTextInput";
-import { regexEscape } from "rww/util";
+} from "app/styles/material/ui/components/MaterialTextInput";
+import { regexEscape } from "app/util";
 import i18next from "i18next";
-import MaterialWarnSearchDialogCard from "rww/styles/material/ui/components/MaterialWarnSearchDialogCard";
+import MaterialWarnSearchDialogCard from "app/styles/material/ui/components/MaterialWarnSearchDialogCard";
 
 interface MaterialWarnSearchDialogProperties extends RWUIDialogProperties {
     /**

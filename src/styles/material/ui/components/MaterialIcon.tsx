@@ -1,5 +1,5 @@
 import { BaseProps, h } from "tsx-dom";
-import expandDataAttributes from "rww/styles/material/util/expandDataAttributes";
+import expandDataAttributes from "app/styles/material/util/expandDataAttributes";
 
 export interface MaterialIconButtonProperties extends BaseProps {
     icon: string;

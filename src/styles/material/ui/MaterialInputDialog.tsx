@@ -5,8 +5,8 @@ import { MDCTextFieldIcon } from "@material/textfield/icon";
 import i18next from "i18next";
 import { h } from "tsx-dom";
 
-import { RWUIInputDialog } from "rww/ui/elements/RWUIInputDialog";
-import { upgradeMaterialDialog } from "rww/styles/material/Material";
+import { RWUIInputDialog } from "app/ui/elements/RWUIInputDialog";
+import { upgradeMaterialDialog } from "app/styles/material/Material";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
@@ -15,7 +15,7 @@ import MaterialDialog, {
 } from "./MaterialDialog";
 import MaterialTextInput, {
     MaterialTextInputUpgrade,
-} from "rww/styles/material/ui/components/MaterialTextInput";
+} from "app/styles/material/ui/components/MaterialTextInput";
 
 /**
  * The MaterialInputDialog is a handling class used to get input from users on the screen. This will

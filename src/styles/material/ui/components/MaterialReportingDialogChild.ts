@@ -1,7 +1,7 @@
-import { Page, User } from "rww/mediawiki";
-import { MaterialReportingDialogUserController } from "rww/styles/material/ui/components/MaterialReportingDialogUser";
-import { MaterialReportingDialogPageController } from "rww/styles/material/ui/components/MaterialReportingDialogPage";
-import MaterialReportingDialog from "rww/styles/material/ui/MaterialReportingDialog";
+import { Page, User } from "app/mediawiki";
+import { MaterialReportingDialogUserController } from "app/styles/material/ui/components/MaterialReportingDialogUser";
+import { MaterialReportingDialogPageController } from "app/styles/material/ui/components/MaterialReportingDialogPage";
+import MaterialReportingDialog from "app/styles/material/ui/MaterialReportingDialog";
 
 export interface MaterialReportingDialogChildProps {
     reportingDialog: MaterialReportingDialog;

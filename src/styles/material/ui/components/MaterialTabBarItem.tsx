@@ -1,5 +1,5 @@
 import { h } from "tsx-dom";
-import { generateId } from "rww/util";
+import { generateId } from "app/util";
 import classMix from "../../util/classMix";
 import { MDCTab } from "@material/tab";
 

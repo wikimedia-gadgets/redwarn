@@ -1,6 +1,6 @@
-import random from "rww/util/random";
+import random from "app/util/random";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
-import RedWarnUI from "rww/ui/RedWarnUI";
+import RedWarnUI from "app/ui/RedWarnUI";
 
 export interface RWUIToastProperties extends RWUIElementProperties {
     content: string;

@@ -1,16 +1,16 @@
-import { MediaWikiAPI, Revision, User } from "rww/mediawiki";
-import RedWarnStore from "rww/data/RedWarnStore";
+import { MediaWikiAPI, Revision, User } from "app/mediawiki";
+import RedWarnStore from "app/data/RedWarnStore";
 import i18next from "i18next";
 import {
     PageInvalidError,
     PageMissingError,
     SectionIndexMissingError,
-} from "rww/errors/MediaWikiErrors";
-import { url as buildURL } from "rww/util";
-import redirect from "rww/util/redirect";
-import Section, { SectionContainer } from "rww/mediawiki/core/Section";
-import url from "rww/util/url";
-import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
+} from "app/errors/MediaWikiErrors";
+import { url as buildURL } from "app/util";
+import redirect from "app/util/redirect";
+import Section, { SectionContainer } from "app/mediawiki/core/Section";
+import url from "app/util/url";
+import RedWarnWikiConfiguration from "app/config/wiki/RedWarnWikiConfiguration";
 
 export interface PageEditOptions {
     /**

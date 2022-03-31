@@ -1,28 +1,28 @@
-import { RWUIExtendedOptions } from "rww/ui/elements/RWUIExtendedOptions";
-import { upgradeMaterialDialog } from "rww/styles/material/Material";
+import { RWUIExtendedOptions } from "app/ui/elements/RWUIExtendedOptions";
+import { upgradeMaterialDialog } from "app/styles/material/Material";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
     MaterialDialogTitle,
-} from "rww/styles/material/ui/MaterialDialog";
+} from "app/styles/material/ui/MaterialDialog";
 import { h } from "tsx-dom";
 import i18next from "i18next";
-import MaterialButton from "rww/styles/material/ui/components/MaterialButton";
+import MaterialButton from "app/styles/material/ui/components/MaterialButton";
 import {
     MaterialList,
     MaterialListDivider,
     MaterialListItem,
     MaterialListSubheader,
-} from "rww/styles/material/ui/components/MaterialList";
-import PageIcons from "rww/ui/definitions/PageIcons";
+} from "app/styles/material/ui/components/MaterialList";
+import PageIcons from "app/ui/definitions/PageIcons";
 import "../css/extendedOptions.css";
-import toCSS from "rww/styles/material/util/toCSS";
-import { Configuration } from "rww/config/user/Configuration";
-import RevertOptions from "rww/mediawiki/revert/RevertOptions";
+import toCSS from "app/styles/material/util/toCSS";
+import { Configuration } from "app/config/user/Configuration";
+import RevertOptions from "app/mediawiki/revert/RevertOptions";
 import {
     MaterialActionSeverityColors,
     MaterialHighContrastActionSeverityColors,
-} from "rww/styles/material/ui/MaterialDiffIcons";
+} from "app/styles/material/ui/MaterialDiffIcons";
 
 export default class MaterialExtendedOptions extends RWUIExtendedOptions {
     show(): Promise<void> {

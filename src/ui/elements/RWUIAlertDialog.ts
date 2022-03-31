@@ -3,7 +3,7 @@ import {
     RWUIDialog,
     RWUIDialogAction,
     RWUIDialogProperties,
-} from "rww/ui/elements/RWUIDialog";
+} from "app/ui/elements/RWUIDialog";
 
 export interface RWUIAlertDialogProps extends RWUIDialogProperties {
     /**

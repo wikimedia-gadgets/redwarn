@@ -4,10 +4,13 @@ import RedWarnUI from "../RedWarnUI";
 
 export default class PreferencesInjector implements Injector {
     async init(): Promise<void> {
-        // check if on Wikipedia:RedWarn/Preferences
+        // check if on Wikipedia:(RedWarn|Ultraviolet)/Preferences
         // TODO support wiki localization
         if (
-            mw.config.get("wgPageName") === "Wikipedia:RedWarn/Preferences" &&
+            (mw.config.get("wgPageName") ===
+                "Wikipedia:Ultraviolet/Preferences" ||
+                mw.config.get("wgPageName") ===
+                    "Wikipedia:RedWarn/Preferences") &&
             mw.config.get("wgAction") === "view"
         ) {
             const preferences = new RedWarnUI.Preferences({

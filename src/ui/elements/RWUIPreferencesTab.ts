@@ -1,4 +1,4 @@
-import { PrimitiveSetting, Setting } from "rww/config/user/Setting";
+import { PrimitiveSetting, Setting } from "app/config/user/Setting";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
 
 export interface RWUIPreferencesTabProperties extends RWUIElementProperties {

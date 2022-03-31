@@ -1,41 +1,41 @@
-import { RWUIProtectionRequestDialog } from "rww/ui/elements/RWUIProtectionRequestDialog";
+import { RWUIProtectionRequestDialog } from "app/ui/elements/RWUIProtectionRequestDialog";
 import ProtectionRequest, {
     ProtectionDuration,
-} from "rww/mediawiki/protection/ProtectionRequest";
-import { upgradeMaterialDialog } from "rww/styles/material/Material";
-import RedWarnStore from "rww/data/RedWarnStore";
-import { Page, ProtectionLevel } from "rww/mediawiki";
+} from "app/mediawiki/protection/ProtectionRequest";
+import { upgradeMaterialDialog } from "app/styles/material/Material";
+import RedWarnStore from "app/data/RedWarnStore";
+import { Page, ProtectionLevel } from "app/mediawiki";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
     MaterialDialogTitle,
-} from "rww/styles/material/ui/MaterialDialog";
+} from "app/styles/material/ui/MaterialDialog";
 import { h } from "tsx-dom";
 import i18next from "i18next";
-import MaterialButton from "rww/styles/material/ui/components/MaterialButton";
-import toCSS from "rww/styles/material/util/toCSS";
+import MaterialButton from "app/styles/material/ui/components/MaterialButton";
+import toCSS from "app/styles/material/util/toCSS";
 import MaterialRadioField, {
     MaterialRadioFieldElement,
     MaterialRadioFieldProps,
-} from "rww/styles/material/ui/components/MaterialRadioField";
+} from "app/styles/material/ui/components/MaterialRadioField";
 import "../css/protectionRequestDialog.css";
-import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
-import { capitalize } from "rww/util";
-import MaterialProtectionRequestDialogPage from "rww/styles/material/ui/components/MaterialProtectionRequestDialogPage";
-import ProtectionEntry from "rww/mediawiki/protection/ProtectionEntry";
+import RedWarnWikiConfiguration from "app/config/wiki/RedWarnWikiConfiguration";
+import { capitalize } from "app/util";
+import MaterialProtectionRequestDialogPage from "app/styles/material/ui/components/MaterialProtectionRequestDialogPage";
+import ProtectionEntry from "app/mediawiki/protection/ProtectionEntry";
 import MaterialTextInput, {
     MaterialTextInputComponents,
     MaterialTextInputUpgrade,
-} from "rww/styles/material/ui/components/MaterialTextInput";
+} from "app/styles/material/ui/components/MaterialTextInput";
 import MaterialSelect, {
     MaterialSelectElement,
     MaterialSelectItem,
-} from "rww/styles/material/ui/components/MaterialSelect";
-import { MaterialRadioProps } from "rww/styles/material/ui/components/MaterialRadio";
+} from "app/styles/material/ui/components/MaterialSelect";
+import { MaterialRadioProps } from "app/styles/material/ui/components/MaterialRadio";
 import MaterialIcon from "./components/MaterialIcon";
 import MaterialDialogValidator, {
     ValidationCheck,
-} from "rww/styles/material/ui/components/MaterialDialogValidator";
+} from "app/styles/material/ui/components/MaterialDialogValidator";
 
 export default class MaterialProtectionRequestDialog extends RWUIProtectionRequestDialog {
     page: Page = RedWarnStore.currentPage;

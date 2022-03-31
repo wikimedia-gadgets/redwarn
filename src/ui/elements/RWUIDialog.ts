@@ -1,6 +1,6 @@
-import random from "rww/util/random";
+import random from "app/util/random";
 import RWUIElement, { RWUIElementProperties } from "./RWUIElement";
-import { UpgradedMaterialDialog } from "rww/styles/material/Material";
+import { UpgradedMaterialDialog } from "app/styles/material/Material";
 
 export enum RWUIDialogActionType {
     /**

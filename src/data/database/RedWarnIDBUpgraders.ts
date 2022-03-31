@@ -1,6 +1,6 @@
 import RedWarnIDB, {
     RedWarnIDBUpgradeHandler,
-} from "rww/data/database/RedWarnIDB";
+} from "app/data/database/RedWarnIDB";
 
 /**
  * A set of functions responsible for setting up the RedWarn IndexedDB

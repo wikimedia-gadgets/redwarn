@@ -1,9 +1,9 @@
-import type { Page } from "rww/mediawiki";
-import { User } from "rww/mediawiki";
-import type { ReportVenue } from "rww/mediawiki/report/ReportVenue";
-import { ReportVenueMode } from "rww/mediawiki/report/ReportVenue";
-import { RWUIDialog, RWUIDialogProperties } from "rww/ui/elements/RWUIDialog";
-import { Report } from "rww/mediawiki/report/Report";
+import type { Page } from "app/mediawiki";
+import { User } from "app/mediawiki";
+import type { ReportVenue } from "app/mediawiki/report/ReportVenue";
+import { ReportVenueMode } from "app/mediawiki/report/ReportVenue";
+import { RWUIDialog, RWUIDialogProperties } from "app/ui/elements/RWUIDialog";
+import { Report } from "app/mediawiki/report/Report";
 
 export type RWUIReportingDialogTargetType<T extends ReportVenue> =
     T["mode"] extends ReportVenueMode.User ? User : Page;

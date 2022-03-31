@@ -1,4 +1,4 @@
-import { RW_VERSION } from "rww/data/RedWarnConstants";
+import { RW_VERSION } from "app/data/RedWarnConstants";
 
 if (window.RedWarnLanguages == null) {
     window.RedWarnLanguages = [];
@@ -8,15 +8,15 @@ window.RedWarnLanguages.push({
     tag: "en-US",
     id: "redwarn-default-en-US",
     meta: {
-        name: "RedWarn English",
-        translators: ["The RedWarn Contributors"],
+        name: "Ultraviolet English",
+        translators: ["The Ultraviolet Contributors"],
         license: {
             url: "https://www.apache.org/licenses/LICENSE-2.0.txt",
             text: "Apache License 2.0",
         },
         version: RW_VERSION,
         links: {
-            home: "https://en.wikipedia.org/wiki/Wikpedia:RedWarn",
+            home: "https://en.wikipedia.org/wiki/Wikpedia:Ultraviolet",
             license:
                 "https://gitlab.com/redwarn/redwarn-web/-/blob/master/LICENSE",
         },

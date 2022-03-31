@@ -2,20 +2,20 @@ import {
     RW_CONFIG_VERSION,
     RW_NOWIKI_CLOSE,
     RW_NOWIKI_OPEN,
-} from "rww/data/RedWarnConstants";
-import { ClientUser } from "rww/mediawiki";
+} from "app/data/RedWarnConstants";
+import { ClientUser } from "app/mediawiki";
 import { Setting } from "./Setting";
-import RedWarnUI from "rww/ui/RedWarnUI";
+import RedWarnUI from "app/ui/RedWarnUI";
 import i18next from "i18next";
-import StyleManager from "rww/styles/StyleManager";
-import { StyleMissingError } from "rww/errors/RedWarnStyleError";
-import Log from "rww/data/RedWarnLog";
+import StyleManager from "app/styles/StyleManager";
+import { StyleMissingError } from "app/errors/RedWarnStyleError";
+import Log from "app/data/RedWarnLog";
 
-import initCoreSettings from "rww/config/user/values/CoreSettings";
-import initUISettings from "rww/config/user/values/UISettings";
-import initRevertSettings from "rww/config/user/values/RevertSettings";
-import initAccessibilitySettings from "rww/config/user/values/AccessibilitySettings";
-import { isEmptyObject } from "rww/util";
+import initCoreSettings from "app/config/user/values/CoreSettings";
+import initUISettings from "app/config/user/values/UISettings";
+import initRevertSettings from "app/config/user/values/RevertSettings";
+import initAccessibilitySettings from "app/config/user/values/AccessibilitySettings";
+import { isEmptyObject } from "app/util";
 import updateConfiguration from "./updateConfiguration";
 
 export type ConfigurationSet = Record<string, Setting<any>>;

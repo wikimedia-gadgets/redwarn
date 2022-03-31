@@ -1,6 +1,5 @@
 {
     "unfinished": "Hmm, looks like we haven't implemented this feature yet. Check back later!",
-
     "ok": "OK",
     "cancel": "Cancel",
     "confirm": "Confirm",
@@ -8,7 +7,6 @@
     "redo": "Redo",
     "toggleSwitch": "Off/On",
     "toggleCheckbox": "Off/On",
-
     "extendedOptions": {
         "title": "More Options",
         "extraRevertOptions": "Additional revert options"
@@ -24,7 +22,7 @@
         "vandalismStatistics": "Vandalism statistics",
         "report": "Report to {{name}}",
         "preferences": "Preferences",
-        "rwTalk": "RedWarn talk page"
+        "uvTalk": "Ultraviolet's talk page"
     },
     "restore": {
         "label": "Restore reason",
@@ -86,13 +84,10 @@
     "userSelect": {
         "change": "Change the target user",
         "confirm": "Target this user",
-
         "load_wait": "Please be patient while the user information is being loaded.",
         "loading": "Loading user information...",
         "input": "Target User",
-
         "highestLevel": "Highest warning level",
-
         "levelInfo": "The user's highest warning level",
         "levelInfo_none": "User has not received any warnings this month",
         "levelInfo_notice": "User has received a level 1 notice this month",
@@ -100,22 +95,18 @@
         "levelInfo_warning": "User has received a level 3 warning this month. $t(ui:userSelect.report)",
         "levelInfo_final": "User has received a level 4 final warning this month. $t(ui:userSelect.report)",
         "levelInfo_immediate": "User has received an immediate level 4 final warning this month. $t(ui:userSelect.report)",
-
         "report": "Click to report.",
         "edits": "{{edits}} edits",
         "age": "Joined {{localeAge}}",
-
         "talk": {
             "main": "User talk page",
             "month": "Notices for this month",
             "whole": "Entire talk page"
         },
-
         "show": {
             "userpage": "Show user page",
             "contributions": "Show user contributions"
         },
-
         "missing": "User does not exist.",
         "invalid": "The username provided is not valid.",
         "fail": "Failed to load user information. Try again in a bit."
@@ -133,7 +124,6 @@
     },
     "warn": {
         "title": "Warn User",
-
         "reason": {
             "page": "Related page",
             "recentPageOpenerTooltip": "Recent pages",
@@ -147,18 +137,15 @@
             "warningLevel": "Warning level",
             "noWarningSelected": "No warning selected."
         },
-
         "templateSearchDialog": {
             "dialogTitle": "Warnings",
             "searchBoxLabel": "Search for a warning...",
             "instantSelect": "Press ENTER to use this template",
             "tip": "Tip: Double-click a warning to quickly select it, or press ENTER to select the top result."
         },
-
         "recentPagesDialog": {
             "dialogTitle": "Recent Pages"
         },
-
         "validation": {
             "fail": "An unknown issue ocurred.",
             "fail_template": "You don't have a warning template selected.",
@@ -166,22 +153,18 @@
             "fail_user": "You haven't selected a target user.",
             "fail_self": "You are not allowed to warn yourself.",
             "fail_required": "Some required fields have not been filled in.",
-
             "failDetailed": "$t(ui:warn.validation.fail) If this problem persists, inform the developers.",
             "failDetailed_template": "$t(ui:warn.validation.fail_template) Select one from the dropdown or search tool.",
             "failDetailed_level": "$t(ui:warn.validation.fail_level) Please select an appropriate level.",
             "failDetailed_user": "$t(ui:warn.validation.fail_user) Please enter a username in the target user box.",
             "failDetailed_self": "$t(ui:warn.validation.fail_self) If you want to test, please use a sandbox user.",
             "failDetailed_required": "Some required fields have not been filled in. Please fill in the required text fields (denoted by an asterisk) found below the warning to be issued.",
-
             "pass": "No issues were found."
         },
-
         "risky": {
             "title": "Risky warning",
             "content": "You are about to warn {{group, en-handle-an}} {{group}}. Are you sure about this?"
         },
-
         "ok": "Warn User"
     },
     "diff": {
@@ -209,7 +192,11 @@
         "missing": {
             "title": "Style Missing",
             "content": "The style set in your RedWarn configuration cannot be found. It has been set to the default style for now.",
-            "actions": [{ "data": "$t(ui:ok)" }]
+            "actions": [
+                {
+                    "data": "$t(ui:ok)"
+                }
+            ]
         }
     },
     "contribs": {
@@ -258,7 +245,6 @@
             "fail_levelEqual": "The level and duration requested is already applied.",
             "fail_noReason": "No reason was provided.",
             "fail_noAdditionalReason": "No additional reason was provided.",
-
             "failDetailed": "$t(ui:protectionRequest.validation.fail) If this problem persists, inform the developers.",
             "failDetailed_noLevel": "$t(ui:protectionRequest.validation.fail_noLevel) Select one from the left-side panel.",
             "failDetailed_noDuration": "$t(ui:protectionRequest.validation.fail_noDuration) Select either \"Temporary\" or \"Indefinite\" from the provided options.",
@@ -267,7 +253,7 @@
             "failDetailed_noAdditionalReason": "$t(ui:protectionRequest.validation.fail_noAdditionalReason) Please provide an additional reason, or switch to a provided reason using the dropdown."
         },
         "retarget": {
-            "text": "RedWarn cannot determine if this is an increase or decrease in protection level. This is likely due to a problem in the RedWarn per-wiki configuration. Please indicate whether or not this request in an increase or decrease in protection level.",
+            "text": "Ultraviolet could not determine if this is an increase or decrease in the page's protection level. This is likely due to a problem in Ultraviolet's per-wiki configuration - please indicate whether this request is an increase or decrease in the page's protection level.",
             "increase": "Increase",
             "decrease": "Decrease"
         },
@@ -276,7 +262,6 @@
     "reporting": {
         "title": "Report to {{venue}}",
         "ok": "Report",
-
         "target": {
             "label": "Target",
             "label_user": "User",
@@ -298,16 +283,13 @@
         },
         "validation": {
             "fail": "An unknown issue ocurred.",
-
             "fail_target": "There is no target to be reported.",
             "fail_targetMissing": "The page to be reported does not exist.",
             "fail_self": "You are not allowed to report yourself.",
             "fail_reason": "You did not provide a reason for the report.",
             "fail_short": "Your report is believed to be too short to contain substantial information.",
             "fail_exists": "The target has already been reported.",
-
             "failDetailed": "An unknown issue ocurred. Please try again.",
-
             "failDetailed_target": "There is no target to be reported. Please make sure that you've selected a valid page or user.",
             "failDetailed_targetMissing": "The page to be reported does not exist. Please make sure that the page you are attempting to report exists.",
             "failDetailed_self": "You are not allowed to report yourself, even for testing situations.",
@@ -319,13 +301,11 @@
             "title": "Risky report",
             "text": "You are about to report {{group, en-handle-an}} {{group}}. This may be the incorrect venue for such a report. Are you sure about this?"
         },
-
         "done": "Report filed.",
         "done_email": "Report emailed."
     },
     "newMessage": {
         "label": "New Message",
-
         "doing": "Sending message...",
         "done": "Message sent.",
         "doneAction": "View",

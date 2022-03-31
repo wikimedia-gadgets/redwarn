@@ -1,12 +1,12 @@
 import { h } from "tsx-dom";
-import { generateId } from "rww/util";
+import { generateId } from "app/util";
 import { MDCTextField } from "@material/textfield";
 import { MDCTextFieldCharacterCounter } from "@material/textfield/character-counter";
 import { MDCTextFieldIcon } from "@material/textfield/icon";
 import { MDCTextFieldHelperText } from "@material/textfield/helper-text";
-import toCSS from "rww/styles/material/util/toCSS";
-import classMix from "rww/styles/material/util/classMix";
-import { RWUITextInputProperties } from "rww/ui/elements/RWUITextInput";
+import toCSS from "app/styles/material/util/toCSS";
+import classMix from "app/styles/material/util/classMix";
+import { RWUITextInputProperties } from "app/ui/elements/RWUITextInput";
 
 type MaterialTextInputProps = RWUITextInputProperties;
 

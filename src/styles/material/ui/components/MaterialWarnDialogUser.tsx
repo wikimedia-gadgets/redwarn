@@ -1,13 +1,13 @@
-import { MaterialWarnDialogChildProps } from "rww/styles/material/ui/MaterialWarnDialog";
-import { User, UserAccount } from "rww/mediawiki";
+import { MaterialWarnDialogChildProps } from "app/styles/material/ui/MaterialWarnDialog";
+import { User, UserAccount } from "app/mediawiki";
 import {
     MaterialUserSelect,
     MaterialUserSelectProps,
-} from "rww/styles/material/ui/components/MaterialUserSelect";
-import MaterialAlertDialog from "rww/styles/material/ui/MaterialAlertDialog";
+} from "app/styles/material/ui/components/MaterialUserSelect";
+import MaterialAlertDialog from "app/styles/material/ui/MaterialAlertDialog";
 import i18next from "i18next";
 import { h } from "tsx-dom";
-import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "app/config/wiki/RedWarnWikiConfiguration";
 
 export class MaterialWarnDialogUser extends MaterialUserSelect {
     constructor(

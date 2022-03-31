@@ -1,16 +1,16 @@
-import { RWUIDialog } from "rww/ui/elements/RWUIDialog";
-import { upgradeMaterialDialog } from "rww/styles/material/Material";
+import { RWUIDialog } from "app/ui/elements/RWUIDialog";
+import { upgradeMaterialDialog } from "app/styles/material/Material";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
     MaterialDialogTitle,
-} from "rww/styles/material/ui/MaterialDialog";
+} from "app/styles/material/ui/MaterialDialog";
 import i18next from "i18next";
 import { h } from "tsx-dom";
-import MaterialButton from "rww/styles/material/ui/components/MaterialButton";
-import MaterialRadioField from "rww/styles/material/ui/components/MaterialRadioField";
-import { RecentPages } from "rww/mediawiki/util/RecentPages";
-import toCSS from "rww/styles/material/util/toCSS";
+import MaterialButton from "app/styles/material/ui/components/MaterialButton";
+import MaterialRadioField from "app/styles/material/ui/components/MaterialRadioField";
+import { RecentPages } from "app/mediawiki/util/RecentPages";
+import toCSS from "app/styles/material/util/toCSS";
 
 export default class MaterialWarnDialogRecentPages extends RWUIDialog<string> {
     page: string;

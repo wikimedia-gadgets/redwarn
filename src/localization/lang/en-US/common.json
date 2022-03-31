@@ -1,13 +1,13 @@
 {
     "redwarn": {
-        "name": "RedWarn",
-        "signature": "([[w:en:WP:RW|RW $t(common:redwarn.version)]])",
-        "userAgent": "RedWarn/$t(common:redwarn.version) ([[w:en:WP:RW|]]; https://w.wiki/s6j/;) ",
+        "name": "Ultraviolet",
+        "signature": "([[w:en:WP:UV|UV $t(common:redwarn.version)]])",
+        "userAgent": "Ultraviolet/$t(common:redwarn.version) ([[w:en:WP:UV|]]; https://w.wiki/s6j/;) ",
         "init": {
-            "error": "An error occurred while loading RedWarn.",
+            "error": "An error occurred while loading Ultraviolet.",
             "mwChecks": {
                 "*": "A MediaWiki installation assertion check failed.",
-                "version": "This version of MediaWiki is unsupported. A version of at least 1.30.0 is required.",
+                "version": "This version of MediaWiki is unsupported. Ultraviolet requires MediaWiki 1.30.0 or higher.",
                 "user": "The current user is not a logged-in user or is an anonymous user."
             }
         }

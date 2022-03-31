@@ -1,8 +1,8 @@
 import i18next from "i18next";
-import { RW_VERSION_TAG, RW_WIKIS_SPEEDUP } from "rww/data/RedWarnConstants";
-import RedWarnStore from "rww/data/RedWarnStore";
-import RedWarnUI from "rww/ui/RedWarnUI";
-import redirect from "rww/util/redirect";
+import { RW_VERSION_TAG, RW_WIKIS_SPEEDUP } from "app/data/RedWarnConstants";
+import RedWarnStore from "app/data/RedWarnStore";
+import RedWarnUI from "app/ui/RedWarnUI";
+import redirect from "app/util/redirect";
 import {
     ClientUser,
     MediaWikiAPI,
@@ -11,14 +11,14 @@ import {
     RevertStage,
     Revision,
     Warning,
-} from "rww/mediawiki";
-import Log from "rww/data/RedWarnLog";
-import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
-import type { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
-import { RevertOption } from "rww/mediawiki/revert/RevertOptions";
-import { RevertMethod } from "rww/config/user/ConfigurationEnums";
-import { Configuration } from "rww/config/user/Configuration";
-import { RevisionNotLatestError } from "rww/errors/MediaWikiErrors";
+} from "app/mediawiki";
+import Log from "app/data/RedWarnLog";
+import RedWarnWikiConfiguration from "app/config/wiki/RedWarnWikiConfiguration";
+import type { RWUIDiffIcons } from "app/ui/elements/RWUIDiffIcons";
+import { RevertOption } from "app/mediawiki/revert/RevertOptions";
+import { RevertMethod } from "app/config/user/ConfigurationEnums";
+import { Configuration } from "app/config/user/Configuration";
+import { RevisionNotLatestError } from "app/errors/MediaWikiErrors";
 
 /**
  * The context of a revert being performed. When used alone (not through

@@ -1,12 +1,12 @@
-import { DiffIconRevertContext } from "rww/mediawiki/revert/Revert";
+import { DiffIconRevertContext } from "app/mediawiki/revert/Revert";
 import i18next from "i18next";
-import RedWarnUI from "rww/ui/RedWarnUI";
-import { User, WarningManager } from "rww/mediawiki";
-import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
+import RedWarnUI from "app/ui/RedWarnUI";
+import { User, WarningManager } from "app/mediawiki";
+import RedWarnWikiConfiguration from "app/config/wiki/RedWarnWikiConfiguration";
 import {
     isPageModeReportVenue,
     ReportVenueDisplayLocations,
-} from "rww/mediawiki/report/ReportVenue";
+} from "app/mediawiki/report/ReportVenue";
 
 export enum RevertDoneOption {
     LatestRevision,

@@ -1,6 +1,6 @@
-import { RW_LOG_SIGNATURE } from "rww/data/RedWarnConstants";
-import RedWarnLocalDB from "rww/data/database/RedWarnLocalDB";
-import { RWFormattedError } from "rww/errors/RWError";
+import { RW_LOG_SIGNATURE } from "app/data/RedWarnConstants";
+import RedWarnLocalDB from "app/data/database/RedWarnLocalDB";
+import { RWFormattedError } from "app/errors/RWError";
 
 declare global {
     interface Window {

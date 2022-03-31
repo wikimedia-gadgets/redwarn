@@ -1,13 +1,13 @@
 import { h } from "tsx-dom";
 import { MDCSelect } from "@material/select/component";
-import { generateId } from "rww/util";
+import { generateId } from "app/util";
 import {
     MaterialList,
     MaterialListDivider,
     MaterialListItem,
     MaterialListSubheader,
-} from "rww/styles/material/ui/components/MaterialList";
-import classMix from "rww/styles/material/util/classMix";
+} from "app/styles/material/ui/components/MaterialList";
+import classMix from "app/styles/material/util/classMix";
 
 export interface MaterialSelectDivider {
     type: "divider";

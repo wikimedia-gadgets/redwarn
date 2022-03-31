@@ -1,9 +1,9 @@
 import { BaseProps, h } from "tsx-dom";
-import { generateId } from "rww/util";
+import { generateId } from "app/util";
 import { MDCCheckbox } from "@material/checkbox";
 import i18next from "i18next";
-import classMix from "rww/styles/material/util/classMix";
-import Log from "rww/data/RedWarnLog";
+import classMix from "app/styles/material/util/classMix";
+import Log from "app/data/RedWarnLog";
 
 interface MaterialCheckboxProps extends BaseProps {
     id?: string;

@@ -1,5 +1,5 @@
-import RedWarnLocalDB from "rww/data/database/RedWarnLocalDB";
-import RedWarnStore from "rww/data/RedWarnStore";
+import RedWarnLocalDB from "app/data/database/RedWarnLocalDB";
+import RedWarnStore from "app/data/RedWarnStore";
 
 export class RecentPages {
     static get recentPages(): typeof RedWarnLocalDB.i.recentPages {

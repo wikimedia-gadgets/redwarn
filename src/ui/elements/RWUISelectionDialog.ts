@@ -1,4 +1,4 @@
-import { RWUIDialog, RWUIDialogProperties } from "rww/ui/elements/RWUIDialog";
+import { RWUIDialog, RWUIDialogProperties } from "app/ui/elements/RWUIDialog";
 
 export interface RWUISelectionDialogItem {
     icon?: string;

@@ -1,6 +1,6 @@
 import { RedWarnHook, RedWarnHookEventTypes } from "./RedWarnHookEvent";
-import StyleManager from "rww/styles/StyleManager";
-import Log from "rww/data/RedWarnLog";
+import StyleManager from "app/styles/StyleManager";
+import Log from "app/data/RedWarnLog";
 
 declare global {
     // noinspection JSUnusedGlobalSymbols

@@ -1,6 +1,6 @@
 import { h } from "tsx-dom";
-import { RWUISelectionDialog } from "rww/ui/elements/RWUISelectionDialog";
-import { upgradeMaterialDialog } from "rww/styles/material/Material";
+import { RWUISelectionDialog } from "app/ui/elements/RWUISelectionDialog";
+import { upgradeMaterialDialog } from "app/styles/material/Material";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogContent,

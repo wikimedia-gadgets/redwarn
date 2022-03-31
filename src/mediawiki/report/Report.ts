@@ -1,12 +1,12 @@
-import { MediaWikiAPI, Page, Revision, User } from "rww/mediawiki";
+import { MediaWikiAPI, Page, Revision, User } from "app/mediawiki";
 import {
     isEmailReportVenue,
     isPageReportVenue,
     isUserModeReportVenue,
     ReportVenue,
-} from "rww/mediawiki/report/ReportVenue";
+} from "app/mediawiki/report/ReportVenue";
 import i18next from "i18next";
-import RedWarnUI from "rww/ui/RedWarnUI";
+import RedWarnUI from "app/ui/RedWarnUI";
 
 export interface Report {
     target: Page | User;

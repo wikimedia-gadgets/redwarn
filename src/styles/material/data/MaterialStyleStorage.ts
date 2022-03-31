@@ -1,7 +1,7 @@
-import RedWarnStore from "rww/data/RedWarnStore";
-import { RWUIDialog, RWUIDialogID } from "rww/ui/elements/RWUIDialog";
-import { StyleStorage } from "rww/styles/Style";
-import MaterialToast from "rww/styles/material/ui/MaterialToast";
+import RedWarnStore from "app/data/RedWarnStore";
+import { RWUIDialog, RWUIDialogID } from "app/ui/elements/RWUIDialog";
+import { StyleStorage } from "app/styles/Style";
+import MaterialToast from "app/styles/material/ui/MaterialToast";
 
 export class MaterialDialogTrackMap extends Map<RWUIDialogID, RWUIDialog<any>> {
     domRemove(key: RWUIDialogID): void {

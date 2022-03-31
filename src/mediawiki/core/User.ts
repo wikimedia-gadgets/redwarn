@@ -1,5 +1,5 @@
-import RedWarnUI from "rww/ui/RedWarnUI";
-import getMonthHeader from "rww/util/getMonthHeader";
+import RedWarnUI from "app/ui/RedWarnUI";
+import getMonthHeader from "app/util/getMonthHeader";
 import {
     Gender,
     GenderDict,
@@ -14,19 +14,19 @@ import {
     WarningLevel,
     WarningOptions,
     WarningType,
-} from "rww/mediawiki";
+} from "app/mediawiki";
 import i18next from "i18next";
 import {
     PageMissingError,
     UserInvalidError,
     UserMissingError,
-} from "rww/errors/MediaWikiErrors";
-import { isIPAddress } from "rww/util";
+} from "app/errors/MediaWikiErrors";
+import { isIPAddress } from "app/util";
 
-import Section from "rww/mediawiki/core/Section";
-import { highestWarningLevel } from "rww/mediawiki/warn/WarningUtils";
-import { RWErrors } from "rww/errors/RWError";
-import Log from "rww/data/RedWarnLog";
+import Section from "app/mediawiki/core/Section";
+import { highestWarningLevel } from "app/mediawiki/warn/WarningUtils";
+import { RWErrors } from "app/errors/RWError";
+import Log from "app/data/RedWarnLog";
 
 /**
  * The User represents a MediaWiki editor, be it a registered user or an IP address.

@@ -1,6 +1,6 @@
-import { Page } from "rww/mediawiki";
-import { RWUIDialog, RWUIDialogProperties } from "rww/ui/elements/RWUIDialog";
-import ProtectionRequest from "rww/mediawiki/protection/ProtectionRequest";
+import { Page } from "app/mediawiki";
+import { RWUIDialog, RWUIDialogProperties } from "app/ui/elements/RWUIDialog";
+import ProtectionRequest from "app/mediawiki/protection/ProtectionRequest";
 
 export interface RWUIProtectionRequestDialogProps extends RWUIDialogProperties {
     relatedPage?: Page;

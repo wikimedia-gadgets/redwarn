@@ -1,7 +1,7 @@
 import { h } from "tsx-dom";
 import i18next from "i18next";
-import { RWUIWarnDialog } from "rww/ui/elements/RWUIWarnDialog";
-import { upgradeMaterialDialog } from "rww/styles/material/Material";
+import { RWUIWarnDialog } from "app/ui/elements/RWUIWarnDialog";
+import { upgradeMaterialDialog } from "app/styles/material/Material";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
@@ -13,7 +13,7 @@ import MaterialWarnDialogUser, {
 } from "./components/MaterialWarnDialogUser";
 import MaterialWarnDialogReason, {
     MaterialWarnDialogReasonController,
-} from "rww/styles/material/ui/components/MaterialWarnDialogReason";
+} from "app/styles/material/ui/components/MaterialWarnDialogReason";
 import {
     ClientUser,
     getWarningFieldVisibility,
@@ -21,19 +21,19 @@ import {
     User,
     WarningOptions,
     WarningType,
-} from "rww/mediawiki";
-import { isIPAddress, normalize } from "rww/util";
+} from "app/mediawiki";
+import { isIPAddress, normalize } from "app/util";
 
-import { RW_SIGNATURE } from "rww/data/RedWarnConstants";
+import { RW_SIGNATURE } from "app/data/RedWarnConstants";
 
 import "../css/warnDialog.css";
-import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
-import { warningSuffix } from "rww/mediawiki/warn/WarningUtils";
-import toCSS from "rww/styles/material/util/toCSS";
+import RedWarnWikiConfiguration from "app/config/wiki/RedWarnWikiConfiguration";
+import { warningSuffix } from "app/mediawiki/warn/WarningUtils";
+import toCSS from "app/styles/material/util/toCSS";
 import MaterialDialogValidator, {
     ValidationCheck,
 } from "./components/MaterialDialogValidator";
-import WikiTemplate from "rww/mediawiki/wikitext/WikiTemplate";
+import WikiTemplate from "app/mediawiki/wikitext/WikiTemplate";
 
 export default class MaterialWarnDialog extends RWUIWarnDialog {
     /** The target user of the warning. */

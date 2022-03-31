@@ -1,6 +1,6 @@
-import { StyleStorage } from "rww/styles/Style";
-import { Dependency } from "rww/data/Dependencies";
-import { NamedPage, Page } from "rww/mediawiki";
+import { StyleStorage } from "app/styles/Style";
+import { Dependency } from "app/data/Dependencies";
+import { NamedPage, Page } from "app/mediawiki";
 
 /**
  * <b>RedWarnStore</b> is for live, in-memory data that does not require persistence

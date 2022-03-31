@@ -2,19 +2,19 @@ import {
     MaterialReportingDialogChildProps,
     MaterialReportingDialogTarget,
     MaterialReportingDialogTargetProps,
-} from "rww/styles/material/ui/components/MaterialReportingDialogChild";
-import { Page } from "rww/mediawiki";
+} from "app/styles/material/ui/components/MaterialReportingDialogChild";
+import { Page } from "app/mediawiki";
 import MaterialTextInput, {
     MaterialTextInputComponents,
     MaterialTextInputUpgrade,
-} from "rww/styles/material/ui/components/MaterialTextInput";
+} from "app/styles/material/ui/components/MaterialTextInput";
 import { h } from "tsx-dom";
 import i18next from "i18next";
 import {
     isPageReportVenue,
     ReportVenue,
     ReportVenueMode,
-} from "rww/mediawiki/report/ReportVenue";
+} from "app/mediawiki/report/ReportVenue";
 
 class MaterialReportingDialogPage {
     get venue(): ReportVenue {

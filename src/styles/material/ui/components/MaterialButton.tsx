@@ -1,7 +1,7 @@
 import { BaseProps, h } from "tsx-dom";
-import expandDataAttributes from "rww/styles/material/util/expandDataAttributes";
-import toCSS from "rww/styles/material/util/toCSS";
-import { Configuration } from "rww/config/user/Configuration";
+import expandDataAttributes from "app/styles/material/util/expandDataAttributes";
+import toCSS from "app/styles/material/util/toCSS";
+import { Configuration } from "app/config/user/Configuration";
 
 export interface MaterialButtonProperties extends BaseProps {
     class?: string;

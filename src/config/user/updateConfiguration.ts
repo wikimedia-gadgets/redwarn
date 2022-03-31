@@ -1,7 +1,7 @@
-import { RW_CONFIG_VERSION } from "rww/data/RedWarnConstants";
-import { RevertMethod } from "rww/config/user/ConfigurationEnums";
-import Log from "rww/data/RedWarnLog";
-import { RevertDoneOption } from "rww/mediawiki/revert/RevertDoneOptions";
+import { RW_CONFIG_VERSION } from "app/data/RedWarnConstants";
+import { RevertMethod } from "app/config/user/ConfigurationEnums";
+import Log from "app/data/RedWarnLog";
+import { RevertDoneOption } from "app/mediawiki/revert/RevertDoneOptions";
 
 type ConfigurationUpdater = (
     oldConfig: Record<string, unknown>

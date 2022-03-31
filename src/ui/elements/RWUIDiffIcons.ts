@@ -1,12 +1,12 @@
-import RWUIElement from "rww/ui/elements/RWUIElement";
+import RWUIElement from "app/ui/elements/RWUIElement";
 import {
     DiffIconRevertContext,
     RestoreStage,
     RevertStage,
     Revision,
-} from "rww/mediawiki";
+} from "app/mediawiki";
 import { BaseProps } from "tsx-dom";
-import RWErrorBase from "rww/errors/RWError";
+import RWErrorBase from "app/errors/RWError";
 
 export type RWUIDiffIconsProperties = Pick<
     DiffIconRevertContext,

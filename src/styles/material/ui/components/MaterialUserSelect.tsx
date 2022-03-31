@@ -1,24 +1,24 @@
 import { h } from "tsx-dom";
-import { Page, User, UserAccount, WarningLevel } from "rww/mediawiki";
+import { Page, User, UserAccount, WarningLevel } from "app/mediawiki";
 import MaterialTextInput, {
     MaterialTextInputComponents,
     MaterialTextInputUpgrade,
-} from "rww/styles/material/ui/components/MaterialTextInput";
-import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
-import RedWarnUI from "rww/ui/RedWarnUI";
+} from "app/styles/material/ui/components/MaterialTextInput";
+import MaterialIconButton from "app/styles/material/ui/components/MaterialIconButton";
+import RedWarnUI from "app/ui/RedWarnUI";
 import i18next from "i18next";
 import Bullet from "./Bullet";
-import { capitalize, formatAge, generateId, getMonthHeader } from "rww/util";
+import { capitalize, formatAge, generateId, getMonthHeader } from "app/util";
 import MaterialMenu, { openMenu } from "./MaterialMenu";
-import showPlainMediaWikiIFrameDialog from "rww/styles/material/util/showPlainMediaWikiIFrameDialog";
+import showPlainMediaWikiIFrameDialog from "app/styles/material/util/showPlainMediaWikiIFrameDialog";
 import { MaterialWarnDialogChild } from "./MaterialWarnDialogChild";
-import { WarningIcons } from "rww/styles/material/data/WarningIcons";
-import Log from "rww/data/RedWarnLog";
-import Group from "rww/mediawiki/core/Group";
+import { WarningIcons } from "app/styles/material/data/WarningIcons";
+import Log from "app/data/RedWarnLog";
+import Group from "app/mediawiki/core/Group";
 import "../../css/userSelect.css";
-import { UserMissingError } from "rww/errors/MediaWikiErrors";
-import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
-import { submitReport } from "rww/mediawiki/report/Report";
+import { UserMissingError } from "app/errors/MediaWikiErrors";
+import RedWarnWikiConfiguration from "app/config/wiki/RedWarnWikiConfiguration";
+import { submitReport } from "app/mediawiki/report/Report";
 
 interface OverlayContentLoading {
     type: "loading";

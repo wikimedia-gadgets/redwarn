@@ -1,9 +1,8 @@
 /**
  *
- * RedWarn - Recent Edits Patrol and Warning Tool
- * The user-friendly Wikipedia counter-vandalism tool.
+ * Ultraviolet - the user-friendly MediaWiki counter-vandalism tool.
  *
- * (c) 2021 The RedWarn Development Team and contributors - tools.redwarn@toolforge.org or [[WT:RW]]
+ * (c) 2020-2022 The Ultraviolet Development Team (10nm) and contributors - tools.ultraviolet@toolforge.org or [[WT:UV]]
  * Licensed under the Apache License 2.0 - read more at https://gitlab.com/redwarn/redwarn-web/
  * Other conditions may apply - check LICENSE for more information.
  *
@@ -17,17 +16,17 @@ import { RW_VERSION } from "./data/RedWarnConstants";
 import * as Utilities from "./util";
 import Dependencies from "./data/Dependencies";
 import Localization from "./localization/Localization";
-import Log from "rww/data/RedWarnLog";
-import MediaWikiNotificationContent from "rww/ui/MediaWikiNotificationContent";
+import Log from "app/data/RedWarnLog";
+import MediaWikiNotificationContent from "app/ui/MediaWikiNotificationContent";
 import RealTimeRecentChanges from "./integrations/RealTimeRecentChanges";
 import RedWarnHooks from "./event/RedWarnHooks";
-import RedWarnLocalDB from "rww/data/database/RedWarnLocalDB";
+import RedWarnLocalDB from "app/data/database/RedWarnLocalDB";
 import RedWarnStore from "./data/RedWarnStore";
 import RedWarnUI from "./ui/RedWarnUI";
-import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
+import RedWarnWikiConfiguration from "app/config/wiki/RedWarnWikiConfiguration";
 import StyleManager from "./styles/StyleManager";
 import TamperProtection from "./tamper/TamperProtection";
-import UIInjectors from "rww/ui/injectors/UIInjectors";
+import UIInjectors from "app/ui/injectors/UIInjectors";
 import * as MediaWikiClasses from "./mediawiki";
 import {
     ClientUser,
@@ -38,8 +37,8 @@ import {
     Watch,
 } from "./mediawiki";
 import { Configuration } from "./config/user/Configuration";
-import LoadErrorTranslations from "rww/errors/LoadErrorTranslations";
-import { RecentPages } from "rww/mediawiki/util/RecentPages";
+import LoadErrorTranslations from "app/errors/LoadErrorTranslations";
+import { RecentPages } from "app/mediawiki/util/RecentPages";
 
 declare global {
     interface Window {
@@ -127,19 +126,21 @@ export default class RedWarn {
             new URL(window.location.href).searchParams.get("redwarn") === "0"
         ) {
             // We've been prevented from running on this page.
-            Log.info("Page is blocking RedWarn loading. Shutting down...");
+            Log.info(
+                "The current page is blocking Ultraviolet from loading. Shutting down..."
+            );
             return;
         }
 
         // Tell all scripts that RedWarn is running.
         RedWarnHooks.executeHooks("load");
 
-        Log.info(`Starting RedWarn ${RW_VERSION}...`);
+        Log.info(`Starting Ultraviolet ${RW_VERSION}...`);
         const startTime = Date.now();
 
         if (window.rw != null) {
             mw.notify(
-                "You have two versions of RedWarn installed at once! Please edit your common.js or skin js files to ensure that you only use one instance to prevent issues.",
+                "You have two versions of Ultraviolet/RedWarn installed at once! Please edit your common.js or skin js files to ensure that you only use one instance to prevent issues.",
                 { type: "error", title: "Conflict" }
             );
             return; // die

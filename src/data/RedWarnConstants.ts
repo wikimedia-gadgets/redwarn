@@ -43,7 +43,7 @@ export const RW_LINK = "[[w:en:WP:RW|RedWarn]]";
 export const RW_WIKIS_TAGGABLE = ["enwiki"];
 export const RW_WIKIS_SPEEDUP = ["enwiki"];
 
-// TODO: Global configuration file on Meta instead of Wikipedia
+// TODO: Host global configuration file on Meta instead of enwiki
 export const RW_FALLBACK_WIKI = {
     indexPath: "https://en.wikipedia.org/w/index.php",
     apiPath: "https://en.wikipedia.org/w/api.php",

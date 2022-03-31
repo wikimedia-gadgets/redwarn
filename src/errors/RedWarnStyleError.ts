@@ -1,4 +1,4 @@
-import Style from "rww/styles/Style";
+import Style from "app/styles/Style";
 import { RWErrors, RWFormattedError } from "./RWError";
 
 export class StyleMissingError extends RWFormattedError<{ styleId: string }> {

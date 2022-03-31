@@ -1,16 +1,16 @@
-import StyleManager from "rww/styles/StyleManager";
+import StyleManager from "app/styles/StyleManager";
 import { RWUIToast } from "./elements/RWUIToast";
-import { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
-import { RWUIPageIcons } from "rww/ui/elements/RWUIPageIcons";
-import { RWUIAlertDialog } from "rww/ui/elements/RWUIAlertDialog";
-import { RWUIInputDialog } from "rww/ui/elements/RWUIInputDialog";
-import { RWUISelectionDialog } from "rww/ui/elements/RWUISelectionDialog";
-import { RWUIIFrameDialog } from "rww/ui/elements/RWUIIFrameDialog";
-import { RWUIWarnDialog } from "rww/ui/elements/RWUIWarnDialog";
-import { RWUIExtendedOptions } from "rww/ui/elements/RWUIExtendedOptions";
-import { RWUIProtectionRequestDialog } from "rww/ui/elements/RWUIProtectionRequestDialog";
-import { RWUIReportingDialog } from "rww/ui/elements/RWUIReportingDialog";
-import { RWUIPreferencesTab } from "rww/ui/elements/RWUIPreferencesTab";
+import { RWUIDiffIcons } from "app/ui/elements/RWUIDiffIcons";
+import { RWUIPageIcons } from "app/ui/elements/RWUIPageIcons";
+import { RWUIAlertDialog } from "app/ui/elements/RWUIAlertDialog";
+import { RWUIInputDialog } from "app/ui/elements/RWUIInputDialog";
+import { RWUISelectionDialog } from "app/ui/elements/RWUISelectionDialog";
+import { RWUIIFrameDialog } from "app/ui/elements/RWUIIFrameDialog";
+import { RWUIWarnDialog } from "app/ui/elements/RWUIWarnDialog";
+import { RWUIExtendedOptions } from "app/ui/elements/RWUIExtendedOptions";
+import { RWUIProtectionRequestDialog } from "app/ui/elements/RWUIProtectionRequestDialog";
+import { RWUIReportingDialog } from "app/ui/elements/RWUIReportingDialog";
+import { RWUIPreferencesTab } from "app/ui/elements/RWUIPreferencesTab";
 import { RWUIPreferencesItem } from "./elements/RWUIPreferencesItem";
 import { RWUIPreferences } from "./elements/RWUIPreferences";
 
@@ -30,9 +30,9 @@ export default class RedWarnUI {
     static get SelectionDialog(): typeof RWUISelectionDialog {
         return StyleManager.activeStyle.classMap.rwSelectionDialog;
     }
-    /** Alias of {@link StyleManager.activeStyle.classMap.rwWarnDialog} */
+    /** Alias of {@link StyleManager.activeStyle.classMap.apparnDialog} */
     static get WarnDialog(): typeof RWUIWarnDialog {
-        return StyleManager.activeStyle.classMap.rwWarnDialog;
+        return StyleManager.activeStyle.classMap.apparnDialog;
     }
     /** Alias of {@link StyleManager.activeStyle.classMap.rwProtectionRequestDialog} */
     static get ProtectionRequestDialog(): typeof RWUIProtectionRequestDialog {

@@ -2,28 +2,28 @@ import { BaseProps, h } from "tsx-dom";
 import {
     RWUIDiffIcons,
     RWUIDiffIconsProperties,
-} from "rww/ui/elements/RWUIDiffIcons";
+} from "app/ui/elements/RWUIDiffIcons";
 import {
     DiffIconRevertContext,
     RestoreStage,
     Revert,
     RevertContextBase,
     RevertStage,
-} from "rww/mediawiki";
+} from "app/mediawiki";
 import RevertOptions, {
     ActionSeverity,
     RevertOption,
-} from "rww/mediawiki/revert/RevertOptions";
+} from "app/mediawiki/revert/RevertOptions";
 import { MDCLinearProgress } from "@material/linear-progress/component";
 
 import "../css/diffIcons.css";
 import i18next from "i18next";
 
-import { RevertDoneOptions } from "rww/mediawiki/revert/RevertDoneOptions";
-import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
-import Log from "rww/data/RedWarnLog";
-import { Configuration } from "rww/config/user/Configuration";
-import { RevertMethod } from "rww/config/user/ConfigurationEnums";
+import { RevertDoneOptions } from "app/mediawiki/revert/RevertDoneOptions";
+import MaterialIconButton from "app/styles/material/ui/components/MaterialIconButton";
+import Log from "app/data/RedWarnLog";
+import { Configuration } from "app/config/user/Configuration";
+import { RevertMethod } from "app/config/user/ConfigurationEnums";
 
 // TODO: Convert to enum.
 function getRollbackOptionClickHandler(

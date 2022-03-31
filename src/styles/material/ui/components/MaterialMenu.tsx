@@ -3,7 +3,7 @@ import { BaseProps, h } from "tsx-dom";
 import {
     MaterialList,
     MaterialListItem,
-} from "rww/styles/material/ui/components/MaterialList";
+} from "app/styles/material/ui/components/MaterialList";
 
 /* Specificity is key */
 type MaterialMenuID = string;

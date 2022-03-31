@@ -1,4 +1,4 @@
-import RWUIElement from "rww/ui/elements/RWUIElement";
+import RWUIElement from "app/ui/elements/RWUIElement";
 
 /**
  * The RWUIPageIcons handle the page customization icons found in the top-right

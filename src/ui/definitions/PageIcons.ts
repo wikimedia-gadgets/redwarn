@@ -1,11 +1,11 @@
-import RedWarnStore from "rww/data/RedWarnStore";
+import RedWarnStore from "app/data/RedWarnStore";
 import i18next from "i18next";
-import RedWarnUI from "rww/ui/RedWarnUI";
-import { ProtectionManager, User, Watch } from "rww/mediawiki";
-import { redirect } from "rww/util";
-import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
-import Log from "rww/data/RedWarnLog";
-import { getReportVenueIcons } from "rww/mediawiki/report/ReportVenue";
+import RedWarnUI from "app/ui/RedWarnUI";
+import { ProtectionManager, User, Watch } from "app/mediawiki";
+import { redirect } from "app/util";
+import RedWarnWikiConfiguration from "app/config/wiki/RedWarnWikiConfiguration";
+import Log from "app/data/RedWarnLog";
+import { getReportVenueIcons } from "app/mediawiki/report/ReportVenue";
 
 interface PageIconBase {
     icon: string;
@@ -171,11 +171,11 @@ export const PageIcons = (): PageIcon[] => {
             },
         },
         {
-            id: "rwTalk",
+            id: "uvTalk",
             icon: "question_answer",
             visible: () => true,
             action() {
-                redirect("https://w.wiki/s6j", true);
+                redirect("https://w.wiki/4$GN", true);
             },
         },
     ];

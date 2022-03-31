@@ -41,7 +41,7 @@ test_jest:
         - master
         - /^dev(-.+)?$/
 
-# Build the actual RedWarn script.
+# Build the actual userscript.
 build_redwarn:
     stage: build
     script:

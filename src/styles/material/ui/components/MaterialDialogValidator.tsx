@@ -1,16 +1,16 @@
-import RWUIElement from "rww/ui/elements/RWUIElement";
+import RWUIElement from "app/ui/elements/RWUIElement";
 import i18next from "i18next";
-import MaterialIconButton from "rww/styles/material/ui/components/MaterialIconButton";
+import MaterialIconButton from "app/styles/material/ui/components/MaterialIconButton";
 import { h } from "tsx-dom";
-import { RWUIDialog, RWUIDialogProperties } from "rww/ui/elements/RWUIDialog";
-import { upgradeMaterialDialog } from "rww/styles/material/Material";
+import { RWUIDialog, RWUIDialogProperties } from "app/ui/elements/RWUIDialog";
+import { upgradeMaterialDialog } from "app/styles/material/Material";
 import MaterialDialog, {
     MaterialDialogActions,
     MaterialDialogContent,
     MaterialDialogTitle,
-} from "rww/styles/material/ui/MaterialDialog";
-import { generateId } from "rww/util";
-import MaterialButton from "rww/styles/material/ui/components/MaterialButton";
+} from "app/styles/material/ui/MaterialDialog";
+import { generateId } from "app/util";
+import MaterialButton from "app/styles/material/ui/components/MaterialButton";
 import "../../css/validation.css";
 
 export interface ValidationCheck {

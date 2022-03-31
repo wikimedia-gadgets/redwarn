@@ -15,7 +15,7 @@
         "sourceMap": true,
         "baseUrl": "./",
         "paths": {
-            "rww/*": ["src/*"]
+            "app/*": ["src/*"]
         },
         "allowJs": true,
         "types": ["./node_modules/types-mediawiki", "node", "jest"]

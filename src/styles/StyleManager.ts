@@ -1,8 +1,8 @@
-import semanticDifference from "rww/util/semanticDifference";
+import semanticDifference from "app/util/semanticDifference";
 import { DefaultRedWarnStyles } from "./RedWarnStyles";
 import Style from "./Style";
-import { DefaultRedWarnStyle } from "rww/styles/StyleConstants";
-import { StyleMissingError } from "rww/errors/RedWarnStyleError";
+import { DefaultRedWarnStyle } from "app/styles/StyleConstants";
+import { StyleMissingError } from "app/errors/RedWarnStyleError";
 
 export default class StyleManager {
     public static get defaultStyle(): string {
@@ -39,7 +39,7 @@ export default class StyleManager {
 
         if (StyleManager._activeStyle == null) {
             mw.notify(
-                "RedWarn styles loading failed. You might have loaded no styles at all."
+                "Ultraviolet styles loading failed. You might have loaded no styles at all."
             );
         } else {
             StyleManager.ready = true;

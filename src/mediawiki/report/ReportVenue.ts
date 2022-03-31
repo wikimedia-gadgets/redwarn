@@ -1,12 +1,12 @@
-import { PageIcon } from "rww/ui/definitions/PageIcons";
-import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
+import { PageIcon } from "app/ui/definitions/PageIcons";
+import RedWarnWikiConfiguration from "app/config/wiki/RedWarnWikiConfiguration";
 import i18next from "i18next";
-import RedWarnStore from "rww/data/RedWarnStore";
-import Log from "rww/data/RedWarnLog";
-import RedWarnUI from "rww/ui/RedWarnUI";
-import { capitalize } from "rww/util";
-import { Page } from "rww/mediawiki";
-import { submitReport } from "rww/mediawiki/report/Report";
+import RedWarnStore from "app/data/RedWarnStore";
+import Log from "app/data/RedWarnLog";
+import RedWarnUI from "app/ui/RedWarnUI";
+import { capitalize } from "app/util";
+import { Page } from "app/mediawiki";
+import { submitReport } from "app/mediawiki/report/Report";
 
 /**
  * Display locations for a ReportVenue. This uses a bit map, meaning each

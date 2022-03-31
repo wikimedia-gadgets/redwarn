@@ -6,11 +6,11 @@ import type {
     Warning,
     WarningLevel,
     WarningLevelSignature,
-} from "rww/mediawiki";
-import { WarningCategory } from "rww/mediawiki";
-import type { SerializableRevertOption } from "rww/mediawiki/revert/RevertOptions";
-import { RevertOption } from "rww/mediawiki/revert/RevertOptions";
-import { ReportVenue } from "rww/mediawiki/report/ReportVenue";
+} from "app/mediawiki";
+import { WarningCategory } from "app/mediawiki";
+import type { SerializableRevertOption } from "app/mediawiki/revert/RevertOptions";
+import { RevertOption } from "app/mediawiki/revert/RevertOptions";
+import { ReportVenue } from "app/mediawiki/report/ReportVenue";
 
 /**
  * This is a configuration file used by RedWarn to provide wiki-specific

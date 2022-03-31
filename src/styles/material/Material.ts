@@ -1,7 +1,7 @@
 import { MDCDialog } from "@material/dialog";
 import { MDCRipple } from "@material/ripple";
-import { RWUIDialog } from "rww/ui/elements/RWUIDialog";
-import Style from "rww/styles/Style";
+import { RWUIDialog } from "app/ui/elements/RWUIDialog";
+import Style from "app/styles/Style";
 import MaterialPreInitializationHooks from "./hooks/MaterialPreInitializationHooks";
 import {
     getMaterialStorage,
@@ -10,17 +10,17 @@ import {
 import MaterialAlertDialog from "./ui/MaterialAlertDialog";
 import MaterialInputDialog from "./ui/MaterialInputDialog";
 import MaterialSelectionDialog from "./ui/MaterialSelectionDialog";
-import MaterialWarnDialog from "rww/styles/material/ui/MaterialWarnDialog";
+import MaterialWarnDialog from "app/styles/material/ui/MaterialWarnDialog";
 import MaterialToast from "./ui/MaterialToast";
 import MaterialDiffIcons from "./ui/MaterialDiffIcons";
-import MaterialIFrameDialog from "rww/styles/material/ui/MaterialIFrameDialog";
+import MaterialIFrameDialog from "app/styles/material/ui/MaterialIFrameDialog";
 
 import "./css/globals.css";
-import MaterialPageIcons from "rww/styles/material/ui/MaterialPageIcons";
-import MaterialExtendedOptions from "rww/styles/material/ui/MaterialExtendedOptions";
-import MaterialProtectionRequestDialog from "rww/styles/material/ui/MaterialProtectionRequestDialog";
-import MaterialReportingDialog from "rww/styles/material/ui/MaterialReportingDialog";
-import promiseSplit from "rww/util/promiseSplit";
+import MaterialPageIcons from "app/styles/material/ui/MaterialPageIcons";
+import MaterialExtendedOptions from "app/styles/material/ui/MaterialExtendedOptions";
+import MaterialProtectionRequestDialog from "app/styles/material/ui/MaterialProtectionRequestDialog";
+import MaterialReportingDialog from "app/styles/material/ui/MaterialReportingDialog";
+import promiseSplit from "app/util/promiseSplit";
 import MaterialPreferences from "./ui/MaterialPreferences";
 import MaterialPreferencesTab from "./ui/MaterialPreferencesTab";
 import MaterialPreferencesItem from "./ui/MaterialPreferencesItem";
@@ -32,13 +32,13 @@ const MaterialStyle: Style = {
     meta: {
         "en-US": {
             displayName: "Material",
-            author: ["The RedWarn Development Team", "Google, Inc."],
+            author: ["The Ultraviolet Development Team (10nm)", "Google, Inc."],
             // \u2014 is an emdash
             description:
                 // TODO: change this to something like "classic but improved/better"
-                "RedWarn's classic look-and-feel \u2014 an implementation of Google's Material Design.",
+                "Ultraviolet's default theme \u2014 the classic look-and-feel of RedWarn with several improvements. This is an implementation of Google's Material Design.",
 
-            homepage: "https://en.wikipedia.org/wiki/WP:RW",
+            homepage: "https://en.wikipedia.org/wiki/WP:UV",
             repository: "https://gitlab.com/redwarn/redwarn-web",
             issues: "https://gitlab.com/redwarn/redwarn-web/-/issues",
         },
@@ -70,7 +70,7 @@ const MaterialStyle: Style = {
         rwAlertDialog: MaterialAlertDialog,
         rwInputDialog: MaterialInputDialog,
         rwSelectionDialog: MaterialSelectionDialog,
-        rwWarnDialog: MaterialWarnDialog,
+        apparnDialog: MaterialWarnDialog,
         rwProtectionRequestDialog: MaterialProtectionRequestDialog,
         rwIFrameDialog: MaterialIFrameDialog,
         rwToast: MaterialToast,

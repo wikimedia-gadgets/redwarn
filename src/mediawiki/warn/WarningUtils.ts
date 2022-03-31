@@ -1,5 +1,5 @@
-import RedWarnWikiConfiguration from "rww/config/wiki/RedWarnWikiConfiguration";
-import { WarningLevel } from "rww/mediawiki";
+import RedWarnWikiConfiguration from "app/config/wiki/RedWarnWikiConfiguration";
+import { WarningLevel } from "app/mediawiki";
 
 /**
  * Grabs the highest warning value from wikitext.

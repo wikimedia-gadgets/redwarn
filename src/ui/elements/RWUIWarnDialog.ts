@@ -4,8 +4,8 @@ import {
     User,
     Warning,
     WarningOptions,
-} from "rww/mediawiki";
-import { RWUIDialog, RWUIDialogProperties } from "rww/ui/elements/RWUIDialog";
+} from "app/mediawiki";
+import { RWUIDialog, RWUIDialogProperties } from "app/ui/elements/RWUIDialog";
 
 export interface RWUIWarnDialogProps extends RWUIDialogProperties {
     rollbackContext?: RevertContext;
@@ -23,7 +23,7 @@ export class RWUIWarnDialog extends RWUIDialog<WarningOptions | null> {
         throw new Error("Attempted to call abstract method");
     }
 
-    public static readonly elementName = "rwWarnDialog";
+    public static readonly elementName = "apparnDialog";
 
     constructor(readonly props: RWUIWarnDialogProps) {
         super(props);

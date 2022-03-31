@@ -1,19 +1,19 @@
-import { User, UserAccount } from "rww/mediawiki";
+import { User, UserAccount } from "app/mediawiki";
 import {
     MaterialUserSelect,
     MaterialUserSelectProps,
-} from "rww/styles/material/ui/components/MaterialUserSelect";
+} from "app/styles/material/ui/components/MaterialUserSelect";
 import { h } from "tsx-dom";
 import {
     MaterialReportingDialogTarget,
     MaterialReportingDialogTargetProps,
-} from "rww/styles/material/ui/components/MaterialReportingDialogChild";
-import MaterialAlertDialog from "rww/styles/material/ui/MaterialAlertDialog";
+} from "app/styles/material/ui/components/MaterialReportingDialogChild";
+import MaterialAlertDialog from "app/styles/material/ui/MaterialAlertDialog";
 import i18next from "i18next";
 import {
     isPageReportVenue,
     isUserModeReportVenue,
-} from "rww/mediawiki/report/ReportVenue";
+} from "app/mediawiki/report/ReportVenue";
 
 class MaterialReportingDialogUser extends MaterialUserSelect {
     constructor(

@@ -1,8 +1,8 @@
 /**
  * Attempt to upgrade an outdated configuration file.
  */
-import { RW_WIKI_CONFIGURATION_VERSION } from "rww/data/RedWarnConstants";
-import WikiConfigurationRaw from "rww/config/wiki/WikiConfigurationRaw";
+import { RW_WIKI_CONFIGURATION_VERSION } from "app/data/RedWarnConstants";
+import WikiConfigurationRaw from "app/config/wiki/WikiConfigurationRaw";
 
 const upgraders: Record<
     number,

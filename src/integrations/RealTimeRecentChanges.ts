@@ -1,5 +1,5 @@
-// import {Revert} from "rww/mediawiki";
-// import DiffViewerInjector from "rww/ui/injectors/DiffViewerInjector";
+// import {Revert} from "app/mediawiki";
+// import DiffViewerInjector from "app/ui/injectors/DiffViewerInjector";
 
 export default class RealTimeRecentChanges {
     private static onRTRC: boolean;

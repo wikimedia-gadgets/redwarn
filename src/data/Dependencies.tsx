@@ -1,9 +1,9 @@
 import { h } from "tsx-dom";
-import { generateId } from "rww/util";
-import RedWarnLocalDB from "rww/data/database/RedWarnLocalDB";
-import Log from "rww/data/RedWarnLog";
-import RedWarnIDBObjectStore from "rww/data/database/RedWarnIDBObjectStore";
-import { CachedDependency } from "rww/data/database/RWDBObjectStoreDefinitions";
+import { generateId } from "app/util";
+import RedWarnLocalDB from "app/data/database/RedWarnLocalDB";
+import Log from "app/data/RedWarnLog";
+import RedWarnIDBObjectStore from "app/data/database/RedWarnIDBObjectStore";
+import { CachedDependency } from "app/data/database/RWDBObjectStoreDefinitions";
 
 /*
  * This file uses TSX only to quickly build <link> and <script>

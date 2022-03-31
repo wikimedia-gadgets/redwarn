@@ -1,7 +1,7 @@
 import { ComponentChild, h } from "tsx-dom";
 
-import { RWUIIFrameDialog } from "rww/ui/elements/RWUIIFrameDialog";
-import { upgradeMaterialDialog } from "rww/styles/material/Material";
+import { RWUIIFrameDialog } from "app/ui/elements/RWUIIFrameDialog";
+import { upgradeMaterialDialog } from "app/styles/material/Material";
 import MaterialButton from "./components/MaterialButton";
 import MaterialDialog, {
     MaterialDialogActions,
@@ -9,11 +9,11 @@ import MaterialDialog, {
     MaterialDialogTitle,
 } from "./MaterialDialog";
 import i18next from "i18next";
-import Dependencies from "rww/data/Dependencies";
+import Dependencies from "app/data/Dependencies";
 
 import "../css/iframeDialog.css";
-import { url } from "rww/util";
-import RedWarnUI from "rww/ui/RedWarnUI";
+import { url } from "app/util";
+import RedWarnUI from "app/ui/RedWarnUI";
 
 export default class MaterialIFrameDialog extends RWUIIFrameDialog {
     /**

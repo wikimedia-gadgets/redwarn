@@ -7,12 +7,12 @@ import {
     PageLatestRevisionOptions,
     Revert,
     User,
-} from "rww/mediawiki";
-import redirect from "rww/util/redirect";
-import Log from "rww/data/RedWarnLog";
-import Section, { SectionContainer } from "rww/mediawiki/core/Section";
-import url from "rww/util/url";
-import RedWarnStore from "rww/data/RedWarnStore";
+} from "app/mediawiki";
+import redirect from "app/util/redirect";
+import Log from "app/data/RedWarnLog";
+import Section, { SectionContainer } from "app/mediawiki/core/Section";
+import url from "app/util/url";
+import RedWarnStore from "app/data/RedWarnStore";
 
 /**
  * A revision is an object provided by the MediaWiki API which represents

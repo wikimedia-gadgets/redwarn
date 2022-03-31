@@ -1,6 +1,6 @@
 {
     "summaries": {
-        "revert": "Edit summary of reverts, use the {{username}}, {{reason}}, and $t(common:redwarn.signature) params as appropriate.",
+        "revert": "Edit summary of reverts. Use the {{username}}, {{reason}}, and $t(common:redwarn.signature) params as appropriate.",
         "rollback": "Same as above, but for rollback.",
         "restore": "Edit summary for restoring revisions. Use the {{revID}}, {{revUser}}, {{reason}}, and $t(common:redwarn.signature) params as appropriate.",
         "warn": "Edit summary for user warnings. Use the {{reason}} param as appropriate.",
@@ -13,6 +13,6 @@
     },
     "ip": "Used in warn dialog to indicate that a user is an anonymous IP editor",
     "error": {
-        "wikiConfigBad": "Error when the wiki-specific configuration for RedWarn is broken. Use the following links as appropriate: <a href=\"{{wikiIndex}}?title=Project:RW/C.JSON\">link to the configuration</a>, <a href=\"{{wikiIndex}}?title=Project:RW/TEAM\">the wiki's project page listing the RedWarn team</a>."
+        "wikiConfigBad": "Error when the wiki-specific configuration for Ultraviolet is broken. Use the following links as appropriate: <a href=\"{{wikiIndex}}?title=Project:RW/C.JSON\">link to the configuration</a>, <a href=\"{{wikiIndex}}?title=Project:RW/TEAM\">the wiki's project page listing the Ultraviolet team</a>."
     }
 }

@@ -1,4 +1,4 @@
-import type { Page } from "rww/mediawiki";
+import type { Page } from "app/mediawiki";
 
 /**
  * The Warning Level is derived from the English Wikipedia's four-level tier

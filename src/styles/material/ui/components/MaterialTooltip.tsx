@@ -1,5 +1,5 @@
 import { BaseProps, h } from "tsx-dom";
-import { generateId } from "rww/util";
+import { generateId } from "app/util";
 import { MDCTooltip } from "@material/tooltip";
 
 export interface MaterialTooltipProps extends BaseProps {

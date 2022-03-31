@@ -1,19 +1,19 @@
-import RedWarnIDB from "rww/data/database/RedWarnIDB";
+import RedWarnIDB from "app/data/database/RedWarnIDB";
 import {
     RW_DATABASE_NAME,
     RW_DATABASE_VERSION,
-} from "rww/data/RedWarnConstants";
-import RedWarnIDBObjectStore from "rww/data/database/RedWarnIDBObjectStore";
+} from "app/data/RedWarnConstants";
+import RedWarnIDBObjectStore from "app/data/database/RedWarnIDBObjectStore";
 import {
     CachedDependency,
     CacheTracker,
     LogItem,
     RecentPage,
     WatchedPage,
-} from "rww/data/database/RWDBObjectStoreDefinitions";
-import Group from "rww/mediawiki/core/Group";
-import Log from "rww/data/RedWarnLog";
-import RedWarnIDBUpgraders from "rww/data/database/RedWarnIDBUpgraders";
+} from "app/data/database/RWDBObjectStoreDefinitions";
+import Group from "app/mediawiki/core/Group";
+import Log from "app/data/RedWarnLog";
+import RedWarnIDBUpgraders from "app/data/database/RedWarnIDBUpgraders";
 
 export default class RedWarnLocalDB {
     public static i = new RedWarnLocalDB();

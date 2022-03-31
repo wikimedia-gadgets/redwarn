@@ -1,7 +1,7 @@
 import { BaseProps, h } from "tsx-dom";
-import expandDataAttributes from "rww/styles/material/util/expandDataAttributes";
+import expandDataAttributes from "app/styles/material/util/expandDataAttributes";
 import { MDCRipple } from "@material/ripple";
-import toCSS from "rww/styles/material/util/toCSS";
+import toCSS from "app/styles/material/util/toCSS";
 import classMix from "../../util/classMix";
 
 export interface MaterialIconButtonProperties extends BaseProps {

@@ -1,8 +1,8 @@
-import { Page, Revert, RevertContextBase, Revision } from "rww/mediawiki";
+import { Page, Revert, RevertContextBase, Revision } from "app/mediawiki";
 import { h } from "tsx-dom";
-import Log from "rww/data/RedWarnLog";
-import { RWUIDiffIcons } from "rww/ui/elements/RWUIDiffIcons";
-import RedWarnUI from "rww/ui/RedWarnUI";
+import Log from "app/data/RedWarnLog";
+import { RWUIDiffIcons } from "app/ui/elements/RWUIDiffIcons";
+import RedWarnUI from "app/ui/RedWarnUI";
 import { Injector } from "./Injector";
 
 export default class DiffViewerInjector implements Injector {

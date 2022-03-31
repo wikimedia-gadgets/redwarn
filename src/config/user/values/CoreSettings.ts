@@ -2,7 +2,7 @@
  * RedWarn core settings.
  */
 
-import { RW_CONFIG_VERSION, RW_VERSION } from "rww/data/RedWarnConstants";
+import { RW_CONFIG_VERSION, RW_VERSION } from "app/data/RedWarnConstants";
 import { ConfigurationSet } from "../Configuration";
 import { Setting } from "../Setting";
 

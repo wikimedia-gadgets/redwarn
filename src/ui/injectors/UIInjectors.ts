@@ -4,11 +4,21 @@ import PageIconsInjector from "app/ui/injectors/PageIconsInjector";
 import PreferencesInjector from "./PreferencesInjector";
 
 export default class UIInjectors {
+    private static instance: UIInjectors = new UIInjectors();
+    static get i(): UIInjectors {
+        return UIInjectors.instance;
+    }
+
     diffViewerInjector: DiffViewerInjector = new DiffViewerInjector();
     contributionsPageInjector: ContributionsPageInjector =
         new ContributionsPageInjector();
     pageIconsInjector: PageIconsInjector = new PageIconsInjector();
     preferencesInjector: PreferencesInjector = new PreferencesInjector();
+
+    private constructor() {
+        /* private constructor */
+    }
+
     /**
      * Run all injectors.
      *

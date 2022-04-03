@@ -26,7 +26,7 @@ import { Configuration } from "app/config/user/Configuration";
 import { RevertMethod } from "app/config/user/ConfigurationEnums";
 
 // TODO: Convert to enum.
-function getRollbackOptionClickHandler(
+export function getRevertOptionClickHandler(
     diffIcons: MaterialDiffIcons,
     option: RevertOption
 ): () => void {
@@ -134,19 +134,10 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
     finishMessageElement: HTMLElement;
 
     selectedReason: RevertOption;
-    readonly latestIcons;
 
     constructor(props: RWUIDiffIconsProperties & BaseProps) {
         super(props);
         Object.assign(this, props);
-        if (
-            props.latestRevision.revisionID ===
-            (props.side === "new"
-                ? props.newRevision.revisionID
-                : props.oldRevision.revisionID)
-        ) {
-            this.latestIcons = true;
-        }
     }
 
     renderRestoreIcon(): JSX.Element {
@@ -240,7 +231,10 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
         const options: JSX.Element[] = [];
 
         for (const option of RevertDoneOptions()) {
-            if (this.latestIcons || (!this.latestIcons && option.showOnRestore))
+            if (
+                this.isLatestIcons ||
+                (!this.isLatestIcons && option.showOnRestore)
+            )
                 options.push(
                     <MaterialIconButton
                         label={option.name}
@@ -274,7 +268,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
     render(): JSX.Element {
         this.self = (
             <div class={"rw-mdc-diffIcons"}>
-                {this.latestIcons
+                {this.isLatestIcons
                     ? this.renderRevertIcons()
                     : this.renderRestoreIcon()}
                 {this.renderProgressBar()}
@@ -285,7 +279,7 @@ export default class MaterialDiffIcons extends RWUIDiffIcons {
         this.self.querySelectorAll("[data-rw-revert-option]").forEach((v) => {
             v.addEventListener(
                 "click",
-                getRollbackOptionClickHandler(
+                getRevertOptionClickHandler(
                     this,
                     RevertOptions.all[v.getAttribute("data-rw-revert-option")]
                 )

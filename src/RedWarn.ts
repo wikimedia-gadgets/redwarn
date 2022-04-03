@@ -226,7 +226,7 @@ export default class RedWarn {
         // Inject all UI elements
         await RedWarnHooks.executeHooks("preUIInject");
 
-        await new UIInjectors().inject();
+        await UIInjectors.i.inject();
 
         // Show Ultraviolet-only visuals.
         document

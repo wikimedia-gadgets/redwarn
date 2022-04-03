@@ -2,6 +2,7 @@ import { BaseProps, h } from "tsx-dom";
 import { MDCRipple } from "@material/ripple";
 import { MDCList } from "@material/list/component";
 import toCSS from "app/styles/material/util/toCSS";
+import classMix from "app/styles/material/util/classMix";
 
 export function MaterialList(
     props: BaseProps & JSX.HTMLAttributes & { initialized?: boolean }
@@ -41,9 +42,11 @@ export function MaterialListItem(
                     ([k]) => !["children", "icon"].includes(k)
                 )
             )}
-            class={`mdc-list-item mdc-list-item--with-one-line ${
-                props.class ?? ""
-            }`}
+            class={classMix([
+                "mdc-list-item",
+                "mdc-list-item--with-one-line",
+                props.class,
+            ])}
         >
             {ripple}
             {props.icon && (

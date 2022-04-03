@@ -31,6 +31,15 @@ export class RWUIDiffIcons
     newRevision: Revision;
     latestRevision: Revision;
 
+    get isLatestIcons(): boolean {
+        return (
+            this.latestRevision.revisionID ===
+            (this.side === "new"
+                ? this.newRevision.revisionID
+                : this.oldRevision.revisionID)
+        );
+    }
+
     side: "old" | "new";
 
     /**

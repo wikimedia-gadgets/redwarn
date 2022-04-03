@@ -6,6 +6,19 @@ import RedWarnUI from "app/ui/RedWarnUI";
 import { Injector } from "./Injector";
 
 export default class DiffViewerInjector implements Injector {
+    private _diffIcons: Partial<Record<"new" | "old", RWUIDiffIcons>> = {};
+    get oldDiffIcons(): RWUIDiffIcons {
+        return this._diffIcons["old"];
+    }
+    get newDiffIcons(): RWUIDiffIcons {
+        return this._diffIcons["new"];
+    }
+    get latestDiffIcons(): RWUIDiffIcons {
+        return Object.values(this._diffIcons).find(
+            (icons) => icons.isLatestIcons
+        );
+    }
+
     /**
      * Initialize the injector. If the page is a diff page, this injector
      * will trigger.
@@ -68,15 +81,18 @@ export default class DiffViewerInjector implements Injector {
         document
             .querySelectorAll(".diff-ntitle, .diff-otitle")
             .forEach((host) => {
-                const diffIcons = new RedWarnUI.DiffIcons({
+                const side = host.classList.contains("diff-ntitle")
+                    ? "new"
+                    : "old";
+                this._diffIcons[side] = new RedWarnUI.DiffIcons({
                     ...context,
-                    side: host.classList.contains("diff-ntitle")
-                        ? "new"
-                        : "old",
+                    side,
                 });
 
                 const icons = (
-                    <div class={"rwDiffIcons"}>{diffIcons.render()}</div>
+                    <div class={"rwDiffIcons"}>
+                        {this._diffIcons[side].render()}
+                    </div>
                 );
 
                 // Always show below the Twinkle buttons.

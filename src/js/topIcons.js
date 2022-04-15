@@ -105,6 +105,7 @@ rw.topIcons = {
 
   "generateHTML" : arrayMode=>{ // ARRAY MODE RETURNS AN ORDERED ARRAY OF [{txt: shortTitle + class, id: "rw-topiconi"}]
     if (mw.config.get("wgNamespaceNumber") < 0) return ``; // if on special page, skip
+    if (mw.config.get("wgPageName") === "Main_Page") return ``; // if on Main Page, skip
 
     // Check if more options is disabled, if so, open a dialog to prompt if user wishes to keep this option
     if ((rw.topIcons.icons.find(o => o.title === 'More Options').enabled == false) && rw.config.rwMORemovedWarning == null) {

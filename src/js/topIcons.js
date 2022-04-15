@@ -167,6 +167,7 @@ rw.topIcons = {
 
   "addHandlers" : ()=>{ // add handlers once icons have been rendered
     if (mw.config.get("wgNamespaceNumber") < 0) return; // if on special page, skip
+    if (mw.config.get("wgPageName") === "Main_Page") return; // if on Main Page, skip
     const pageIsUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");
     const pageIsEditable = mw.config.get("wgIsProbablyEditable");
     rw.topIcons.icons.forEach((icon, i)=>{

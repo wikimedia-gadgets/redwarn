@@ -1,4 +1,4 @@
-image: node:14.16.1
+image: docker-registry.wikimedia.org/nodejs14-slim:latest
 
 stages:
     - build
@@ -6,7 +6,7 @@ stages:
 
 # GitLab Pages deployment
 pages:
-    image: php:latest
+    image: docker-registry.wikimedia.org/php7.4-cli:latest
     stage: build
     script:
         - php build.php > public/redwarn.js

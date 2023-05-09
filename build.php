@@ -416,7 +416,12 @@ function buildScript() {
 // ========================== BEGIN REDWARN ===========================
 (function () {
     <?php echo $sources; ?>
-
+    if (window.rwLoaded) {
+        console.warn("RedWarn is being loaded twice!");
+        return;
+    } else {
+        window.rwLoaded = true;
+    }
     window.rw = rw;
 
     $(document).ready(async function() {

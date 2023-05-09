@@ -33,7 +33,7 @@ deploy_start:
     when: manual
     only:
         variables:
-            - $CI_PROJECT_PATH == "redwarn/redwarn-web"
+            - $CI_PROJECT_PATH == "repos/10nm/redwarn-web"
         refs:
             - master
         changes:

@@ -160,7 +160,7 @@ rw.multiAct = { // Multi action screen
                         rw.ui.beginWarn(true, "(RedWarn MAT)", mw.config.get("wgRelevantPageName"), "APPLY TO CHECKED", r=>{
                             // Now push to iframe
                             rw.multiAct.dialog.getElementsByTagName("iframe")[0].contentWindow.postMessage(
-                                "applyToChecked`" + btoa(r) +
+                                "applyToChecked`" + serialize(r) +
                                 "`Yes`Warn User"
                                 , '*');
                         }, true); // Show Warn User dialog, true at end hides user info
@@ -171,7 +171,7 @@ rw.multiAct = { // Multi action screen
                         rw.ui.newMsg("(RedWarn MAT)", true, "APPLY TO CHECKED", r=>{ // new talk page message dialog
                             // Now push to iframe
                             rw.multiAct.dialog.getElementsByTagName("iframe")[0].contentWindow.postMessage(
-                                "applyToChecked`" + btoa(r) +
+                                "applyToChecked`" + serialize(r) +
                                 "`No`New Message"
                                 , '*');
                         });
@@ -205,7 +205,7 @@ rw.multiAct = { // Multi action screen
                         actionsToTake.push({
                             "user" : cI.split("`")[3],
                             "underDate" : cI.split("`")[2] == "true",
-                            "wikiTxt" : atob(cI.split("`")[1])
+                            "wikiTxt" : deserialize(cI.split("`")[1])
                         });
                     });
 

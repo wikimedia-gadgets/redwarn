@@ -87,7 +87,7 @@ ${rw.info.getUsername()}
             <!-- send email on click -->
             <button id="OSsubmitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
             style="width: 100%;"
-            onclick="window.parent.postMessage('OSEmail\`' + btoa(document.getElementById('OSReportBox').value), '*');" disabled>
+            onclick="window.parent.postMessage('OSEmail\`' + serialize(document.getElementById('OSReportBox').value), '*');" disabled>
                 SEND EMAIL
             </button>
         `)}
@@ -135,7 +135,7 @@ ${rw.info.getUsername()}
             <!-- send email on click -->
             <button id="TASsubmitBtn" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
             style="width: 100%;"
-            onclick="window.parent.postMessage('TASEmail\`' + btoa(document.getElementById('tasReportBox').value), '*');" disabled>
+            onclick="window.parent.postMessage('TASEmail\`' + serialize(document.getElementById('tasReportBox').value), '*');" disabled>
                 SEND EMAIL
             </button>
 

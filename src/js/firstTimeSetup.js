@@ -11,7 +11,7 @@ rw.firstTimeSetup = {
     "launch": () => {
         addMessageHandler("config`*", rs => { // On config change
             // New config recieved
-            let config = JSON.parse(atob(rs.split("`")[1])); // b64 encoded json string
+            let config = JSON.parse(deserialize(rs.split("`")[1])); // b64 encoded json string
             //Write to our config
             for (const key in config) {
                 if (config.hasOwnProperty(key)) {

@@ -73,7 +73,7 @@
     // Used to handle submit
     function handleSubmit() {
         let wikiTxt = document.getElementById("wikiTxt").value;
-        window.parent.postMessage('qtDone\\\`' + btoa(wikiTxt)); // Push upstairs and commit
+        window.parent.postMessage('qtDone\\\`' + serialize(wikiTxt)); // Push upstairs and commit
         window.parent.postMessage("closeDialog"); // We done here. Top will refresh or reshow if error occurs.
     }
 
@@ -84,13 +84,13 @@
     var previewTO;
     function refreshPreview() {
         clearTimeout(previewTO); // cancel TO
-        let originalText = atob("`+ btoa(selectedTemplate.content) +`");
+        let originalText = deserialize("`+ serialize(selectedTemplate.content) +`");
         // Now replace for each input
 
         $(".rwCustomTextInput").each((i, el)=>{
             console.log(originalText);
-            console.log(atob($(el).attr("id")));
-            originalText = originalText.replace(atob($(el).attr("id")), $(el).val()); // replace case with inputted text
+            console.log(deserialize($(el).attr("id")));
+            originalText = originalText.replace(deserialize($(el).attr("id")), $(el).val()); // replace case with inputted text
         });
 
         // Now set the text input

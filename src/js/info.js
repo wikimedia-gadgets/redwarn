@@ -135,9 +135,9 @@ rw.info = { // API
 
                 // Process template packs (b64encoded string)
                 if (rw.config.templatePacks != null) {
-                    rw.config.templatePacks = JSON.parse(atob(rw.config.templatePacks));
+                    rw.config.templatePacks = JSON.parse(deserialize(rw.config.templatePacks));
                     // Verify
-                    if (typeof rw.config.templatePacks == "string") rw.config.templatePacks = JSON.parse(atob(rw.config.templatePacks)); // if issue, throw error and return to default
+                    if (typeof rw.config.templatePacks == "string") rw.config.templatePacks = JSON.parse(deserialize(rw.config.templatePacks)); // if issue, throw error and return to default
                 }
 
                 // Load rollback icons
@@ -241,7 +241,7 @@ ${err.stack}</no${""}wiki></code>
             // Then
             let rwConfigTemplate = rw.config.templatePacks; // for restore
             // Handle templates (saved as b64 string)
-            if (rw.config.templatePacks != null) rw.config.templatePacks = btoa(JSON.stringify(rw.config.templatePacks));
+            if (rw.config.templatePacks != null) rw.config.templatePacks = serialize(JSON.stringify(rw.config.templatePacks));
             if (!noRedirect) rw.ui.loadDialog.show("Saving preferences...");
             // Write config to the users page and refresh
             let finalTxt = `

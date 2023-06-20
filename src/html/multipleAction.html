@@ -222,7 +222,7 @@
 
   // SET TEXT UNDER DATE HANDLER
   addMessageHandler("applyToChecked\`*", cI=>{ // apply to checked b64 txt, underDate (Yes/No), source (i.e Warn User)
-    let textToAdd = atob(cI.split("\`")[1]);
+    let textToAdd = deserialize(cI.split("\`")[1]);
     let underDate = cI.split("\`")[2];
     let source = cI.split("\`")[3];
     $("tbody > tr").each((i, el)=>{ // for each row
@@ -274,7 +274,7 @@
           }
 
           // Finally, push upstairs to be done.
-          window.parent.postMessage('RWMATToAdd\`'+ btoa(finalWikiTxt) + '\`'+ userAct.underDate + '\`'+ username);
+          window.parent.postMessage('RWMATToAdd\`'+ serialize(finalWikiTxt) + '\`'+ userAct.underDate + '\`'+ username);
           // Done - Now remove original
           $(el).find("td:visible > label > input:checkbox").click(); // click to uncheck
           $(el).fadeOut(); // hide

@@ -77,11 +77,11 @@ var rw = {
      * @extends rw
      */
 
-    "sign": () => { return atob("fn5+fg==") }, // we have to do this because mediawiki will swap this out with devs sig.
+    "sign": () => { return deserialize("fn5+fg==") }, // we have to do this because mediawiki will swap this out with devs sig.
 
     // Not really used, but keep for now just in case
-    "welcome": () => { return atob("e3tzdWJzdDpXZWxjb21lfX0="); }, // welcome template
-    "welcomeIP": () => { return atob("e3tzdWJzdDp3ZWxjb21lLWFub259fQ=="); }, // welcome IP template
+    "welcome": () => { return deserialize("e3tzdWJzdDpXZWxjb21lfX0="); }, // welcome template
+    "welcomeIP": () => { return deserialize("e3tzdWJzdDp3ZWxjb21lLWFub259fQ=="); }, // welcome IP template
 
     /**
      * Returns a shared IP advice template - please note that is is likely to be depreciated in the near future
@@ -89,7 +89,7 @@ var rw = {
      * @method sharedIPadvice
      * @extends rw
      */
-    "sharedIPadvice": () => { return atob("XG57e3N1YnN0OlNoYXJlZCBJUCBhZHZpY2V9fQ=="); }, // if this is a shared...
+    "sharedIPadvice": () => { return deserialize("XG57e3N1YnN0OlNoYXJlZCBJUCBhZHZpY2V9fQ=="); }, // if this is a shared...
 
     // Wiki automated config
 

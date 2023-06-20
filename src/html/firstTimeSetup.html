@@ -361,7 +361,7 @@
         data.firstTimeSetupComplete = "yes";
 
         // Done! Submit
-        window.parent.postMessage("config\\\`" + btoa(JSON.stringify(data))); // send to the big boss
+        window.parent.postMessage("config\\\`" + serialize(JSON.stringify(data))); // send to the big boss
 
         if (showVideo) {
             // Now, play video (rw17)

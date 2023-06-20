@@ -20,6 +20,16 @@ var mdlContainers = {
         <link rel="stylesheet" href="https://redwarn.toolforge.org/cdn/css/materialicons.css">
         <script defer src="https://redwarn.toolforge.org/cdn/js/mdl.js"></script>
         <script src="https://redwarn.toolforge.org/cdn/js/dialogPolyfill.js"></script> <!-- firefox being dumb -->
+        <script>
+        /** src/js/serialize.js **/
+        function serialize(data) {
+            return btoa(encodeURIComponent(data));
+        }
+        
+        function deserialize(data) {
+            return decodeURIComponent(atob(data));
+        }
+        </script>
 
         <!-- expander element CSS -->
         <style>

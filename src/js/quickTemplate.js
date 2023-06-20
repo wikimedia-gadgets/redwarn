@@ -189,7 +189,7 @@ rw.quickTemplate = { // Quick template UI and loader
 
         // Add handlers for submit
         addMessageHandler("qtDone`*", eD => {
-            let wikiTxtToAdd = atob(eD.split("`")[1]); // params
+            let wikiTxtToAdd = deserialize(eD.split("`")[1]); // params
 
             // MAKE EDIT
             rw.info.addWikiTextToUserPage(rw.info.targetUsername(un), wikiTxtToAdd, addUnderDate, "[[w:en:Wikipedia:RedWarn/QTPACKS|" + selectedPack.name + " - " + selectedTemplate.title + "]]");
@@ -207,8 +207,8 @@ rw.quickTemplate = { // Quick template UI and loader
                     // Now add our textbox
                     finalAdditionalInputs += `
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
-                        <input class="mdl-textfield__input rwCustomTextInput" type="text" id="${btoa(match)}"> <!-- ID is b64 of what needs to be replaced -->
-                        <label class="mdl-textfield__label" for="${btoa(match)}">${label}</label>
+                        <input class="mdl-textfield__input rwCustomTextInput" type="text" id="${serialize(match)}"> <!-- ID is b64 of what needs to be replaced -->
+                        <label class="mdl-textfield__label" for="${serialize(match)}">${label}</label>
                     </div>
                     `;
                 });
@@ -255,9 +255,9 @@ rw.quickTemplate = { // Quick template UI and loader
         let selectedTemplate = selectedPack.templates[selectedTemplateI];
         let saveHandler = (b64data, callback) => { // Save Data handler
             // Set vars
-            let title = atob(b64data.split("`")[1]);
-            let about = atob(b64data.split("`")[2]);
-            let content = atob(b64data.split("`")[3]);
+            let title = deserialize(b64data.split("`")[1]);
+            let about = deserialize(b64data.split("`")[2]);
+            let content = deserialize(b64data.split("`")[3]);
             rw.config.templatePacks[selectedPackI].templates[selectedTemplateI] = {
                 "title": title,
                 "about": about,
@@ -324,7 +324,7 @@ rw.quickTemplate = { // Quick template UI and loader
 Install script (c) Ed. E (User:Ed6767) - license: https://gitlab.com/redwarn/redwarn-web
 */
 rw.ui.loadDialog.show("Installing...");
-let packSource = JSON.parse(atob("${btoa(JSON.stringify(selectedPack))}")); // Load source from currentpack
+let packSource = JSON.parse((${deserialize.toString()})("${serialize(JSON.stringify(selectedPack))}")); // Load source from currentpack
 rw.config.templatePacks.push(packSource); // Push into config
 rw.info.writeConfig(true, ()=>{ // save config
     rw.ui.loadDialog.close();
@@ -359,7 +359,7 @@ rw.info.writeConfig(true, ()=>{ // save config
             } else {
                 // Success!
                 if (!isNew) { // if not a new pack, show update done screen and exit
-                    rw.loadDialog.close();
+                    rw.ui.loadDialog.close();
                     rw.ui.confirmDialog("Pack updated successfully!", "DONE", () => dialogEngine.closeDialog(), "", () => { }, 0);
                     return;
                 }

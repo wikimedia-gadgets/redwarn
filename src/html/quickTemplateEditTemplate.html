@@ -1,7 +1,7 @@
 <h2 style="font-weight: 200;font-size:45px;line-height: 48px;">`+selectedPack.name+`</h2>
 <div style="height:400px;overflow:auto;">
     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 100%;">
-        <input class="mdl-textfield__input" type="text" id="title"> <script>$("#title").val(atob("`+ btoa(selectedTemplate.title) +`"));</script> <!-- Script to set due to quote issues-->
+        <input class="mdl-textfield__input" type="text" id="title"> <script>$("#title").val(deserialize("`+ serialize(selectedTemplate.title) +`"));</script> <!-- Script to set due to quote issues-->
         <label class="mdl-textfield__label" for="title">Title</label>
     </div><br />
     <div class="mdl-textfield mdl-js-textfield" style="width: 100%;">
@@ -34,16 +34,16 @@
 <script>
     // Add handlers
     $("#exitBtn").click(()=>{
-        window.parent.postMessage('qTClose\`'+ btoa($("#title").val()) + "\`" + btoa($("#about").val()) + "\`" + btoa($("#content").val()), '*');
+        window.parent.postMessage('qTClose\`'+ serialize($("#title").val()) + "\`" + serialize($("#about").val()) + "\`" + serialize($("#content").val()), '*');
     });
 
     $("#testBtn").click(()=>{
         // Test changes
-        window.parent.postMessage('qTTest\`'+ btoa($("#title").val()) + "\`" + btoa($("#about").val()) + "\`" + btoa($("#content").val()), '*');
+        window.parent.postMessage('qTTest\`'+ serialize($("#title").val()) + "\`" + serialize($("#about").val()) + "\`" + serialize($("#content").val()), '*');
     });
 
     $("#saveBtn").click(()=>{
         // Save changes here
-        window.parent.postMessage('qTSave\`'+ btoa($("#title").val()) + "\`" + btoa($("#about").val()) + "\`" + btoa($("#content").val()), '*');
+        window.parent.postMessage('qTSave\`'+ serialize($("#title").val()) + "\`" + serialize($("#about").val()) + "\`" + serialize($("#content").val()), '*');
     });
 </script>

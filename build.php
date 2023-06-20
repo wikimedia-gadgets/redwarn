@@ -29,6 +29,7 @@ define("DEBUG_MODE", php_sapi_name() == 'cli-server'); // enable debug mode if w
 
 $jsRoot = __DIR__ . DIRECTORY_SEPARATOR . "src" . DIRECTORY_SEPARATOR . "js";
 $jsFiles = [
+    'serialize.js',
     'styles.js',
     'init.js',
     'topIcons.js',

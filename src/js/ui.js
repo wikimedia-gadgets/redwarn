@@ -628,7 +628,7 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
 
         addMessageHandler("config`*", rs => { // On config change
             // New config recieved
-            let config = JSON.parse(atob(rs.split("`")[1])); // b64 encoded json string
+            let config = JSON.parse(deserialize(rs.split("`")[1])); // b64 encoded json string
             //Write to our config
             for (const key in config) {
                 if (config.hasOwnProperty(key)) {
@@ -978,10 +978,10 @@ Welcome to advanced warning mode! This feature looks through the past 50 user ta
             addMessageHandler("redwarnTalk", () => redirect("https://en.wikipedia.org/wiki/Wikipedia_talk:RedWarn", true));
 
             // Email to TAS THIS IS LIVE!!
-            addMessageHandler("TASEmail`*", e => dialogEngine.closeDialog(() => rw.info.sendEmail("Emergency", atob(e.split("`")[1]))));
+            addMessageHandler("TASEmail`*", e => dialogEngine.closeDialog(() => rw.info.sendEmail("Emergency", deserialize(e.split("`")[1]))));
 
             // Email to OS - THESE ARE LIVE
-            addMessageHandler("OSEmail`*", e => dialogEngine.closeDialog(() => rw.info.sendEmail("Oversight", atob(e.split("`")[1]))));
+            addMessageHandler("OSEmail`*", e => dialogEngine.closeDialog(() => rw.info.sendEmail("Oversight", deserialize(e.split("`")[1]))));
 
             const isUserPage = mw.config.get("wgRelevantPageName").includes("User:") || mw.config.get("wgRelevantPageName").includes("User_talk:");
             const isOnRevPage = window.location.href.includes("diff=") || window.location.href.includes("oldid="); // for reporting revisions

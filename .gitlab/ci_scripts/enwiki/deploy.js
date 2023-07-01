@@ -41,6 +41,7 @@
     const packageLock = require("../package-lock.json");
     const path = require("path");
     const qs = require("querystring");
+    const dns = require("dns");
 
     const CI_DEPLOYSCRIPT_VERSION = "1.0.0";
 
@@ -71,6 +72,38 @@
 
         process.exit(500);
     }
+
+    function promisify(cb) {
+        return new Promise((resolve, reject) => {
+            cb((err, res) => {
+                if (err) reject(err);
+                else resolve(res);
+            });
+        });
+    }
+
+    console.log("DNS servers: ", dns.getServers());
+    async function dumpDNS() {
+        console.log("Looking up DNS records...");
+        console.log(
+            ":: en.wikipedia.org: ",
+            await promisify(dns.lookup.bind(null, "en.wikipedia.org"))
+        );
+        console.log(
+            ":: signatures.toolforge.org: ",
+            await promisify(dns.lookup.bind(null, "signatures.toolforge.org"))
+        );
+        console.log("Resolving DNS records...");
+        console.log(
+            ":: en.wikipedia.org: ",
+            await promisify(dns.resolve.bind(null, "en.wikipedia.org", "A"))
+        );
+        console.log(
+            ":: signatures.toolforge.org: ",
+            await promisify(dns.resolve.bind(null, "signatures.toolforge.org", "A"))
+        );
+    }
+    dumpDNS();
 
     console.log("Setting up...");
 
@@ -476,6 +509,8 @@
                 continue;
             }
 
+            await dumpDNS();
+
             // Authorized user made an edit on the page. Grab their signature.
             // This asks `signatures` on Toolforge for their raw signature, and
             // then runs a PST in order to parse out the `subst:`s
@@ -487,7 +522,9 @@
                 text: (await axios.get(
                     `https://signatures.toolforge.org/api/v1/check/en.wikipedia.org/${encodeURIComponent(revision["user"])
                     }`
-                )).data.signature,
+                )).catch((e) => {
+                    crashAndBurn(e);
+                }).data.signature,
                 prop: "text",
                 onlypst: 1,
                 contentmodel: "wikitext"

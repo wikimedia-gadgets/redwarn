@@ -31,11 +31,16 @@ deploy_start:
         name: production
         url: https://en.wikipedia.org/wiki/User:RedWarn/.js
     when: manual
+    rules:
+        -   if: $CI_COMMIT_REF_NAME =~ /^c[id]-.*$/
+            variables:
+                DRY_RUN: 1
     only:
         variables:
             - $CI_PROJECT_PATH == "repos/10nm/redwarn-web"
         refs:
             - master
+            - /^c[id]-.*$/
         changes:
             - .gitlab-ci.yml
             - build.php

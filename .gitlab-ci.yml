@@ -14,9 +14,11 @@ pages:
         paths:
             # GitLab pages
             - public
-    only:
-        refs:
-            - master
+    rules:
+        -   if: $CI_PROJECT_PATH != "repos/10nm/redwarn-web"
+            when: never
+        -   if: $CI_COMMIT_REF_NAME == "master"
+        -   if: $CI_COMMIT_REF_NAME =~ /^c[id]-.*$/
 
 ################################################################################
 # ENGLISH WIKIPEDIA DEPLOYMENT
@@ -32,20 +34,22 @@ deploy_start:
         url: https://en.wikipedia.org/wiki/User:RedWarn/.js
     when: manual
     rules:
+        -   if: $CI_PROJECT_PATH != "repos/10nm/redwarn-web"
+            when: never
+        -   if: $CI_COMMIT_REF_NAME == "master"
+            changes:
+                - .gitlab-ci.yml
+                - build.php
+                - src/**/*
+                - .gitlab/ci_scripts/**/*
         -   if: $CI_COMMIT_REF_NAME =~ /^c[id]-.*$/
+            changes:
+                - .gitlab-ci.yml
+                - build.php
+                - src/**/*
+                - .gitlab/ci_scripts/**/*
             variables:
                 DRY_RUN: 1
-    only:
-        variables:
-            - $CI_PROJECT_PATH == "repos/10nm/redwarn-web"
-        refs:
-            - master
-            - /^c[id]-.*$/
-        changes:
-            - .gitlab-ci.yml
-            - build.php
-            - src/**/*
-            - .gitlab/ci_scripts/**/*
     allow_failure: false
     script:
         - cd .gitlab/ci_scripts

@@ -24,9 +24,8 @@
   "dependencies": {
     "axios": "^0.21.4",
     "axios-cookiejar-support": "^1.0.1",
-    "git-commit-info": "^2.0.0",
+    "git-commit-info": "^2.0.2",
     "gitlog": "^4.0.4",
     "tough-cookie": "^4.0.0"
-  },
-  "devDependencies": {}
+  }
 }

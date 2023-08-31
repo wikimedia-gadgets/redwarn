@@ -642,79 +642,77 @@
     });
 
     // jQuery context menus for icons
-    rw.visuals.contextMenuPromise.then(() => {
-        $(() => {
-            $.contextMenu({
-                selector: 'div[id^="rollbackIcon-"]',
-                callback: (key, options) => {
-                    // If editcolor
-                    if (key.startsWith("editColor-")) {
-                        $(options["$trigger"][0]).find("span.material-icons").css("color", key.split("-")[1]); // Set color
-                        return false; // we done (return false so user can see change with menu still open)
+    $(() => {
+        $.contextMenu({
+            selector: 'div[id^="rollbackIcon-"]',
+            callback: (key, options) => {
+                // If editcolor
+                if (key.startsWith("editColor-")) {
+                    $(options["$trigger"][0]).find("span.material-icons").css("color", key.split("-")[1]); // Set color
+                    return false; // we done (return false so user can see change with menu still open)
+                }
+                // Send callback for non-edit color changes
+                ({
+                    "editIcon": element => {
+                        // Edit icon
+                        showIconSelector(icon => { // Open icon selector
+                            $(element).find("span.material-icons").text(icon); // swap out the icon. normal code does the rest.
+                        });
                     }
-                    // Send callback for non-edit color changes
-                    ({
-                        "editIcon": element => {
-                            // Edit icon
-                            showIconSelector(icon => { // Open icon selector
-                                $(element).find("span.material-icons").text(icon); // swap out the icon. normal code does the rest.
-                            });
-                        }
-                    })[key](options["$trigger"][0]); // pass in trigger element
+                })[key](options["$trigger"][0]); // pass in trigger element
+            },
+            items: {
+                "editIcon": { name: "Change Icon" },
+                "editColor": {
+                    "name": "Edit Color",
+                    "items": {
+                        "editColor-crimson": { name: "Crimson" },
+                        "editColor-red": { name: "Red" },
+                        "editColor-DarkOrange": { name: "Dark Orange" },
+                        "editColor-Orange": { name: "Orange" },
+                        "editColor-Gold": { name: "Yellow" },
+                        "editColor-DarkMagenta": { name: "Dark Magenta" },
+                        "editColor-Magenta": { name: "Magenta" },
+                        "editColor-HotPink": { name: "Pink" },
+                        "editColor-DarkBlue": { name: "Dark Blue" },
+                        "editColor-Blue": { name: "Blue" },
+                        "editColor-Teal": { name: "Teal" },
+                        "editColor-Cyan": { name: "Cyan" },
+                        "editColor-DodgerBlue": { name: "Dodger Blue" },
+                        "editColor-Green": { name: "Green" },
+                        "editColor-LawnGreen": { name: "Lawn Green" },
+                        "editColor-LightGreen": { name: "Light Green" },
+                        "editColor-Lavender": { name: "Lavender" },
+                        "editColor-LightGray": { name: "Light Gray" },
+                        "editColor-LightSlateGrey": { name: "Light Slate Grey" },
+                        "editColor-Grey": { name: "Grey" },
+                        "editColor-Black": { name: "Black" }
+                    }
                 },
-                items: {
-                    "editIcon": { name: "Change Icon" },
-                    "editColor": {
-                        "name": "Edit Color",
-                        "items": {
-                            "editColor-crimson": { name: "Crimson" },
-                            "editColor-red": { name: "Red" },
-                            "editColor-DarkOrange": { name: "Dark Orange" },
-                            "editColor-Orange": { name: "Orange" },
-                            "editColor-Gold": { name: "Yellow" },
-                            "editColor-DarkMagenta": { name: "Dark Magenta" },
-                            "editColor-Magenta": { name: "Magenta" },
-                            "editColor-HotPink": { name: "Pink" },
-                            "editColor-DarkBlue": { name: "Dark Blue" },
-                            "editColor-Blue": { name: "Blue" },
-                            "editColor-Teal": { name: "Teal" },
-                            "editColor-Cyan": { name: "Cyan" },
-                            "editColor-DodgerBlue": { name: "Dodger Blue" },
-                            "editColor-Green": { name: "Green" },
-                            "editColor-LawnGreen": { name: "Lawn Green" },
-                            "editColor-LightGreen": { name: "Light Green" },
-                            "editColor-Lavender": { name: "Lavender" },
-                            "editColor-LightGray": { name: "Light Gray" },
-                            "editColor-LightSlateGrey": { name: "Light Slate Grey" },
-                            "editColor-Grey": { name: "Grey" },
-                            "editColor-Black": { name: "Black" }
-                        }
-                    },
-                }
-            });   // end rollback icons
+            }
+        });   // end rollback icons
 
 
-            // Page icons (only change icon)
+        // Page icons (only change icon)
 
-            $.contextMenu({
-                selector: 'div[id^="rwTopIcon-"]',
-                callback: (key, options) => {
-                    // Send callback for non-edit color changes
-                    ({
-                        "editIcon": element => {
-                            // Edit icon
-                            showIconSelector(icon => { // Open icon selector
-                                $(element).find("span.material-icons").text(icon); // swap out the icon. normal code does the rest.
-                            });
-                        }
-                    })[key](options["$trigger"][0]); // pass in trigger element
-                },
-                items: {
-                    "editIcon": { name: "Change Icon" }
-                }
-            });
-        })
-    });
+        $.contextMenu({
+            selector: 'div[id^="rwTopIcon-"]',
+            callback: (key, options) => {
+                // Send callback for non-edit color changes
+                ({
+                    "editIcon": element => {
+                        // Edit icon
+                        showIconSelector(icon => { // Open icon selector
+                            $(element).find("span.material-icons").text(icon); // swap out the icon. normal code does the rest.
+                        });
+                    }
+                })[key](options["$trigger"][0]); // pass in trigger element
+            },
+            items: {
+                "editIcon": { name: "Change Icon" }
+            }
+        });
+    })
 
     // Colour theme preview
     function updateColourTheme() {

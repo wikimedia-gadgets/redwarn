@@ -222,8 +222,9 @@ var rw = {
 
             // Load script files
             // Load MDL and everything needed, then callback when all loaded
-            rw.visuals.contextMenuPromise = mw.loader.getScript("https://redwarn.toolforge.org/cdn/js/jquery-contextmenu.js");
-            mw.loader.getScript("https://redwarn.toolforge.org/cdn/js/jquery-ui-position.js");
+            rw.visuals.contextMenuPromise = mw.loader.using(["jquery.ui"], () => {
+                return mw.loader.getScript("https://redwarn.toolforge.org/cdn/js/jquery-contextmenu.js");
+            });
             // Dialog polyfill for Firefox browsers
             mw.loader.getScript("https://redwarn.toolforge.org/cdn/js/dialogPolyfill.js");
             // Material Design Lite
